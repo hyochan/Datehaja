@@ -7,7 +7,7 @@ import {
   DATE_TYPE_OPTIONS,
   DIETARY_OPTIONS,
 } from "@convex/lib/catalog";
-import { ChipGroup, SelectionCount } from "../components/forms/ChipGroup";
+import { ChipGroup, ChipRadio, SelectionCount } from "../components/forms/ChipGroup";
 import {
   Button,
   Card,
@@ -161,18 +161,16 @@ export default function PreferencesPage() {
           </Field>
 
           <Field label="What you're looking for">
-            <ChipGroup
+            <ChipRadio
               options={[
-                { key: "casual", label: "Something casual" },
-                { key: "open", label: "Open to anything" },
-                { key: "serious", label: "Something serious" },
-                { key: "friendship", label: "Friendship first" },
-                { key: "unsure", label: "Still working it out" },
+                { key: "casual" as const, label: "Something casual" },
+                { key: "open" as const, label: "Open to anything" },
+                { key: "serious" as const, label: "Something serious" },
+                { key: "friendship" as const, label: "Friendship first" },
+                { key: "unsure" as const, label: "Still working it out" },
               ]}
-              selected={[p.relationshipIntent]}
-              onChange={(next) =>
-                next[0] && set("relationshipIntent", next[0] as Prefs["relationshipIntent"])
-              }
+              value={p.relationshipIntent}
+              onChange={(next) => set("relationshipIntent", next)}
               ariaLabel="Relationship intent"
             />
             <Hard checked={p.intentHard} onChange={(v) => set("intentHard", v)} />
@@ -236,7 +234,11 @@ export default function PreferencesPage() {
                 emoji: d.emoji,
               }))}
               selected={p.preferredDateTypes}
-              onChange={(v) => set("preferredDateTypes", v)}
+              onChange={(update) =>
+                setP((cur) =>
+                  cur ? { ...cur, preferredDateTypes: update(cur.preferredDateTypes) } : cur,
+                )
+              }
               ariaLabel="Date types"
             />
             <SelectionCount count={p.preferredDateTypes.length} min={1} />
@@ -302,7 +304,11 @@ export default function PreferencesPage() {
             <ChipGroup
               options={DIETARY_OPTIONS.map((d) => ({ key: d.key, label: d.label }))}
               selected={p.dietary}
-              onChange={(v) => set("dietary", v)}
+              onChange={(update) =>
+                setP((cur) =>
+                  cur ? { ...cur, dietary: update(cur.dietary) } : cur,
+                )
+              }
               ariaLabel="Dietary requirements"
             />
           </Field>
@@ -315,7 +321,11 @@ export default function PreferencesPage() {
             <ChipGroup
               options={ACCESSIBILITY_OPTIONS.map((a) => ({ key: a.key, label: a.label }))}
               selected={p.accessibility}
-              onChange={(v) => set("accessibility", v)}
+              onChange={(update) =>
+                setP((cur) =>
+                  cur ? { ...cur, accessibility: update(cur.accessibility) } : cur,
+                )
+              }
               ariaLabel="Accessibility needs"
             />
           </Field>

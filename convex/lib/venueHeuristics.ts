@@ -75,13 +75,19 @@ function classify(text: string): string {
 }
 
 function cleanName(raw: string): string {
-  return raw
-    .replace(/^[#*\s\d.)-]+/, "")
-    .replace(/[*_`]+/g, "")
-    .replace(/\s{2,}/g, " ")
-    .replace(/\s*\([^)]{0,40}\)\s*$/, "")
-    .trim()
-    .slice(0, 80);
+  return (
+    raw
+      // Markdown headings often wrap the name in a link: [Name](https://...).
+      .replace(/\[([^\]]{1,80})\]\([^)]*\)/g, "$1")
+      .replace(/^[#*\s\d.)-]+/, "")
+      .replace(/[*_`]+/g, "")
+      // A bare bracketed name, once the link target is gone.
+      .replace(/^\[([^\]]{1,80})\]$/, "$1")
+      .replace(/\s{2,}/g, " ")
+      .replace(/\s*\([^)]{0,40}\)\s*$/, "")
+      .trim()
+      .slice(0, 80)
+  );
 }
 
 /**

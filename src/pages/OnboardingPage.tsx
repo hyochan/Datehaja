@@ -15,7 +15,7 @@ import {
   SUPPORTED_CITIES,
 } from "@convex/lib/catalog";
 import { Logo } from "../components/layout/Logo";
-import { ChipGroup, SelectionCount } from "../components/forms/ChipGroup";
+import { ChipGroup, ChipRadio, SelectionCount } from "../components/forms/ChipGroup";
 import { AvailabilityEditor } from "../components/forms/AvailabilityEditor";
 import {
   Button,
@@ -294,7 +294,10 @@ export default function OnboardingPage() {
     });
   }
 
-  const age = ageFromDateString(dob);
+  // dobMs is never returned to the client, so after a reload the age comes from
+  // the denormalised ageYears the server keeps for exactly this reason.
+  const savedAge = (me?.profile as { ageYears?: number } | null | undefined)?.ageYears;
+  const age = ageFromDateString(dob) ?? savedAge ?? null;
   const canContinue = (() => {
     switch (step) {
       case 0:
@@ -397,10 +400,10 @@ export default function OnboardingPage() {
             </Field>
 
             <Field label="You are">
-              <ChipGroup
+              <ChipRadio
                 options={GENDER_OPTIONS}
-                selected={[gender]}
-                onChange={(next) => next[0] && setGender(next[0] as Gender)}
+                value={gender}
+                onChange={setGender}
                 ariaLabel="Your gender"
               />
             </Field>
@@ -422,7 +425,9 @@ export default function OnboardingPage() {
               <ChipGroup
                 options={GENDER_OPTIONS}
                 selected={interestedIn}
-                onChange={(next) => setInterestedIn(next as Gender[])}
+                onChange={(update) =>
+                  setInterestedIn((previous) => update(previous) as Gender[])
+                }
                 ariaLabel="Who you'd like to meet"
               />
             </Field>
@@ -453,10 +458,10 @@ export default function OnboardingPage() {
               label="Roughly where"
               hint="Neighbourhood only — we never store or share your address."
             >
-              <ChipGroup
-                options={city.neighborhoods.map((n) => n.name)}
-                selected={[neighborhood]}
-                onChange={(next) => next[0] && setNeighborhood(next[0])}
+              <ChipRadio
+                options={city.neighborhoods.map((n) => ({ key: n.name, label: n.name }))}
+                value={neighborhood}
+                onChange={setNeighborhood}
                 ariaLabel="Your neighbourhood"
               />
             </Field>
@@ -643,16 +648,16 @@ export default function OnboardingPage() {
             </Field>
 
             <Field label="What you're looking for">
-              <ChipGroup
+              <ChipRadio
                 options={[
-                  { key: "casual", label: "Something casual" },
-                  { key: "open", label: "Open to anything" },
-                  { key: "serious", label: "Something serious" },
-                  { key: "friendship", label: "Friendship first" },
-                  { key: "unsure", label: "Still working it out" },
+                  { key: "casual" as const, label: "Something casual" },
+                  { key: "open" as const, label: "Open to anything" },
+                  { key: "serious" as const, label: "Something serious" },
+                  { key: "friendship" as const, label: "Friendship first" },
+                  { key: "unsure" as const, label: "Still working it out" },
                 ]}
-                selected={[intent]}
-                onChange={(next) => next[0] && setIntent(next[0] as typeof intent)}
+                value={intent}
+                onChange={setIntent}
                 ariaLabel="Relationship intent"
               />
               <HardToggle

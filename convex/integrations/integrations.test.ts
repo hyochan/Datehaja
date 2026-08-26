@@ -300,7 +300,7 @@ describe("venue extraction without a model", () => {
       "## Where we ate last week",
       "More filler text that goes on for a little while so it passes the length gate.",
       "",
-      "## Parco Pizzeria",
+      "## [Parco Pizzeria](https://parco.example.com)",
       "Neapolitan pizza in a converted garage. Loud, cheap and very good indeed.",
     ].join("\n"),
   };
@@ -330,6 +330,12 @@ describe("venue extraction without a model", () => {
       expect(venue.confidence).toBe("low");
       expect(venue.tags).toContain("extracted-without-model");
     }
+  });
+
+  it("unwraps a markdown link around the name", () => {
+    const names = extractVenues(page, "Seongsu").map((v) => v.name);
+    expect(names).toContain("Parco Pizzeria");
+    expect(names.some((n) => n.includes("["))).toBe(false);
   });
 
   it("classifies categories from the surrounding text", () => {
