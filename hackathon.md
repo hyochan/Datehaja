@@ -8,11 +8,11 @@
 - **Frontend:** Convex static hosting
 - **Convex deployment:** https://merry-bass-190.convex.cloud
 - **Components:** @convex-dev/static-hosting
-- **Convex features:** schema, tables, indexes, queries, mutations, actions, HTTP actions, crons, scheduled functions, file storage, realtime queries
+- **Convex features:** schema, tables, indexes, queries, mutations, actions, HTTP actions, crons, scheduled functions, file storage, realtime queries, pagination
 - **Auth:** Convex Auth
 - **AI models:** gpt-5.6-terra (configured default, with a fallback ladder in `convex/integrations/openai.ts`)
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-08-26T22:20:00Z
+- **Last updated:** 2026-08-26T22:48:00Z
 
 ## Log
 
@@ -122,7 +122,7 @@ Running it live surfaced three bugs, all fixed:
   deliberately never returned to the client. It now falls back to the
   denormalised `ageYears`.
 
-### 2026-08-26 - working tree
+### 2026-08-26 - 88184b6
 Verified integrations against the live production deployment, and recorded
 exactly what is and is not proven:
 
@@ -147,3 +147,61 @@ Both unverified integrations are complete against the real APIs — no mocked
 adapters — and `setup:provisionAgentMail` will create the Concierge inbox and
 signed webhook in one call once a key exists. `GET /healthz` reports which
 integrations are live on the deployment.
+
+### 2026-08-26 - 58ba634
+Added the OG image, touch icon and submission assets, and fixed four things
+found by using the deployed app: a confirmed date hid the way to ask for
+another DateDrop; heuristic venue names kept their markdown link brackets; a
+price capture dragged surrounding prose along with it; and fallback plan notes
+read awkwardly.
+
+### 2026-08-26 - working tree
+Ran a 44-agent adversarial audit across authorization, privacy, correctness,
+integration robustness, frontend/accessibility and copy honesty — every finding
+independently verified by a separate skeptic before being accepted. 38 findings
+raised, 12 refuted, 26 confirmed. Fixed all of them.
+
+Two root causes accounted for most of the serious ones.
+
+**Identity by insertion order.** A DateDrop keeps every participant row it ever
+had, so after a replacement the oldest non-self row is the person who
+*declined*. Six call sites picked "the other person" that way: the replacement's
+invitation email described the person who passed, blocking from a drop blocked
+the wrong account (leaving the real match still matchable, with no error shown),
+reporting filed against an uninvolved user and auto-flagged their account, and
+the drop page named the wrong counterpart. All of it now routes through
+`convex/lib/participants.ts`, which resolves the counterpart by commitment.
+
+**Authorization that checked membership but not liveness.** Someone who had
+passed could cancel a confirmed date between two other people, confirm
+attendance on it, read the confirmed pair's logistics notes, receive the other
+person's photo once the drop confirmed around them, and see it as an upcoming
+date on their own dashboard.
+
+Also fixed: a replacement could be attached to an availability window another
+drop already held; a replacement run could be left `running` forever, blocking
+the user's next search for ten minutes; releasing a held evening orphaned the
+drop rather than standing it down (now atomic, and it cancels a confirmed date
+rather than letting the other person turn up alone); the reminder and age sweeps
+could never reach rows past their first page; and the client and server
+disagreed about age on a user's 18th birthday, hard-blocking a valid sign-up —
+both now use calendar arithmetic in `convex/lib/age.ts` instead of dividing by
+an averaged year.
+
+`aiRuns` rows are written before the drop document exists, so "How we built
+this" showed no model runs despite the README saying it would; provenance now
+reads them by matching run as well.
+
+Two copy claims outran the code and were corrected rather than papered over:
+pausing removes you from the candidate pool immediately, but a search already in
+flight can still deliver one final invitation, and the Safety Center and README
+now say exactly that.
+
+Frontend: budget inputs no longer snap back mid-edit, the theme toggle no longer
+freezes the system theme on a first visit, action chips no longer advertise
+themselves as toggles, and the segmented control supports arrow-key navigation
+as its `radiogroup` role promises.
+
+15 new regression tests covering the replacement flow specifically. 180 total,
+all passing. Redeployed and re-verified against production: a replacement drop
+now names the replacement, not the persona who passed.

@@ -37,7 +37,7 @@ both the AgentMail webhook and the React app itself via
 the workflow engine. Every DateDrop carries its own provenance — the pages
 Firecrawl crawled, the quote from each, and every model run — visible in the app.
 
-163 tests. Seeded with 14 clearly-marked fictional personas so a judge can see
+180 tests. Seeded with 14 clearly-marked fictional personas so a judge can see
 the whole loop in 60 seconds without recruiting a second human.
 
 Live: https://merry-bass-190.convex.site

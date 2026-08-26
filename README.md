@@ -209,7 +209,7 @@ node -e 'import("jose").then(async({generateKeyPair,exportPKCS8,exportJWK})=>{co
 Then set `JWT_PRIVATE_KEY` and `JWKS` from that file on the deployment and delete it.
 
 ```bash
-bun run test             # 163 tests
+bun run test             # 180 tests
 bun run typecheck
 bun run build
 bunx convex run demo:ensureSeeded '{}'    # seed the demo personas
@@ -295,13 +295,15 @@ src/
 
 ## Testing
 
-163 tests, `bun run test`.
+180 tests, `bun run test`.
 
 - **Unit** — hard filters (every exclusion reason and its soft counterpart), deterministic scoring bounds and ordering, lifecycle transitions including every illegal one, expiry and deadline rules, availability overlap, timezone handling across zones, and the privacy projections (including an assertion that no coordinate, DOB, email or surname can leak through).
 - **Integration** (`convex-test`) — accept, pass, withdraw, cancel, expire and complete driven as real signed-in users, plus the negative authorisation cases: a stranger can't accept your drop, a signed-out caller can't act, a non-participant sees `null`.
 - **Provider parsing** — OpenAI reasoning-item traversal, refusals, truncation, the model ladder and billing hard-stops; Firecrawl's grouped `data.web` shape, HTTP errors and network failures; the Svix verifier against real signatures, tampered bodies, replays and wrong secrets.
 
-One real bug was found by these tests and fixed: withdrawing after accepting left the drop stuck in `partially_accepted` with nobody committed.
+- **Replacement flow** — a dedicated suite for the three-participant shape a drop takes after someone passes, because that shape is where the subtle bugs live: the counterpart must be the person still on the date, and someone who has left must not be able to cancel it, read its notes, or receive the other person's photo.
+
+These tests found real bugs. Withdrawing after accepting left the drop stuck in `partially_accepted` with nobody committed. And a 44-agent adversarial audit — every finding verified by an independent skeptic — surfaced a cluster caused by picking "the other participant" by insertion order, which after a replacement is the person who declined. Both are fixed, and both are now covered.
 
 ## Hackathon
 
