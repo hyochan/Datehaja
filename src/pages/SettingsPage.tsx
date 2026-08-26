@@ -84,7 +84,7 @@ export default function SettingsPage() {
             description={
               paused
                 ? "You won't be matched with anyone and nobody will see your profile. Nothing is deleted."
-                : "Turn this off any time — it takes effect immediately, including for searches already running."
+                : "Turn this off any time. You leave everyone's candidate pool straight away; a search already in flight may still deliver one last invitation."
             }
           />
           <Toggle

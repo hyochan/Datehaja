@@ -9,6 +9,7 @@ import { assertDropTransition } from "./lib/stateMachine";
 import { coarsen } from "./lib/geo";
 import { DAY_MS, HOUR_MS } from "./lib/time";
 import { findCity, findNeighborhood } from "./lib/catalog";
+import { ageOn, dobToMs } from "./lib/age";
 import type { Gender } from "./lib/enums";
 
 /**
@@ -22,7 +23,13 @@ import type { Gender } from "./lib/enums";
  * are one.
  */
 
-const MS_PER_YEAR = 365.2425 * 24 * 60 * 60 * 1000;
+/** A birthday that lands the persona squarely at their stated age. */
+function personaDob(age: number, nowMs: number): number {
+  const now = new Date(nowMs);
+  const dob = dobToMs(now.getUTCFullYear() - age, now.getUTCMonth() + 1, 1);
+  // Guard against a first-of-month edge landing them a year young.
+  return ageOn(dob, nowMs) === age ? dob : dobToMs(now.getUTCFullYear() - age - 1, 6, 15);
+}
 
 type PersonaSpec = {
   key: string;
@@ -487,7 +494,7 @@ export const seed = internalMutation({
       await ctx.db.insert("profiles", {
         userId,
         displayName: persona.displayName,
-        dobMs: args.nowMs - persona.age * MS_PER_YEAR - 90 * DAY_MS,
+        dobMs: personaDob(persona.age, args.nowMs),
         ageYears: persona.age,
         ageConfirmed18: true,
         gender: persona.gender,

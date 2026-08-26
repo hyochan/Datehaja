@@ -121,18 +121,25 @@ export function ThemeToggle() {
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+
+  // Only a deliberate toggle is persisted. Writing on mount would freeze
+  // whatever the system happened to be on a user's first visit, and they would
+  // never follow their OS setting again.
+  function choose(next: "light" | "dark") {
+    setTheme(next);
     try {
-      localStorage.setItem("datedrop-theme", theme);
+      localStorage.setItem("datedrop-theme", next);
     } catch {
       /* private mode — the choice just won't persist */
     }
-  }, [theme]);
+  }
 
   return (
     <button
       type="button"
       aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      onClick={() => choose(theme === "dark" ? "light" : "dark")}
       className="rounded-full p-2.5 text-muted transition-colors hover:bg-[var(--bg-sunken)] hover:text-[var(--text)]"
     >
       {theme === "dark" ? <SunIcon /> : <MoonIcon />}

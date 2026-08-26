@@ -10,6 +10,7 @@ import {
   requireUserId,
 } from "./lib/authz";
 import { reportCategoryValidator } from "./lib/enums";
+import { pickCounterpart } from "./lib/participants";
 import { firstNameOnly, toPublicPreview } from "./lib/privacy";
 import { LIMITS, cleanMultiline } from "./lib/text";
 import { appUrl, sendConciergeEmail } from "./mail";
@@ -46,7 +47,9 @@ export const blockFromDrop = mutation({
       .query("dateDropParticipants")
       .withIndex("by_drop", (q) => q.eq("dropId", args.dropId))
       .take(10);
-    const other = participants.find((p) => p.userId !== userId);
+    // Insertion order would hand back whoever declined first, not the person
+    // actually on the date. Always resolve the live counterpart.
+    const other = pickCounterpart(participants, userId);
     if (!other) throw new Error("There's nobody to block on this DateDrop.");
 
     await blockUserInternal(ctx, userId, other.userId, args.reason);
@@ -169,7 +172,7 @@ export const report = mutation({
         .query("dateDropParticipants")
         .withIndex("by_drop", (q) => q.eq("dropId", args.dropId!))
         .take(10);
-      reportedUserId = participants.find((p) => p.userId !== userId)?.userId ?? null;
+      reportedUserId = pickCounterpart(participants, userId)?.userId ?? null;
     }
     if (!reportedUserId) {
       throw new Error("We need a DateDrop to attach this report to.");

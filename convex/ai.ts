@@ -540,6 +540,7 @@ export async function normaliseVenues(
   ctx: ActionCtx,
   args: {
     dropId?: Id<"dateDrops">;
+    matchingRunId?: Id<"matchingRuns">;
     city: string;
     area: string;
     sources: Array<{ url: string; title: string; content: string }>;
@@ -591,6 +592,7 @@ export async function normaliseVenues(
     model: result.model,
     endpoint: result.endpoint,
     dropId: args.dropId,
+    matchingRunId: args.matchingRunId,
     inputSummary: `Normalised ${args.sources.length} crawled pages for ${args.area}, ${args.city}`,
     outputPreview: result.outputPreview,
     promptTokens: result.promptTokens,

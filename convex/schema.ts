@@ -299,6 +299,9 @@ export default defineSchema({
     failureReason: v.optional(v.string()),
 
     isDemo: v.boolean(),
+    /** Set once reminders have been queued, so a backlog drains instead of the
+     *  sweep re-picking the same soonest batch every run. */
+    remindersQueuedAt: v.optional(v.number()),
     updatedAt: v.number(),
   })
     .index("by_status", ["status"])
@@ -509,6 +512,13 @@ export default defineSchema({
     .index("by_drop", ["dropId"])
     .index("by_actor", ["actorUserId"])
     .index("by_action", ["action"]),
+
+  /** Resume points for cron sweeps that are larger than one transaction. */
+  jobCursors: defineTable({
+    job: v.string(),
+    cursor: v.union(v.string(), v.null()),
+    updatedAt: v.number(),
+  }).index("by_job", ["job"]),
 
   /** Rate limiting for expensive user-triggered work. */
   rateLimits: defineTable({

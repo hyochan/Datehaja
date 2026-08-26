@@ -21,8 +21,16 @@ import {
   isTerminalDrop,
 } from "./lib/stateMachine";
 import { passReasonValidator } from "./lib/enums";
+import {
+  activeCounterparts,
+  canActOnDrop,
+  hasDeparted,
+  isActiveParticipant,
+  pickCounterpart,
+} from "./lib/participants";
 import { firstNameOnly, toPublicPreview, type PublicPreview } from "./lib/privacy";
 import { describeDateTime, DAY_MS } from "./lib/time";
+import { ageOn } from "./lib/age";
 import { formatMoney } from "./lib/catalog";
 import { LIMITS, clean, truncate } from "./lib/text";
 import { appUrl, sendConciergeEmail } from "./mail";
@@ -93,11 +101,14 @@ async function buildDropView(
     .take(10);
 
   const others = participants.filter((p) => p.userId !== me.userId);
-  const liveOther = others.find(
-    (p) => p.state !== "replaced" && p.state !== "passed" && p.state !== "withdrawn",
-  );
+  const liveOther = pickCounterpart(participants, me.userId);
 
-  const revealed = drop.status === "confirmed" || drop.status === "completed";
+  // Revealing is gated on the VIEWER's own state as well as the drop's.
+  // Someone who passed must never receive the photo of the person who ended up
+  // going, even once the drop confirms around them.
+  const revealed =
+    (drop.status === "confirmed" || drop.status === "completed") &&
+    (me.state === "confirmed" || me.state === "accepted");
 
   let match: PublicPreview | null = null;
   let matchPhotoUrl: string | null = null;
@@ -196,13 +207,20 @@ export const dashboard = query({
       if (!drop) continue;
       const view = await buildDropView(ctx, drop, membership);
 
+      // Whatever happened to the drop afterwards, someone who passed or
+      // withdrew is no longer part of it — it is history to them.
+      if (hasDeparted(membership.state)) {
+        history.push(view);
+        continue;
+      }
+
       if (membership.state === "invited" || membership.state === "viewed") {
         if (!isTerminalDrop(drop.status)) {
           invitations.push(view);
           continue;
         }
       }
-      if (drop.status === "confirmed") {
+      if (drop.status === "confirmed" && isActiveParticipant(membership.state)) {
         upcoming.push(view);
         continue;
       }
@@ -555,7 +573,12 @@ export const cancel = mutation({
   returns: v.null(),
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
-    await requireParticipant(ctx, args.dropId, userId);
+    const me = await requireParticipant(ctx, args.dropId, userId);
+    // Passing or withdrawing takes you off the drop. It must not leave you
+    // holding the power to cancel a date that later confirms without you.
+    if (!canActOnDrop(me.state)) {
+      throw new Error("You're not on this DateDrop any more.");
+    }
     const drop = await ctx.db.get("dateDrops", args.dropId);
     if (!drop) throw new Error("That DateDrop is gone.");
     if (isTerminalDrop(drop.status)) return null;
@@ -575,6 +598,9 @@ export const confirmAttendance = mutation({
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
     const me = await requireParticipant(ctx, args.dropId, userId);
+    if (me.state !== "confirmed") {
+      throw new Error("You're not on this DateDrop.");
+    }
     const drop = await ctx.db.get("dateDrops", args.dropId);
     if (!drop || drop.status !== "confirmed") {
       throw new Error("This date isn't confirmed.");
@@ -582,6 +608,55 @@ export const confirmAttendance = mutation({
     await ctx.db.patch("dateDropParticipants", me._id, {
       attendanceConfirmed: true,
     });
+    return null;
+  },
+});
+
+/**
+ * Withdraw someone from a drop on the system's behalf — used when they take
+ * back the evening the drop was holding. Same departure logic as `withdraw`,
+ * without requiring them to be the caller.
+ */
+export const forceWithdraw = internalMutation({
+  args: {
+    dropId: v.id("dateDrops"),
+    userId: v.id("users"),
+    reason: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const me = await ctx.db
+      .query("dateDropParticipants")
+      .withIndex("by_drop_and_user", (q) =>
+        q.eq("dropId", args.dropId).eq("userId", args.userId),
+      )
+      .unique();
+    if (!me || !isActiveParticipant(me.state)) return null;
+
+    const drop = await ctx.db.get("dateDrops", args.dropId);
+    if (!drop || isTerminalDrop(drop.status)) return null;
+
+    const now = Date.now();
+    await ctx.db.patch("dateDropParticipants", me._id, {
+      state: "withdrawn",
+      respondedAt: now,
+    });
+
+    await recordAudit(ctx, {
+      action: "drop.force_withdrawn",
+      dropId: args.dropId,
+      targetUserId: args.userId,
+      detail: truncate(args.reason, 200),
+    });
+
+    // A confirmed date can't quietly lose a participant — cancel it and tell
+    // the other person, rather than leaving them to turn up alone.
+    if (drop.status === "confirmed") {
+      await closeDrop(ctx, drop, "cancelled", now, args.reason, args.userId);
+      return null;
+    }
+
+    await resolveAfterDeparture(ctx, drop, now);
     return null;
   },
 });
@@ -678,7 +753,10 @@ export const dispatchInvitations = internalAction({
       if (participant.state !== "invited") continue;
       if (participant.emailMessageId) continue; // already invited
 
-      const other = context.participants.find((p) => p.userId !== participant.userId);
+      // After a replacement, the oldest other row is the person who PASSED.
+      // Never describe them to the new invitee.
+      const others = activeCounterparts(context.participants, participant.userId);
+      const other = others.find((p) => p.userId !== participant.userId) ?? null;
 
       await ctx.runMutation(internal.notifications.create, {
         userId: participant.userId,
@@ -998,14 +1076,19 @@ export const queueReminders = internalMutation({
           .gt("startMs", args.nowMs)
           .lte("startMs", args.nowMs + DAY_MS),
       )
-      .take(25);
+      .take(60);
 
     let queued = 0;
     for (const drop of soon) {
+      // Without this marker the sweep would re-pick the same soonest batch
+      // every run and never reach a backlog behind it.
+      if (drop.remindersQueuedAt) continue;
+      await ctx.db.patch("dateDrops", drop._id, { remindersQueuedAt: args.nowMs });
       await ctx.scheduler.runAfter(0, internal.dateDrops.sendReminders, {
         dropId: drop._id,
       });
       queued += 1;
+      if (queued >= 25) break;
     }
     return queued;
   },
@@ -1030,22 +1113,47 @@ export const expireStaleAvailability = internalMutation({
 });
 
 /** Cron: keep denormalised ages accurate so queries never read the clock. */
+/**
+ * Keep denormalised ages accurate. Paginated with a persisted cursor so the
+ * sweep covers every profile across runs instead of re-reading the first page
+ * forever once the table outgrows one batch.
+ */
 export const refreshAges = internalMutation({
   args: { nowMs: v.number() },
   returns: v.number(),
   handler: async (ctx, args) => {
-    const MS_PER_YEAR = 365.2425 * 24 * 60 * 60 * 1000;
-    const profiles = await ctx.db
+    const JOB = "refreshAges";
+    const saved = await ctx.db
+      .query("jobCursors")
+      .withIndex("by_job", (q) => q.eq("job", JOB))
+      .unique();
+
+    const page = await ctx.db
       .query("profiles")
-      .withIndex("by_status_and_city", (q) => q.eq("status", "active"))
-      .take(200);
+      .paginate({ numItems: 200, cursor: saved?.cursor ?? null });
+
     let updated = 0;
-    for (const profile of profiles) {
-      const age = Math.floor((args.nowMs - profile.dobMs) / MS_PER_YEAR);
+    for (const profile of page.page) {
+      const age = ageOn(profile.dobMs, args.nowMs);
       if (age !== profile.ageYears) {
         await ctx.db.patch("profiles", profile._id, { ageYears: age });
         updated += 1;
       }
+    }
+
+    // Restart from the top once we reach the end.
+    const nextCursor = page.isDone ? null : page.continueCursor;
+    if (saved) {
+      await ctx.db.patch("jobCursors", saved._id, {
+        cursor: nextCursor,
+        updatedAt: args.nowMs,
+      });
+    } else {
+      await ctx.db.insert("jobCursors", {
+        job: JOB,
+        cursor: nextCursor,
+        updatedAt: args.nowMs,
+      });
     }
     return updated;
   },

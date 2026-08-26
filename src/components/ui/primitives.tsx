@@ -174,6 +174,8 @@ export function Chip({
   disabled,
   size = "md",
 }: {
+  /** Omit entirely for a one-shot action chip — `aria-pressed` is only
+   *  correct on a chip that actually toggles. */
   selected?: boolean;
   onClick?: () => void;
   children: ReactNode;
@@ -181,10 +183,11 @@ export function Chip({
   size?: "sm" | "md";
 }) {
   const Tag = onClick ? "button" : "span";
+  const isToggle = onClick !== undefined && selected !== undefined;
   return (
     <Tag
       {...(onClick ? { type: "button" as const, onClick, disabled } : {})}
-      aria-pressed={onClick ? Boolean(selected) : undefined}
+      aria-pressed={isToggle ? Boolean(selected) : undefined}
       className={cx(
         "inline-flex items-center gap-1.5 rounded-full border transition-colors duration-150",
         size === "sm" ? "px-2.5 py-1 text-[12px]" : "px-3.5 py-2 text-[14px]",
@@ -364,12 +367,29 @@ export function SegmentedControl<T extends string>({
       aria-label={ariaLabel}
       className="inline-flex w-full rounded-xl border border-[var(--border-strong)] bg-[var(--bg-sunken)] p-1"
     >
-      {options.map((option) => (
+      {options.map((option, index) => (
         <button
           key={option.value}
           type="button"
           role="radio"
           aria-checked={value === option.value}
+          // A radiogroup is a single tab stop; arrows move within it.
+          tabIndex={value === option.value ? 0 : -1}
+          onKeyDown={(event) => {
+            const delta =
+              event.key === "ArrowRight" || event.key === "ArrowDown"
+                ? 1
+                : event.key === "ArrowLeft" || event.key === "ArrowUp"
+                  ? -1
+                  : 0;
+            if (delta === 0) return;
+            event.preventDefault();
+            const next = options[(index + delta + options.length) % options.length];
+            onChange(next.value);
+            const group = event.currentTarget.parentElement;
+            const buttons = group?.querySelectorAll<HTMLButtonElement>('[role="radio"]');
+            buttons?.[(index + delta + options.length) % options.length]?.focus();
+          }}
           onClick={() => onChange(option.value)}
           className={cx(
             "flex-1 rounded-lg px-3 py-2 text-[14px] font-medium transition-colors",

@@ -29,7 +29,9 @@ export const list = query({
         q.eq("dropId", args.dropId).eq("userId", userId),
       )
       .unique();
-    if (!me) return [];
+    // `send` requires a confirmed participant; reading must match, or someone
+    // who passed could watch the couple who replaced them make plans.
+    if (!me || me.state !== "confirmed") return [];
 
     const messages = await ctx.db
       .query("dateMessages")

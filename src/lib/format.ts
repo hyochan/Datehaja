@@ -1,3 +1,5 @@
+import { ageOn, parseDobString } from "@convex/lib/age";
+
 /** Display helpers. All times render in the viewer's own timezone. */
 
 export function localTimezone(): string {
@@ -151,15 +153,17 @@ export function fromDateAndTime(
   return naive - zoneOffsetMs(firstPass, zone);
 }
 
+/**
+ * Age and DOB both come from convex/lib/age.ts, so the client can never
+ * disagree with the server about whether someone is 18 — which would show a
+ * valid adult a "you must be 18" error on their birthday.
+ */
 export function ageFromDateString(value: string, nowMs = Date.now()): number | null {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
-  const [year, month, day] = value.split("-").map(Number);
-  const dob = new Date(year, month - 1, day).getTime();
-  if (Number.isNaN(dob)) return null;
-  return Math.floor((nowMs - dob) / (365.2425 * 24 * 60 * 60 * 1000));
+  const dobMs = parseDobString(value);
+  if (dobMs === null) return null;
+  return ageOn(dobMs, nowMs);
 }
 
 export function dobStringToMs(value: string): number {
-  const [year, month, day] = value.split("-").map(Number);
-  return new Date(year, month - 1, day, 12, 0, 0, 0).getTime();
+  return parseDobString(value) ?? Number.NaN;
 }

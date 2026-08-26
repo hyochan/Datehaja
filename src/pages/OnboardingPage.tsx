@@ -117,8 +117,10 @@ export default function OnboardingPage() {
     "either",
   );
   const [atmosphere, setAtmosphere] = useState<"quiet" | "lively" | "either">("either");
-  const [budgetMin, setBudgetMin] = useState(0);
-  const [budgetMax, setBudgetMax] = useState(0);
+  // null means "not chosen yet". Using 0 as the sentinel made the controlled
+  // input snap back to the default the moment someone cleared the field.
+  const [budgetMin, setBudgetMin] = useState<number | null>(null);
+  const [budgetMax, setBudgetMax] = useState<number | null>(null);
   const [budgetHard, setBudgetHard] = useState(false);
   const [dietary, setDietary] = useState<string[]>([]);
   const [accessibility, setAccessibility] = useState<string[]>([]);
@@ -183,8 +185,8 @@ export default function OnboardingPage() {
       | null
       | undefined;
     if (prefs) {
-      setBudgetMin(prefs.budgetMinPerPerson ?? 0);
-      setBudgetMax(prefs.budgetMaxPerPerson ?? 0);
+      setBudgetMin(prefs.budgetMinPerPerson ?? null);
+      setBudgetMax(prefs.budgetMaxPerPerson ?? null);
       setDateTypes(prefs.preferredDateTypes ?? ["coffee", "dinner"]);
     }
     setStep(Math.max(0, Math.min(5, (profile?.onboardingStep ?? 1) - 1)));
@@ -198,8 +200,8 @@ export default function OnboardingPage() {
     );
   }
 
-  const effectiveBudgetMin = budgetMin || Math.round(band.min * 2);
-  const effectiveBudgetMax = budgetMax || Math.round(band.max / 2.2);
+  const effectiveBudgetMin = budgetMin ?? Math.round(band.min * 2);
+  const effectiveBudgetMax = budgetMax ?? Math.round(band.max / 2.2);
 
   async function guard(action: () => Promise<void>) {
     setError(null);
@@ -442,8 +444,8 @@ export default function OnboardingPage() {
                     SUPPORTED_CITIES[0];
                   setCityKey(nextCity.key);
                   setNeighborhood(nextCity.neighborhoods[0].name);
-                  setBudgetMin(0);
-                  setBudgetMax(0);
+                  setBudgetMin(null);
+                  setBudgetMax(null);
                 }}
               >
                 {SUPPORTED_CITIES.map((option) => (
@@ -775,7 +777,9 @@ export default function OnboardingPage() {
                   step={band.step}
                   value={effectiveBudgetMin}
                   aria-label="Minimum budget"
-                  onChange={(e) => setBudgetMin(Number(e.target.value))}
+                  onChange={(e) =>
+                    setBudgetMin(e.target.value === "" ? null : Number(e.target.value))
+                  }
                 />
                 <span className="text-muted">to</span>
                 <TextInput
@@ -784,7 +788,9 @@ export default function OnboardingPage() {
                   step={band.step}
                   value={effectiveBudgetMax}
                   aria-label="Maximum budget"
-                  onChange={(e) => setBudgetMax(Number(e.target.value))}
+                  onChange={(e) =>
+                    setBudgetMax(e.target.value === "" ? null : Number(e.target.value))
+                  }
                 />
               </div>
               <HardToggle

@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { internal } from "./_generated/api";
 import { availabilityStatusValidator } from "./lib/enums";
 import {
   currentUserId,
@@ -129,11 +130,29 @@ export const remove = mutation({
       );
     }
     if (window.status === "held") {
-      // A DateDrop is mid-flight on this window; releasing it is fine, the
-      // orchestrator will find the window gone and stand the drop down.
+      // A DateDrop is mid-flight on this window. Releasing it silently would
+      // leave that drop pointing at an evening the user has taken back, so
+      // withdraw them from it properly and let the normal departure logic
+      // decide whether to look for a replacement or close the drop.
+      const dropId = window.heldByDropId;
       await ctx.db.patch("availability", window._id, {
         status: "cancelled",
         heldByDropId: undefined,
+      });
+      // Same transaction, not scheduled: releasing the evening and leaving the
+      // drop must never be able to come apart.
+      if (dropId) {
+        await ctx.runMutation(internal.dateDrops.forceWithdraw, {
+          dropId,
+          userId,
+          reason: "They took that evening back.",
+        });
+      }
+      await recordAudit(ctx, {
+        action: "availability.released_held",
+        actorUserId: userId,
+        dropId,
+        detail: new Date(window.startMs).toISOString(),
       });
       return null;
     }

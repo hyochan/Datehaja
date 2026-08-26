@@ -34,12 +34,7 @@ import {
 import { coarsen } from "./lib/geo";
 import { containsContactInfo, redactContactInfo } from "./lib/privacy";
 import { LIMITS, clean, cleanMultiline, pickFrom } from "./lib/text";
-
-const MS_PER_YEAR = 365.2425 * 24 * 60 * 60 * 1000;
-
-export function ageFromDob(dobMs: number, nowMs: number): number {
-  return Math.floor((nowMs - dobMs) / MS_PER_YEAR);
-}
+import { MAX_AGE, MIN_AGE, ageOn } from "./lib/age";
 
 /* ------------------------------- queries -------------------------------- */
 
@@ -114,9 +109,6 @@ export const onboardingState = query({
 
 /* ------------------------------ mutations ------------------------------- */
 
-const MIN_AGE = 18;
-const MAX_AGE = 120;
-
 export const saveBasics = mutation({
   args: {
     displayName: v.string(),
@@ -143,7 +135,7 @@ export const saveBasics = mutation({
       throw new Error("Please use a name, not a contact handle.");
     }
 
-    const age = ageFromDob(args.dobMs, now);
+    const age = ageOn(args.dobMs, now);
     if (!Number.isFinite(args.dobMs) || age < MIN_AGE) {
       throw new Error("You must be 18 or over to use DateDrop.");
     }

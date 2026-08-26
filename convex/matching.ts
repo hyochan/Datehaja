@@ -823,6 +823,7 @@ async function planDate(
 
   const research = await researchDateOptions(ctx, {
     dropId: args.dropId,
+    matchingRunId: args.matchingRunId,
     countryCode: seeker.profile.countryCode,
     query: {
       city: seeker.profile.city,
@@ -1423,17 +1424,31 @@ export const runReplacementPipeline = internalAction({
         ranked.find((r) => r.candidateScoreId === best.candidateScoreId)?.rationale ??
         context.drop.whyItFits;
 
-      await ctx.runMutation(internal.matching.addReplacementParticipant, {
-        dropId: args.dropId,
-        matchingRunId,
-        userId: best.userId,
-        candidateScoreId: best.candidateScoreId,
-        privateWhyItFits: rationale,
-        compatibilityBlurb: context.drop.whyItFits,
-        availabilityId: chosen?.party.availabilityId as
-          | Id<"availability">
-          | undefined,
-      });
+      const added = (await ctx.runMutation(
+        internal.matching.addReplacementParticipant,
+        {
+          dropId: args.dropId,
+          matchingRunId,
+          userId: best.userId,
+          candidateScoreId: best.candidateScoreId,
+          privateWhyItFits: rationale,
+          compatibilityBlurb: context.drop.whyItFits,
+          availabilityId: chosen?.party.availabilityId as
+            | Id<"availability">
+            | undefined,
+        },
+      )) as boolean;
+
+      // The drop may have confirmed or been cancelled while we were planning.
+      // Close the run out either way — a run left "running" blocks the user's
+      // next search for ten minutes.
+      if (!added) {
+        await ctx.runMutation(internal.matching.finishReplacementRun, {
+          matchingRunId,
+          status: "no_candidates",
+        });
+        return null;
+      }
 
       await ctx.scheduler.runAfter(0, internal.dateDrops.dispatchInvitations, {
         dropId: args.dropId,
@@ -1521,10 +1536,10 @@ export const addReplacementParticipant = internalMutation({
     compatibilityBlurb: v.string(),
     availabilityId: v.optional(v.id("availability")),
   },
-  returns: v.null(),
+  returns: v.boolean(),
   handler: async (ctx, args) => {
     const drop = await ctx.db.get("dateDrops", args.dropId);
-    if (!drop || drop.status !== "partially_accepted") return null;
+    if (!drop || drop.status !== "partially_accepted") return false;
 
     const existing = await ctx.db
       .query("dateDropParticipants")
@@ -1532,7 +1547,19 @@ export const addReplacementParticipant = internalMutation({
         q.eq("dropId", args.dropId).eq("userId", args.userId),
       )
       .unique();
-    if (existing) return null;
+    if (existing) return false;
+
+    // Only claim a window that is genuinely still free. If another drop grabbed
+    // it while we were planning, invite without a hold rather than pointing at
+    // someone else's booking — releasing that later would free the wrong drop.
+    let heldWindowId: Id<"availability"> | undefined;
+    if (args.availabilityId) {
+      const window = await ctx.db.get("availability", args.availabilityId);
+      if (!window || window.userId !== args.userId || window.status !== "open") {
+        return false;
+      }
+      heldWindowId = window._id;
+    }
 
     const now = Date.now();
     await ctx.db.insert("dateDropParticipants", {
@@ -1543,18 +1570,15 @@ export const addReplacementParticipant = internalMutation({
       privateWhyItFits: args.privateWhyItFits,
       compatibilityBlurb: args.compatibilityBlurb,
       candidateScoreId: args.candidateScoreId,
-      availabilityId: args.availabilityId,
+      availabilityId: heldWindowId,
       invitedAt: now,
     });
 
-    if (args.availabilityId) {
-      const window = await ctx.db.get("availability", args.availabilityId);
-      if (window && window.status === "open") {
-        await ctx.db.patch("availability", window._id, {
-          status: "held",
-          heldByDropId: args.dropId,
-        });
-      }
+    if (heldWindowId) {
+      await ctx.db.patch("availability", heldWindowId, {
+        status: "held",
+        heldByDropId: args.dropId,
+      });
     }
 
     await ctx.db.patch("candidateScores", args.candidateScoreId, {
@@ -1574,7 +1598,7 @@ export const addReplacementParticipant = internalMutation({
       targetUserId: args.userId,
       detail: `Attempt ${drop.candidateAttempts}`,
     });
-    return null;
+    return true;
   },
 });
 
@@ -1613,10 +1637,27 @@ export const dropProvenance = query({
           )
           .take(20)
       : [];
-    const aiRuns = await ctx.db
+    // Ranking, extraction and planning all run BEFORE the drop document
+    // exists, so those rows carry the matchingRunId rather than a dropId.
+    // Read both, or the panel is always empty and the README's claim is false.
+    const byDrop = await ctx.db
       .query("aiRuns")
       .withIndex("by_drop", (q) => q.eq("dropId", args.dropId))
       .take(10);
+    const byRun = drop.matchingRunId
+      ? await ctx.db
+          .query("aiRuns")
+          .withIndex("by_matching_run", (q) =>
+            q.eq("matchingRunId", drop.matchingRunId),
+          )
+          .take(10)
+      : [];
+    const seenRunIds = new Set<string>();
+    const aiRuns = [...byDrop, ...byRun].filter((run) => {
+      if (seenRunIds.has(run._id)) return false;
+      seenRunIds.add(run._id);
+      return true;
+    });
 
     return {
       research: research

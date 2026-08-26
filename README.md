@@ -171,7 +171,7 @@ On safety:
 - **DateDrop does not verify identity.** No ID checks, no photo verification, no background checks. The app says this plainly on the landing page, at sign-up, and in the Safety Center, because a product that implies safety it hasn't earned is more dangerous than one that's honest.
 - **Blocking is mutual, immediate and permanent** until undone: it cancels any shared DateDrop, frees both evenings, and removes the pair from each other's candidate pool in both directions.
 - **Reports of harassment or of an apparent minor immediately restrict the reported account** pending review.
-- **One switch pauses DateDrops entirely**, including searches already running.
+- **One switch takes you out of everyone's candidate pool immediately.** A search already in flight may still deliver one final invitation; nothing follows it.
 - Every date is at a real, public, currently-operating venue. DateDrop never plans anything at a private address.
 
 ## Demo mode

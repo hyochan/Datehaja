@@ -55,7 +55,7 @@ export default function SafetyPage() {
           />
           <Item
             title="You can stop instantly"
-            body="One switch in Settings pauses DateDrops entirely — including searches already running. Nothing is deleted."
+            body="One switch in Settings takes you out of everyone's candidate pool immediately, so no new DateDrop can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted."
           />
           <Item
             title="Blocking is mutual and permanent"

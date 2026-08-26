@@ -209,6 +209,7 @@ export async function researchDateOptions(
   ctx: ActionCtx,
   args: {
     dropId?: Id<"dateDrops">;
+    matchingRunId?: Id<"matchingRuns">;
     requestedByUserId?: Id<"users">;
     countryCode: string;
     query: ResearchQuery;
@@ -315,6 +316,7 @@ export async function researchDateOptions(
   if (hasOpenAI()) {
     const result = await normaliseVenues(ctx, {
       dropId: args.dropId,
+      matchingRunId: args.matchingRunId,
       city: args.query.city,
       area: args.query.area,
       sources: sources.slice(0, 8),
