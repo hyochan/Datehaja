@@ -1,0 +1,223 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/*  DateDrop design system                                            */
+/*  Warm editorial. Calm, premium, intentional. Not a swipe app.      */
+/* ------------------------------------------------------------------ */
+
+@theme {
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Warm neutral ramp */
+  --color-sand-50: #fcfaf7;
+  --color-sand-100: #f6f1ea;
+  --color-sand-200: #ece4d9;
+  --color-sand-300: #ddd1c2;
+  --color-sand-400: #bcae9c;
+  --color-sand-500: #948674;
+
+  /* Ink (plum-black) ramp */
+  --color-ink-400: #7a7183;
+  --color-ink-500: #5b5266;
+  --color-ink-600: #423a4d;
+  --color-ink-700: #2e2638;
+  --color-ink-800: #211b28;
+  --color-ink-900: #16121b;
+  --color-ink-950: #0f0c13;
+
+  /* Signature ember */
+  --color-ember-50: #fdf3ef;
+  --color-ember-100: #fae2d9;
+  --color-ember-200: #f4c2b0;
+  --color-ember-300: #ec9a7e;
+  --color-ember-400: #e2703f;
+  --color-ember-500: #d4552b;
+  --color-ember-600: #b44322;
+  --color-ember-700: #90351c;
+
+  /* Sage — confirmations, success */
+  --color-sage-100: #e2ede7;
+  --color-sage-300: #9dc2b1;
+  --color-sage-500: #46705f;
+  --color-sage-600: #375a4c;
+
+  /* Dusk — informational / AI states */
+  --color-dusk-100: #e6e3f5;
+  --color-dusk-300: #b0a7e0;
+  --color-dusk-500: #6558b8;
+  --color-dusk-600: #52479a;
+
+  --radius-card: 1.25rem;
+
+  --shadow-soft: 0 1px 2px rgb(22 18 27 / 0.04), 0 8px 24px -12px rgb(22 18 27 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(22 18 27 / 0.05), 0 20px 44px -20px rgb(22 18 27 / 0.22);
+
+  --animate-drop-in: drop-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-up: fade-up 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-pulse-soft: pulse-soft 2.4s ease-in-out infinite;
+  --animate-sheen: sheen 2.2s linear infinite;
+}
+
+@keyframes drop-in {
+  from { opacity: 0; transform: translateY(-10px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.45; }
+  50%      { opacity: 1; }
+}
+@keyframes sheen {
+  from { background-position: -160% 0; }
+  to   { background-position: 260% 0; }
+}
+
+/* ---------------------------- base ---------------------------- */
+
+@layer base {
+  :root {
+    --bg: var(--color-sand-50);
+    --bg-raised: #ffffff;
+    --bg-sunken: var(--color-sand-100);
+    --border: var(--color-sand-200);
+    --border-strong: var(--color-sand-300);
+    --text: var(--color-ink-900);
+    --text-muted: var(--color-ink-400);
+    --text-soft: var(--color-ink-500);
+
+    /* Semantic tints. Defined once per theme so an accent surface is never
+       light-on-light in dark mode. */
+    --tint-ember-bg: #fdf3ef;
+    --tint-ember-fg: #90351c;
+    --tint-ember-strong: #b44322;
+    --tint-ember-border: #f4c2b0;
+    --accent-text: #d4552b;
+
+    --tint-sage-bg: #e2ede7;
+    --tint-sage-fg: #375a4c;
+    --tint-sage-border: #9dc2b1;
+
+    --tint-dusk-bg: #e6e3f5;
+    --tint-dusk-fg: #52479a;
+    --tint-dusk-border: #b0a7e0;
+
+    --tint-warn-bg: #fdf6e7;
+    --tint-warn-fg: #8a5a12;
+    --tint-warn-border: #ecd9ae;
+
+    color-scheme: light;
+  }
+
+  html[data-theme="dark"] {
+    --bg: #100d14;
+    --bg-raised: #1a151f;
+    --bg-sunken: #171320;
+    --border: #2a2333;
+    --border-strong: #3a3145;
+    --text: #f5f1ec;
+    --text-muted: #9c92a8;
+    --text-soft: #b8afc2;
+
+    --tint-ember-bg: #2b1a16;
+    --tint-ember-fg: #ec9a7e;
+    --tint-ember-strong: #ec9a7e;
+    --tint-ember-border: #4d281d;
+    --accent-text: #ec9a7e;
+
+    --tint-sage-bg: #17241f;
+    --tint-sage-fg: #9dc2b1;
+    --tint-sage-border: #2c473c;
+
+    --tint-dusk-bg: #1e1b30;
+    --tint-dusk-fg: #b0a7e0;
+    --tint-dusk-border: #34305a;
+
+    --tint-warn-bg: #2a2113;
+    --tint-warn-fg: #e3bd77;
+    --tint-warn-border: #4a3a1c;
+
+    color-scheme: dark;
+  }
+
+  * { border-color: var(--border); }
+
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    min-height: 100dvh;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    font-variation-settings: "SOFT" 20, "WONK" 0, "opsz" 40;
+  }
+
+  ::selection { background: var(--color-ember-200); color: var(--color-ink-900); }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ember-400);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  input, textarea, select, button { font: inherit; color: inherit; }
+
+  input::placeholder, textarea::placeholder { color: var(--text-muted); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* --------------------------- utilities --------------------------- */
+
+@utility surface {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft);
+}
+
+@utility text-muted { color: var(--text-muted); }
+@utility text-soft  { color: var(--text-soft); }
+
+@utility grain {
+  position: relative;
+}
+
+@utility skeleton {
+  background-image: linear-gradient(
+    100deg,
+    var(--bg-sunken) 30%,
+    color-mix(in oklab, var(--bg-sunken) 55%, var(--bg-raised)) 50%,
+    var(--bg-sunken) 70%
+  );
+  background-size: 220% 100%;
+  animation: var(--animate-sheen);
+  border-radius: 0.5rem;
+}
+
+/* Hide scrollbar but keep scrolling (used for chip rows) */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar { display: none; }
+}
