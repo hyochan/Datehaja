@@ -36,8 +36,10 @@ const ADDRESS_RE =
   /(\d+[^\n,]{0,40}(?:-ro|-gil|-dong|-gu|street|st\.|road|rd\.|avenue|ave\.|lane|ln\.|square|boulevard|blvd)\b[^\n]{0,60})/i;
 const HOURS_RE =
   /((?:mon|tue|wed|thu|fri|sat|sun|daily|open)[^\n]{0,80}?\d{1,2}(?::\d{2})?\s*(?:am|pm|:00)[^\n]{0,40})/i;
+/** Just the amount, or an amount range. Nothing after it — prose that follows
+ *  a price on a crawled page is almost never about the price. */
 const PRICE_RE =
-  /((?:[₩$€£¥]|krw|usd|eur|gbp|jpy)\s?[\d,]{2,9}(?:\s?[–\-~]\s?(?:[₩$€£¥])?[\d,]{2,9})?[^\n]{0,30})/i;
+  /((?:[₩$€£¥]|KRW|USD|EUR|GBP|JPY)\s?[\d][\d,]{1,8}(?:\s?[–\-~]\s?(?:[₩$€£¥])?[\d][\d,]{1,8})?)/;
 
 const STOPWORD_TITLES =
   /\b(best|top \d+|guide|things to do|where to|itinerary|list|blog|reddit|review|map|menu|near me|content|ahead|warning|caution|disclaimer|subscribe|newsletter|share this|read more|related|comments?|advertisement|sponsored|faq|conclusion|introduction|table of contents)\b/i;
@@ -65,6 +67,15 @@ function looksLikeVenueName(name: string): boolean {
     return false;
   }
   return true;
+}
+
+/** A price is only useful if it survived as a bare amount. */
+function cleanPrice(raw: string | undefined): string | null {
+  if (!raw) return null;
+  const value = raw.trim().replace(/\s+/g, " ");
+  if (value.length > 32) return null;
+  if (/[*_`()\[\]]/.test(value)) return null;
+  return value;
 }
 
 function classify(text: string): string {
@@ -132,7 +143,7 @@ export function extractVenues(
       address: window.match(ADDRESS_RE)?.[1]?.trim().slice(0, 160) ?? "",
       district: area,
       openingHours: window.match(HOURS_RE)?.[1]?.trim().slice(0, 140) ?? null,
-      approximatePrice: window.match(PRICE_RE)?.[1]?.trim().slice(0, 70) ?? null,
+      approximatePrice: cleanPrice(window.match(PRICE_RE)?.[1]),
       evidence,
       tags: ["extracted-without-model"],
       // Deliberately never above "low": nothing here was verified by anything
@@ -154,8 +165,7 @@ export function extractVenues(
           address: source.content.match(ADDRESS_RE)?.[1]?.trim().slice(0, 160) ?? "",
           district: area,
           openingHours: source.content.match(HOURS_RE)?.[1]?.trim().slice(0, 140) ?? null,
-          approximatePrice:
-            source.content.match(PRICE_RE)?.[1]?.trim().slice(0, 70) ?? null,
+          approximatePrice: cleanPrice(source.content.match(PRICE_RE)?.[1]),
           evidence,
           tags: ["extracted-without-model", "single-page"],
           confidence: "low",

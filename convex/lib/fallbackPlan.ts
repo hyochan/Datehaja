@@ -194,11 +194,24 @@ export function buildFallbackPlan(input: FallbackInput): FallbackPlan | null {
   };
 }
 
+/** Reads naturally in a sentence: "somewhere for coffee in Seongsu." */
+const CATEGORY_PHRASE: Record<string, string> = {
+  restaurant: "somewhere to eat",
+  cafe: "somewhere for coffee",
+  dessert: "somewhere for dessert",
+  bar: "somewhere for a drink",
+  exhibition: "something to look at",
+  park: "somewhere to walk",
+  live_music: "somewhere with live music",
+  activity: "something to do",
+  other: "a spot",
+};
+
 function noteFor(venue: FallbackVenue, input: FallbackInput): string {
   const overlap = intersect(venue.tags, input.sharedInterests);
   if (overlap.length > 0) return `Picked for the ${overlap[0].toLowerCase()} connection.`;
   if (venue.approximatePrice) return `Around ${venue.approximatePrice} per person.`;
-  return `A ${CATEGORY_LABEL[venue.category] ?? "spot"} in ${venue.district}.`;
+  return `${capitalise(CATEGORY_PHRASE[venue.category] ?? "a spot")} in ${venue.district}.`;
 }
 
 function capitalise(value: string): string {

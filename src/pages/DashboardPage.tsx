@@ -47,6 +47,12 @@ export default function DashboardPage() {
   const invitations = (board?.invitations ?? []) as DropSummary[];
   const upcoming = (board?.upcoming ?? []) as DropSummary[];
   const waiting = (board?.waiting ?? []) as DropSummary[];
+  // The hero slot already offers the search when there's nothing else to show.
+  const showingIdleCta =
+    board !== undefined &&
+    invitations.length === 0 &&
+    !searching &&
+    upcoming.length === 0;
 
   return (
     <div className="space-y-10">
@@ -153,6 +159,21 @@ export default function DashboardPage() {
             </Link>
           }
         />
+        {/* You can always ask for another DateDrop, even with one confirmed —
+            as long as you have an evening free and nothing is already running. */}
+        {openWindows.length > 0 && !searching && !showingIdleCta && (
+          <div className="mb-4 flex flex-wrap items-center gap-3 rounded-card border border-[var(--border)] bg-[var(--bg-sunken)] px-4 py-3.5">
+            <p className="min-w-0 flex-1 text-[14.5px] text-soft">
+              {openWindows.length === 1
+                ? "You've still got an evening open."
+                : `You've still got ${openWindows.length} evenings open.`}{" "}
+              Want another DateDrop?
+            </p>
+            <Button onClick={findMeADate} loading={busy} size="sm">
+              Find me a date
+            </Button>
+          </div>
+        )}
         {windows === undefined ? (
           <Skeleton className="h-20 w-full rounded-card" />
         ) : openWindows.length === 0 ? (

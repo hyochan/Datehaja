@@ -325,6 +325,24 @@ describe("venue extraction without a model", () => {
     expect(sedici?.address).toMatch(/Seongsui-ro/);
   });
 
+  it("drops a price capture that dragged prose along with it", () => {
+    const messy = {
+      url: "https://x.test",
+      title: "Cafe list",
+      content: [
+        "## Soha Salt Pond",
+        "A calm room with good light and better filter coffee, honestly one of",
+        "the nicer ones. Around ₩3,000)**, and I totally get it – ** per person.",
+      ].join("\n"),
+    };
+    const venue = extractVenues(messy, "Seongsu")[0];
+    expect(venue).toBeDefined();
+    // Better to say nothing than to quote mangled markdown as a price.
+    expect(venue.approximatePrice === null || /^[₩$€£¥][\d,]+$/.test(venue.approximatePrice)).toBe(
+      true,
+    );
+  });
+
   it("never claims more than low confidence", () => {
     for (const venue of extractVenues(page, "Seongsu")) {
       expect(venue.confidence).toBe("low");
