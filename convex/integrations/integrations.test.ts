@@ -1,0 +1,438 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { modelCandidates, structured } from "./openai";
+import { search, scrape } from "./firecrawl";
+import { parseAddress } from "./agentmail";
+import { extractVenues } from "../lib/venueHeuristics";
+import { buildFallbackPlan } from "../lib/fallbackPlan";
+
+const originalFetch = globalThis.fetch;
+const originalEnv = { ...process.env };
+
+function mockFetch(handler: (url: string, init?: RequestInit) => Response) {
+  globalThis.fetch = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) =>
+    handler(String(input), init),
+  ) as unknown as typeof fetch;
+}
+
+function json(body: unknown, status = 200, headers: Record<string, string> = {}) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json", ...headers },
+  });
+}
+
+beforeEach(() => {
+  process.env.OPENAI_API_KEY = "sk-test";
+  delete process.env.OPENAI_MODEL;
+  delete process.env.FIRECRAWL_API_KEY;
+});
+
+afterEach(() => {
+  globalThis.fetch = originalFetch;
+  process.env = { ...originalEnv };
+  vi.restoreAllMocks();
+});
+
+/* --------------------------------- OpenAI --------------------------------- */
+
+describe("OpenAI structured output", () => {
+  it("walks past reasoning items to find the message content", async () => {
+    mockFetch(() =>
+      json({
+        status: "completed",
+        output: [
+          { type: "reasoning", content: [] },
+          {
+            type: "message",
+            content: [{ type: "output_text", text: '{"ok":true,"n":3}' }],
+          },
+        ],
+        usage: { input_tokens: 10, output_tokens: 5, total_tokens: 15 },
+      }),
+    );
+
+    const result = await structured<{ ok: boolean; n: number }>({
+      instructions: "x",
+      input: "y",
+      schemaName: "s",
+      schema: { type: "object", properties: {}, required: [], additionalProperties: false },
+    });
+
+    expect(result.ok).toBe(true);
+    expect(result.data).toEqual({ ok: true, n: 3 });
+    expect(result.totalTokens).toBe(15);
+  });
+
+  it("surfaces a refusal instead of trying to parse it", async () => {
+    mockFetch(() =>
+      json({
+        status: "completed",
+        output: [
+          { type: "message", content: [{ type: "refusal", refusal: "I can't help." }] },
+        ],
+      }),
+    );
+    const result = await structured({
+      instructions: "x",
+      input: "y",
+      schemaName: "s",
+      schema: {},
+    });
+    expect(result.ok).toBe(false);
+    expect(result.error).toMatch(/refusal/i);
+  });
+
+  it("does not parse a truncated response", async () => {
+    mockFetch(() =>
+      json({
+        status: "incomplete",
+        incomplete_details: { reason: "max_output_tokens" },
+        output: [{ type: "message", content: [{ type: "output_text", text: '{"a":' }] }],
+      }),
+    );
+    const result = await structured({
+      instructions: "x",
+      input: "y",
+      schemaName: "s",
+      schema: {},
+    });
+    expect(result.ok).toBe(false);
+    expect(result.error).toMatch(/truncated/i);
+  });
+
+  it("falls through the model ladder on model_not_found", async () => {
+    const seen: string[] = [];
+    mockFetch((_url, init) => {
+      const body = JSON.parse(String(init?.body)) as { model: string };
+      seen.push(body.model);
+      if (seen.length < 2) {
+        return json({ error: { code: "model_not_found", message: "nope" } }, 404);
+      }
+      return json({
+        status: "completed",
+        output: [{ type: "message", content: [{ type: "output_text", text: "{}" }] }],
+      });
+    });
+
+    const result = await structured({
+      instructions: "x",
+      input: "y",
+      schemaName: "s",
+      schema: {},
+    });
+    expect(result.ok).toBe(true);
+    expect(seen.length).toBeGreaterThanOrEqual(2);
+    expect(seen[0]).not.toBe(seen[1]);
+  });
+
+  it("stops immediately on a billing failure rather than burning the ladder", async () => {
+    let calls = 0;
+    mockFetch(() => {
+      calls += 1;
+      return json(
+        { error: { code: "credit_balance_exhausted", message: "no credit" } },
+        429,
+      );
+    });
+    const result = await structured({
+      instructions: "x",
+      input: "y",
+      schemaName: "s",
+      schema: {},
+    });
+    expect(result.ok).toBe(false);
+    expect(calls).toBe(1);
+  });
+
+  it("reports missing configuration without calling out", async () => {
+    delete process.env.OPENAI_API_KEY;
+    const calls = vi.fn();
+    globalThis.fetch = calls as unknown as typeof fetch;
+    const result = await structured({
+      instructions: "x",
+      input: "y",
+      schemaName: "s",
+      schema: {},
+    });
+    expect(result.ok).toBe(false);
+    expect(result.error).toMatch(/OPENAI_API_KEY/);
+    expect(calls).not.toHaveBeenCalled();
+  });
+
+  it("puts the configured model at the head of the ladder", () => {
+    process.env.OPENAI_MODEL = "gpt-custom";
+    const ladder = modelCandidates();
+    expect(ladder[0]).toBe("gpt-custom");
+    expect(new Set(ladder).size).toBe(ladder.length);
+  });
+
+  it("sends the strict json_schema in the Responses shape", async () => {
+    let sent: Record<string, unknown> = {};
+    mockFetch((_url, init) => {
+      sent = JSON.parse(String(init?.body));
+      return json({
+        status: "completed",
+        output: [{ type: "message", content: [{ type: "output_text", text: "{}" }] }],
+      });
+    });
+    await structured({
+      instructions: "x",
+      input: "y",
+      schemaName: "my_schema",
+      schema: { type: "object" },
+    });
+    const text = sent.text as { format: Record<string, unknown> };
+    expect(text.format.type).toBe("json_schema");
+    expect(text.format.name).toBe("my_schema");
+    expect(text.format.strict).toBe(true);
+  });
+});
+
+/* -------------------------------- Firecrawl -------------------------------- */
+
+describe("Firecrawl normalisation", () => {
+  it("reads results out of the grouped data.web shape", async () => {
+    mockFetch(() =>
+      json({
+        success: true,
+        data: {
+          web: [
+            { url: "https://a.test", title: "A", description: "d", position: 1 },
+            { url: "https://b.test", title: "B", position: 2, markdown: "# B" },
+          ],
+        },
+        creditsUsed: 2,
+      }),
+    );
+
+    const { hits, log } = await search("q");
+    expect(hits).toHaveLength(2);
+    expect(hits[1].markdown).toBe("# B");
+    expect(log.httpStatus).toBe(200);
+    expect(log.resultCount).toBe(2);
+  });
+
+  it("never throws on an HTTP error — it reports it", async () => {
+    mockFetch(() => new Response("rate limited", { status: 429 }));
+    const { hits, log } = await search("q");
+    expect(hits).toEqual([]);
+    expect(log.httpStatus).toBe(429);
+    expect(log.error).toContain("rate limited");
+  });
+
+  it("never throws on a network failure", async () => {
+    globalThis.fetch = vi.fn(async () => {
+      throw new Error("ECONNRESET");
+    }) as unknown as typeof fetch;
+    const { hits, log } = await search("q");
+    expect(hits).toEqual([]);
+    expect(log.httpStatus).toBe(0);
+    expect(log.error).toContain("ECONNRESET");
+  });
+
+  it("omits the Authorization header entirely when running keyless", async () => {
+    let headers: Record<string, string> = {};
+    mockFetch((_url, init) => {
+      headers = (init?.headers ?? {}) as Record<string, string>;
+      return json({ success: true, data: { web: [] } });
+    });
+    await search("q");
+    expect(headers.Authorization).toBeUndefined();
+
+    process.env.FIRECRAWL_API_KEY = "fc-test";
+    await search("q");
+    expect(headers.Authorization).toBe("Bearer fc-test");
+  });
+
+  it("tolerates a result row with no url", async () => {
+    mockFetch(() =>
+      json({ success: true, data: { web: [{ title: "no url" }, { url: "https://ok.test" }] } }),
+    );
+    const { hits } = await search("q");
+    expect(hits).toHaveLength(1);
+    expect(hits[0].url).toBe("https://ok.test");
+  });
+
+  it("extracts markdown and json from a scrape", async () => {
+    mockFetch(() =>
+      json({
+        success: true,
+        data: {
+          markdown: "# Example",
+          json: { title: "Example" },
+          metadata: { title: "Example Domain", statusCode: 200 },
+        },
+      }),
+    );
+    const result = await scrape("https://example.com");
+    expect(result.markdown).toBe("# Example");
+    expect(result.title).toBe("Example Domain");
+    expect(result.json).toEqual({ title: "Example" });
+  });
+});
+
+/* ------------------------------- AgentMail --------------------------------- */
+
+describe("AgentMail helpers", () => {
+  it("pulls a bare address out of a display-name header", () => {
+    expect(parseAddress("Jane Doe <jane@example.com>")).toBe("jane@example.com");
+    expect(parseAddress("  JANE@example.com ")).toBe("jane@example.com");
+  });
+});
+
+/* --------------------------- deterministic fallbacks ----------------------- */
+
+describe("venue extraction without a model", () => {
+  const page = {
+    url: "https://guide.test/seongsu",
+    title: "The 20 Best Italian Restaurants near Seongsu",
+    content: [
+      "# The 20 Best Italian Restaurants near Seongsu",
+      "",
+      "## Sediciseoul",
+      "A small trattoria with an open kitchen. Handmade pasta and a short wine list.",
+      "Open Tue–Sun 17:00–23:00. ₩25,000–40,000 per person.",
+      "12 Seongsui-ro, Seongdong-gu",
+      "",
+      "## CAUTION: DROOL-WORTHY CONTENT AHEAD!",
+      "Some editorial filler that is definitely not a restaurant at all, honestly.",
+      "",
+      "## Where we ate last week",
+      "More filler text that goes on for a little while so it passes the length gate.",
+      "",
+      "## Parco Pizzeria",
+      "Neapolitan pizza in a converted garage. Loud, cheap and very good indeed.",
+    ].join("\n"),
+  };
+
+  it("finds real venue names in a listicle", () => {
+    const venues = extractVenues(page, "Seongsu");
+    const names = venues.map((v) => v.name);
+    expect(names).toContain("Sediciseoul");
+    expect(names).toContain("Parco Pizzeria");
+  });
+
+  it("rejects editorial shouting and sentence-shaped headings", () => {
+    const names = extractVenues(page, "Seongsu").map((v) => v.name);
+    expect(names).not.toContain("CAUTION: DROOL-WORTHY CONTENT AHEAD!");
+    expect(names.some((n) => n.startsWith("Where we"))).toBe(false);
+  });
+
+  it("captures hours, price and address when the page states them", () => {
+    const sedici = extractVenues(page, "Seongsu").find((v) => v.name === "Sediciseoul");
+    expect(sedici?.openingHours).toMatch(/17:00/);
+    expect(sedici?.approximatePrice).toMatch(/25,000/);
+    expect(sedici?.address).toMatch(/Seongsui-ro/);
+  });
+
+  it("never claims more than low confidence", () => {
+    for (const venue of extractVenues(page, "Seongsu")) {
+      expect(venue.confidence).toBe("low");
+      expect(venue.tags).toContain("extracted-without-model");
+    }
+  });
+
+  it("classifies categories from the surrounding text", () => {
+    const venues = extractVenues(page, "Seongsu");
+    expect(venues.find((v) => v.name === "Parco Pizzeria")?.category).toBe("restaurant");
+  });
+
+  it("returns nothing from a page with no headings and no usable title", () => {
+    expect(
+      extractVenues(
+        { url: "https://x.test", title: "Best guide to things to do", content: "short" },
+        "Seongsu",
+      ),
+    ).toEqual([]);
+  });
+});
+
+describe("plan composition without a model", () => {
+  const base = {
+    area: "Seongsu",
+    city: "Seoul",
+    budgetLow: 30000,
+    budgetHigh: 60000,
+    availableMinutes: 180,
+    sharedInterests: ["Films", "Coffee"],
+    sharedDateTypes: ["dinner", "dessert"],
+    atmosphere: "quiet",
+    dietary: [] as string[],
+    aName: "Alice",
+    bName: "Bob",
+    venues: [
+      {
+        name: "Sediciseoul",
+        category: "restaurant",
+        district: "Seongsu",
+        approximatePrice: "₩30,000",
+        confidence: "medium" as const,
+        tags: [],
+      },
+      {
+        name: "Quiet Dessert Bar",
+        category: "dessert",
+        district: "Seongsu",
+        approximatePrice: null,
+        confidence: "low" as const,
+        tags: [],
+      },
+      {
+        name: "Loud Cocktail Room",
+        category: "bar",
+        district: "Seongsu",
+        approximatePrice: null,
+        confidence: "low" as const,
+        tags: [],
+      },
+    ],
+  };
+
+  it("builds a two-stop plan when there's time and a complementary venue", () => {
+    const plan = buildFallbackPlan(base)!;
+    expect(plan.stops).toHaveLength(2);
+    expect(plan.stops[0].venueIndex).toBe(0);
+    expect(plan.stops[1].startOffsetMin).toBeGreaterThan(plan.stops[0].durationMin - 1);
+  });
+
+  it("keeps the cost inside the agreed range", () => {
+    const plan = buildFallbackPlan(base)!;
+    expect(plan.estimatedCostPerPerson).toBeGreaterThanOrEqual(base.budgetLow);
+    expect(plan.estimatedCostPerPerson).toBeLessThanOrEqual(base.budgetHigh);
+  });
+
+  it("builds a single-stop plan when the window is short", () => {
+    const plan = buildFallbackPlan({ ...base, availableMinutes: 120 })!;
+    expect(plan.stops).toHaveLength(1);
+  });
+
+  it("never sends an alcohol-free user to a bar", () => {
+    const plan = buildFallbackPlan({
+      ...base,
+      dietary: ["no_alcohol_venue"],
+      venues: [base.venues[2], base.venues[1]],
+    })!;
+    const chosen = plan.stops.map((s) => [base.venues[2], base.venues[1]][s.venueIndex]);
+    expect(chosen.some((v) => v.category === "bar")).toBe(false);
+  });
+
+  it("returns null when there is nothing to work with", () => {
+    expect(buildFallbackPlan({ ...base, venues: [] })).toBeNull();
+  });
+
+  it("names what the two people actually share", () => {
+    const plan = buildFallbackPlan(base)!;
+    expect(plan.whyItFits).toContain("Films");
+    expect(plan.whyItFits).toContain("Coffee");
+  });
+
+  it("never asks the two people to exchange contact details", () => {
+    const plan = buildFallbackPlan(base)!;
+    const allText = [plan.summary, plan.whyItFits, plan.meetingInstructions].join(" ");
+    // Reassurance ("you won't need to swap numbers") is fine; an instruction is not.
+    expect(allText).not.toMatch(
+      /(?<!(?:won't|will not|do not|don't|no) need to )(?<!never )(swap|exchange|share|send|give)\s+(?:them\s+)?(?:your\s+)?(numbers?|phone|contact|instagram|whatsapp|kakao|email)/i,
+    );
+    expect(allText).not.toMatch(/text (?:them|each other)/i);
+  });
+});
