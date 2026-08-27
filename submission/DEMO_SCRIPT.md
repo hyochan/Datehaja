@@ -7,6 +7,11 @@ Have **two browser windows** open side by side, both signed into the same
 account, both on `/dashboard`. Window A is the one you drive. Window B just
 sits there — it's the proof that Convex is doing the work.
 
+Before recording, create the account with an email address you can actually
+receive mail at and keep that inbox open in a third tab. Do not use an address
+ending in `.test`: it is a reserved, non-deliverable TLD, so the AgentMail shot
+at 1:40 will not exist.
+
 ---
 
 ## 0:00 – 0:20 · The inversion
@@ -150,5 +155,7 @@ This is the bit that surprises people. Instead of **They accept**, hit
 
 - Use dark mode. It photographs better and the ember accent carries.
 - Seoul as the city — that's where the demo personas live.
+- Use a real, deliverable email address and confirm the welcome email arrives
+  before starting the take.
 - Window B must be visibly untouched. Don't click into it before the reveal.
 - Don't narrate the architecture. Point at the thing on screen doing it.

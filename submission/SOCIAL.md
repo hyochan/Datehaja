@@ -37,7 +37,7 @@ both the AgentMail webhook and the React app itself via
 the workflow engine. Every DateDrop carries its own provenance — the pages
 Firecrawl crawled, the quote from each, and every model run — visible in the app.
 
-187 tests. Seeded with 14 clearly-marked fictional personas so a judge can see
+188 tests. Seeded with 14 clearly-marked fictional personas so a judge can see
 the whole loop in 60 seconds without recruiting a second human.
 
 Live: https://merry-bass-190.convex.site
@@ -67,8 +67,8 @@ Code: https://github.com/hyochan/datedrop
 >
 > It's a dating app where the only input is your availability.
 >
-> Hard filters in TypeScript → @OpenAI ranks + explains → @firecrawl_dev
-> researches real venues live → @agentmailto invites both people privately →
+> Hard filters in TypeScript → @OpenAI ranks + explains → @firecrawl
+> researches real venues live → @agentmail invites both people privately →
 > both screens say "It's a date" with no refresh.
 >
 > 🧵
@@ -171,6 +171,7 @@ Code: https://github.com/hyochan/datedrop
 
 ## Tagging
 
-Where submission rules require sponsor tags: **@convex · @OpenAI · @firecrawl ·
-@agentmail**. Check the current handles before posting — the ones above are the
-commonly used forms, not verified account names.
+Verified 2026-08-28 against the sponsors' current official profiles:
+**[@convex](https://x.com/convex) · [@OpenAI](https://x.com/OpenAI) ·
+[@firecrawl](https://x.com/firecrawl) ·
+[@agentmail](https://x.com/agentmail)**.
