@@ -155,7 +155,7 @@ another DateDrop; heuristic venue names kept their markdown link brackets; a
 price capture dragged surrounding prose along with it; and fallback plan notes
 read awkwardly.
 
-### 2026-08-26 - working tree
+### 2026-08-26 - 8cc3b85
 Ran a 44-agent adversarial audit across authorization, privacy, correctness,
 integration robustness, frontend/accessibility and copy honesty — every finding
 independently verified by a separate skeptic before being accepted. 38 findings
@@ -206,7 +206,7 @@ as its `radiogroup` role promises.
 all passing. Redeployed and re-verified against production: a replacement drop
 now names the replacement, not the persona who passed.
 
-### 2026-08-27 - working tree
+### 2026-08-27 - 642710e
 Wired the real credentials and verified each integration with a live call.
 
 - **Firecrawl — verified, now authenticated.** With a key, `/v2/search` returns
@@ -235,7 +235,7 @@ a 400 that names the header rather than the character. Keys built from email
 addresses or ISO timestamps therefore failed silently at send time. Sanitising
 in the client means no call site has to remember. 187 tests.
 
-### 2026-08-27 - working tree
+### 2026-08-27 - 4aa019f
 Credit added to the OpenAI account, so the model path runs for the first time.
 All three stages now succeed against the live deployment: `rank_candidates`
 (5.9s), `venue_summary` (13.3s), `build_plan` (4.8s).
