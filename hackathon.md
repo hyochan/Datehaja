@@ -12,7 +12,7 @@
 - **Auth:** Convex Auth
 - **AI models:** gpt-5.6-terra (configured default, with a fallback ladder in `convex/integrations/openai.ts`)
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-08-26T22:48:00Z
+- **Last updated:** 2026-08-27T12:52:00Z
 
 ## Log
 
@@ -205,3 +205,32 @@ as its `radiogroup` role promises.
 15 new regression tests covering the replacement flow specifically. 180 total,
 all passing. Redeployed and re-verified against production: a replacement drop
 now names the replacement, not the persona who passed.
+
+### 2026-08-27 - working tree
+Wired the real credentials and verified each integration with a live call.
+
+- **Firecrawl — verified, now authenticated.** With a key, `/v2/search` returns
+  in 400–900ms against 8–18s unauthenticated. Also corrected an earlier wrong
+  inference: `/v2/scrape` does NOT require a key. The 403s seen earlier were
+  per-site refusals ("we do not support this site" — Reddit, Facebook), not
+  auth failures, and the code had been gating the scrape follow-up behind
+  `hasFirecrawlKey()` for that wrong reason. Gate removed; those domains are
+  now excluded at search time instead.
+- **AgentMail — verified end to end.** Provisioned the `datedrop-concierge@agentmail.to`
+  inbox and a webhook at `https://merry-bass-190.convex.site/webhooks/agentmail`
+  subscribed to message.received, message.sent, message.delivered and
+  message.bounced. Sent a real message (AWS SES message id returned), and the
+  resulting `message.sent` and `message.delivered` webhooks arrived, **passed
+  Svix signature verification**, and were persisted idempotently. The Web Crypto
+  verifier works against real AgentMail signatures, not just synthetic ones.
+  `message.received` is still unexercised — it needs a human to reply to the
+  Concierge inbox.
+- **OpenAI — key created, still blocked on credit.** The account has no prepaid
+  balance, so every call returns `429 insufficient_quota`. Adding credit is a
+  payment action and is the one remaining human step.
+
+One real bug surfaced by doing this rather than assuming: AgentMail rejects an
+`Idempotency-Key` containing anything outside `A-Z a-z 0-9 - . _ ~`, and returns
+a 400 that names the header rather than the character. Keys built from email
+addresses or ISO timestamps therefore failed silently at send time. Sanitising
+in the client means no call site has to remember. 187 tests.

@@ -209,7 +209,7 @@ node -e 'import("jose").then(async({generateKeyPair,exportPKCS8,exportJWK})=>{co
 Then set `JWT_PRIVATE_KEY` and `JWKS` from that file on the deployment and delete it.
 
 ```bash
-bun run test             # 180 tests
+bun run test             # 187 tests
 bun run typecheck
 bun run build
 bunx convex run demo:ensureSeeded '{}'    # seed the demo personas
@@ -241,7 +241,7 @@ or generated, and it tells you about any variable the app doesn't actually read.
 |---|---|---|---|
 | `OPENAI_API_KEY` | **yes** | [platform.openai.com](https://platform.openai.com/settings/organization/api-keys) → API keys. Prepaid — add credit or every call 429s. | Falls back to rule-based venue extraction and a templated plan, labelled *Unconfirmed details* |
 | `AGENTMAIL_API_KEY` | **yes** | [console.agentmail.to](https://console.agentmail.to) → API Keys. Free tier, no card: 3 inboxes, 3,000 emails/month | No mail sent; each send logged as `skipped_no_provider` |
-| `FIRECRAWL_API_KEY` | no | [firecrawl.dev](https://firecrawl.dev) → API Keys | Nothing breaks. `/v2/search` already serves unauthenticated requests, which is how the live deployment runs. A key raises the rate limit and unlocks `/v2/scrape` (403 without one) |
+| `FIRECRAWL_API_KEY` | no | [firecrawl.dev](https://firecrawl.dev) → API Keys | Nothing breaks — both `/v2/search` and `/v2/scrape` serve unauthenticated requests. A key mainly buys speed and headroom: search returns in ~400–900ms with one, against 8–18s without |
 | `OPENAI_MODEL` | no | — | Uses the model ladder's default |
 
 Two more are **produced, not typed**. Once `AGENTMAIL_API_KEY` is set:
@@ -269,7 +269,7 @@ curl https://merry-bass-190.convex.site/healthz
 DateDrop is built so a provider outage degrades the product instead of breaking it:
 
 - **No OpenAI key, or the model fails** → venues are extracted with deterministic rules and the plan is composed from a template. Everything produced this way is marked `low` confidence and shown as *Unconfirmed details*. It is never presented as reasoning that didn't happen.
-- **No Firecrawl key** → `/v2/search` still runs unauthenticated; `/v2/scrape` is skipped rather than called and failed.
+- **No Firecrawl key** → both endpoints still run unauthenticated, just slower. Sites Firecrawl refuses outright (Reddit, Facebook) are excluded at search time rather than failing on scrape.
 - **No AgentMail** → the in-app notification still fires, and the skipped send is logged with its reason.
 
 ## Deployment
@@ -315,7 +315,7 @@ src/
 
 ## Testing
 
-180 tests, `bun run test`.
+187 tests, `bun run test`.
 
 - **Unit** — hard filters (every exclusion reason and its soft counterpart), deterministic scoring bounds and ordering, lifecycle transitions including every illegal one, expiry and deadline rules, availability overlap, timezone handling across zones, and the privacy projections (including an assertion that no coordinate, DOB, email or surname can leak through).
 - **Integration** (`convex-test`) — accept, pass, withdraw, cancel, expire and complete driven as real signed-in users, plus the negative authorisation cases: a stranger can't accept your drop, a signed-out caller can't act, a non-participant sees `null`.
