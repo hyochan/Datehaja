@@ -6,6 +6,7 @@ import { ConvexReactClient } from "convex/react";
 import { getConvexUrl } from "@convex-dev/static-hosting";
 import App from "./App";
 import { ToastProvider } from "./components/ui/Toast";
+import { I18nProvider } from "./i18n";
 import "./styles/index.css";
 
 /**
@@ -32,12 +33,14 @@ const convex = new ConvexReactClient(resolveConvexUrl(), {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ConvexAuthProvider client={convex}>
-      <BrowserRouter>
-        <ToastProvider>
-          <App />
-        </ToastProvider>
-      </BrowserRouter>
-    </ConvexAuthProvider>
+    <I18nProvider>
+      <ConvexAuthProvider client={convex}>
+        <BrowserRouter>
+          <ToastProvider>
+            <App />
+          </ToastProvider>
+        </BrowserRouter>
+      </ConvexAuthProvider>
+    </I18nProvider>
   </StrictMode>,
 );

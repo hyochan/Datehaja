@@ -2,9 +2,11 @@ import { useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import { DropCard, type DropSummary } from "../components/dates/DropCard";
 import { Card, EmptyState, LinkButton, Skeleton } from "../components/ui/primitives";
+import { useI18n } from "../i18n";
 
 export default function HistoryPage() {
   const board = useQuery(api.dateDrops.dashboard);
+  const { t } = useI18n();
 
   if (board === undefined) {
     return (
@@ -22,15 +24,15 @@ export default function HistoryPage() {
   return (
     <div className="mx-auto max-w-2xl space-y-8">
       <header>
-        <h1 className="text-[28px] leading-tight">History</h1>
+        <h1 className="text-[28px] leading-tight">{t("History")}</h1>
         <p className="mt-1.5 text-[15px] text-soft">
-          Every DateDrop you've been part of — accepted, passed, expired or done.
+          {t("Every DateDrop you've been part of — accepted, passed, expired or done.")}
         </p>
       </header>
 
       {upcoming.length > 0 && (
         <section>
-          <h2 className="mb-3 text-[19px]">Coming up</h2>
+          <h2 className="mb-3 text-[19px]">{t("Coming up")}</h2>
           <ul className="space-y-3">
             {upcoming.map((drop) => (
               <DropCard key={drop.dropId} drop={drop} variant="confirmed" />
@@ -40,13 +42,13 @@ export default function HistoryPage() {
       )}
 
       <section>
-        <h2 className="mb-3 text-[19px]">Past</h2>
+        <h2 className="mb-3 text-[19px]">{t("Past")}</h2>
         {history.length === 0 ? (
           <Card>
             <EmptyState
-              title="Nothing here yet"
-              body="Your first DateDrop will show up here once you've responded to it."
-              action={<LinkButton to="/availability">Add availability</LinkButton>}
+              title={t("Nothing here yet")}
+              body={t("Your first DateDrop will show up here once you've responded to it.")}
+              action={<LinkButton to="/availability">{t("Add availability")}</LinkButton>}
             />
           </Card>
         ) : (

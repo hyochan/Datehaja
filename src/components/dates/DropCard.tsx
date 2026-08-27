@@ -3,6 +3,7 @@ import { Card, Tag, cx } from "../ui/primitives";
 import { Logo } from "../layout/Logo";
 import { countdown, formatDateTime } from "../../lib/format";
 import { dropStatusLabel } from "../../lib/status";
+import { useI18n } from "../../i18n";
 
 export type DropSummary = {
   dropId: string;
@@ -35,6 +36,8 @@ export function DropCard({
   drop: DropSummary;
   variant?: "default" | "invitation" | "confirmed";
 }) {
+  const { t } = useI18n();
+
   return (
     <Card
       as="li"
@@ -87,7 +90,7 @@ export function DropCard({
 
         {drop.isDemo && (
           <div className="mt-3">
-            <Tag tone="dusk">Demo profile</Tag>
+            <Tag tone="dusk">{t("Demo profile")}</Tag>
           </div>
         )}
       </Link>
@@ -102,14 +105,16 @@ function StatusTag({
   drop: DropSummary;
   variant: "default" | "invitation" | "confirmed";
 }) {
+  const { t } = useI18n();
+
   if (variant === "invitation") {
     return (
       <span className="docket-label inline-flex items-center gap-1.5 rounded-[2px] border border-[var(--tint-ember-border)] bg-[var(--tint-ember-bg)] px-2.5 py-1 text-[var(--tint-ember-fg)]">
         <Logo className="h-3.5 w-3.5" />
-        New DateDrop
+        {t("New DateDrop")}
       </span>
     );
   }
   const { label, tone } = dropStatusLabel(drop.status, drop.myState);
-  return <Tag tone={tone}>{label}</Tag>;
+  return <Tag tone={tone}>{t(label)}</Tag>;
 }

@@ -5,6 +5,8 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { api } from "@convex/_generated/api";
 import { cx } from "../ui/primitives";
 import { Logo } from "./Logo";
+import { LocaleSwitcher } from "./LocaleSwitcher";
+import { useI18n } from "../../i18n";
 
 const NAV = [
   { to: "/dashboard", label: "Home", icon: HomeIcon },
@@ -16,6 +18,7 @@ const NAV = [
 export function AppShell({ children }: { children: ReactNode }) {
   const location = useLocation();
   const unread = useQuery(api.notifications.unreadCount) ?? 0;
+  const { t } = useI18n();
 
   return (
     <div className="min-h-dvh">
@@ -32,7 +35,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 DateDrop
               </span>
               <span className="docket-label mt-1 block text-[8px] text-muted">
-                Private concierge
+                {t("Private date concierge")}
               </span>
             </span>
           </Link>
@@ -54,17 +57,20 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <span className="docket-label text-[8px] text-muted">
                   0{index + 1}
                 </span>
-                {item.label}
+                {t(item.label)}
               </NavLink>
             ))}
           </nav>
 
           <div className="flex items-center gap-1">
+            <LocaleSwitcher compact />
             <ThemeToggle />
             <Link
               to="/notifications"
               aria-label={
-                unread > 0 ? `Notifications, ${unread} unread` : "Notifications"
+                unread > 0
+                  ? t("Notifications, {count} unread", { count: unread })
+                  : t("Notifications")
               }
               className="relative rounded-[3px] border border-transparent p-2.5 text-muted transition-colors hover:border-[var(--border)] hover:bg-[var(--bg-raised)] hover:text-[var(--text)]"
             >
@@ -89,7 +95,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <nav
         className="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--border-strong)] bg-[var(--bg-raised)] pb-[env(safe-area-inset-bottom)] sm:hidden"
-        aria-label="Main"
+        aria-label={t("Main")}
       >
         <div className="flex">
           {NAV.map((item) => (
@@ -106,7 +112,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               }
             >
               <item.icon />
-              {item.label}
+              {t(item.label)}
             </NavLink>
           ))}
         </div>
@@ -117,11 +123,12 @@ export function AppShell({ children }: { children: ReactNode }) {
 
 function SignOutButton() {
   const { signOut } = useAuthActions();
+  const { t } = useI18n();
   return (
     <button
       type="button"
       onClick={() => void signOut()}
-      aria-label="Sign out"
+      aria-label={t("Sign out")}
       className="rounded-[3px] border border-transparent p-2.5 text-muted transition-colors hover:border-[var(--border)] hover:bg-[var(--bg-raised)] hover:text-[var(--text)]"
     >
       <ExitIcon />
@@ -130,6 +137,7 @@ function SignOutButton() {
 }
 
 export function ThemeToggle() {
+  const { t } = useI18n();
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof document === "undefined") return "light";
     return (
@@ -158,7 +166,9 @@ export function ThemeToggle() {
     <button
       type="button"
       aria-label={
-        theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+        theme === "dark"
+          ? t("Switch to light mode")
+          : t("Switch to dark mode")
       }
       onClick={() => choose(theme === "dark" ? "light" : "dark")}
       className="rounded-[3px] border border-transparent p-2.5 text-muted transition-colors hover:border-[var(--border)] hover:bg-[var(--bg-raised)] hover:text-[var(--text)]"

@@ -19,6 +19,7 @@ import {
   localTimezone,
   toDateInputValue,
 } from "../../lib/format";
+import { useI18n } from "../../i18n";
 
 const QUICK_SLOTS = [
   { label: "Evening", start: "18:00", end: "22:30" },
@@ -35,6 +36,7 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
   const addWindow = useMutation(api.availability.add);
   const removeWindow = useMutation(api.availability.remove);
   const toast = useToast();
+  const { t } = useI18n();
 
   // Times are read in the timezone of the city the date will happen in, so
   // "Saturday evening" means the same thing wherever the browser is.
@@ -60,7 +62,7 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
     setBusy(true);
     try {
       await addWindow({ startMs, endMs });
-      toast("Added to your availability.", "success");
+      toast(t("Added to your availability."), "success");
     } catch (e) {
       const message = readableError(e);
       setError(message);
@@ -78,7 +80,7 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
       <Card className="p-5">
         <div className="mb-4 flex flex-wrap items-end gap-3">
           <label className="flex-1 min-w-40">
-            <span className="mb-1.5 block text-[13px] font-medium text-soft">Day</span>
+            <span className="mb-1.5 block text-[13px] font-medium text-soft">{t("Day")}</span>
             <TextInput
               type="date"
               value={date}
@@ -91,7 +93,7 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
 
         <div className="mb-4">
           <span className="mb-2 block text-[13px] font-medium text-soft">
-            When, roughly
+            {t("When, roughly")}
           </span>
           <div className="flex flex-wrap gap-2">
             {QUICK_SLOTS.map((option) => (
@@ -100,14 +102,14 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
                 selected={slot === option.label}
                 onClick={() => setSlot(option.label)}
               >
-                {option.label}
+                {t(option.label)}
                 <span className="text-[12px] opacity-70">
                   {option.start}–{option.end}
                 </span>
               </Chip>
             ))}
             <Chip selected={usingCustom} onClick={() => setSlot("Custom")}>
-              Custom
+              {t("Custom")}
             </Chip>
           </div>
         </div>
@@ -115,7 +117,7 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
         {usingCustom && (
           <div className="mb-4 flex items-end gap-3">
             <label className="flex-1">
-              <span className="mb-1.5 block text-[13px] font-medium text-soft">From</span>
+              <span className="mb-1.5 block text-[13px] font-medium text-soft">{t("From")}</span>
               <TextInput
                 type="time"
                 value={customStart}
@@ -123,7 +125,7 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
               />
             </label>
             <label className="flex-1">
-              <span className="mb-1.5 block text-[13px] font-medium text-soft">Until</span>
+              <span className="mb-1.5 block text-[13px] font-medium text-soft">{t("Until")}</span>
               <TextInput
                 type="time"
                 value={customEnd}
@@ -141,11 +143,13 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
 
         <div className="flex items-center justify-between gap-3">
           <p className="text-[12.5px] text-muted">
-            Times are local to {zone.split("/").pop()?.replace(/_/g, " ") ?? zone}.
-            We need at least 90 minutes to plan something worth going to.
+            {t(
+              "Times are local to {zone}. We need at least 90 minutes to plan something worth going to.",
+              { zone: zone.split("/").pop()?.replace(/_/g, " ") ?? zone },
+            )}
           </p>
           <Button onClick={handleAdd} loading={busy} size="sm">
-            Add
+            {t("Add")}
           </Button>
         </div>
       </Card>
@@ -157,8 +161,8 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
       ) : windows.length === 0 ? (
         <Card>
           <EmptyState
-            title="Nothing on the calendar yet"
-            body="Add one evening you're free. That's genuinely all we need to start looking."
+            title={t("Nothing on the calendar yet")}
+            body={t("Add one evening you're free. That's genuinely all we need to start looking.")}
           />
         </Card>
       ) : (
@@ -178,7 +182,7 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
                 {window.status !== "booked" && (
                   <button
                     type="button"
-                    aria-label="Remove this window"
+                    aria-label={t("Remove this window")}
                     onClick={async () => {
                       try {
                         await removeWindow({
@@ -212,8 +216,9 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
 
       {!compact && windows && windows.length > 0 && (
         <p className="px-1 text-[13px] leading-relaxed text-muted">
-          A held window means a DateDrop is in flight for it. Booked means the
-          date is confirmed — cancel the date if you can't make it.
+          {t(
+            "A held window means a DateDrop is in flight for it. Booked means the date is confirmed — cancel the date if you can't make it.",
+          )}
         </p>
       )}
     </div>
@@ -221,24 +226,26 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
 }
 
 function WindowStatus({ status }: { status: string }) {
+  const { t } = useI18n();
+
   if (status === "open") {
     return (
       <span className="shrink-0 rounded-full bg-[var(--tint-sage-bg)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--tint-sage-fg)]">
-        Open
+        {t("Open")}
       </span>
     );
   }
   if (status === "held") {
     return (
       <span className="shrink-0 rounded-full bg-[var(--tint-dusk-bg)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--tint-dusk-fg)]">
-        Held
+        {t("Held")}
       </span>
     );
   }
   if (status === "booked") {
     return (
       <span className="shrink-0 rounded-full bg-[var(--tint-ember-bg)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--tint-ember-fg)]">
-        Booked
+        {t("Booked")}
       </span>
     );
   }

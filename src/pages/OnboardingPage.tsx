@@ -15,6 +15,7 @@ import {
   SUPPORTED_CITIES,
 } from "@convex/lib/catalog";
 import { Logo } from "../components/layout/Logo";
+import { LocaleSwitcher } from "../components/layout/LocaleSwitcher";
 import {
   ChipGroup,
   ChipRadio,
@@ -36,6 +37,7 @@ import {
 } from "../components/ui/primitives";
 import { readableError, useToast } from "../components/ui/Toast";
 import { ageFromDateString, dobStringToMs, formatMoney } from "../lib/format";
+import { useI18n } from "../i18n";
 
 type Gender = "woman" | "man" | "nonbinary" | "other";
 
@@ -59,6 +61,7 @@ export default function OnboardingPage() {
   const me = useQuery(api.profiles.me);
   const navigate = useNavigate();
   const toast = useToast();
+  const { t } = useI18n();
 
   const saveBasics = useMutation(api.profiles.saveBasics);
   const saveAbout = useMutation(api.profiles.saveAbout);
@@ -340,17 +343,20 @@ export default function OnboardingPage() {
     <div className="min-h-dvh">
       <header className="sticky top-0 z-20 border-b border-[var(--border-strong)] bg-[var(--bg)]">
         <div className="mx-auto max-w-2xl px-5 py-4 sm:px-8">
-          <div className="mb-3 flex items-center justify-between">
+          <div className="mb-3 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
               <Logo className="h-6 w-6" />
               <span className="font-display text-[17px] font-medium">
                 DateDrop
               </span>
             </div>
-            <span className="docket-label text-muted">
-              Brief {String(step + 1).padStart(2, "0")} /{" "}
-              {String(STEPS.length).padStart(2, "0")}
-            </span>
+            <div className="flex items-center gap-2">
+              <LocaleSwitcher compact />
+              <span className="docket-label text-muted">
+                {t("Brief")} {String(step + 1).padStart(2, "0")} /{" "}
+                {String(STEPS.length).padStart(2, "0")}
+              </span>
+            </div>
           </div>
           <div
             className="flex gap-1.5"
@@ -358,7 +364,7 @@ export default function OnboardingPage() {
             aria-valuenow={step + 1}
             aria-valuemin={1}
             aria-valuemax={STEPS.length}
-            aria-label="Onboarding progress"
+            aria-label={t("Onboarding progress")}
           >
             {STEPS.map((label, index) => (
               <div
@@ -375,11 +381,11 @@ export default function OnboardingPage() {
 
       <main className="mx-auto max-w-2xl px-5 pb-32 pt-8 sm:px-8 sm:pt-12">
         <div className="docket-label mb-3 text-[var(--accent-text)]">
-          {STEPS[step]}
+          {t(STEPS[step])}
         </div>
-        <h1 className="mb-2 text-[28px] leading-tight">{stepTitle(step)}</h1>
+        <h1 className="mb-2 text-[28px] leading-tight">{t(stepTitle(step))}</h1>
         <p className="mb-8 text-[15.5px] leading-relaxed text-soft">
-          {stepBlurb(step)}
+          {t(stepBlurb(step))}
         </p>
 
         {error && (
@@ -391,8 +397,8 @@ export default function OnboardingPage() {
         {step === 0 && (
           <div className="animate-fade-up">
             <Field
-              label="What should we call you?"
-              hint="Matches only ever see your first name."
+              label={t("What should we call you?")}
+              hint={t("Matches only ever see your first name.")}
               htmlFor="name"
             >
               <TextInput
@@ -406,12 +412,12 @@ export default function OnboardingPage() {
             </Field>
 
             <Field
-              label="Date of birth"
-              hint="Used to check you're 18+ and to match age ranges. Never shown to anyone."
+              label={t("Date of birth")}
+              hint={t("Used to check you're 18+ and to match age ranges. Never shown to anyone.")}
               htmlFor="dob"
               error={
                 dob && age !== null && age < 18
-                  ? "You must be 18 or over."
+                  ? t("You must be 18 or over.")
                   : null
               }
             >
@@ -423,21 +429,24 @@ export default function OnboardingPage() {
               />
               {age !== null && age >= 18 && (
                 <p className="mt-1.5 text-[13px] text-muted">
-                  You'll appear as {age}.
+                  {t("You'll appear as {age}.", { age })}
                 </p>
               )}
             </Field>
 
-            <Field label="You are">
+            <Field label={t("You are")}>
               <ChipRadio
-                options={GENDER_OPTIONS}
+                options={GENDER_OPTIONS.map((option) => ({
+                  ...option,
+                  label: t(option.label),
+                }))}
                 value={gender}
                 onChange={setGender}
-                ariaLabel="Your gender"
+                ariaLabel={t("Your gender")}
               />
             </Field>
 
-            <Field label="Pronouns" optional htmlFor="pronouns">
+            <Field label={t("Pronouns")} optional htmlFor="pronouns">
               <TextInput
                 id="pronouns"
                 value={pronouns}
@@ -448,20 +457,23 @@ export default function OnboardingPage() {
             </Field>
 
             <Field
-              label="You'd like to meet"
-              hint="Pick everyone you'd be happy to be matched with."
+              label={t("You'd like to meet")}
+              hint={t("Pick everyone you'd be happy to be matched with.")}
             >
               <ChipGroup
-                options={GENDER_OPTIONS}
+                options={GENDER_OPTIONS.map((option) => ({
+                  ...option,
+                  label: t(option.label),
+                }))}
                 selected={interestedIn}
                 onChange={(update) =>
                   setInterestedIn((previous) => update(previous) as Gender[])
                 }
-                ariaLabel="Who you'd like to meet"
+                ariaLabel={t("Who you'd like to meet")}
               />
             </Field>
 
-            <Field label="City" htmlFor="city">
+            <Field label={t("City")} htmlFor="city">
               <Select
                 id="city"
                 value={cityKey}
@@ -484,8 +496,8 @@ export default function OnboardingPage() {
             </Field>
 
             <Field
-              label="Roughly where"
-              hint="Neighbourhood only — we never store or share your address."
+              label={t("Roughly where")}
+              hint={t("Neighbourhood only — we never store or share your address.")}
             >
               <ChipRadio
                 options={city.neighborhoods.map((n) => ({
@@ -494,7 +506,7 @@ export default function OnboardingPage() {
                 }))}
                 value={neighborhood}
                 onChange={setNeighborhood}
-                ariaLabel="Your neighbourhood"
+                ariaLabel={t("Your neighbourhood")}
               />
             </Field>
 
@@ -506,7 +518,7 @@ export default function OnboardingPage() {
                 className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--color-ember-400)]"
               />
               <span>
-                I confirm I'm 18 or over. DateDrop is an adults-only service.
+                {t("I confirm I'm 18 or over. DateDrop is an adults-only service.")}
               </span>
             </label>
           </div>
@@ -886,24 +898,24 @@ export default function OnboardingPage() {
               <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--tint-ember-bg)]">
                 <Logo className="h-8 w-8" />
               </div>
-              <h2 className="mb-2 text-[24px]">You're ready for DateDrop.</h2>
+              <h2 className="mb-2 text-[24px]">{t("You're ready for DateDrop.")}</h2>
               <p className="mx-auto max-w-sm text-[15px] leading-relaxed text-soft">
-                From here we do the work. When we find someone compatible who's
-                free at the same time, we'll plan a real date and send it to you
-                both.
+                {t(
+                  "From here we do the work. When we find someone compatible who's free at the same time, we'll plan a real date and send it to you both.",
+                )}
               </p>
 
               <dl className="mx-auto mt-7 max-w-sm space-y-3 text-left">
                 <SummaryRow
-                  label="You"
+                  label={t("You")}
                   value={`${displayName}, ${age ?? "—"}`}
                 />
                 <SummaryRow
-                  label="Area"
+                  label={t("Area")}
                   value={`${neighborhood}, ${city.city}`}
                 />
                 <SummaryRow
-                  label="Looking for"
+                  label={t("Looking for")}
                   value={interestedIn
                     .map(
                       (g) =>
@@ -911,23 +923,23 @@ export default function OnboardingPage() {
                     )
                     .join(", ")}
                 />
-                <SummaryRow label="Age range" value={`${ageMin}–${ageMax}`} />
+                <SummaryRow label={t("Age range")} value={`${ageMin}–${ageMax}`} />
                 <SummaryRow
-                  label="Interests"
+                  label={t("Interests")}
                   value={interests.slice(0, 4).join(" · ")}
                 />
                 <SummaryRow
-                  label="Budget"
+                  label={t("Budget")}
                   value={`${formatMoney(effectiveBudgetMin, city.currency)}–${formatMoney(effectiveBudgetMax, city.currency)}`}
                 />
               </dl>
             </Card>
 
             <div className="mt-4">
-              <Notice tone="info" title="Demo profiles are on">
-                This deployment includes clearly-marked fictional demo profiles
-                so you can see the whole flow immediately. Turn them off any
-                time in Settings.
+              <Notice tone="info" title={t("Demo profiles are on")}>
+                {t(
+                  "This deployment includes clearly-marked fictional demo profiles so you can see the whole flow immediately. Turn them off any time in Settings.",
+                )}
               </Notice>
             </div>
           </div>
@@ -944,7 +956,7 @@ export default function OnboardingPage() {
                 setStep((s) => Math.max(0, (s ?? 0) - 1));
               }}
             >
-              Back
+              {t("Back")}
             </Button>
           )}
           <div className="flex-1" />
@@ -955,7 +967,7 @@ export default function OnboardingPage() {
             size="lg"
             className="min-w-40"
           >
-            {step === 5 ? "Find me a date" : "Continue"}
+            {step === 5 ? t("Find me a date") : t("Continue")}
           </Button>
         </div>
       </div>
@@ -972,6 +984,8 @@ function HardToggle({
   onChange: (next: boolean) => void;
   label: string;
 }) {
+  const { t } = useI18n();
+
   return (
     <div className="mt-2">
       <Toggle
@@ -980,8 +994,8 @@ function HardToggle({
         label={label}
         description={
           checked
-            ? "We'll never match you outside this."
-            : "We'll prefer this, but won't rule someone out for it."
+            ? t("We'll never match you outside this.")
+            : t("We'll prefer this, but won't rule someone out for it.")
         }
       />
     </div>

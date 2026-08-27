@@ -4,24 +4,26 @@ import { api } from "@convex/_generated/api";
 import type { Id } from "@convex/_generated/dataModel";
 import { Button, Card, EmptyState, Skeleton, cx } from "../components/ui/primitives";
 import { relativeTime } from "../lib/format";
+import { useI18n } from "../i18n";
 
 export default function NotificationsPage() {
   const notifications = useQuery(api.notifications.list, {});
   const markRead = useMutation(api.notifications.markRead);
   const markAllRead = useMutation(api.notifications.markAllRead);
+  const { t } = useI18n();
 
   return (
     <div className="mx-auto max-w-2xl space-y-5">
       <header className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-[28px] leading-tight">Notifications</h1>
+          <h1 className="text-[28px] leading-tight">{t("Notifications")}</h1>
           <p className="mt-1.5 text-[15px] text-soft">
-            Everything DateDrop has told you, newest first.
+            {t("Everything DateDrop has told you, newest first.")}
           </p>
         </div>
         {notifications && notifications.some((n) => !n.read) && (
           <Button variant="ghost" size="sm" onClick={() => void markAllRead({})}>
-            Mark all read
+            {t("Mark all read")}
           </Button>
         )}
       </header>
@@ -31,8 +33,8 @@ export default function NotificationsPage() {
       ) : notifications.length === 0 ? (
         <Card>
           <EmptyState
-            title="Nothing yet"
-            body="When a DateDrop lands, is confirmed, or changes, you'll see it here."
+            title={t("Nothing yet")}
+            body={t("When a DateDrop lands, is confirmed, or changes, you'll see it here.")}
           />
         </Card>
       ) : (

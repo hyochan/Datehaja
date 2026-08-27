@@ -16,6 +16,7 @@ import {
 } from "../components/ui/primitives";
 import { readableError, useToast } from "../components/ui/Toast";
 import { formatDay, formatRange } from "../lib/format";
+import { useI18n } from "../i18n";
 
 export default function DashboardPage() {
   const nowMs = useMemo(() => Date.now(), []);
@@ -25,6 +26,7 @@ export default function DashboardPage() {
   const me = useQuery(api.profiles.me);
   const requestDrop = useMutation(api.matching.requestDrop);
   const toast = useToast();
+  const { t } = useI18n();
   const [busy, setBusy] = useState(false);
 
   const searching =
@@ -34,7 +36,7 @@ export default function DashboardPage() {
     setBusy(true);
     try {
       await requestDrop({});
-      toast("On it — we're looking now.", "success");
+      toast(t("On it — we're looking now."), "success");
     } catch (e) {
       toast(readableError(e), "error");
     } finally {
@@ -59,20 +61,22 @@ export default function DashboardPage() {
     <div className="space-y-10">
       <header>
         <div className="docket-label mb-2 text-[var(--accent-text)]">
-          Your concierge desk
+          {t("Your concierge desk")}
         </div>
         <h1 className="text-[30px] leading-tight">
-          {firstName ? `Hi, ${firstName.split(" ")[0]}.` : "Your DateDrops"}
+          {firstName
+            ? t("Hi, {name}.", { name: firstName.split(" ")[0] })
+            : t("Your DateDrops")}
         </h1>
         <p className="mt-1.5 text-[15.5px] text-soft">
-          Tell us when. We handle who &amp; where.
+          {t("Tell us when. We handle who & where.")}
         </p>
       </header>
 
       {/* ------------------------- your next DateDrop ------------------------- */}
       <section aria-labelledby="next-heading">
         <h2 id="next-heading" className="sr-only">
-          Your next DateDrop
+          {t("Your next DateDrop")}
         </h2>
 
         {board === undefined ? (
@@ -84,11 +88,13 @@ export default function DashboardPage() {
         ) : invitations.length > 0 ? (
           <div className="space-y-3">
             <SectionHeading
-              eyebrow="Waiting on you"
+              eyebrow={t("Waiting on you")}
               title={
                 invitations.length === 1
-                  ? "You've got a DateDrop"
-                  : `You've got ${invitations.length} DateDrops`
+                  ? t("You've got a DateDrop")
+                  : t("You've got {count} DateDrops", {
+                      count: invitations.length,
+                    })
               }
             />
             <ul className="space-y-3">
@@ -101,7 +107,7 @@ export default function DashboardPage() {
           <SearchProgress stage={run?.stage ?? "hard_filter"} />
         ) : upcoming.length > 0 ? (
           <div className="space-y-3">
-            <SectionHeading eyebrow="Confirmed" title="It's a date" />
+            <SectionHeading eyebrow={t("Confirmed")} title={t("It's a date")} />
             <ul className="space-y-3">
               {upcoming.map((drop) => (
                 <DropCard key={drop.dropId} drop={drop} variant="confirmed" />
@@ -122,12 +128,13 @@ export default function DashboardPage() {
       {waiting.length > 0 && (
         <section aria-labelledby="waiting-heading">
           <SectionHeading
-            eyebrow="You said yes"
-            title="Waiting on the other person"
+            eyebrow={t("You said yes")}
+            title={t("Waiting on the other person")}
           />
           <p className="mb-4 -mt-2 max-w-lg text-[14px] leading-relaxed text-muted">
-            Your evening is held. If they pass, we look for someone else who
-            fits the same plan rather than cancelling on you.
+            {t(
+              "Your evening is held. If they pass, we look for someone else who fits the same plan rather than cancelling on you.",
+            )}
           </p>
           <ul className="space-y-3">
             {waiting.map((drop) => (
@@ -140,7 +147,7 @@ export default function DashboardPage() {
       {/* ---------------------------- upcoming ------------------------------- */}
       {upcoming.length > 0 && invitations.length > 0 && (
         <section aria-labelledby="upcoming-heading">
-          <SectionHeading eyebrow="Confirmed" title="Coming up" />
+          <SectionHeading eyebrow={t("Confirmed")} title={t("Coming up")} />
           <ul className="space-y-3">
             {upcoming.map((drop) => (
               <DropCard key={drop.dropId} drop={drop} variant="confirmed" />
@@ -152,14 +159,14 @@ export default function DashboardPage() {
       {/* ---------------------------- availability --------------------------- */}
       <section aria-labelledby="availability-heading">
         <SectionHeading
-          eyebrow="Your availability"
-          title="When you're free"
+          eyebrow={t("Your availability")}
+          title={t("When you're free")}
           action={
             <Link
               to="/availability"
               className="text-[14px] font-medium text-[var(--accent-text)] hover:underline"
             >
-              Edit
+              {t("Edit")}
             </Link>
           }
         />
@@ -169,12 +176,14 @@ export default function DashboardPage() {
           <div className="mb-4 flex flex-wrap items-center gap-3 rounded-card border border-[var(--border)] bg-[var(--bg-sunken)] px-4 py-3.5">
             <p className="min-w-0 flex-1 text-[14.5px] text-soft">
               {openWindows.length === 1
-                ? "You've still got an evening open."
-                : `You've still got ${openWindows.length} evenings open.`}{" "}
-              Want another DateDrop?
+                ? t("You've still got an evening open.")
+                : t("You've still got {count} evenings open.", {
+                    count: openWindows.length,
+                  })}{" "}
+              {t("Want another DateDrop?")}
             </p>
             <Button onClick={findMeADate} loading={busy} size="sm">
-              Find me a date
+              {t("Find me a date")}
             </Button>
           </div>
         )}
@@ -183,10 +192,10 @@ export default function DashboardPage() {
         ) : openWindows.length === 0 ? (
           <Card>
             <EmptyState
-              title="No open windows"
-              body="Add an evening you're free and we'll start looking straight away."
+              title={t("No open windows")}
+              body={t("Add an evening you're free and we'll start looking straight away.")}
               action={
-                <LinkButton to="/availability">Add availability</LinkButton>
+                <LinkButton to="/availability">{t("Add availability")}</LinkButton>
               }
             />
           </Card>
@@ -207,7 +216,7 @@ export default function DashboardPage() {
                       )}
                     </div>
                   </div>
-                  <Tag tone="sage">Open</Tag>
+                  <Tag tone="sage">{t("Open")}</Tag>
                 </Card>
               </li>
             ))}
@@ -219,14 +228,14 @@ export default function DashboardPage() {
       {board && board.history.length > 0 && (
         <section aria-labelledby="history-heading">
           <SectionHeading
-            eyebrow="Previously"
-            title="History"
+            eyebrow={t("Previously")}
+            title={t("History")}
             action={
               <Link
                 to="/history"
                 className="text-[14px] font-medium text-[var(--accent-text)] hover:underline"
               >
-                See all
+                {t("See all")}
               </Link>
             }
           />
@@ -254,16 +263,18 @@ function IdleCard({
   busy: boolean;
   onFind: () => void;
 }) {
+  const { t } = useI18n();
+
   if (openWindowCount === 0) {
     return (
       <Card>
         <EmptyState
           icon={<Logo className="h-10 w-10" />}
-          title="We only need one thing"
-          body="Tell us when you're free. We'll find someone compatible, plan a real date, and send it to you both."
+          title={t("We only need one thing")}
+          body={t("Tell us when you're free. We'll find someone compatible, plan a real date, and send it to you both.")}
           action={
             <LinkButton to="/availability" size="lg">
-              Add availability
+              {t("Add availability")}
             </LinkButton>
           }
         />
@@ -273,25 +284,29 @@ function IdleCard({
 
   return (
     <Card className="p-6 sm:p-7">
-      <div className="docket-label mb-1 text-muted">Your next DateDrop</div>
+      <div className="docket-label mb-1 text-muted">{t("Your next DateDrop")}</div>
       <h2 className="font-display text-[24px] leading-tight sm:text-[27px]">
         {nextWindow ? (
-          <>You're free {formatDay(nextWindow.startMs, nextWindow.timezone)}.</>
+          t("You're free {date}.", {
+            date: formatDay(nextWindow.startMs, nextWindow.timezone),
+          })
         ) : (
-          "You're free soon."
+          t("You're free soon.")
         )}
       </h2>
       <p className="mt-2 max-w-md text-[15px] leading-relaxed text-soft">
         {openWindowCount === 1
-          ? "One window open. Ask us to look now, or add more times to widen the net."
-          : `${openWindowCount} windows open. We'll use whichever finds the best match first.`}
+          ? t("One window open. Ask us to look now, or add more times to widen the net.")
+          : t("{count} windows open. We'll use whichever finds the best match first.", {
+              count: openWindowCount,
+            })}
       </p>
       <div className="mt-6 flex flex-wrap gap-3">
         <Button onClick={onFind} loading={busy} size="lg">
-          Find me a date
+          {t("Find me a date")}
         </Button>
         <LinkButton to="/availability" variant="secondary" size="lg">
-          Add another time
+          {t("Add another time")}
         </LinkButton>
       </div>
     </Card>
@@ -324,6 +339,7 @@ const STAGE_ORDER: Record<string, number> = {
  */
 function SearchProgress({ stage }: { stage: string }) {
   const current = STAGE_ORDER[stage] ?? 0;
+  const { t } = useI18n();
 
   return (
     <Card className="p-6 sm:p-7">
@@ -333,12 +349,12 @@ function SearchProgress({ stage }: { stage: string }) {
           <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-ember-400" />
         </span>
         <span className="docket-label text-[var(--tint-ember-strong)]">
-          Working on it
+          {t("Working on it")}
         </span>
       </div>
 
       <h2 className="font-display text-[24px] leading-tight">
-        We're looking for your DateDrop.
+        {t("We're looking for your DateDrop.")}
       </h2>
 
       <ol className="mt-6 space-y-3.5">
@@ -381,7 +397,7 @@ function SearchProgress({ stage }: { stage: string }) {
                   done ? "text-muted" : active ? "font-medium" : "text-muted",
                 )}
               >
-                {item.label}
+                {t(item.label)}
               </span>
             </li>
           );
@@ -389,8 +405,9 @@ function SearchProgress({ stage }: { stage: string }) {
       </ol>
 
       <p className="mt-6 text-[13.5px] leading-relaxed text-muted">
-        This usually takes under a minute. You can close this page — we'll email
-        you the moment there's something to look at.
+        {t(
+          "This usually takes under a minute. You can close this page — we'll email you the moment there's something to look at.",
+        )}
       </p>
     </Card>
   );

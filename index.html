@@ -34,6 +34,8 @@
     <script>
       (function () {
         try {
+          var l = localStorage.getItem("datedrop-locale");
+          if (l) document.documentElement.setAttribute("lang", l);
           var t = localStorage.getItem("datedrop-theme");
           if (!t || t === "system") {
             t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";

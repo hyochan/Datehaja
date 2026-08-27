@@ -9,7 +9,9 @@ import {
 import { api } from "@convex/_generated/api";
 import { AppShell } from "./components/layout/AppShell";
 import { Logo } from "./components/layout/Logo";
+import { LocaleSwitcher } from "./components/layout/LocaleSwitcher";
 import { Spinner } from "./components/ui/primitives";
+import { useI18n } from "./i18n";
 import LandingPage from "./pages/LandingPage";
 import AuthPage from "./pages/AuthPage";
 import OnboardingPage from "./pages/OnboardingPage";
@@ -197,6 +199,8 @@ function AuthedRoutes() {
 }
 
 function PublicPage({ children }: { children: React.ReactNode }) {
+  const { t } = useI18n();
+
   return (
     <Suspense fallback={<FullPageLoader />}>
       <div className="min-h-dvh">
@@ -205,7 +209,7 @@ function PublicPage({ children }: { children: React.ReactNode }) {
             <Link
               to="/"
               className="flex items-center gap-2.5"
-              aria-label="DateDrop home"
+              aria-label={t("DateDrop home")}
             >
               <Logo className="h-8 w-8" />
               <span>
@@ -213,16 +217,19 @@ function PublicPage({ children }: { children: React.ReactNode }) {
                   DateDrop
                 </span>
                 <span className="docket-label mt-1 block text-[8px] text-muted">
-                  Public record
+                  {t("Public record")}
                 </span>
               </span>
             </Link>
-            <Link
-              to="/signup"
-              className="rounded-[3px] border border-[var(--border-strong)] bg-[var(--bg-raised)] px-4 py-2 text-[13px] font-semibold"
-            >
-              Get started
-            </Link>
+            <div className="flex items-center gap-2">
+              <LocaleSwitcher compact />
+              <Link
+                to="/signup"
+                className="rounded-[3px] border border-[var(--border-strong)] bg-[var(--bg-raised)] px-3 py-2 text-[13px] font-semibold sm:px-4"
+              >
+                {t("Get started")}
+              </Link>
+            </div>
           </div>
         </header>
         <div className="mx-auto max-w-3xl px-5 py-12 sm:px-8 sm:py-16">
@@ -244,10 +251,12 @@ function RedirectToSignIn() {
 }
 
 function FullPageLoader() {
+  const { t } = useI18n();
+
   return (
     <div className="flex min-h-dvh items-center justify-center">
       <Spinner className="h-7 w-7 text-ember-400" />
-      <span className="sr-only">Loading</span>
+      <span className="sr-only">{t("Loading")}</span>
     </div>
   );
 }

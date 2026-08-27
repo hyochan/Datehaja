@@ -1,4 +1,5 @@
 import { ageOn, parseDobString } from "@convex/lib/age";
+import { activeLocale, translate } from "../i18n";
 
 /** Display helpers. All times render in the viewer's own timezone. */
 
@@ -11,7 +12,7 @@ export function localTimezone(): string {
 }
 
 export function formatDateTime(ms: number, timeZone?: string): string {
-  return new Intl.DateTimeFormat(undefined, {
+  return new Intl.DateTimeFormat(activeLocale(), {
     weekday: "long",
     month: "short",
     day: "numeric",
@@ -22,7 +23,7 @@ export function formatDateTime(ms: number, timeZone?: string): string {
 }
 
 export function formatDay(ms: number, timeZone?: string): string {
-  return new Intl.DateTimeFormat(undefined, {
+  return new Intl.DateTimeFormat(activeLocale(), {
     weekday: "long",
     month: "short",
     day: "numeric",
@@ -31,7 +32,7 @@ export function formatDay(ms: number, timeZone?: string): string {
 }
 
 export function formatTime(ms: number, timeZone?: string): string {
-  return new Intl.DateTimeFormat(undefined, {
+  return new Intl.DateTimeFormat(activeLocale(), {
     hour: "numeric",
     minute: "2-digit",
     timeZone: timeZone || localTimezone(),
@@ -44,7 +45,7 @@ export function formatRange(startMs: number, endMs: number, timeZone?: string): 
 
 export function formatMoney(amount: number, currency: string): string {
   try {
-    return new Intl.NumberFormat(undefined, {
+    return new Intl.NumberFormat(activeLocale(), {
       style: "currency",
       currency,
       maximumFractionDigits: 0,
@@ -57,40 +58,57 @@ export function formatMoney(amount: number, currency: string): string {
 export function relativeTime(ms: number, nowMs = Date.now()): string {
   const diff = ms - nowMs;
   const abs = Math.abs(diff);
-  const rtf = new Intl.RelativeTimeFormat(undefined, { numeric: "auto" });
+  const locale = activeLocale();
+  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
   const minute = 60_000;
   const hour = 60 * minute;
   const day = 24 * hour;
 
-  if (abs < minute) return "just now";
+  if (abs < minute) return rtf.format(0, "second");
   if (abs < hour) return rtf.format(Math.round(diff / minute), "minute");
   if (abs < day) return rtf.format(Math.round(diff / hour), "hour");
   if (abs < 30 * day) return rtf.format(Math.round(diff / day), "day");
-  return new Intl.DateTimeFormat(undefined, {
+  return new Intl.DateTimeFormat(locale, {
     month: "short",
     day: "numeric",
   }).format(new Date(ms));
 }
 
 export function countdown(toMs: number, nowMs = Date.now()): string {
+  const locale = activeLocale();
   const diff = toMs - nowMs;
-  if (diff <= 0) return "closed";
+  if (diff <= 0) return translate(locale, "closed");
   const hours = Math.floor(diff / 3_600_000);
   if (hours >= 24) {
     const days = Math.floor(hours / 24);
-    return `${days} day${days === 1 ? "" : "s"} left`;
+    return translate(locale, days === 1 ? "{count} day left" : "{count} days left", {
+      count: days,
+    });
   }
-  if (hours >= 1) return `${hours} hour${hours === 1 ? "" : "s"} left`;
+  if (hours >= 1) {
+    return translate(
+      locale,
+      hours === 1 ? "{count} hour left" : "{count} hours left",
+      { count: hours },
+    );
+  }
   const minutes = Math.max(1, Math.floor(diff / 60_000));
-  return `${minutes} min left`;
+  return translate(locale, "{count} min left", { count: minutes });
 }
 
 export function durationLabel(minutes: number): string {
-  if (minutes < 60) return `${minutes} min`;
+  const locale = activeLocale();
+  const unit = (value: number, name: "minute" | "hour") =>
+    new Intl.NumberFormat(locale, {
+      style: "unit",
+      unit: name,
+      unitDisplay: "short",
+    }).format(value);
+  if (minutes < 60) return unit(minutes, "minute");
   const hours = Math.floor(minutes / 60);
   const rest = minutes % 60;
-  if (rest === 0) return `${hours} hr`;
-  return `${hours} hr ${rest} min`;
+  if (rest === 0) return unit(hours, "hour");
+  return `${unit(hours, "hour")} ${unit(rest, "minute")}`;
 }
 
 /** Build a maps search link. We only ever link to a public venue. */

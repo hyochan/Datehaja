@@ -2,14 +2,17 @@ import { useState, type FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { Logo } from "../components/layout/Logo";
+import { LocaleSwitcher } from "../components/layout/LocaleSwitcher";
 import { Button, Field, Notice, TextInput } from "../components/ui/primitives";
 import { readableError, useToast } from "../components/ui/Toast";
+import { useI18n } from "../i18n";
 
 export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
   const { signIn } = useAuthActions();
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const toast = useToast();
+  const { t } = useI18n();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,13 +28,11 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
     setError(null);
 
     if (signingUp && !ageConfirmed) {
-      setError(
-        "DateDrop is for adults only — please confirm you're 18 or over.",
-      );
+      setError(t("DateDrop is for adults only — please confirm you're 18 or over."));
       return;
     }
     if (signingUp && password.length < 8) {
-      setError("Use at least 8 characters.");
+      setError(t("Use at least 8 characters."));
       return;
     }
 
@@ -50,11 +51,11 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
       setError(
         /InvalidAccountId|InvalidSecret|Invalid/i.test(message)
           ? signingUp
-            ? "That email is already registered. Try signing in instead."
-            : "That email and password don't match."
+            ? t("That email is already registered. Try signing in instead.")
+            : t("That email and password don't match.")
           : message,
       );
-      toast("Couldn't sign you in.", "error");
+      toast(t("Couldn't sign you in."), "error");
     } finally {
       setSubmitting(false);
     }
@@ -66,33 +67,34 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
         <Link
           to="/"
           className="inline-flex items-center gap-3 self-start"
-          aria-label="DateDrop home"
+          aria-label={t("DateDrop home")}
         >
           <Logo className="h-9 w-9" />
           <span>
             <span className="block font-display text-[21px]">DateDrop</span>
             <span className="docket-label mt-1 block text-[8px] text-sand-400">
-              Private date concierge
+              {t("Private date concierge")}
             </span>
           </span>
         </Link>
 
         <div className="my-16 max-w-lg">
-          <div className="docket-label text-ember-300">Concierge brief</div>
+          <div className="docket-label text-ember-300">{t("Concierge brief")}</div>
           <h2 className="mt-5 text-[clamp(3.2rem,5vw,5.5rem)] leading-[0.91] tracking-[-0.045em]">
-            Your free time is enough to begin.
+            {t("Your free time is enough to begin.")}
           </h2>
           <p className="mt-7 max-w-md text-[16px] leading-relaxed text-sand-300">
-            Give us an evening. We handle compatibility, the place, the plan,
-            and two private invitations.
+            {t(
+              "Give us an evening. We handle compatibility, the place, the plan, and two private invitations.",
+            )}
           </p>
         </div>
 
         <ol className="border-y border-sand-500/40">
           {[
-            ["01", "Your contact details stay yours"],
-            ["02", "Every venue has a live source"],
-            ["03", "Both people answer in private"],
+            ["01", t("Your contact details stay yours")],
+            ["02", t("Every venue has a live source")],
+            ["03", t("Both people answer in private")],
           ].map(([number, item]) => (
             <li
               key={item}
@@ -108,36 +110,37 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
       </aside>
 
       <main className="flex min-h-dvh flex-col bg-[var(--bg)]">
-        <header className="flex h-20 items-center border-b border-[var(--border-strong)] px-5 sm:px-8 lg:justify-end">
+        <header className="flex h-20 items-center gap-2 border-b border-[var(--border-strong)] px-5 sm:px-8 lg:justify-end">
           <Link
             to="/"
             className="inline-flex items-center gap-2.5 lg:hidden"
-            aria-label="DateDrop home"
+            aria-label={t("DateDrop home")}
           >
             <Logo className="h-8 w-8" />
             <span className="font-display text-[20px] font-medium tracking-tight">
               DateDrop
             </span>
           </Link>
-          <span className="docket-label ml-auto text-muted">
-            {signingUp ? "New client / 01" : "Client return / 01"}
+          <LocaleSwitcher compact />
+          <span className="docket-label text-muted">
+            {signingUp ? t("New client / 01") : t("Client return / 01")}
           </span>
         </header>
 
         <div className="flex flex-1 items-center px-5 py-12 sm:px-8 lg:px-16 xl:px-24">
           <div className="w-full max-w-[29rem]">
             <div className="docket-label text-[var(--accent-text)]">
-              {signingUp ? "Open your account" : "Welcome back"}
+              {signingUp ? t("Open your account") : t("Welcome back")}
             </div>
             <h1 className="mt-4 text-[clamp(2.6rem,6vw,4.4rem)] leading-[0.96]">
               {signingUp
-                ? "Reserve your first evening."
-                : "Your dates are this way."}
+                ? t("Reserve your first evening.")
+                : t("Your dates are this way.")}
             </h1>
             <p className="mt-4 max-w-md text-[15px] leading-relaxed text-soft">
               {signingUp
-                ? "Two minutes of setup. After that, all we ask is when you're free."
-                : "Sign in to review invitations, open evenings, and confirmed plans."}
+                ? t("Two minutes of setup. After that, all we ask is when you're free.")
+                : t("Sign in to review invitations, open evenings, and confirmed plans.")}
             </p>
 
             <form
@@ -145,7 +148,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
               className="mt-9 border-t border-[var(--border-strong)] pt-7"
               noValidate
             >
-              <Field label="Email" htmlFor="email">
+              <Field label={t("Email")} htmlFor="email">
                 <TextInput
                   id="email"
                   type="email"
@@ -159,9 +162,9 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
               </Field>
 
               <Field
-                label="Password"
+                label={t("Password")}
                 htmlFor="password"
-                hint={signingUp ? "At least 8 characters." : undefined}
+                hint={signingUp ? t("At least 8 characters.") : undefined}
               >
                 <TextInput
                   id="password"
@@ -184,11 +187,9 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
                     className="mt-0.5 h-4 w-4 shrink-0 rounded-none accent-[var(--color-ember-400)]"
                   />
                   <span>
-                    I'm 18 or over, and I understand DateDrop{" "}
-                    <strong className="font-semibold">
-                      does not verify identity
-                    </strong>
-                    .
+                    {t(
+                      "I'm 18 or over, and I understand DateDrop does not verify identity.",
+                    )}
                   </span>
                 </label>
               )}
@@ -200,7 +201,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
               )}
 
               <Button type="submit" size="lg" fullWidth loading={submitting}>
-                {signingUp ? "Create my account" : "Sign in"}{" "}
+                {signingUp ? t("Create my account") : t("Sign in")}{" "}
                 <span aria-hidden>→</span>
               </Button>
             </form>
@@ -208,32 +209,33 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
             <p className="mt-6 text-[14px] text-muted">
               {signingUp ? (
                 <>
-                  Already have an account?{" "}
+                  {t("Already have an account?")}{" "}
                   <Link
                     to="/signin"
                     className="font-semibold text-[var(--accent-text)] hover:underline"
                   >
-                    Sign in
+                    {t("Sign in")}
                   </Link>
                 </>
               ) : (
                 <>
-                  New here?{" "}
+                  {t("New here?")}{" "}
                   <Link
                     to="/signup"
                     className="font-semibold text-[var(--accent-text)] hover:underline"
                   >
-                    Create an account
+                    {t("Create an account")}
                   </Link>
                 </>
               )}
             </p>
 
             <p className="mt-10 border-t border-[var(--border)] pt-5 text-[12px] leading-relaxed text-muted">
-              Your email is used only by DateDrop Concierge to reach you. It is
-              never shown to another user.{" "}
+              {t(
+                "Your email is used only by DateDrop Concierge to reach you. It is never shown to another user.",
+              )}{" "}
               <Link to="/privacy" className="underline underline-offset-4">
-                How privacy works
+                {t("How privacy works")}
               </Link>
             </p>
           </div>

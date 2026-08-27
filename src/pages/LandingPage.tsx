@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { Logo } from "../components/layout/Logo";
+import { LocaleSwitcher } from "../components/layout/LocaleSwitcher";
 import { ThemeToggle } from "../components/layout/AppShell";
 import { LinkButton } from "../components/ui/primitives";
+import { useI18n } from "../i18n";
 
 const OLD_WAY = [
   "Browse strangers",
@@ -20,6 +22,8 @@ const DATE_DROP_WAY = [
 ];
 
 export default function LandingPage() {
+  const { t } = useI18n();
+
   return (
     <div className="min-h-dvh">
       <header className="border-b border-[var(--border-strong)] bg-[var(--bg)]">
@@ -31,17 +35,18 @@ export default function LandingPage() {
                 DateDrop
               </div>
               <div className="docket-label mt-1.5 text-[8px] text-muted">
-                Private date concierge
+                {t("Private date concierge")}
               </div>
             </div>
           </div>
           <div className="flex items-center gap-1 sm:gap-3">
+            <LocaleSwitcher compact />
             <ThemeToggle />
             <Link
               to="/signin"
               className="rounded-[3px] border border-[var(--border-strong)] bg-[var(--bg-raised)] px-3.5 py-2 text-[13px] font-semibold transition-colors hover:border-[var(--text-muted)] sm:px-4"
             >
-              Sign in
+              {t("Sign in")}
             </Link>
           </div>
         </div>
@@ -52,24 +57,24 @@ export default function LandingPage() {
           <div className="mx-auto grid max-w-6xl lg:grid-cols-[minmax(0,1.28fr)_minmax(20rem,0.72fr)]">
             <div className="px-5 py-14 sm:px-8 sm:py-20 lg:py-28 lg:pr-16">
               <div className="docket-label animate-fade-up text-[var(--accent-text)]">
-                Service note 001 · Seoul
+                {t("Service note 001 · Seoul")}
               </div>
               <h1
                 className="mt-7 max-w-3xl animate-fade-up text-[clamp(3.25rem,9vw,6.8rem)] leading-[0.89] tracking-[-0.055em]"
                 style={{ animationDelay: "40ms" }}
               >
-                Bring us a free evening.
+                {t("Bring us a free evening.")}
                 <span className="mt-2 block text-[var(--accent-text)]">
-                  We'll return a date.
+                  {t("We'll return a date.")}
                 </span>
               </h1>
               <p
                 className="mt-8 max-w-[38rem] animate-fade-up text-[17px] leading-[1.7] text-soft sm:text-[19px]"
                 style={{ animationDelay: "80ms" }}
               >
-                No profiles to browse. No conversation to keep alive. DateDrop
-                finds a compatible person, researches a real place, and sends
-                one private invitation to each of you.
+                {t(
+                  "No profiles to browse. No conversation to keep alive. DateDrop finds a compatible person, researches a real place, and sends one private invitation to each of you.",
+                )}
               </p>
 
               <div
@@ -77,13 +82,13 @@ export default function LandingPage() {
                 style={{ animationDelay: "120ms" }}
               >
                 <LinkButton to="/signup" size="lg">
-                  Open an evening <span aria-hidden>→</span>
+                  {t("Open an evening")} <span aria-hidden>→</span>
                 </LinkButton>
                 <Link
                   to="#how-it-works"
                   className="paper-rule py-2 text-[13px] font-semibold text-muted transition-colors hover:text-[var(--text)]"
                 >
-                  Read the two-minute brief
+                  {t("Read the two-minute brief")}
                 </Link>
               </div>
 
@@ -92,9 +97,9 @@ export default function LandingPage() {
                 style={{ animationDelay: "160ms" }}
               >
                 {[
-                  ["01", "No swiping"],
-                  ["02", "No chat audition"],
-                  ["03", "No contacts shared"],
+                  ["01", t("No swiping")],
+                  ["02", t("No chat audition")],
+                  ["03", t("No contacts shared")],
                 ].map(([number, label], index) => (
                   <div
                     key={label}
@@ -125,22 +130,25 @@ export default function LandingPage() {
             <div className="grid gap-10 lg:grid-cols-[0.68fr_1.32fr] lg:gap-20">
               <div>
                 <div className="docket-label text-[var(--accent-text)]">
-                  The route
+                  {t("The route")}
                 </div>
                 <h2 className="mt-4 text-[clamp(2.25rem,5vw,4.2rem)] leading-[0.98]">
-                  Less matching.
+                  {t("Less matching.")}
                   <br />
-                  More meeting.
+                  {t("More meeting.")}
                 </h2>
                 <p className="mt-5 max-w-sm text-[16px] leading-relaxed text-soft">
-                  We removed every step that exists only to keep you inside a
-                  dating app.
+                  {t(
+                    "We removed every step that exists only to keep you inside a dating app.",
+                  )}
                 </p>
               </div>
 
               <div className="grid border border-[var(--border-strong)] bg-[var(--bg-raised)] md:grid-cols-2">
                 <div className="p-6 sm:p-8">
-                  <div className="docket-label text-muted">The usual route</div>
+                  <div className="docket-label text-muted">
+                    {t("The usual route")}
+                  </div>
                   <ol className="mt-6">
                     {OLD_WAY.map((step, index) => (
                       <li
@@ -151,7 +159,7 @@ export default function LandingPage() {
                           {String(index + 1).padStart(2, "0")}
                         </span>
                         <span className="line-through decoration-[var(--border-strong)] decoration-1">
-                          {step}
+                          {t(step)}
                         </span>
                       </li>
                     ))}
@@ -160,7 +168,7 @@ export default function LandingPage() {
 
                 <div className="border-t border-[var(--border-strong)] bg-[var(--tint-ember-bg)] p-6 sm:p-8 md:border-l md:border-t-0">
                   <div className="docket-label text-[var(--tint-ember-strong)]">
-                    The DateDrop route
+                    {t("The DateDrop route")}
                   </div>
                   <ol className="mt-6">
                     {DATE_DROP_WAY.map(([number, step]) => (
@@ -172,7 +180,7 @@ export default function LandingPage() {
                           {number}
                         </span>
                         <span className="text-[15px] font-semibold">
-                          {step}
+                          {t(step)}
                         </span>
                       </li>
                     ))}
@@ -187,23 +195,23 @@ export default function LandingPage() {
           <div className="mx-auto grid max-w-6xl items-start gap-12 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
             <div className="lg:sticky lg:top-28">
               <div className="docket-label text-[var(--accent-text)]">
-                What arrives
+                {t("What arrives")}
               </div>
               <h2 className="mt-4 text-[clamp(2.2rem,5vw,4rem)] leading-[0.98]">
-                A plan,
+                {t("A plan,")}
                 <br />
-                not a profile.
+                {t("not a profile.")}
               </h2>
               <p className="mt-6 max-w-md text-[16px] leading-relaxed text-soft">
-                A DateDrop has a time, a public place, a budget, and one honest
-                reason the two of you might enjoy it. Nothing to research. One
-                decision to make.
+                {t(
+                  "A DateDrop has a time, a public place, a budget, and one honest reason the two of you might enjoy it. Nothing to research. One decision to make.",
+                )}
               </p>
               <ol className="mt-9 max-w-md border-y border-[var(--border)]">
                 {[
-                  ["01", "Places researched on the live web"],
-                  ["02", "Sources and evidence attached"],
-                  ["03", "Constraints and budget respected"],
+                  ["01", t("Places researched on the live web")],
+                  ["02", t("Sources and evidence attached")],
+                  ["03", t("Constraints and budget respected")],
                 ].map(([number, text]) => (
                   <li
                     key={text}
@@ -224,28 +232,28 @@ export default function LandingPage() {
           <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
             <div>
               <div className="docket-label text-ember-300">
-                Private by construction
+                {t("Private by construction")}
               </div>
               <h2 className="mt-4 text-[clamp(2.3rem,5vw,4.4rem)] leading-[0.98]">
-                The date arrives.
+                {t("The date arrives.")}
                 <br />
-                Your details don't.
+                {t("Your details don't.")}
               </h2>
               <p className="mt-6 max-w-xl text-[16px] leading-relaxed text-sand-300">
-                DateDrop Concierge sends every invitation separately. Before you
-                both accept, your match gets a first name, age, neighbourhood,
-                and a few interests — never your inbox or number.
+                {t(
+                  "DateDrop Concierge sends every invitation separately. Before you both accept, your match gets a first name, age, neighbourhood, and a few interests — never your inbox or number.",
+                )}
               </p>
             </div>
 
             <div className="border-y border-sand-500/50">
               {[
-                "Email address",
-                "Phone number",
-                "Home address",
-                "Exact location",
-                "Full name",
-                "Social handles",
+                t("Email address"),
+                t("Phone number"),
+                t("Home address"),
+                t("Exact location"),
+                t("Full name"),
+                t("Social handles"),
               ].map((item, index) => (
                 <div
                   key={item}
@@ -256,18 +264,19 @@ export default function LandingPage() {
                   </span>
                   <span className="text-[14px] text-sand-300">{item}</span>
                   <span className="docket-label text-ember-300">
-                    Not shared
+                    {t("Not shared")}
                   </span>
                 </div>
               ))}
               <p className="border-t border-sand-500/30 py-5 text-[12px] leading-relaxed text-sand-400">
-                DateDrop is 18+. We do not verify identity. Read exactly what we
-                do and don't do in the{" "}
+                {t(
+                  "DateDrop is 18+. We do not verify identity. Read exactly what we do and don't do in the",
+                )}{" "}
                 <Link
                   to="/safety"
                   className="text-sand-200 underline underline-offset-4"
                 >
-                  Safety Center
+                  {t("Safety Center")}
                 </Link>
                 .
               </p>
@@ -279,17 +288,17 @@ export default function LandingPage() {
           <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 py-16 sm:px-8 sm:py-20 md:grid-cols-[1fr_auto]">
             <div>
               <div className="docket-label text-[var(--accent-text)]">
-                Your invitation is open
+                {t("Your invitation is open")}
               </div>
               <h2 className="mt-3 text-[clamp(2.15rem,5vw,3.8rem)] leading-none">
-                When are you free?
+                {t("When are you free?")}
               </h2>
               <p className="mt-4 text-[15px] text-soft">
-                That is still the only question we need answered.
+                {t("That is still the only question we need answered.")}
               </p>
             </div>
             <LinkButton to="/signup" size="lg">
-              Get my first DateDrop <span aria-hidden>→</span>
+              {t("Get my first DateDrop")} <span aria-hidden>→</span>
             </LinkButton>
           </div>
         </section>
@@ -303,18 +312,20 @@ export default function LandingPage() {
               <div className="font-display text-[16px] text-[var(--text)]">
                 DateDrop
               </div>
-              <div className="mt-0.5">We plan the date. You just say yes.</div>
+              <div className="mt-0.5">
+                {t("We plan the date. You just say yes.")}
+              </div>
             </div>
           </div>
           <div className="flex gap-5">
             <Link to="/privacy" className="hover:text-[var(--text)]">
-              Privacy
+              {t("Privacy")}
             </Link>
             <Link to="/safety" className="hover:text-[var(--text)]">
-              Safety
+              {t("Safety")}
             </Link>
             <Link to="/signin" className="hover:text-[var(--text)]">
-              Sign in
+              {t("Sign in")}
             </Link>
           </div>
         </div>
@@ -324,44 +335,50 @@ export default function LandingPage() {
 }
 
 function AvailabilityDocket() {
+  const { t } = useI18n();
+
   return (
     <aside className="mx-auto max-w-md border border-[var(--border-strong)] bg-[var(--bg-raised)] shadow-[6px_6px_0_var(--shadow-ink)]">
       <div className="flex items-center justify-between border-b border-[var(--border-strong)] px-5 py-4">
-        <span className="docket-label">Availability docket</span>
+        <span className="docket-label">{t("Availability docket")}</span>
         <span className="font-mono text-[10px] text-muted">DD—001</span>
       </div>
       <div className="grid grid-cols-[5.25rem_1fr]">
         <div className="border-r border-[var(--border)] p-4 text-center">
-          <div className="docket-label text-[var(--accent-text)]">Sat</div>
+          <div className="docket-label text-[var(--accent-text)]">{t("Sat")}</div>
           <div className="mt-2 font-display text-[42px] leading-none">29</div>
           <div className="mt-2 font-mono text-[9px] text-muted">
-            AUG / SEOUL
+            {t("AUG / SEOUL")}
           </div>
         </div>
         <div className="p-5">
-          <div className="docket-label text-muted">Window submitted</div>
+          <div className="docket-label text-muted">{t("Window submitted")}</div>
           <div className="mt-2 font-display text-[27px]">18:00—22:30</div>
           <div className="mt-2 text-[13px] leading-relaxed text-soft">
-            One quiet evening. Flexible on neighbourhood.
+            {t("One quiet evening. Flexible on neighbourhood.")}
           </div>
         </div>
       </div>
       <div className="border-t border-dashed border-[var(--border-strong)] px-5 py-5">
         <div className="flex items-end justify-between gap-5">
           <div>
-            <div className="docket-label text-muted">Concierge instruction</div>
+            <div className="docket-label text-muted">
+              {t("Concierge instruction")}
+            </div>
             <div className="mt-2 max-w-[14rem] text-[14px] font-medium leading-snug">
-              Find someone thoughtful. Keep it easy to leave, easy to extend.
+              {t(
+                "Find someone thoughtful. Keep it easy to leave, easy to extend.",
+              )}
             </div>
           </div>
           <div className="rotate-[-7deg] border-2 border-ember-400 px-2.5 py-2 text-center text-ember-500">
-            <div className="docket-label text-[9px]">Ready</div>
+            <div className="docket-label text-[9px]">{t("Ready")}</div>
             <div className="mt-0.5 font-mono text-[8px]">CONCIERGE</div>
           </div>
         </div>
       </div>
       <div className="border-t border-[var(--border)] bg-[var(--bg-sunken)] px-5 py-3 font-mono text-[9px] uppercase tracking-[0.12em] text-muted">
-        Next: compatibility → venue research → private invite
+        {t("Next: compatibility → venue research → private invite")}
       </div>
     </aside>
   );
@@ -369,69 +386,72 @@ function AvailabilityDocket() {
 
 /** A concrete example, so the concept lands before anyone signs up. */
 function SampleDrop() {
+  const { t } = useI18n();
+
   return (
     <article className="relative border border-[var(--border-strong)] bg-[var(--bg-raised)] shadow-[7px_7px_0_var(--shadow-ink)]">
       <header className="flex items-center justify-between border-b border-[var(--border-strong)] px-5 py-4 sm:px-7">
         <span className="docket-label flex items-center gap-2 text-[var(--accent-text)]">
-          <Logo className="h-4 w-4" /> New DateDrop
+          <Logo className="h-4 w-4" /> {t("New DateDrop")}
         </span>
         <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-muted">
-          Preview / grounded live
+          {t("Preview / grounded live")}
         </span>
       </header>
 
       <div className="grid sm:grid-cols-[8rem_1fr]">
         <div className="border-b border-[var(--border)] p-5 sm:border-b-0 sm:border-r sm:p-6">
-          <div className="docket-label text-muted">Saturday</div>
+          <div className="docket-label text-muted">{t("Saturday")}</div>
           <div className="mt-2 font-display text-[42px] leading-none">7:00</div>
           <div className="mt-1 font-mono text-[10px] text-muted">PM · KST</div>
-          <div className="mt-7 docket-label text-muted">Area</div>
+          <div className="mt-7 docket-label text-muted">{t("Area")}</div>
           <div className="mt-1.5 text-[14px] font-semibold">Seongsu</div>
           <div className="text-[12px] text-muted">Seoul</div>
         </div>
 
         <div className="p-5 sm:p-7">
-          <div className="docket-label text-muted">Proposed route</div>
+          <div className="docket-label text-muted">{t("Proposed route")}</div>
           <div className="mt-5 space-y-5">
             <PlanStop
               time="19:00"
               title="Charmandre British Kitchen"
-              body="Dinner · calm room · about ₩28,000"
+              body={t("Dinner · calm room · about ₩28,000")}
             />
             <PlanStop
               time="20:40"
-              title="Quiet dessert café"
-              body="Four minutes on foot · open late"
+              title={t("Quiet dessert café")}
+              body={t("Four minutes on foot · open late")}
             />
           </div>
 
           <div className="mt-7 border-y border-dashed border-[var(--border-strong)] py-5">
-            <div className="docket-label text-muted">Who you would meet</div>
+            <div className="docket-label text-muted">{t("Who you would meet")}</div>
             <div className="mt-2 text-[16px] font-semibold">
               Alex · 29 · Seongsu
             </div>
             <div className="mt-1 text-[12px] text-muted">
-              Running / Films / Coffee
+              {t("Running / Films / Coffee")}
             </div>
             <p className="mt-4 text-[14px] leading-relaxed text-soft">
-              You both prefer quieter first dates and share an interest in films
-              and running.
+              {t(
+                "You both prefer quieter first dates and share an interest in films and running.",
+              )}
             </p>
           </div>
 
           <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
             <div>
-              <div className="docket-label text-muted">Estimate</div>
+              <div className="docket-label text-muted">{t("Estimate")}</div>
               <div className="mt-1 text-[14px] font-semibold">
-                ≈ ₩45,000 / person
+                ≈ ₩45,000 / {t("person")}
               </div>
             </div>
             <div className="flex gap-2">
               <span className="rounded-[3px] border border-[var(--border-strong)] px-4 py-2 text-[13px] text-muted">
-                Pass
+                {t("Pass")}
               </span>
               <span className="rounded-[3px] border border-ember-600 bg-ember-400 px-4 py-2 text-[13px] font-semibold text-white shadow-[2px_2px_0_var(--shadow-ink)]">
-                Accept
+                {t("Accept")}
               </span>
             </div>
           </div>
