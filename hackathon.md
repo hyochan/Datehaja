@@ -10,9 +10,9 @@
 - **Components:** @convex-dev/static-hosting
 - **Convex features:** schema, tables, indexes, queries, mutations, actions, HTTP actions, crons, scheduled functions, file storage, realtime queries, pagination
 - **Auth:** Convex Auth
-- **AI models:** gpt-5.6-terra (configured default, with a fallback ladder in `convex/integrations/openai.ts`)
+- **AI models:** gpt-5.6-luna (configured default, with a cheapest-capable fallback ladder in `convex/integrations/openai.ts`)
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-08-27T12:52:00Z
+- **Last updated:** 2026-08-27T13:10:00Z
 
 ## Log
 
@@ -234,3 +234,30 @@ One real bug surfaced by doing this rather than assuming: AgentMail rejects an
 a 400 that names the header rather than the character. Keys built from email
 addresses or ISO timestamps therefore failed silently at send time. Sanitising
 in the client means no call site has to remember. 187 tests.
+
+### 2026-08-27 - working tree
+Credit added to the OpenAI account, so the model path runs for the first time.
+All three stages now succeed against the live deployment: `rank_candidates`
+(5.9s), `venue_summary` (13.3s), `build_plan` (4.8s).
+
+The difference in output is the whole argument for the model path. Before, the
+rule-based fallback produced "Coffee → somewhere" from headings like "Cash and
+Tipping in South Korea". Now it produces:
+
+> **Dinner and easy conversation** — British dinner → relaxed conversation,
+> Seongsu, ₩40,000. Charmandre British Kitchen.
+> "You both enjoy films, coffee, running, and photography, and both prefer a
+> quiet first date with time to talk."
+
+Picked the model by measuring rather than by price list. On the hardest task —
+extracting venues from eight crawled pages — gpt-5-nano let blog headings
+through, gpt-5.6-luna and gpt-5-mini both returned six real venues, and luna did
+it 2.5x faster than mini at a lower price. gpt-5.6-terra, the most expensive
+candidate tried, could not run the request at all: a new account's
+tokens-per-minute allowance is too small for the payload, so it returns
+`429 Request too large`. The ladder is now ordered cheapest-capable first, and a
+TPM refusal drops to the next model instead of failing, since smaller models
+carry roomier allowances.
+
+One DateDrop costs ~22,800 tokens end to end, about $0.0066. Venue extraction is
+80% of that, since it reads the crawled pages.

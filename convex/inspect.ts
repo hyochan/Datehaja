@@ -62,6 +62,9 @@ export const snapshot = internalQuery({
         model: a.model,
         status: a.status,
         latencyMs: a.latencyMs,
+        promptTokens: a.promptTokens ?? null,
+        completionTokens: a.completionTokens ?? null,
+        totalTokens: a.totalTokens ?? null,
         error: a.error ?? null,
       })),
       emails: emails.map((e) => ({

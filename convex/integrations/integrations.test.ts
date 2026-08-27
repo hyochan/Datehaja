@@ -125,6 +125,40 @@ describe("OpenAI structured output", () => {
     expect(seen[0]).not.toBe(seen[1]);
   });
 
+  it("drops to the next model when the payload exceeds this model's TPM limit", async () => {
+    const seen: string[] = [];
+    mockFetch((_url, init) => {
+      const body = JSON.parse(String(init?.body)) as { model: string };
+      seen.push(body.model);
+      if (seen.length === 1) {
+        // No retry-after: the request will never fit this model on this account.
+        return json(
+          {
+            error: {
+              code: "rate_limit_exceeded",
+              message: "Request too large for gpt-5.6-luna on tokens per min",
+            },
+          },
+          429,
+        );
+      }
+      return json({
+        status: "completed",
+        output: [{ type: "message", content: [{ type: "output_text", text: "{}" }] }],
+      });
+    });
+
+    const result = await structured({
+      instructions: "x",
+      input: "y",
+      schemaName: "s",
+      schema: {},
+    });
+    expect(result.ok).toBe(true);
+    expect(seen.length).toBe(2);
+    expect(seen[1]).not.toBe(seen[0]);
+  });
+
   it("stops immediately on a billing failure rather than burning the ladder", async () => {
     let calls = 0;
     mockFetch(() => {

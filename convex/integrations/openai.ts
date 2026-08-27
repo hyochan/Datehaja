@@ -9,14 +9,20 @@
 const OPENAI_BASE = "https://api.openai.com/v1";
 
 /**
- * Model ladder. `OPENAI_MODEL` overrides the head of the list; if a model is
- * not available to the account we fall through rather than failing the drop.
+ * Model ladder, cheapest-capable first. `OPENAI_MODEL` overrides the head.
+ *
+ * Chosen by measuring the hardest task — extracting venues from eight crawled
+ * pages — rather than by price list. gpt-5.6-luna matched gpt-5-mini's output
+ * exactly at 2.5x the speed and a lower price, and the far pricier gpt-5.6-terra
+ * could not run the request at all on a new account: its tokens-per-minute
+ * allowance is too small for the payload, so it 429s with "Request too large".
+ * Bigger is not automatically better here.
  */
 const MODEL_LADDER = [
-  "gpt-5.6-terra",
-  "gpt-5.6",
-  "gpt-5.4-mini",
+  "gpt-5.6-luna",
   "gpt-5-mini",
+  "gpt-5-nano",
+  "gpt-5.4-mini",
   "gpt-4.1-mini",
 ];
 
@@ -151,6 +157,10 @@ export async function structured<T>(
           await sleep(Math.min(4000, Number(res.headers.get("retry-after")) * 1000));
           continue; // retry same model
         }
+        // A tokens-per-minute limit with no retry-after means this payload will
+        // never fit THIS model on THIS account. Smaller models carry separate,
+        // roomier allowances, so drop down the ladder instead of giving up.
+        if (res.status === 429) break;
         if (res.status >= 500) {
           await sleep(700);
           continue;

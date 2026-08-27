@@ -122,7 +122,8 @@ Design rules the code enforces:
 - **The model ranks; it never filters.** Every hard constraint is programmatic. A pair that fails Stage 1 is never shown to the model, and a model score cannot resurrect it.
 - **Structured or nothing.** Free text is never parsed by hand. Refusals, truncation (`status: "incomplete"`) and non-JSON output are all detected and treated as failures rather than parsed optimistically.
 - **Prompts forbid sensitive-attribute reasoning** — gender, race, religion, nationality, disability, body, income — explicitly, and the code never puts those in the payload in the first place.
-- **A model ladder** handles model availability; billing failures (`credit_balance_exhausted` and friends) stop immediately instead of burning the whole ladder.
+- **A model ladder** handles availability, ordered cheapest-capable first. It was chosen by measuring the hardest task — extracting venues from eight crawled pages — not from the price list. `gpt-5.6-luna` matched `gpt-5-mini`'s output exactly at 2.5x the speed and a lower price, while the far pricier `gpt-5.6-terra` could not run the request at all on a new account: its tokens-per-minute allowance is too small for the payload. A TPM refusal now drops to the next model rather than failing, since smaller models carry roomier allowances. Billing failures (`credit_balance_exhausted` and friends) stop immediately instead of burning the ladder.
+- **One DateDrop costs about 23,000 tokens** across all three calls — roughly $0.0066 on `gpt-5.6-luna`. Venue extraction is 80% of that, because it reads the crawled pages.
 - **Every call is recorded** in `aiRuns` — purpose, model, latency, tokens, outcome — and surfaced in the app's "How we built this" panel.
 
 ## How Firecrawl is used
@@ -209,7 +210,7 @@ node -e 'import("jose").then(async({generateKeyPair,exportPKCS8,exportJWK})=>{co
 Then set `JWT_PRIVATE_KEY` and `JWKS` from that file on the deployment and delete it.
 
 ```bash
-bun run test             # 187 tests
+bun run test             # 188 tests
 bun run typecheck
 bun run build
 bunx convex run demo:ensureSeeded '{}'    # seed the demo personas
@@ -242,7 +243,7 @@ or generated, and it tells you about any variable the app doesn't actually read.
 | `OPENAI_API_KEY` | **yes** | [platform.openai.com](https://platform.openai.com/settings/organization/api-keys) → API keys. Prepaid — add credit or every call 429s. | Falls back to rule-based venue extraction and a templated plan, labelled *Unconfirmed details* |
 | `AGENTMAIL_API_KEY` | **yes** | [console.agentmail.to](https://console.agentmail.to) → API Keys. Free tier, no card: 3 inboxes, 3,000 emails/month | No mail sent; each send logged as `skipped_no_provider` |
 | `FIRECRAWL_API_KEY` | no | [firecrawl.dev](https://firecrawl.dev) → API Keys | Nothing breaks — both `/v2/search` and `/v2/scrape` serve unauthenticated requests. A key mainly buys speed and headroom: search returns in ~400–900ms with one, against 8–18s without |
-| `OPENAI_MODEL` | no | — | Uses the model ladder's default |
+| `OPENAI_MODEL` | no | — | Uses the ladder's default, `gpt-5.6-luna` |
 
 Two more are **produced, not typed**. Once `AGENTMAIL_API_KEY` is set:
 
@@ -315,7 +316,7 @@ src/
 
 ## Testing
 
-187 tests, `bun run test`.
+188 tests, `bun run test`.
 
 - **Unit** — hard filters (every exclusion reason and its soft counterpart), deterministic scoring bounds and ordering, lifecycle transitions including every illegal one, expiry and deadline rules, availability overlap, timezone handling across zones, and the privacy projections (including an assertion that no coordinate, DOB, email or surname can leak through).
 - **Integration** (`convex-test`) — accept, pass, withdraw, cancel, expire and complete driven as real signed-in users, plus the negative authorisation cases: a stranger can't accept your drop, a signed-out caller can't act, a non-participant sees `null`.
