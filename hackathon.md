@@ -12,7 +12,7 @@
 - **Auth:** Convex Auth
 - **AI models:** gpt-5.6-luna (configured default, with a cheapest-capable fallback ladder in `convex/integrations/openai.ts`)
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-08-27T18:56:54Z
+- **Last updated:** 2026-08-27T19:51:26Z
 
 ## Log
 
@@ -278,3 +278,13 @@ Checked dark and light themes at 390px and 1440px with no overflow or browser
 errors. Rechecked the landing-to-signup route, adult-confirmation guard,
 sign-in, privacy, safety, protected-route redirect, and theme switch in a real
 browser; 188 tests and the production build pass (`src/`).
+
+### 2026-08-28 - a2628f8
+Added country-aware internationalization for ten launch markets: the United
+States, United Kingdom, Canada, Australia, South Korea, Japan, Germany, France,
+the Netherlands, and Sweden. The selected locale is detected, persisted, and
+applied to document metadata, accessibility labels, dates, times, money, and
+the core journey from landing and signup through onboarding, dashboard,
+availability, history, notifications, privacy, and safety. Verified every
+locale in a real browser, including reload persistence and a 390px Korean
+mobile layout; 193 tests and the production build pass (`src/i18n/`, `src/`).
