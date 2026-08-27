@@ -15,7 +15,11 @@ import {
   SUPPORTED_CITIES,
 } from "@convex/lib/catalog";
 import { Logo } from "../components/layout/Logo";
-import { ChipGroup, ChipRadio, SelectionCount } from "../components/forms/ChipGroup";
+import {
+  ChipGroup,
+  ChipRadio,
+  SelectionCount,
+} from "../components/forms/ChipGroup";
 import { AvailabilityEditor } from "../components/forms/AvailabilityEditor";
 import {
   Button,
@@ -84,12 +88,14 @@ export default function OnboardingPage() {
   const [interests, setInterests] = useState<string[]>([]);
   const [hobbies, setHobbies] = useState<string[]>([]);
   const [languages, setLanguages] = useState<string[]>([]);
-  const [socialEnergy, setSocialEnergy] = useState<"introvert" | "ambivert" | "extrovert">(
-    "ambivert",
-  );
+  const [socialEnergy, setSocialEnergy] = useState<
+    "introvert" | "ambivert" | "extrovert"
+  >("ambivert");
   const [firstDateVibe, setFirstDateVibe] = useState<string[]>([]);
   const [smokes, setSmokes] = useState(false);
-  const [drinks, setDrinks] = useState<"none" | "occasional" | "social">("occasional");
+  const [drinks, setDrinks] = useState<"none" | "occasional" | "social">(
+    "occasional",
+  );
 
   const [ageMin, setAgeMin] = useState(25);
   const [ageMax, setAgeMax] = useState(38);
@@ -108,15 +114,17 @@ export default function OnboardingPage() {
     "none" | "occasional" | "social" | "no_preference"
   >("no_preference");
   const [alcoholHard, setAlcoholHard] = useState(false);
-  const [dayPreference, setDayPreference] = useState<"weekday" | "weekend" | "either">(
-    "either",
-  );
+  const [dayPreference, setDayPreference] = useState<
+    "weekday" | "weekend" | "either"
+  >("either");
 
   const [dateTypes, setDateTypes] = useState<string[]>(["coffee", "dinner"]);
-  const [indoorOutdoor, setIndoorOutdoor] = useState<"indoor" | "outdoor" | "either">(
+  const [indoorOutdoor, setIndoorOutdoor] = useState<
+    "indoor" | "outdoor" | "either"
+  >("either");
+  const [atmosphere, setAtmosphere] = useState<"quiet" | "lively" | "either">(
     "either",
   );
-  const [atmosphere, setAtmosphere] = useState<"quiet" | "lively" | "either">("either");
   // null means "not chosen yet". Using 0 as the sentinel made the controlled
   // input snap back to the default the moment someone cleared the field.
   const [budgetMin, setBudgetMin] = useState<number | null>(null);
@@ -126,7 +134,8 @@ export default function OnboardingPage() {
   const [accessibility, setAccessibility] = useState<string[]>([]);
 
   const city = useMemo(
-    () => SUPPORTED_CITIES.find((c) => c.key === cityKey) ?? SUPPORTED_CITIES[0],
+    () =>
+      SUPPORTED_CITIES.find((c) => c.key === cityKey) ?? SUPPORTED_CITIES[0],
     [cityKey],
   );
   const band = BUDGET_BANDS[city.currency] ?? BUDGET_BANDS.USD;
@@ -149,7 +158,10 @@ export default function OnboardingPage() {
           firstDateVibe?: string[];
           occupationCategory?: string;
           showOccupation?: boolean;
-          lifestyle?: { smokes: boolean; drinks: "none" | "occasional" | "social" };
+          lifestyle?: {
+            smokes: boolean;
+            drinks: "none" | "occasional" | "social";
+          };
           ageConfirmed18?: boolean;
         }
       | null
@@ -298,7 +310,8 @@ export default function OnboardingPage() {
 
   // dobMs is never returned to the client, so after a reload the age comes from
   // the denormalised ageYears the server keeps for exactly this reason.
-  const savedAge = (me?.profile as { ageYears?: number } | null | undefined)?.ageYears;
+  const savedAge = (me?.profile as { ageYears?: number } | null | undefined)
+    ?.ageYears;
   const age = ageFromDateString(dob) ?? savedAge ?? null;
   const canContinue = (() => {
     switch (step) {
@@ -325,15 +338,18 @@ export default function OnboardingPage() {
 
   return (
     <div className="min-h-dvh">
-      <header className="sticky top-0 z-20 border-b border-[var(--border)] bg-[color-mix(in_oklab,var(--bg)_88%,transparent)] backdrop-blur-lg">
+      <header className="sticky top-0 z-20 border-b border-[var(--border-strong)] bg-[var(--bg)]">
         <div className="mx-auto max-w-2xl px-5 py-4 sm:px-8">
           <div className="mb-3 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <Logo className="h-6 w-6" />
-              <span className="font-display text-[17px] font-medium">DateDrop</span>
+              <span className="font-display text-[17px] font-medium">
+                DateDrop
+              </span>
             </div>
-            <span className="text-[13px] text-muted">
-              Step {step + 1} of {STEPS.length}
+            <span className="docket-label text-muted">
+              Brief {String(step + 1).padStart(2, "0")} /{" "}
+              {String(STEPS.length).padStart(2, "0")}
             </span>
           </div>
           <div
@@ -348,7 +364,7 @@ export default function OnboardingPage() {
               <div
                 key={label}
                 className={cx(
-                  "h-1 flex-1 rounded-full transition-colors duration-300",
+                  "h-1 flex-1 transition-colors duration-300",
                   index <= step ? "bg-ember-400" : "bg-[var(--border)]",
                 )}
               />
@@ -358,8 +374,13 @@ export default function OnboardingPage() {
       </header>
 
       <main className="mx-auto max-w-2xl px-5 pb-32 pt-8 sm:px-8 sm:pt-12">
+        <div className="docket-label mb-3 text-[var(--accent-text)]">
+          {STEPS[step]}
+        </div>
         <h1 className="mb-2 text-[28px] leading-tight">{stepTitle(step)}</h1>
-        <p className="mb-8 text-[15.5px] leading-relaxed text-soft">{stepBlurb(step)}</p>
+        <p className="mb-8 text-[15.5px] leading-relaxed text-soft">
+          {stepBlurb(step)}
+        </p>
 
         {error && (
           <div className="mb-6">
@@ -388,7 +409,11 @@ export default function OnboardingPage() {
               label="Date of birth"
               hint="Used to check you're 18+ and to match age ranges. Never shown to anyone."
               htmlFor="dob"
-              error={dob && age !== null && age < 18 ? "You must be 18 or over." : null}
+              error={
+                dob && age !== null && age < 18
+                  ? "You must be 18 or over."
+                  : null
+              }
             >
               <TextInput
                 id="dob"
@@ -397,7 +422,9 @@ export default function OnboardingPage() {
                 onChange={(e) => setDob(e.target.value)}
               />
               {age !== null && age >= 18 && (
-                <p className="mt-1.5 text-[13px] text-muted">You'll appear as {age}.</p>
+                <p className="mt-1.5 text-[13px] text-muted">
+                  You'll appear as {age}.
+                </p>
               )}
             </Field>
 
@@ -461,7 +488,10 @@ export default function OnboardingPage() {
               hint="Neighbourhood only — we never store or share your address."
             >
               <ChipRadio
-                options={city.neighborhoods.map((n) => ({ key: n.name, label: n.name }))}
+                options={city.neighborhoods.map((n) => ({
+                  key: n.name,
+                  label: n.name,
+                }))}
                 value={neighborhood}
                 onChange={setNeighborhood}
                 ariaLabel="Your neighbourhood"
@@ -475,7 +505,9 @@ export default function OnboardingPage() {
                 onChange={(e) => setAgeConfirmed(e.target.checked)}
                 className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--color-ember-400)]"
               />
-              <span>I confirm I'm 18 or over. DateDrop is an adults-only service.</span>
+              <span>
+                I confirm I'm 18 or over. DateDrop is an adults-only service.
+              </span>
             </label>
           </div>
         )}
@@ -494,7 +526,9 @@ export default function OnboardingPage() {
                 placeholder="I edit documentaries. Big on markets, small on small talk."
                 onChange={(e) => setBio(e.target.value)}
               />
-              <p className="mt-1.5 text-right text-[12px] text-muted">{bio.length}/600</p>
+              <p className="mt-1.5 text-right text-[12px] text-muted">
+                {bio.length}/600
+              </p>
             </Field>
 
             <Field label="What you do" optional htmlFor="occupation">
@@ -631,7 +665,10 @@ export default function OnboardingPage() {
               />
             </Field>
 
-            <Field label="How far you'll travel" hint={`Up to ${maxDistanceKm} km`}>
+            <Field
+              label="How far you'll travel"
+              hint={`Up to ${maxDistanceKm} km`}
+            >
               <input
                 type="range"
                 min={2}
@@ -726,7 +763,10 @@ export default function OnboardingPage() {
 
         {step === 3 && (
           <div className="animate-fade-up">
-            <Field label="Kinds of date you'd enjoy" hint="Pick as many as apply.">
+            <Field
+              label="Kinds of date you'd enjoy"
+              hint="Pick as many as apply."
+            >
               <ChipGroup
                 options={DATE_TYPE_OPTIONS.map((d) => ({
                   key: d.key,
@@ -778,7 +818,9 @@ export default function OnboardingPage() {
                   value={effectiveBudgetMin}
                   aria-label="Minimum budget"
                   onChange={(e) =>
-                    setBudgetMin(e.target.value === "" ? null : Number(e.target.value))
+                    setBudgetMin(
+                      e.target.value === "" ? null : Number(e.target.value),
+                    )
                   }
                 />
                 <span className="text-muted">to</span>
@@ -789,7 +831,9 @@ export default function OnboardingPage() {
                   value={effectiveBudgetMax}
                   aria-label="Maximum budget"
                   onChange={(e) =>
-                    setBudgetMax(e.target.value === "" ? null : Number(e.target.value))
+                    setBudgetMax(
+                      e.target.value === "" ? null : Number(e.target.value),
+                    )
                   }
                 />
               </div>
@@ -802,7 +846,10 @@ export default function OnboardingPage() {
 
             <Field label="Dietary requirements" optional>
               <ChipGroup
-                options={DIETARY_OPTIONS.map((d) => ({ key: d.key, label: d.label }))}
+                options={DIETARY_OPTIONS.map((d) => ({
+                  key: d.key,
+                  label: d.label,
+                }))}
                 selected={dietary}
                 onChange={setDietary}
                 ariaLabel="Dietary requirements"
@@ -815,7 +862,10 @@ export default function OnboardingPage() {
               hint="We'll only ever plan somewhere that meets these. Shared with venues, never with your match."
             >
               <ChipGroup
-                options={ACCESSIBILITY_OPTIONS.map((a) => ({ key: a.key, label: a.label }))}
+                options={ACCESSIBILITY_OPTIONS.map((a) => ({
+                  key: a.key,
+                  label: a.label,
+                }))}
                 selected={accessibility}
                 onChange={setAccessibility}
                 ariaLabel="Accessibility needs"
@@ -844,16 +894,28 @@ export default function OnboardingPage() {
               </p>
 
               <dl className="mx-auto mt-7 max-w-sm space-y-3 text-left">
-                <SummaryRow label="You" value={`${displayName}, ${age ?? "—"}`} />
-                <SummaryRow label="Area" value={`${neighborhood}, ${city.city}`} />
+                <SummaryRow
+                  label="You"
+                  value={`${displayName}, ${age ?? "—"}`}
+                />
+                <SummaryRow
+                  label="Area"
+                  value={`${neighborhood}, ${city.city}`}
+                />
                 <SummaryRow
                   label="Looking for"
                   value={interestedIn
-                    .map((g) => GENDER_OPTIONS.find((o) => o.key === g)?.label ?? g)
+                    .map(
+                      (g) =>
+                        GENDER_OPTIONS.find((o) => o.key === g)?.label ?? g,
+                    )
                     .join(", ")}
                 />
                 <SummaryRow label="Age range" value={`${ageMin}–${ageMax}`} />
-                <SummaryRow label="Interests" value={interests.slice(0, 4).join(" · ")} />
+                <SummaryRow
+                  label="Interests"
+                  value={interests.slice(0, 4).join(" · ")}
+                />
                 <SummaryRow
                   label="Budget"
                   value={`${formatMoney(effectiveBudgetMin, city.currency)}–${formatMoney(effectiveBudgetMax, city.currency)}`}
@@ -863,9 +925,9 @@ export default function OnboardingPage() {
 
             <div className="mt-4">
               <Notice tone="info" title="Demo profiles are on">
-                This deployment includes clearly-marked fictional demo profiles so
-                you can see the whole flow immediately. Turn them off any time in
-                Settings.
+                This deployment includes clearly-marked fictional demo profiles
+                so you can see the whole flow immediately. Turn them off any
+                time in Settings.
               </Notice>
             </div>
           </div>

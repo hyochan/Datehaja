@@ -4,7 +4,7 @@
 - **Event:** Convex All Gas Hackathon
 - **What it does:** Asks only when you're free, then researches a real date at a real venue, matches you with someone compatible, and privately invites you both — without either of you seeing the other's contact details.
 - **Live app:** https://merry-bass-190.convex.site
-- **Repo:** https://github.com/hyochan/datedrop
+- **Repo:** private
 - **Frontend:** Convex static hosting
 - **Convex deployment:** https://merry-bass-190.convex.cloud
 - **Components:** @convex-dev/static-hosting
@@ -12,7 +12,7 @@
 - **Auth:** Convex Auth
 - **AI models:** gpt-5.6-luna (configured default, with a cheapest-capable fallback ladder in `convex/integrations/openai.ts`)
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-08-27T18:26:22Z
+- **Last updated:** 2026-08-27T18:44:09Z
 
 ## Log
 
@@ -268,3 +268,11 @@ checklist now requires a deliverable email before the take so the real
 AgentMail invitation can be shown. Verified the sponsors' current X handles,
 updated the public test count, and reran the suite: 188 tests pass
 (`submission/DEMO_SCRIPT.md`, `submission/SOCIAL.md`).
+
+### 2026-08-28 - e03b98c
+Reworked the product around a private-concierge docket rather than a generic
+rounded dashboard: paper-and-ink tokens, compact status stamps, editorial
+layouts, and a rebuilt landing and authentication flow. Applied the same visual
+language to the app shell, onboarding, public records, and DateDrop cards.
+Checked dark and light themes at 390px and 1440px with no overflow or browser
+errors; 188 tests and the production build pass (`src/`).

@@ -25,7 +25,9 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
     setError(null);
 
     if (signingUp && !ageConfirmed) {
-      setError("DateDrop is for adults only — please confirm you're 18 or over.");
+      setError(
+        "DateDrop is for adults only — please confirm you're 18 or over.",
+      );
       return;
     }
     if (signingUp && password.length < 8) {
@@ -40,7 +42,9 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
         password,
         flow: signingUp ? "signUp" : "signIn",
       });
-      navigate(next && next.startsWith("/") ? next : "/dashboard", { replace: true });
+      navigate(next && next.startsWith("/") ? next : "/dashboard", {
+        replace: true,
+      });
     } catch (e) {
       const message = readableError(e);
       setError(
@@ -57,109 +61,182 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <header className="px-5 pt-6 sm:px-8">
-        <Link to="/" className="inline-flex items-center gap-2.5" aria-label="DateDrop home">
-          <Logo className="h-7 w-7" />
-          <span className="font-display text-[19px] font-medium tracking-tight">
-            DateDrop
+    <div className="min-h-dvh lg:grid lg:grid-cols-[0.84fr_1.16fr]">
+      <aside className="relative hidden min-h-dvh flex-col justify-between overflow-hidden border-r border-ink-600 bg-ink-950 p-10 text-sand-50 lg:flex xl:p-14">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-3 self-start"
+          aria-label="DateDrop home"
+        >
+          <Logo className="h-9 w-9" />
+          <span>
+            <span className="block font-display text-[21px]">DateDrop</span>
+            <span className="docket-label mt-1 block text-[8px] text-sand-400">
+              Private date concierge
+            </span>
           </span>
         </Link>
-      </header>
 
-      <main className="flex flex-1 items-center justify-center px-5 py-10 sm:px-8">
-        <div className="w-full max-w-[26rem]">
-          <h1 className="text-[30px] leading-tight">
-            {signingUp ? "Let's find you a date." : "Welcome back."}
-          </h1>
-          <p className="mt-2 text-[15px] leading-relaxed text-soft">
-            {signingUp
-              ? "Two minutes of setup, then all we ever ask is when you're free."
-              : "Sign in to see your DateDrops."}
+        <div className="my-16 max-w-lg">
+          <div className="docket-label text-ember-300">Concierge brief</div>
+          <h2 className="mt-5 text-[clamp(3.2rem,5vw,5.5rem)] leading-[0.91] tracking-[-0.045em]">
+            Your free time is enough to begin.
+          </h2>
+          <p className="mt-7 max-w-md text-[16px] leading-relaxed text-sand-300">
+            Give us an evening. We handle compatibility, the place, the plan,
+            and two private invitations.
           </p>
+        </div>
 
-          <form onSubmit={handleSubmit} className="mt-8" noValidate>
-            <Field label="Email" htmlFor="email">
-              <TextInput
-                id="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                placeholder="you@example.com"
-                onChange={(e) => setEmail(e.target.value)}
-                invalid={Boolean(error)}
-              />
-            </Field>
-
-            <Field
-              label="Password"
-              htmlFor="password"
-              hint={signingUp ? "At least 8 characters." : undefined}
+        <ol className="border-y border-sand-500/40">
+          {[
+            ["01", "Your contact details stay yours"],
+            ["02", "Every venue has a live source"],
+            ["03", "Both people answer in private"],
+          ].map(([number, item]) => (
+            <li
+              key={item}
+              className="grid grid-cols-[2.5rem_1fr] border-t border-sand-500/30 py-3.5 text-[13px] first:border-t-0"
             >
-              <TextInput
-                id="password"
-                type="password"
-                autoComplete={signingUp ? "new-password" : "current-password"}
-                required
-                minLength={signingUp ? 8 : undefined}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                invalid={Boolean(error)}
-              />
-            </Field>
+              <span className="font-mono text-[9px] text-ember-300">
+                {number}
+              </span>
+              <span className="text-sand-300">{item}</span>
+            </li>
+          ))}
+        </ol>
+      </aside>
 
-            {signingUp && (
-              <label className="mb-5 flex cursor-pointer items-start gap-3 rounded-xl border border-[var(--border-strong)] p-3.5 text-[14px] leading-relaxed">
-                <input
-                  type="checkbox"
-                  checked={ageConfirmed}
-                  onChange={(e) => setAgeConfirmed(e.target.checked)}
-                  className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--color-ember-400)]"
+      <main className="flex min-h-dvh flex-col bg-[var(--bg)]">
+        <header className="flex h-20 items-center border-b border-[var(--border-strong)] px-5 sm:px-8 lg:justify-end">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2.5 lg:hidden"
+            aria-label="DateDrop home"
+          >
+            <Logo className="h-8 w-8" />
+            <span className="font-display text-[20px] font-medium tracking-tight">
+              DateDrop
+            </span>
+          </Link>
+          <span className="docket-label ml-auto text-muted">
+            {signingUp ? "New client / 01" : "Client return / 01"}
+          </span>
+        </header>
+
+        <div className="flex flex-1 items-center px-5 py-12 sm:px-8 lg:px-16 xl:px-24">
+          <div className="w-full max-w-[29rem]">
+            <div className="docket-label text-[var(--accent-text)]">
+              {signingUp ? "Open your account" : "Welcome back"}
+            </div>
+            <h1 className="mt-4 text-[clamp(2.6rem,6vw,4.4rem)] leading-[0.96]">
+              {signingUp
+                ? "Reserve your first evening."
+                : "Your dates are this way."}
+            </h1>
+            <p className="mt-4 max-w-md text-[15px] leading-relaxed text-soft">
+              {signingUp
+                ? "Two minutes of setup. After that, all we ask is when you're free."
+                : "Sign in to review invitations, open evenings, and confirmed plans."}
+            </p>
+
+            <form
+              onSubmit={handleSubmit}
+              className="mt-9 border-t border-[var(--border-strong)] pt-7"
+              noValidate
+            >
+              <Field label="Email" htmlFor="email">
+                <TextInput
+                  id="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={email}
+                  placeholder="you@example.com"
+                  onChange={(e) => setEmail(e.target.value)}
+                  invalid={Boolean(error)}
                 />
-                <span>
-                  I'm 18 or over, and I understand DateDrop{" "}
-                  <strong className="font-medium">does not verify identity</strong>.
-                </span>
-              </label>
-            )}
+              </Field>
 
-            {error && (
-              <div className="mb-5">
-                <Notice tone="warn">{error}</Notice>
-              </div>
-            )}
+              <Field
+                label="Password"
+                htmlFor="password"
+                hint={signingUp ? "At least 8 characters." : undefined}
+              >
+                <TextInput
+                  id="password"
+                  type="password"
+                  autoComplete={signingUp ? "new-password" : "current-password"}
+                  required
+                  minLength={signingUp ? 8 : undefined}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  invalid={Boolean(error)}
+                />
+              </Field>
 
-            <Button type="submit" size="lg" fullWidth loading={submitting}>
-              {signingUp ? "Create my account" : "Sign in"}
-            </Button>
-          </form>
+              {signingUp && (
+                <label className="mb-5 flex cursor-pointer items-start gap-3 rounded-[3px] border border-[var(--border-strong)] bg-[var(--bg-raised)] p-3.5 text-[14px] leading-relaxed">
+                  <input
+                    type="checkbox"
+                    checked={ageConfirmed}
+                    onChange={(e) => setAgeConfirmed(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 shrink-0 rounded-none accent-[var(--color-ember-400)]"
+                  />
+                  <span>
+                    I'm 18 or over, and I understand DateDrop{" "}
+                    <strong className="font-semibold">
+                      does not verify identity
+                    </strong>
+                    .
+                  </span>
+                </label>
+              )}
 
-          <p className="mt-6 text-center text-[14.5px] text-muted">
-            {signingUp ? (
-              <>
-                Already have an account?{" "}
-                <Link to="/signin" className="font-medium text-[var(--accent-text)] hover:underline">
-                  Sign in
-                </Link>
-              </>
-            ) : (
-              <>
-                New here?{" "}
-                <Link to="/signup" className="font-medium text-[var(--accent-text)] hover:underline">
-                  Create an account
-                </Link>
-              </>
-            )}
-          </p>
+              {error && (
+                <div className="mb-5">
+                  <Notice tone="warn">{error}</Notice>
+                </div>
+              )}
 
-          <p className="mt-8 text-center text-[13px] leading-relaxed text-muted">
-            Your email is only ever used by DateDrop Concierge to reach you. It's
-            never shown to another user.{" "}
-            <Link to="/privacy" className="underline underline-offset-2">
-              How privacy works
-            </Link>
-          </p>
+              <Button type="submit" size="lg" fullWidth loading={submitting}>
+                {signingUp ? "Create my account" : "Sign in"}{" "}
+                <span aria-hidden>→</span>
+              </Button>
+            </form>
+
+            <p className="mt-6 text-[14px] text-muted">
+              {signingUp ? (
+                <>
+                  Already have an account?{" "}
+                  <Link
+                    to="/signin"
+                    className="font-semibold text-[var(--accent-text)] hover:underline"
+                  >
+                    Sign in
+                  </Link>
+                </>
+              ) : (
+                <>
+                  New here?{" "}
+                  <Link
+                    to="/signup"
+                    className="font-semibold text-[var(--accent-text)] hover:underline"
+                  >
+                    Create an account
+                  </Link>
+                </>
+              )}
+            </p>
+
+            <p className="mt-10 border-t border-[var(--border)] pt-5 text-[12px] leading-relaxed text-muted">
+              Your email is used only by DateDrop Concierge to reach you. It is
+              never shown to another user.{" "}
+              <Link to="/privacy" className="underline underline-offset-4">
+                How privacy works
+              </Link>
+            </p>
+          </div>
         </div>
       </main>
     </div>

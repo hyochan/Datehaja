@@ -13,18 +13,19 @@ type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "quiet";
 type ButtonSize = "sm" | "md" | "lg";
 
 const BUTTON_BASE =
-  "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-[transform,background-color,border-color,color,box-shadow] duration-150 active:scale-[0.985] disabled:opacity-50 disabled:pointer-events-none select-none whitespace-nowrap";
+  "inline-flex items-center justify-center gap-2 rounded-[3px] border font-semibold tracking-[-0.01em] transition-[transform,background-color,border-color,color,box-shadow] duration-150 active:translate-x-px active:translate-y-px disabled:opacity-50 disabled:pointer-events-none select-none whitespace-nowrap";
 
 const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   primary:
-    "bg-ember-400 text-white hover:bg-ember-500 shadow-[0_1px_2px_rgb(180_67_34/0.25),0_8px_20px_-10px_rgb(180_67_34/0.5)]",
+    "border-ember-600 bg-ember-400 text-white shadow-[3px_3px_0_var(--shadow-ink)] hover:-translate-x-px hover:-translate-y-px hover:bg-ember-500 hover:shadow-[4px_4px_0_var(--shadow-ink)]",
   secondary:
-    "bg-[var(--bg-raised)] text-[var(--text)] border border-[var(--border-strong)] hover:border-[var(--tint-ember-border)] hover:bg-[var(--tint-ember-bg)]",
-  ghost: "text-[var(--text-soft)] hover:text-[var(--text)] hover:bg-[var(--bg-sunken)]",
+    "border-[var(--border-strong)] bg-[var(--bg-raised)] text-[var(--text)] shadow-[2px_2px_0_var(--shadow-ink)] hover:-translate-x-px hover:-translate-y-px hover:border-[var(--text-muted)]",
+  ghost:
+    "border-transparent text-[var(--text-soft)] hover:border-[var(--border)] hover:text-[var(--text)]",
   quiet:
-    "bg-[var(--bg-sunken)] text-[var(--text)] border border-transparent hover:border-[var(--border-strong)]",
+    "border-[var(--border)] bg-[var(--bg-sunken)] text-[var(--text)] hover:border-[var(--border-strong)]",
   danger:
-    "bg-[var(--bg-raised)] text-[var(--tint-ember-strong)] border border-[var(--tint-ember-border)] hover:bg-[var(--tint-ember-bg)]",
+    "border-[var(--tint-ember-border)] bg-[var(--bg-raised)] text-[var(--tint-ember-strong)] hover:bg-[var(--tint-ember-bg)]",
 };
 
 const BUTTON_SIZES: Record<ButtonSize, string> = {
@@ -151,12 +152,10 @@ export function SectionHeading({
   action?: ReactNode;
 }) {
   return (
-    <div className="mb-4 flex items-end justify-between gap-4">
+    <div className="mb-4 flex items-end justify-between gap-4 border-b border-[var(--border)] pb-3">
       <div>
         {eyebrow && (
-          <div className="mb-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
-            {eyebrow}
-          </div>
+          <div className="docket-label mb-1 text-muted">{eyebrow}</div>
         )}
         <h2 className="text-[22px] leading-tight">{title}</h2>
       </div>
@@ -189,12 +188,14 @@ export function Chip({
       {...(onClick ? { type: "button" as const, onClick, disabled } : {})}
       aria-pressed={isToggle ? Boolean(selected) : undefined}
       className={cx(
-        "inline-flex items-center gap-1.5 rounded-full border transition-colors duration-150",
+        "inline-flex items-center gap-1.5 rounded-[3px] border transition-colors duration-150",
         size === "sm" ? "px-2.5 py-1 text-[12px]" : "px-3.5 py-2 text-[14px]",
         selected
           ? "border-[var(--tint-ember-border)] bg-[var(--tint-ember-bg)] text-[var(--tint-ember-fg)] font-medium"
           : "border-[var(--border-strong)] bg-[var(--bg-raised)] text-[var(--text-soft)]",
-        onClick && !selected && "hover:border-[var(--tint-ember-border)] hover:text-[var(--text)]",
+        onClick &&
+          !selected &&
+          "hover:border-[var(--tint-ember-border)] hover:text-[var(--text)]",
         disabled && "opacity-40 pointer-events-none",
       )}
     >
@@ -220,7 +221,7 @@ export function Tag({
   return (
     <span
       className={cx(
-        "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.08em]",
+        "docket-label inline-flex items-center gap-1 rounded-[2px] border border-transparent px-2.5 py-1",
         tones[tone],
       )}
     >
@@ -257,10 +258,15 @@ export function Field({
           <span className="text-[12px] font-normal text-muted">optional</span>
         )}
       </label>
-      {hint && <p className="mb-2 text-[13px] leading-relaxed text-muted">{hint}</p>}
+      {hint && (
+        <p className="mb-2 text-[13px] leading-relaxed text-muted">{hint}</p>
+      )}
       {children}
       {error && (
-        <p role="alert" className="mt-1.5 text-[13px] text-[var(--tint-ember-strong)]">
+        <p
+          role="alert"
+          className="mt-1.5 text-[13px] text-[var(--tint-ember-strong)]"
+        >
           {error}
         </p>
       )}
@@ -269,7 +275,7 @@ export function Field({
 }
 
 const CONTROL =
-  "w-full rounded-xl border border-[var(--border-strong)] bg-[var(--bg-raised)] px-3.5 py-2.5 text-[15px] transition-colors placeholder:text-[var(--text-muted)] focus:border-[var(--tint-ember-border)] focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-[var(--tint-ember-border)]";
+  "w-full rounded-[3px] border border-[var(--border-strong)] bg-[var(--bg-raised)] px-3.5 py-2.5 text-[15px] shadow-[inset_0_1px_0_var(--border)] transition-[border-color,box-shadow] placeholder:text-[var(--text-muted)] focus:border-ember-400 focus:outline-none focus-visible:outline-none focus:ring-1 focus:ring-ember-400";
 
 export function TextInput(
   props: React.InputHTMLAttributes<HTMLInputElement> & { invalid?: boolean },
@@ -279,7 +285,11 @@ export function TextInput(
     <input
       {...rest}
       aria-invalid={invalid || undefined}
-      className={cx(CONTROL, invalid && "border-[var(--tint-ember-border)]", className)}
+      className={cx(
+        CONTROL,
+        invalid && "border-[var(--tint-ember-border)]",
+        className,
+      )}
     />
   );
 }
@@ -288,13 +298,21 @@ export function TextArea(
   props: React.TextareaHTMLAttributes<HTMLTextAreaElement>,
 ) {
   const { className, ...rest } = props;
-  return <textarea {...rest} className={cx(CONTROL, "min-h-28 resize-y", className)} />;
+  return (
+    <textarea
+      {...rest}
+      className={cx(CONTROL, "min-h-28 resize-y", className)}
+    />
+  );
 }
 
 export function Select(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
   const { className, children, ...rest } = props;
   return (
-    <select {...rest} className={cx(CONTROL, "appearance-none pr-9", className)}>
+    <select
+      {...rest}
+      className={cx(CONTROL, "appearance-none pr-9", className)}
+    >
       {children}
     </select>
   );
@@ -321,7 +339,7 @@ export function Toggle({
       disabled={disabled}
       onClick={() => onChange(!checked)}
       className={cx(
-        "flex w-full items-start gap-3.5 rounded-xl border border-transparent px-3 py-3 text-left transition-colors hover:bg-[var(--bg-sunken)]",
+        "flex w-full items-start gap-3.5 rounded-[3px] border border-transparent px-3 py-3 text-left transition-colors hover:border-[var(--border)] hover:bg-[var(--bg-sunken)]",
         disabled && "opacity-50 pointer-events-none",
       )}
     >
@@ -365,7 +383,7 @@ export function SegmentedControl<T extends string>({
     <div
       role="radiogroup"
       aria-label={ariaLabel}
-      className="inline-flex w-full rounded-xl border border-[var(--border-strong)] bg-[var(--bg-sunken)] p-1"
+      className="inline-flex w-full rounded-[3px] border border-[var(--border-strong)] bg-[var(--bg-sunken)] p-1"
     >
       {options.map((option, index) => (
         <button
@@ -384,18 +402,22 @@ export function SegmentedControl<T extends string>({
                   : 0;
             if (delta === 0) return;
             event.preventDefault();
-            const next = options[(index + delta + options.length) % options.length];
+            const next =
+              options[(index + delta + options.length) % options.length];
             onChange(next.value);
             const group = event.currentTarget.parentElement;
-            const buttons = group?.querySelectorAll<HTMLButtonElement>('[role="radio"]');
-            buttons?.[(index + delta + options.length) % options.length]?.focus();
+            const buttons =
+              group?.querySelectorAll<HTMLButtonElement>('[role="radio"]');
+            buttons?.[
+              (index + delta + options.length) % options.length
+            ]?.focus();
           }}
           onClick={() => onChange(option.value)}
           className={cx(
-            "flex-1 rounded-lg px-3 py-2 text-[14px] font-medium transition-colors",
+            "flex-1 rounded-[2px] border px-3 py-2 text-[14px] font-medium transition-colors",
             value === option.value
-              ? "bg-[var(--bg-raised)] text-[var(--text)] shadow-sm"
-              : "text-muted hover:text-[var(--text)]",
+              ? "border-[var(--border-strong)] bg-[var(--bg-raised)] text-[var(--text)]"
+              : "border-transparent text-muted hover:text-[var(--text)]",
           )}
         >
           {option.label}
@@ -451,7 +473,12 @@ export function Notice({
     success: "border-[var(--tint-sage-border)] bg-[var(--tint-sage-bg)]",
   };
   return (
-    <div className={cx("rounded-xl border px-4 py-3.5 text-[14px]", tones[tone])}>
+    <div
+      className={cx(
+        "rounded-[3px] border-l-[3px] px-4 py-3.5 text-[14px]",
+        tones[tone],
+      )}
+    >
       {title && <div className="mb-1 font-semibold">{title}</div>}
       <div className="leading-relaxed text-[var(--text-soft)]">{children}</div>
     </div>

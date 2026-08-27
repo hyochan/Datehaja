@@ -5,10 +5,13 @@ export default function SafetyPage() {
   return (
     <div className="mx-auto max-w-2xl space-y-8">
       <header>
+        <div className="docket-label mb-2 text-[var(--accent-text)]">
+          Public record · Safety
+        </div>
         <h1 className="text-[28px] leading-tight">Safety Center</h1>
         <p className="mt-1.5 text-[15.5px] leading-relaxed text-soft">
-          DateDrop sends you to meet a stranger in public. Here's what we do, what
-          we don't, and what's in your hands.
+          DateDrop sends you to meet a stranger in public. Here's what we do,
+          what we don't, and what's in your hands.
         </p>
       </header>
 
@@ -18,7 +21,10 @@ export default function SafetyPage() {
       </Notice>
 
       <section>
-        <SectionHeading eyebrow="Be clear about this" title="What we don't verify" />
+        <SectionHeading
+          eyebrow="Be clear about this"
+          title="What we don't verify"
+        />
         <Card className="p-5">
           <div className="mb-3 flex flex-wrap gap-2">
             <Tag tone="warn">No ID checks</Tag>
@@ -26,20 +32,24 @@ export default function SafetyPage() {
             <Tag tone="warn">No background checks</Tag>
           </div>
           <p className="text-[15px] leading-relaxed">
-            DateDrop does not verify identity in any form. Everything on a profile
-            is self-reported. We say this plainly because a product that implies
-            safety it hasn't earned is more dangerous than one that's honest.
+            DateDrop does not verify identity in any form. Everything on a
+            profile is self-reported. We say this plainly because a product that
+            implies safety it hasn't earned is more dangerous than one that's
+            honest.
           </p>
           <p className="mt-3 text-[15px] leading-relaxed">
             What we do enforce: every account confirms it's 18 or over, blocked
-            pairs are never matched again in either direction, and serious reports
-            immediately restrict the reported account pending review.
+            pairs are never matched again in either direction, and serious
+            reports immediately restrict the reported account pending review.
           </p>
         </Card>
       </section>
 
       <section>
-        <SectionHeading eyebrow="By design" title="What the product does for you" />
+        <SectionHeading
+          eyebrow="By design"
+          title="What the product does for you"
+        />
         <Card className="divide-y divide-[var(--border)]">
           <Item
             title="Public places only"
@@ -75,7 +85,10 @@ export default function SafetyPage() {
               "Keep an eye on your drink, and leave whenever you want to — you owe a stranger nothing.",
               "If they pressure you for your number, socials or money, report it. That's exactly what DateDrop exists to make unnecessary.",
             ].map((tip) => (
-              <li key={tip} className="flex items-start gap-2.5 text-[15px] leading-relaxed">
+              <li
+                key={tip}
+                className="flex items-start gap-2.5 text-[15px] leading-relaxed"
+              >
                 <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-ember-400" />
                 {tip}
               </li>
@@ -88,15 +101,16 @@ export default function SafetyPage() {
         <SectionHeading eyebrow="If something happens" title="Reporting" />
         <Card className="p-5">
           <p className="text-[15px] leading-relaxed">
-            Open the DateDrop and use <strong className="font-medium">Report</strong> at
-            the bottom of the page. The report reaches us with the DateDrop
-            attached, so we can see who, when and where without you having to
-            explain it twice.
+            Open the DateDrop and use{" "}
+            <strong className="font-medium">Report</strong> at the bottom of the
+            page. The report reaches us with the DateDrop attached, so we can
+            see who, when and where without you having to explain it twice.
           </p>
           <p className="mt-3 text-[15px] leading-relaxed">
             Reports of harassment or of someone appearing to be under 18
-            immediately restrict that account while we look at it. You can block at
-            the same time, or separately — the two are independent on purpose.
+            immediately restrict that account while we look at it. You can block
+            at the same time, or separately — the two are independent on
+            purpose.
           </p>
           <p className="mt-3 text-[15px] leading-relaxed">
             You can also reply to any DateDrop Concierge email. It comes to us.
@@ -107,8 +121,16 @@ export default function SafetyPage() {
       <section>
         <SectionHeading eyebrow="Also" title="Related" />
         <Card className="divide-y divide-[var(--border)]">
-          <LinkRow to="/privacy" title="Privacy" body="Exactly what a match can see about you" />
-          <LinkRow to="/settings" title="Settings" body="Pause DateDrops, manage blocks, control email" />
+          <LinkRow
+            to="/privacy"
+            title="Privacy"
+            body="Exactly what a match can see about you"
+          />
+          <LinkRow
+            to="/settings"
+            title="Settings"
+            body="Pause DateDrops, manage blocks, control email"
+          />
         </Card>
       </section>
     </div>
@@ -124,9 +146,20 @@ function Item({ title, body }: { title: string; body: string }) {
   );
 }
 
-function LinkRow({ to, title, body }: { to: string; title: string; body: string }) {
+function LinkRow({
+  to,
+  title,
+  body,
+}: {
+  to: string;
+  title: string;
+  body: string;
+}) {
   return (
-    <Link to={to} className="block p-4 transition-colors hover:bg-[var(--bg-sunken)]">
+    <Link
+      to={to}
+      className="block p-4 transition-colors hover:bg-[var(--bg-sunken)]"
+    >
       <div className="text-[15px] font-medium">{title}</div>
       <p className="mt-0.5 text-[13.5px] text-muted">{body}</p>
     </Link>

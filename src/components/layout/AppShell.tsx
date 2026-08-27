@@ -19,29 +19,41 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-dvh">
-      <header className="sticky top-0 z-30 border-b border-[var(--border)] bg-[color-mix(in_oklab,var(--bg)_86%,transparent)] backdrop-blur-lg">
-        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-4 px-4 sm:px-6">
-          <Link to="/dashboard" className="flex items-center gap-2.5" aria-label="DateDrop">
-            <Logo className="h-7 w-7" />
-            <span className="font-display text-[19px] font-medium tracking-tight">
-              DateDrop
+      <header className="sticky top-0 z-30 border-b border-[var(--border-strong)] bg-[var(--bg)]">
+        <div className="mx-auto flex h-[4.5rem] max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+          <Link
+            to="/dashboard"
+            className="flex items-center gap-2.5"
+            aria-label="DateDrop"
+          >
+            <Logo className="h-8 w-8" />
+            <span className="leading-none">
+              <span className="block font-display text-[19px] font-medium tracking-tight">
+                DateDrop
+              </span>
+              <span className="docket-label mt-1 block text-[8px] text-muted">
+                Private concierge
+              </span>
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-1 sm:flex">
-            {NAV.map((item) => (
+          <nav className="hidden h-full items-stretch sm:flex">
+            {NAV.map((item, index) => (
               <NavLink
                 key={item.to}
                 to={item.to}
                 className={({ isActive }) =>
                   cx(
-                    "rounded-full px-3.5 py-2 text-[14px] font-medium transition-colors",
+                    "relative flex items-center gap-2 border-b-2 px-4 text-[13.5px] font-medium transition-colors",
                     isActive
-                      ? "bg-[var(--bg-sunken)] text-[var(--text)]"
-                      : "text-muted hover:text-[var(--text)]",
+                      ? "border-ember-400 bg-[var(--bg-raised)] text-[var(--text)]"
+                      : "border-transparent text-muted hover:bg-[var(--bg-raised)] hover:text-[var(--text)]",
                   )
                 }
               >
+                <span className="docket-label text-[8px] text-muted">
+                  0{index + 1}
+                </span>
                 {item.label}
               </NavLink>
             ))}
@@ -51,8 +63,10 @@ export function AppShell({ children }: { children: ReactNode }) {
             <ThemeToggle />
             <Link
               to="/notifications"
-              aria-label={unread > 0 ? `Notifications, ${unread} unread` : "Notifications"}
-              className="relative rounded-full p-2.5 text-muted transition-colors hover:bg-[var(--bg-sunken)] hover:text-[var(--text)]"
+              aria-label={
+                unread > 0 ? `Notifications, ${unread} unread` : "Notifications"
+              }
+              className="relative rounded-[3px] border border-transparent p-2.5 text-muted transition-colors hover:border-[var(--border)] hover:bg-[var(--bg-raised)] hover:text-[var(--text)]"
             >
               <BellIcon />
               {unread > 0 && (
@@ -68,13 +82,13 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <main
         key={location.pathname}
-        className="mx-auto max-w-5xl px-4 pb-28 pt-6 sm:px-6 sm:pb-16 sm:pt-10"
+        className="mx-auto max-w-6xl px-4 pb-28 pt-7 sm:px-6 sm:pb-16 sm:pt-11"
       >
         {children}
       </main>
 
       <nav
-        className="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--border)] bg-[color-mix(in_oklab,var(--bg)_92%,transparent)] pb-[env(safe-area-inset-bottom)] backdrop-blur-lg sm:hidden"
+        className="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--border-strong)] bg-[var(--bg-raised)] pb-[env(safe-area-inset-bottom)] sm:hidden"
         aria-label="Main"
       >
         <div className="flex">
@@ -85,7 +99,9 @@ export function AppShell({ children }: { children: ReactNode }) {
               className={({ isActive }) =>
                 cx(
                   "flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] font-medium transition-colors",
-                  isActive ? "text-[var(--accent-text)]" : "text-muted",
+                  isActive
+                    ? "border-t-2 border-ember-400 bg-[var(--tint-ember-bg)] text-[var(--accent-text)]"
+                    : "border-t-2 border-transparent text-muted",
                 )
               }
             >
@@ -106,7 +122,7 @@ function SignOutButton() {
       type="button"
       onClick={() => void signOut()}
       aria-label="Sign out"
-      className="rounded-full p-2.5 text-muted transition-colors hover:bg-[var(--bg-sunken)] hover:text-[var(--text)]"
+      className="rounded-[3px] border border-transparent p-2.5 text-muted transition-colors hover:border-[var(--border)] hover:bg-[var(--bg-raised)] hover:text-[var(--text)]"
     >
       <ExitIcon />
     </button>
@@ -116,7 +132,10 @@ function SignOutButton() {
 export function ThemeToggle() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof document === "undefined") return "light";
-    return (document.documentElement.getAttribute("data-theme") as "light" | "dark") ?? "light";
+    return (
+      (document.documentElement.getAttribute("data-theme") as
+        "light" | "dark") ?? "light"
+    );
   });
 
   useEffect(() => {
@@ -138,9 +157,11 @@ export function ThemeToggle() {
   return (
     <button
       type="button"
-      aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label={
+        theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+      }
       onClick={() => choose(theme === "dark" ? "light" : "dark")}
-      className="rounded-full p-2.5 text-muted transition-colors hover:bg-[var(--bg-sunken)] hover:text-[var(--text)]"
+      className="rounded-[3px] border border-transparent p-2.5 text-muted transition-colors hover:border-[var(--border)] hover:bg-[var(--bg-raised)] hover:text-[var(--text)]"
     >
       {theme === "dark" ? <SunIcon /> : <MoonIcon />}
     </button>

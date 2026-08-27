@@ -1,8 +1,14 @@
 import { Suspense, lazy } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { Authenticated, AuthLoading, Unauthenticated, useQuery } from "convex/react";
+import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import {
+  Authenticated,
+  AuthLoading,
+  Unauthenticated,
+  useQuery,
+} from "convex/react";
 import { api } from "@convex/_generated/api";
 import { AppShell } from "./components/layout/AppShell";
+import { Logo } from "./components/layout/Logo";
 import { Spinner } from "./components/ui/primitives";
 import LandingPage from "./pages/LandingPage";
 import AuthPage from "./pages/AuthPage";
@@ -80,7 +86,12 @@ function AuthedRoutes() {
         <Route path="/onboarding" element={<OnboardingPage />} />
         <Route
           path="/"
-          element={<Navigate to={state.complete ? "/dashboard" : "/onboarding"} replace />}
+          element={
+            <Navigate
+              to={state.complete ? "/dashboard" : "/onboarding"}
+              replace
+            />
+          }
         />
         <Route path="/signin" element={<Navigate to="/dashboard" replace />} />
         <Route path="/signup" element={<Navigate to="/dashboard" replace />} />
@@ -188,7 +199,36 @@ function AuthedRoutes() {
 function PublicPage({ children }: { children: React.ReactNode }) {
   return (
     <Suspense fallback={<FullPageLoader />}>
-      <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-16">{children}</div>
+      <div className="min-h-dvh">
+        <header className="border-b border-[var(--border-strong)] bg-[var(--bg)]">
+          <div className="mx-auto flex h-20 max-w-4xl items-center justify-between px-5 sm:px-8">
+            <Link
+              to="/"
+              className="flex items-center gap-2.5"
+              aria-label="DateDrop home"
+            >
+              <Logo className="h-8 w-8" />
+              <span>
+                <span className="block font-display text-[19px] leading-none">
+                  DateDrop
+                </span>
+                <span className="docket-label mt-1 block text-[8px] text-muted">
+                  Public record
+                </span>
+              </span>
+            </Link>
+            <Link
+              to="/signup"
+              className="rounded-[3px] border border-[var(--border-strong)] bg-[var(--bg-raised)] px-4 py-2 text-[13px] font-semibold"
+            >
+              Get started
+            </Link>
+          </div>
+        </header>
+        <div className="mx-auto max-w-3xl px-5 py-12 sm:px-8 sm:py-16">
+          {children}
+        </div>
+      </div>
     </Suspense>
   );
 }
@@ -197,7 +237,9 @@ function RedirectToSignIn() {
   const location = useLocation();
   // Deep links (an emailed DateDrop) survive the sign-in round trip.
   const target =
-    location.pathname === "/" ? "/" : `/signin?next=${encodeURIComponent(location.pathname)}`;
+    location.pathname === "/"
+      ? "/"
+      : `/signin?next=${encodeURIComponent(location.pathname)}`;
   return <Navigate to={target} replace />;
 }
 

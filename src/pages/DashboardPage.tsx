@@ -42,7 +42,8 @@ export default function DashboardPage() {
     }
   }
 
-  const firstName = (me?.profile as { displayName?: string } | null)?.displayName ?? "";
+  const firstName =
+    (me?.profile as { displayName?: string } | null)?.displayName ?? "";
   const openWindows = (windows ?? []).filter((w) => w.status === "open");
   const invitations = (board?.invitations ?? []) as DropSummary[];
   const upcoming = (board?.upcoming ?? []) as DropSummary[];
@@ -57,6 +58,9 @@ export default function DashboardPage() {
   return (
     <div className="space-y-10">
       <header>
+        <div className="docket-label mb-2 text-[var(--accent-text)]">
+          Your concierge desk
+        </div>
         <h1 className="text-[30px] leading-tight">
           {firstName ? `Hi, ${firstName.split(" ")[0]}.` : "Your DateDrops"}
         </h1>
@@ -122,8 +126,8 @@ export default function DashboardPage() {
             title="Waiting on the other person"
           />
           <p className="mb-4 -mt-2 max-w-lg text-[14px] leading-relaxed text-muted">
-            Your evening is held. If they pass, we look for someone else who fits
-            the same plan rather than cancelling on you.
+            Your evening is held. If they pass, we look for someone else who
+            fits the same plan rather than cancelling on you.
           </p>
           <ul className="space-y-3">
             {waiting.map((drop) => (
@@ -181,7 +185,9 @@ export default function DashboardPage() {
             <EmptyState
               title="No open windows"
               body="Add an evening you're free and we'll start looking straight away."
-              action={<LinkButton to="/availability">Add availability</LinkButton>}
+              action={
+                <LinkButton to="/availability">Add availability</LinkButton>
+              }
             />
           </Card>
         ) : (
@@ -194,7 +200,11 @@ export default function DashboardPage() {
                       {formatDay(window.startMs, window.timezone)}
                     </div>
                     <div className="text-[13px] text-muted">
-                      {formatRange(window.startMs, window.endMs, window.timezone)}
+                      {formatRange(
+                        window.startMs,
+                        window.endMs,
+                        window.timezone,
+                      )}
                     </div>
                   </div>
                   <Tag tone="sage">Open</Tag>
@@ -251,7 +261,11 @@ function IdleCard({
           icon={<Logo className="h-10 w-10" />}
           title="We only need one thing"
           body="Tell us when you're free. We'll find someone compatible, plan a real date, and send it to you both."
-          action={<LinkButton to="/availability" size="lg">Add availability</LinkButton>}
+          action={
+            <LinkButton to="/availability" size="lg">
+              Add availability
+            </LinkButton>
+          }
         />
       </Card>
     );
@@ -259,14 +273,10 @@ function IdleCard({
 
   return (
     <Card className="p-6 sm:p-7">
-      <div className="mb-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
-        Your next DateDrop
-      </div>
+      <div className="docket-label mb-1 text-muted">Your next DateDrop</div>
       <h2 className="font-display text-[24px] leading-tight sm:text-[27px]">
         {nextWindow ? (
-          <>
-            You're free {formatDay(nextWindow.startMs, nextWindow.timezone)}.
-          </>
+          <>You're free {formatDay(nextWindow.startMs, nextWindow.timezone)}.</>
         ) : (
           "You're free soon."
         )}
@@ -322,7 +332,7 @@ function SearchProgress({ stage }: { stage: string }) {
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-ember-300 opacity-75" />
           <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-ember-400" />
         </span>
-        <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--tint-ember-strong)]">
+        <span className="docket-label text-[var(--tint-ember-strong)]">
           Working on it
         </span>
       </div>
