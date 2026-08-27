@@ -12,7 +12,7 @@
 - **Auth:** Convex Auth
 - **AI models:** gpt-5.6-luna (configured default, with a cheapest-capable fallback ladder in `convex/integrations/openai.ts`)
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-08-27T13:10:00Z
+- **Last updated:** 2026-08-27T18:26:22Z
 
 ## Log
 
@@ -261,3 +261,10 @@ carry roomier allowances.
 
 One DateDrop costs ~22,800 tokens end to end, about $0.0066. Venue extraction is
 80% of that, since it reads the crawled pages.
+
+### 2026-08-28 - 8b85c6f
+Prepared the submission assets for recording and social launch. The demo
+checklist now requires a deliverable email before the take so the real
+AgentMail invitation can be shown. Verified the sponsors' current X handles,
+updated the public test count, and reran the suite: 188 tests pass
+(`submission/DEMO_SCRIPT.md`, `submission/SOCIAL.md`).
