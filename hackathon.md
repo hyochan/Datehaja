@@ -12,7 +12,7 @@
 - **Auth:** Convex Auth
 - **AI models:** gpt-5.6-luna (configured default, with a cheapest-capable fallback ladder in `convex/integrations/openai.ts`)
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-08-27T18:44:09Z
+- **Last updated:** 2026-08-27T18:56:54Z
 
 ## Log
 
@@ -269,10 +269,12 @@ AgentMail invitation can be shown. Verified the sponsors' current X handles,
 updated the public test count, and reran the suite: 188 tests pass
 (`submission/DEMO_SCRIPT.md`, `submission/SOCIAL.md`).
 
-### 2026-08-28 - e03b98c
+### 2026-08-28 - 1f9281e
 Reworked the product around a private-concierge docket rather than a generic
 rounded dashboard: paper-and-ink tokens, compact status stamps, editorial
 layouts, and a rebuilt landing and authentication flow. Applied the same visual
 language to the app shell, onboarding, public records, and DateDrop cards.
 Checked dark and light themes at 390px and 1440px with no overflow or browser
-errors; 188 tests and the production build pass (`src/`).
+errors. Rechecked the landing-to-signup route, adult-confirmation guard,
+sign-in, privacy, safety, protected-route redirect, and theme switch in a real
+browser; 188 tests and the production build pass (`src/`).
