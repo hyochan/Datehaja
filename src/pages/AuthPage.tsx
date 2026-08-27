@@ -28,7 +28,9 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
     setError(null);
 
     if (signingUp && !ageConfirmed) {
-      setError(t("DateDrop is for adults only — please confirm you're 18 or over."));
+      setError(
+        t("DateDrop is for adults only — please confirm you're 18 or over."),
+      );
       return;
     }
     if (signingUp && password.length < 8) {
@@ -62,8 +64,20 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
   }
 
   return (
-    <div className="min-h-dvh lg:grid lg:grid-cols-[0.84fr_1.16fr]">
-      <aside className="relative hidden min-h-dvh flex-col justify-between overflow-hidden border-r border-ink-600 bg-ink-950 p-10 text-sand-50 lg:flex xl:p-14">
+    <div className="min-h-dvh lg:grid lg:grid-cols-[0.9fr_1.1fr]">
+      <aside className="romance-night relative hidden min-h-dvh flex-col justify-between overflow-hidden p-10 text-sand-50 lg:flex xl:p-14">
+        <span
+          className="absolute right-[12%] top-[12%] rotate-12 text-5xl text-ember-300/45"
+          aria-hidden
+        >
+          ♡
+        </span>
+        <span
+          className="absolute bottom-[21%] left-[11%] rotate-[-12deg] text-2xl text-ember-300/35"
+          aria-hidden
+        >
+          ✦
+        </span>
         <Link
           to="/"
           className="inline-flex items-center gap-3 self-start"
@@ -71,7 +85,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
         >
           <Logo className="h-9 w-9" />
           <span>
-            <span className="block font-display text-[21px]">DateDrop</span>
+            <span className="brand-wordmark block text-[22px]">DateDrop</span>
             <span className="docket-label mt-1 block text-[8px] text-sand-400">
               {t("Private date concierge")}
             </span>
@@ -79,8 +93,13 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
         </Link>
 
         <div className="my-16 max-w-lg">
-          <div className="docket-label text-ember-300">{t("Concierge brief")}</div>
-          <h2 className="mt-5 text-[clamp(3.2rem,5vw,5.5rem)] leading-[0.91] tracking-[-0.045em]">
+          <div className="docket-label text-ember-300">
+            <span className="mr-2" aria-hidden>
+              ♥
+            </span>
+            {t("Concierge brief")}
+          </div>
+          <h2 className="mt-5 text-[clamp(3rem,5vw,5.1rem)] leading-[0.97] tracking-[-0.04em]">
             {t("Your free time is enough to begin.")}
           </h2>
           <p className="mt-7 max-w-md text-[16px] leading-relaxed text-sand-300">
@@ -90,7 +109,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
           </p>
         </div>
 
-        <ol className="border-y border-sand-500/40">
+        <ol className="rounded-[1.6rem] border border-sand-500/25 bg-white/[0.035] px-5 py-2 backdrop-blur-sm">
           {[
             ["01", t("Your contact details stay yours")],
             ["02", t("Every venue has a live source")],
@@ -109,26 +128,26 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
         </ol>
       </aside>
 
-      <main className="flex min-h-dvh flex-col bg-[var(--bg)]">
-        <header className="flex h-20 items-center gap-2 border-b border-[var(--border-strong)] px-5 sm:px-8 lg:justify-end">
+      <main className="flex min-h-dvh flex-col bg-[var(--bg)]/75">
+        <header className="glass-bar flex h-20 items-center gap-2 border-b border-[var(--border)] px-5 sm:px-8 lg:justify-end">
           <Link
             to="/"
             className="inline-flex items-center gap-2.5 lg:hidden"
             aria-label={t("DateDrop home")}
           >
             <Logo className="h-8 w-8" />
-            <span className="font-display text-[20px] font-medium tracking-tight">
+            <span className="brand-wordmark text-[21px] font-medium">
               DateDrop
             </span>
           </Link>
           <LocaleSwitcher compact />
-          <span className="docket-label text-muted">
+          <span className="docket-label rounded-full bg-[var(--bg-sunken)] px-3 py-2 text-muted">
             {signingUp ? t("New client / 01") : t("Client return / 01")}
           </span>
         </header>
 
         <div className="flex flex-1 items-center px-5 py-12 sm:px-8 lg:px-16 xl:px-24">
-          <div className="w-full max-w-[29rem]">
+          <div className="soft-section w-full max-w-[31rem] px-5 py-7 sm:px-8 sm:py-9">
             <div className="docket-label text-[var(--accent-text)]">
               {signingUp ? t("Open your account") : t("Welcome back")}
             </div>
@@ -139,15 +158,15 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
             </h1>
             <p className="mt-4 max-w-md text-[15px] leading-relaxed text-soft">
               {signingUp
-                ? t("Two minutes of setup. After that, all we ask is when you're free.")
-                : t("Sign in to review invitations, open evenings, and confirmed plans.")}
+                ? t(
+                    "Two minutes of setup. After that, all we ask is when you're free.",
+                  )
+                : t(
+                    "Sign in to review invitations, open evenings, and confirmed plans.",
+                  )}
             </p>
 
-            <form
-              onSubmit={handleSubmit}
-              className="mt-9 border-t border-[var(--border-strong)] pt-7"
-              noValidate
-            >
+            <form onSubmit={handleSubmit} className="mt-8" noValidate>
               <Field label={t("Email")} htmlFor="email">
                 <TextInput
                   id="email"
@@ -179,12 +198,12 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
               </Field>
 
               {signingUp && (
-                <label className="mb-5 flex cursor-pointer items-start gap-3 rounded-[3px] border border-[var(--border-strong)] bg-[var(--bg-raised)] p-3.5 text-[14px] leading-relaxed">
+                <label className="mb-5 flex cursor-pointer items-start gap-3 rounded-2xl border border-[var(--border)] bg-[var(--bg-raised)] p-3.5 text-[14px] leading-relaxed">
                   <input
                     type="checkbox"
                     checked={ageConfirmed}
                     onChange={(e) => setAgeConfirmed(e.target.checked)}
-                    className="mt-0.5 h-4 w-4 shrink-0 rounded-none accent-[var(--color-ember-400)]"
+                    className="mt-0.5 h-4 w-4 shrink-0 rounded accent-[var(--color-ember-400)]"
                   />
                   <span>
                     {t(

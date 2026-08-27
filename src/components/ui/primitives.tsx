@@ -13,25 +13,25 @@ type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "quiet";
 type ButtonSize = "sm" | "md" | "lg";
 
 const BUTTON_BASE =
-  "inline-flex items-center justify-center gap-2 rounded-[3px] border font-semibold tracking-[-0.01em] transition-[transform,background-color,border-color,color,box-shadow] duration-150 active:translate-x-px active:translate-y-px disabled:opacity-50 disabled:pointer-events-none select-none whitespace-nowrap";
+  "inline-flex items-center justify-center gap-2 rounded-full border font-bold tracking-[-0.01em] transition-[transform,background-color,border-color,color,box-shadow] duration-200 active:translate-y-px disabled:opacity-50 disabled:pointer-events-none select-none whitespace-nowrap";
 
 const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   primary:
-    "border-ember-600 bg-ember-400 text-white shadow-[3px_3px_0_var(--shadow-ink)] hover:-translate-x-px hover:-translate-y-px hover:bg-ember-500 hover:shadow-[4px_4px_0_var(--shadow-ink)]",
+    "border-ember-600 bg-ember-600 text-white shadow-[0_12px_24px_-14px_var(--shadow-ink)] hover:-translate-y-0.5 hover:bg-ember-700 hover:shadow-[0_16px_30px_-14px_var(--shadow-ink)]",
   secondary:
-    "border-[var(--border-strong)] bg-[var(--bg-raised)] text-[var(--text)] shadow-[2px_2px_0_var(--shadow-ink)] hover:-translate-x-px hover:-translate-y-px hover:border-[var(--text-muted)]",
+    "border-[var(--border)] bg-[var(--bg-raised)] text-[var(--text)] shadow-[var(--shadow-soft)] hover:-translate-y-0.5 hover:border-[var(--tint-ember-border)] hover:bg-[var(--tint-ember-bg)]",
   ghost:
     "border-transparent text-[var(--text-soft)] hover:border-[var(--border)] hover:text-[var(--text)]",
   quiet:
-    "border-[var(--border)] bg-[var(--bg-sunken)] text-[var(--text)] hover:border-[var(--border-strong)]",
+    "border-[var(--border)] bg-[var(--bg-sunken)] text-[var(--text)] hover:border-[var(--tint-ember-border)] hover:bg-[var(--tint-ember-bg)]",
   danger:
     "border-[var(--tint-ember-border)] bg-[var(--bg-raised)] text-[var(--tint-ember-strong)] hover:bg-[var(--tint-ember-bg)]",
 };
 
 const BUTTON_SIZES: Record<ButtonSize, string> = {
   sm: "h-9 px-4 text-[13px]",
-  md: "h-11 px-5 text-[15px]",
-  lg: "h-13 px-7 text-[16px]",
+  md: "h-11 px-5.5 text-[15px]",
+  lg: "h-13 px-7.5 text-[16px]",
 };
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -152,7 +152,7 @@ export function SectionHeading({
   action?: ReactNode;
 }) {
   return (
-    <div className="mb-4 flex items-end justify-between gap-4 border-b border-[var(--border)] pb-3">
+    <div className="mb-5 flex items-end justify-between gap-4">
       <div>
         {eyebrow && (
           <div className="docket-label mb-1 text-muted">{eyebrow}</div>
@@ -188,7 +188,7 @@ export function Chip({
       {...(onClick ? { type: "button" as const, onClick, disabled } : {})}
       aria-pressed={isToggle ? Boolean(selected) : undefined}
       className={cx(
-        "inline-flex items-center gap-1.5 rounded-[3px] border transition-colors duration-150",
+        "inline-flex items-center gap-1.5 rounded-full border transition-colors duration-150",
         size === "sm" ? "px-2.5 py-1 text-[12px]" : "px-3.5 py-2 text-[14px]",
         selected
           ? "border-[var(--tint-ember-border)] bg-[var(--tint-ember-bg)] text-[var(--tint-ember-fg)] font-medium"
@@ -221,7 +221,7 @@ export function Tag({
   return (
     <span
       className={cx(
-        "docket-label inline-flex items-center gap-1 rounded-[2px] border border-transparent px-2.5 py-1",
+        "docket-label inline-flex items-center gap-1 rounded-full border border-transparent px-2.5 py-1",
         tones[tone],
       )}
     >
@@ -275,7 +275,7 @@ export function Field({
 }
 
 const CONTROL =
-  "w-full rounded-[3px] border border-[var(--border-strong)] bg-[var(--bg-raised)] px-3.5 py-2.5 text-[15px] shadow-[inset_0_1px_0_var(--border)] transition-[border-color,box-shadow] placeholder:text-[var(--text-muted)] focus:border-ember-400 focus:outline-none focus-visible:outline-none focus:ring-1 focus:ring-ember-400";
+  "w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-raised)] px-4 py-3 text-[15px] shadow-[0_5px_18px_-16px_var(--shadow-ink)] transition-[border-color,box-shadow] placeholder:text-[var(--text-muted)] focus:border-ember-400 focus:outline-none focus-visible:outline-none focus:ring-3 focus:ring-ember-200/30";
 
 export function TextInput(
   props: React.InputHTMLAttributes<HTMLInputElement> & { invalid?: boolean },
@@ -339,7 +339,7 @@ export function Toggle({
       disabled={disabled}
       onClick={() => onChange(!checked)}
       className={cx(
-        "flex w-full items-start gap-3.5 rounded-[3px] border border-transparent px-3 py-3 text-left transition-colors hover:border-[var(--border)] hover:bg-[var(--bg-sunken)]",
+        "flex w-full items-start gap-3.5 rounded-2xl border border-transparent px-3.5 py-3 text-left transition-colors hover:border-[var(--border)] hover:bg-[var(--bg-sunken)]",
         disabled && "opacity-50 pointer-events-none",
       )}
     >
@@ -383,7 +383,7 @@ export function SegmentedControl<T extends string>({
     <div
       role="radiogroup"
       aria-label={ariaLabel}
-      className="inline-flex w-full rounded-[3px] border border-[var(--border-strong)] bg-[var(--bg-sunken)] p-1"
+      className="inline-flex w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-sunken)] p-1"
     >
       {options.map((option, index) => (
         <button
@@ -414,7 +414,7 @@ export function SegmentedControl<T extends string>({
           }}
           onClick={() => onChange(option.value)}
           className={cx(
-            "flex-1 rounded-[2px] border px-3 py-2 text-[14px] font-medium transition-colors",
+            "flex-1 rounded-xl border px-3 py-2 text-[14px] font-medium transition-colors",
             value === option.value
               ? "border-[var(--border-strong)] bg-[var(--bg-raised)] text-[var(--text)]"
               : "border-transparent text-muted hover:text-[var(--text)]",
@@ -474,10 +474,7 @@ export function Notice({
   };
   return (
     <div
-      className={cx(
-        "rounded-[3px] border-l-[3px] px-4 py-3.5 text-[14px]",
-        tones[tone],
-      )}
+      className={cx("rounded-2xl border px-4 py-3.5 text-[14px]", tones[tone])}
     >
       {title && <div className="mb-1 font-semibold">{title}</div>}
       <div className="leading-relaxed text-[var(--text-soft)]">{children}</div>

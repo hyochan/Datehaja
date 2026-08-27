@@ -341,12 +341,12 @@ export default function OnboardingPage() {
 
   return (
     <div className="min-h-dvh">
-      <header className="sticky top-0 z-20 border-b border-[var(--border-strong)] bg-[var(--bg)]">
+      <header className="glass-bar sticky top-0 z-20 border-b border-[var(--border)]">
         <div className="mx-auto max-w-2xl px-5 py-4 sm:px-8">
           <div className="mb-3 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
               <Logo className="h-6 w-6" />
-              <span className="font-display text-[17px] font-medium">
+              <span className="brand-wordmark text-[18px] font-medium">
                 DateDrop
               </span>
             </div>
@@ -370,7 +370,7 @@ export default function OnboardingPage() {
               <div
                 key={label}
                 className={cx(
-                  "h-1 flex-1 transition-colors duration-300",
+                  "h-1 flex-1 rounded-full transition-colors duration-300",
                   index <= step ? "bg-ember-400" : "bg-[var(--border)]",
                 )}
               />
@@ -413,7 +413,9 @@ export default function OnboardingPage() {
 
             <Field
               label={t("Date of birth")}
-              hint={t("Used to check you're 18+ and to match age ranges. Never shown to anyone.")}
+              hint={t(
+                "Used to check you're 18+ and to match age ranges. Never shown to anyone.",
+              )}
               htmlFor="dob"
               error={
                 dob && age !== null && age < 18
@@ -497,7 +499,9 @@ export default function OnboardingPage() {
 
             <Field
               label={t("Roughly where")}
-              hint={t("Neighbourhood only — we never store or share your address.")}
+              hint={t(
+                "Neighbourhood only — we never store or share your address.",
+              )}
             >
               <ChipRadio
                 options={city.neighborhoods.map((n) => ({
@@ -518,7 +522,9 @@ export default function OnboardingPage() {
                 className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--color-ember-400)]"
               />
               <span>
-                {t("I confirm I'm 18 or over. DateDrop is an adults-only service.")}
+                {t(
+                  "I confirm I'm 18 or over. DateDrop is an adults-only service.",
+                )}
               </span>
             </label>
           </div>
@@ -898,7 +904,9 @@ export default function OnboardingPage() {
               <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--tint-ember-bg)]">
                 <Logo className="h-8 w-8" />
               </div>
-              <h2 className="mb-2 text-[24px]">{t("You're ready for DateDrop.")}</h2>
+              <h2 className="mb-2 text-[24px]">
+                {t("You're ready for DateDrop.")}
+              </h2>
               <p className="mx-auto max-w-sm text-[15px] leading-relaxed text-soft">
                 {t(
                   "From here we do the work. When we find someone compatible who's free at the same time, we'll plan a real date and send it to you both.",
@@ -923,7 +931,10 @@ export default function OnboardingPage() {
                     )
                     .join(", ")}
                 />
-                <SummaryRow label={t("Age range")} value={`${ageMin}–${ageMax}`} />
+                <SummaryRow
+                  label={t("Age range")}
+                  value={`${ageMin}–${ageMax}`}
+                />
                 <SummaryRow
                   label={t("Interests")}
                   value={interests.slice(0, 4).join(" · ")}

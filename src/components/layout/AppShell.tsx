@@ -22,7 +22,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-dvh">
-      <header className="sticky top-0 z-30 border-b border-[var(--border-strong)] bg-[var(--bg)]">
+      <header className="glass-bar sticky top-0 z-30 border-b border-[var(--border)]">
         <div className="mx-auto flex h-[4.5rem] max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
           <Link
             to="/dashboard"
@@ -31,7 +31,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           >
             <Logo className="h-8 w-8" />
             <span className="leading-none">
-              <span className="block font-display text-[19px] font-medium tracking-tight">
+              <span className="brand-wordmark block text-[20px] font-medium">
                 DateDrop
               </span>
               <span className="docket-label mt-1 block text-[8px] text-muted">
@@ -40,17 +40,17 @@ export function AppShell({ children }: { children: ReactNode }) {
             </span>
           </Link>
 
-          <nav className="hidden h-full items-stretch sm:flex">
+          <nav className="hidden items-center gap-1 rounded-full border border-[var(--border)] bg-[var(--bg-raised)] p-1 sm:flex">
             {NAV.map((item, index) => (
               <NavLink
                 key={item.to}
                 to={item.to}
                 className={({ isActive }) =>
                   cx(
-                    "relative flex items-center gap-2 border-b-2 px-4 text-[13.5px] font-medium transition-colors",
+                    "relative flex items-center gap-2 rounded-full px-4 py-2 text-[13.5px] font-semibold transition-colors",
                     isActive
-                      ? "border-ember-400 bg-[var(--bg-raised)] text-[var(--text)]"
-                      : "border-transparent text-muted hover:bg-[var(--bg-raised)] hover:text-[var(--text)]",
+                      ? "bg-[var(--tint-ember-bg)] text-[var(--accent-text)]"
+                      : "text-muted hover:bg-[var(--bg-sunken)] hover:text-[var(--text)]",
                   )
                 }
               >
@@ -72,11 +72,11 @@ export function AppShell({ children }: { children: ReactNode }) {
                   ? t("Notifications, {count} unread", { count: unread })
                   : t("Notifications")
               }
-              className="relative rounded-[3px] border border-transparent p-2.5 text-muted transition-colors hover:border-[var(--border)] hover:bg-[var(--bg-raised)] hover:text-[var(--text)]"
+              className="relative rounded-full border border-transparent p-2.5 text-muted transition-colors hover:border-[var(--border)] hover:bg-[var(--bg-raised)] hover:text-[var(--text)]"
             >
               <BellIcon />
               {unread > 0 && (
-                <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-ember-400 px-1 text-[10px] font-bold text-white">
+                <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-ember-600 px-1 text-[10px] font-bold text-white">
                   {unread > 9 ? "9+" : unread}
                 </span>
               )}
@@ -94,7 +94,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </main>
 
       <nav
-        className="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--border-strong)] bg-[var(--bg-raised)] pb-[env(safe-area-inset-bottom)] sm:hidden"
+        className="glass-bar fixed inset-x-3 bottom-3 z-30 overflow-hidden rounded-[1.4rem] border border-[var(--border)] pb-[env(safe-area-inset-bottom)] shadow-[var(--shadow-lift)] sm:hidden"
         aria-label={t("Main")}
       >
         <div className="flex">
@@ -106,8 +106,8 @@ export function AppShell({ children }: { children: ReactNode }) {
                 cx(
                   "flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] font-medium transition-colors",
                   isActive
-                    ? "border-t-2 border-ember-400 bg-[var(--tint-ember-bg)] text-[var(--accent-text)]"
-                    : "border-t-2 border-transparent text-muted",
+                    ? "bg-[var(--tint-ember-bg)] text-[var(--accent-text)]"
+                    : "text-muted",
                 )
               }
             >
@@ -129,7 +129,7 @@ function SignOutButton() {
       type="button"
       onClick={() => void signOut()}
       aria-label={t("Sign out")}
-      className="rounded-[3px] border border-transparent p-2.5 text-muted transition-colors hover:border-[var(--border)] hover:bg-[var(--bg-raised)] hover:text-[var(--text)]"
+      className="rounded-full border border-transparent p-2.5 text-muted transition-colors hover:border-[var(--border)] hover:bg-[var(--bg-raised)] hover:text-[var(--text)]"
     >
       <ExitIcon />
     </button>
@@ -166,12 +166,10 @@ export function ThemeToggle() {
     <button
       type="button"
       aria-label={
-        theme === "dark"
-          ? t("Switch to light mode")
-          : t("Switch to dark mode")
+        theme === "dark" ? t("Switch to light mode") : t("Switch to dark mode")
       }
       onClick={() => choose(theme === "dark" ? "light" : "dark")}
-      className="rounded-[3px] border border-transparent p-2.5 text-muted transition-colors hover:border-[var(--border)] hover:bg-[var(--bg-raised)] hover:text-[var(--text)]"
+      className="rounded-full border border-transparent p-2.5 text-muted transition-colors hover:border-[var(--border)] hover:bg-[var(--bg-raised)] hover:text-[var(--text)]"
     >
       {theme === "dark" ? <SunIcon /> : <MoonIcon />}
     </button>

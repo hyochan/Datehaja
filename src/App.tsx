@@ -204,7 +204,7 @@ function PublicPage({ children }: { children: React.ReactNode }) {
   return (
     <Suspense fallback={<FullPageLoader />}>
       <div className="min-h-dvh">
-        <header className="border-b border-[var(--border-strong)] bg-[var(--bg)]">
+        <header className="glass-bar border-b border-[var(--border)]">
           <div className="mx-auto flex h-20 max-w-4xl items-center justify-between px-5 sm:px-8">
             <Link
               to="/"
@@ -213,7 +213,7 @@ function PublicPage({ children }: { children: React.ReactNode }) {
             >
               <Logo className="h-8 w-8" />
               <span>
-                <span className="block font-display text-[19px] leading-none">
+                <span className="brand-wordmark block text-[20px] leading-none">
                   DateDrop
                 </span>
                 <span className="docket-label mt-1 block text-[8px] text-muted">
@@ -225,7 +225,7 @@ function PublicPage({ children }: { children: React.ReactNode }) {
               <LocaleSwitcher compact />
               <Link
                 to="/signup"
-                className="rounded-[3px] border border-[var(--border-strong)] bg-[var(--bg-raised)] px-3 py-2 text-[13px] font-semibold sm:px-4"
+                className="rounded-full border border-[var(--border)] bg-[var(--bg-raised)] px-4 py-2 text-[13px] font-bold shadow-[var(--shadow-soft)] transition-colors hover:border-[var(--tint-ember-border)] hover:bg-[var(--tint-ember-bg)] sm:px-5"
               >
                 {t("Get started")}
               </Link>

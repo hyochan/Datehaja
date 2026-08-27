@@ -2,57 +2,60 @@
 
 /* ------------------------------------------------------------------ */
 /*  DateDrop design system                                            */
-/*  A private concierge docket: paper, ink, time stamps, city nights. */
+/*  A warm invitation: soft paper, handwritten details, evening light.  */
 /* ------------------------------------------------------------------ */
 
 @theme {
-  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-display: "DM Serif Display", "Iowan Old Style", Georgia, serif;
   --font-sans:
-    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    "Nunito Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    sans-serif;
 
   /* Paper */
-  --color-sand-50: #f8f3e9;
-  --color-sand-100: #f0e9dc;
-  --color-sand-200: #e2d7c8;
-  --color-sand-300: #cdbfac;
-  --color-sand-400: #a99a86;
-  --color-sand-500: #817461;
+  --color-sand-50: #fff9f6;
+  --color-sand-100: #fbedeb;
+  --color-sand-200: #f2deda;
+  --color-sand-300: #dbbebc;
+  --color-sand-400: #b99299;
+  --color-sand-500: #8c6875;
 
   /* Ink */
-  --color-ink-400: #84786a;
-  --color-ink-500: #665b4f;
-  --color-ink-600: #4c433a;
-  --color-ink-700: #37302a;
-  --color-ink-800: #29231e;
-  --color-ink-900: #1e1915;
-  --color-ink-950: #14110e;
+  --color-ink-400: #896c76;
+  --color-ink-500: #765c67;
+  --color-ink-600: #604651;
+  --color-ink-700: #503842;
+  --color-ink-800: #422d37;
+  --color-ink-900: #38262f;
+  --color-ink-950: #21171d;
 
-  /* Persimmon — a stamp, not a gradient */
-  --color-ember-50: #fff2e9;
-  --color-ember-100: #fddfce;
-  --color-ember-200: #f5baa0;
-  --color-ember-300: #ed8c68;
-  --color-ember-400: #df6847;
-  --color-ember-500: #c94f32;
-  --color-ember-600: #a83b26;
-  --color-ember-700: #822d20;
+  /* Coral — warmth without the visual noise of a dating-app gradient. */
+  --color-ember-50: #fff3f1;
+  --color-ember-100: #ffe1dd;
+  --color-ember-200: #ffc7c1;
+  --color-ember-300: #f79b99;
+  --color-ember-400: #e96f73;
+  --color-ember-500: #d95662;
+  --color-ember-600: #b93e50;
+  --color-ember-700: #913042;
 
   /* Sage — confirmations, success */
-  --color-sage-100: #e2ede7;
-  --color-sage-300: #9dc2b1;
-  --color-sage-500: #46705f;
-  --color-sage-600: #375a4c;
+  --color-sage-100: #e9f2e9;
+  --color-sage-300: #b8d1b8;
+  --color-sage-500: #628668;
+  --color-sage-600: #4c6f53;
 
   /* Blue-black carbon copy — informational states */
-  --color-dusk-100: #e6e9e8;
-  --color-dusk-300: #aab6b3;
-  --color-dusk-500: #526b68;
-  --color-dusk-600: #405754;
+  --color-dusk-100: #f0eaf1;
+  --color-dusk-300: #cbb8ce;
+  --color-dusk-500: #806685;
+  --color-dusk-600: #684f6d;
 
-  --radius-card: 0.4rem;
+  --radius-card: 1.4rem;
 
-  --shadow-soft: 0 1px 0 rgb(30 25 21 / 0.06);
-  --shadow-lift: 4px 4px 0 rgb(30 25 21 / 0.12);
+  --shadow-soft:
+    0 14px 42px -32px rgb(83 43 58 / 0.42), 0 2px 8px rgb(83 43 58 / 0.04);
+  --shadow-lift:
+    0 22px 52px -30px rgb(83 43 58 / 0.38), 0 8px 18px rgb(83 43 58 / 0.08);
 
   --animate-drop-in: drop-in 0.42s cubic-bezier(0.2, 0.8, 0.2, 1) both;
   --animate-fade-up: fade-up 0.34s cubic-bezier(0.2, 0.8, 0.2, 1) both;
@@ -102,32 +105,33 @@
 
 @layer base {
   :root {
-    --bg: #f5efe4;
-    --bg-raised: #fbf7ef;
-    --bg-sunken: #ebe3d6;
-    --border: #d5c8b8;
-    --border-strong: #aa9b88;
+    --bg: #fff9f7;
+    --bg-raised: #fffefd;
+    --bg-sunken: #fbedeb;
+    --border: #efdcd9;
+    --border-strong: #dfbebd;
     --text: var(--color-ink-900);
     --text-muted: var(--color-ink-400);
     --text-soft: var(--color-ink-500);
-    --grid-line: rgb(62 49 38 / 0.035);
-    --shadow-ink: rgb(30 25 21 / 0.16);
+    --glow-peach: rgb(255 215 199 / 0.62);
+    --glow-pink: rgb(246 199 210 / 0.42);
+    --shadow-ink: rgb(83 43 58 / 0.18);
 
     /* Semantic tints. Defined once per theme so an accent surface is never
        light-on-light in dark mode. */
-    --tint-ember-bg: #fdf3ef;
-    --tint-ember-fg: #90351c;
-    --tint-ember-strong: #b44322;
-    --tint-ember-border: #f4c2b0;
-    --accent-text: #d4552b;
+    --tint-ember-bg: #fff0ee;
+    --tint-ember-fg: #a8384a;
+    --tint-ember-strong: #c44656;
+    --tint-ember-border: #f2c3c1;
+    --accent-text: #b93e50;
 
-    --tint-sage-bg: #e2ede7;
-    --tint-sage-fg: #375a4c;
-    --tint-sage-border: #9dc2b1;
+    --tint-sage-bg: #eaf3ea;
+    --tint-sage-fg: #4c6f53;
+    --tint-sage-border: #b8d1b8;
 
-    --tint-dusk-bg: #e6e9e8;
-    --tint-dusk-fg: #405754;
-    --tint-dusk-border: #aab6b3;
+    --tint-dusk-bg: #f0eaf1;
+    --tint-dusk-fg: #684f6d;
+    --tint-dusk-border: #cbb8ce;
 
     --tint-warn-bg: #fdf6e7;
     --tint-warn-fg: #8a5a12;
@@ -137,30 +141,31 @@
   }
 
   html[data-theme="dark"] {
-    --bg: #15120f;
-    --bg-raised: #1d1915;
-    --bg-sunken: #100e0c;
-    --border: #393128;
-    --border-strong: #5a4c3f;
-    --text: #f4ecdf;
-    --text-muted: #998c7c;
-    --text-soft: #c1b5a5;
-    --grid-line: rgb(246 236 222 / 0.035);
-    --shadow-ink: rgb(0 0 0 / 0.45);
+    --bg: #21171d;
+    --bg-raised: #2c2027;
+    --bg-sunken: #1a1116;
+    --border: #493641;
+    --border-strong: #6a4d5b;
+    --text: #fff7f4;
+    --text-muted: #b798a3;
+    --text-soft: #d8bdc4;
+    --glow-peach: rgb(170 76 83 / 0.16);
+    --glow-pink: rgb(128 70 103 / 0.14);
+    --shadow-ink: rgb(0 0 0 / 0.34);
 
-    --tint-ember-bg: #2d1912;
-    --tint-ember-fg: #f09a78;
-    --tint-ember-strong: #f09a78;
-    --tint-ember-border: #603322;
-    --accent-text: #f09a78;
+    --tint-ember-bg: #40242d;
+    --tint-ember-fg: #ffaaa8;
+    --tint-ember-strong: #ffaaa8;
+    --tint-ember-border: #70404c;
+    --accent-text: #ff9b9a;
 
-    --tint-sage-bg: #17241f;
-    --tint-sage-fg: #9dc2b1;
-    --tint-sage-border: #2c473c;
+    --tint-sage-bg: #213027;
+    --tint-sage-fg: #b8d1b8;
+    --tint-sage-border: #3f5b45;
 
-    --tint-dusk-bg: #17211f;
-    --tint-dusk-fg: #aab6b3;
-    --tint-dusk-border: #344744;
+    --tint-dusk-bg: #302437;
+    --tint-dusk-fg: #d0b5d4;
+    --tint-dusk-border: #56425d;
 
     --tint-warn-bg: #2a2113;
     --tint-warn-fg: #e3bd77;
@@ -181,12 +186,12 @@
   body {
     background: var(--bg);
     background-image:
-      linear-gradient(var(--grid-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 28px 28px;
+      radial-gradient(circle at 8% -4%, var(--glow-peach), transparent 25rem),
+      radial-gradient(circle at 94% 17%, var(--glow-pink), transparent 31rem);
+    background-attachment: fixed;
     color: var(--text);
     font-family: var(--font-sans);
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    font-feature-settings: "ss01", "ss02";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -198,11 +203,27 @@
   h3 {
     font-family: var(--font-display);
     font-weight: 500;
-    letter-spacing: -0.02em;
-    font-variation-settings:
-      "SOFT" 8,
-      "WONK" 0,
-      "opsz" 50;
+    letter-spacing: -0.025em;
+  }
+
+  html[lang^="ko"] {
+    --font-display: "Gowun Batang", "AppleMyungjo", serif;
+    --font-sans: "Gowun Dodum", "Apple SD Gothic Neo", sans-serif;
+  }
+
+  html[lang^="ja"] {
+    --font-display: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", sans-serif;
+    --font-sans: "Zen Maru Gothic", "Hiragino Kaku Gothic ProN", sans-serif;
+  }
+
+  html[lang^="ko"] h1,
+  html[lang^="ko"] h2,
+  html[lang^="ko"] h3,
+  html[lang^="ja"] h1,
+  html[lang^="ja"] h2,
+  html[lang^="ja"] h3 {
+    letter-spacing: -0.045em;
+    word-break: keep-all;
   }
 
   ::selection {
@@ -213,7 +234,7 @@
   :focus-visible {
     outline: 2px solid var(--color-ember-400);
     outline-offset: 2px;
-    border-radius: 2px;
+    border-radius: 0.75rem;
   }
 
   input,
@@ -241,22 +262,97 @@
   }
 }
 
+.hero-title {
+  font-size: clamp(3.15rem, 7vw, 5.1rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+
+html[lang^="ko"] .hero-title,
+html[lang^="ja"] .hero-title {
+  max-width: 42rem;
+  font-size: clamp(2.75rem, 5vw, 4.15rem);
+  line-height: 1.08;
+  letter-spacing: -0.055em;
+}
+
 /* --------------------------- utilities --------------------------- */
 
 @utility surface {
   background: var(--bg-raised);
-  border: 1px solid var(--border);
+  border: 1px solid color-mix(in oklab, var(--border) 82%, transparent);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-soft);
 }
 
 @utility docket-label {
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
-  font-size: 0.68rem;
-  font-weight: 650;
-  letter-spacing: 0.14em;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
   line-height: 1.2;
   text-transform: uppercase;
+}
+
+@utility brand-wordmark {
+  font-family: "DM Serif Display", "Iowan Old Style", Georgia, serif;
+  font-style: italic;
+  letter-spacing: -0.035em;
+}
+
+@utility glass-bar {
+  background: color-mix(in oklab, var(--bg) 82%, transparent);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+@utility soft-section {
+  border: 1px solid color-mix(in oklab, var(--border) 76%, transparent);
+  background: color-mix(in oklab, var(--bg-raised) 86%, transparent);
+  border-radius: 2rem;
+  box-shadow: var(--shadow-soft);
+}
+
+@utility love-note {
+  position: relative;
+  border: 1px solid
+    color-mix(in oklab, var(--tint-ember-border) 72%, transparent);
+  border-radius: 2rem;
+  background:
+    radial-gradient(
+      circle at 92% 8%,
+      color-mix(in oklab, var(--color-ember-100) 72%, transparent),
+      transparent 9rem
+    ),
+    var(--bg-raised);
+  box-shadow: var(--shadow-lift);
+}
+
+@utility romance-night {
+  background:
+    radial-gradient(
+      circle at 14% 8%,
+      rgb(233 111 115 / 0.19),
+      transparent 24rem
+    ),
+    radial-gradient(
+      circle at 88% 80%,
+      rgb(155 97 128 / 0.2),
+      transparent 28rem
+    ),
+    var(--color-ink-950);
+}
+
+@utility love-doodle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid
+    color-mix(in oklab, var(--tint-ember-border) 75%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--tint-ember-bg) 88%, transparent);
+  color: var(--accent-text);
+  box-shadow: 0 12px 30px -20px var(--shadow-ink);
 }
 
 @utility paper-rule {

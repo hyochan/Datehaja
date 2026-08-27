@@ -61,6 +61,9 @@ export default function DashboardPage() {
     <div className="space-y-10">
       <header>
         <div className="docket-label mb-2 text-[var(--accent-text)]">
+          <span className="mr-2" aria-hidden>
+            ♥
+          </span>
           {t("Your concierge desk")}
         </div>
         <h1 className="text-[30px] leading-tight">
@@ -193,9 +196,13 @@ export default function DashboardPage() {
           <Card>
             <EmptyState
               title={t("No open windows")}
-              body={t("Add an evening you're free and we'll start looking straight away.")}
+              body={t(
+                "Add an evening you're free and we'll start looking straight away.",
+              )}
               action={
-                <LinkButton to="/availability">{t("Add availability")}</LinkButton>
+                <LinkButton to="/availability">
+                  {t("Add availability")}
+                </LinkButton>
               }
             />
           </Card>
@@ -271,7 +278,9 @@ function IdleCard({
         <EmptyState
           icon={<Logo className="h-10 w-10" />}
           title={t("We only need one thing")}
-          body={t("Tell us when you're free. We'll find someone compatible, plan a real date, and send it to you both.")}
+          body={t(
+            "Tell us when you're free. We'll find someone compatible, plan a real date, and send it to you both.",
+          )}
           action={
             <LinkButton to="/availability" size="lg">
               {t("Add availability")}
@@ -284,22 +293,27 @@ function IdleCard({
 
   return (
     <Card className="p-6 sm:p-7">
-      <div className="docket-label mb-1 text-muted">{t("Your next DateDrop")}</div>
+      <div className="docket-label mb-1 text-muted">
+        {t("Your next DateDrop")}
+      </div>
       <h2 className="font-display text-[24px] leading-tight sm:text-[27px]">
-        {nextWindow ? (
-          t("You're free {date}.", {
-            date: formatDay(nextWindow.startMs, nextWindow.timezone),
-          })
-        ) : (
-          t("You're free soon.")
-        )}
+        {nextWindow
+          ? t("You're free {date}.", {
+              date: formatDay(nextWindow.startMs, nextWindow.timezone),
+            })
+          : t("You're free soon.")}
       </h2>
       <p className="mt-2 max-w-md text-[15px] leading-relaxed text-soft">
         {openWindowCount === 1
-          ? t("One window open. Ask us to look now, or add more times to widen the net.")
-          : t("{count} windows open. We'll use whichever finds the best match first.", {
-              count: openWindowCount,
-            })}
+          ? t(
+              "One window open. Ask us to look now, or add more times to widen the net.",
+            )
+          : t(
+              "{count} windows open. We'll use whichever finds the best match first.",
+              {
+                count: openWindowCount,
+              },
+            )}
       </p>
       <div className="mt-6 flex flex-wrap gap-3">
         <Button onClick={onFind} loading={busy} size="lg">

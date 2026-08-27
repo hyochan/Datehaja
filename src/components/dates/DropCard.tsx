@@ -42,7 +42,7 @@ export function DropCard({
     <Card
       as="li"
       className={cx(
-        "group overflow-hidden transition-[transform,box-shadow] duration-150 hover:-translate-x-px hover:-translate-y-px hover:shadow-[var(--shadow-lift)]",
+        "group overflow-hidden transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)]",
         variant === "invitation" && "border-[var(--tint-ember-border)]",
         variant === "confirmed" && "border-[var(--tint-sage-border)]",
       )}
@@ -70,7 +70,7 @@ export function DropCard({
 
         {drop.match && (
           <div className="mt-4 flex items-center gap-2.5 border-t border-[var(--border)] pt-3.5">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[2px] border border-[var(--tint-ember-border)] bg-[var(--tint-ember-bg)] font-mono text-[12px] font-semibold text-[var(--tint-ember-strong)]">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[var(--tint-ember-border)] bg-[var(--tint-ember-bg)] font-mono text-[12px] font-semibold text-[var(--tint-ember-strong)]">
               {drop.match.displayName.slice(0, 1).toUpperCase()}
             </span>
             <div className="min-w-0 flex-1">
@@ -109,7 +109,7 @@ function StatusTag({
 
   if (variant === "invitation") {
     return (
-      <span className="docket-label inline-flex items-center gap-1.5 rounded-[2px] border border-[var(--tint-ember-border)] bg-[var(--tint-ember-bg)] px-2.5 py-1 text-[var(--tint-ember-fg)]">
+      <span className="docket-label inline-flex items-center gap-1.5 rounded-full border border-[var(--tint-ember-border)] bg-[var(--tint-ember-bg)] px-2.5 py-1 text-[var(--tint-ember-fg)]">
         <Logo className="h-3.5 w-3.5" />
         {t("New DateDrop")}
       </span>

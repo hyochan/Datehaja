@@ -26,12 +26,12 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-dvh">
-      <header className="border-b border-[var(--border-strong)] bg-[var(--bg)]">
+      <header className="glass-bar sticky top-0 z-30 border-b border-[var(--border)]">
         <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-5 sm:px-8">
           <div className="flex items-center gap-3">
             <Logo className="h-9 w-9" />
             <div className="leading-none">
-              <div className="font-display text-[21px] font-medium tracking-tight">
+              <div className="brand-wordmark text-[22px] font-medium">
                 DateDrop
               </div>
               <div className="docket-label mt-1.5 text-[8px] text-muted">
@@ -44,7 +44,7 @@ export default function LandingPage() {
             <ThemeToggle />
             <Link
               to="/signin"
-              className="rounded-[3px] border border-[var(--border-strong)] bg-[var(--bg-raised)] px-3.5 py-2 text-[13px] font-semibold transition-colors hover:border-[var(--text-muted)] sm:px-4"
+              className="rounded-full border border-[var(--border)] bg-[var(--bg-raised)] px-4 py-2 text-[13px] font-bold shadow-[var(--shadow-soft)] transition-colors hover:border-[var(--tint-ember-border)] hover:bg-[var(--tint-ember-bg)] sm:px-5"
             >
               {t("Sign in")}
             </Link>
@@ -53,18 +53,33 @@ export default function LandingPage() {
       </header>
 
       <main>
-        <section className="border-b border-[var(--border-strong)]">
-          <div className="mx-auto grid max-w-6xl lg:grid-cols-[minmax(0,1.28fr)_minmax(20rem,0.72fr)]">
-            <div className="px-5 py-14 sm:px-8 sm:py-20 lg:py-28 lg:pr-16">
+        <section className="relative overflow-hidden">
+          <span
+            className="love-doodle absolute left-[4%] top-16 hidden h-12 w-12 rotate-[-12deg] text-[18px] xl:inline-flex"
+            aria-hidden
+          >
+            ♡
+          </span>
+          <span
+            className="love-doodle absolute right-[3%] top-24 hidden h-9 w-9 rotate-12 text-[13px] xl:inline-flex"
+            aria-hidden
+          >
+            ✦
+          </span>
+          <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 pb-16 pt-12 sm:px-8 sm:pb-24 sm:pt-20 lg:grid-cols-[minmax(0,1.2fr)_minmax(20rem,0.8fr)] lg:gap-14 lg:py-28">
+            <div>
               <div className="docket-label animate-fade-up text-[var(--accent-text)]">
+                <span className="mr-2" aria-hidden>
+                  ♥
+                </span>
                 {t("Service note 001 · Seoul")}
               </div>
               <h1
-                className="mt-7 max-w-3xl animate-fade-up text-[clamp(3.25rem,9vw,6.8rem)] leading-[0.89] tracking-[-0.055em]"
+                className="hero-title mt-6 max-w-3xl animate-fade-up"
                 style={{ animationDelay: "40ms" }}
               >
                 {t("Bring us a free evening.")}
-                <span className="mt-2 block text-[var(--accent-text)]">
+                <span className="mt-1 block italic text-[var(--accent-text)]">
                   {t("We'll return a date.")}
                 </span>
               </h1>
@@ -86,14 +101,14 @@ export default function LandingPage() {
                 </LinkButton>
                 <Link
                   to="#how-it-works"
-                  className="paper-rule py-2 text-[13px] font-semibold text-muted transition-colors hover:text-[var(--text)]"
+                  className="rounded-full px-3 py-2 text-[13px] font-bold text-muted transition-colors hover:bg-[var(--bg-sunken)] hover:text-[var(--text)]"
                 >
                   {t("Read the two-minute brief")}
                 </Link>
               </div>
 
               <dl
-                className="mt-14 grid animate-fade-up grid-cols-3 border-y border-[var(--border)]"
+                className="mt-14 grid animate-fade-up grid-cols-3 rounded-[1.5rem] border border-[var(--border)] bg-[var(--bg-raised)] p-1.5 shadow-[var(--shadow-soft)]"
                 style={{ animationDelay: "160ms" }}
               >
                 {[
@@ -103,7 +118,7 @@ export default function LandingPage() {
                 ].map(([number, label], index) => (
                   <div
                     key={label}
-                    className={`py-4 ${index > 0 ? "border-l border-[var(--border)] pl-4 sm:pl-6" : "pr-3"}`}
+                    className={`rounded-[1.1rem] px-3 py-3.5 sm:px-5 ${index > 0 ? "border-l border-[var(--border)]" : ""}`}
                   >
                     <dt className="docket-label text-[var(--accent-text)]">
                       {number}
@@ -116,7 +131,13 @@ export default function LandingPage() {
               </dl>
             </div>
 
-            <div className="border-t border-[var(--border-strong)] bg-[var(--bg-sunken)] px-5 py-10 sm:px-8 lg:border-l lg:border-t-0 lg:px-10 lg:py-20">
+            <div className="relative px-1 py-4 sm:px-8 lg:px-0">
+              <span
+                className="love-doodle absolute -right-1 -top-3 h-14 w-14 rotate-12 text-[21px]"
+                aria-hidden
+              >
+                ♡
+              </span>
               <AvailabilityDocket />
             </div>
           </div>
@@ -124,7 +145,7 @@ export default function LandingPage() {
 
         <section
           id="how-it-works"
-          className="border-b border-[var(--border-strong)]"
+          className="border-y border-[var(--border)] bg-[var(--bg-raised)]/50"
         >
           <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
             <div className="grid gap-10 lg:grid-cols-[0.68fr_1.32fr] lg:gap-20">
@@ -144,7 +165,7 @@ export default function LandingPage() {
                 </p>
               </div>
 
-              <div className="grid border border-[var(--border-strong)] bg-[var(--bg-raised)] md:grid-cols-2">
+              <div className="grid overflow-hidden rounded-[2rem] border border-[var(--border)] bg-[var(--bg-raised)] shadow-[var(--shadow-soft)] md:grid-cols-2">
                 <div className="p-6 sm:p-8">
                   <div className="docket-label text-muted">
                     {t("The usual route")}
@@ -166,7 +187,7 @@ export default function LandingPage() {
                   </ol>
                 </div>
 
-                <div className="border-t border-[var(--border-strong)] bg-[var(--tint-ember-bg)] p-6 sm:p-8 md:border-l md:border-t-0">
+                <div className="border-t border-[var(--tint-ember-border)] bg-[var(--tint-ember-bg)] p-6 sm:p-8 md:border-l md:border-t-0">
                   <div className="docket-label text-[var(--tint-ember-strong)]">
                     {t("The DateDrop route")}
                   </div>
@@ -191,7 +212,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="border-b border-[var(--border-strong)]">
+        <section>
           <div className="mx-auto grid max-w-6xl items-start gap-12 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
             <div className="lg:sticky lg:top-28">
               <div className="docket-label text-[var(--accent-text)]">
@@ -228,7 +249,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="bg-ink-950 text-sand-50">
+        <section className="romance-night overflow-hidden text-sand-50">
           <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
             <div>
               <div className="docket-label text-ember-300">
@@ -284,8 +305,8 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="border-b border-[var(--border-strong)]">
-          <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 py-16 sm:px-8 sm:py-20 md:grid-cols-[1fr_auto]">
+        <section className="px-5 py-10 sm:px-8 sm:py-14">
+          <div className="soft-section mx-auto grid max-w-6xl items-center gap-8 px-6 py-10 sm:px-10 sm:py-12 md:grid-cols-[1fr_auto]">
             <div>
               <div className="docket-label text-[var(--accent-text)]">
                 {t("Your invitation is open")}
@@ -304,12 +325,12 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="bg-[var(--bg-sunken)]">
+      <footer className="border-t border-[var(--border)] bg-[var(--bg-sunken)]/65">
         <div className="mx-auto flex max-w-6xl flex-col justify-between gap-6 px-5 py-9 text-[12px] text-muted sm:flex-row sm:items-end sm:px-8">
           <div className="flex items-center gap-2.5">
             <Logo className="h-6 w-6" />
             <div>
-              <div className="font-display text-[16px] text-[var(--text)]">
+              <div className="brand-wordmark text-[17px] text-[var(--text)]">
                 DateDrop
               </div>
               <div className="mt-0.5">
@@ -338,14 +359,21 @@ function AvailabilityDocket() {
   const { t } = useI18n();
 
   return (
-    <aside className="mx-auto max-w-md border border-[var(--border-strong)] bg-[var(--bg-raised)] shadow-[6px_6px_0_var(--shadow-ink)]">
-      <div className="flex items-center justify-between border-b border-[var(--border-strong)] px-5 py-4">
-        <span className="docket-label">{t("Availability docket")}</span>
+    <aside className="love-note mx-auto max-w-md overflow-hidden">
+      <div className="flex items-center justify-between border-b border-[var(--border)] px-5 py-4">
+        <span className="docket-label flex items-center gap-2">
+          <span className="text-[var(--accent-text)]" aria-hidden>
+            ♥
+          </span>
+          {t("Availability docket")}
+        </span>
         <span className="font-mono text-[10px] text-muted">DD—001</span>
       </div>
       <div className="grid grid-cols-[5.25rem_1fr]">
-        <div className="border-r border-[var(--border)] p-4 text-center">
-          <div className="docket-label text-[var(--accent-text)]">{t("Sat")}</div>
+        <div className="border-r border-[var(--border)] bg-[var(--tint-ember-bg)]/45 p-4 text-center">
+          <div className="docket-label text-[var(--accent-text)]">
+            {t("Sat")}
+          </div>
           <div className="mt-2 font-display text-[42px] leading-none">29</div>
           <div className="mt-2 font-mono text-[9px] text-muted">
             {t("AUG / SEOUL")}
@@ -359,7 +387,7 @@ function AvailabilityDocket() {
           </div>
         </div>
       </div>
-      <div className="border-t border-dashed border-[var(--border-strong)] px-5 py-5">
+      <div className="border-t border-dashed border-[var(--tint-ember-border)] px-5 py-5">
         <div className="flex items-end justify-between gap-5">
           <div>
             <div className="docket-label text-muted">
@@ -371,13 +399,13 @@ function AvailabilityDocket() {
               )}
             </div>
           </div>
-          <div className="rotate-[-7deg] border-2 border-ember-400 px-2.5 py-2 text-center text-ember-500">
+          <div className="rotate-[-5deg] rounded-full border-2 border-ember-300 bg-[var(--tint-ember-bg)] px-3.5 py-2 text-center text-ember-500">
             <div className="docket-label text-[9px]">{t("Ready")}</div>
             <div className="mt-0.5 font-mono text-[8px]">CONCIERGE</div>
           </div>
         </div>
       </div>
-      <div className="border-t border-[var(--border)] bg-[var(--bg-sunken)] px-5 py-3 font-mono text-[9px] uppercase tracking-[0.12em] text-muted">
+      <div className="border-t border-[var(--border)] bg-[var(--bg-sunken)]/65 px-5 py-3 font-mono text-[9px] uppercase tracking-[0.12em] text-muted">
         {t("Next: compatibility → venue research → private invite")}
       </div>
     </aside>
@@ -389,8 +417,8 @@ function SampleDrop() {
   const { t } = useI18n();
 
   return (
-    <article className="relative border border-[var(--border-strong)] bg-[var(--bg-raised)] shadow-[7px_7px_0_var(--shadow-ink)]">
-      <header className="flex items-center justify-between border-b border-[var(--border-strong)] px-5 py-4 sm:px-7">
+    <article className="love-note relative overflow-hidden">
+      <header className="flex items-center justify-between border-b border-[var(--border)] px-5 py-4 sm:px-7">
         <span className="docket-label flex items-center gap-2 text-[var(--accent-text)]">
           <Logo className="h-4 w-4" /> {t("New DateDrop")}
         </span>
@@ -424,8 +452,10 @@ function SampleDrop() {
             />
           </div>
 
-          <div className="mt-7 border-y border-dashed border-[var(--border-strong)] py-5">
-            <div className="docket-label text-muted">{t("Who you would meet")}</div>
+          <div className="mt-7 rounded-2xl border border-dashed border-[var(--tint-ember-border)] bg-[var(--tint-ember-bg)]/45 p-4">
+            <div className="docket-label text-muted">
+              {t("Who you would meet")}
+            </div>
             <div className="mt-2 text-[16px] font-semibold">
               Alex · 29 · Seongsu
             </div>
@@ -447,10 +477,10 @@ function SampleDrop() {
               </div>
             </div>
             <div className="flex gap-2">
-              <span className="rounded-[3px] border border-[var(--border-strong)] px-4 py-2 text-[13px] text-muted">
+              <span className="rounded-full border border-[var(--border)] px-4 py-2 text-[13px] text-muted">
                 {t("Pass")}
               </span>
-              <span className="rounded-[3px] border border-ember-600 bg-ember-400 px-4 py-2 text-[13px] font-semibold text-white shadow-[2px_2px_0_var(--shadow-ink)]">
+              <span className="rounded-full border border-ember-600 bg-ember-600 px-4 py-2 text-[13px] font-bold text-white shadow-[0_10px_20px_-14px_var(--shadow-ink)]">
                 {t("Accept")}
               </span>
             </div>
