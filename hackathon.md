@@ -12,7 +12,7 @@
 - **Auth:** Convex Auth
 - **AI models:** gpt-5.6-luna (configured default, with a cheapest-capable fallback ladder in `convex/integrations/openai.ts`)
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-08-27T19:51:26Z
+- **Last updated:** 2026-08-27T20:13:32Z
 
 ## Log
 
@@ -288,3 +288,20 @@ the core journey from landing and signup through onboarding, dashboard,
 availability, history, notifications, privacy, and safety. Verified every
 locale in a real browser, including reload persistence and a 390px Korean
 mobile layout; 193 tests and the production build pass (`src/i18n/`, `src/`).
+
+### 2026-08-28 - 32afc54
+Softened the concierge aesthetic into a warmer, more personal couple-service
+experience without borrowing another product's characters or layout. Replaced
+the institutional grid, square controls, and offset stamp shadows with a cream,
+blush, coral, and plum palette; pill-shaped actions; soft invitation cards; and
+small hand-placed heart and sparkle details. Added locale-aware typography:
+DM Serif Display and Nunito Sans for Latin scripts, Gowun Batang and Gowun
+Dodum for Korean, and Zen Maru Gothic for Japanese. The landing, authentication,
+app shell, mobile navigation, onboarding, dashboard, DateDrop cards, public
+records, logo, and favicon now share the same visual language.
+
+Verified English and Korean at 1280px and 390px with no horizontal overflow,
+checked the light and aubergine dark themes, exercised language switching and
+the signup adult-confirmation guard in a real browser, and raised small-text and
+button contrast to accessible levels. The production build, lint (no errors),
+and all 193 tests pass (`src/`, `public/favicon.svg`, `index.html`).
