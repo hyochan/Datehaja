@@ -36,14 +36,14 @@ export const snapshot = internalQuery({
         calls: r.calls.map((c) => `${c.endpoint} ${c.httpStatus} ${c.ms}ms ${c.resultCount}`),
         error: r.error ?? null,
       })),
-      venues: venues.map((v2) => ({
-        name: v2.name,
-        category: v2.category,
-        confidence: v2.confidence,
-        address: v2.address,
-        hours: v2.openingHours ?? null,
-        price: v2.approximatePrice ?? null,
-        source: v2.sourceUrl,
+      venues: venues.map((venue) => ({
+        name: venue.name,
+        category: venue.category,
+        confidence: venue.confidence,
+        address: venue.address,
+        hours: venue.openingHours ?? null,
+        price: venue.approximatePrice ?? null,
+        source: venue.sourceUrl,
       })),
       drops: drops.map((d) => ({
         status: d.status,

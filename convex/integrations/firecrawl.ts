@@ -250,12 +250,19 @@ export async function scrape(
   }
 }
 
-/** Domains that are never useful as a venue source. */
+/**
+ * Domains that are never useful as a venue source, plus the ones Firecrawl
+ * refuses outright ("we do not support this site", HTTP 403). Excluding them at
+ * search time saves a wasted scrape and a misleading error in the run log.
+ */
 export const NOISE_DOMAINS = [
   "pinterest.com",
   "facebook.com",
+  "instagram.com",
   "x.com",
   "twitter.com",
   "tiktok.com",
   "youtube.com",
+  "reddit.com",
+  "quora.com",
 ];

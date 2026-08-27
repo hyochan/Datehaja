@@ -85,6 +85,27 @@ function classify(text: string): string {
   return "other";
 }
 
+/**
+ * A heading is not a venue just because it is a heading. Travel blogs are full
+ * of section titles ("Winter trip to Seoul", "Related posts") that look
+ * structurally identical to a restaurant name.
+ *
+ * Require corroboration: either the page states something only a real place has
+ * — an address, opening hours, a price — or the text around it names a kind of
+ * venue. Without a model reading the page, this is the line between a venue
+ * record and a blog outline.
+ */
+function hasVenueEvidence(
+  name: string,
+  evidence: string,
+  address: string,
+  hours: string | null,
+  price: string | null,
+): boolean {
+  if (address || hours || price) return true;
+  return CATEGORY_HINTS.some(([pattern]) => pattern.test(`${name} ${evidence}`));
+}
+
 function cleanName(raw: string): string {
   return (
     raw
@@ -136,14 +157,21 @@ export function extractVenues(
     const evidence = window.replace(/\s+/g, " ").trim().slice(0, 300);
     if (evidence.length < 25) continue;
 
+    const address = window.match(ADDRESS_RE)?.[1]?.trim().slice(0, 160) ?? "";
+    const openingHours = window.match(HOURS_RE)?.[1]?.trim().slice(0, 140) ?? null;
+    const approximatePrice = cleanPrice(window.match(PRICE_RE)?.[1]);
+    if (!hasVenueEvidence(name, evidence, address, openingHours, approximatePrice)) {
+      continue;
+    }
+
     seen.add(key);
     out.push({
       name,
       category: classify(`${name} ${evidence}`),
-      address: window.match(ADDRESS_RE)?.[1]?.trim().slice(0, 160) ?? "",
+      address,
       district: area,
-      openingHours: window.match(HOURS_RE)?.[1]?.trim().slice(0, 140) ?? null,
-      approximatePrice: cleanPrice(window.match(PRICE_RE)?.[1]),
+      openingHours,
+      approximatePrice,
       evidence,
       tags: ["extracted-without-model"],
       // Deliberately never above "low": nothing here was verified by anything
@@ -158,14 +186,21 @@ export function extractVenues(
     const name = cleanName(source.title.split(/[|·—–-]/)[0]);
     if (looksLikeVenueName(name)) {
       const evidence = source.content.replace(/\s+/g, " ").trim().slice(0, 300);
-      if (evidence.length >= 40) {
+      const address = source.content.match(ADDRESS_RE)?.[1]?.trim().slice(0, 160) ?? "";
+      const openingHours =
+        source.content.match(HOURS_RE)?.[1]?.trim().slice(0, 140) ?? null;
+      const approximatePrice = cleanPrice(source.content.match(PRICE_RE)?.[1]);
+      if (
+        evidence.length >= 40 &&
+        hasVenueEvidence(name, evidence, address, openingHours, approximatePrice)
+      ) {
         out.push({
           name,
           category: classify(`${name} ${evidence}`),
-          address: source.content.match(ADDRESS_RE)?.[1]?.trim().slice(0, 160) ?? "",
+          address,
           district: area,
-          openingHours: source.content.match(HOURS_RE)?.[1]?.trim().slice(0, 140) ?? null,
-          approximatePrice: cleanPrice(source.content.match(PRICE_RE)?.[1]),
+          openingHours,
+          approximatePrice,
           evidence,
           tags: ["extracted-without-model", "single-page"],
           confidence: "low",

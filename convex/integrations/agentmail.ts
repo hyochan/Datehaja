@@ -22,6 +22,18 @@ export function conciergeInboxId(): string | null {
  *  both are URL path segments and must be percent-encoded. */
 export const pathId = (s: string) => encodeURIComponent(s);
 
+/**
+ * AgentMail rejects an `Idempotency-Key` containing anything outside
+ * `A-Z a-z 0-9 - . _ ~`. Keys here are built from ids, addresses and
+ * timestamps, so an `@` or a `:` slips in easily and the send fails with a
+ * 400 that looks nothing like the real cause. Sanitise at the boundary so no
+ * call site has to remember.
+ */
+export function safeIdempotencyKey(raw: string): string {
+  const cleaned = raw.replace(/[^A-Za-z0-9\-._~]/g, "-").slice(0, 200);
+  return cleaned || "datedrop";
+}
+
 export class AgentMailError extends Error {
   status: number;
   body: string;
@@ -106,7 +118,9 @@ export async function sendMessage(args: {
 }): Promise<SendResult> {
   return am<SendResult>(`/inboxes/${pathId(args.inboxId)}/messages/send`, {
     method: "POST",
-    idempotencyKey: args.idempotencyKey,
+    idempotencyKey: args.idempotencyKey
+      ? safeIdempotencyKey(args.idempotencyKey)
+      : undefined,
     body: JSON.stringify({
       to: [args.to],
       subject: args.subject,
@@ -129,7 +143,9 @@ export async function replyToMessage(args: {
     `/inboxes/${pathId(args.inboxId)}/messages/${pathId(args.messageId)}/reply`,
     {
       method: "POST",
-      idempotencyKey: args.idempotencyKey,
+      idempotencyKey: args.idempotencyKey
+        ? safeIdempotencyKey(args.idempotencyKey)
+        : undefined,
       body: JSON.stringify({ text: args.text, html: args.html, reply_all: false }),
     },
   );

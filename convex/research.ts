@@ -258,11 +258,10 @@ export async function researchDateOptions(
     if (sources.length >= 10) break;
   }
 
-  // Follow up on the most promising pages that came back without content.
-  // /v2/scrape needs a key (search does not), so skip it when running keyless.
-  const thin = hasFirecrawlKey()
-    ? sources.filter((s) => s.content.length < 400).slice(0, 2)
-    : [];
+  // Follow up on the most promising pages that came back without much content.
+  // This works without an API key; individual URLs can still 403 when Firecrawl
+  // refuses that site, which the call log records per-URL.
+  const thin = sources.filter((s) => s.content.length < 400).slice(0, 2);
   for (const source of thin) {
     const result = await scrape(source.url, { maxAgeMs: 24 * 60 * 60 * 1000 });
     calls.push(result.log);
@@ -281,7 +280,7 @@ export async function researchDateOptions(
       venues: [],
       error: hasFirecrawlKey()
         ? "Firecrawl returned no usable results."
-        : "Firecrawl returned no usable results (running without an API key).",
+        : "Firecrawl returned no usable results (running unauthenticated).",
     });
     return {
       researchRunId,

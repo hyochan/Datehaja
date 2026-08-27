@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { modelCandidates, structured } from "./openai";
 import { search, scrape } from "./firecrawl";
-import { parseAddress } from "./agentmail";
+import { parseAddress, safeIdempotencyKey } from "./agentmail";
 import { extractVenues } from "../lib/venueHeuristics";
 import { buildFallbackPlan } from "../lib/fallbackPlan";
 
@@ -278,6 +278,36 @@ describe("AgentMail helpers", () => {
     expect(parseAddress("Jane Doe <jane@example.com>")).toBe("jane@example.com");
     expect(parseAddress("  JANE@example.com ")).toBe("jane@example.com");
   });
+
+  describe("idempotency keys", () => {
+    // AgentMail 400s on anything outside A-Z a-z 0-9 - . _ ~ , and the error
+    // names the header rather than the offending character.
+    const ALLOWED = /^[A-Za-z0-9\-._~]+$/;
+
+    it("strips an email address's @", () => {
+      const key = safeIdempotencyKey("verify-hyo@hyo.dev-2026-08-27T21");
+      expect(key).toMatch(ALLOWED);
+      expect(key).not.toContain("@");
+    });
+
+    it("strips colons from an ISO timestamp", () => {
+      expect(safeIdempotencyKey("run-2026-08-27T21:15:00Z")).toMatch(ALLOWED);
+    });
+
+    it("leaves an already-safe key untouched", () => {
+      const safe = "invite-ks78m3xeetdz-n976kt8n8evq";
+      expect(safeIdempotencyKey(safe)).toBe(safe);
+    });
+
+    it("never returns an empty key", () => {
+      expect(safeIdempotencyKey("@@@")).not.toBe("");
+      expect(safeIdempotencyKey("")).toBe("datedrop");
+    });
+
+    it("caps the length", () => {
+      expect(safeIdempotencyKey("a".repeat(500)).length).toBeLessThanOrEqual(200);
+    });
+  });
 });
 
 /* --------------------------- deterministic fallbacks ----------------------- */
@@ -359,6 +389,37 @@ describe("venue extraction without a model", () => {
   it("classifies categories from the surrounding text", () => {
     const venues = extractVenues(page, "Seongsu");
     expect(venues.find((v) => v.name === "Parco Pizzeria")?.category).toBe("restaurant");
+  });
+
+  it("rejects a blog section heading with nothing venue-like around it", () => {
+    const blog = {
+      url: "https://blog.test/seoul",
+      title: "Winter trip notes",
+      content: [
+        "## Perjalanan Musim Dingin ke Seoul",
+        "Catatan perjalanan saya selama seminggu, foto-foto dan cerita ringan",
+        "tentang cuaca dan suasana kota pada bulan Desember lalu.",
+        "",
+        "## Momen Trip Terkait",
+        "Beberapa tautan ke tulisan lain yang mungkin menarik untuk dibaca juga.",
+      ].join("\n"),
+    };
+    expect(extractVenues(blog, "Seongsu")).toEqual([]);
+  });
+
+  it("keeps a heading the page corroborates with hours, price or an address", () => {
+    const corroborated = {
+      url: "https://blog.test/seoul",
+      title: "Winter trip notes",
+      content: [
+        "## Onion Seongsu",
+        "Sebuah tempat yang tenang dengan roti yang sangat enak sekali.",
+        "Open daily 08:00-22:00.",
+      ].join("\n"),
+    };
+    expect(extractVenues(corroborated, "Seongsu").map((v) => v.name)).toContain(
+      "Onion Seongsu",
+    );
   });
 
   it("returns nothing from a page with no headings and no usable title", () => {
