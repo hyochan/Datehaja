@@ -217,31 +217,51 @@ bunx convex run demo:ensureSeeded '{}'    # seed the demo personas
 
 ## Environment variables
 
-Only two values live in `.env.local`, both written by `convex dev`: `CONVEX_DEPLOYMENT` and `VITE_CONVEX_URL`. **Every secret lives on the Convex deployment**, so nothing is bundled into the browser and nothing can be committed. See [`.env.example`](.env.example).
+`.env.local` holds only `CONVEX_DEPLOYMENT` and `VITE_CONVEX_URL`, both written
+by `convex dev`. **Every secret lives on the Convex deployment**, because Convex
+actions read `process.env` from the deployment — a local file alone does nothing
+for the running app, and nothing secret ends up in the browser bundle.
 
-| Variable | Where | Required | Purpose |
-|---|---|---|---|
-| `JWT_PRIVATE_KEY`, `JWKS` | Convex | yes | Convex Auth signing keys |
-| `SITE_URL` | Convex | yes | Public origin used in email links |
-| `OPENAI_API_KEY` | Convex | for AI | Ranking, venue extraction, plan writing |
-| `OPENAI_MODEL` | Convex | no | Overrides the head of the model ladder |
-| `FIRECRAWL_API_KEY` | Convex | no | Higher rate limits; required for `/v2/scrape` |
-| `AGENTMAIL_API_KEY` | Convex | for email | Concierge inbox |
-| `AGENTMAIL_INBOX_ID` | Convex | for email | The Concierge address |
-| `AGENTMAIL_WEBHOOK_SECRET` | Convex | for email | Svix signature verification |
-
-Provision the AgentMail inbox and webhook in one step:
+To set them, put them in a gitignored `.env` and push:
 
 ```bash
-bunx convex run setup:provisionAgentMail \
-  '{"webhookUrl":"https://<deployment>.convex.site/webhooks/agentmail"}'
+cp .env.example .env      # fill in the values
+bun run env:push          # -> dev
+bun run env:push:prod     # -> production
+bun run verify:prod       # makes a REAL call to each provider
 ```
 
-Check what's actually wired up, with real calls to each provider:
+`env:push` refuses to send `SITE_URL`, `JWT_PRIVATE_KEY`, `JWKS`,
+`CONVEX_DEPLOYMENT` and the `VITE_*` pair, since those are deployment-specific
+or generated, and it tells you about any variable the app doesn't actually read.
+
+### What you need
+
+| Variable | Required? | Where to get it | Without it |
+|---|---|---|---|
+| `OPENAI_API_KEY` | **yes** | [platform.openai.com](https://platform.openai.com/settings/organization/api-keys) → API keys. Prepaid — add credit or every call 429s. | Falls back to rule-based venue extraction and a templated plan, labelled *Unconfirmed details* |
+| `AGENTMAIL_API_KEY` | **yes** | [console.agentmail.to](https://console.agentmail.to) → API Keys. Free tier, no card: 3 inboxes, 3,000 emails/month | No mail sent; each send logged as `skipped_no_provider` |
+| `FIRECRAWL_API_KEY` | no | [firecrawl.dev](https://firecrawl.dev) → API Keys | Nothing breaks. `/v2/search` already serves unauthenticated requests, which is how the live deployment runs. A key raises the rate limit and unlocks `/v2/scrape` (403 without one) |
+| `OPENAI_MODEL` | no | — | Uses the model ladder's default |
+
+Two more are **produced, not typed**. Once `AGENTMAIL_API_KEY` is set:
 
 ```bash
-bunx convex run setup:verifyIntegrations '{}'
-curl https://<deployment>.convex.site/healthz
+bun run provision:agentmail
+```
+
+creates the DateDrop Concierge inbox and its Svix-signed webhook and prints
+`AGENTMAIL_INBOX_ID` and `AGENTMAIL_WEBHOOK_SECRET`. Put those in `.env` and
+re-run `env:push:prod`.
+
+Already set on both deployments, and not yours to fill in: `JWT_PRIVATE_KEY` and
+`JWKS` (generated per deployment — see Local development) and `SITE_URL` (the
+public origin, different for dev and prod).
+
+Check what's actually live at any time:
+
+```bash
+curl https://merry-bass-190.convex.site/healthz
 ```
 
 ### Graceful degradation

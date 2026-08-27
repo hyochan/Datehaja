@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:all": "convex dev --tail-logs disable --run-sh \"vite\"",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint": "oxlint",
@@ -15,7 +14,11 @@
     "convex:dev": "convex dev",
     "convex:deploy": "convex deploy",
     "deploy": "static-hosting deploy",
-    "verify": "convex run setup:verifyIntegrations"
+    "verify": "convex run setup:verifyIntegrations \"{}\"",
+    "env:push": "node scripts/push-env.mjs",
+    "env:push:prod": "node scripts/push-env.mjs --prod",
+    "verify:prod": "convex run --prod setup:verifyIntegrations \"{}\"",
+    "provision:agentmail": "convex run --prod setup:provisionAgentMail '{\"webhookUrl\":\"https://merry-bass-190.convex.site/webhooks/agentmail\"}'"
   },
   "dependencies": {
     "@auth/core": "0.41.1",
