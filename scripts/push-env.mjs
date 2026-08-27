@@ -19,6 +19,15 @@ const prod = process.argv.includes("--prod");
 const target = prod ? "production (merry-bass-190)" : "dev";
 
 /**
+ * Secrets can live in either file. `.env.local` is where `convex dev` writes
+ * CONVEX_DEPLOYMENT and VITE_CONVEX_URL, and keeping secrets alongside them is
+ * fine — Vite only exposes VITE_*-prefixed variables to the browser, and the
+ * NEVER_PUSH list below stops the deployment-specific ones being sent anywhere.
+ */
+const explicit = process.argv.find((a) => a.startsWith("--file="))?.slice(7);
+const CANDIDATES = explicit ? [explicit] : [".env", ".env.local"];
+
+/**
  * Refused outright. These are either deployment-specific (pushing one value to
  * both deployments breaks auth and email links), generated rather than typed,
  * or platform-provided and not settable at all.
@@ -47,12 +56,15 @@ const KNOWN = new Set([
 
 const PLACEHOLDER = /^(sk|am|fc|whsec)-?\.\.\.$|^$|\.\.\.$/;
 
-if (!existsSync(".env")) {
-  console.error("No .env found.\n\n  cp .env.example .env\n");
+const sourceFile = CANDIDATES.find((f) => existsSync(f));
+if (!sourceFile) {
+  console.error(
+    `No ${CANDIDATES.join(" or ")} found.\n\n  cp .env.example .env\n`,
+  );
   process.exit(1);
 }
 
-const lines = readFileSync(".env", "utf8").split("\n");
+const lines = readFileSync(sourceFile, "utf8").split("\n");
 const push = [];
 const skipped = [];
 const placeholders = [];
@@ -88,13 +100,13 @@ for (const raw of lines) {
 
 if (push.length === 0) {
   console.error(
-    `Nothing to push — every value in .env is still a placeholder.\n` +
+    `Nothing to push — every secret in ${sourceFile} is still a placeholder.\n` +
       `Fill in at least OPENAI_API_KEY or AGENTMAIL_API_KEY.\n`,
   );
   process.exit(1);
 }
 
-console.log(`\nPushing ${push.length} variable(s) to ${target}:\n`);
+console.log(`\nPushing ${push.length} variable(s) from ${sourceFile} to ${target}:\n`);
 for (const [name, value] of push) {
   const shown = value.length > 12 ? `${value.slice(0, 6)}…${value.slice(-4)}` : "••••";
   console.log(`  ${name.padEnd(26)} ${shown}`);
