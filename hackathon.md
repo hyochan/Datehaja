@@ -328,3 +328,17 @@ second real-browser walkthrough now opens signup at the top, both themes keep
 the invitation legible, there are no browser errors, and the production build,
 lint (no errors), and all 193 tests pass (`src/App.tsx`,
 `src/styles/index.css`).
+
+### 2026-08-28 - db70df1
+Replaced the landing page's long explanatory copy with a visual product story:
+a four-card date journey, hand-drawn evidence icons, a concrete invitation
+preview, and an A-to-B privacy diagram with locked data tiles. The hero now
+asks for one action without an AI-like paragraph, while the remaining copy is
+kept only where it proves the product or states a safety limit. Also made hash
+links land on their intended section without breaking the route-level scroll
+reset.
+
+Checked Korean and English at 1280px and 390px, including long-label wrapping,
+in-page navigation, sign-in scroll position, and horizontal overflow. The real
+browser reported no errors; the production build, lint (no errors), and all 193
+tests pass (`src/pages/LandingPage.tsx`, `src/App.tsx`, `src/i18n/index.tsx`).
