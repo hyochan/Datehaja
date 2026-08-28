@@ -359,3 +359,19 @@ run before the authenticated shell rendered the anchor. No browser errors or
 horizontal overflow; the production build, lint (no errors), and all 193 tests
 pass (`src/pages/LandingPage.tsx`, `src/styles/index.css`, `src/App.tsx`,
 `src/i18n/index.tsx`).
+
+### 2026-08-28 - cef5dba
+Turned the service scenario into one connected concierge desk: two availability
+slips travel through DateDrop's live research, become separate locked replies,
+and merge into a final public-place date ticket. The landing example now adapts
+its city, neighbourhood, time format, time zone, currency, budget, venue, and
+sample person to each of the ten launch locales instead of presenting Seoul to
+every visitor.
+
+Replaced the compact native locale select with a warm flag-led country menu and
+fixed its mobile positioning after real-browser review exposed left-edge
+clipping. Verified English, German, and Korean locale switching, in-page
+navigation, 1280px desktop and 390px mobile layouts, and zero horizontal
+overflow. The production build, lint (no errors), and all 193 tests pass
+(`src/pages/LandingPage.tsx`, `src/components/layout/LocaleSwitcher.tsx`,
+`src/i18n/index.tsx`).
