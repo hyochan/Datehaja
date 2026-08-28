@@ -342,3 +342,20 @@ Checked Korean and English at 1280px and 390px, including long-label wrapping,
 in-page navigation, sign-in scroll position, and horizontal overflow. The real
 browser reported no errors; the production build, lint (no errors), and all 193
 tests pass (`src/pages/LandingPage.tsx`, `src/App.tsx`, `src/i18n/index.tsx`).
+
+### 2026-08-28 - 1c46100
+Replaced the abstract landing steps and repeated privacy panel with a complete
+visual service scenario. The new flow shows two availability windows entering
+the concierge, compatibility and live venue research, two separate private
+acceptances, and the final public-place DateDrop ticket. Kept safety facts as
+compact visual badges instead of another explanatory paragraph, and localized
+the new stage label for all ten launch markets.
+
+Unified display-heading rhythm with one locale-aware line-height token: 1.08
+for Latin scripts and 1.18 for Korean and Japanese. Browser-computed values now
+match across every landing heading. Verified the flow at 1280px and 390px,
+checked long German labels for clipping, and fixed direct hash loads that could
+run before the authenticated shell rendered the anchor. No browser errors or
+horizontal overflow; the production build, lint (no errors), and all 193 tests
+pass (`src/pages/LandingPage.tsx`, `src/styles/index.css`, `src/App.tsx`,
+`src/i18n/index.tsx`).
