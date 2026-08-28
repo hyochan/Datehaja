@@ -274,6 +274,14 @@
   }
 }
 
+/* One heading rhythm across pages. Keeping this outside Tailwind's cascade
+   layers prevents local leading utilities from quietly changing it. */
+h1,
+h2,
+h3 {
+  line-height: var(--heading-leading);
+}
+
 .hero-title {
   font-size: clamp(3.15rem, 7vw, 5.1rem);
   line-height: var(--heading-leading);
