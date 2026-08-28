@@ -232,6 +232,7 @@
   html[lang^="ko"] h2,
   html[lang^="ko"] h3 {
     font-weight: 700;
+    line-height: 1.18;
   }
 
   ::selection {
