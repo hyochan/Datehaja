@@ -1,63 +1,39 @@
 1
-00:00:00,000 --> 00:00:08,500
-Dating apps ask who you like, then make you swipe and chat for days.
+00:00:00,000 --> 00:00:13,566
+Dating apps ask who you like, then make you swipe and chat for days. DateHaja asks one smaller question: when are you free? Give us one evening, and we return a researched date plan with someone who can actually make it.
 
 2
-00:00:08,500 --> 00:00:18,000
-DateHaja asks one smaller question: when are you free?
+00:00:13,566 --> 00:00:28,408
+This is the whole input: Monday, six to ten thirty, interpreted in Seoul time, not the browser's timezone. DateHaja looks for genuine overlap before it ever considers chemistry, so the date begins with two people who can both be there.
 
 3
-00:00:18,000 --> 00:00:29,500
-One free evening goes in. A real date comes out.
+00:00:28,408 --> 00:00:48,075
+These are real Convex document updates, not a timed spinner. Hard TypeScript rules enforce age, mutual intent, distance, safety state and a real calendar overlap. A deterministic score explains the fit. OpenAI only ranks survivors, and Firecrawl researches real public venues from the live web.
 
 4
-00:00:29,500 --> 00:00:43,000
-Hard rules check age, mutual interest, distance, safety, budget, and real overlap.
+00:00:48,075 --> 00:01:04,175
+The plan arrives with a time, two real places, a walking handoff and a budget. Every stop carries the source page Firecrawl found. OpenAI composes only from that evidence. In today's production run, this full plan arrived in about thirty six seconds.
 
 5
-00:00:43,000 --> 00:00:56,000
-OpenAI ranks only the people who pass those rules. It cannot overrule one.
+00:01:04,175 --> 00:01:18,642
+AgentMail gives the product its own concierge identity. The two invitations are sent separately, so neither person sees the other's address in the app, sender field or C C list. Replies return to DateHaja, not to the match.
 
 6
-00:00:56,000 --> 00:01:09,500
-Firecrawl researches real public venues on the live web around both people.
+00:01:18,642 --> 00:01:31,675
+I accept. My evening is now reserved, but nothing is confirmed and the other person cannot see my answer. If they pass, DateHaja keeps my acceptance alive and searches for a replacement instead of cancelling on me.
 
 7
-00:01:09,500 --> 00:01:23,000
-Every plan keeps its sources, evidence, timestamp, budget, and constraints.
+00:01:31,675 --> 00:01:45,416
+The fictional demo persona accepts from the control panel. A second window stays untouched. Without a refresh or navigation, its live Convex query changes from waiting to It's a date. The transaction is the animation.
 
 8
-00:01:23,000 --> 00:01:37,000
-AgentMail sends two separate invitations. Neither person sees the other's email.
+00:01:45,416 --> 00:02:04,216
+The calendar subscription follows Convex state. One acceptance creates a tentative reservation. Two acceptances finalize the same event. A withdrawal, cancellation or unsuccessful replacement marks it cancelled, without creating duplicates. It works with Google Calendar and any webcal client.
 
 9
-00:01:37,000 --> 00:01:50,000
-I accept privately. The other person cannot see my answer yet.
+00:02:04,216 --> 00:02:22,282
+Safety is an action, not a claim. A trusted contact can receive my first name, confirmed time and public venue, but never the match's identity. After the date, each person can respond privately. DateHaja plainly says it does not verify identity and plans public places only.
 
 10
-00:01:50,000 --> 00:02:03,000
-A labelled demo persona lets a judge drive the second side.
-
-11
-00:02:03,000 --> 00:02:16,500
-Both accept. The untouched screen updates live through Convex—no refresh.
-
-12
-00:02:16,500 --> 00:02:29,000
-One acceptance reserves the evening. Two finalize the same calendar event.
-
-13
-00:02:29,000 --> 00:02:40,000
-A cancellation releases it instead of leaving a stale plan behind.
-
-14
-00:02:40,000 --> 00:02:49,000
-A trusted contact receives only my name, time, and the public venue.
-
-15
-00:02:49,000 --> 00:02:56,000
-Afterward, each person can check in privately about outcome and safety.
-
-16
-00:02:56,000 --> 00:02:59,000
-Let's date. We'll make the plan.
+00:02:22,282 --> 00:02:39,149
+DateHaja only asks when you're free. Convex keeps the whole journey transactional and realtime. OpenAI ranks and composes. Firecrawl brings current evidence. AgentMail keeps both people private. One evening is enough to begin. Let's date. We'll make the plan.

@@ -1,9 +1,17 @@
 # DateHaja — 3-minute demo script
 
-Target: **2:55 maximum**. Show the product moving; keep architecture claims tied
-to something visible on screen.
+Completed deliverable: **`submission/DateHaja-demo.mp4`** — 2:39, 1920×1080,
+H.264 video with AAC English narration.
 
 Live app: https://datehaja.com
+
+The finished cut is a concise visual story built from the production E2E run:
+availability, deterministic matching, OpenAI ranking, Firecrawl evidence,
+separate AgentMail invitations, private answers, Convex realtime confirmation,
+calendar state, trusted-contact sharing, and private post-date feedback.
+
+The live-capture rundown below is retained as the operator script if the
+submission portal asks for an unedited browser walkthrough.
 
 ## Before recording
 

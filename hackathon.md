@@ -12,7 +12,7 @@
 - **Auth:** Convex Auth
 - **AI models:** gpt-5.6-luna (configured default, with a cheapest-capable fallback ladder in `convex/integrations/openai.ts`)
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-08-28T14:36:00Z
+- **Last updated:** 2026-08-28T18:07:30Z
 
 ## Log
 
@@ -216,8 +216,8 @@ Wired the real credentials and verified each integration with a live call.
   auth failures, and the code had been gating the scrape follow-up behind
   `hasFirecrawlKey()` for that wrong reason. Gate removed; those domains are
   now excluded at search time instead.
-- **AgentMail — verified end to end.** Provisioned the `datehaja-concierge@agentmail.to`
-  inbox and a webhook at `https://merry-bass-190.convex.site/webhooks/agentmail`
+- **AgentMail — verified end to end.** Verified the existing `datedrop-concierge@agentmail.to`
+  inbox and its webhook at `https://merry-bass-190.convex.site/webhooks/agentmail`
   subscribed to message.received, message.sent, message.delivered and
   message.bounced. Sent a real message (AWS SES message id returned), and the
   resulting `message.sent` and `message.delivered` webhooks arrived, **passed
@@ -418,3 +418,33 @@ recent failed executions on the existing production deployment; the new
 backend was pushed only to the personal dev deployment `adorable-boar-359`.
 Production and repository visibility were intentionally left unchanged during
 this private hardening pass.
+
+### 2026-08-29 - 4c920bf
+Promoted the complete private hardening build to Convex production
+`merry-bass-190` and to `https://datehaja.com`. The deploy included the
+calendar-feed, date-feedback, safety-profile, and trusted-contact schemas and
+indexes, set the production `SITE_URL` to the custom domain, and uploaded the
+same build to the Convex static-hosting fallback. Static deployment:
+`210e31f0-56fb-472c-ae60-8211f0a0f533`.
+
+Production verification exercised every configured integration. Firecrawl
+returned three live results in 3161 ms; OpenAI `gpt-5.6-luna` completed in
+5661 ms using 82 tokens; AgentMail reported two inboxes and an enabled,
+signed webhook subscribed to received, sent, delivered, and bounced events.
+The health endpoint reported every integration ready, and the production
+snapshot contained verified, processed AgentMail events including a received
+message.
+
+A fresh production account completed protected-route redirect, sign-up, all
+six onboarding steps, Seoul availability, and the full matching pipeline. The
+researched dinner-and-coffee plan arrived in about 36 seconds with live venue
+sources and a ₩40,000 estimate. One acceptance changed the plan to Reserved;
+a second fictional-persona acceptance changed an untouched browser tab to
+“It's a date” through a realtime Convex query without refresh. The same event
+then appeared as Finalized with Google Calendar and webcal actions. Trusted
+contact sharing, the optional private post-date check-in, and the explicit
+limits on identity verification were also checked. No browser console errors
+were emitted.
+
+The active production AgentMail address remains the original
+`datedrop-concierge@agentmail.to`; changing that third-party inbox is isolated
