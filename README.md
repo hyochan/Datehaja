@@ -13,7 +13,7 @@ DateDrop is a dating app that never asks who you like. It asks when you're free 
 
 Dating apps have optimised the wrong half of the funnel. They are extraordinarily good at generating matches and extraordinarily bad at generating dates.
 
-You browse hundreds of profiles. You swipe. You match. You then perform several days of low-stakes text conversation whose entire purpose is to decide whether to have one drink. Most of those conversations die of natural causes. The ones that survive stall on the hardest question of all — *so, where should we go?* — which nobody wants to be the one to answer.
+You browse hundreds of profiles. You swipe. You match. You then perform several days of low-stakes text conversation whose entire purpose is to decide whether to have one drink. Most of those conversations die of natural causes. The ones that survive stall on the hardest question of all — _so, where should we go?_ — which nobody wants to be the one to answer.
 
 And to get that far, you traded your phone number, your Instagram, or your email to someone you've never met.
 
@@ -21,8 +21,8 @@ And to get that far, you traded your phone number, your Instagram, or your email
 
 Invert it.
 
-| Every other dating app | DateDrop |
-|---|---|
+| Every other dating app                                                              | DateDrop                                                                                              |
+| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
 | Browse → Swipe → Match → Chat forever → Maybe decide to meet → Work out where to go | Say when you're free → We find someone compatible → We plan a real date → You both say yes → You meet |
 
 A **DateDrop** is not a match. It's a specific plan: a time, a real place found by live web research, an estimated cost, a short honest reason it suits you both, and one decision to make. Accept or pass.
@@ -38,7 +38,10 @@ A **DateDrop** is not a match. It's a specific plan: a time, a real place found 
 7. **DateDrop Concierge invites both people privately**, by email, from its own AgentMail inbox. Neither sees the other's address.
 8. **They independently accept or pass.** Neither learns the other's answer until it's a date.
 9. **If one passes,** the other's evening stays held and DateDrop looks for someone else who fits the same plan — rather than cancelling on the person who said yes.
-10. **If nobody suitable is found before the cutoff,** the drop expires gracefully and says so honestly: *we couldn't find the right match for this DateDrop, so we cancelled it rather than force a poor one.*
+10. **If nobody suitable is found before the cutoff,** the drop expires gracefully and says so honestly: _we couldn't find the right match for this DateDrop, so we cancelled it rather than force a poor one._
+11. **Your calendar follows the same lifecycle.** One acceptance creates a tentative reservation; two acceptances finalize it; a withdrawal, cancellation, or unsuccessful replacement marks that same event cancelled. Google Calendar, Apple Calendar, Outlook, and other iCalendar clients can subscribe through a private capability URL.
+12. **A trusted contact can receive the plan.** Only when the user asks, DateDrop Concierge sends their first name, time, and public venue — never the match's identity or contact details.
+13. **After the planned end, each person can check in privately.** Outcome, safety, whether they would meet again, and venue quality are optional and never shown to the other participant.
 
 ## Architecture
 
@@ -98,11 +101,12 @@ flowchart LR
 
 Convex isn't the database behind DateDrop; it's the whole backend, and the product would be materially worse on anything else.
 
-- **Realtime is the product.** When your match accepts, your screen says *It's a date* without a refresh, a poll, or a socket you wrote. Every screen in the app is a `useQuery` subscription over the same documents the background jobs are writing.
+- **Realtime is the product.** When your match accepts, your screen says _It's a date_ without a refresh, a poll, or a socket you wrote. Every screen in the app is a `useQuery` subscription over the same documents the background jobs are writing.
 - **Every mutation is a transaction.** Accepting a DateDrop reads both participants, derives the next lifecycle state, patches the drop, books two availability windows and writes an audit event — atomically. There is no state where one person is confirmed and the other isn't.
 - **Actions do the messy part, mutations keep the truth.** OpenAI, Firecrawl and AgentMail are all called from actions. They can fail, time out, or return nonsense; none of that can leave a DateDrop half-written, because the only writes happen in small mutations with validated arguments.
 - **The scheduler is the workflow engine.** `ctx.scheduler.runAfter` chains the pipeline; crons handle the 24-hour cutoff, reminders and completion. No queue to run, no worker to deploy.
 - **`convex/http.ts` is both the webhook endpoint and the web server.** The AgentMail webhook and the React app are served from the same `*.convex.site` origin.
+- **Calendar sync is derived, not duplicated.** A secret iCalendar feed maps the transactional DateDrop and participant states to `TENTATIVE`, `CONFIRMED`, or `CANCELLED` with one stable event UID, so an external calendar cannot drift from the app's source of truth.
 - **The frontend is hosted by Convex too**, via the `@convex-dev/static-hosting` component — so the whole product is one deployment.
 
 Convex features used: schema, tables, indexes, queries, internal queries, mutations, internal mutations, actions, internal actions, HTTP actions, crons, scheduled functions, file storage, realtime queries, Convex Auth, and one registered component (`staticHosting`).
@@ -111,11 +115,11 @@ Convex features used: schema, tables, indexes, queries, internal queries, mutati
 
 All model calls go through `/v1/responses` with a strict JSON Schema, from `convex/integrations/openai.ts`. Three jobs:
 
-| Purpose | What the model does |
-|---|---|
-| `rank_candidates` | Ranks an already-filtered shortlist and writes the "why you two" line, in language safe to show either person |
-| `venue_summary` | Turns crawled pages into structured venue records — name, category, address, hours, price, and a verbatim evidence quote |
-| `build_plan` | Composes the date itself from the researched venues: stops, timings, cost, meeting instructions |
+| Purpose           | What the model does                                                                                                      |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `rank_candidates` | Ranks an already-filtered shortlist and writes the "why you two" line, in language safe to show either person            |
+| `venue_summary`   | Turns crawled pages into structured venue records — name, category, address, hours, price, and a verbatim evidence quote |
+| `build_plan`      | Composes the date itself from the researched venues: stops, timings, cost, meeting instructions                          |
 
 Design rules the code enforces:
 
@@ -136,7 +140,7 @@ What gets persisted for every run:
 - every source URL
 - for each venue: name, category, address, district, opening hours, approximate price, a **verbatim evidence snippet** from the page, a confidence rating, and the timestamp it was researched
 
-The DateDrop that comes out is grounded in those records, and the app shows them: open **How we built this** on any DateDrop to see the pages that were crawled and what they actually said. When something can't be confirmed from a source it is marked `low` confidence and labelled *Unconfirmed details* in the UI rather than presented as fact.
+The DateDrop that comes out is grounded in those records, and the app shows them: open **How we built this** on any DateDrop to see the pages that were crawled and what they actually said. When something can't be confirmed from a source it is marked `low` confidence and labelled _Unconfirmed details_ in the UI rather than presented as fact.
 
 `/v2/search` works without an API key at a lower rate limit, which is how the deployment runs today; `/v2/scrape` needs a key and is skipped when one isn't configured.
 
@@ -157,7 +161,7 @@ AgentMail is DateDrop's communication identity. This is the mechanism that makes
 
 Privacy isn't a settings page here, it's the product mechanism.
 
-**What another user can ever see:** your first name, your age, your neighbourhood, up to five interests, up to three languages, your occupation *category* if you chose to show it, and one or two sentences about why you two fit. That's the whole payload, and `convex/lib/privacy.ts` is the single function every cross-user read passes through.
+**What another user can ever see:** your first name, your age, your neighbourhood, up to five interests, up to three languages, your occupation _category_ if you chose to show it, and one or two sentences about why you two fit. That's the whole payload, and `convex/lib/privacy.ts` is the single function every cross-user read passes through.
 
 **What is never shared:** your email address, your phone number, your exact address or coordinates, your date of birth, your full name, or anything about your other DateDrops.
 
@@ -165,6 +169,8 @@ Privacy isn't a settings page here, it's the product mechanism.
 - **Bios are scrubbed** of email addresses, phone numbers, links and messenger handles before anyone else can read them.
 - **Photos are optional and revealed only after both people accept.** DateDrop is not a product you browse by face.
 - **Pre-date messaging is a fixed list of eight preset lines** — "I'm running 10 minutes late", "I'm here" — with no free-text field, so there is nowhere to slip a phone number and no pressure to.
+- **Trusted contacts are optional and purposeful.** DateDrop stores a name and email only after the user confirms consent, and uses them only when that user explicitly shares a confirmed public-place plan.
+- **Post-date responses are private.** A match cannot read the other person's outcome, safety answer, venue score, note, or request for follow-up.
 
 On safety:
 
@@ -174,6 +180,7 @@ On safety:
 - **Reports of harassment or of an apparent minor immediately restrict the reported account** pending review.
 - **One switch takes you out of everyone's candidate pool immediately.** A search already in flight may still deliver one final invitation; nothing follows it.
 - Every date is at a real, public, currently-operating venue. DateDrop never plans anything at a private address.
+- DateDrop does not collect government ID scans. A future identity-verification integration must use a specialist provider and retain only a verification status/reference, never raw documents.
 
 ## Demo mode
 
@@ -191,7 +198,7 @@ They are labelled **Demo profile** everywhere they appear, they never receive em
 4. **Find me a date** — watch the stages advance; each one is a real document update
 5. Open the DateDrop; expand **How we built this** to see the live pages Firecrawl crawled
 6. **Accept**
-7. Go to **Demo controls** → **They accept**, and watch it become *It's a date*. Open a second browser window on the dashboard first to see it flip live.
+7. Go to **Demo controls** → **They accept**, and watch it become _It's a date_. Open a second browser window on the dashboard first to see it flip live.
 
 ## Local development
 
@@ -210,7 +217,7 @@ node -e 'import("jose").then(async({generateKeyPair,exportPKCS8,exportJWK})=>{co
 Then set `JWT_PRIVATE_KEY` and `JWKS` from that file on the deployment and delete it.
 
 ```bash
-bun run test             # 193 tests
+bun run test             # 199 tests
 bun run typecheck
 bun run build
 bunx convex run demo:ensureSeeded '{}'    # seed the demo personas
@@ -238,12 +245,12 @@ or generated, and it tells you about any variable the app doesn't actually read.
 
 ### What you need
 
-| Variable | Required? | Where to get it | Without it |
-|---|---|---|---|
-| `OPENAI_API_KEY` | **yes** | [platform.openai.com](https://platform.openai.com/settings/organization/api-keys) → API keys. Prepaid — add credit or every call 429s. | Falls back to rule-based venue extraction and a templated plan, labelled *Unconfirmed details* |
-| `AGENTMAIL_API_KEY` | **yes** | [console.agentmail.to](https://console.agentmail.to) → API Keys. Free tier, no card: 3 inboxes, 3,000 emails/month | No mail sent; each send logged as `skipped_no_provider` |
-| `FIRECRAWL_API_KEY` | no | [firecrawl.dev](https://firecrawl.dev) → API Keys | Nothing breaks — both `/v2/search` and `/v2/scrape` serve unauthenticated requests. A key mainly buys speed and headroom: search returns in ~400–900ms with one, against 8–18s without |
-| `OPENAI_MODEL` | no | — | Uses the ladder's default, `gpt-5.6-luna` |
+| Variable            | Required? | Where to get it                                                                                                                        | Without it                                                                                                                                                                             |
+| ------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OPENAI_API_KEY`    | **yes**   | [platform.openai.com](https://platform.openai.com/settings/organization/api-keys) → API keys. Prepaid — add credit or every call 429s. | Falls back to rule-based venue extraction and a templated plan, labelled _Unconfirmed details_                                                                                         |
+| `AGENTMAIL_API_KEY` | **yes**   | [console.agentmail.to](https://console.agentmail.to) → API Keys. Free tier, no card: 3 inboxes, 3,000 emails/month                     | No mail sent; each send logged as `skipped_no_provider`                                                                                                                                |
+| `FIRECRAWL_API_KEY` | no        | [firecrawl.dev](https://firecrawl.dev) → API Keys                                                                                      | Nothing breaks — both `/v2/search` and `/v2/scrape` serve unauthenticated requests. A key mainly buys speed and headroom: search returns in ~400–900ms with one, against 8–18s without |
+| `OPENAI_MODEL`      | no        | —                                                                                                                                      | Uses the ladder's default, `gpt-5.6-luna`                                                                                                                                              |
 
 Two more are **produced, not typed**. Once `AGENTMAIL_API_KEY` is set:
 
@@ -269,7 +276,7 @@ curl https://merry-bass-190.convex.site/healthz
 
 DateDrop is built so a provider outage degrades the product instead of breaking it:
 
-- **No OpenAI key, or the model fails** → venues are extracted with deterministic rules and the plan is composed from a template. Everything produced this way is marked `low` confidence and shown as *Unconfirmed details*. It is never presented as reasoning that didn't happen.
+- **No OpenAI key, or the model fails** → venues are extracted with deterministic rules and the plan is composed from a template. Everything produced this way is marked `low` confidence and shown as _Unconfirmed details_. It is never presented as reasoning that didn't happen.
 - **No Firecrawl key** → both endpoints still run unauthenticated, just slower. Sites Firecrawl refuses outright (Reddit, Facebook) are excluded at search time rather than failing on scrape.
 - **No AgentMail** → the in-app notification still fires, and the skipped send is logged with its reason.
 
@@ -282,7 +289,7 @@ bunx convex deploy                                  # backend
 bunx @convex-dev/static-hosting upload --build --prod   # frontend
 ```
 
-Never run `bun run build` followed by a bare `upload --prod`: that bakes your *dev* `VITE_CONVEX_URL` into the production bundle. `--build` lets the CLI inject the right one.
+Never run `bun run build` followed by a bare `upload --prod`: that bakes your _dev_ `VITE_CONVEX_URL` into the production bundle. `--build` lets the CLI inject the right one.
 
 ## Project structure
 
@@ -316,7 +323,7 @@ src/
 
 ## Testing
 
-193 tests, `bun run test`.
+199 tests, `bun run test`.
 
 - **Unit** — hard filters (every exclusion reason and its soft counterpart), deterministic scoring bounds and ordering, lifecycle transitions including every illegal one, expiry and deadline rules, availability overlap, timezone handling across zones, and the privacy projections (including an assertion that no coordinate, DOB, email or surname can leak through).
 - **Integration** (`convex-test`) — accept, pass, withdraw, cancel, expire and complete driven as real signed-in users, plus the negative authorisation cases: a stranger can't accept your drop, a signed-out caller can't act, a non-participant sees `null`.

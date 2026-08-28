@@ -89,15 +89,20 @@ Click **Accept this DateDrop**, open **Demo controls**, then click
 > subscriptions, so the same transactional state appears immediately on both
 > screens.
 
-## 2:30–2:47 · What never changed hands
+## 2:30–2:50 · The plan leaves the app safely
 
-**On screen:** confirmed DateDrop and its safety/privacy details.
+**On screen:** confirmed DateDrop, then its calendar and trusted-contact actions.
 
-> We now share a public venue, time and itinerary. We never exchanged phone
-> numbers, email addresses, socials, exact coordinates or free-text messages.
-> If one person passes, DateDrop keeps the other's evening and searches again.
+> One acceptance reserves the evening; two finalize the same calendar event;
+> a cancellation releases it. I can also send only my name, the time and this
+> public venue to a trusted contact. The match's identity never leaves DateDrop.
 
-## 2:47–2:58 · Close
+Briefly reveal the private post-date check-in heading without filling it in.
+
+> After the date, each person can respond privately. Safety answers never go
+> to the match.
+
+## 2:50–2:58 · Close
 
 **On screen:** return to the landing hero or final date ticket.
 
@@ -112,6 +117,8 @@ Click **Accept this DateDrop**, open **Demo controls**, then click
 - The AgentMail message is genuinely delivered before recording begins.
 - Window B visibly remains untouched until the realtime reveal.
 - The expanded provenance panel contains real Firecrawl and OpenAI evidence.
+- The calendar event visibly says **Finalized** after both accept.
+- The trusted-contact email shown contains no match identity or contact detail.
 - Export at 1080p, H.264, with readable browser zoom and clear voice audio.
 
 ## Optional alternate ending

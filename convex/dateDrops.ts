@@ -28,7 +28,11 @@ import {
   isActiveParticipant,
   pickCounterpart,
 } from "./lib/participants";
-import { firstNameOnly, toPublicPreview, type PublicPreview } from "./lib/privacy";
+import {
+  firstNameOnly,
+  toPublicPreview,
+  type PublicPreview,
+} from "./lib/privacy";
 import { describeDateTime, DAY_MS } from "./lib/time";
 import { ageOn } from "./lib/age";
 import { formatMoney } from "./lib/catalog";
@@ -43,6 +47,7 @@ import {
   reminderEmail,
   type DropEmailData,
 } from "./lib/emailTemplates";
+import { calendarEventStatus } from "./lib/calendar";
 
 /**
  * DateDrop lifecycle.
@@ -88,6 +93,7 @@ export type DropView = {
   attendanceConfirmed: boolean;
   cancelReason: string | null;
   otherWithdrew: boolean;
+  calendarState: "none" | "reserved" | "finalized" | "cancelled";
 };
 
 async function buildDropView(
@@ -128,6 +134,11 @@ async function buildDropView(
   const iAccepted = me.state === "accepted" || me.state === "confirmed";
   const otherAnswered =
     liveOther?.state === "accepted" || liveOther?.state === "confirmed";
+  const externalCalendarStatus = calendarEventStatus({
+    dropStatus: drop.status,
+    participantState: me.state,
+    reservedAt: me.calendarReservedAt,
+  });
 
   return {
     dropId: drop._id,
@@ -161,6 +172,14 @@ async function buildDropView(
     attendanceConfirmed: me.attendanceConfirmed ?? false,
     cancelReason: drop.cancelReason ?? null,
     otherWithdrew: others.some((p) => p.state === "withdrawn"),
+    calendarState:
+      externalCalendarStatus === "TENTATIVE"
+        ? "reserved"
+        : externalCalendarStatus === "CONFIRMED"
+          ? "finalized"
+          : externalCalendarStatus === "CANCELLED"
+            ? "cancelled"
+            : "none",
   };
 }
 
@@ -220,7 +239,10 @@ export const dashboard = query({
           continue;
         }
       }
-      if (drop.status === "confirmed" && isActiveParticipant(membership.state)) {
+      if (
+        drop.status === "confirmed" &&
+        isActiveParticipant(membership.state)
+      ) {
         upcoming.push(view);
         continue;
       }
@@ -291,6 +313,7 @@ export const accept = mutation({
     await ctx.db.patch("dateDropParticipants", me._id, {
       state: "accepted",
       respondedAt: now,
+      calendarReservedAt: me.calendarReservedAt ?? now,
     });
 
     const participants = await ctx.db
@@ -385,7 +408,11 @@ export const pass = mutation({
     // Give this person their evening back straight away.
     if (me.availabilityId) {
       const window = await ctx.db.get("availability", me.availabilityId);
-      if (window && window.heldByDropId === drop._id && window.status === "held") {
+      if (
+        window &&
+        window.heldByDropId === drop._id &&
+        window.status === "held"
+      ) {
         await ctx.db.patch("availability", window._id, {
           status: "open",
           heldByDropId: undefined,
@@ -464,7 +491,13 @@ async function resolveAfterDeparture(
   );
 
   if (stillIn.length === 0 && stillDeciding.length === 0) {
-    await closeDrop(ctx, drop, "expired_no_match", now, "Nobody was available.");
+    await closeDrop(
+      ctx,
+      drop,
+      "expired_no_match",
+      now,
+      "Nobody was available.",
+    );
     return;
   }
 
@@ -483,7 +516,8 @@ async function resolveAfterDeparture(
   }
 
   const canRetry =
-    drop.candidateAttempts < drop.maxCandidateAttempts && now < drop.confirmDeadlineMs;
+    drop.candidateAttempts < drop.maxCandidateAttempts &&
+    now < drop.confirmDeadlineMs;
 
   if (drop.status !== "partially_accepted") {
     assertDropTransition(drop.status, "partially_accepted");
@@ -495,9 +529,13 @@ async function resolveAfterDeparture(
 
   if (stillDeciding.length === 0) {
     if (canRetry) {
-      await ctx.scheduler.runAfter(0, internal.matching.runReplacementPipeline, {
-        dropId: drop._id,
-      });
+      await ctx.scheduler.runAfter(
+        0,
+        internal.matching.runReplacementPipeline,
+        {
+          dropId: drop._id,
+        },
+      );
     } else {
       await closeDrop(
         ctx,
@@ -546,7 +584,11 @@ async function closeDrop(
     }
     if (p.availabilityId) {
       const window = await ctx.db.get("availability", p.availabilityId);
-      if (window && window.heldByDropId === drop._id && window.status !== "cancelled") {
+      if (
+        window &&
+        window.heldByDropId === drop._id &&
+        window.status !== "cancelled"
+      ) {
         await ctx.db.patch("availability", window._id, {
           status: window.startMs > now ? "open" : "expired",
           heldByDropId: undefined,
@@ -755,7 +797,10 @@ export const dispatchInvitations = internalAction({
 
       // After a replacement, the oldest other row is the person who PASSED.
       // Never describe them to the new invitee.
-      const others = activeCounterparts(context.participants, participant.userId);
+      const others = activeCounterparts(
+        context.participants,
+        participant.userId,
+      );
       const other = others.find((p) => p.userId !== participant.userId) ?? null;
 
       await ctx.runMutation(internal.notifications.create, {
@@ -858,7 +903,8 @@ export const notifyConfirmed = internalAction({
             context.drop.whyItFits,
           ),
           venue: firstStop?.venueName ?? context.drop.area,
-          address: firstStop?.address || `${context.drop.area}, ${context.drop.city}`,
+          address:
+            firstStop?.address || `${context.drop.area}, ${context.drop.city}`,
           instructions: context.drop.meetingInstructions,
         }),
         idempotencyKey: `confirmed-${args.dropId}-${participant.userId}`,
@@ -884,7 +930,8 @@ export const notifyClosed = internalAction({
     const expired = args.status === "expired_no_match";
     for (const participant of context.participants) {
       // Only tell people who had actually committed or were still deciding.
-      if (participant.state === "passed" || participant.state === "replaced") continue;
+      if (participant.state === "passed" || participant.state === "replaced")
+        continue;
       if (participant.expiryNotified) continue;
 
       const data = emailData(
@@ -897,7 +944,9 @@ export const notifyClosed = internalAction({
       await ctx.runMutation(internal.notifications.create, {
         userId: participant.userId,
         kind: expired ? "expired" : "cancelled",
-        title: expired ? "We cancelled this one" : "That DateDrop was cancelled",
+        title: expired
+          ? "We cancelled this one"
+          : "That DateDrop was cancelled",
         body: expired
           ? "We couldn't find the right person for this plan, so we cancelled it rather than force a poor match."
           : (context.drop.cancelReason ?? "The DateDrop was cancelled."),
@@ -913,7 +962,8 @@ export const notifyClosed = internalAction({
           ? expiredEmail(data)
           : cancelledEmail({
               ...data,
-              reason: context.drop.cancelReason ?? "The DateDrop was cancelled.",
+              reason:
+                context.drop.cancelReason ?? "The DateDrop was cancelled.",
             }),
         idempotencyKey: `closed-${args.dropId}-${participant.userId}`,
         labels: [expired ? "expired" : "cancelled"],
@@ -977,9 +1027,15 @@ export const sendReminders = internalAction({
         dropId: args.dropId,
         kind: "reminder",
         content: reminderEmail({
-          ...emailData(context, participant.firstName, null, context.drop.whyItFits),
+          ...emailData(
+            context,
+            participant.firstName,
+            null,
+            context.drop.whyItFits,
+          ),
           venue: firstStop?.venueName ?? context.drop.area,
-          address: firstStop?.address || `${context.drop.area}, ${context.drop.city}`,
+          address:
+            firstStop?.address || `${context.drop.area}, ${context.drop.city}`,
         }),
         idempotencyKey: `reminder-${args.dropId}-${participant.userId}`,
         labels: ["reminder"],
@@ -1001,7 +1057,12 @@ export const expireOverdueDrops = internalMutation({
   returns: v.number(),
   handler: async (ctx, args) => {
     let closed = 0;
-    for (const status of ["inviting", "partially_accepted", "matching", "researching"] as const) {
+    for (const status of [
+      "inviting",
+      "partially_accepted",
+      "matching",
+      "researching",
+    ] as const) {
       const overdue = await ctx.db
         .query("dateDrops")
         .withIndex("by_status_and_deadline", (q) =>
@@ -1023,15 +1084,15 @@ export const expireOverdueDrops = internalMutation({
   },
 });
 
-/** Cron: mark finished dates complete and free up the calendar. */
+/** Cron: mark dates complete as soon as their planned end passes. */
 export const completePastDrops = internalMutation({
   args: { nowMs: v.number() },
   returns: v.number(),
   handler: async (ctx, args) => {
     const past = await ctx.db
       .query("dateDrops")
-      .withIndex("by_status_and_start", (q) =>
-        q.eq("status", "confirmed").lte("startMs", args.nowMs - 6 * 60 * 60 * 1000),
+      .withIndex("by_status_and_end", (q) =>
+        q.eq("status", "confirmed").lte("endMs", args.nowMs),
       )
       .take(25);
 
@@ -1049,8 +1110,26 @@ export const completePastDrops = internalMutation({
         if (p.availabilityId) {
           const window = await ctx.db.get("availability", p.availabilityId);
           if (window && window.status === "booked") {
-            await ctx.db.patch("availability", window._id, { status: "expired" });
+            await ctx.db.patch("availability", window._id, {
+              status: "expired",
+            });
           }
+        }
+
+        const safetyProfile = await ctx.db
+          .query("safetyProfiles")
+          .withIndex("by_user", (q) => q.eq("userId", p.userId))
+          .unique();
+        if (safetyProfile?.postDateCheckIn !== false) {
+          await ctx.db.insert("notifications", {
+            userId: p.userId,
+            kind: "safety",
+            title: "How did your DateDrop feel?",
+            body: "Your private check-in is optional and is never shown to your match.",
+            dropId: drop._id,
+            href: `/drop/${drop._id}`,
+            read: false,
+          });
         }
       }
       await recordAudit(ctx, {
@@ -1083,7 +1162,9 @@ export const queueReminders = internalMutation({
       // Without this marker the sweep would re-pick the same soonest batch
       // every run and never reach a backlog behind it.
       if (drop.remindersQueuedAt) continue;
-      await ctx.db.patch("dateDrops", drop._id, { remindersQueuedAt: args.nowMs });
+      await ctx.db.patch("dateDrops", drop._id, {
+        remindersQueuedAt: args.nowMs,
+      });
       await ctx.scheduler.runAfter(0, internal.dateDrops.sendReminders, {
         dropId: drop._id,
       });

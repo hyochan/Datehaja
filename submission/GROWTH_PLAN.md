@@ -1,0 +1,116 @@
+# DateDrop growth plan
+
+## The wedge
+
+Start with one dense pool, not ten thin markets: busy adults in Seoul who want
+to meet but dislike swiping and prolonged chat. Ten locales make the product
+portable; liquidity still has to be earned city by city.
+
+The promise is one sentence:
+
+> Give DateDrop one free evening. Get one real, researched plan with one person
+> who can actually make it.
+
+## First 30 days
+
+### 1. Private alpha · 20–30 people
+
+- Recruit from two trusted communities with balanced dating preferences.
+- Onboard people in small cohorts so availability overlaps instead of forming
+  an empty marketplace.
+- Watch every failed match, confusing invitation, no-show, and venue complaint.
+- Do not buy traffic yet. Fix activation and safety before adding volume.
+
+Exit gate: at least 70% finish onboarding, 60% add availability, and five real
+DateDrops reach a private post-date response.
+
+### 2. One-neighbourhood launch · 75–100 people
+
+- Concentrate on Seongsu, Yeonnam, and nearby areas before opening all Seoul.
+- Partner with small public venues that already work for first dates: clear
+  pricing, easy transit, staff present, and simple exits.
+- Publish short real-product clips: free evening → live venue evidence → two
+  private answers → confirmed calendar event.
+- Ask satisfied users for a short quote, never for their date's identity or
+  private story.
+
+Exit gate: median plan time under ten minutes, both-accept rate above 25%,
+no-show rate below 10%, and at least 80% of check-ins marked safe.
+
+### 3. Repeatable city playbook
+
+- Open a city waitlist and launch only when a neighbourhood has enough
+  compatible availability to produce dates in the next seven days.
+- Reuse the local research and venue-quality process, not a global restaurant
+  database.
+- Add the next city only after Seoul users reopen availability or refer someone
+  at a rate that shows the product is retaining value.
+
+## Acquisition channels
+
+1. **Community cohorts:** coworking spaces, running clubs, language exchanges,
+   alumni groups, and friend-of-friend communities. Trust and density matter
+   more than reach at the beginning.
+2. **Venue partners:** a small "good first-date venue" collection with public
+   evidence. Venues get qualified visits; DateDrop gets reliable plans and
+   local distribution.
+3. **Product-led social:** show the live flow, not founder narration. The most
+   shareable proof is a calendar event changing from reserved to finalized.
+4. **Trusted-contact exposure:** safety-plan emails explain DateDrop without
+   exposing either participant. This is awareness, never an automatic referral
+   or mailing list.
+5. **City waitlists:** collect demand by city, then invite balanced cohorts
+   together instead of admitting users into an empty pool.
+
+## The loops
+
+```text
+more overlapping evenings
+        ↓
+faster, better DateDrops
+        ↓
+more completed safe dates
+        ↓
+more reopened availability + genuine stories
+        ↓
+more overlapping evenings
+```
+
+The loop must optimize completed safe dates, not swipes, messages, or time in
+the app.
+
+## Metrics that decide what to fix
+
+| Stage      | Primary measure                   | Diagnostic measures                      |
+| ---------- | --------------------------------- | ---------------------------------------- |
+| Activation | availability added                | signup completion, onboarding time       |
+| Liquidity  | eligible candidates per evening   | overlap rate, time to first plan         |
+| Invitation | both people accept                | view rate, first acceptance, pass reason |
+| Fulfilment | date completed                    | cancellation, no-show, venue rating      |
+| Safety     | safe post-date check-in           | blocks, reports, follow-up requests      |
+| Retention  | another evening opened in 30 days | second DateDrop, pause rate              |
+| Referral   | invited person activates          | source cohort, city waitlist conversion  |
+
+Track aggregate funnel counts and cohort-level outcomes. Do not place names,
+emails, exact locations, dating preferences, or feedback notes in analytics.
+
+## What not to do
+
+- Do not launch every supported city at once.
+- Do not reward raw invites before the local pool can serve them.
+- Do not fabricate testimonials, dates, engagement, or safety claims.
+- Do not collect government ID images ourselves. If identity verification is
+  added later, use a specialist provider and retain only its status/reference.
+- Do not optimize for app engagement. A successful DateDrop gets people out of
+  the app and into a safe public place.
+
+## Hackathon launch sequence
+
+1. Keep the repository private during the hardening pass.
+2. Deploy and test the final public build without announcing it.
+3. Record the real under-three-minute demo and prepare screenshots.
+4. Make the repository, video, and launch post public together.
+5. Collect legitimate reactions and tester feedback while judging is open.
+6. Keep the live app and repository public through judging.
+
+The final two steps are qualification requirements, not optional growth work.

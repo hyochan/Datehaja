@@ -71,7 +71,10 @@ export type DropEmailData = {
   url: string;
 };
 
-export function welcomeEmail(args: { firstName: string; url: string }): EmailContent {
+export function welcomeEmail(args: {
+  firstName: string;
+  url: string;
+}): EmailContent {
   const subject = "You're on the list for your first DateDrop";
   const text = `Hi ${args.firstName},
 
@@ -88,7 +91,9 @@ Open DateDrop: ${args.url}
     text,
     html: shell(
       h1("You're set up.") +
-        p(`Hi ${args.firstName}, from here DateDrop only needs one thing from you: when you're free.`) +
+        p(
+          `Hi ${args.firstName}, from here DateDrop only needs one thing from you: when you're free.`,
+        ) +
         p(
           "We'll look for someone compatible nearby, plan a real date at a real place, and send it to you both privately. You say yes or pass.",
         ) +
@@ -277,14 +282,18 @@ Your availability is still open and we'll keep looking for the next one.
         p(
           `We couldn't find the right person for your ${d.when} DateDrop in ${d.area}, so we cancelled it rather than force a poor match.`,
         ) +
-        p("Your availability is still open and we'll keep looking for the next one.") +
+        p(
+          "Your availability is still open and we'll keep looking for the next one.",
+        ) +
         `<div style="margin-top:16px;">${button(d.url, "Open DateDrop")}</div>`,
       "You're getting this because you accepted a DateDrop that didn't fill.",
     ),
   };
 }
 
-export function cancelledEmail(d: DropEmailData & { reason: string }): EmailContent {
+export function cancelledEmail(
+  d: DropEmailData & { reason: string },
+): EmailContent {
   const subject = `Your ${d.when} DateDrop was cancelled`;
   const text = `Hi ${d.firstName},
 
@@ -359,8 +368,52 @@ export function safetyEmail(args: {
   };
 }
 
+export function trustedContactPlanEmail(args: {
+  contactName: string;
+  memberFirstName: string;
+  when: string;
+  venue: string;
+  address: string;
+}): EmailContent {
+  const subject = `${args.memberFirstName} shared a DateDrop safety plan`;
+  const text = `Hi ${args.contactName},
+
+${args.memberFirstName} chose you as their trusted contact and asked DateDrop to share this plan.
+
+When: ${args.when}
+Public venue: ${args.venue}
+Address: ${args.address}
+
+This message does not include the other person's identity or contact details. DateDrop will never ask you for money, a password, or a verification code.
+
+— DateDrop Concierge`;
+
+  return {
+    subject,
+    text,
+    html: shell(
+      h1(`${args.memberFirstName} shared their plan.`) +
+        p(
+          `Hi ${args.contactName}, ${args.memberFirstName} chose you as their trusted contact and asked DateDrop to send this safety note.`,
+        ) +
+        `<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin:4px 0 18px 0;border-top:1px solid ${BRAND.border};">
+          ${detailRow("When", args.when)}
+          ${detailRow("Public venue", args.venue)}
+          ${detailRow("Address", args.address)}
+        </table>` +
+        p(
+          "This message does not include the other person's identity or contact details. DateDrop will never ask you for money, a password, or a verification code.",
+        ),
+      `${args.memberFirstName} asked DateDrop to send this one-time safety plan to you.`,
+    ),
+  };
+}
+
 /** Auto-reply sent when someone writes back to the Concierge inbox. */
-export function conciergeReply(args: { firstName: string; url: string }): EmailContent {
+export function conciergeReply(args: {
+  firstName: string;
+  url: string;
+}): EmailContent {
   return {
     subject: "Re: your DateDrop",
     text: `Hi ${args.firstName},
@@ -380,7 +433,9 @@ If this was about safety, use the Report option in the app — it reaches us wit
 — DateDrop Concierge`,
     html: shell(
       h1("We got your message.") +
-        p("Thanks for writing in — this reached DateDrop Concierge and we've logged it.") +
+        p(
+          "Thanks for writing in — this reached DateDrop Concierge and we've logged it.",
+        ) +
         `<ul style="margin:0 0 14px 0;padding-left:18px;font-size:15px;line-height:1.7;color:${BRAND.ink};">
            <li>Accept or pass on a DateDrop</li>
            <li>Cancel a date, or tell your match you're running late</li>

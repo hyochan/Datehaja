@@ -7,12 +7,15 @@ import {
   atmosphereValidator,
   availabilityStatusValidator,
   confidenceValidator,
+  dateOutcomeValidator,
+  dateSafetyValidator,
   dayPreferenceValidator,
   dropStatusValidator,
   emailKindValidator,
   genderValidator,
   indoorOutdoorValidator,
   moderationStatusValidator,
+  meetAgainValidator,
   notificationKindValidator,
   participantStateValidator,
   passReasonValidator,
@@ -170,6 +173,33 @@ export default defineSchema({
     .index("by_reported", ["reportedUserId"])
     .index("by_status", ["status"]),
 
+  /** Optional private safety setup. Never returned to another user. */
+  safetyProfiles: defineTable({
+    userId: v.id("users"),
+    trustedContactName: v.optional(v.string()),
+    trustedContactEmail: v.optional(v.string()),
+    trustedContactConsent: v.boolean(),
+    postDateCheckIn: v.boolean(),
+    updatedAt: v.number(),
+  }).index("by_user", ["userId"]),
+
+  /** A user-triggered copy of a confirmed plan sent to their trusted contact. */
+  safetyPlanShares: defineTable({
+    userId: v.id("users"),
+    dropId: v.id("dateDrops"),
+    status: v.union(
+      v.literal("queued"),
+      v.literal("sent"),
+      v.literal("failed"),
+      v.literal("skipped_no_provider"),
+    ),
+    error: v.optional(v.string()),
+    sentAt: v.optional(v.number()),
+    updatedAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_drop_and_user", ["dropId", "userId"]),
+
   // ---- matching --------------------------------------------------------
   matchingRuns: defineTable({
     initiatorUserId: v.id("users"),
@@ -307,6 +337,7 @@ export default defineSchema({
     .index("by_status", ["status"])
     .index("by_status_and_deadline", ["status", "confirmDeadlineMs"])
     .index("by_status_and_start", ["status", "startMs"])
+    .index("by_status_and_end", ["status", "endMs"])
     .index("by_initiator", ["initiatorUserId"]),
 
   dateDropParticipants: defineTable({
@@ -324,6 +355,9 @@ export default defineSchema({
     invitedAt: v.number(),
     viewedAt: v.optional(v.number()),
     respondedAt: v.optional(v.number()),
+    /** Set the first time this participant accepts, so a calendar feed can
+     *  preserve a later cancellation without adding declined invitations. */
+    calendarReservedAt: v.optional(v.number()),
     passReason: v.optional(passReasonValidator),
     attendanceConfirmed: v.optional(v.boolean()),
 
@@ -337,6 +371,33 @@ export default defineSchema({
     .index("by_user_and_state", ["userId", "state"])
     .index("by_drop_and_user", ["dropId", "userId"])
     .index("by_thread", ["emailThreadId"]),
+
+  /** Private post-date response. It is never shown to the other participant. */
+  dateFeedback: defineTable({
+    dropId: v.id("dateDrops"),
+    userId: v.id("users"),
+    outcome: dateOutcomeValidator,
+    safety: dateSafetyValidator,
+    meetAgain: meetAgainValidator,
+    venueRating: v.optional(v.number()),
+    note: v.optional(v.string()),
+    followUpRequested: v.boolean(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_drop", ["dropId"])
+    .index("by_user", ["userId"])
+    .index("by_drop_and_user", ["dropId", "userId"]),
+
+  /** Secret capability URL for a user's read-only iCalendar subscription. */
+  calendarFeeds: defineTable({
+    userId: v.id("users"),
+    token: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_token", ["token"]),
 
   // ---- research (Firecrawl) -------------------------------------------
   researchRuns: defineTable({

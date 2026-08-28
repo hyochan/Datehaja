@@ -1,5 +1,11 @@
 import { v } from "convex/values";
-import { internalAction, mutation, query } from "./_generated/server";
+import {
+  internalAction,
+  internalMutation,
+  internalQuery,
+  mutation,
+  query,
+} from "./_generated/server";
 import type { MutationCtx } from "./_generated/server";
 import type { Id } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
@@ -12,9 +18,15 @@ import {
 import { reportCategoryValidator } from "./lib/enums";
 import { pickCounterpart } from "./lib/participants";
 import { firstNameOnly, toPublicPreview } from "./lib/privacy";
-import { LIMITS, cleanMultiline } from "./lib/text";
+import { LIMITS, clean, cleanMultiline, truncate } from "./lib/text";
 import { appUrl, sendConciergeEmail } from "./mail";
-import { safetyEmail } from "./lib/emailTemplates";
+import { safetyEmail, trustedContactPlanEmail } from "./lib/emailTemplates";
+import {
+  conciergeInboxId,
+  hasAgentMail,
+  sendMessage,
+} from "./integrations/agentmail";
+import { describeDateTime } from "./lib/time";
 
 /**
  * Safety.
@@ -26,6 +38,317 @@ import { safetyEmail } from "./lib/emailTemplates";
  *
  * DateDrop does NOT verify identity. Nothing in the product claims that it does.
  */
+
+/* ------------------------- private safety profile ------------------------- */
+
+const safetyProfileValidator = v.object({
+  trustedContactName: v.union(v.string(), v.null()),
+  trustedContactEmail: v.union(v.string(), v.null()),
+  trustedContactConsent: v.boolean(),
+  postDateCheckIn: v.boolean(),
+});
+
+export const mySafetyProfile = query({
+  args: {},
+  returns: safetyProfileValidator,
+  handler: async (ctx) => {
+    const userId = await requireUserId(ctx);
+    const profile = await ctx.db
+      .query("safetyProfiles")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .unique();
+    return {
+      trustedContactName: profile?.trustedContactName ?? null,
+      trustedContactEmail: profile?.trustedContactEmail ?? null,
+      trustedContactConsent: profile?.trustedContactConsent ?? false,
+      postDateCheckIn: profile?.postDateCheckIn ?? true,
+    };
+  },
+});
+
+export const saveSafetyProfile = mutation({
+  args: {
+    trustedContactName: v.optional(v.string()),
+    trustedContactEmail: v.optional(v.string()),
+    trustedContactConsent: v.boolean(),
+    postDateCheckIn: v.boolean(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const userId = await requireUserId(ctx);
+    const name = args.trustedContactName
+      ? clean(args.trustedContactName, 80)
+      : undefined;
+    const email = args.trustedContactEmail
+      ? args.trustedContactEmail.trim().toLowerCase()
+      : undefined;
+
+    if (Boolean(name) !== Boolean(email)) {
+      throw new Error(
+        "Add both a trusted contact name and email, or leave both blank.",
+      );
+    }
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      throw new Error("Check the trusted contact email address.");
+    }
+    if (email && !args.trustedContactConsent) {
+      throw new Error("Confirm that your trusted contact agreed to be listed.");
+    }
+
+    const existing = await ctx.db
+      .query("safetyProfiles")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .unique();
+    const values = {
+      trustedContactName: name,
+      trustedContactEmail: email,
+      trustedContactConsent: Boolean(email) && args.trustedContactConsent,
+      postDateCheckIn: args.postDateCheckIn,
+      updatedAt: Date.now(),
+    };
+    if (existing) {
+      await ctx.db.patch("safetyProfiles", existing._id, values);
+    } else {
+      await ctx.db.insert("safetyProfiles", { userId, ...values });
+    }
+    await recordAudit(ctx, {
+      action: "safety.profile_updated",
+      actorUserId: userId,
+      detail: email
+        ? "Trusted contact configured"
+        : "Check-in preferences only",
+    });
+    return null;
+  },
+});
+
+const shareStatusValidator = v.union(
+  v.literal("queued"),
+  v.literal("sent"),
+  v.literal("failed"),
+  v.literal("skipped_no_provider"),
+);
+type ShareStatus = "queued" | "sent" | "failed" | "skipped_no_provider";
+
+export const sharePlan = mutation({
+  args: { dropId: v.id("dateDrops") },
+  returns: v.object({ status: shareStatusValidator }),
+  handler: async (ctx, args) => {
+    const userId = await requireUserId(ctx);
+    const participant = await ctx.db
+      .query("dateDropParticipants")
+      .withIndex("by_drop_and_user", (q) =>
+        q.eq("dropId", args.dropId).eq("userId", userId),
+      )
+      .unique();
+    if (!participant || participant.state !== "confirmed") {
+      throw new Error("Only a confirmed DateDrop can be shared.");
+    }
+    const drop = await ctx.db.get("dateDrops", args.dropId);
+    if (!drop || (drop.status !== "confirmed" && drop.status !== "completed")) {
+      throw new Error("This DateDrop is not confirmed.");
+    }
+    const safetyProfile = await ctx.db
+      .query("safetyProfiles")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .unique();
+    if (
+      !safetyProfile?.trustedContactName ||
+      !safetyProfile.trustedContactEmail ||
+      !safetyProfile.trustedContactConsent
+    ) {
+      throw new Error("Add a trusted contact in the Safety Center first.");
+    }
+
+    const existing = await ctx.db
+      .query("safetyPlanShares")
+      .withIndex("by_drop_and_user", (q) =>
+        q.eq("dropId", args.dropId).eq("userId", userId),
+      )
+      .unique();
+    if (existing?.status === "sent" || existing?.status === "queued") {
+      return { status: existing.status as ShareStatus };
+    }
+
+    const now = Date.now();
+    const shareId =
+      existing?._id ??
+      (await ctx.db.insert("safetyPlanShares", {
+        userId,
+        dropId: args.dropId,
+        status: "queued",
+        updatedAt: now,
+      }));
+    if (existing) {
+      await ctx.db.patch("safetyPlanShares", existing._id, {
+        status: "queued",
+        error: undefined,
+        updatedAt: now,
+      });
+    }
+    await ctx.scheduler.runAfter(0, internal.safety.deliverSafetyPlan, {
+      shareId,
+    });
+    await recordAudit(ctx, {
+      action: "safety.plan_share_requested",
+      actorUserId: userId,
+      dropId: args.dropId,
+      detail: "Trusted contact delivery queued",
+    });
+    return { status: "queued" as const };
+  },
+});
+
+export const getSafetyPlanShare = internalQuery({
+  args: { shareId: v.id("safetyPlanShares") },
+  returns: v.any(),
+  handler: async (ctx, args) => {
+    const share = await ctx.db.get("safetyPlanShares", args.shareId);
+    if (!share) return null;
+    const safetyProfile = await ctx.db
+      .query("safetyProfiles")
+      .withIndex("by_user", (q) => q.eq("userId", share.userId))
+      .unique();
+    const profile = await ctx.db
+      .query("profiles")
+      .withIndex("by_user", (q) => q.eq("userId", share.userId))
+      .unique();
+    const drop = await ctx.db.get("dateDrops", share.dropId);
+    if (!safetyProfile || !profile || !drop) return null;
+    const firstStop = drop.itinerary[0];
+    return {
+      share,
+      contactName: safetyProfile.trustedContactName ?? null,
+      contactEmail: safetyProfile.trustedContactEmail ?? null,
+      contactConsent: safetyProfile.trustedContactConsent,
+      memberFirstName: firstNameOnly(profile.displayName),
+      when: describeDateTime(drop.startMs, drop.timezone),
+      venue: firstStop?.venueName ?? drop.area,
+      address: firstStop?.address || `${drop.area}, ${drop.city}`,
+    };
+  },
+});
+
+export const updateSafetyPlanShare = internalMutation({
+  args: {
+    shareId: v.id("safetyPlanShares"),
+    status: shareStatusValidator,
+    error: v.optional(v.string()),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    await ctx.db.patch("safetyPlanShares", args.shareId, {
+      status: args.status,
+      error: args.error ? truncate(args.error, 300) : undefined,
+      ...(args.status === "sent" ? { sentAt: Date.now() } : {}),
+      updatedAt: Date.now(),
+    });
+    return null;
+  },
+});
+
+export const deliverSafetyPlan = internalAction({
+  args: { shareId: v.id("safetyPlanShares") },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const context = (await ctx.runQuery(internal.safety.getSafetyPlanShare, {
+      shareId: args.shareId,
+    })) as {
+      share: { userId: Id<"users">; dropId: Id<"dateDrops">; status: string };
+      contactName: string | null;
+      contactEmail: string | null;
+      contactConsent: boolean;
+      memberFirstName: string;
+      when: string;
+      venue: string;
+      address: string;
+    } | null;
+    if (!context || context.share.status === "sent") return null;
+
+    if (
+      !context.contactName ||
+      !context.contactEmail ||
+      !context.contactConsent
+    ) {
+      await ctx.runMutation(internal.safety.updateSafetyPlanShare, {
+        shareId: args.shareId,
+        status: "failed",
+        error: "Trusted contact is no longer configured.",
+      });
+      return null;
+    }
+
+    const content = trustedContactPlanEmail({
+      contactName: context.contactName,
+      memberFirstName: context.memberFirstName,
+      when: context.when,
+      venue: context.venue,
+      address: context.address,
+    });
+    const inboxId = conciergeInboxId();
+    if (!hasAgentMail() || !inboxId) {
+      await ctx.runMutation(internal.safety.updateSafetyPlanShare, {
+        shareId: args.shareId,
+        status: "skipped_no_provider",
+        error: "AgentMail is not configured on this deployment.",
+      });
+      return null;
+    }
+
+    try {
+      const sent = await sendMessage({
+        inboxId,
+        to: context.contactEmail,
+        subject: content.subject,
+        text: content.text,
+        html: content.html,
+        labels: ["safety_plan"],
+        headers: { "X-DateDrop-Id": context.share.dropId },
+        idempotencyKey: `safety-plan-${args.shareId}`,
+      });
+      await ctx.runMutation(internal.mail.logEmail, {
+        userId: context.share.userId,
+        dropId: context.share.dropId,
+        kind: "safety",
+        toAddress: context.contactEmail,
+        fromAddress: inboxId,
+        subject: content.subject,
+        agentMailMessageId: sent.message_id,
+        agentMailThreadId: sent.thread_id,
+        status: "sent",
+      });
+      await ctx.runMutation(internal.safety.updateSafetyPlanShare, {
+        shareId: args.shareId,
+        status: "sent",
+      });
+      await ctx.runMutation(internal.notifications.create, {
+        userId: context.share.userId,
+        kind: "safety",
+        title: "Plan shared with your trusted contact",
+        body: `${context.contactName} received the time and public venue.`,
+        dropId: context.share.dropId,
+        href: `/drop/${context.share.dropId}`,
+      });
+    } catch (error) {
+      await ctx.runMutation(internal.mail.logEmail, {
+        userId: context.share.userId,
+        dropId: context.share.dropId,
+        kind: "safety",
+        toAddress: context.contactEmail,
+        fromAddress: inboxId,
+        subject: content.subject,
+        status: "failed",
+        error: String(error),
+      });
+      await ctx.runMutation(internal.safety.updateSafetyPlanShare, {
+        shareId: args.shareId,
+        status: "failed",
+        error: String(error),
+      });
+    }
+    return null;
+  },
+});
 
 export const blockFromDrop = mutation({
   args: {
@@ -63,7 +386,8 @@ async function blockUserInternal(
   blockedUserId: Id<"users">,
   reason?: string,
 ): Promise<void> {
-  if (blockerUserId === blockedUserId) throw new Error("You can't block yourself.");
+  if (blockerUserId === blockedUserId)
+    throw new Error("You can't block yourself.");
 
   const existing = await ctx.db
     .query("blocks")
@@ -117,7 +441,9 @@ async function blockUserInternal(
         p.state !== "replaced" &&
         p.state !== "withdrawn"
       ) {
-        await ctx.db.patch("dateDropParticipants", p._id, { state: "cancelled" });
+        await ctx.db.patch("dateDropParticipants", p._id, {
+          state: "cancelled",
+        });
       }
       if (p.availabilityId) {
         const window = await ctx.db.get("availability", p.availabilityId);
@@ -258,7 +584,9 @@ export const acknowledgeReport = internalAction({
 
 export const blockedList = query({
   args: {},
-  returns: v.array(v.object({ userId: v.id("users"), displayName: v.string() })),
+  returns: v.array(
+    v.object({ userId: v.id("users"), displayName: v.string() }),
+  ),
   handler: async (ctx) => {
     const userId = await currentUserId(ctx);
     if (!userId) return [];

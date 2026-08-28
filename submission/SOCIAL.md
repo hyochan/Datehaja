@@ -30,6 +30,10 @@ cutoff, it cancels honestly rather than forcing a poor match.
 You can complete an entire date without your match ever having your email, your
 number, or anything more precise than your neighbourhood.
 
+The same private plan can reserve, finalize, or cancel one calendar event; a
+trusted contact can receive only the public meeting details; and each person can
+leave an optional private safety check-in after the date.
+
 Convex is the whole backend: schema and indexes, queries as live subscriptions,
 transactional mutations, actions for every external call, HTTP actions serving
 both the AgentMail webhook and the React app itself via
@@ -37,7 +41,7 @@ both the AgentMail webhook and the React app itself via
 the workflow engine. Every DateDrop carries its own provenance — the pages
 Firecrawl crawled, the quote from each, and every model run — visible in the app.
 
-193 tests. Seeded with 14 clearly-marked fictional personas so a judge can see
+199 tests. Seeded with 14 clearly-marked fictional personas so a judge can see
 the whole loop in 60 seconds without recruiting a second human.
 
 Live: https://merry-bass-190.convex.site

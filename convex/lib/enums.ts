@@ -122,6 +122,27 @@ export type ParticipantState =
   | "cancelled"
   | "replaced";
 
+export const dateOutcomeValidator = v.union(
+  v.literal("went"),
+  v.literal("no_show"),
+  v.literal("left_early"),
+  v.literal("did_not_go"),
+);
+
+export const dateSafetyValidator = v.union(
+  v.literal("safe"),
+  v.literal("uncomfortable"),
+  v.literal("unsafe"),
+  v.literal("prefer_not_to_say"),
+);
+
+export const meetAgainValidator = v.union(
+  v.literal("yes"),
+  v.literal("maybe"),
+  v.literal("no"),
+  v.literal("prefer_not_to_say"),
+);
+
 export const passReasonValidator = v.union(
   v.literal("timing"),
   v.literal("location"),

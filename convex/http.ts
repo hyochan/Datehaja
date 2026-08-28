@@ -4,6 +4,7 @@ import { httpAction } from "./_generated/server";
 import { components, internal } from "./_generated/api";
 import { auth } from "./auth";
 import { parseAddress, verifyWebhookSignature } from "./integrations/agentmail";
+import { buildCalendar } from "./lib/calendar";
 
 const http = httpRouter();
 
@@ -34,6 +35,37 @@ http.route({
       }),
       { status: 200, headers: { "Content-Type": "application/json" } },
     );
+  }),
+});
+
+/* ----------------------- private calendar subscription -------------------- */
+
+http.route({
+  pathPrefix: "/calendar/",
+  method: "GET",
+  handler: httpAction(async (ctx, request) => {
+    const pathname = new URL(request.url).pathname;
+    const file = pathname.slice("/calendar/".length);
+    const token = file.endsWith(".ics") ? file.slice(0, -4) : "";
+    if (!/^[a-f0-9]{64}$/i.test(token)) {
+      return new Response("Calendar not found", { status: 404 });
+    }
+
+    const feed = await ctx.runQuery(internal.calendar.getFeedByToken, {
+      token,
+    });
+    if (!feed) return new Response("Calendar not found", { status: 404 });
+
+    return new Response(buildCalendar(feed.events), {
+      status: 200,
+      headers: {
+        "Content-Type": "text/calendar; charset=utf-8",
+        "Content-Disposition": 'inline; filename="datedrop.ics"',
+        "Cache-Control": "private, no-store, max-age=0",
+        "X-Content-Type-Options": "nosniff",
+        "X-Robots-Tag": "noindex, nofollow",
+      },
+    });
   }),
 });
 
@@ -71,7 +103,9 @@ http.route({
     const secret = process.env.AGENTMAIL_WEBHOOK_SECRET;
 
     if (!secret) {
-      console.error("[agentmail] webhook received but AGENTMAIL_WEBHOOK_SECRET is unset");
+      console.error(
+        "[agentmail] webhook received but AGENTMAIL_WEBHOOK_SECRET is unset",
+      );
       return new Response("Webhook not configured", { status: 503 });
     }
 
@@ -96,39 +130,55 @@ http.route({
       return new Response("Malformed body", { status: 400 });
     }
 
-    const eventType = typeof event.event_type === "string" ? event.event_type : "unknown";
+    const eventType =
+      typeof event.event_type === "string" ? event.event_type : "unknown";
     const eventId =
       typeof event.event_id === "string" && event.event_id.length > 0
         ? event.event_id
         : `${eventType}:${event.message?.message_id ?? rawBody.length}`;
 
     const message = event.message ?? {};
-    const { duplicate, eventDocId } = await ctx.runMutation(internal.mail.recordEvent, {
-      eventId,
-      eventType,
-      inboxId: typeof message.inbox_id === "string" ? message.inbox_id : undefined,
-      threadId: typeof message.thread_id === "string" ? message.thread_id : undefined,
-      messageId: typeof message.message_id === "string" ? message.message_id : undefined,
-      fromAddress:
-        typeof message.from === "string" ? parseAddress(message.from) : undefined,
-      toAddress: Array.isArray(message.to) ? String(message.to[0] ?? "") : undefined,
-      subject: typeof message.subject === "string" ? message.subject : undefined,
-      preview:
-        typeof message.preview === "string"
-          ? message.preview
-          : typeof message.extracted_text === "string"
-            ? message.extracted_text.slice(0, 300)
+    const { duplicate, eventDocId } = await ctx.runMutation(
+      internal.mail.recordEvent,
+      {
+        eventId,
+        eventType,
+        inboxId:
+          typeof message.inbox_id === "string" ? message.inbox_id : undefined,
+        threadId:
+          typeof message.thread_id === "string" ? message.thread_id : undefined,
+        messageId:
+          typeof message.message_id === "string"
+            ? message.message_id
             : undefined,
-      signatureVerified: true,
-      rawPreview: rawBody.slice(0, 1500),
-    });
+        fromAddress:
+          typeof message.from === "string"
+            ? parseAddress(message.from)
+            : undefined,
+        toAddress: Array.isArray(message.to)
+          ? String(message.to[0] ?? "")
+          : undefined,
+        subject:
+          typeof message.subject === "string" ? message.subject : undefined,
+        preview:
+          typeof message.preview === "string"
+            ? message.preview
+            : typeof message.extracted_text === "string"
+              ? message.extracted_text.slice(0, 300)
+              : undefined,
+        signatureVerified: true,
+        rawPreview: rawBody.slice(0, 1500),
+      },
+    );
 
     if (duplicate || !eventDocId) {
       return new Response(null, { status: 204 });
     }
 
     if (eventType.startsWith("message.received")) {
-      await ctx.scheduler.runAfter(0, internal.mail.handleInbound, { eventDocId });
+      await ctx.scheduler.runAfter(0, internal.mail.handleInbound, {
+        eventDocId,
+      });
     } else {
       await ctx.runMutation(internal.mail.markEventProcessed, { eventDocId });
     }

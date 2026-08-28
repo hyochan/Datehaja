@@ -3,7 +3,11 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import type { Id } from "@convex/_generated/dataModel";
-import { PASS_REASON_OPTIONS, PRESET_MESSAGES, REPORT_CATEGORY_OPTIONS } from "@convex/lib/catalog";
+import {
+  PASS_REASON_OPTIONS,
+  PRESET_MESSAGES,
+  REPORT_CATEGORY_OPTIONS,
+} from "@convex/lib/catalog";
 import { Logo } from "../components/layout/Logo";
 import {
   Button,
@@ -19,6 +23,7 @@ import {
 } from "../components/ui/primitives";
 import { readableError, useToast } from "../components/ui/Toast";
 import { dropStatusLabel } from "../lib/status";
+import { useI18n } from "../i18n";
 import {
   countdown,
   durationLabel,
@@ -57,13 +62,16 @@ export default function DropPage() {
         <p className="mb-6 text-[15px] text-soft">
           It may have expired, or it isn't yours.
         </p>
-        <Button onClick={() => navigate("/dashboard")}>Back to your DateDrops</Button>
+        <Button onClick={() => navigate("/dashboard")}>
+          Back to your DateDrops
+        </Button>
       </Card>
     );
   }
 
   const isInvitation = drop.myState === "invited" || drop.myState === "viewed";
-  const isConfirmed = drop.status === "confirmed" || drop.status === "completed";
+  const isConfirmed =
+    drop.status === "confirmed" || drop.status === "completed";
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
@@ -87,9 +95,17 @@ export default function DropPage() {
         All DateDrops
       </Link>
 
-      {isConfirmed && <ConfirmedBanner />}
+      {isConfirmed && (
+        <ConfirmedBanner completed={drop.status === "completed"} />
+      )}
 
-      <PlanCard drop={drop} isInvitation={isInvitation} isConfirmed={isConfirmed} />
+      <PlanCard
+        drop={drop}
+        isInvitation={isInvitation}
+        isConfirmed={isConfirmed}
+      />
+
+      {drop.calendarState !== "none" && <CalendarPanel drop={drop} />}
 
       {drop.match && <MatchCard drop={drop} isConfirmed={isConfirmed} />}
 
@@ -97,7 +113,11 @@ export default function DropPage() {
 
       {drop.awaitingOther && <WaitingPanel drop={drop} dropId={id} />}
 
-      {isConfirmed && <ConfirmedPanel dropId={id} drop={drop} />}
+      {drop.status === "confirmed" && (
+        <ConfirmedPanel dropId={id} drop={drop} />
+      )}
+
+      {drop.status === "completed" && <FeedbackPanel dropId={id} />}
 
       {(drop.status === "cancelled" || drop.status === "expired_no_match") && (
         <ClosedPanel drop={drop} />
@@ -152,6 +172,7 @@ type DropView = {
   attendanceConfirmed: boolean;
   cancelReason: string | null;
   otherWithdrew: boolean;
+  calendarState: "none" | "reserved" | "finalized" | "cancelled";
   match: {
     displayName: string;
     age: number;
@@ -166,16 +187,148 @@ type DropView = {
   } | null;
 };
 
-function ConfirmedBanner() {
+function ConfirmedBanner({ completed }: { completed: boolean }) {
+  const { t } = useI18n();
   return (
     <div className="animate-drop-in rounded-card border border-[var(--tint-sage-border)] bg-[var(--tint-sage-bg)] px-6 py-5 text-center">
       <div className="font-display text-[28px] leading-tight text-[var(--tint-sage-fg)]">
-        It's a date.
+        {completed ? t("How did it go?") : t("It's a date.")}
       </div>
       <p className="mt-1 text-[14.5px] text-[var(--tint-sage-fg)]">
-        You're both in. Here's everything you need.
+        {completed
+          ? t("The plan is complete. Your private check-in is ready.")
+          : t("You're both in. Here's everything you need.")}
       </p>
     </div>
+  );
+}
+
+/* ------------------------------ calendar sync ----------------------------- */
+
+function CalendarPanel({ drop }: { drop: DropView }) {
+  const { t } = useI18n();
+  const feed = useQuery(api.calendar.myFeed);
+  const enable = useMutation(api.calendar.enable);
+  const toast = useToast();
+  const [enabling, setEnabling] = useState(false);
+
+  const status =
+    drop.calendarState === "reserved"
+      ? {
+          label: t("Reserved"),
+          title: t("Your evening is held."),
+          body: t(
+            "The calendar event is tentative while the other person decides.",
+          ),
+          tone: "warn" as const,
+        }
+      : drop.calendarState === "finalized"
+        ? {
+            label: t("Finalized"),
+            title: t("The date is on."),
+            body: t(
+              "Your calendar receives the public venue and confirmed time.",
+            ),
+            tone: "sage" as const,
+          }
+        : {
+            label: t("Cancelled"),
+            title: t("The evening is released."),
+            body: t(
+              "Subscribed calendars receive the cancellation from the same event.",
+            ),
+            tone: "neutral" as const,
+          };
+
+  async function ensureFeed(): Promise<string | null> {
+    if (feed?.url) return feed.url;
+    setEnabling(true);
+    try {
+      const created = await enable({});
+      toast(t("Private calendar link created."), "success");
+      return created.url;
+    } catch (error) {
+      toast(readableError(error), "error");
+      return null;
+    } finally {
+      setEnabling(false);
+    }
+  }
+
+  async function copyLink(url: string) {
+    await navigator.clipboard.writeText(url);
+    toast(t("Private calendar link copied."), "success");
+  }
+
+  async function openGoogleCalendar() {
+    const url = await ensureFeed();
+    if (!url) return;
+    try {
+      await copyLink(url);
+      window.open(
+        "https://calendar.google.com/calendar/u/0/r/settings/addbyurl",
+        "_blank",
+        "noopener,noreferrer",
+      );
+      toast(t("Paste the copied link into Google Calendar."), "info");
+    } catch (error) {
+      toast(readableError(error), "error");
+    }
+  }
+
+  async function openCalendarApp() {
+    const url = await ensureFeed();
+    if (!url) return;
+    window.location.href = url.replace(/^https:/, "webcal:");
+  }
+
+  return (
+    <Card className="overflow-hidden">
+      <div className="grid sm:grid-cols-[1fr_auto] sm:items-center">
+        <div className="p-5 sm:p-6">
+          <div className="mb-3 flex flex-wrap items-center gap-2.5">
+            <Tag tone={status.tone}>{status.label}</Tag>
+            <span className="text-[12px] text-muted">
+              {t("Live calendar status")}
+            </span>
+          </div>
+          <h2 className="text-[19px] leading-tight">{status.title}</h2>
+          <p className="mt-1.5 max-w-lg text-[14px] leading-relaxed text-soft">
+            {status.body}{" "}
+            {t(
+              "Subscribe once; DateDrop keeps the same event ID as it moves from reserved to finalized or cancelled.",
+            )}
+          </p>
+        </div>
+        <div className="flex flex-col gap-2 border-t border-[var(--border)] bg-[var(--bg-sunken)] p-4 sm:min-w-52 sm:border-l sm:border-t-0">
+          <Button size="sm" loading={enabling} onClick={openGoogleCalendar}>
+            {t("Google Calendar")}
+          </Button>
+          <Button
+            size="sm"
+            variant="secondary"
+            loading={enabling}
+            onClick={openCalendarApp}
+          >
+            {t("Apple / calendar app")}
+          </Button>
+          {feed?.url && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => void copyLink(feed.url)}
+            >
+              {t("Copy private link")}
+            </Button>
+          )}
+          <p className="px-1 text-[10.5px] leading-relaxed text-muted">
+            {t(
+              "Anyone with this secret link can read your DateDrop times. Calendar apps refresh on their own schedule.",
+            )}
+          </p>
+        </div>
+      </div>
+    </Card>
   );
 }
 
@@ -249,7 +402,10 @@ function PlanCard({
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                   <h3 className="text-[17px] font-medium">{stop.venueName}</h3>
                   <span className="text-[13px] text-muted">
-                    {formatTime(drop.startMs + stop.startOffsetMin * 60_000, drop.timezone)}
+                    {formatTime(
+                      drop.startMs + stop.startOffsetMin * 60_000,
+                      drop.timezone,
+                    )}
                     {" · "}
                     {durationLabel(stop.durationMin)}
                   </span>
@@ -258,7 +414,9 @@ function PlanCard({
                   {stop.category.replace(/_/g, " ")}
                 </div>
                 {stop.note && (
-                  <p className="mt-2 text-[14.5px] leading-relaxed text-soft">{stop.note}</p>
+                  <p className="mt-2 text-[14.5px] leading-relaxed text-soft">
+                    {stop.note}
+                  </p>
                 )}
                 {isConfirmed && stop.address && (
                   <p className="mt-2 text-[14px] text-soft">{stop.address}</p>
@@ -296,7 +454,9 @@ function PlanCard({
             <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-muted">
               Meeting up
             </div>
-            <p className="text-[14.5px] leading-relaxed">{drop.meetingInstructions}</p>
+            <p className="text-[14.5px] leading-relaxed">
+              {drop.meetingInstructions}
+            </p>
           </div>
         )}
       </div>
@@ -309,7 +469,11 @@ function StatusTag({ status, myState }: { status: string; myState: string }) {
   return <Tag tone={tone}>{label}</Tag>;
 }
 
-function ConfidenceTag({ confidence }: { confidence: "high" | "medium" | "low" }) {
+function ConfidenceTag({
+  confidence,
+}: {
+  confidence: "high" | "medium" | "low";
+}) {
   if (confidence === "high") return null;
   return (
     <span
@@ -328,7 +492,13 @@ function ConfidenceTag({ confidence }: { confidence: "high" | "medium" | "low" }
 
 /* -------------------------------- the match -------------------------------- */
 
-function MatchCard({ drop, isConfirmed }: { drop: DropView; isConfirmed: boolean }) {
+function MatchCard({
+  drop,
+  isConfirmed,
+}: {
+  drop: DropView;
+  isConfirmed: boolean;
+}) {
   const match = drop.match!;
   return (
     <Card className="p-6">
@@ -385,8 +555,8 @@ function MatchCard({ drop, isConfirmed }: { drop: DropView; isConfirmed: boolean
 
       {!isConfirmed && (
         <p className="mt-4 text-[13px] leading-relaxed text-muted">
-          That's everything they can see about you too — first name, age, area, a
-          few interests. No email, no number, no exact location.{" "}
+          That's everything they can see about you too — first name, age, area,
+          a few interests. No email, no number, no exact location.{" "}
           <Link to="/privacy" className="underline underline-offset-2">
             What they see
           </Link>
@@ -398,7 +568,13 @@ function MatchCard({ drop, isConfirmed }: { drop: DropView; isConfirmed: boolean
 
 /* ------------------------------ accept / pass ------------------------------ */
 
-function RespondPanel({ dropId, drop }: { dropId: Id<"dateDrops">; drop: DropView }) {
+function RespondPanel({
+  dropId,
+  drop,
+}: {
+  dropId: Id<"dateDrops">;
+  drop: DropView;
+}) {
   const accept = useMutation(api.dateDrops.accept);
   const pass = useMutation(api.dateDrops.pass);
   const toast = useToast();
@@ -410,7 +586,12 @@ function RespondPanel({ dropId, drop }: { dropId: Id<"dateDrops">; drop: DropVie
     setBusy("accept");
     try {
       const result = await accept({ dropId });
-      toast(result.confirmed ? "It's a date." : "You're in — we'll take it from here.", "success");
+      toast(
+        result.confirmed
+          ? "It's a date."
+          : "You're in — we'll take it from here.",
+        "success",
+      );
     } catch (e) {
       toast(readableError(e), "error");
     } finally {
@@ -458,8 +639,8 @@ function RespondPanel({ dropId, drop }: { dropId: Id<"dateDrops">; drop: DropVie
             </Button>
           </div>
           <p className="mt-4 text-center text-[13px] leading-relaxed text-muted">
-            Accepting holds your evening. Nothing is confirmed until you both say
-            yes — and they never find out if you pass.
+            Accepting holds your evening. Nothing is confirmed until you both
+            say yes — and they never find out if you pass.
           </p>
           {drop.isDemo && (
             <p className="mt-3 text-center text-[13px] text-muted">
@@ -474,7 +655,9 @@ function RespondPanel({ dropId, drop }: { dropId: Id<"dateDrops">; drop: DropVie
         </>
       ) : (
         <>
-          <h3 className="mb-1 text-[18px]">Anything we should learn from this?</h3>
+          <h3 className="mb-1 text-[18px]">
+            Anything we should learn from this?
+          </h3>
           <p className="mb-4 text-[14px] text-soft">
             Entirely optional — it just makes the next one better.
           </p>
@@ -483,7 +666,9 @@ function RespondPanel({ dropId, drop }: { dropId: Id<"dateDrops">; drop: DropVie
               <Chip
                 key={option.key}
                 selected={reason === option.key}
-                onClick={() => setReason(reason === option.key ? null : option.key)}
+                onClick={() =>
+                  setReason(reason === option.key ? null : option.key)
+                }
               >
                 {option.label}
               </Chip>
@@ -514,7 +699,13 @@ function RespondPanel({ dropId, drop }: { dropId: Id<"dateDrops">; drop: DropVie
 
 /* --------------------------------- waiting --------------------------------- */
 
-function WaitingPanel({ drop, dropId }: { drop: DropView; dropId: Id<"dateDrops"> }) {
+function WaitingPanel({
+  drop,
+  dropId,
+}: {
+  drop: DropView;
+  dropId: Id<"dateDrops">;
+}) {
   const withdraw = useMutation(api.dateDrops.withdraw);
   const toast = useToast();
   const [busy, setBusy] = useState(false);
@@ -530,14 +721,17 @@ function WaitingPanel({ drop, dropId }: { drop: DropView; dropId: Id<"dateDrops"
           You're in
         </span>
       </div>
-      <h3 className="text-[19px] leading-tight">Waiting on the other person.</h3>
+      <h3 className="text-[19px] leading-tight">
+        Waiting on the other person.
+      </h3>
       <p className="mt-2 text-[14.5px] leading-relaxed text-soft">
-        Your evening is held. If they pass, we look for someone else who fits this
-        same plan rather than cancelling on you — you don't need to do anything.
+        Your evening is held. If they pass, we look for someone else who fits
+        this same plan rather than cancelling on you — you don't need to do
+        anything.
       </p>
       <p className="mt-3 text-[13.5px] text-muted">
-        We'll stop looking {relativeTime(drop.confirmDeadlineMs)} and let you know
-        either way.
+        We'll stop looking {relativeTime(drop.confirmDeadlineMs)} and let you
+        know either way.
       </p>
       <div className="mt-5">
         <Button
@@ -565,14 +759,23 @@ function WaitingPanel({ drop, dropId }: { drop: DropView; dropId: Id<"dateDrops"
 
 /* ------------------------------- confirmed --------------------------------- */
 
-function ConfirmedPanel({ dropId, drop }: { dropId: Id<"dateDrops">; drop: DropView }) {
+function ConfirmedPanel({
+  dropId,
+  drop,
+}: {
+  dropId: Id<"dateDrops">;
+  drop: DropView;
+}) {
   const confirmAttendance = useMutation(api.dateDrops.confirmAttendance);
   const cancel = useMutation(api.dateDrops.cancel);
+  const sharePlan = useMutation(api.safety.sharePlan);
+  const safetyProfile = useQuery(api.safety.mySafetyProfile);
   const sendMessage = useMutation(api.messages.send);
   const messages = useQuery(api.messages.list, { dropId });
   const toast = useToast();
   const [busy, setBusy] = useState(false);
   const [confirming, setConfirming] = useState(false);
+  const [sharing, setSharing] = useState(false);
 
   return (
     <>
@@ -625,6 +828,51 @@ function ConfirmedPanel({ dropId, drop }: { dropId: Id<"dateDrops">; drop: DropV
       </Card>
 
       <Card className="p-6">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="max-w-md">
+            <div className="docket-label text-[var(--accent-text)]">
+              Safety handoff
+            </div>
+            <h3 className="mt-2 text-[19px] leading-tight">
+              Let one person know the plan.
+            </h3>
+            <p className="mt-1.5 text-[14px] leading-relaxed text-soft">
+              We send your first name, the time, and the public venue. Your
+              match's identity and contact details stay private.
+            </p>
+          </div>
+          {safetyProfile?.trustedContactName ? (
+            <Button
+              variant="secondary"
+              loading={sharing}
+              onClick={async () => {
+                setSharing(true);
+                try {
+                  const result = await sharePlan({ dropId });
+                  toast(
+                    result.status === "sent"
+                      ? `Already shared with ${safetyProfile.trustedContactName}.`
+                      : `Sending the plan to ${safetyProfile.trustedContactName}.`,
+                    "success",
+                  );
+                } catch (error) {
+                  toast(readableError(error), "error");
+                } finally {
+                  setSharing(false);
+                }
+              }}
+            >
+              Share with {safetyProfile.trustedContactName}
+            </Button>
+          ) : (
+            <LinkButton to="/safety" variant="secondary">
+              Add a trusted contact
+            </LinkButton>
+          )}
+        </div>
+      </Card>
+
+      <Card className="p-6">
         <div className="flex flex-wrap items-center gap-3">
           {!drop.attendanceConfirmed ? (
             <Button
@@ -654,11 +902,15 @@ function ConfirmedPanel({ dropId, drop }: { dropId: Id<"dateDrops">; drop: DropV
           ) : (
             <div className="w-full rounded-xl border border-[var(--tint-ember-border)] bg-[var(--tint-ember-bg)] p-4">
               <p className="mb-3 text-[14.5px]">
-                Cancelling tells them straight away and frees both evenings. This
-                can't be undone.
+                Cancelling tells them straight away and frees both evenings.
+                This can't be undone.
               </p>
               <div className="flex gap-2">
-                <Button variant="secondary" size="sm" onClick={() => setConfirming(false)}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setConfirming(false)}
+                >
                   Keep the date
                 </Button>
                 <Button
@@ -688,6 +940,248 @@ function ConfirmedPanel({ dropId, drop }: { dropId: Id<"dateDrops">; drop: DropV
   );
 }
 
+/* ----------------------------- post-date check-in -------------------------- */
+
+type DateOutcome = "went" | "no_show" | "left_early" | "did_not_go";
+type DateSafety = "safe" | "uncomfortable" | "unsafe" | "prefer_not_to_say";
+type MeetAgain = "yes" | "maybe" | "no" | "prefer_not_to_say";
+
+function FeedbackPanel({ dropId }: { dropId: Id<"dateDrops"> }) {
+  const { t } = useI18n();
+  const feedback = useQuery(api.feedback.mine, { dropId });
+  const submit = useMutation(api.feedback.submit);
+  const toast = useToast();
+  const [editing, setEditing] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [outcome, setOutcome] = useState<DateOutcome | null>(null);
+  const [safety, setSafety] = useState<DateSafety | null>(null);
+  const [meetAgain, setMeetAgain] = useState<MeetAgain | null>(null);
+  const [venueRating, setVenueRating] = useState<number | null>(null);
+  const [note, setNote] = useState("");
+  const [followUpRequested, setFollowUpRequested] = useState(false);
+
+  function editExisting() {
+    if (feedback) {
+      setOutcome(feedback.outcome);
+      setSafety(feedback.safety);
+      setMeetAgain(feedback.meetAgain);
+      setVenueRating(feedback.venueRating);
+      setNote(feedback.note ?? "");
+      setFollowUpRequested(feedback.followUpRequested);
+    }
+    setEditing(true);
+  }
+
+  if (feedback === undefined)
+    return <Skeleton className="h-44 w-full rounded-card" />;
+
+  if (feedback && !editing) {
+    return (
+      <Card className="p-6">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <Tag tone="sage">{t("Private response saved")}</Tag>
+            <h2 className="mt-3 text-[20px] leading-tight">
+              {t("Thanks for checking in.")}
+            </h2>
+            <p className="mt-1.5 max-w-md text-[14px] leading-relaxed text-soft">
+              {t(
+                "Your answers are never shown to your match. They help DateDrop improve matching, venues, and safety follow-up.",
+              )}
+            </p>
+          </div>
+          <Button variant="secondary" size="sm" onClick={editExisting}>
+            {t("Update response")}
+          </Button>
+        </div>
+      </Card>
+    );
+  }
+
+  const safetyNeedsFollowUp = safety === "uncomfortable" || safety === "unsafe";
+
+  return (
+    <Card className="overflow-hidden">
+      <div className="border-b border-[var(--border)] bg-[var(--bg-sunken)] p-6">
+        <div className="docket-label text-[var(--accent-text)]">
+          {t("After the date")}
+        </div>
+        <h2 className="mt-2 text-[23px] leading-tight">
+          {t("How did it feel?")}
+        </h2>
+        <p className="mt-1.5 max-w-xl text-[14px] leading-relaxed text-soft">
+          {t(
+            "Entirely optional and private. Your match never sees these answers.",
+          )}
+        </p>
+      </div>
+
+      <div className="space-y-7 p-6">
+        <FeedbackChoice
+          label={t("What happened?")}
+          value={outcome}
+          onChange={setOutcome}
+          options={[
+            ["went", t("We met")],
+            ["no_show", t("They didn't show")],
+            ["left_early", t("I left early")],
+            ["did_not_go", t("I didn't go")],
+          ]}
+        />
+
+        <FeedbackChoice
+          label={t("Did you feel safe?")}
+          value={safety}
+          onChange={(value) => {
+            setSafety(value);
+            if (value === "unsafe") setFollowUpRequested(true);
+          }}
+          options={[
+            ["safe", t("Yes")],
+            ["uncomfortable", t("Uncomfortable")],
+            ["unsafe", t("No")],
+            ["prefer_not_to_say", t("Prefer not to say")],
+          ]}
+        />
+
+        <FeedbackChoice
+          label={t("Would you meet them again?")}
+          value={meetAgain}
+          onChange={setMeetAgain}
+          options={[
+            ["yes", t("Yes")],
+            ["maybe", t("Maybe")],
+            ["no", t("No")],
+            ["prefer_not_to_say", t("Prefer not to say")],
+          ]}
+        />
+
+        <div>
+          <div className="mb-2 text-[14px] font-medium">
+            {t("How was the venue?")}{" "}
+            <span className="font-normal text-muted">{t("optional")}</span>
+          </div>
+          <div className="flex gap-2" aria-label={t("Venue rating")}>
+            {[1, 2, 3, 4, 5].map((rating) => (
+              <Chip
+                key={rating}
+                selected={venueRating === rating}
+                onClick={() =>
+                  setVenueRating(venueRating === rating ? null : rating)
+                }
+              >
+                {rating} {rating === 1 ? t("star") : t("stars")}
+              </Chip>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label
+            htmlFor="date-feedback-note"
+            className="mb-2 block text-[14px] font-medium"
+          >
+            {t("Anything else?")}{" "}
+            <span className="font-normal text-muted">{t("optional")}</span>
+          </label>
+          <TextArea
+            id="date-feedback-note"
+            value={note}
+            maxLength={800}
+            placeholder={t("A private note for DateDrop — never your match.")}
+            onChange={(event) => setNote(event.target.value)}
+          />
+        </div>
+
+        {safetyNeedsFollowUp && (
+          <div className="rounded-2xl border border-[var(--tint-warn-border)] bg-[var(--tint-warn-bg)] p-2">
+            <Toggle
+              checked={followUpRequested}
+              onChange={setFollowUpRequested}
+              label={t("I want safety follow-up")}
+              description={t(
+                "Save this as a private safety follow-up request. For immediate danger, contact local emergency services.",
+              )}
+            />
+            <div className="px-3 pb-2">
+              <Link
+                to="/safety"
+                className="text-[12.5px] underline underline-offset-2"
+              >
+                {t("Open the Safety Center")}
+              </Link>
+            </div>
+          </div>
+        )}
+
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            loading={busy}
+            disabled={!outcome || !safety || !meetAgain}
+            onClick={async () => {
+              if (!outcome || !safety || !meetAgain) return;
+              setBusy(true);
+              try {
+                await submit({
+                  dropId,
+                  outcome,
+                  safety,
+                  meetAgain,
+                  venueRating: venueRating ?? undefined,
+                  note: note.trim() || undefined,
+                  followUpRequested,
+                });
+                setEditing(false);
+                toast(t("Your private response is saved."), "success");
+              } catch (error) {
+                toast(readableError(error), "error");
+              } finally {
+                setBusy(false);
+              }
+            }}
+          >
+            {t("Save private response")}
+          </Button>
+          {feedback && (
+            <Button variant="ghost" onClick={() => setEditing(false)}>
+              {t("Keep previous response")}
+            </Button>
+          )}
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+function FeedbackChoice<T extends string>({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  value: T | null;
+  onChange: (value: T) => void;
+  options: Array<readonly [T, string]>;
+}) {
+  return (
+    <div>
+      <div className="mb-2 text-[14px] font-medium">{label}</div>
+      <div className="flex flex-wrap gap-2">
+        {options.map(([key, optionLabel]) => (
+          <Chip
+            key={key}
+            selected={value === key}
+            onClick={() => onChange(key)}
+          >
+            {optionLabel}
+          </Chip>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ClosedPanel({ drop }: { drop: DropView }) {
   const expired = drop.status === "expired_no_match";
   return (
@@ -701,7 +1195,8 @@ function ClosedPanel({ drop }: { drop: DropView }) {
           : (drop.cancelReason ?? "The DateDrop was cancelled.")}
       </p>
       <p className="mt-3 text-[14px] text-muted">
-        Your availability is open again and we're already looking for the next one.
+        Your availability is open again and we're already looking for the next
+        one.
       </p>
       <div className="mt-5">
         <LinkButton to="/dashboard" variant="secondary">
@@ -716,7 +1211,10 @@ function ClosedPanel({ drop }: { drop: DropView }) {
 
 function Provenance({ dropId }: { dropId: Id<"dateDrops"> }) {
   const [open, setOpen] = useState(false);
-  const data = useQuery(api.matching.dropProvenance, open ? { dropId } : "skip");
+  const data = useQuery(
+    api.matching.dropProvenance,
+    open ? { dropId } : "skip",
+  );
 
   return (
     <Card className="overflow-hidden">
@@ -742,7 +1240,10 @@ function Provenance({ dropId }: { dropId: Id<"dateDrops"> }) {
           strokeLinecap="round"
           strokeLinejoin="round"
           aria-hidden
-          className={cx("shrink-0 text-muted transition-transform", open && "rotate-180")}
+          className={cx(
+            "shrink-0 text-muted transition-transform",
+            open && "rotate-180",
+          )}
         >
           <path d="M6 9.5l6 6 6-6" />
         </svg>
@@ -753,7 +1254,9 @@ function Provenance({ dropId }: { dropId: Id<"dateDrops"> }) {
           {data === undefined ? (
             <Skeleton className="h-24 w-full" />
           ) : data === null ? (
-            <p className="text-[14px] text-muted">Nothing recorded for this DateDrop.</p>
+            <p className="text-[14px] text-muted">
+              Nothing recorded for this DateDrop.
+            </p>
           ) : (
             <div className="space-y-5">
               {data.research && (
@@ -792,39 +1295,43 @@ function Provenance({ dropId }: { dropId: Id<"dateDrops"> }) {
                     What the pages actually said
                   </div>
                   <ul className="space-y-3">
-                    {data.venues.slice(0, 5).map(
-                      (venue: {
-                        name: string;
-                        confidence: string;
-                        evidence: string;
-                        openingHours: string | null;
-                        approximatePrice: string | null;
-                      }) => (
-                        <li
-                          key={venue.name}
-                          className="rounded-lg bg-[var(--bg-sunken)] p-3"
-                        >
-                          <div className="flex items-baseline justify-between gap-3">
-                            <span className="text-[14px] font-medium">{venue.name}</span>
-                            <span className="text-[11.5px] uppercase tracking-wide text-muted">
-                              {venue.confidence}
-                            </span>
-                          </div>
-                          {venue.evidence && (
-                            <p className="mt-1.5 text-[13px] italic leading-relaxed text-muted">
-                              “{venue.evidence}”
-                            </p>
-                          )}
-                          {(venue.openingHours || venue.approximatePrice) && (
-                            <p className="mt-1.5 text-[12.5px] text-muted">
-                              {[venue.openingHours, venue.approximatePrice]
-                                .filter(Boolean)
-                                .join(" · ")}
-                            </p>
-                          )}
-                        </li>
-                      ),
-                    )}
+                    {data.venues
+                      .slice(0, 5)
+                      .map(
+                        (venue: {
+                          name: string;
+                          confidence: string;
+                          evidence: string;
+                          openingHours: string | null;
+                          approximatePrice: string | null;
+                        }) => (
+                          <li
+                            key={venue.name}
+                            className="rounded-lg bg-[var(--bg-sunken)] p-3"
+                          >
+                            <div className="flex items-baseline justify-between gap-3">
+                              <span className="text-[14px] font-medium">
+                                {venue.name}
+                              </span>
+                              <span className="text-[11.5px] uppercase tracking-wide text-muted">
+                                {venue.confidence}
+                              </span>
+                            </div>
+                            {venue.evidence && (
+                              <p className="mt-1.5 text-[13px] italic leading-relaxed text-muted">
+                                “{venue.evidence}”
+                              </p>
+                            )}
+                            {(venue.openingHours || venue.approximatePrice) && (
+                              <p className="mt-1.5 text-[12.5px] text-muted">
+                                {[venue.openingHours, venue.approximatePrice]
+                                  .filter(Boolean)
+                                  .join(" · ")}
+                              </p>
+                            )}
+                          </li>
+                        ),
+                      )}
                   </ul>
                 </div>
               )}
@@ -852,8 +1359,10 @@ function Provenance({ dropId }: { dropId: Id<"dateDrops"> }) {
                             {run.purpose.replace(/_/g, " ")}
                           </span>{" "}
                           · {run.model} · {run.latencyMs}ms
-                          {run.totalTokens ? ` · ${run.totalTokens} tokens` : ""} ·{" "}
-                          {run.status}
+                          {run.totalTokens
+                            ? ` · ${run.totalTokens} tokens`
+                            : ""}{" "}
+                          · {run.status}
                         </li>
                       ),
                     )}
@@ -921,8 +1430,8 @@ function SafetyPanel({ dropId }: { dropId: Id<"dateDrops"> }) {
           <h3 className="mb-1 text-[18px]">Report this person</h3>
           <p className="mb-4 text-[14px] leading-relaxed text-soft">
             This goes straight to our team with the DateDrop attached. If you're
-            in danger, contact your local emergency services first — we're not an
-            emergency service.
+            in danger, contact your local emergency services first — we're not
+            an emergency service.
           </p>
 
           <div className="mb-4 flex flex-wrap gap-2">
@@ -955,7 +1464,11 @@ function SafetyPanel({ dropId }: { dropId: Id<"dateDrops"> }) {
           </div>
 
           <div className="flex gap-2">
-            <Button variant="secondary" size="sm" onClick={() => setOpen(false)}>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setOpen(false)}
+            >
               Cancel
             </Button>
             <Button

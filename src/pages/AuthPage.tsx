@@ -146,117 +146,170 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
           </span>
         </header>
 
-        <div className="flex flex-1 items-center px-5 py-12 sm:px-8 lg:px-16 xl:px-24">
-          <div className="soft-section w-full max-w-[31rem] px-5 py-7 sm:px-8 sm:py-9">
-            <div className="docket-label text-[var(--accent-text)]">
-              {signingUp ? t("Open your account") : t("Welcome back")}
+        <div className="flex flex-1 items-center px-5 py-10 sm:px-8 lg:px-12 xl:px-16">
+          <div className="w-full max-w-[45rem]">
+            <div className="mb-6">
+              <div className="docket-label text-[var(--accent-text)]">
+                {signingUp ? t("A private beginning") : t("Private handoff")}
+              </div>
+              <h1 className="mt-3 max-w-2xl text-[clamp(2.55rem,5vw,4.5rem)] leading-[1.02] tracking-[-0.035em]">
+                {signingUp
+                  ? t("Start with an account only you can open.")
+                  : t("Come back to your evening.")}
+              </h1>
+              <p className="mt-4 max-w-2xl text-[15.5px] leading-[1.75] text-soft">
+                {t(
+                  "Every invitation is private. Signing in lets us show the right plan to the right person, keep each answer secret, and update your calendar without sharing contact details.",
+                )}
+              </p>
             </div>
-            <h1 className="mt-4 text-[clamp(2.6rem,6vw,4.4rem)] leading-[0.96]">
-              {signingUp
-                ? t("Reserve your first evening.")
-                : t("Your dates are this way.")}
-            </h1>
-            <p className="mt-4 max-w-md text-[15px] leading-relaxed text-soft">
-              {signingUp
-                ? t(
-                    "Two minutes of setup. After that, all we ask is when you're free.",
-                  )
-                : t(
-                    "Sign in to review invitations, open evenings, and confirmed plans.",
-                  )}
-            </p>
 
-            <form onSubmit={handleSubmit} className="mt-8" noValidate>
-              <Field label={t("Email")} htmlFor="email">
-                <TextInput
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  placeholder="you@example.com"
-                  onChange={(e) => setEmail(e.target.value)}
-                  invalid={Boolean(error)}
-                />
-              </Field>
-
-              <Field
-                label={t("Password")}
-                htmlFor="password"
-                hint={signingUp ? t("At least 8 characters.") : undefined}
-              >
-                <TextInput
-                  id="password"
-                  type="password"
-                  autoComplete={signingUp ? "new-password" : "current-password"}
-                  required
-                  minLength={signingUp ? 8 : undefined}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  invalid={Boolean(error)}
-                />
-              </Field>
-
-              {signingUp && (
-                <label className="mb-5 flex cursor-pointer items-start gap-3 rounded-2xl border border-[var(--border)] bg-[var(--bg-raised)] p-3.5 text-[14px] leading-relaxed">
-                  <input
-                    type="checkbox"
-                    checked={ageConfirmed}
-                    onChange={(e) => setAgeConfirmed(e.target.checked)}
-                    className="mt-0.5 h-4 w-4 shrink-0 rounded accent-[var(--color-ember-400)]"
-                  />
-                  <span>
-                    {t(
-                      "I'm 18 or over, and I understand DateDrop does not verify identity.",
-                    )}
-                  </span>
-                </label>
-              )}
-
-              {error && (
-                <div className="mb-5">
-                  <Notice tone="warn">{error}</Notice>
+            <div className="mb-6 grid gap-2.5 sm:grid-cols-3">
+              {[
+                {
+                  icon: "⌁",
+                  title: t("Your invitation"),
+                  body: t("Only you can open it."),
+                },
+                {
+                  icon: "♡",
+                  title: t("Your answer"),
+                  body: t("Your match never sees a pass."),
+                },
+                {
+                  icon: "◷",
+                  title: t("Your calendar"),
+                  body: t("Reserved, finalized, or cancelled."),
+                },
+              ].map((reason) => (
+                <div
+                  key={reason.title}
+                  className="rounded-[1.35rem] border border-[var(--border)] bg-[var(--bg-raised)] px-4 py-3.5 shadow-[var(--shadow-soft)]"
+                >
+                  <div className="mb-2 flex h-7 w-7 items-center justify-center rounded-full bg-[var(--tint-ember-bg)] text-[14px] text-[var(--tint-ember-strong)]">
+                    {reason.icon}
+                  </div>
+                  <div className="text-[13.5px] font-semibold">
+                    {reason.title}
+                  </div>
+                  <div className="mt-0.5 text-[12.5px] leading-relaxed text-muted">
+                    {reason.body}
+                  </div>
                 </div>
-              )}
+              ))}
+            </div>
 
-              <Button type="submit" size="lg" fullWidth loading={submitting}>
-                {signingUp ? t("Create my account") : t("Sign in")}{" "}
-                <span aria-hidden>→</span>
-              </Button>
-            </form>
+            <div className="soft-section px-5 py-6 sm:px-7 sm:py-7">
+              <div className="mb-6 flex items-start justify-between gap-5 border-b border-[var(--border)] pb-5">
+                <div>
+                  <div className="docket-label text-[var(--accent-text)]">
+                    {signingUp ? t("Open your account") : t("Welcome back")}
+                  </div>
+                  <h2 className="mt-2 text-[23px] leading-tight">
+                    {signingUp
+                      ? t("Reserve your first evening.")
+                      : t("Open your private DateDrops.")}
+                  </h2>
+                </div>
+                <span className="hidden rounded-full border border-[var(--tint-sage-border)] bg-[var(--tint-sage-bg)] px-3 py-1.5 text-[11px] font-semibold text-[var(--tint-sage-fg)] sm:inline-flex">
+                  {t("No public profile")}
+                </span>
+              </div>
 
-            <p className="mt-6 text-[14px] text-muted">
-              {signingUp ? (
-                <>
-                  {t("Already have an account?")}{" "}
-                  <Link
-                    to="/signin"
-                    className="font-semibold text-[var(--accent-text)] hover:underline"
-                  >
-                    {t("Sign in")}
-                  </Link>
-                </>
-              ) : (
-                <>
-                  {t("New here?")}{" "}
-                  <Link
-                    to="/signup"
-                    className="font-semibold text-[var(--accent-text)] hover:underline"
-                  >
-                    {t("Create an account")}
-                  </Link>
-                </>
-              )}
-            </p>
+              <form onSubmit={handleSubmit} noValidate>
+                <Field label={t("Email")} htmlFor="email">
+                  <TextInput
+                    id="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={email}
+                    placeholder="you@example.com"
+                    onChange={(e) => setEmail(e.target.value)}
+                    invalid={Boolean(error)}
+                  />
+                </Field>
 
-            <p className="mt-10 border-t border-[var(--border)] pt-5 text-[12px] leading-relaxed text-muted">
-              {t(
-                "Your email is used only by DateDrop Concierge to reach you. It is never shown to another user.",
-              )}{" "}
-              <Link to="/privacy" className="underline underline-offset-4">
-                {t("How privacy works")}
-              </Link>
-            </p>
+                <Field
+                  label={t("Password")}
+                  htmlFor="password"
+                  hint={signingUp ? t("At least 8 characters.") : undefined}
+                >
+                  <TextInput
+                    id="password"
+                    type="password"
+                    autoComplete={
+                      signingUp ? "new-password" : "current-password"
+                    }
+                    required
+                    minLength={signingUp ? 8 : undefined}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    invalid={Boolean(error)}
+                  />
+                </Field>
+
+                {signingUp && (
+                  <label className="mb-5 flex cursor-pointer items-start gap-3 rounded-2xl border border-[var(--border)] bg-[var(--bg-raised)] p-3.5 text-[14px] leading-relaxed">
+                    <input
+                      type="checkbox"
+                      checked={ageConfirmed}
+                      onChange={(e) => setAgeConfirmed(e.target.checked)}
+                      className="mt-0.5 h-4 w-4 shrink-0 rounded accent-[var(--color-ember-400)]"
+                    />
+                    <span>
+                      {t(
+                        "I'm 18 or over, and I understand DateDrop does not verify identity.",
+                      )}
+                    </span>
+                  </label>
+                )}
+
+                {error && (
+                  <div className="mb-5">
+                    <Notice tone="warn">{error}</Notice>
+                  </div>
+                )}
+
+                <Button type="submit" size="lg" fullWidth loading={submitting}>
+                  {signingUp ? t("Create my account") : t("Sign in")}{" "}
+                  <span aria-hidden>→</span>
+                </Button>
+              </form>
+
+              <p className="mt-6 text-[14px] text-muted">
+                {signingUp ? (
+                  <>
+                    {t("Already have an account?")}{" "}
+                    <Link
+                      to="/signin"
+                      className="font-semibold text-[var(--accent-text)] hover:underline"
+                    >
+                      {t("Sign in")}
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    {t("New here?")}{" "}
+                    <Link
+                      to="/signup"
+                      className="font-semibold text-[var(--accent-text)] hover:underline"
+                    >
+                      {t("Create an account")}
+                    </Link>
+                  </>
+                )}
+              </p>
+
+              <p className="mt-7 border-t border-[var(--border)] pt-5 text-[12px] leading-relaxed text-muted">
+                {t(
+                  "Your email is used only by DateDrop Concierge to reach you. It is never shown to another user.",
+                )}{" "}
+                <Link to="/privacy" className="underline underline-offset-4">
+                  {t("How privacy works")}
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
       </main>
