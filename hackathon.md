@@ -12,7 +12,7 @@
 - **Auth:** Convex Auth
 - **AI models:** gpt-5.6-luna (configured default, with a cheapest-capable fallback ladder in `convex/integrations/openai.ts`)
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-08-28T11:50:37Z
+- **Last updated:** 2026-08-28T13:23:03Z
 
 ## Log
 
@@ -316,3 +316,15 @@ copy column so the desktop sentences each hold a clean line. Rechecked at
 1280px and 390px in a real browser with no horizontal overflow; the production
 build and all 193 tests pass (`index.html`, `src/styles/index.css`,
 `src/pages/LandingPage.tsx`).
+
+### 2026-08-28 - 4c14fb9
+Kept the real Vite development server and browser open for continuous visual
+review. The first landing-to-signup walkthrough exposed two issues that static
+checks missed: dark-mode invitation cards had a light-theme glow bright enough
+to wash out their contents, and React Router preserved the landing page's
+scroll position so signup could open with its header and title clipped. Added a
+theme-specific low-luminance plum glow and a pathname-based scroll reset. A
+second real-browser walkthrough now opens signup at the top, both themes keep
+the invitation legible, there are no browser errors, and the production build,
+lint (no errors), and all 193 tests pass (`src/App.tsx`,
+`src/styles/index.css`).
