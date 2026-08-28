@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import {
   Authenticated,
@@ -32,6 +32,8 @@ const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 export default function App() {
   return (
     <>
+      <ScrollToTop />
+
       <AuthLoading>
         <FullPageLoader />
       </AuthLoading>
@@ -66,6 +68,17 @@ export default function App() {
       </Authenticated>
     </>
   );
+}
+
+/** Every route should open like a fresh page, not inherit the previous scroll. */
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
 }
 
 function AuthedRoutes() {

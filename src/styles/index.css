@@ -115,6 +115,7 @@
     --text-soft: var(--color-ink-500);
     --glow-peach: rgb(255 215 199 / 0.62);
     --glow-pink: rgb(246 199 210 / 0.42);
+    --note-glow: rgb(255 225 221 / 0.72);
     --shadow-ink: rgb(83 43 58 / 0.18);
 
     /* Semantic tints. Defined once per theme so an accent surface is never
@@ -151,6 +152,7 @@
     --text-soft: #d8bdc4;
     --glow-peach: rgb(170 76 83 / 0.16);
     --glow-pink: rgb(128 70 103 / 0.14);
+    --note-glow: rgb(138 60 83 / 0.24);
     --shadow-ink: rgb(0 0 0 / 0.34);
 
     --tint-ember-bg: #40242d;
@@ -337,11 +339,7 @@ html[lang^="ja"] .hero-title-accent {
     color-mix(in oklab, var(--tint-ember-border) 72%, transparent);
   border-radius: 2rem;
   background:
-    radial-gradient(
-      circle at 92% 8%,
-      color-mix(in oklab, var(--color-ember-100) 72%, transparent),
-      transparent 9rem
-    ),
+    radial-gradient(circle at 92% 8%, var(--note-glow), transparent 9rem),
     var(--bg-raised);
   box-shadow: var(--shadow-lift);
 }
