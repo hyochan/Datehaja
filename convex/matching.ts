@@ -46,7 +46,7 @@ import { buildFallbackPlan } from "./lib/fallbackPlan";
 import { researchDateOptions } from "./research";
 
 /**
- * The DateHaja matching pipeline.
+ * The Datehaja matching pipeline.
  *
  *   hard filter  →  deterministic scoring  →  AI ranking  →
  *   live venue research  →  plan generation  →  private invitations

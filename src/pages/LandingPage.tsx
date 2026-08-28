@@ -146,13 +146,6 @@ function sampleRange(
   );
 }
 
-function sampleMonth(locale: LocaleCode) {
-  return new Intl.DateTimeFormat(locale, {
-    month: "short",
-    timeZone: "UTC",
-  }).format(new Date(Date.UTC(2026, 7, 29)));
-}
-
 function sampleMoney(locale: LocaleCode, amount: number, currency: string) {
   return new Intl.NumberFormat(locale, {
     style: "currency",
@@ -173,10 +166,10 @@ export default function LandingPage() {
             <Logo className="h-9 w-9" />
             <div className="leading-none">
               <div className="brand-wordmark text-[22px] font-medium">
-                DateHaja
+                Datehaja
               </div>
               <div className="docket-label mt-1.5 text-[8px] text-muted">
-                {t("Private date concierge")}
+                {t("Let's make it a date")}
               </div>
             </div>
           </div>
@@ -219,23 +212,31 @@ export default function LandingPage() {
                 className="display-heading hero-title mt-6 max-w-3xl animate-fade-up"
                 style={{ animationDelay: "40ms" }}
               >
-                {t("Bring us a free evening.")}
+                {t("Pick a night.")}
                 <span className="hero-title-accent block italic text-[var(--accent-text)]">
-                  {t("We'll return a date.")}
+                  {t("Let's make it a date.")}
                 </span>
               </h1>
+              <p
+                className="mt-7 max-w-2xl animate-fade-up text-[16px] leading-relaxed text-soft sm:text-[18px]"
+                style={{ animationDelay: "80ms" }}
+              >
+                {t(
+                  "Tell us when you're free. We'll find someone compatible, plan a real date, and send it to you both.",
+                )}
+              </p>
               <div
                 className="mt-8 flex animate-fade-up flex-col items-start gap-4 sm:flex-row sm:items-center"
                 style={{ animationDelay: "120ms" }}
               >
                 <LinkButton to="/signup" size="lg">
-                  {t("Open an evening")} <span aria-hidden>→</span>
+                  {t("Find me a date")} <span aria-hidden>→</span>
                 </LinkButton>
                 <Link
                   to="#how-it-works"
                   className="rounded-full px-3 py-2 text-[13px] font-bold text-muted transition-colors hover:bg-[var(--bg-sunken)] hover:text-[var(--text)]"
                 >
-                  {t("Read the two-minute brief")}
+                  {t("See what happens next")}
                 </Link>
               </div>
 
@@ -270,64 +271,28 @@ export default function LandingPage() {
               >
                 ♡
               </span>
-              <AvailabilityDocket example={example} locale={locale} />
+              <DateNightPreview example={example} locale={locale} />
             </div>
           </div>
         </section>
 
-        <section>
-          <div className="mx-auto grid max-w-6xl items-start gap-12 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
-            <div className="lg:sticky lg:top-28">
-              <div className="docket-label text-[var(--accent-text)]">
-                {t("What arrives")}
-              </div>
-              <h2 className="display-heading mt-4 text-[clamp(2.2rem,5vw,4rem)]">
-                {t("A plan,")}
-                <br />
-                {t("not a profile.")}
-              </h2>
-              <div className="mt-8 grid max-w-md grid-cols-3 gap-2">
-                {[
-                  ["globe", t("Places researched on the live web")],
-                  ["source", t("Sources and evidence attached")],
-                  ["tune", t("Constraints and budget respected")],
-                ].map(([icon, text]) => (
-                  <div
-                    key={text}
-                    className="rounded-2xl border border-[var(--border)] bg-[var(--bg-raised)] p-3 text-center shadow-[var(--shadow-soft)]"
-                  >
-                    <span className="love-doodle mx-auto h-10 w-10">
-                      <VisualIcon kind={icon as VisualIconKind} />
-                    </span>
-                    <span className="mt-2 block text-[11px] font-bold leading-snug sm:text-[12px]">
-                      {text}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <SampleDrop example={example} locale={locale} />
-          </div>
-        </section>
-
-        <ConciergeFlow example={example} locale={locale} />
+        <CustomerJourney example={example} locale={locale} />
 
         <section className="px-5 py-10 sm:px-8 sm:py-14">
           <div className="soft-section mx-auto grid max-w-6xl items-center gap-8 px-6 py-10 sm:px-10 sm:py-12 md:grid-cols-[1fr_auto]">
             <div>
               <div className="docket-label text-[var(--accent-text)]">
-                {t("Your invitation is open")}
+                {t("One night is enough")}
               </div>
               <h2 className="display-heading mt-3 text-[clamp(2.15rem,5vw,3.8rem)]">
-                {t("When are you free?")}
+                {t("Shall we make it a date?")}
               </h2>
               <p className="mt-4 text-[15px] text-soft">
                 {t("That is still the only question we need answered.")}
               </p>
             </div>
             <LinkButton to="/signup" size="lg">
-              {t("Plan my first date")} <span aria-hidden>→</span>
+              {t("Find me a date")} <span aria-hidden>→</span>
             </LinkButton>
           </div>
         </section>
@@ -339,10 +304,10 @@ export default function LandingPage() {
             <Logo className="h-6 w-6" />
             <div>
               <div className="brand-wordmark text-[17px] text-[var(--text)]">
-                DateHaja
+                Datehaja
               </div>
               <div className="mt-0.5">
-                {t("Let's date. We'll make the plan.")}
+                {t("Pick a night. Let's make it a date.")}
               </div>
             </div>
           </div>
@@ -363,7 +328,7 @@ export default function LandingPage() {
   );
 }
 
-function ConciergeFlow({
+function CustomerJourney({
   example,
   locale,
 }: {
@@ -371,10 +336,13 @@ function ConciergeFlow({
   locale: LocaleCode;
 }) {
   const { t } = useI18n();
-  const eveningA = sampleRange(locale, 18, 0, 22, 30);
-  const eveningB = sampleRange(locale, 18, 30, 22, 0);
+  const evening = sampleRange(locale, 19, 0, 22, 0);
   const dateTime = sampleTime(locale, 19, 0);
-  const estimate = sampleMoney(locale, example.totalAmount, example.currency);
+  const dinnerAmount = sampleMoney(
+    locale,
+    example.dinnerAmount,
+    example.currency,
+  );
 
   return (
     <section
@@ -385,121 +353,92 @@ function ConciergeFlow({
         <div className="max-w-3xl">
           <div className="docket-label text-ember-300">{t("How it works")}</div>
           <h2 className="display-heading mt-4 text-[clamp(2.35rem,5vw,4.4rem)]">
-            {t("One free evening goes in. A real date comes out.")}
+            {t("From “I'm free” to “see you there.”")}
           </h2>
+          <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-sand-300 sm:text-[17px]">
+            {t("Three small choices. No audition in between.")}
+          </p>
         </div>
 
-        <div className="relative mt-12 overflow-hidden rounded-[2.25rem] border border-sand-500/25 bg-white/[0.035] p-5 shadow-[0_30px_80px_-52px_rgb(0_0_0/0.9)] sm:p-8">
-          <span
-            className="absolute -right-8 -top-10 text-[9rem] leading-none text-ember-300/[0.035]"
-            aria-hidden
-          >
-            ♡
-          </span>
-
-          <div className="relative grid gap-3 lg:grid-cols-[0.95fr_3.5rem_1.1fr_3.5rem_0.95fr] lg:items-center">
-            <article>
-              <SceneHeading
-                number="01"
-                icon="calendar"
-                title={t("Open an evening")}
+        <div className="mt-12 grid gap-4 lg:grid-cols-3">
+          <article className="flex min-h-[25rem] flex-col rounded-[2rem] border border-sand-500/25 bg-white/[0.04] p-5 sm:p-7">
+            <SceneHeading
+              number="01"
+              icon="calendar"
+              title={t("Choose a night")}
+            />
+            <p className="mt-4 text-[14px] leading-relaxed text-sand-300">
+              {t("Friday, 7–10 PM. That's all we need.")}
+            </p>
+            <div className="mt-auto pt-8">
+              <AvailabilityWindow
+                label="♥"
+                owner={t("Friday")}
+                time={evening}
               />
-              <div className="mt-6 space-y-2.5">
-                <AvailabilityWindow
-                  label="A"
-                  owner={t("You")}
-                  time={eveningA}
-                />
-                <AvailabilityWindow
-                  label="B"
-                  owner={t("Match")}
-                  time={eveningB}
-                />
-              </div>
-            </article>
-
-            <FlowThread />
-
-            <article className="py-2 text-center">
-              <SceneHeading
-                number="02"
-                icon="spark"
-                title={t("Private date concierge")}
-                centered
-              />
-              <div className="mt-6 flex flex-col items-center gap-4">
-                <span className="relative flex h-24 w-24 items-center justify-center rounded-full border border-ember-300/40 bg-ember-300/10 shadow-[0_0_0_12px_rgb(247_155_153/0.035)]">
-                  <span className="absolute -right-1 top-0 text-ember-300">
-                    ✦
-                  </span>
-                  <Logo className="h-11 w-11" />
+              <div className="mt-3 flex items-center gap-2 px-1 text-[11px] font-bold text-ember-200">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-ember-500 text-[9px] text-white">
+                  ✓
                 </span>
-                <div className="flex max-w-xs flex-wrap justify-center gap-1.5 text-[10px] font-bold text-sand-300">
-                  <span className="rounded-full border border-sand-500/30 px-2.5 py-1.5">
-                    {t("Match")}
-                  </span>
-                  <span className="rounded-full border border-sand-500/30 px-2.5 py-1.5">
-                    {t("Places researched on the live web")}
-                  </span>
-                  <span className="rounded-full border border-sand-500/30 px-2.5 py-1.5">
-                    {t("Constraints and budget respected")}
-                  </span>
-                </div>
+                {t("Window submitted")}
               </div>
-            </article>
-
-            <FlowThread />
-
-            <article>
-              <SceneHeading
-                number="03"
-                icon="reply"
-                title={t("Both answer privately")}
-              />
-              <div className="mt-6 space-y-2.5">
-                <PrivateReply label="A" accept={t("Accept")} />
-                <PrivateReply label="B" accept={t("Accept")} />
-              </div>
-            </article>
-          </div>
-
-          <div className="relative my-6 flex h-16 items-center justify-center lg:my-8">
-            <span className="absolute h-full border-l border-dashed border-ember-300/35" />
-            <span className="z-10 flex h-10 w-10 items-center justify-center rounded-full border border-ember-300/40 bg-[#34212a] text-[14px] text-ember-300">
-              ♥
-            </span>
-          </div>
-
-          <article className="relative mx-auto max-w-2xl overflow-hidden rounded-[2rem] border border-ember-300/35 bg-ember-300/[0.08] shadow-[0_24px_60px_-42px_rgb(0_0_0/0.9)]">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ember-300/25 px-5 py-4">
-              <span className="flex items-center gap-2.5 text-[11px] font-bold text-ember-200">
-                <span className="rounded-full bg-ember-500 px-2.5 py-1 text-[9px] text-white">
-                  A ✓
-                </span>
-                <span aria-hidden>+</span>
-                <span className="rounded-full bg-ember-500 px-2.5 py-1 text-[9px] text-white">
-                  B ✓
-                </span>
-                <span className="ml-1">{t("Meet in public")}</span>
-              </span>
-              <span className="font-mono text-[9px] text-sand-400">DD—001</span>
             </div>
-            <div className="grid sm:grid-cols-[7rem_1fr]">
-              <div className="border-b border-ember-300/20 p-5 text-center sm:border-b-0 sm:border-r">
-                <div className="docket-label text-[9px] text-ember-300">
-                  {t("Sat")}
-                </div>
-                <div className="mt-1 font-display text-[38px]">29</div>
+          </article>
+
+          <article className="flex min-h-[25rem] flex-col rounded-[2rem] border border-ember-300/30 bg-ember-300/[0.07] p-5 sm:p-7">
+            <SceneHeading
+              number="02"
+              icon="meet"
+              title={t("Receive one considered plan")}
+            />
+            <p className="mt-4 text-[14px] leading-relaxed text-sand-300">
+              {t("One person, one public place, one plan that fits.")}
+            </p>
+            <div className="mt-auto rounded-[1.5rem] border border-ember-300/25 bg-[#291a22] p-5 shadow-[0_24px_50px_-38px_rgb(0_0_0/0.9)]">
+              <div className="docket-label text-[9px] text-ember-300">
+                {t("New date plan")}
               </div>
-              <div className="p-5">
-                <div className="font-display text-[28px]">{dateTime}</div>
-                <div className="mt-2 text-[14px] font-bold text-sand-100">
-                  {example.venue} · {example.area}
-                </div>
-                <div className="mt-1 text-[11px] text-sand-400">
-                  {example.city} · {example.zoneLabel} · ≈ {estimate} /{" "}
-                  {t("person")}
-                </div>
+              <div className="mt-3 font-display text-[26px] text-sand-50">
+                {dateTime} · {example.area}
+              </div>
+              <div className="mt-5">
+                <PlanStop
+                  time={dateTime}
+                  title={example.venue}
+                  body={t("Dinner · calm room · about {amount}", {
+                    amount: dinnerAmount,
+                  })}
+                />
+              </div>
+              <div className="mt-4 border-t border-ember-300/15 pt-4 text-[12px] leading-relaxed text-sand-300">
+                {t(
+                  "You both prefer quieter first dates and share an interest in films and running.",
+                )}
+              </div>
+            </div>
+          </article>
+
+          <article className="flex min-h-[25rem] flex-col rounded-[2rem] border border-sand-500/25 bg-white/[0.04] p-5 sm:p-7">
+            <SceneHeading
+              number="03"
+              icon="reply"
+              title={t("Both answer privately")}
+            />
+            <p className="mt-4 text-[14px] leading-relaxed text-sand-300">
+              {t(
+                "When you both choose yes, the date is ready for your calendar.",
+              )}
+            </p>
+            <div className="mt-auto space-y-2.5 pt-8">
+              <PrivateReply owner={t("You")} accept={t("Accept")} />
+              <PrivateReply owner={t("Match")} accept={t("Accept")} />
+              <div className="mt-3 flex items-center justify-between rounded-2xl bg-ember-500 px-4 py-3 text-white">
+                <span className="flex items-center gap-2 text-[12px] font-bold">
+                  <span aria-hidden>♥</span> {t("It's a date")}
+                </span>
+                <span className="font-mono text-[9px] uppercase">
+                  {t("Added to calendar")}
+                </span>
               </div>
             </div>
           </article>
@@ -559,20 +498,6 @@ function SceneHeading({
   );
 }
 
-function FlowThread() {
-  return (
-    <div
-      className="relative flex h-12 items-center justify-center lg:h-auto"
-      aria-hidden
-    >
-      <span className="absolute h-full border-l border-dashed border-ember-300/35 lg:h-auto lg:w-full lg:border-l-0 lg:border-t" />
-      <span className="z-10 flex h-9 w-9 rotate-90 items-center justify-center rounded-full border border-ember-300/35 bg-[#34212a] font-mono text-[14px] text-ember-300 lg:rotate-0">
-        →
-      </span>
-    </div>
-  );
-}
-
 function AvailabilityWindow({
   label,
   owner,
@@ -599,14 +524,13 @@ function AvailabilityWindow({
   );
 }
 
-function PrivateReply({ label, accept }: { label: string; accept: string }) {
+function PrivateReply({ owner, accept }: { owner: string; accept: string }) {
   return (
     <div className="rounded-2xl border border-sand-500/25 bg-white/[0.035] p-3">
       <div className="flex items-center justify-between">
         <span className="flex items-center gap-2 text-[11px] font-bold text-sand-200">
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ember-300/15 text-ember-200">
-            {label}
-          </span>
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ember-300/15 text-ember-200">♥</span>
+          {owner}
           <VisualIcon kind="lock" />
         </span>
         <span className="rounded-full bg-ember-500 px-3 py-1.5 text-[9px] font-bold text-white">
@@ -707,7 +631,7 @@ function VisualIcon({ kind }: { kind: VisualIconKind }) {
   }
 }
 
-function AvailabilityDocket({
+function DateNightPreview({
   example,
   locale,
 }: {
@@ -715,160 +639,65 @@ function AvailabilityDocket({
   locale: LocaleCode;
 }) {
   const { t } = useI18n();
-  const availability = sampleRange(locale, 18, 0, 22, 30);
-
-  return (
-    <aside className="love-note mx-auto max-w-md overflow-hidden">
-      <div className="flex items-center justify-between border-b border-[var(--border)] px-5 py-4">
-        <span className="docket-label flex items-center gap-2">
-          <span className="text-[var(--accent-text)]" aria-hidden>
-            ♥
-          </span>
-          {t("Availability docket")}
-        </span>
-        <span className="font-mono text-[10px] text-muted">DD—001</span>
-      </div>
-      <div className="grid grid-cols-[5.25rem_1fr]">
-        <div className="border-r border-[var(--border)] bg-[var(--tint-ember-bg)]/45 p-4 text-center">
-          <div className="docket-label text-[var(--accent-text)]">
-            {t("Sat")}
-          </div>
-          <div className="mt-2 font-display text-[42px] leading-none">29</div>
-          <div className="mt-2 font-mono text-[9px] uppercase text-muted">
-            {sampleMonth(locale)} / {example.city}
-          </div>
-        </div>
-        <div className="p-5">
-          <div className="docket-label text-muted">{t("Window submitted")}</div>
-          <div className="mt-2 font-display text-[clamp(1.2rem,4vw,1.7rem)]">
-            {availability}
-          </div>
-          <div className="mt-2 text-[13px] leading-relaxed text-soft">
-            {t("One quiet evening. Flexible on neighbourhood.")}
-          </div>
-        </div>
-      </div>
-      <div className="border-t border-dashed border-[var(--tint-ember-border)] px-5 py-5">
-        <div className="flex items-end justify-between gap-5">
-          <div>
-            <div className="docket-label text-muted">
-              {t("Concierge instruction")}
-            </div>
-            <div className="mt-2 max-w-[14rem] text-[14px] font-medium leading-snug">
-              {t(
-                "Find someone thoughtful. Keep it easy to leave, easy to extend.",
-              )}
-            </div>
-          </div>
-          <div className="rotate-[-5deg] rounded-full border-2 border-ember-300 bg-[var(--tint-ember-bg)] px-3.5 py-2 text-center text-ember-500">
-            <div className="docket-label text-[9px]">{t("Ready")}</div>
-            <div className="mt-0.5 font-mono text-[8px]">CONCIERGE</div>
-          </div>
-        </div>
-      </div>
-      <div className="border-t border-[var(--border)] bg-[var(--bg-sunken)]/65 px-5 py-3 font-mono text-[9px] uppercase tracking-[0.12em] text-muted">
-        {t("Next: compatibility → venue research → private invite")}
-      </div>
-    </aside>
-  );
-}
-
-/** A concrete example, so the concept lands before anyone signs up. */
-function SampleDrop({
-  example,
-  locale,
-}: {
-  example: LandingExample;
-  locale: LocaleCode;
-}) {
-  const { t } = useI18n();
-  const dinnerTime = sampleTime(locale, 19, 0);
-  const dessertTime = sampleTime(locale, 20, 40);
-  const dinnerAmount = sampleMoney(
-    locale,
-    example.dinnerAmount,
-    example.currency,
-  );
+  const dateTime = sampleTime(locale, 19, 0);
   const estimate = sampleMoney(locale, example.totalAmount, example.currency);
 
   return (
-    <article className="love-note relative overflow-hidden">
-      <header className="flex items-center justify-between border-b border-[var(--border)] px-5 py-4 sm:px-7">
-        <span className="docket-label flex items-center gap-2 text-[var(--accent-text)]">
-          <Logo className="h-4 w-4" /> {t("New date plan")}
-        </span>
-        <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-muted">
-          {t("Preview / localized example")}
-        </span>
-      </header>
-
-      <div className="grid sm:grid-cols-[8rem_1fr]">
-        <div className="border-b border-[var(--border)] p-5 sm:border-b-0 sm:border-r sm:p-6">
-          <div className="docket-label text-muted">{t("Saturday")}</div>
-          <div className="mt-2 font-display text-[34px] leading-none">
-            {dinnerTime}
-          </div>
-          <div className="mt-1 font-mono text-[10px] text-muted">
-            {example.zoneLabel}
-          </div>
-          <div className="mt-7 docket-label text-muted">{t("Area")}</div>
-          <div className="mt-1.5 text-[14px] font-semibold">{example.area}</div>
-          <div className="text-[12px] text-muted">{example.city}</div>
+    <aside className="love-note mx-auto max-w-md overflow-hidden">
+      <div className="relative aspect-[4/3] overflow-hidden">
+        <img
+          src="/date-night-illustration.webp"
+          alt=""
+          width={1440}
+          height={960}
+          fetchPriority="high"
+          decoding="async"
+          className="h-full w-full object-cover"
+          aria-hidden="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1b1117] via-transparent to-[#1b1117]/15" />
+        <div className="absolute left-4 top-4 rounded-full border border-white/20 bg-[#21151c]/80 px-3 py-2 backdrop-blur-md">
+          <span className="docket-label flex items-center gap-2 text-[9px] text-ember-200">
+            <Logo className="h-4 w-4" /> {t("Your Friday, planned")}
+          </span>
         </div>
-
-        <div className="p-5 sm:p-7">
-          <div className="docket-label text-muted">{t("Proposed route")}</div>
-          <div className="mt-5 space-y-5">
-            <PlanStop
-              time={dinnerTime}
-              title={example.venue}
-              body={t("Dinner · calm room · about {amount}", {
-                amount: dinnerAmount,
-              })}
-            />
-            <PlanStop
-              time={dessertTime}
-              title={t("Quiet dessert café")}
-              body={t("Four minutes on foot · open late")}
-            />
+        <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+          <div className="docket-label text-[9px] text-ember-200">
+            {t("Friday")} · {dateTime} · {example.area}
           </div>
-
-          <div className="mt-7 rounded-2xl border border-dashed border-[var(--tint-ember-border)] bg-[var(--tint-ember-bg)]/45 p-4">
-            <div className="docket-label text-muted">
-              {t("Who you would meet")}
-            </div>
-            <div className="mt-2 text-[16px] font-semibold">
-              {example.person} · 29 · {example.area}
-            </div>
-            <div className="mt-1 text-[12px] text-muted">
-              {t("Running / Films / Coffee")}
-            </div>
-            <p className="mt-4 text-[14px] leading-relaxed text-soft">
-              {t(
-                "You both prefer quieter first dates and share an interest in films and running.",
-              )}
-            </p>
-          </div>
-
-          <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <div className="docket-label text-muted">{t("Estimate")}</div>
-              <div className="mt-1 text-[14px] font-semibold">
-                ≈ {estimate} / {t("person")}
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <span className="rounded-full border border-[var(--border)] px-4 py-2 text-[13px] text-muted">
-                {t("Pass")}
-              </span>
-              <span className="rounded-full border border-ember-600 bg-ember-600 px-4 py-2 text-[13px] font-bold text-white shadow-[0_10px_20px_-14px_var(--shadow-ink)]">
-                {t("Accept")}
-              </span>
-            </div>
+          <div className="mt-2 font-display text-[26px] leading-tight sm:text-[30px]">
+            {t("Dinner, then dessert if it feels right.")}
           </div>
         </div>
       </div>
-    </article>
+
+      <div className="p-5">
+        <div className="flex flex-wrap gap-2 text-[10px] font-bold text-muted">
+          <span className="rounded-full bg-[var(--tint-ember-bg)] px-3 py-2">
+            {t("Meet in public")}
+          </span>
+          <span className="rounded-full bg-[var(--tint-ember-bg)] px-3 py-2">
+            ≈ {estimate} / {t("person")}
+          </span>
+          <span className="rounded-full bg-[var(--tint-ember-bg)] px-3 py-2">
+            {t("Your contact details stay yours")}
+          </span>
+        </div>
+        <div className="mt-4 flex items-center justify-between rounded-2xl border border-[var(--tint-ember-border)] bg-[var(--tint-ember-bg)] px-4 py-3">
+          <span>
+            <span className="docket-label block text-[8px] text-muted">
+              {t("Both said yes")}
+            </span>
+            <span className="mt-1 block text-[14px] font-bold text-[var(--accent-text)]">
+              {t("It's a date")}
+            </span>
+          </span>
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-ember-500 text-white">
+            ♥
+          </span>
+        </div>
+      </div>
+    </aside>
   );
 }
 

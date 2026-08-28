@@ -9,17 +9,17 @@
   <rect width="1200" height="630" fill="#100d14"/>
   <rect width="1200" height="630" fill="url(#glow)"/>
 
-  <!-- two people, one shared table -->
+  <!-- two open availability windows, one shared date -->
   <g transform="translate(96,84)">
-    <circle cx="12" cy="13" r="5" fill="#e2703f"/>
-    <circle cx="36" cy="13" r="5" fill="#e2703f"/>
-    <path d="M4 33c3-7 7-10 12-10 3.2 0 5.9 1.4 8 4 2.1-2.6 4.8-4 8-4 5 0 9 3 12 10" fill="none" stroke="#e2703f" stroke-width="4" stroke-linecap="round"/>
-    <path d="M15 40h18M24 28v12" fill="none" stroke="#ec9a7e" stroke-width="3.4" stroke-linecap="round"/>
+    <circle cx="24" cy="24" r="24" fill="#3a222d"/>
+    <path d="M21 11.55h-2.55a8.7 8.7 0 0 0-8.7 8.7v5.7a8.7 8.7 0 0 0 8.7 8.7H21" fill="none" stroke="#e2703f" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M27 11.55h2.55a8.7 8.7 0 0 1 8.7 8.7v5.7a8.7 8.7 0 0 1-8.7 8.7H27" fill="none" stroke="#ec9a7e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M24 28.8c-3.825-2.25-5.4-4.275-5.4-6.225 0-1.725 1.275-3.075 3.075-3.075 1.05 0 1.875.45 2.325 1.275.525-.825 1.35-1.275 2.4-1.275 1.8 0 3.075 1.35 3.075 3.075 0 1.95-1.575 3.975-5.475 6.225Z" fill="#f08078"/>
   </g>
-  <text x="164" y="126" font-family="Georgia, 'Iowan Old Style', serif" font-size="40" fill="#f5f1ec" letter-spacing="-0.5">DateHaja</text>
+  <text x="164" y="126" font-family="Georgia, 'Iowan Old Style', serif" font-size="40" fill="#f5f1ec" letter-spacing="-0.5">Datehaja</text>
 
-  <text x="96" y="286" font-family="Georgia, 'Iowan Old Style', serif" font-size="86" fill="#f5f1ec" letter-spacing="-3">Let's date.</text>
-  <text x="96" y="382" font-family="Georgia, 'Iowan Old Style', serif" font-size="86" fill="#e2703f" letter-spacing="-3">We'll make the plan.</text>
+  <text x="96" y="286" font-family="Georgia, 'Iowan Old Style', serif" font-size="82" fill="#f5f1ec" letter-spacing="-3">Pick a night.</text>
+  <text x="96" y="382" font-family="Georgia, 'Iowan Old Style', serif" font-size="72" fill="#e2703f" letter-spacing="-3">Let's make it a date.</text>
 
   <text x="96" y="452" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="27" fill="#b8afc2">Tell us when you're free. We handle who &amp; where.</text>
 

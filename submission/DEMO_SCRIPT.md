@@ -1,6 +1,6 @@
-# DateHaja — 3-minute demo script
+# Datehaja — 3-minute demo script
 
-Completed deliverable: **`submission/DateHaja-demo.mp4`** — 2:39, 1920×1080,
+Completed deliverable: **`submission/Datehaja-demo.mp4`** — 2:39, 1920×1080,
 H.264 video with AAC English narration.
 
 Live app: https://datehaja.com
@@ -31,7 +31,7 @@ submission portal asks for an unedited browser walkthrough.
 **On screen:** redesigned landing hero.
 
 > Dating apps ask who you like, then make you swipe and chat for days.
-> DateHaja asks one smaller question: when are you free?
+> Datehaja asks one smaller question: when are you free?
 
 Click **Read the two-minute brief**. Let the connected concierge flow settle on
 screen: two availability slips, research, two locked answers, one date ticket.
@@ -71,11 +71,11 @@ Briefly show model name, latency and token evidence—do not dwell on raw logs.
 
 ## 1:32–1:50 · AgentMail keeps both people private
 
-**On screen:** the real invitation email from DateHaja Concierge.
+**On screen:** the real invitation email from Datehaja Concierge.
 
-> AgentMail gives DateHaja its own inbox. We receive separate private
+> AgentMail gives Datehaja its own inbox. We receive separate private
 > invitations, so neither person sees the other's email address—not in the app,
-> sender field or CC list. A reply goes back to DateHaja, not to the match.
+> sender field or CC list. A reply goes back to Datehaja, not to the match.
 
 ## 1:50–2:12 · Both answer privately
 
@@ -103,7 +103,7 @@ Click **Accept this date**, open **Demo controls**, then click
 
 > One acceptance reserves the evening; two finalize the same calendar event;
 > a cancellation releases it. I can also send only my name, the time and this
-> public venue to a trusted contact. The match's identity never leaves DateHaja.
+> public venue to a trusted contact. The match's identity never leaves Datehaja.
 
 Briefly reveal the private post-date check-in heading without filling it in.
 
@@ -114,7 +114,7 @@ Briefly reveal the private post-date check-in heading without filling it in.
 
 **On screen:** return to the landing hero or final date ticket.
 
-> DateHaja only asks when you're free. Let's date. We'll make the plan.
+> Datehaja only asks when you're free. Pick a night. Let's make it a date.
 
 ---
 

@@ -163,7 +163,7 @@ export default function ProfilePage() {
           <div className="min-w-0 flex-1">
             <p className="text-[14px] leading-relaxed text-soft">
               Only revealed to your match after you've <em>both</em> accepted — never
-              before. DateHaja isn't a product you browse by face.
+              before. Datehaja isn't a product you browse by face.
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Button

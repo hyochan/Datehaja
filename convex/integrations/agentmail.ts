@@ -1,7 +1,7 @@
 /**
- * AgentMail client — DateHaja's own email identity.
+ * AgentMail client — Datehaja's own email identity.
  *
- * DateHaja Concierge sends every message from its own inbox, so two people can
+ * Datehaja Concierge sends every message from its own inbox, so two people can
  * be introduced, invited, confirmed and reminded without either of them ever
  * seeing the other's email address.
  *

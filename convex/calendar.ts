@@ -162,10 +162,10 @@ export const getFeedByToken = internalQuery({
         status,
         summary:
           status === "TENTATIVE"
-            ? "DateHaja · reserved"
+            ? "Datehaja · reserved"
             : status === "CANCELLED"
-              ? "DateHaja · cancelled"
-              : `DateHaja · ${drop.theme || drop.title}`,
+              ? "Datehaja · cancelled"
+              : `Datehaja · ${drop.theme || drop.title}`,
         description:
           status === "TENTATIVE"
             ? `Your evening is reserved while both people decide. This event updates automatically. ${dateUrl}`

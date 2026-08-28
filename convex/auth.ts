@@ -9,7 +9,7 @@ import type { DataModel } from "./_generated/dataModel";
  * account e-mail, which is NEVER exposed to another user. Everything a match can
  * see lives in `profiles` and is filtered through `lib/privacy.ts`.
  */
-const DateHajaPassword = Password<DataModel>({
+const DatehajaPassword = Password<DataModel>({
   profile(params) {
     const email = String(params.email ?? "").trim().toLowerCase();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -24,5 +24,5 @@ const DateHajaPassword = Password<DataModel>({
 });
 
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
-  providers: [DateHajaPassword],
+  providers: [DatehajaPassword],
 });

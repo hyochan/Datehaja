@@ -18,7 +18,7 @@ import { hasOpenAI, obj, structured } from "./integrations/openai";
  * setup and by `scripts/verify-integrations.ts`, never from the browser.
  */
 
-/** Create (or find) the DateHaja Concierge inbox and its webhook. */
+/** Create (or find) the Datehaja Concierge inbox and its webhook. */
 export const provisionAgentMail = internalAction({
   args: {
     username: v.optional(v.string()),
@@ -37,7 +37,7 @@ export const provisionAgentMail = internalAction({
     try {
       const inbox = await createInbox({
         username,
-        displayName: "DateHaja Concierge",
+        displayName: "Datehaja Concierge",
         clientId: "datehaja-concierge-v1",
       });
       inboxId = inbox.inbox_id;
@@ -196,9 +196,9 @@ export const verifyIntegrations = internalAction({
           const sent = await sendMessage({
             inboxId,
             to: args.sendTestEmailTo,
-            subject: "DateHaja Concierge — integration check",
-            text: "This is a live delivery test from the DateHaja Concierge inbox. Reply to this message to exercise the inbound webhook.",
-            html: "<p>This is a live delivery test from the <strong>DateHaja Concierge</strong> inbox.</p><p>Reply to this message to exercise the inbound webhook.</p>",
+            subject: "Datehaja Concierge — integration check",
+            text: "This is a live delivery test from the Datehaja Concierge inbox. Reply to this message to exercise the inbound webhook.",
+            html: "<p>This is a live delivery test from the <strong>Datehaja Concierge</strong> inbox.</p><p>Reply to this message to exercise the inbound webhook.</p>",
             labels: ["integration_check"],
             idempotencyKey: `verify-${args.sendTestEmailTo}-${new Date().toISOString().slice(0, 13)}`,
           });

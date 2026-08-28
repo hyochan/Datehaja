@@ -1,4 +1,4 @@
-/** DateHaja Concierge email templates. Plain text and HTML, one source of truth. */
+/** Datehaja Concierge email templates. Plain text and HTML, one source of truth. */
 
 export type EmailContent = { subject: string; text: string; html: string };
 
@@ -18,13 +18,13 @@ function shell(body: string, footerNote: string): string {
     <tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border:1px solid ${BRAND.border};border-radius:18px;overflow:hidden;">
         <tr><td style="padding:28px 32px 8px 32px;">
-          <div style="font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:${BRAND.muted};font-weight:600;">DateHaja</div>
+          <div style="font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:${BRAND.muted};font-weight:600;">Datehaja</div>
         </td></tr>
         <tr><td style="padding:8px 32px 28px 32px;">${body}</td></tr>
       </table>
       <div style="max-width:520px;margin:18px auto 0;font-size:12px;line-height:1.6;color:${BRAND.muted};text-align:left;">
         ${footerNote}<br>
-        You can change what DateHaja emails you, or pause matching entirely, in Settings.
+        You can change what Datehaja emails you, or pause matching entirely, in Settings.
       </div>
     </td></tr>
   </table>
@@ -78,13 +78,13 @@ export function welcomeEmail(args: {
   const subject = "You're ready for your first date";
   const text = `Hi ${args.firstName},
 
-You're set up. From here, DateHaja only needs one thing from you: when you're free.
+You're set up. From here, Datehaja only needs one thing from you: when you're free.
 
 We'll look for someone compatible in your area, plan a real date at a real place, and send it to you both privately. You say yes or pass. Nobody gets your email address, your phone number, or your exact location — not even your match.
 
-Open DateHaja: ${args.url}
+Open Datehaja: ${args.url}
 
-— DateHaja Concierge`;
+— Datehaja Concierge`;
 
   return {
     subject,
@@ -92,7 +92,7 @@ Open DateHaja: ${args.url}
     html: shell(
       h1("You're set up.") +
         p(
-          `Hi ${args.firstName}, from here DateHaja only needs one thing from you: when you're free.`,
+          `Hi ${args.firstName}, from here Datehaja only needs one thing from you: when you're free.`,
         ) +
         p(
           "We'll look for someone compatible nearby, plan a real date at a real place, and send it to you both privately. You say yes or pass.",
@@ -101,7 +101,7 @@ Open DateHaja: ${args.url}
           "Nobody gets your email address, your phone number, or your exact location — not even your match.",
         ) +
         `<div style="margin-top:20px;">${button(args.url, "Add your availability")}</div>`,
-      "You're getting this because you created a DateHaja account.",
+      "You're getting this because you created a Datehaja account.",
     ),
   };
 }
@@ -127,7 +127,7 @@ Accept or pass: ${d.url}
 
 If you pass, nothing happens to your profile and they never find out it was you.
 
-— DateHaja Concierge`;
+— Datehaja Concierge`;
 
   return {
     subject,
@@ -147,7 +147,7 @@ If you pass, nothing happens to your profile and they never find out it was you.
          </div>` +
         `<div style="margin-top:4px;">${button(d.url, "Open your date plan")}</div>` +
         `<p style="margin:18px 0 0 0;font-size:13px;line-height:1.6;color:${BRAND.muted};">If you pass, nothing happens to your profile and they never find out it was you.</p>`,
-      "You're getting this because you asked DateHaja to find you a date.",
+      "You're getting this because you asked Datehaja to find you a date.",
     ),
   };
 }
@@ -164,7 +164,7 @@ If we can't find the right person in time, we'll cancel rather than force a bad 
 
 Your date plan: ${d.url}
 
-— DateHaja Concierge`;
+— Datehaja Concierge`;
 
   return {
     subject,
@@ -206,7 +206,7 @@ Full details: ${d.url}
 
 You won't need to exchange numbers. If something changes, use the date plan page — there are a few one-tap messages for exactly that.
 
-— DateHaja Concierge`;
+— Datehaja Concierge`;
 
   return {
     subject,
@@ -245,7 +245,7 @@ Details: ${d.url}
 
 If you can't make it, cancel from the date plan page so we can tell them properly.
 
-— DateHaja Concierge`;
+— Datehaja Concierge`;
 
   return {
     subject,
@@ -272,7 +272,7 @@ We couldn't find the right person for your ${d.when} date in ${d.area}, so we ca
 
 Your availability is still open and we'll keep looking for the next one.
 
-— DateHaja Concierge`;
+— Datehaja Concierge`;
 
   return {
     subject,
@@ -285,7 +285,7 @@ Your availability is still open and we'll keep looking for the next one.
         p(
           "Your availability is still open and we'll keep looking for the next one.",
         ) +
-        `<div style="margin-top:16px;">${button(d.url, "Open DateHaja")}</div>`,
+        `<div style="margin-top:16px;">${button(d.url, "Open Datehaja")}</div>`,
       "You're getting this because you accepted a date plan that didn't fill.",
     ),
   };
@@ -303,7 +303,7 @@ ${d.reason}
 
 Your availability is still open — we'll keep looking.
 
-— DateHaja Concierge`;
+— Datehaja Concierge`;
 
   return {
     subject,
@@ -313,7 +313,7 @@ Your availability is still open — we'll keep looking.
         p(`${d.when} · ${d.area}, ${d.city}`) +
         p(d.reason) +
         p("Your availability is still open — we'll keep looking.") +
-        `<div style="margin-top:16px;">${button(d.url, "Open DateHaja")}</div>`,
+        `<div style="margin-top:16px;">${button(d.url, "Open Datehaja")}</div>`,
       "You're getting this because you were part of a cancelled date plan.",
     ),
   };
@@ -331,7 +331,7 @@ ${d.theme}
 
 Have a look: ${d.url}
 
-— DateHaja Concierge`;
+— Datehaja Concierge`;
 
   return {
     subject,
@@ -358,12 +358,12 @@ export function safetyEmail(args: {
 }): EmailContent {
   return {
     subject: args.headline,
-    text: `Hi ${args.firstName},\n\n${args.body}\n\nSafety Center: ${args.url}\n\n— DateHaja Concierge`,
+    text: `Hi ${args.firstName},\n\n${args.body}\n\nSafety Center: ${args.url}\n\n— Datehaja Concierge`,
     html: shell(
       h1(args.headline) +
         p(args.body) +
         `<div style="margin-top:16px;">${button(args.url, "Open the Safety Center")}</div>`,
-      "You're getting this because it affects your safety on DateHaja.",
+      "You're getting this because it affects your safety on Datehaja.",
     ),
   };
 }
@@ -375,18 +375,18 @@ export function trustedContactPlanEmail(args: {
   venue: string;
   address: string;
 }): EmailContent {
-  const subject = `${args.memberFirstName} shared a safety plan from DateHaja`;
+  const subject = `${args.memberFirstName} shared a safety plan from Datehaja`;
   const text = `Hi ${args.contactName},
 
-${args.memberFirstName} chose you as their trusted contact and asked DateHaja to share this plan.
+${args.memberFirstName} chose you as their trusted contact and asked Datehaja to share this plan.
 
 When: ${args.when}
 Public venue: ${args.venue}
 Address: ${args.address}
 
-This message does not include the other person's identity or contact details. DateHaja will never ask you for money, a password, or a verification code.
+This message does not include the other person's identity or contact details. Datehaja will never ask you for money, a password, or a verification code.
 
-— DateHaja Concierge`;
+— Datehaja Concierge`;
 
   return {
     subject,
@@ -394,7 +394,7 @@ This message does not include the other person's identity or contact details. Da
     html: shell(
       h1(`${args.memberFirstName} shared their plan.`) +
         p(
-          `Hi ${args.contactName}, ${args.memberFirstName} chose you as their trusted contact and asked DateHaja to send this safety note.`,
+          `Hi ${args.contactName}, ${args.memberFirstName} chose you as their trusted contact and asked Datehaja to send this safety note.`,
         ) +
         `<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin:4px 0 18px 0;border-top:1px solid ${BRAND.border};">
           ${detailRow("When", args.when)}
@@ -402,9 +402,9 @@ This message does not include the other person's identity or contact details. Da
           ${detailRow("Address", args.address)}
         </table>` +
         p(
-          "This message does not include the other person's identity or contact details. DateHaja will never ask you for money, a password, or a verification code.",
+          "This message does not include the other person's identity or contact details. Datehaja will never ask you for money, a password, or a verification code.",
         ),
-      `${args.memberFirstName} asked DateHaja to send this one-time safety plan to you.`,
+      `${args.memberFirstName} asked Datehaja to send this one-time safety plan to you.`,
     ),
   };
 }
@@ -418,7 +418,7 @@ export function conciergeReply(args: {
     subject: "Re: your date plan",
     text: `Hi ${args.firstName},
 
-Thanks for writing in — this reached DateHaja Concierge and we've logged it.
+Thanks for writing in — this reached Datehaja Concierge and we've logged it.
 
 A few things you can do straight away from the app:
 · Accept or pass on a date plan
@@ -426,15 +426,15 @@ A few things you can do straight away from the app:
 · Report someone, or block them
 · Pause matching entirely
 
-Open DateHaja: ${args.url}
+Open Datehaja: ${args.url}
 
 If this was about safety, use the Report option in the app — it reaches us with the context attached.
 
-— DateHaja Concierge`,
+— Datehaja Concierge`,
     html: shell(
       h1("We got your message.") +
         p(
-          "Thanks for writing in — this reached DateHaja Concierge and we've logged it.",
+          "Thanks for writing in — this reached Datehaja Concierge and we've logged it.",
         ) +
         `<ul style="margin:0 0 14px 0;padding-left:18px;font-size:15px;line-height:1.7;color:${BRAND.ink};">
            <li>Accept or pass on a date plan</li>
@@ -442,9 +442,9 @@ If this was about safety, use the Report option in the app — it reaches us wit
            <li>Report someone, or block them</li>
            <li>Pause matching entirely</li>
          </ul>` +
-        `<div style="margin-top:4px;">${button(args.url, "Open DateHaja")}</div>` +
+        `<div style="margin-top:4px;">${button(args.url, "Open Datehaja")}</div>` +
         `<p style="margin:18px 0 0 0;font-size:13px;line-height:1.6;color:${BRAND.muted};">If this was about safety, use the Report option in the app — it reaches us with the context attached.</p>`,
-      "You're getting this because you emailed DateHaja Concierge.",
+      "You're getting this because you emailed Datehaja Concierge.",
     ),
   };
 }

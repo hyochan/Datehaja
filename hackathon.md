@@ -1,6 +1,6 @@
 # Hackathon log
 
-- **Project:** DateHaja
+- **Project:** Datehaja
 - **Event:** Convex All Gas Hackathon
 - **What it does:** Asks only when you're free, then researches a real date at a real venue, matches you with someone compatible, and privately invites you both — without either of you seeing the other's contact details.
 - **Live app:** https://datehaja.com
@@ -12,7 +12,7 @@
 - **Auth:** Convex Auth
 - **AI models:** gpt-5.6-luna (configured default, with a cheapest-capable fallback ladder in `convex/integrations/openai.ts`)
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-08-28T18:07:30Z
+- **Last updated:** 2026-08-28T19:33:52Z
 
 ## Log
 
@@ -362,7 +362,7 @@ pass (`src/pages/LandingPage.tsx`, `src/styles/index.css`, `src/App.tsx`,
 
 ### 2026-08-28 - cef5dba
 Turned the service scenario into one connected concierge desk: two availability
-slips travel through DateHaja's live research, become separate locked replies,
+slips travel through Datehaja's live research, become separate locked replies,
 and merge into a final public-place date ticket. The landing example now adapts
 its city, neighbourhood, time format, time zone, currency, budget, venue, and
 sample person to each of the ten launch locales instead of presenting Seoul to
@@ -406,7 +406,7 @@ and a private note. None of it is returned to the other participant.
 Added a consent-based safety circle rather than collecting raw identity
 documents: one trusted contact can receive the user's first name, confirmed
 time, and public venue on explicit request, while the match's identity and
-contact details stay private. DateHaja continues to state plainly that it does
+contact details stay private. Datehaja continues to state plainly that it does
 not verify identity. The growth plan concentrates liquidity in one Seoul wedge
 before expanding city by city, and the three-minute demo now includes the
 calendar and trusted-contact proof.
@@ -448,3 +448,99 @@ were emitted.
 
 The active production AgentMail address remains the original
 `datedrop-concierge@agentmail.to`; changing that third-party inbox is isolated
+from the application deploy so the working webhook is not silently replaced.
+Completed a 2:39 narrated 1080p H.264/AAC submission cut at
+`submission/Datehaja-demo.mp4`, based on the production E2E evidence above.
+
+### 2026-08-29 - 1c07262
+Normalized the product name casing to `Datehaja`, reflecting that
+“haja” is a single Korean verb rather than a second name. Updated every
+user-visible surface and technical reference: the 10-locale dictionary,
+authentication and safety copy, Concierge emails, calendar events, metadata,
+Open Graph artwork, README, growth and social material, demo script, captions,
+and the narrated video itself. Renamed the final asset to
+`submission/Datehaja-demo.mp4`; an exact tracked-file search finds no old-case
+occurrences.
+
+Verified all 199 tests, typecheck, production build, and lint with no errors
+(existing warnings only). Re-encoded and fully decoded the 159.3-second,
+1920×1080 H.264/AAC video and visually checked its title and final frames.
+
+Deployed the new casing to Convex production `merry-bass-190`, the Convex
+static-hosting fallback (deployment
+`af3772aa-857d-4951-a21b-30146c7a9a23`), and Vercel production (deployment
+`dpl_2MYSHjJAjAAaFjde8kaBUei1GfNJ`, aliased to
+`https://datehaja.com`). Fresh production HTML from both hosts and a real
+browser accessibility pass contain `Datehaja` only. The health endpoint still
+reports OpenAI, Firecrawl, AgentMail, its inbox, and its webhook ready.
+
+### 2026-08-29 - active invitation brand and growth loop
+
+Shifted the brand voice from product narration to a direct human invitation:
+`Pick a night. Let's make it a date.` and
+`저녁 하나 비워봐. 우리, 데이트하자.` The landing hero, calls to action,
+footer, document metadata, Open Graph artwork, demo copy, social copy, and all
+non-English landing translations now use the same active direction.
+
+Added the operational growth unit, **Datehaja Night**: concentrate a trusted
+Seoul cohort into three upcoming evenings, match the pool together, collect
+private next-morning check-ins, and reopen availability in one tap. The growth
+plan now distinguishes density, anonymous proof, and venue loops and uses safe
+completed dates per active neighbourhood per week as its north-star metric.
+
+Verified 199 tests, typecheck, and production build. Browser QA confirmed the
+new English and Korean landing layouts, language switcher, CTA labels, metadata,
+and 1200×630 social artwork.
+
+Deployed the updated landing to Vercel production (deployment
+`dpl_E4QsU1ieEciML7B9qeG3Q3qLQbz3`, aliased to `https://datehaja.com`) and the
+Convex static-hosting fallback (deployment
+`134efd45-59f8-49b1-812d-664aad59fed2`). Fresh HTML from both hosts contains
+the new title, and `/healthz` reports OpenAI, Firecrawl, AgentMail, its inbox,
+and its webhook ready.
+
+### 2026-08-29 - date-window brand mark
+
+Replaced the literal two-people-and-table illustration with a simpler symbol:
+two open availability windows face each other and a small heart appears in the
+shared space. The mark now communicates the product's actual transformation —
+two schedules becoming one date — without relying on a generic AI sparkle.
+
+Applied the same geometry to the React interface, SVG favicon, 180×180 Apple
+touch icon, and 1200×630 Open Graph card. Verified the icon at 512px, 180px,
+32px, and in the social composition, then passed all 199 tests, typecheck, and
+the production build.
+
+Deployed the mark to Vercel production (deployment
+`dpl_B6WffSbmcf1c5a2gW2h9WjGV8nnt`, aliased to `https://datehaja.com`) and the
+Convex static-hosting fallback (deployment
+`c8486661-85d2-4e3b-9bb3-d1781e0a7465`). The live favicon and Open Graph PNG
+match the local assets byte for byte, and production integration health remains
+fully ready.
+
+### 2026-08-29 - customer-centred landing story
+
+Replaced the landing page's internal-system diagrams with the customer's actual
+journey. The hero now shows the emotional outcome — a real first date in a safe
+public bistro — alongside a concise Friday plan, mutual acceptance state,
+budget, privacy, and public-place promise. Removed the large A/B pipeline and
+technical “availability docket” presentation.
+
+The new three-moment flow is written entirely from the user's perspective:
+choose one evening, receive one considered plan, and answer privately. Each
+step now shows the exact small choice the person makes and the useful thing they
+receive, ending with a calendar-ready confirmed date. Added complete
+translations for every new phrase across all ten supported locales.
+
+Generated a bespoke, text-free editorial illustration of two adults beginning
+a first date in a staffed Seoul neighbourhood bistro. The warm paper-textured
+scene is served as a 1440×960 WebP at 123 KB and uses explicit dimensions and
+high-priority loading to avoid layout shift. It does not imply a testimonial or
+depict a private or unsafe venue.
+
+Deployed the redesigned landing to Vercel production (deployment
+`dpl_Dr6wCacBP7C4s9etn9zvxyZuBQnc`, aliased to `https://datehaja.com`) and the
+Convex static-hosting fallback (deployment
+`fb7e6b01-6fe7-4c4a-aa61-7b03b50dedaf`). The live illustration matches the
+optimized local asset byte for byte, the production bundle contains the new
+customer-journey copy, and integration health remains fully ready.

@@ -27,12 +27,12 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Link
             to="/dashboard"
             className="flex items-center gap-2.5"
-            aria-label="DateHaja"
+            aria-label="Datehaja"
           >
             <Logo className="h-8 w-8" />
             <span className="leading-none">
               <span className="brand-wordmark block text-[20px] font-medium">
-                DateHaja
+                Datehaja
               </span>
               <span className="docket-label mt-1 block text-[8px] text-muted">
                 {t("Private date concierge")}

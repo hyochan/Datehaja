@@ -43,7 +43,7 @@ export default function DemoPage() {
         </div>
         <h1 className="text-[28px] leading-tight">Demo controls</h1>
         <p className="mt-1.5 text-[15.5px] leading-relaxed text-soft">
-          DateHaja needs two people. These are fictional profiles seeded into this
+          Datehaja needs two people. These are fictional profiles seeded into this
           deployment so you can watch the whole loop — matching, research,
           invitation, acceptance, confirmation — without recruiting a friend.
         </p>
@@ -152,7 +152,7 @@ export default function DemoPage() {
           </ul>
         )}
         <p className="mt-3 px-1 text-[13px] leading-relaxed text-muted">
-          "They pass" is the interesting one: DateHaja keeps your acceptance
+          "They pass" is the interesting one: Datehaja keeps your acceptance
           alive and starts looking for someone else who fits the same plan,
           rather than cancelling on you.
         </p>
@@ -235,7 +235,7 @@ export default function DemoPage() {
               "Open the date plan that lands. Expand “How we built this” to see the live pages Firecrawl crawled and the model runs behind the plan.",
               "Accept it.",
               "Come back here and hit “They accept”. If you have a second browser open on the same account, watch it flip to “It's a date” without a refresh.",
-              "Or hit “They pass” instead, and watch DateHaja go looking for a replacement while keeping your evening held.",
+              "Or hit “They pass” instead, and watch Datehaja go looking for a replacement while keeping your evening held.",
             ].map((step, index) => (
               <li key={step} className="flex gap-3">
                 <span className="mt-0.5 w-4 shrink-0 text-[13px] font-semibold text-[var(--accent-text)]">

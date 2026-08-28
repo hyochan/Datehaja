@@ -1,8 +1,9 @@
-# DateHaja
+# Datehaja
 
-**Let's date. We'll make the plan.**
+**Pick a night. Let's make it a date.**
 
-**데이트하자** means “let's go on a date” in Korean. DateHaja never asks who
+**데이트하자** means “let's go on a date” in Korean: a warm, direct invitation,
+not a dating-app label. Datehaja never asks who
 you like. It asks when you're free — then researches a real date at a real
 place, works out who you'd actually enjoy it with, and privately invites you
 both. No swiping. No endless chats. No exchanging contact information.
@@ -24,7 +25,7 @@ And to get that far, you traded your phone number, your Instagram, or your email
 
 Invert it.
 
-| Every other dating app                                                              | DateHaja                                                                                              |
+| Every other dating app                                                              | Datehaja                                                                                              |
 | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
 | Browse → Swipe → Match → Chat forever → Maybe decide to meet → Work out where to go | Say when you're free → We find someone compatible → We plan a real date → You both say yes → You meet |
 
@@ -32,20 +33,20 @@ A **date plan** is not a match. It's a time, a real place found by live web
 research, an estimated cost, a short honest reason it suits you both, and one
 decision to make: accept or pass.
 
-## How DateHaja works
+## How Datehaja works
 
-1. **You set availability.** "Saturday, 6–10:30 PM." That's the only thing DateHaja ever asks of you.
+1. **You set availability.** "Saturday, 6–10:30 PM." That's the only thing Datehaja ever asks of you.
 2. **Hard filters run in code.** Age, mutual gender interest, distance, genuine availability overlap, blocks, moderation state, budget, shared language. This stage is pure TypeScript and is the only thing allowed to exclude anyone.
 3. **Survivors are scored deterministically.** Shared interests, compatible date styles, distance, overlap length, budget fit, lifestyle and atmosphere fit — each contributing a known weight, with the signals recorded alongside the score.
 4. **OpenAI ranks the shortlist** and explains, in language you could show either person, why a particular pairing would work. It never sees a pair that failed step 2, and it cannot overrule a rule.
 5. **Firecrawl researches the actual evening.** Live web search around the midpoint of the two people, filtered by the date types, budget, dietary needs and accessibility requirements they both stated. Every venue keeps its source URL, a verbatim evidence snippet, and a timestamp.
 6. **OpenAI writes the plan** from those researched venues only — one or two stops, inside budget, respecting every stated constraint.
-7. **DateHaja Concierge invites both people privately**, by email, from its own AgentMail inbox. Neither sees the other's address.
+7. **Datehaja Concierge invites both people privately**, by email, from its own AgentMail inbox. Neither sees the other's address.
 8. **They independently accept or pass.** Neither learns the other's answer until it's a date.
-9. **If one passes,** the other's evening stays held and DateHaja looks for someone else who fits the same plan — rather than cancelling on the person who said yes.
+9. **If one passes,** the other's evening stays held and Datehaja looks for someone else who fits the same plan — rather than cancelling on the person who said yes.
 10. **If nobody suitable is found before the cutoff,** the plan expires gracefully and says so honestly: _we couldn't find the right match for this date, so we cancelled it rather than force a poor one._
 11. **Your calendar follows the same lifecycle.** One acceptance creates a tentative reservation; two acceptances finalize it; a withdrawal, cancellation, or unsuccessful replacement marks that same event cancelled. Google Calendar, Apple Calendar, Outlook, and other iCalendar clients can subscribe through a private capability URL.
-12. **A trusted contact can receive the plan.** Only when the user asks, DateHaja Concierge sends their first name, time, and public venue — never the match's identity or contact details.
+12. **A trusted contact can receive the plan.** Only when the user asks, Datehaja Concierge sends their first name, time, and public venue — never the match's identity or contact details.
 13. **After the planned end, each person can check in privately.** Outcome, safety, whether they would meet again, and venue quality are optional and never shown to the other participant.
 
 ## Architecture
@@ -104,7 +105,7 @@ flowchart LR
 
 ## Why Convex
 
-Convex isn't the database behind DateHaja; it's the whole backend, and the product would be materially worse on anything else.
+Convex isn't the database behind Datehaja; it's the whole backend, and the product would be materially worse on anything else.
 
 - **Realtime is the product.** When your match accepts, your screen says _It's a date_ without a refresh, a poll, or a socket you wrote. Every screen in the app is a `useQuery` subscription over the same documents the background jobs are writing.
 - **Every mutation is a transaction.** Accepting a date plan reads both participants, derives the next lifecycle state, patches the plan, books two availability windows and writes an audit event — atomically. There is no state where one person is confirmed and the other isn't.
@@ -137,7 +138,7 @@ Design rules the code enforces:
 
 ## How Firecrawl is used
 
-Firecrawl is DateHaja's research engine, not a restaurant database. `convex/research.ts` turns a matched pair into two to four real searches — informed by their shared date types, the vibe they both prefer, their dietary constraints and the neighbourhood between them — and runs them live against `/v2/search` with `scrapeOptions` so the page content comes back in the same round trip.
+Firecrawl is Datehaja's research engine, not a restaurant database. `convex/research.ts` turns a matched pair into two to four real searches — informed by their shared date types, the vibe they both prefer, their dietary constraints and the neighbourhood between them — and runs them live against `/v2/search` with `scrapeOptions` so the page content comes back in the same round trip.
 
 What gets persisted for every run:
 
@@ -151,16 +152,16 @@ The resulting date plan is grounded in those records, and the app shows them: op
 
 ## How AgentMail is used
 
-AgentMail is DateHaja's communication identity. This is the mechanism that makes the core privacy promise true rather than aspirational: **two people can be introduced, invited, confirmed, reminded and cancelled on without either ever seeing the other's email address.**
+AgentMail is Datehaja's communication identity. This is the mechanism that makes the core privacy promise true rather than aspirational: **two people can be introduced, invited, confirmed, reminded and cancelled on without either ever seeing the other's email address.**
 
-- A dedicated **DateHaja Concierge** inbox sends every message. Your address is the recipient, never the sender, never a CC. Two participants on the same date plan are always mailed separately.
+- A dedicated **Datehaja Concierge** inbox sends every message. Your address is the recipient, never the sender, never a CC. Two participants on the same date plan are always mailed separately.
 - Ten message types: welcome, invitation, accepted-and-waiting, confirmed, reminder, updated, cancelled, expired, safety, and concierge reply.
 - Every send carries an **`Idempotency-Key`**, so a retried job re-sends nothing.
 - Every send is logged to `emailMessages` with its AgentMail message and thread id, and the thread id is stored on the participant so inbound mail can be traced back to a person and a date plan.
 - **Notification preferences are checked before every send.** Safety mail is the only category that ignores them.
 - Inbound mail arrives at `POST /webhooks/agentmail`. The **Svix signature is verified against the raw body** before parsing, with a five-minute replay window. The `svix` npm package depends on Node crypto and cannot run in a Convex HTTP action, so the algorithm is implemented directly with Web Crypto in `convex/integrations/agentmail.ts` — and tested against signatures generated the same way Svix generates them.
 - **Processing is idempotent on `event_id`.** A duplicate delivery is acknowledged and dropped; the same event can never be processed twice.
-- Replying to a Concierge email reaches DateHaja, not your match. The Concierge replies with what you can do from the app — DateHaja deliberately does not accept "yes" by email, because acting on a date needs a real session.
+- Replying to a Concierge email reaches Datehaja, not your match. The Concierge replies with what you can do from the app — Datehaja deliberately does not accept "yes" by email, because acting on a date needs a real session.
 
 ## Privacy and safety
 
@@ -172,20 +173,20 @@ Privacy isn't a settings page here, it's the product mechanism.
 
 - **Location is a neighbourhood, not a point.** Coordinates are rounded to ~1 km before storage and never leave the server. Distance is never shown as a number, because a distance plus a map inverts to a location.
 - **Bios are scrubbed** of email addresses, phone numbers, links and messenger handles before anyone else can read them.
-- **Photos are optional and revealed only after both people accept.** DateHaja is not a product you browse by face.
+- **Photos are optional and revealed only after both people accept.** Datehaja is not a product you browse by face.
 - **Pre-date messaging is a fixed list of eight preset lines** — "I'm running 10 minutes late", "I'm here" — with no free-text field, so there is nowhere to slip a phone number and no pressure to.
-- **Trusted contacts are optional and purposeful.** DateHaja stores a name and email only after the user confirms consent, and uses them only when that user explicitly shares a confirmed public-place plan.
+- **Trusted contacts are optional and purposeful.** Datehaja stores a name and email only after the user confirms consent, and uses them only when that user explicitly shares a confirmed public-place plan.
 - **Post-date responses are private.** A match cannot read the other person's outcome, safety answer, venue score, note, or request for follow-up.
 
 On safety:
 
 - **18+ only**, confirmed at sign-up and enforced in the hard filters.
-- **DateHaja does not verify identity.** No ID checks, no photo verification, no background checks. The app says this plainly on the landing page, at sign-up, and in the Safety Center, because a product that implies safety it hasn't earned is more dangerous than one that's honest.
+- **Datehaja does not verify identity.** No ID checks, no photo verification, no background checks. The app says this plainly on the landing page, at sign-up, and in the Safety Center, because a product that implies safety it hasn't earned is more dangerous than one that's honest.
 - **Blocking is mutual, immediate and permanent** until undone: it cancels any shared date plan, frees both evenings, and removes the pair from each other's candidate pool in both directions.
 - **Reports of harassment or of an apparent minor immediately restrict the reported account** pending review.
 - **One switch takes you out of everyone's candidate pool immediately.** A search already in flight may still deliver one final invitation; nothing follows it.
-- Every date is at a real, public, currently-operating venue. DateHaja never plans anything at a private address.
-- DateHaja does not collect government ID scans. A future identity-verification integration must use a specialist provider and retain only a verification status/reference, never raw documents.
+- Every date is at a real, public, currently-operating venue. Datehaja never plans anything at a private address.
+- Datehaja does not collect government ID scans. A future identity-verification integration must use a specialist provider and retain only a verification status/reference, never raw documents.
 
 ## Demo mode
 
@@ -263,7 +264,7 @@ Two more are **produced, not typed**. Once `AGENTMAIL_API_KEY` is set:
 bun run provision:agentmail
 ```
 
-creates the DateHaja Concierge inbox and its Svix-signed webhook and prints
+creates the Datehaja Concierge inbox and its Svix-signed webhook and prints
 `AGENTMAIL_INBOX_ID` and `AGENTMAIL_WEBHOOK_SECRET`. Put those in `.env` and
 re-run `env:push:prod`.
 
@@ -279,7 +280,7 @@ curl https://merry-bass-190.convex.site/healthz
 
 ### Graceful degradation
 
-DateHaja is built so a provider outage degrades the product instead of breaking it:
+Datehaja is built so a provider outage degrades the product instead of breaking it:
 
 - **No OpenAI key, or the model fails** → venues are extracted with deterministic rules and the plan is composed from a template. Everything produced this way is marked `low` confidence and shown as _Unconfirmed details_. It is never presented as reasoning that didn't happen.
 - **No Firecrawl key** → both endpoints still run unauthenticated, just slower. Sites Firecrawl refuses outright (Reddit, Facebook) are excluded at search time rather than failing on scrape.
@@ -313,7 +314,7 @@ convex/
   dateDrops.ts           Lifecycle: accept, pass, withdraw, cancel, confirm, expire
   research.ts            Firecrawl research engine
   ai.ts                  OpenAI ranking, venue extraction, plan generation
-  mail.ts                DateHaja Concierge send + inbound handling
+  mail.ts                Datehaja Concierge send + inbound handling
   safety.ts              Blocking, reporting, visibility
   demo.ts                Fictional personas and demo controls
   setup.ts               Provisioning and live integration verification

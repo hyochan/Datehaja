@@ -29,7 +29,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
 
     if (signingUp && !ageConfirmed) {
       setError(
-        t("DateHaja is for adults only — please confirm you're 18 or over."),
+        t("Datehaja is for adults only — please confirm you're 18 or over."),
       );
       return;
     }
@@ -81,11 +81,11 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
         <Link
           to="/"
           className="inline-flex items-center gap-3 self-start"
-          aria-label={t("DateHaja home")}
+          aria-label={t("Datehaja home")}
         >
           <Logo className="h-9 w-9" />
           <span>
-            <span className="brand-wordmark block text-[22px]">DateHaja</span>
+            <span className="brand-wordmark block text-[22px]">Datehaja</span>
             <span className="docket-label mt-1 block text-[8px] text-sand-400">
               {t("Private date concierge")}
             </span>
@@ -133,11 +133,11 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
           <Link
             to="/"
             className="inline-flex items-center gap-2.5 lg:hidden"
-            aria-label={t("DateHaja home")}
+            aria-label={t("Datehaja home")}
           >
             <Logo className="h-8 w-8" />
             <span className="brand-wordmark text-[21px] font-medium">
-              DateHaja
+              Datehaja
             </span>
           </Link>
           <LocaleSwitcher compact />
@@ -259,7 +259,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
                     />
                     <span>
                       {t(
-                        "I'm 18 or over, and I understand DateHaja does not verify identity.",
+                        "I'm 18 or over, and I understand Datehaja does not verify identity.",
                       )}
                     </span>
                   </label>
@@ -303,7 +303,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
 
               <p className="mt-7 border-t border-[var(--border)] pt-5 text-[12px] leading-relaxed text-muted">
                 {t(
-                  "Your email is used only by DateHaja Concierge to reach you. It is never shown to another user.",
+                  "Your email is used only by Datehaja Concierge to reach you. It is never shown to another user.",
                 )}{" "}
                 <Link to="/privacy" className="underline underline-offset-4">
                   {t("How privacy works")}

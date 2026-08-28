@@ -239,12 +239,12 @@ function PublicPage({ children }: { children: React.ReactNode }) {
             <Link
               to="/"
               className="flex items-center gap-2.5"
-              aria-label={t("DateHaja home")}
+              aria-label={t("Datehaja home")}
             >
               <Logo className="h-8 w-8" />
               <span>
                 <span className="brand-wordmark block text-[20px] leading-none">
-                  DateHaja
+                  Datehaja
                 </span>
                 <span className="docket-label mt-1 block text-[8px] text-muted">
                   {t("Public record")}

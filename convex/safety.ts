@@ -36,7 +36,7 @@ import { describeDateTime } from "./lib/time";
  * blocking so someone can flag a real problem without being forced to also cut
  * contact, and vice versa.
  *
- * DateHaja does NOT verify identity. Nothing in the product claims that it does.
+ * Datehaja does NOT verify identity. Nothing in the product claims that it does.
  */
 
 /* ------------------------- private safety profile ------------------------- */
@@ -303,7 +303,7 @@ export const deliverSafetyPlan = internalAction({
         text: content.text,
         html: content.html,
         labels: ["safety_plan"],
-        headers: { "X-DateHaja-Id": context.share.dropId },
+        headers: { "X-Datehaja-Id": context.share.dropId },
         idempotencyKey: `safety-plan-${args.shareId}`,
       });
       await ctx.runMutation(internal.mail.logEmail, {

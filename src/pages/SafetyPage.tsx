@@ -67,7 +67,7 @@ export default function SafetyPage() {
         <h1 className="text-[28px] leading-tight">{t("Safety Center")}</h1>
         <p className="mt-1.5 text-[15.5px] leading-relaxed text-soft">
           {t(
-            "DateHaja sends you to meet a stranger in public. Here's what we do, what we don't, and what's in your hands.",
+            "Datehaja sends you to meet a stranger in public. Here's what we do, what we don't, and what's in your hands.",
           )}
         </p>
       </header>
@@ -145,7 +145,7 @@ export default function SafetyPage() {
                     />
                     <span>
                       {t(
-                        "They agreed that I can store this email for DateHaja safety plans.",
+                        "They agreed that I can store this email for Datehaja safety plans.",
                       )}
                     </span>
                   </label>
@@ -174,7 +174,7 @@ export default function SafetyPage() {
           <Card className="p-5">
             <p className="text-[14.5px] leading-relaxed text-soft">
               {t(
-                "Sign in to add a trusted contact and choose whether DateHaja checks in after a date.",
+                "Sign in to add a trusted contact and choose whether Datehaja checks in after a date.",
               )}
             </p>
             <div className="mt-4">
@@ -199,7 +199,7 @@ export default function SafetyPage() {
           </div>
           <p className="text-[15px] leading-relaxed">
             {t(
-              "DateHaja does not verify identity in any form. Everything on a profile is self-reported. We say this plainly because a product that implies safety it hasn't earned is more dangerous than one that's honest.",
+              "Datehaja does not verify identity in any form. Everything on a profile is self-reported. We say this plainly because a product that implies safety it hasn't earned is more dangerous than one that's honest.",
             )}
           </p>
           <p className="mt-3 text-[15px] leading-relaxed">
@@ -270,7 +270,7 @@ export default function SafetyPage() {
                 "Keep an eye on your drink, and leave whenever you want to — you owe a stranger nothing.",
               ),
               t(
-                "If they pressure you for your number, socials or money, report it. That's exactly what DateHaja exists to make unnecessary.",
+                "If they pressure you for your number, socials or money, report it. That's exactly what Datehaja exists to make unnecessary.",
               ),
             ].map((tip) => (
               <li
@@ -303,7 +303,7 @@ export default function SafetyPage() {
           </p>
           <p className="mt-3 text-[15px] leading-relaxed">
             {t(
-              "You can also reply to any DateHaja Concierge email. It comes to us.",
+              "You can also reply to any Datehaja Concierge email. It comes to us.",
             )}
           </p>
         </Card>

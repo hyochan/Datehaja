@@ -88,10 +88,10 @@ export function buildCalendar(events: CalendarEvent[]): string {
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//DateHaja//Private Date Concierge//EN",
+    "PRODID:-//Datehaja//Private Date Concierge//EN",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
-    "X-WR-CALNAME:DateHaja",
+    "X-WR-CALNAME:Datehaja",
     "REFRESH-INTERVAL;VALUE=DURATION:PT15M",
     "X-PUBLISHED-TTL:PT15M",
   ];

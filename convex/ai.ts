@@ -123,7 +123,7 @@ const RANK_SCHEMA = obj({
   },
 });
 
-const RANK_INSTRUCTIONS = `You match adults for a single first date on DateHaja.
+const RANK_INSTRUCTIONS = `You match adults for a single first date on Datehaja.
 
 You are given one person (the seeker) and a shortlist of candidates who have ALREADY passed every hard requirement — age, distance, mutual interest, availability, safety. Your job is only to rank how well each pairing would work as one specific first date, and to explain it in human terms.
 
@@ -331,7 +331,7 @@ const PLAN_SCHEMA = obj({
   },
 });
 
-const PLAN_INSTRUCTIONS = `You design a single first date for DateHaja.
+const PLAN_INSTRUCTIONS = `You design a single first date for Datehaja.
 
 You are given two people who have already been matched, the time window, a budget range, and a list of REAL venues found by live web research. Build one date from those venues.
 

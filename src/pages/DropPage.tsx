@@ -782,7 +782,7 @@ function ConfirmedPanel({
       <Card className="p-6">
         <SectionHeading eyebrow="Before you go" title="Quick notes" />
         <p className="-mt-2 mb-4 text-[14px] leading-relaxed text-muted">
-          A short list, on purpose. DateHaja isn't a chat app — this is just for
+          A short list, on purpose. Datehaja isn't a chat app — this is just for
           the things a real evening needs.
         </p>
 
@@ -986,7 +986,7 @@ function FeedbackPanel({ dropId }: { dropId: Id<"dateDrops"> }) {
             </h2>
             <p className="mt-1.5 max-w-md text-[14px] leading-relaxed text-soft">
               {t(
-                "Your answers are never shown to your match. They help DateHaja improve matching, venues, and safety follow-up.",
+                "Your answers are never shown to your match. They help Datehaja improve matching, venues, and safety follow-up.",
               )}
             </p>
           </div>
@@ -1088,7 +1088,7 @@ function FeedbackPanel({ dropId }: { dropId: Id<"dateDrops"> }) {
             id="date-feedback-note"
             value={note}
             maxLength={800}
-            placeholder={t("A private note for DateHaja — never your match.")}
+            placeholder={t("A private note for Datehaja — never your match.")}
             onChange={(event) => setNote(event.target.value)}
           />
         </div>

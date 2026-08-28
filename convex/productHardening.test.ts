@@ -123,7 +123,7 @@ describe("calendar lifecycle", () => {
         endMs: Date.UTC(2026, 7, 30, 11),
         updatedAt: NOW,
         status: "TENTATIVE",
-        summary: "DateHaja · reserved",
+        summary: "Datehaja · reserved",
         description: "One line\nAnother, private line",
         location: "Seongsu; Seoul",
         url: "https://example.convex.site/drop/1",

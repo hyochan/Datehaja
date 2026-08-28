@@ -18,7 +18,7 @@ export default function NotificationsPage() {
         <div>
           <h1 className="text-[28px] leading-tight">{t("Notifications")}</h1>
           <p className="mt-1.5 text-[15px] text-soft">
-            {t("Everything DateHaja has told you, newest first.")}
+            {t("Everything Datehaja has told you, newest first.")}
           </p>
         </div>
         {notifications && notifications.some((n) => !n.read) && (

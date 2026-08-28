@@ -44,7 +44,7 @@ const NEVER_PUSH = new Set([
   "SITE_URL",
 ]);
 
-/** Everything DateHaja's own code actually reads. */
+/** Everything Datehaja's own code actually reads. */
 const KNOWN = new Set([
   "OPENAI_API_KEY",
   "OPENAI_MODEL",
@@ -112,7 +112,7 @@ for (const [name, value] of push) {
   console.log(`  ${name.padEnd(26)} ${shown}`);
 }
 if (unknown.length) {
-  console.log(`\n  note: not read by DateHaja — ${unknown.join(", ")}`);
+  console.log(`\n  note: not read by Datehaja — ${unknown.join(", ")}`);
 }
 if (skipped.length) {
   console.log(`  skipped (deployment-specific or generated): ${skipped.join(", ")}`);

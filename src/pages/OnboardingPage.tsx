@@ -347,7 +347,7 @@ export default function OnboardingPage() {
             <div className="flex items-center gap-2.5">
               <Logo className="h-6 w-6" />
               <span className="brand-wordmark text-[18px] font-medium">
-                DateHaja
+                Datehaja
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -523,7 +523,7 @@ export default function OnboardingPage() {
               />
               <span>
                 {t(
-                  "I confirm I'm 18 or over. DateHaja is an adults-only service.",
+                  "I confirm I'm 18 or over. Datehaja is an adults-only service.",
                 )}
               </span>
             </label>
@@ -905,7 +905,7 @@ export default function OnboardingPage() {
                 <Logo className="h-8 w-8" />
               </div>
               <h2 className="mb-2 text-[24px]">
-                {t("You're ready for DateHaja.")}
+                {t("You're ready for Datehaja.")}
               </h2>
               <p className="mx-auto max-w-sm text-[15px] leading-relaxed text-soft">
                 {t(
@@ -1039,7 +1039,7 @@ function stepBlurb(step: number): string {
     "The parts we actually match on. Be specific rather than impressive.",
     "Mark the things that genuinely rule someone out — everything else we treat as a preference.",
     "This is what we hand to the research engine when it goes looking for places.",
-    "This is the one thing DateHaja asks of you, ever. Add a window or two.",
+    "This is the one thing Datehaja asks of you, ever. Add a window or two.",
     "That's everything. We'll take it from here.",
   ][step];
 }
