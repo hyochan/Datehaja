@@ -386,3 +386,35 @@ against recording a stale deployment, a non-deliverable `.test` mailbox, or
 private information on screen, and updated submission copy to the current 193
 tests. The video itself is not yet recorded (`submission/DEMO_SCRIPT.md`,
 `submission/SOCIAL.md`, `README.md`).
+
+### 2026-08-29 - fce2091
+Finished the private product-hardening pass around the full date lifecycle. The
+sign-in page now explains the product reason for an account through a complete
+visual handoff: each invitation belongs to one person, each answer stays
+private, and the calendar updates without exchanging contact details. The new
+copy and the safety/calendar/check-in journey are localized across the ten
+launch-market locale system.
+
+One private iCalendar subscription now derives directly from Convex state. A
+first acceptance creates a tentative reservation, two acceptances finalize the
+same event, and a withdrawal, cancellation, or unsuccessful replacement marks
+that event cancelled. Users can add it to Google Calendar or any `webcal`
+client. After a completed date, each participant can optionally record what
+happened, whether they felt safe, whether they would meet again, a venue score,
+and a private note. None of it is returned to the other participant.
+
+Added a consent-based safety circle rather than collecting raw identity
+documents: one trusted contact can receive the user's first name, confirmed
+time, and public venue on explicit request, while the match's identity and
+contact details stay private. DateDrop continues to state plainly that it does
+not verify identity. The growth plan concentrates liquidity in one Seoul wedge
+before expanding city by city, and the three-minute demo now includes the
+calendar and trusted-contact proof.
+
+Verified 199 tests, typecheck, lint with no errors, and the production build.
+Desktop and 390px browser checks found no overflow or console errors. A
+read-only Convex launch audit found no 72-hour resource/OCC insights and no
+recent failed executions on the existing production deployment; the new
+backend was pushed only to the personal dev deployment `adorable-boar-359`.
+Production and repository visibility were intentionally left unchanged during
+this private hardening pass.
