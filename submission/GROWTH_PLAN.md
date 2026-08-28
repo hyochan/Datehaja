@@ -114,3 +114,67 @@ emails, exact locations, dating preferences, or feedback notes in analytics.
 6. Keep the live app and repository public through judging.
 
 The final two steps are qualification requirements, not optional growth work.
+
+## First 14-day execution sprint
+
+### Launch day
+
+- Publish the under-three-minute product walkthrough on LinkedIn and VibeApps.
+- Invite exactly two trusted Seoul communities into a private alpha form; do
+  not open paid acquisition.
+- Admit users in small, preference-balanced cohorts so a new evening has a real
+  chance of overlapping with another one.
+- Reply personally to every first-day tester who reaches a confusing or empty
+  state.
+
+### Days 1–3 · prove activation
+
+- Target: 20 invited people, 14 completed profiles, 12 availability windows.
+- Watch the path from account creation to first open evening, not page views.
+- Interview anyone who creates an account but does not add availability. Fix
+  the top repeated objection before inviting the next cohort.
+
+### Days 4–7 · prove liquidity
+
+- Target: five invitations and at least two both-accepted DateDrops.
+- Keep the pool concentrated around Seongsu and Yeonnam.
+- Review every zero-candidate run and every pass reason. Change one constraint
+  or explanation at a time so the result is attributable.
+
+### Days 8–14 · prove safe completion
+
+- Target: three completed dates, 80% private check-in response, zero unresolved
+  unsafe reports, and one reopened availability window.
+- Ask for a product quote only after a positive private check-in. Never ask for
+  the match's name, photo, or details of the date.
+- Turn the strongest factual proof into the next clip: reserved calendar →
+  finalized event → optional trusted-contact share.
+
+## Weekly growth review
+
+Use the product's existing transactional records rather than invasive session
+replay. Review these counts once a week:
+
+1. profiles with onboarding complete;
+2. users with an open availability window;
+3. matching runs with at least one eligible candidate;
+4. invitations viewed, first acceptances, and both acceptances;
+5. confirmed dates that complete, cancel, or report a no-show;
+6. safe, uncomfortable, and follow-up-requested private check-ins;
+7. users who open another evening within 30 days.
+
+Do not report a global conversion rate while the sample is below 30 people.
+Show the raw numerator and denominator so an early result cannot look more
+certain than it is.
+
+## First outreach message
+
+> I'm testing DateDrop with a small Seoul group. You give it one evening you're
+> free; it finds someone compatible, researches a real public place, and sends
+> both people a private plan. No swiping or exchanging numbers. I'm looking for
+> honest feedback from adults who would genuinely consider one date in Seongsu
+> or Yeonnam — interested?
+
+This is an invitation to test, not a promise of a match. Never pressure someone
+to disclose dating preferences in a group channel; collect them privately in
+the product.

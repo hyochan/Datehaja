@@ -20,8 +20,8 @@ survivors deterministically, has OpenAI rank the shortlist and explain the
 pairing, sends Firecrawl to research real venues on the live web around the
 midpoint between you, composes a specific date from what it found, and has
 DateDrop Concierge invite you both privately by email from its own AgentMail
-inbox. You each accept or pass. When both say yes, both screens say *It's a
-date* — live, no refresh.
+inbox. You each accept or pass. When both say yes, both screens say _It's a
+date_ — live, no refresh.
 
 If one person passes, the other's evening stays held while DateDrop looks for
 someone else who fits the same plan. If nobody suitable turns up before the
@@ -111,50 +111,31 @@ Code: https://github.com/hyochan/datedrop
 
 > **We plan the date. You just say yes.**
 >
-> I built DateDrop for the Convex All Gas Hackathon, and the idea started with
-> something that has always bothered me about dating apps: they're excellent at
-> producing matches and terrible at producing dates.
+> Dating apps are good at creating matches and bad at creating dates.
 >
-> You browse hundreds of profiles. You swipe. You match. Then you spend four
-> days on a text conversation whose only purpose is deciding whether to have one
-> drink — and most of those conversations quietly die. The ones that survive
-> stall on the question nobody wants to ask first: so where should we go?
+> DateDrop asks for one free evening. Then it:
 >
-> And to get that far, you handed your phone number to someone you've never met.
+> - finds someone compatible who is actually free
+> - researches a real public venue with Firecrawl
+> - uses OpenAI to compose a plan from that evidence
+> - sends two separate private invitations through AgentMail
+> - updates both screens live through Convex when they say yes
 >
-> DateDrop inverts the whole thing. It never asks who you like. It asks when
-> you're free.
+> One acceptance reserves the evening. Two finalize the calendar event. If the
+> other person passes, DateDrop keeps looking instead of cancelling on the
+> person who said yes.
 >
-> From there: hard compatibility filters run in plain TypeScript. OpenAI ranks
-> what survives and explains the pairing in language you could show either
-> person. Firecrawl researches real venues on the live web around the midpoint
-> between you, filtered by what you both said you'd enjoy and what you can
-> spend. The plan is composed from what it actually found — with the source
-> page and a verbatim quote attached to every venue, visible in the app.
+> No swiping. No chat audition. No exchange of phone numbers or email addresses.
+> Afterward, each person can leave a private safety check-in that the other
+> person never sees.
 >
-> Then DateDrop Concierge invites you both privately, from its own inbox on
-> AgentMail. You each accept or pass. When both say yes, both screens say "It's
-> a date" — live, no refresh, because Convex queries are subscriptions.
->
-> Two details I'm most pleased with:
->
-> If one person passes, DateDrop doesn't cancel on the person who said yes. It
-> keeps their evening held and looks for someone else who fits the same plan.
-> And if it can't find the right person before the cutoff, it cancels honestly
-> rather than forcing a poor match.
->
-> And you can complete an entire date without your match ever having your email
-> address, your phone number, or anything more precise than your neighbourhood.
->
-> Convex is the whole backend — database, transactional mutations, actions for
-> every external call, the scheduler as the workflow engine, crons for the
-> cutoff, and the HTTP router serving both the AgentMail webhook and the React
-> app itself.
+> Built for the Convex All Gas Hackathon with @Convex, @OpenAI, Firecrawl, and
+> AgentMail.
 >
 > Live: https://merry-bass-190.convex.site
 > Code: https://github.com/hyochan/datedrop
 >
-> #Convex #OpenAI #Firecrawl #AgentMail #buildinpublic
+> #Convex #OpenAI #Firecrawl #AgentMail #BuildInPublic
 
 ---
 
