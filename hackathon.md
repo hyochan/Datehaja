@@ -12,7 +12,7 @@
 - **Auth:** Convex Auth
 - **AI models:** gpt-5.6-luna (configured default, with a cheapest-capable fallback ladder in `convex/integrations/openai.ts`)
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-08-28T13:23:03Z
+- **Last updated:** 2026-08-28T14:36:00Z
 
 ## Log
 
@@ -375,3 +375,14 @@ navigation, 1280px desktop and 390px mobile layouts, and zero horizontal
 overflow. The production build, lint (no errors), and all 193 tests pass
 (`src/pages/LandingPage.tsx`, `src/components/layout/LocaleSwitcher.tsx`,
 `src/i18n/index.tsx`).
+
+### 2026-08-28 - 3fae84d
+Rewrote the submission recording plan around the final connected-concierge
+landing and a 2:58 product walkthrough. The shot list now opens with the visual
+service flow, then proves live Convex state, Firecrawl evidence, OpenAI model
+runs, a genuinely delivered AgentMail invitation, two private acceptances, and
+an untouched second window changing to a confirmed date. Added explicit guards
+against recording a stale deployment, a non-deliverable `.test` mailbox, or
+private information on screen, and updated submission copy to the current 193
+tests. The video itself is not yet recorded (`submission/DEMO_SCRIPT.md`,
+`submission/SOCIAL.md`, `README.md`).
