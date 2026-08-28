@@ -12,7 +12,7 @@
 - **Auth:** Convex Auth
 - **AI models:** gpt-5.6-luna (configured default, with a cheapest-capable fallback ladder in `convex/integrations/openai.ts`)
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-08-27T20:13:32Z
+- **Last updated:** 2026-08-28T11:50:37Z
 
 ## Log
 
@@ -305,3 +305,14 @@ checked the light and aubergine dark themes, exercised language switching and
 the signup adult-confirmation guard in a real browser, and raised small-text and
 button contrast to accessible levels. The production build, lint (no errors),
 and all 193 tests pass (`src/`, `public/favicon.svg`, `index.html`).
+
+### 2026-08-28 - bf0c538
+Replaced the Korean display serif after visual review showed that its calligraphic
+forms and English-tuned tight leading made the hero feel dated and crowded.
+Korean now uses Noto Sans KR at a controlled 700 weight, with script-specific
+font sizing, 1.18 line height, balanced wrapping, and deliberate spacing between
+the two hero sentences. Removed synthetic Korean italics and widened the hero
+copy column so the desktop sentences each hold a clean line. Rechecked at
+1280px and 390px in a real browser with no horizontal overflow; the production
+build and all 193 tests pass (`index.html`, `src/styles/index.css`,
+`src/pages/LandingPage.tsx`).
