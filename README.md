@@ -7,7 +7,7 @@ you like. It asks when you're free — then researches a real date at a real
 place, works out who you'd actually enjoy it with, and privately invites you
 both. No swiping. No endless chats. No exchanging contact information.
 
-**Live app:** https://merry-bass-190.convex.site
+**Live app:** https://datehaja.com
 **Built for:** the [Convex All Gas Hackathon](https://www.convex.dev/hackathons/all-gas) (Convex · OpenAI · Firecrawl · AgentMail)
 
 ---
@@ -52,15 +52,15 @@ decision to make: accept or pass.
 
 ```mermaid
 flowchart TB
-    subgraph browser["Browser — merry-bass-190.convex.site"]
-        UI["React 19 SPA<br/>served by @convex-dev/static-hosting"]
+    subgraph browser["Browser — datehaja.com"]
+        UI["React 19 SPA<br/>Vercel static delivery"]
     end
 
     subgraph convex["Convex — merry-bass-190.convex.cloud"]
         Q["Queries<br/>realtime subscriptions"]
         M["Mutations<br/>transactional state"]
         A["Actions<br/>external I/O"]
-        H["HTTP actions<br/>webhooks + static site"]
+        H["HTTP actions<br/>webhooks + fallback static site"]
         C["Crons<br/>cutoffs, reminders, completion"]
         DB[("Database<br/>profiles · availability<br/>dateDrops · participants<br/>venues · aiRuns · researchRuns")]
     end
@@ -82,7 +82,7 @@ flowchart TB
     A --> AM
     AM -->|"message.received<br/>Svix-signed"| H
     H --> M
-    H -->|serves the SPA| UI
+    H -.->|convex.site fallback| UI
 ```
 
 ### The matching pipeline
@@ -110,9 +110,9 @@ Convex isn't the database behind DateHaja; it's the whole backend, and the produ
 - **Every mutation is a transaction.** Accepting a date plan reads both participants, derives the next lifecycle state, patches the plan, books two availability windows and writes an audit event — atomically. There is no state where one person is confirmed and the other isn't.
 - **Actions do the messy part, mutations keep the truth.** OpenAI, Firecrawl and AgentMail are all called from actions. They can fail, time out, or return nonsense; none of that can leave a plan half-written, because the only writes happen in small mutations with validated arguments.
 - **The scheduler is the workflow engine.** `ctx.scheduler.runAfter` chains the pipeline; crons handle the 24-hour cutoff, reminders and completion. No queue to run, no worker to deploy.
-- **`convex/http.ts` is both the webhook endpoint and the web server.** The AgentMail webhook and the React app are served from the same `*.convex.site` origin.
+- **`convex/http.ts` is both the webhook endpoint and the fallback web server.** AgentMail stays on the stable `*.convex.site` endpoint while the same React app is also available there for recovery.
 - **Calendar sync is derived, not duplicated.** A secret iCalendar feed maps the transactional date-plan and participant states to `TENTATIVE`, `CONFIRMED`, or `CANCELLED` with one stable event UID, so an external calendar cannot drift from the app's source of truth.
-- **The frontend is hosted by Convex too**, via the `@convex-dev/static-hosting` component — so the whole product is one deployment.
+- **The production domain is a thin Vercel delivery layer.** It serves the Vite build at `datehaja.com`; every stateful feature still talks directly to the same Convex production deployment. The identical build remains on `@convex-dev/static-hosting` as a fallback.
 
 Convex features used: schema, tables, indexes, queries, internal queries, mutations, internal mutations, actions, internal actions, HTTP actions, crons, scheduled functions, file storage, realtime queries, Convex Auth, and one registered component (`staticHosting`).
 
@@ -197,7 +197,7 @@ They are labelled **Demo profile** everywhere they appear, they never receive em
 
 ### Try it in 60 seconds
 
-1. Create an account at https://merry-bass-190.convex.site
+1. Create an account at https://datehaja.com
 2. Onboard (city **Seoul** — that's where the demo personas are)
 3. Add an evening you're free
 4. **Find me a date** — watch the stages advance; each one is a real document update
@@ -287,11 +287,16 @@ DateHaja is built so a provider outage degrades the product instead of breaking 
 
 ## Deployment
 
-The frontend and backend are one Convex deployment. The React SPA is served from `*.convex.site` by the `@convex-dev/static-hosting` component, and the app's own HTTP routes — Convex Auth's `/.well-known/*` endpoints and the AgentMail webhook — keep the root, with the static catch-all registered last in `convex/http.ts`.
+The backend is deployed to Convex. The production domain serves the React SPA
+from Vercel with `VITE_CONVEX_URL` pinned to the production deployment. The
+same build is also uploaded to `*.convex.site` through
+`@convex-dev/static-hosting` as a fallback. Convex Auth, the calendar feed,
+health check, and AgentMail webhook remain Convex HTTP actions.
 
 ```bash
 bunx convex deploy                                  # backend
 bunx @convex-dev/static-hosting upload --build --prod   # frontend
+vercel --prod                                       # custom-domain frontend
 ```
 
 Never run `bun run build` followed by a bare `upload --prod`: that bakes your _dev_ `VITE_CONVEX_URL` into the production bundle. `--build` lets the CLI inject the right one.

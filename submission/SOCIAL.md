@@ -44,7 +44,7 @@ Firecrawl crawled, the quote from each, and every model run — visible in the a
 199 tests. Seeded with 14 clearly-marked fictional personas so a judge can see
 the whole loop in 60 seconds without recruiting a second human.
 
-Live: https://merry-bass-190.convex.site
+Live: https://datehaja.com
 Code: https://github.com/hyochan/datehaja
 
 ---
@@ -63,7 +63,7 @@ Code: https://github.com/hyochan/datehaja
 >
 > Built for @convex All Gas 👇
 >
-> https://merry-bass-190.convex.site
+> https://datehaja.com
 
 ### Option B — the technical thread opener
 
@@ -102,7 +102,7 @@ Code: https://github.com/hyochan/datehaja
 > 6/ And if your match passes, DateHaja doesn't cancel on you. Your evening
 > stays held while it looks for someone else who fits the same plan.
 >
-> Live: https://merry-bass-190.convex.site
+> Live: https://datehaja.com
 > Code: https://github.com/hyochan/datehaja
 
 ---
@@ -132,7 +132,7 @@ Code: https://github.com/hyochan/datehaja
 > Built for the Convex All Gas Hackathon with @Convex, @OpenAI, Firecrawl, and
 > AgentMail.
 >
-> Live: https://merry-bass-190.convex.site
+> Live: https://datehaja.com
 > Code: https://github.com/hyochan/datehaja
 >
 > #Convex #OpenAI #Firecrawl #AgentMail #BuildInPublic

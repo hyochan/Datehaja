@@ -3,7 +3,7 @@
 Target: **2:55 maximum**. Show the product moving; keep architecture claims tied
 to something visible on screen.
 
-Live app: https://merry-bass-190.convex.site
+Live app: https://datehaja.com
 
 ## Before recording
 

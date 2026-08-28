@@ -3,9 +3,9 @@
 - **Project:** DateHaja
 - **Event:** Convex All Gas Hackathon
 - **What it does:** Asks only when you're free, then researches a real date at a real venue, matches you with someone compatible, and privately invites you both — without either of you seeing the other's contact details.
-- **Live app:** https://merry-bass-190.convex.site
+- **Live app:** https://datehaja.com
 - **Repo:** private
-- **Frontend:** Convex static hosting
+- **Frontend:** Vercel custom-domain delivery + Convex static-hosting fallback
 - **Convex deployment:** https://merry-bass-190.convex.cloud
 - **Components:** @convex-dev/static-hosting
 - **Convex features:** schema, tables, indexes, queries, mutations, actions, HTTP actions, crons, scheduled functions, file storage, realtime queries, pagination
