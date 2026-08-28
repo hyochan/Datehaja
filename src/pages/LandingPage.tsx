@@ -1,13 +1,169 @@
 import { Link } from "react-router-dom";
-import type { ReactNode } from "react";
 import { Logo } from "../components/layout/Logo";
 import { LocaleSwitcher } from "../components/layout/LocaleSwitcher";
 import { ThemeToggle } from "../components/layout/AppShell";
 import { LinkButton } from "../components/ui/primitives";
-import { useI18n } from "../i18n";
+import { useI18n, type LocaleCode } from "../i18n";
+
+type LandingExample = {
+  city: string;
+  area: string;
+  venue: string;
+  person: string;
+  currency: string;
+  dinnerAmount: number;
+  totalAmount: number;
+  zoneLabel: string;
+};
+
+const LANDING_EXAMPLES: Record<LocaleCode, LandingExample> = {
+  "en-US": {
+    city: "New York",
+    area: "Williamsburg",
+    venue: "Neighborhood bistro",
+    person: "Alex",
+    currency: "USD",
+    dinnerAmount: 38,
+    totalAmount: 62,
+    zoneLabel: "EDT",
+  },
+  "en-GB": {
+    city: "London",
+    area: "Shoreditch",
+    venue: "Neighbourhood bistro",
+    person: "Jamie",
+    currency: "GBP",
+    dinnerAmount: 32,
+    totalAmount: 52,
+    zoneLabel: "BST",
+  },
+  "en-CA": {
+    city: "Montréal",
+    area: "Mile End",
+    venue: "Neighbourhood bistro",
+    person: "Riley",
+    currency: "CAD",
+    dinnerAmount: 42,
+    totalAmount: 68,
+    zoneLabel: "EDT",
+  },
+  "en-AU": {
+    city: "Melbourne",
+    area: "Fitzroy",
+    venue: "Neighbourhood bistro",
+    person: "Taylor",
+    currency: "AUD",
+    dinnerAmount: 46,
+    totalAmount: 74,
+    zoneLabel: "AEST",
+  },
+  "ko-KR": {
+    city: "서울",
+    area: "성수",
+    venue: "동네 비스트로",
+    person: "민준",
+    currency: "KRW",
+    dinnerAmount: 28_000,
+    totalAmount: 45_000,
+    zoneLabel: "KST",
+  },
+  "ja-JP": {
+    city: "東京",
+    area: "中目黒",
+    venue: "街のビストロ",
+    person: "ハル",
+    currency: "JPY",
+    dinnerAmount: 4_600,
+    totalAmount: 7_500,
+    zoneLabel: "JST",
+  },
+  "de-DE": {
+    city: "Berlin",
+    area: "Kreuzberg",
+    venue: "Bistro im Viertel",
+    person: "Luca",
+    currency: "EUR",
+    dinnerAmount: 34,
+    totalAmount: 56,
+    zoneLabel: "CEST",
+  },
+  "fr-FR": {
+    city: "Paris",
+    area: "Canal Saint-Martin",
+    venue: "Bistrot du quartier",
+    person: "Camille",
+    currency: "EUR",
+    dinnerAmount: 36,
+    totalAmount: 58,
+    zoneLabel: "CEST",
+  },
+  "nl-NL": {
+    city: "Amsterdam",
+    area: "De Pijp",
+    venue: "Bistro in de buurt",
+    person: "Sam",
+    currency: "EUR",
+    dinnerAmount: 35,
+    totalAmount: 57,
+    zoneLabel: "CEST",
+  },
+  "sv-SE": {
+    city: "Stockholm",
+    area: "Södermalm",
+    venue: "Kvartersbistro",
+    person: "Noah",
+    currency: "SEK",
+    dinnerAmount: 390,
+    totalAmount: 650,
+    zoneLabel: "CEST",
+  },
+};
+
+function sampleTime(locale: LocaleCode, hour: number, minute: number) {
+  return new Intl.DateTimeFormat(locale, {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(2026, 7, 29, hour, minute)));
+}
+
+function sampleRange(
+  locale: LocaleCode,
+  startHour: number,
+  startMinute: number,
+  endHour: number,
+  endMinute: number,
+) {
+  const formatter = new Intl.DateTimeFormat(locale, {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "UTC",
+  });
+
+  return formatter.formatRange(
+    new Date(Date.UTC(2026, 7, 29, startHour, startMinute)),
+    new Date(Date.UTC(2026, 7, 29, endHour, endMinute)),
+  );
+}
+
+function sampleMonth(locale: LocaleCode) {
+  return new Intl.DateTimeFormat(locale, {
+    month: "short",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(2026, 7, 29)));
+}
+
+function sampleMoney(locale: LocaleCode, amount: number, currency: string) {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency,
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
 
 export default function LandingPage() {
-  const { t } = useI18n();
+  const { locale, t } = useI18n();
+  const example = LANDING_EXAMPLES[locale];
 
   return (
     <div className="min-h-dvh">
@@ -57,7 +213,7 @@ export default function LandingPage() {
                 <span className="mr-2" aria-hidden>
                   ♥
                 </span>
-                {t("Service note 001 · Seoul")}
+                {t("Service note 001")} · {example.city}
               </div>
               <h1
                 className="display-heading hero-title mt-6 max-w-3xl animate-fade-up"
@@ -114,7 +270,7 @@ export default function LandingPage() {
               >
                 ♡
               </span>
-              <AvailabilityDocket />
+              <AvailabilityDocket example={example} locale={locale} />
             </div>
           </div>
         </section>
@@ -151,11 +307,11 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <SampleDrop />
+            <SampleDrop example={example} locale={locale} />
           </div>
         </section>
 
-        <ConciergeFlow />
+        <ConciergeFlow example={example} locale={locale} />
 
         <section className="px-5 py-10 sm:px-8 sm:py-14">
           <div className="soft-section mx-auto grid max-w-6xl items-center gap-8 px-6 py-10 sm:px-10 sm:py-12 md:grid-cols-[1fr_auto]">
@@ -207,106 +363,146 @@ export default function LandingPage() {
   );
 }
 
-function ConciergeFlow() {
+function ConciergeFlow({
+  example,
+  locale,
+}: {
+  example: LandingExample;
+  locale: LocaleCode;
+}) {
   const { t } = useI18n();
+  const eveningA = sampleRange(locale, 18, 0, 22, 30);
+  const eveningB = sampleRange(locale, 18, 30, 22, 0);
+  const dateTime = sampleTime(locale, 19, 0);
+  const estimate = sampleMoney(locale, example.totalAmount, example.currency);
 
   return (
     <section
       id="how-it-works"
-      className="romance-night overflow-hidden text-sand-50"
+      className="romance-night scroll-mt-20 overflow-hidden text-sand-50"
     >
       <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
         <div className="max-w-3xl">
           <div className="docket-label text-ember-300">{t("How it works")}</div>
           <h2 className="display-heading mt-4 text-[clamp(2.35rem,5vw,4.4rem)]">
-            {t("Your free time is enough to begin.")}
+            {t("One free evening goes in. A real date comes out.")}
           </h2>
         </div>
 
-        <div className="mt-12 grid gap-3 md:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] md:items-stretch">
-          <FlowStage
-            number="01"
-            icon="calendar"
-            title={t("Say when you're free")}
+        <div className="relative mt-12 overflow-hidden rounded-[2.25rem] border border-sand-500/25 bg-white/[0.035] p-5 shadow-[0_30px_80px_-52px_rgb(0_0_0/0.9)] sm:p-8">
+          <span
+            className="absolute -right-8 -top-10 text-[9rem] leading-none text-ember-300/[0.035]"
+            aria-hidden
           >
-            <div className="space-y-2.5">
-              <AvailabilityWindow label="A" time="18:00—22:30" />
-              <AvailabilityWindow label="B" time="18:30—22:00" />
-            </div>
-          </FlowStage>
+            ♡
+          </span>
 
-          <FlowArrow />
+          <div className="relative grid gap-3 lg:grid-cols-[0.95fr_3.5rem_1.1fr_3.5rem_0.95fr] lg:items-center">
+            <article>
+              <SceneHeading
+                number="01"
+                icon="calendar"
+                title={t("Open an evening")}
+              />
+              <div className="mt-6 space-y-2.5">
+                <AvailabilityWindow
+                  label="A"
+                  owner={t("You")}
+                  time={eveningA}
+                />
+                <AvailabilityWindow
+                  label="B"
+                  owner={t("Match")}
+                  time={eveningB}
+                />
+              </div>
+            </article>
 
-          <FlowStage
-            number="02"
-            icon="spark"
-            title={t("Finding the person and the place")}
-          >
-            <div className="flex flex-1 flex-col items-center justify-center gap-3">
-              <span className="relative flex h-20 w-20 items-center justify-center rounded-full border border-ember-300/35 bg-ember-300/10">
-                <span className="absolute -right-2 -top-2 text-ember-300">
-                  ✦
+            <FlowThread />
+
+            <article className="py-2 text-center">
+              <SceneHeading
+                number="02"
+                icon="spark"
+                title={t("Private date concierge")}
+                centered
+              />
+              <div className="mt-6 flex flex-col items-center gap-4">
+                <span className="relative flex h-24 w-24 items-center justify-center rounded-full border border-ember-300/40 bg-ember-300/10 shadow-[0_0_0_12px_rgb(247_155_153/0.035)]">
+                  <span className="absolute -right-1 top-0 text-ember-300">
+                    ✦
+                  </span>
+                  <Logo className="h-11 w-11" />
                 </span>
-                <Logo className="h-9 w-9" />
+                <div className="flex max-w-xs flex-wrap justify-center gap-1.5 text-[10px] font-bold text-sand-300">
+                  <span className="rounded-full border border-sand-500/30 px-2.5 py-1.5">
+                    {t("Match")}
+                  </span>
+                  <span className="rounded-full border border-sand-500/30 px-2.5 py-1.5">
+                    {t("Places researched on the live web")}
+                  </span>
+                  <span className="rounded-full border border-sand-500/30 px-2.5 py-1.5">
+                    {t("Constraints and budget respected")}
+                  </span>
+                </div>
+              </div>
+            </article>
+
+            <FlowThread />
+
+            <article>
+              <SceneHeading
+                number="03"
+                icon="reply"
+                title={t("Both answer privately")}
+              />
+              <div className="mt-6 space-y-2.5">
+                <PrivateReply label="A" accept={t("Accept")} />
+                <PrivateReply label="B" accept={t("Accept")} />
+              </div>
+            </article>
+          </div>
+
+          <div className="relative my-6 flex h-16 items-center justify-center lg:my-8">
+            <span className="absolute h-full border-l border-dashed border-ember-300/35" />
+            <span className="z-10 flex h-10 w-10 items-center justify-center rounded-full border border-ember-300/40 bg-[#34212a] text-[14px] text-ember-300">
+              ♥
+            </span>
+          </div>
+
+          <article className="relative mx-auto max-w-2xl overflow-hidden rounded-[2rem] border border-ember-300/35 bg-ember-300/[0.08] shadow-[0_24px_60px_-42px_rgb(0_0_0/0.9)]">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ember-300/25 px-5 py-4">
+              <span className="flex items-center gap-2.5 text-[11px] font-bold text-ember-200">
+                <span className="rounded-full bg-ember-500 px-2.5 py-1 text-[9px] text-white">
+                  A ✓
+                </span>
+                <span aria-hidden>+</span>
+                <span className="rounded-full bg-ember-500 px-2.5 py-1 text-[9px] text-white">
+                  B ✓
+                </span>
+                <span className="ml-1">{t("Meet in public")}</span>
               </span>
-              <div className="flex flex-wrap justify-center gap-1.5 text-[10px] font-bold text-sand-300">
-                <span className="rounded-full border border-sand-500/30 px-2.5 py-1">
-                  {t("Match")}
-                </span>
-                <span className="rounded-full border border-sand-500/30 px-2.5 py-1">
-                  {t("Places researched on the live web")}
-                </span>
-                <span className="rounded-full border border-sand-500/30 px-2.5 py-1">
-                  {t("Constraints and budget respected")}
-                </span>
-              </div>
+              <span className="font-mono text-[9px] text-sand-400">DD—001</span>
             </div>
-          </FlowStage>
-
-          <FlowArrow />
-
-          <FlowStage
-            number="03"
-            icon="reply"
-            title={t("Both answer privately")}
-          >
-            <div className="space-y-2.5">
-              <PrivateReply label="A" accept={t("Accept")} />
-              <PrivateReply label="B" accept={t("Accept")} />
-            </div>
-          </FlowStage>
-
-          <FlowArrow />
-
-          <FlowStage number="04" icon="meet" title={t("Meet in public")}>
-            <div className="overflow-hidden rounded-2xl border border-ember-300/25 bg-ember-300/[0.07]">
-              <div className="flex items-center justify-between border-b border-ember-300/20 px-3 py-2.5">
-                <span className="docket-label text-[9px] text-ember-300">
-                  {t("New DateDrop")}
-                </span>
-                <span className="font-mono text-[9px] text-sand-400">
-                  DD—001
-                </span>
-              </div>
-              <div className="grid grid-cols-[3.4rem_1fr] gap-3 p-3">
-                <div className="text-center">
-                  <div className="docket-label text-[9px] text-ember-300">
-                    {t("Sat")}
-                  </div>
-                  <div className="mt-1 font-display text-[28px]">29</div>
+            <div className="grid sm:grid-cols-[7rem_1fr]">
+              <div className="border-b border-ember-300/20 p-5 text-center sm:border-b-0 sm:border-r">
+                <div className="docket-label text-[9px] text-ember-300">
+                  {t("Sat")}
                 </div>
-                <div className="border-l border-sand-500/25 pl-3">
-                  <div className="text-[16px] font-bold">19:00</div>
-                  <div className="mt-1 text-[11px] font-semibold text-sand-200">
-                    Charmandre · Seongsu
-                  </div>
-                  <div className="mt-1 text-[10px] text-sand-400">
-                    ≈ ₩45,000 / {t("person")}
-                  </div>
+                <div className="mt-1 font-display text-[38px]">29</div>
+              </div>
+              <div className="p-5">
+                <div className="font-display text-[28px]">{dateTime}</div>
+                <div className="mt-2 text-[14px] font-bold text-sand-100">
+                  {example.venue} · {example.area}
+                </div>
+                <div className="mt-1 text-[11px] text-sand-400">
+                  {example.city} · {example.zoneLabel} · ≈ {estimate} /{" "}
+                  {t("person")}
                 </div>
               </div>
             </div>
-          </FlowStage>
+          </article>
         </div>
 
         <div className="mt-6 flex flex-wrap gap-2 text-[11px] font-bold text-sand-300">
@@ -335,60 +531,68 @@ function ConciergeFlow() {
   );
 }
 
-function FlowStage({
+function SceneHeading({
   number,
   icon,
   title,
-  children,
+  centered = false,
 }: {
   number: string;
   icon: VisualIconKind;
   title: string;
-  children: ReactNode;
+  centered?: boolean;
 }) {
   return (
-    <article className="flex min-h-64 flex-col rounded-[1.65rem] border border-sand-500/25 bg-white/[0.045] p-4 shadow-[0_22px_50px_-38px_rgb(0_0_0/0.75)]">
-      <div className="flex items-center justify-between text-ember-300">
+    <div className={centered ? "text-center" : ""}>
+      <div
+        className={`flex items-center gap-3 text-ember-300 ${
+          centered ? "justify-center" : "justify-between"
+        }`}
+      >
         <span className="flex h-10 w-10 items-center justify-center rounded-full border border-ember-300/30 bg-ember-300/10">
           <VisualIcon kind={icon} />
         </span>
         <span className="font-mono text-[10px]">{number}</span>
       </div>
-      <h3 className="mt-5 min-h-12 text-[15px] font-bold text-sand-50">
-        {title}
-      </h3>
-      <div className="mt-4 flex flex-1 flex-col justify-end">{children}</div>
-    </article>
+      <h3 className="mt-4 text-[16px] font-bold text-sand-50">{title}</h3>
+    </div>
   );
 }
 
-function FlowArrow() {
+function FlowThread() {
   return (
     <div
-      className="flex items-center justify-center py-1 text-ember-300 md:px-0.5 md:py-0"
+      className="relative flex h-12 items-center justify-center lg:h-auto"
       aria-hidden
     >
-      <span className="flex h-9 w-9 rotate-90 items-center justify-center rounded-full border border-ember-300/30 bg-ember-300/10 font-mono text-[15px] md:rotate-0">
+      <span className="absolute h-full border-l border-dashed border-ember-300/35 lg:h-auto lg:w-full lg:border-l-0 lg:border-t" />
+      <span className="z-10 flex h-9 w-9 rotate-90 items-center justify-center rounded-full border border-ember-300/35 bg-[#34212a] font-mono text-[14px] text-ember-300 lg:rotate-0">
         →
       </span>
     </div>
   );
 }
 
-function AvailabilityWindow({ label, time }: { label: string; time: string }) {
-  const { t } = useI18n();
-
+function AvailabilityWindow({
+  label,
+  owner,
+  time,
+}: {
+  label: string;
+  owner: string;
+  time: string;
+}) {
   return (
-    <div className="flex items-center gap-2.5 rounded-2xl border border-sand-500/25 bg-white/[0.035] p-2.5">
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ember-300/15 text-[11px] font-bold text-ember-200">
+    <div className="flex items-center gap-2.5 rounded-2xl border border-sand-500/25 bg-white/[0.035] p-3">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ember-300/15 text-[11px] font-bold text-ember-200">
         {label}
       </span>
       <span className="min-w-0">
         <span className="docket-label block text-[8px] text-sand-400">
-          {t("Window submitted")}
+          {owner}
         </span>
         <span className="mt-1 block font-mono text-[11px] text-sand-100">
-          {t("Sat")} · {time}
+          {time}
         </span>
       </span>
     </div>
@@ -397,15 +601,15 @@ function AvailabilityWindow({ label, time }: { label: string; time: string }) {
 
 function PrivateReply({ label, accept }: { label: string; accept: string }) {
   return (
-    <div className="rounded-2xl border border-sand-500/25 bg-white/[0.035] p-2.5">
+    <div className="rounded-2xl border border-sand-500/25 bg-white/[0.035] p-3">
       <div className="flex items-center justify-between">
         <span className="flex items-center gap-2 text-[11px] font-bold text-sand-200">
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ember-300/15 text-ember-200">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ember-300/15 text-ember-200">
             {label}
           </span>
           <VisualIcon kind="lock" />
         </span>
-        <span className="rounded-full bg-ember-500 px-2.5 py-1 text-[9px] font-bold text-white">
+        <span className="rounded-full bg-ember-500 px-3 py-1.5 text-[9px] font-bold text-white">
           {accept} ✓
         </span>
       </div>
@@ -503,8 +707,15 @@ function VisualIcon({ kind }: { kind: VisualIconKind }) {
   }
 }
 
-function AvailabilityDocket() {
+function AvailabilityDocket({
+  example,
+  locale,
+}: {
+  example: LandingExample;
+  locale: LocaleCode;
+}) {
   const { t } = useI18n();
+  const availability = sampleRange(locale, 18, 0, 22, 30);
 
   return (
     <aside className="love-note mx-auto max-w-md overflow-hidden">
@@ -523,13 +734,15 @@ function AvailabilityDocket() {
             {t("Sat")}
           </div>
           <div className="mt-2 font-display text-[42px] leading-none">29</div>
-          <div className="mt-2 font-mono text-[9px] text-muted">
-            {t("AUG / SEOUL")}
+          <div className="mt-2 font-mono text-[9px] uppercase text-muted">
+            {sampleMonth(locale)} / {example.city}
           </div>
         </div>
         <div className="p-5">
           <div className="docket-label text-muted">{t("Window submitted")}</div>
-          <div className="mt-2 font-display text-[27px]">18:00—22:30</div>
+          <div className="mt-2 font-display text-[clamp(1.2rem,4vw,1.7rem)]">
+            {availability}
+          </div>
           <div className="mt-2 text-[13px] leading-relaxed text-soft">
             {t("One quiet evening. Flexible on neighbourhood.")}
           </div>
@@ -561,8 +774,22 @@ function AvailabilityDocket() {
 }
 
 /** A concrete example, so the concept lands before anyone signs up. */
-function SampleDrop() {
+function SampleDrop({
+  example,
+  locale,
+}: {
+  example: LandingExample;
+  locale: LocaleCode;
+}) {
   const { t } = useI18n();
+  const dinnerTime = sampleTime(locale, 19, 0);
+  const dessertTime = sampleTime(locale, 20, 40);
+  const dinnerAmount = sampleMoney(
+    locale,
+    example.dinnerAmount,
+    example.currency,
+  );
+  const estimate = sampleMoney(locale, example.totalAmount, example.currency);
 
   return (
     <article className="love-note relative overflow-hidden">
@@ -571,30 +798,36 @@ function SampleDrop() {
           <Logo className="h-4 w-4" /> {t("New DateDrop")}
         </span>
         <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-muted">
-          {t("Preview / grounded live")}
+          {t("Preview / localized example")}
         </span>
       </header>
 
       <div className="grid sm:grid-cols-[8rem_1fr]">
         <div className="border-b border-[var(--border)] p-5 sm:border-b-0 sm:border-r sm:p-6">
           <div className="docket-label text-muted">{t("Saturday")}</div>
-          <div className="mt-2 font-display text-[42px] leading-none">7:00</div>
-          <div className="mt-1 font-mono text-[10px] text-muted">PM · KST</div>
+          <div className="mt-2 font-display text-[34px] leading-none">
+            {dinnerTime}
+          </div>
+          <div className="mt-1 font-mono text-[10px] text-muted">
+            {example.zoneLabel}
+          </div>
           <div className="mt-7 docket-label text-muted">{t("Area")}</div>
-          <div className="mt-1.5 text-[14px] font-semibold">Seongsu</div>
-          <div className="text-[12px] text-muted">Seoul</div>
+          <div className="mt-1.5 text-[14px] font-semibold">{example.area}</div>
+          <div className="text-[12px] text-muted">{example.city}</div>
         </div>
 
         <div className="p-5 sm:p-7">
           <div className="docket-label text-muted">{t("Proposed route")}</div>
           <div className="mt-5 space-y-5">
             <PlanStop
-              time="19:00"
-              title="Charmandre British Kitchen"
-              body={t("Dinner · calm room · about ₩28,000")}
+              time={dinnerTime}
+              title={example.venue}
+              body={t("Dinner · calm room · about {amount}", {
+                amount: dinnerAmount,
+              })}
             />
             <PlanStop
-              time="20:40"
+              time={dessertTime}
               title={t("Quiet dessert café")}
               body={t("Four minutes on foot · open late")}
             />
@@ -605,7 +838,7 @@ function SampleDrop() {
               {t("Who you would meet")}
             </div>
             <div className="mt-2 text-[16px] font-semibold">
-              Alex · 29 · Seongsu
+              {example.person} · 29 · {example.area}
             </div>
             <div className="mt-1 text-[12px] text-muted">
               {t("Running / Films / Coffee")}
@@ -621,7 +854,7 @@ function SampleDrop() {
             <div>
               <div className="docket-label text-muted">{t("Estimate")}</div>
               <div className="mt-1 text-[14px] font-semibold">
-                ≈ ₩45,000 / {t("person")}
+                ≈ {estimate} / {t("person")}
               </div>
             </div>
             <div className="flex gap-2">
@@ -649,7 +882,7 @@ function PlanStop({
   body: string;
 }) {
   return (
-    <div className="grid grid-cols-[3.5rem_1fr] gap-3">
+    <div className="grid grid-cols-[4.75rem_1fr] gap-3">
       <span className="font-mono text-[10px] text-[var(--accent-text)]">
         {time}
       </span>
