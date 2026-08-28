@@ -70,13 +70,20 @@ export default function App() {
   );
 }
 
-/** Every route should open like a fresh page, not inherit the previous scroll. */
+/** Open routes at the top while preserving intentional in-page links. */
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
+    if (hash) {
+      requestAnimationFrame(() => {
+        document.getElementById(hash.slice(1))?.scrollIntoView();
+      });
+      return;
+    }
+
     window.scrollTo(0, 0);
-  }, [pathname]);
+  }, [pathname, hash]);
 
   return null;
 }

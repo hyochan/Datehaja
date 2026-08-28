@@ -59,7 +59,7 @@ const ko: TranslationPack = {
   "No chat audition": "채팅 심사 없음",
   "No contacts shared": "연락처 공유 없음",
   "The route": "진행 방식",
-  "Less matching.": "매칭은 줄이고.",
+  "Less matching.": "매칭은 줄이고,",
   "More meeting.": "만남은 늘리고.",
   "We removed every step that exists only to keep you inside a dating app.":
     "데이트 앱 안에 붙잡아 두기 위한 단계는 모두 걷어냈습니다.",
