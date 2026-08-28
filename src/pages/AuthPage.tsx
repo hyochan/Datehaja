@@ -85,7 +85,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
         >
           <Logo className="h-9 w-9" />
           <span>
-            <span className="brand-wordmark block text-[22px]">datehaja</span>
+            <span className="brand-wordmark block text-[22px]">DateHaja</span>
             <span className="docket-label mt-1 block text-[8px] text-sand-400">
               {t("Private date concierge")}
             </span>
@@ -137,7 +137,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
           >
             <Logo className="h-8 w-8" />
             <span className="brand-wordmark text-[21px] font-medium">
-              datehaja
+              DateHaja
             </span>
           </Link>
           <LocaleSwitcher compact />

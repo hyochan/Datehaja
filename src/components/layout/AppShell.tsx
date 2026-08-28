@@ -32,7 +32,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Logo className="h-8 w-8" />
             <span className="leading-none">
               <span className="brand-wordmark block text-[20px] font-medium">
-                datehaja
+                DateHaja
               </span>
               <span className="docket-label mt-1 block text-[8px] text-muted">
                 {t("Private date concierge")}

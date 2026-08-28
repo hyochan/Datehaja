@@ -347,7 +347,7 @@ export default function OnboardingPage() {
             <div className="flex items-center gap-2.5">
               <Logo className="h-6 w-6" />
               <span className="brand-wordmark text-[18px] font-medium">
-                datehaja
+                DateHaja
               </span>
             </div>
             <div className="flex items-center gap-2">

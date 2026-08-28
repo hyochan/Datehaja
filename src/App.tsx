@@ -244,7 +244,7 @@ function PublicPage({ children }: { children: React.ReactNode }) {
               <Logo className="h-8 w-8" />
               <span>
                 <span className="brand-wordmark block text-[20px] leading-none">
-                  datehaja
+                  DateHaja
                 </span>
                 <span className="docket-label mt-1 block text-[8px] text-muted">
                   {t("Public record")}

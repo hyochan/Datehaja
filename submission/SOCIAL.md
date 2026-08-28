@@ -45,7 +45,7 @@ Firecrawl crawled, the quote from each, and every model run — visible in the a
 the whole loop in 60 seconds without recruiting a second human.
 
 Live: https://datehaja.com
-Code: https://github.com/hyochan/datehaja
+Code: https://github.com/hyochan/DateHaja
 
 ---
 
@@ -103,7 +103,7 @@ Code: https://github.com/hyochan/datehaja
 > stays held while it looks for someone else who fits the same plan.
 >
 > Live: https://datehaja.com
-> Code: https://github.com/hyochan/datehaja
+> Code: https://github.com/hyochan/DateHaja
 
 ---
 
@@ -133,7 +133,7 @@ Code: https://github.com/hyochan/datehaja
 > AgentMail.
 >
 > Live: https://datehaja.com
-> Code: https://github.com/hyochan/datehaja
+> Code: https://github.com/hyochan/DateHaja
 >
 > #Convex #OpenAI #Firecrawl #AgentMail #BuildInPublic
 

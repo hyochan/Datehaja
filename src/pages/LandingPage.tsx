@@ -173,7 +173,7 @@ export default function LandingPage() {
             <Logo className="h-9 w-9" />
             <div className="leading-none">
               <div className="brand-wordmark text-[22px] font-medium">
-                datehaja
+                DateHaja
               </div>
               <div className="docket-label mt-1.5 text-[8px] text-muted">
                 {t("Private date concierge")}
@@ -339,7 +339,7 @@ export default function LandingPage() {
             <Logo className="h-6 w-6" />
             <div>
               <div className="brand-wordmark text-[17px] text-[var(--text)]">
-                datehaja
+                DateHaja
               </div>
               <div className="mt-0.5">
                 {t("Let's date. We'll make the plan.")}
