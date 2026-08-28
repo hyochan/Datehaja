@@ -173,7 +173,7 @@ export default function LandingPage() {
             <Logo className="h-9 w-9" />
             <div className="leading-none">
               <div className="brand-wordmark text-[22px] font-medium">
-                DateDrop
+                datehaja
               </div>
               <div className="docket-label mt-1.5 text-[8px] text-muted">
                 {t("Private date concierge")}
@@ -327,7 +327,7 @@ export default function LandingPage() {
               </p>
             </div>
             <LinkButton to="/signup" size="lg">
-              {t("Get my first DateDrop")} <span aria-hidden>→</span>
+              {t("Plan my first date")} <span aria-hidden>→</span>
             </LinkButton>
           </div>
         </section>
@@ -339,10 +339,10 @@ export default function LandingPage() {
             <Logo className="h-6 w-6" />
             <div>
               <div className="brand-wordmark text-[17px] text-[var(--text)]">
-                DateDrop
+                datehaja
               </div>
               <div className="mt-0.5">
-                {t("We plan the date. You just say yes.")}
+                {t("Let's date. We'll make the plan.")}
               </div>
             </div>
           </div>
@@ -795,7 +795,7 @@ function SampleDrop({
     <article className="love-note relative overflow-hidden">
       <header className="flex items-center justify-between border-b border-[var(--border)] px-5 py-4 sm:px-7">
         <span className="docket-label flex items-center gap-2 text-[var(--accent-text)]">
-          <Logo className="h-4 w-4" /> {t("New DateDrop")}
+          <Logo className="h-4 w-4" /> {t("New date plan")}
         </span>
         <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-muted">
           {t("Preview / localized example")}

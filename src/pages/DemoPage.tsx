@@ -19,7 +19,7 @@ import { readableError, useToast } from "../components/ui/Toast";
  *
  * A dating product needs two people. This screen lets one person experience the
  * whole loop by playing the other side — but only when the other side is a
- * clearly-marked fictional persona, and only on a DateDrop they're already in.
+ * clearly-marked fictional persona, and only on a date plan they're already in.
  */
 export default function DemoPage() {
   const status = useQuery(api.demo.status);
@@ -43,7 +43,7 @@ export default function DemoPage() {
         </div>
         <h1 className="text-[28px] leading-tight">Demo controls</h1>
         <p className="mt-1.5 text-[15.5px] leading-relaxed text-soft">
-          DateDrop needs two people. These are fictional profiles seeded into this
+          DateHaja needs two people. These are fictional profiles seeded into this
           deployment so you can watch the whole loop — matching, research,
           invitation, acceptance, confirmation — without recruiting a friend.
         </p>
@@ -77,7 +77,7 @@ export default function DemoPage() {
         ) : actionable.length === 0 ? (
           <Card className="p-5">
             <p className="text-[15px] leading-relaxed text-soft">
-              Nothing to respond to yet. Accept a DateDrop with a demo profile
+              Nothing to respond to yet. Accept a date with a demo profile
               first — then come back here and play their side.
             </p>
             <div className="mt-4">
@@ -85,7 +85,7 @@ export default function DemoPage() {
                 to="/dashboard"
                 className="text-[14px] font-medium text-[var(--accent-text)] hover:underline"
               >
-                Go to your DateDrops
+                Go to your dates
               </Link>
             </div>
           </Card>
@@ -152,7 +152,7 @@ export default function DemoPage() {
           </ul>
         )}
         <p className="mt-3 px-1 text-[13px] leading-relaxed text-muted">
-          "They pass" is the interesting one: DateDrop keeps your acceptance
+          "They pass" is the interesting one: DateHaja keeps your acceptance
           alive and starts looking for someone else who fits the same plan,
           rather than cancelling on you.
         </p>
@@ -232,10 +232,10 @@ export default function DemoPage() {
             {[
               "Add an evening you're free on the Availability page.",
               "Hit “Find me a date” on the dashboard and watch the stages advance — each one is a real Convex document update, not a timer.",
-              "Open the DateDrop that lands. Expand “How we built this” to see the live pages Firecrawl crawled and the model runs behind the plan.",
+              "Open the date plan that lands. Expand “How we built this” to see the live pages Firecrawl crawled and the model runs behind the plan.",
               "Accept it.",
               "Come back here and hit “They accept”. If you have a second browser open on the same account, watch it flip to “It's a date” without a refresh.",
-              "Or hit “They pass” instead, and watch DateDrop go looking for a replacement while keeping your evening held.",
+              "Or hit “They pass” instead, and watch DateHaja go looking for a replacement while keeping your evening held.",
             ].map((step, index) => (
               <li key={step} className="flex gap-3">
                 <span className="mt-0.5 w-4 shrink-0 text-[13px] font-semibold text-[var(--accent-text)]">

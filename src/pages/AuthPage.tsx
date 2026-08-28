@@ -29,7 +29,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
 
     if (signingUp && !ageConfirmed) {
       setError(
-        t("DateDrop is for adults only — please confirm you're 18 or over."),
+        t("DateHaja is for adults only — please confirm you're 18 or over."),
       );
       return;
     }
@@ -81,11 +81,11 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
         <Link
           to="/"
           className="inline-flex items-center gap-3 self-start"
-          aria-label={t("DateDrop home")}
+          aria-label={t("DateHaja home")}
         >
           <Logo className="h-9 w-9" />
           <span>
-            <span className="brand-wordmark block text-[22px]">DateDrop</span>
+            <span className="brand-wordmark block text-[22px]">datehaja</span>
             <span className="docket-label mt-1 block text-[8px] text-sand-400">
               {t("Private date concierge")}
             </span>
@@ -133,11 +133,11 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
           <Link
             to="/"
             className="inline-flex items-center gap-2.5 lg:hidden"
-            aria-label={t("DateDrop home")}
+            aria-label={t("DateHaja home")}
           >
             <Logo className="h-8 w-8" />
             <span className="brand-wordmark text-[21px] font-medium">
-              DateDrop
+              datehaja
             </span>
           </Link>
           <LocaleSwitcher compact />
@@ -208,7 +208,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
                   <h2 className="mt-2 text-[23px] leading-tight">
                     {signingUp
                       ? t("Reserve your first evening.")
-                      : t("Open your private DateDrops.")}
+                      : t("Open your private dates.")}
                   </h2>
                 </div>
                 <span className="hidden rounded-full border border-[var(--tint-sage-border)] bg-[var(--tint-sage-bg)] px-3 py-1.5 text-[11px] font-semibold text-[var(--tint-sage-fg)] sm:inline-flex">
@@ -259,7 +259,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
                     />
                     <span>
                       {t(
-                        "I'm 18 or over, and I understand DateDrop does not verify identity.",
+                        "I'm 18 or over, and I understand DateHaja does not verify identity.",
                       )}
                     </span>
                   </label>
@@ -303,7 +303,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
 
               <p className="mt-7 border-t border-[var(--border)] pt-5 text-[12px] leading-relaxed text-muted">
                 {t(
-                  "Your email is used only by DateDrop Concierge to reach you. It is never shown to another user.",
+                  "Your email is used only by DateHaja Concierge to reach you. It is never shown to another user.",
                 )}{" "}
                 <Link to="/privacy" className="underline underline-offset-4">
                   {t("How privacy works")}

@@ -18,7 +18,7 @@ import { hasOpenAI, obj, structured } from "./integrations/openai";
  * setup and by `scripts/verify-integrations.ts`, never from the browser.
  */
 
-/** Create (or find) the DateDrop Concierge inbox and its webhook. */
+/** Create (or find) the DateHaja Concierge inbox and its webhook. */
 export const provisionAgentMail = internalAction({
   args: {
     username: v.optional(v.string()),
@@ -30,15 +30,15 @@ export const provisionAgentMail = internalAction({
       return { ok: false, error: "AGENTMAIL_API_KEY is not set on this deployment." };
     }
 
-    const username = args.username ?? "datedrop-concierge";
+    const username = args.username ?? "datehaja-concierge";
     let inboxId: string;
     let inboxEmail: string;
 
     try {
       const inbox = await createInbox({
         username,
-        displayName: "DateDrop Concierge",
-        clientId: "datedrop-concierge-v1",
+        displayName: "DateHaja Concierge",
+        clientId: "datehaja-concierge-v1",
       });
       inboxId = inbox.inbox_id;
       inboxEmail = inbox.email ?? inbox.inbox_id;
@@ -66,7 +66,7 @@ export const provisionAgentMail = internalAction({
           "message.delivered",
           "message.bounced",
         ],
-        clientId: "datedrop-webhook-v1",
+        clientId: "datehaja-webhook-v1",
       });
       webhookId = hook.webhook_id;
       webhookSecret = hook.secret;
@@ -196,9 +196,9 @@ export const verifyIntegrations = internalAction({
           const sent = await sendMessage({
             inboxId,
             to: args.sendTestEmailTo,
-            subject: "DateDrop Concierge — integration check",
-            text: "This is a live delivery test from the DateDrop Concierge inbox. Reply to this message to exercise the inbound webhook.",
-            html: "<p>This is a live delivery test from the <strong>DateDrop Concierge</strong> inbox.</p><p>Reply to this message to exercise the inbound webhook.</p>",
+            subject: "DateHaja Concierge — integration check",
+            text: "This is a live delivery test from the DateHaja Concierge inbox. Reply to this message to exercise the inbound webhook.",
+            html: "<p>This is a live delivery test from the <strong>DateHaja Concierge</strong> inbox.</p><p>Reply to this message to exercise the inbound webhook.</p>",
             labels: ["integration_check"],
             idempotencyKey: `verify-${args.sendTestEmailTo}-${new Date().toISOString().slice(0, 13)}`,
           });

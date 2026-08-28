@@ -97,7 +97,7 @@ export const REPORT_CATEGORY_OPTIONS = [
   { key: "other", label: "Something else" },
 ] as const;
 
-/** Preset logistics messages. Deliberately the whole vocabulary — DateDrop is
+/** Preset logistics messages. Deliberately the whole vocabulary — DateHaja is
  *  not a chat app, it just needs to survive a delayed train. */
 export const PRESET_MESSAGES = [
   { key: "running_late_10", body: "I'm running about 10 minutes late." },
@@ -112,7 +112,7 @@ export const PRESET_MESSAGES = [
 
 export type PresetMessageKey = (typeof PRESET_MESSAGES)[number]["key"];
 
-/** Cities DateDrop can research and plan in. Approximate centroids only. */
+/** Cities DateHaja can research and plan in. Approximate centroids only. */
 export const SUPPORTED_CITIES = [
   {
     key: "seoul",

@@ -50,11 +50,11 @@ import {
 import { calendarEventStatus } from "./lib/calendar";
 
 /**
- * DateDrop lifecycle.
+ * Date-plan lifecycle.
  *
  * A participant only ever sees: the plan, a privacy-safe preview of the other
  * person, and why the two of them fit. They never see the other's response
- * until DateDrop decides it is appropriate to disclose — which is when the
+ * until the product decides it is appropriate to disclose — which is when the
  * drop is confirmed, or when their own commitment needs an update.
  */
 
@@ -294,10 +294,10 @@ export const accept = mutation({
     const userId = await requireUserId(ctx);
     const me = await requireParticipant(ctx, args.dropId, userId);
     const drop = await ctx.db.get("dateDrops", args.dropId);
-    if (!drop) throw new Error("That DateDrop is gone.");
+    if (!drop) throw new Error("That date plan is gone.");
 
     if (isTerminalDrop(drop.status)) {
-      throw new Error("This DateDrop is already closed.");
+      throw new Error("This date plan is already closed.");
     }
     if (me.state === "accepted" || me.state === "confirmed") {
       return { confirmed: drop.status === "confirmed" };
@@ -307,7 +307,7 @@ export const accept = mutation({
     }
     const now = Date.now();
     if (now >= drop.confirmDeadlineMs) {
-      throw new Error("The window to accept this DateDrop has closed.");
+      throw new Error("The window to accept this date has closed.");
     }
 
     await ctx.db.patch("dateDropParticipants", me._id, {
@@ -393,7 +393,7 @@ export const pass = mutation({
     const userId = await requireUserId(ctx);
     const me = await requireParticipant(ctx, args.dropId, userId);
     const drop = await ctx.db.get("dateDrops", args.dropId);
-    if (!drop) throw new Error("That DateDrop is gone.");
+    if (!drop) throw new Error("That date plan is gone.");
     if (me.state !== "invited" && me.state !== "viewed") {
       throw new Error("You've already responded to this one.");
     }
@@ -439,7 +439,7 @@ export const withdraw = mutation({
     const userId = await requireUserId(ctx);
     const me = await requireParticipant(ctx, args.dropId, userId);
     const drop = await ctx.db.get("dateDrops", args.dropId);
-    if (!drop) throw new Error("That DateDrop is gone.");
+    if (!drop) throw new Error("That date plan is gone.");
     if (me.state !== "accepted") {
       throw new Error("There's nothing to withdraw from.");
     }
@@ -619,10 +619,10 @@ export const cancel = mutation({
     // Passing or withdrawing takes you off the drop. It must not leave you
     // holding the power to cancel a date that later confirms without you.
     if (!canActOnDrop(me.state)) {
-      throw new Error("You're not on this DateDrop any more.");
+      throw new Error("You're not on this date plan any more.");
     }
     const drop = await ctx.db.get("dateDrops", args.dropId);
-    if (!drop) throw new Error("That DateDrop is gone.");
+    if (!drop) throw new Error("That date plan is gone.");
     if (isTerminalDrop(drop.status)) return null;
 
     const reason = args.reason
@@ -641,7 +641,7 @@ export const confirmAttendance = mutation({
     const userId = await requireUserId(ctx);
     const me = await requireParticipant(ctx, args.dropId, userId);
     if (me.state !== "confirmed") {
-      throw new Error("You're not on this DateDrop.");
+      throw new Error("You're not on this date plan.");
     }
     const drop = await ctx.db.get("dateDrops", args.dropId);
     if (!drop || drop.status !== "confirmed") {
@@ -806,7 +806,7 @@ export const dispatchInvitations = internalAction({
       await ctx.runMutation(internal.notifications.create, {
         userId: participant.userId,
         kind: "invitation",
-        title: "You've got a DateDrop",
+        title: "Your date plan is ready",
         body: `${describeDateTime(context.drop.startMs, context.drop.timezone)} · ${context.drop.area} — ${context.drop.theme || context.drop.title}`,
         dropId: args.dropId,
         href: `/drop/${args.dropId}`,
@@ -946,10 +946,10 @@ export const notifyClosed = internalAction({
         kind: expired ? "expired" : "cancelled",
         title: expired
           ? "We cancelled this one"
-          : "That DateDrop was cancelled",
+          : "That date was cancelled",
         body: expired
           ? "We couldn't find the right person for this plan, so we cancelled it rather than force a poor match."
-          : (context.drop.cancelReason ?? "The DateDrop was cancelled."),
+          : (context.drop.cancelReason ?? "The date was cancelled."),
         dropId: args.dropId,
         href: `/drop/${args.dropId}`,
       });
@@ -963,7 +963,7 @@ export const notifyClosed = internalAction({
           : cancelledEmail({
               ...data,
               reason:
-                context.drop.cancelReason ?? "The DateDrop was cancelled.",
+                context.drop.cancelReason ?? "The date was cancelled.",
             }),
         idempotencyKey: `closed-${args.dropId}-${participant.userId}`,
         labels: [expired ? "expired" : "cancelled"],
@@ -1016,7 +1016,7 @@ export const sendReminders = internalAction({
       await ctx.runMutation(internal.notifications.create, {
         userId: participant.userId,
         kind: "reminder",
-        title: "Your DateDrop is coming up",
+        title: "Your date is coming up",
         body: `${describeDateTime(context.drop.startMs, context.drop.timezone)} · ${firstStop?.venueName ?? context.drop.area}`,
         dropId: args.dropId,
         href: `/drop/${args.dropId}`,
@@ -1124,7 +1124,7 @@ export const completePastDrops = internalMutation({
           await ctx.db.insert("notifications", {
             userId: p.userId,
             kind: "safety",
-            title: "How did your DateDrop feel?",
+            title: "How did your date feel?",
             body: "Your private check-in is optional and is never shown to your match.",
             dropId: drop._id,
             href: `/drop/${drop._id}`,

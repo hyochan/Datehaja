@@ -18,7 +18,7 @@ export default function NotificationsPage() {
         <div>
           <h1 className="text-[28px] leading-tight">{t("Notifications")}</h1>
           <p className="mt-1.5 text-[15px] text-soft">
-            {t("Everything DateDrop has told you, newest first.")}
+            {t("Everything DateHaja has told you, newest first.")}
           </p>
         </div>
         {notifications && notifications.some((n) => !n.read) && (
@@ -34,7 +34,7 @@ export default function NotificationsPage() {
         <Card>
           <EmptyState
             title={t("Nothing yet")}
-            body={t("When a DateDrop lands, is confirmed, or changes, you'll see it here.")}
+            body={t("When a date plan lands, is confirmed, or changes, you'll see it here.")}
           />
         </Card>
       ) : (

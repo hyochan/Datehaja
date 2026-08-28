@@ -1,7 +1,7 @@
 /**
- * AgentMail client — DateDrop's own email identity.
+ * AgentMail client — DateHaja's own email identity.
  *
- * DateDrop Concierge sends every message from its own inbox, so two people can
+ * DateHaja Concierge sends every message from its own inbox, so two people can
  * be introduced, invited, confirmed and reminded without either of them ever
  * seeing the other's email address.
  *
@@ -31,7 +31,7 @@ export const pathId = (s: string) => encodeURIComponent(s);
  */
 export function safeIdempotencyKey(raw: string): string {
   const cleaned = raw.replace(/[^A-Za-z0-9\-._~]/g, "-").slice(0, 200);
-  return cleaned || "datedrop";
+  return cleaned || "datehaja";
 }
 
 export class AgentMailError extends Error {

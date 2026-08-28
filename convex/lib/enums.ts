@@ -75,7 +75,7 @@ export const availabilityStatusValidator = v.union(
   v.literal("cancelled"),
 );
 
-/** DateDrop lifecycle. Transitions are enforced in lib/stateMachine.ts. */
+/** Date-plan lifecycle. Transitions are enforced in lib/stateMachine.ts. */
 export const dropStatusValidator = v.union(
   v.literal("draft"),
   v.literal("matching"),

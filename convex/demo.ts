@@ -474,7 +474,7 @@ export const seed = internalMutation({
 
     let created = 0;
     for (const persona of SEOUL_PERSONAS) {
-      const email = `${persona.key}@demo.datedrop.invalid`;
+      const email = `${persona.key}@demo.datehaja.invalid`;
       const already = await ctx.db
         .query("users")
         .withIndex("email", (q) => q.eq("email", email))
@@ -686,10 +686,10 @@ export const status = query({
 });
 
 /**
- * Let a judge play the other side of their own DateDrop.
+ * Let a judge play the other side of their own date plan.
  *
  * Only works when the other participant is a demo persona, and only for a
- * DateDrop the caller is actually in. This is the one place demo personas act.
+ * date plan the caller is actually in. This is the one place demo personas act.
  */
 export const respondAsPersona = mutation({
   args: {
@@ -705,11 +705,11 @@ export const respondAsPersona = mutation({
         q.eq("dropId", args.dropId).eq("userId", userId),
       )
       .unique();
-    if (!me) throw new Error("That DateDrop isn't yours.");
+    if (!me) throw new Error("That date plan isn't yours.");
 
     const drop = await ctx.db.get("dateDrops", args.dropId);
-    if (!drop) throw new Error("That DateDrop is gone.");
-    if (isTerminalDrop(drop.status)) throw new Error("This DateDrop is already closed.");
+    if (!drop) throw new Error("That date plan is gone.");
+    if (isTerminalDrop(drop.status)) throw new Error("This date plan is already closed.");
 
     const participants = await ctx.db
       .query("dateDropParticipants")
@@ -720,7 +720,7 @@ export const respondAsPersona = mutation({
       (p) =>
         p.userId !== userId && (p.state === "invited" || p.state === "viewed"),
     );
-    if (!other) throw new Error("Nobody on this DateDrop is waiting to respond.");
+    if (!other) throw new Error("Nobody on this date plan is waiting to respond.");
 
     const otherProfile = await ctx.db
       .query("profiles")

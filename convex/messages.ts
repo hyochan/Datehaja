@@ -8,7 +8,7 @@ import { firstNameOnly } from "./lib/privacy";
 /**
  * Pre-date logistics. Deliberately not a chat app.
  *
- * DateDrop's whole point is getting two people offline, so the only thing this
+ * DateHaja's whole point is getting two people offline, so the only thing this
  * carries is the handful of messages a real evening actually needs. There is no
  * free-text field, which also means there is nowhere to slip a phone number.
  */

@@ -1,6 +1,6 @@
 # Hackathon log
 
-- **Project:** DateDrop
+- **Project:** DateHaja
 - **Event:** Convex All Gas Hackathon
 - **What it does:** Asks only when you're free, then researches a real date at a real venue, matches you with someone compatible, and privately invites you both — without either of you seeing the other's contact details.
 - **Live app:** https://merry-bass-190.convex.site
@@ -23,7 +23,7 @@ deployment rather than in the repo (`.env.example`, `.gitignore`).
 
 ### 2026-08-26 - b1bb727
 Built the data model — 18 tables covering profiles, preferences, availability,
-DateDrops and participants, plus the observability tables the product needs to
+date plans and participants, plus the observability tables the product needs to
 be honest about itself: `matchingRuns`, `candidateScores`, `researchRuns`,
 `venues`, `aiRuns`, `agentMailEvents`, `auditEvents`. Every table carries the
 indexes its real queries use; no hot path does a full scan. Registered the
@@ -39,7 +39,7 @@ interests, and nothing else. Convex features: queries, mutations, file storage,
 Convex Auth (`convex/auth.ts`, `convex/lib/authz.ts`, `convex/profiles.ts`).
 
 ### 2026-08-26 - 47ee5e5
-Wrote the matching engine and the DateDrop state machine as pure functions.
+Wrote the matching engine and the date-plan state machine as pure functions.
 Stage 1 hard filters are the only thing allowed to exclude anyone: mutual
 gender interest, age ranges, distance, a genuine 90-minute availability
 overlap, blocks in either direction, moderation state, budget, currency and
@@ -83,11 +83,11 @@ features: actions, HTTP actions, crons, scheduled functions
 `convex/safety.ts`, `convex/demo.ts`, `convex/crons.ts`, `convex/http.ts`).
 
 ### 2026-08-26 - 312bf83
-Built the web app: landing page, six-step onboarding, dashboard, DateDrop
+Built the web app: landing page, six-step onboarding, dashboard, date
 invitation and confirmation screens, availability editor, profile, preferences,
 notifications, privacy, safety centre and demo controls. The dashboard's
 matching progress states map one-to-one onto real `matchingRuns` documents —
-nothing animates to look busy. Each DateDrop has a "How we built this" panel
+nothing animates to look busy. Each date plan has a "How we built this" panel
 showing the pages Firecrawl actually crawled and the model runs behind the
 plan. Convex features: realtime queries (`src/`).
 
@@ -127,8 +127,8 @@ Verified integrations against the live production deployment, and recorded
 exactly what is and is not proven:
 
 - **Convex — verified.** Signed up, onboarded, added availability, ran the
-  matching pipeline, accepted a DateDrop and had it confirm. A second browser
-  tab left open on the dashboard moved from "You've got a DateDrop" to "Waiting
+  matching pipeline, accepted a date plan and had it confirm. A second browser
+  tab left open on the dashboard moved from "Your date plan is ready" to "Waiting
   on the other person" to "It's a date" without a reload or a navigation.
 - **Firecrawl — verified live, unauthenticated.** Real `/v2/search` calls from
   a Convex action against Seoul venues returned HTTP 200 with real results
@@ -151,7 +151,7 @@ integrations are live on the deployment.
 ### 2026-08-26 - 58ba634
 Added the OG image, touch icon and submission assets, and fixed four things
 found by using the deployed app: a confirmed date hid the way to ask for
-another DateDrop; heuristic venue names kept their markdown link brackets; a
+another date plan; heuristic venue names kept their markdown link brackets; a
 price capture dragged surrounding prose along with it; and fallback plan notes
 read awkwardly.
 
@@ -163,7 +163,7 @@ raised, 12 refuted, 26 confirmed. Fixed all of them.
 
 Two root causes accounted for most of the serious ones.
 
-**Identity by insertion order.** A DateDrop keeps every participant row it ever
+**Identity by insertion order.** A date plan keeps every participant row it ever
 had, so after a replacement the oldest non-self row is the person who
 *declined*. Six call sites picked "the other person" that way: the replacement's
 invitation email described the person who passed, blocking from a drop blocked
@@ -216,7 +216,7 @@ Wired the real credentials and verified each integration with a live call.
   auth failures, and the code had been gating the scrape follow-up behind
   `hasFirecrawlKey()` for that wrong reason. Gate removed; those domains are
   now excluded at search time instead.
-- **AgentMail — verified end to end.** Provisioned the `datedrop-concierge@agentmail.to`
+- **AgentMail — verified end to end.** Provisioned the `datehaja-concierge@agentmail.to`
   inbox and a webhook at `https://merry-bass-190.convex.site/webhooks/agentmail`
   subscribed to message.received, message.sent, message.delivered and
   message.bounced. Sent a real message (AWS SES message id returned), and the
@@ -259,7 +259,7 @@ tokens-per-minute allowance is too small for the payload, so it returns
 TPM refusal drops to the next model instead of failing, since smaller models
 carry roomier allowances.
 
-One DateDrop costs ~22,800 tokens end to end, about $0.0066. Venue extraction is
+One date plan costs ~22,800 tokens end to end, about $0.0066. Venue extraction is
 80% of that, since it reads the crawled pages.
 
 ### 2026-08-28 - 8b85c6f
@@ -273,7 +273,7 @@ updated the public test count, and reran the suite: 188 tests pass
 Reworked the product around a private-concierge docket rather than a generic
 rounded dashboard: paper-and-ink tokens, compact status stamps, editorial
 layouts, and a rebuilt landing and authentication flow. Applied the same visual
-language to the app shell, onboarding, public records, and DateDrop cards.
+language to the app shell, onboarding, public records, and date-plan cards.
 Checked dark and light themes at 390px and 1440px with no overflow or browser
 errors. Rechecked the landing-to-signup route, adult-confirmation guard,
 sign-in, privacy, safety, protected-route redirect, and theme switch in a real
@@ -297,7 +297,7 @@ blush, coral, and plum palette; pill-shaped actions; soft invitation cards; and
 small hand-placed heart and sparkle details. Added locale-aware typography:
 DM Serif Display and Nunito Sans for Latin scripts, Gowun Batang and Gowun
 Dodum for Korean, and Zen Maru Gothic for Japanese. The landing, authentication,
-app shell, mobile navigation, onboarding, dashboard, DateDrop cards, public
+app shell, mobile navigation, onboarding, dashboard, date-plan cards, public
 records, logo, and favicon now share the same visual language.
 
 Verified English and Korean at 1280px and 390px with no horizontal overflow,
@@ -347,7 +347,7 @@ tests pass (`src/pages/LandingPage.tsx`, `src/App.tsx`, `src/i18n/index.tsx`).
 Replaced the abstract landing steps and repeated privacy panel with a complete
 visual service scenario. The new flow shows two availability windows entering
 the concierge, compatibility and live venue research, two separate private
-acceptances, and the final public-place DateDrop ticket. Kept safety facts as
+acceptances, and the final public-place date ticket. Kept safety facts as
 compact visual badges instead of another explanatory paragraph, and localized
 the new stage label for all ten launch markets.
 
@@ -362,7 +362,7 @@ pass (`src/pages/LandingPage.tsx`, `src/styles/index.css`, `src/App.tsx`,
 
 ### 2026-08-28 - cef5dba
 Turned the service scenario into one connected concierge desk: two availability
-slips travel through DateDrop's live research, become separate locked replies,
+slips travel through DateHaja's live research, become separate locked replies,
 and merge into a final public-place date ticket. The landing example now adapts
 its city, neighbourhood, time format, time zone, currency, budget, venue, and
 sample person to each of the ten launch locales instead of presenting Seoul to
@@ -406,7 +406,7 @@ and a private note. None of it is returned to the other participant.
 Added a consent-based safety circle rather than collecting raw identity
 documents: one trusted contact can receive the user's first name, confirmed
 time, and public venue on explicit request, while the match's identity and
-contact details stay private. DateDrop continues to state plainly that it does
+contact details stay private. DateHaja continues to state plainly that it does
 not verify identity. The growth plan concentrates liquidity in one Seoul wedge
 before expanding city by city, and the three-minute demo now includes the
 calendar and trusted-contact proof.

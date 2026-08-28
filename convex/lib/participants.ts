@@ -1,7 +1,7 @@
 import type { ParticipantState } from "./enums";
 
 /**
- * Who counts as "the other person" on a DateDrop.
+ * Who counts as "the other person" on a date plan.
  *
  * A drop keeps every participant row it ever had — someone who passes is
  * patched to `passed`, never deleted, because the pass reason feeds future
@@ -61,7 +61,7 @@ export type ParticipantLike = { userId: string; state: ParticipantState };
 type AnyParticipant = { userId: string; state: string };
 
 /**
- * The person on the other side of this DateDrop, from `meUserId`'s point of
+ * The person on the other side of this date plan, from `meUserId`'s point of
  * view. Prefers whoever is most committed; falls back to a departed row only
  * when nobody else is left, so a closed drop still renders its history.
  */

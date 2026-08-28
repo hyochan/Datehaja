@@ -58,12 +58,12 @@ export default function DropPage() {
   if (drop === null) {
     return (
       <Card className="p-8 text-center">
-        <h1 className="mb-2 text-[22px]">We can't find that DateDrop</h1>
+        <h1 className="mb-2 text-[22px]">We can't find that date plan</h1>
         <p className="mb-6 text-[15px] text-soft">
           It may have expired, or it isn't yours.
         </p>
         <Button onClick={() => navigate("/dashboard")}>
-          Back to your DateDrops
+          Back to your dates
         </Button>
       </Card>
     );
@@ -92,7 +92,7 @@ export default function DropPage() {
         >
           <path d="M14 6l-6 6 6 6" />
         </svg>
-        All DateDrops
+        All dates
       </Link>
 
       {isConfirmed && (
@@ -296,7 +296,7 @@ function CalendarPanel({ drop }: { drop: DropView }) {
           <p className="mt-1.5 max-w-lg text-[14px] leading-relaxed text-soft">
             {status.body}{" "}
             {t(
-              "Subscribe once; DateDrop keeps the same event ID as it moves from reserved to finalized or cancelled.",
+              "Subscribe once; the same event moves from reserved to finalized or cancelled.",
             )}
           </p>
         </div>
@@ -323,7 +323,7 @@ function CalendarPanel({ drop }: { drop: DropView }) {
           )}
           <p className="px-1 text-[10.5px] leading-relaxed text-muted">
             {t(
-              "Anyone with this secret link can read your DateDrop times. Calendar apps refresh on their own schedule.",
+              "Anyone with this secret link can read your date times. Calendar apps refresh on their own schedule.",
             )}
           </p>
         </div>
@@ -348,7 +348,7 @@ function PlanCard({
           {isInvitation ? (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--tint-ember-bg)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--tint-ember-fg)]">
               <Logo className="h-4 w-4" />
-              You've got a DateDrop
+              Your date plan is ready
             </span>
           ) : isConfirmed ? (
             <Tag tone="sage">Confirmed</Tag>
@@ -626,7 +626,7 @@ function RespondPanel({
               loading={busy === "accept"}
               className="flex-1"
             >
-              Accept this DateDrop
+              Accept this date
             </Button>
             <Button
               size="lg"
@@ -688,7 +688,7 @@ function RespondPanel({
               loading={busy === "pass"}
               className="flex-1"
             >
-              Pass on this DateDrop
+              Pass on this date
             </Button>
           </div>
         </>
@@ -782,7 +782,7 @@ function ConfirmedPanel({
       <Card className="p-6">
         <SectionHeading eyebrow="Before you go" title="Quick notes" />
         <p className="-mt-2 mb-4 text-[14px] leading-relaxed text-muted">
-          A short list, on purpose. DateDrop isn't a chat app — this is just for
+          A short list, on purpose. DateHaja isn't a chat app — this is just for
           the things a real evening needs.
         </p>
 
@@ -986,7 +986,7 @@ function FeedbackPanel({ dropId }: { dropId: Id<"dateDrops"> }) {
             </h2>
             <p className="mt-1.5 max-w-md text-[14px] leading-relaxed text-soft">
               {t(
-                "Your answers are never shown to your match. They help DateDrop improve matching, venues, and safety follow-up.",
+                "Your answers are never shown to your match. They help DateHaja improve matching, venues, and safety follow-up.",
               )}
             </p>
           </div>
@@ -1088,7 +1088,7 @@ function FeedbackPanel({ dropId }: { dropId: Id<"dateDrops"> }) {
             id="date-feedback-note"
             value={note}
             maxLength={800}
-            placeholder={t("A private note for DateDrop — never your match.")}
+            placeholder={t("A private note for DateHaja — never your match.")}
             onChange={(event) => setNote(event.target.value)}
           />
         </div>
@@ -1187,12 +1187,12 @@ function ClosedPanel({ drop }: { drop: DropView }) {
   return (
     <Card className="p-6">
       <h3 className="text-[19px] leading-tight">
-        {expired ? "We cancelled this one." : "This DateDrop was cancelled."}
+        {expired ? "We cancelled this one." : "This date was cancelled."}
       </h3>
       <p className="mt-2 text-[14.5px] leading-relaxed text-soft">
         {expired
           ? "We couldn't find the right match for this plan before the cutoff, so we cancelled it rather than force a poor match."
-          : (drop.cancelReason ?? "The DateDrop was cancelled.")}
+          : (drop.cancelReason ?? "The date was cancelled.")}
       </p>
       <p className="mt-3 text-[14px] text-muted">
         Your availability is open again and we're already looking for the next
@@ -1200,7 +1200,7 @@ function ClosedPanel({ drop }: { drop: DropView }) {
       </p>
       <div className="mt-5">
         <LinkButton to="/dashboard" variant="secondary">
-          Back to your DateDrops
+          Back to your dates
         </LinkButton>
       </div>
     </Card>
@@ -1227,7 +1227,7 @@ function Provenance({ dropId }: { dropId: Id<"dateDrops"> }) {
         <div>
           <div className="text-[15px] font-medium">How we built this</div>
           <div className="mt-0.5 text-[13.5px] text-muted">
-            The live sources and the reasoning behind this DateDrop
+            The live sources and reasoning behind this date plan
           </div>
         </div>
         <svg
@@ -1255,7 +1255,7 @@ function Provenance({ dropId }: { dropId: Id<"dateDrops"> }) {
             <Skeleton className="h-24 w-full" />
           ) : data === null ? (
             <p className="text-[14px] text-muted">
-              Nothing recorded for this DateDrop.
+              Nothing recorded for this date plan.
             </p>
           ) : (
             <div className="space-y-5">
@@ -1429,7 +1429,7 @@ function SafetyPanel({ dropId }: { dropId: Id<"dateDrops"> }) {
         <div>
           <h3 className="mb-1 text-[18px]">Report this person</h3>
           <p className="mb-4 text-[14px] leading-relaxed text-soft">
-            This goes straight to our team with the DateDrop attached. If you're
+            This goes straight to our team with the date plan attached. If you're
             in danger, contact your local emergency services first — we're not
             an emergency service.
           </p>
@@ -1459,7 +1459,7 @@ function SafetyPanel({ dropId }: { dropId: Id<"dateDrops"> }) {
               checked={alsoBlock}
               onChange={setAlsoBlock}
               label="Also block them"
-              description="Cancels any shared DateDrop and stops you ever being matched again."
+              description="Cancels any shared date and stops you ever being matched again."
             />
           </div>
 

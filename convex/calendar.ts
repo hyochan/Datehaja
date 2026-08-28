@@ -15,7 +15,7 @@ function feedUrl(token: string): string {
 function siteOrigin(): string {
   // Convex supplies this in every deployment. convex-test intentionally does
   // not, so the deterministic local origin keeps backend tests self-contained.
-  return (env.CONVEX_SITE_URL || "https://datedrop.test").replace(/\/$/, "");
+  return (env.CONVEX_SITE_URL || "https://datehaja.test").replace(/\/$/, "");
 }
 
 function newToken(): string {
@@ -68,7 +68,7 @@ export const enable = mutation({
   },
 });
 
-/** Replace a leaked subscription URL without changing any DateDrop. */
+/** Replace a leaked subscription URL without changing any date plan. */
 export const rotate = mutation({
   args: {},
   returns: feedResultValidator,
@@ -153,6 +153,8 @@ export const getFeedByToken = internalQuery({
       const firstStop = drop.itinerary[0];
       const dateUrl = `${site}/drop/${drop._id}`;
       events.push({
+        // Keep the pre-rename namespace forever: changing a VEVENT UID creates
+        // duplicate calendar entries for existing subscribers.
         uid: `${drop._id}@datedrop`,
         startMs: drop.startMs,
         endMs: drop.endMs,
@@ -160,16 +162,16 @@ export const getFeedByToken = internalQuery({
         status,
         summary:
           status === "TENTATIVE"
-            ? "DateDrop · reserved"
+            ? "DateHaja · reserved"
             : status === "CANCELLED"
-              ? "DateDrop · cancelled"
-              : `DateDrop · ${drop.theme || drop.title}`,
+              ? "DateHaja · cancelled"
+              : `DateHaja · ${drop.theme || drop.title}`,
         description:
           status === "TENTATIVE"
             ? `Your evening is reserved while both people decide. This event updates automatically. ${dateUrl}`
             : status === "CANCELLED"
-              ? `This DateDrop is no longer going ahead. ${dateUrl}`
-              : `Your DateDrop is finalized. Open the private plan for live details: ${dateUrl}`,
+              ? `This date is no longer going ahead. ${dateUrl}`
+              : `Your date is finalized. Open the private plan for live details: ${dateUrl}`,
         location:
           status === "CONFIRMED"
             ? firstStop?.address || `${drop.area}, ${drop.city}`

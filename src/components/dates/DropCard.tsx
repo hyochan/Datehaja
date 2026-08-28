@@ -111,7 +111,7 @@ function StatusTag({
     return (
       <span className="docket-label inline-flex items-center gap-1.5 rounded-full border border-[var(--tint-ember-border)] bg-[var(--tint-ember-bg)] px-2.5 py-1 text-[var(--tint-ember-fg)]">
         <Logo className="h-3.5 w-3.5" />
-        {t("New DateDrop")}
+        {t("New date plan")}
       </span>
     );
   }

@@ -335,7 +335,7 @@ describe("AgentMail helpers", () => {
 
     it("never returns an empty key", () => {
       expect(safeIdempotencyKey("@@@")).not.toBe("");
-      expect(safeIdempotencyKey("")).toBe("datedrop");
+      expect(safeIdempotencyKey("")).toBe("datehaja");
     });
 
     it("caps the length", () => {

@@ -46,7 +46,7 @@ import { buildFallbackPlan } from "./lib/fallbackPlan";
 import { researchDateOptions } from "./research";
 
 /**
- * The DateDrop matching pipeline.
+ * The DateHaja matching pipeline.
  *
  *   hard filter  →  deterministic scoring  →  AI ranking  →
  *   live venue research  →  plan generation  →  private invitations
@@ -74,10 +74,10 @@ export const requestDrop = mutation({
     if (!profile) throw new Error("Finish your profile first.");
     if (!profile.onboardingComplete) throw new Error("Finish onboarding first.");
     if (profile.status !== "active") {
-      throw new Error("Your DateDrops are paused. Turn them back on in Settings.");
+      throw new Error("Matching is paused. Turn it back on in Settings.");
     }
     if (profile.moderationStatus !== "ok") {
-      throw new Error("This account can't request DateDrops right now.");
+      throw new Error("This account can't request date plans right now.");
     }
 
     const prefs = await ctx.db
@@ -86,7 +86,7 @@ export const requestDrop = mutation({
       .unique();
     if (!prefs) throw new Error("Finish your preferences first.");
     if (prefs.dropsPaused) {
-      throw new Error("DateDrops are paused. Turn them back on in Settings.");
+      throw new Error("Matching is paused. Turn it back on in Settings.");
     }
 
     const limit = await checkRateLimit(ctx, `drop:${userId}`, 6, HOUR_MS, now);
@@ -702,7 +702,7 @@ export const failRun = internalMutation({
       userId: run.initiatorUserId,
       kind: "searching",
       title: "We hit a snag",
-      body: "That search didn't produce a DateDrop. Nothing's lost — try again, or add another window.",
+      body: "That search didn't produce a date plan. Nothing's lost — try again, or add another window.",
       href: "/dashboard",
       read: false,
     });

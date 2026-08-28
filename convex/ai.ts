@@ -15,7 +15,7 @@ import type { Signals } from "./lib/matching";
  *  1. The model only ever sees pairs that already passed the programmatic hard
  *     filters, and it cannot resurrect one that did not.
  *  2. Every call is recorded in `aiRuns` — model, latency, tokens, outcome — so
- *     the reasoning behind a DateDrop can be inspected after the fact.
+ *     the reasoning behind a date plan can be inspected after the fact.
  */
 
 export const recordRun = internalMutation({
@@ -123,7 +123,7 @@ const RANK_SCHEMA = obj({
   },
 });
 
-const RANK_INSTRUCTIONS = `You match adults for a single first date on DateDrop.
+const RANK_INSTRUCTIONS = `You match adults for a single first date on DateHaja.
 
 You are given one person (the seeker) and a shortlist of candidates who have ALREADY passed every hard requirement — age, distance, mutual interest, availability, safety. Your job is only to rank how well each pairing would work as one specific first date, and to explain it in human terms.
 
@@ -331,7 +331,7 @@ const PLAN_SCHEMA = obj({
   },
 });
 
-const PLAN_INSTRUCTIONS = `You design a single first date for DateDrop.
+const PLAN_INSTRUCTIONS = `You design a single first date for DateHaja.
 
 You are given two people who have already been matched, the time window, a budget range, and a list of REAL venues found by live web research. Build one date from those venues.
 
@@ -449,7 +449,7 @@ export async function buildDatePlan(
   return {
     model: result.model,
     plan: {
-      title: sanitizeModelText(d.title, 60) || "A DateDrop",
+      title: sanitizeModelText(d.title, 60) || "A date worth leaving the app for",
       theme: sanitizeModelText(d.theme, 70),
       summary: sanitizeModelText(d.summary, 320),
       whyItFits: sanitizeModelText(d.why_it_fits, 260),

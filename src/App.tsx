@@ -239,12 +239,12 @@ function PublicPage({ children }: { children: React.ReactNode }) {
             <Link
               to="/"
               className="flex items-center gap-2.5"
-              aria-label={t("DateDrop home")}
+              aria-label={t("DateHaja home")}
             >
               <Logo className="h-8 w-8" />
               <span>
                 <span className="brand-wordmark block text-[20px] leading-none">
-                  DateDrop
+                  datehaja
                 </span>
                 <span className="docket-label mt-1 block text-[8px] text-muted">
                   {t("Public record")}
@@ -272,7 +272,7 @@ function PublicPage({ children }: { children: React.ReactNode }) {
 
 function RedirectToSignIn() {
   const location = useLocation();
-  // Deep links (an emailed DateDrop) survive the sign-in round trip.
+  // Emailed date-plan links survive the sign-in round trip.
   const target =
     location.pathname === "/"
       ? "/"

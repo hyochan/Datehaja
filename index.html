@@ -19,18 +19,18 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <title>DateDrop — We plan the date. You just say yes.</title>
+    <title>DateHaja — Let's date. We'll make the plan.</title>
     <meta
       name="description"
-      content="DateDrop is the dating app that doesn't ask who you like — it asks when you're free. Tell us your availability; our AI plans a real date at a real place and privately invites someone compatible. No swiping. No endless chats. No exchanging contact info."
+      content="DateHaja is the dating app that doesn't ask who you like — it asks when you're free. Tell us your availability; our AI plans a real date at a real place and privately invites someone compatible. No swiping. No endless chats. No exchanging contact info."
     />
 
     <meta property="og:url" content="https://merry-bass-190.convex.site/" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="DateDrop" />
+    <meta property="og:site_name" content="DateHaja" />
     <meta
       property="og:title"
-      content="DateDrop — We plan the date. You just say yes."
+      content="DateHaja — Let's date. We'll make the plan."
     />
     <meta
       property="og:description"
@@ -46,7 +46,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta
       name="twitter:title"
-      content="DateDrop — We plan the date. You just say yes."
+      content="DateHaja — Let's date. We'll make the plan."
     />
     <meta
       name="twitter:description"
@@ -66,9 +66,9 @@
     <script>
       (function () {
         try {
-          var l = localStorage.getItem("datedrop-locale");
+          var l = localStorage.getItem("datehaja-locale") || localStorage.getItem("datedrop-locale");
           if (l) document.documentElement.setAttribute("lang", l);
-          var t = localStorage.getItem("datedrop-theme");
+          var t = localStorage.getItem("datehaja-theme") || localStorage.getItem("datedrop-theme");
           if (!t || t === "system") {
             t = window.matchMedia("(prefers-color-scheme: dark)").matches
               ? "dark"

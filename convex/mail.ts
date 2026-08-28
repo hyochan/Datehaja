@@ -20,9 +20,9 @@ import { firstNameOnly } from "./lib/privacy";
 import { truncate } from "./lib/text";
 
 /**
- * DateDrop Concierge — the product's email identity.
+ * DateHaja Concierge — the product's email identity.
  *
- * Every message is sent from DateDrop's own AgentMail inbox. Participants are
+ * Every message is sent from DateHaja's own AgentMail inbox. Participants are
  * addressed individually, never CC'd together, so no one ever learns the other
  * person's address. Notification preferences are checked before every send.
  */
@@ -156,7 +156,7 @@ function isAllowed(
 
 /**
  * Send one Concierge email. Never throws — a mail failure must not take down
- * the DateDrop it was describing.
+ * the date plan it was describing.
  */
 export async function sendConciergeEmail(
   ctx: ActionCtx,
@@ -184,7 +184,7 @@ export async function sendConciergeEmail(
   };
 
   const inboxId = conciergeInboxId();
-  const fromAddress = inboxId ?? "concierge@datedrop";
+  const fromAddress = inboxId ?? "concierge@datehaja";
 
   if (!recipient.email) {
     await ctx.runMutation(internal.mail.logEmail, {
@@ -235,7 +235,7 @@ export async function sendConciergeEmail(
       text: args.content.text,
       html: args.content.html,
       labels: args.labels ?? [args.kind],
-      headers: args.dropId ? { "X-DateDrop-Id": args.dropId } : undefined,
+      headers: args.dropId ? { "X-DateHaja-Id": args.dropId } : undefined,
       idempotencyKey: args.idempotencyKey,
     });
 
@@ -381,8 +381,8 @@ export const getEvent = internalQuery({
 });
 
 /**
- * React to inbound mail. Someone replying to a DateDrop invitation gets a
- * Concierge reply pointing them back into the app — DateDrop deliberately does
+ * React to inbound mail. Someone replying to a date invitation gets a
+ * Concierge reply pointing them back into the app — DateHaja deliberately does
  * not accept "yes" by email, because acting on a date needs a real session.
  */
 export const handleInbound = internalAction({
@@ -423,7 +423,7 @@ export const handleInbound = internalAction({
           userId: event.userId,
           kind: "message",
           title: "We got your email",
-          body: "DateDrop Concierge replied with what you can do from here.",
+          body: "DateHaja Concierge replied with what you can do from here.",
           dropId: event.dropId,
           href: event.dropId ? `/drop/${event.dropId}` : "/dashboard",
         });

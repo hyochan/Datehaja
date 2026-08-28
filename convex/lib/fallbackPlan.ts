@@ -3,7 +3,7 @@ import { intersect } from "./matching";
 /**
  * Deterministic plan composition.
  *
- * The model writes the real DateDrop. This builds a usable one from the same
+ * The model writes the real date plan. This builds a usable one from the same
  * researched venues when the model is unavailable, so an outage degrades the
  * prose rather than cancelling someone's Saturday. The copy is honest about
  * being assembled from rules — it never claims reasoning that did not happen.
@@ -187,7 +187,7 @@ export function buildFallbackPlan(input: FallbackInput): FallbackPlan | null {
     ),
     whyForA: `${primary.venue.name} matches what you said you'd enjoy on a first date.`,
     whyForB: `${primary.venue.name} matches what you said you'd enjoy on a first date.`,
-    meetingInstructions: `Meet at ${primary.venue.name} in ${input.area}. If either of you is running late, use the one-tap notes on the DateDrop page — you won't need to swap numbers.`,
+    meetingInstructions: `Meet at ${primary.venue.name} in ${input.area}. If either of you is running late, use the one-tap notes on the date plan — you won't need to swap numbers.`,
     estimatedCostPerPerson: Math.round((input.budgetLow + input.budgetHigh) / 2),
     estimatedDurationMin: Math.max(60, Math.min(240, totalMinutes)),
     stops,

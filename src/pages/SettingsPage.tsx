@@ -63,7 +63,7 @@ export default function SettingsPage() {
 
       {/* -------------------------- the big switch -------------------------- */}
       <section>
-        <SectionHeading eyebrow="Control" title="DateDrops" />
+        <SectionHeading eyebrow="Control" title="Matching" />
         <Card className="p-2">
           <Toggle
             checked={!paused}
@@ -73,14 +73,14 @@ export default function SettingsPage() {
               try {
                 await setStatus({ status: next ? "active" : "paused" });
                 toast(
-                  next ? "DateDrops are on again." : "Paused. You won't get any more.",
+                  next ? "Matching is on again." : "Paused. You won't get any more.",
                   "success",
                 );
               } catch (e) {
                 toast(readableError(e), "error");
               }
             }}
-            label={paused ? "DateDrops are paused" : "Send me DateDrops"}
+            label={paused ? "Matching is paused" : "Find dates for me"}
             description={
               paused
                 ? "You won't be matched with anyone and nobody will see your profile. Nothing is deleted."
@@ -112,7 +112,7 @@ export default function SettingsPage() {
             checked={prefs?.notifyInvitations ?? true}
             disabled={busy || prefs?.notifyEmail === false}
             onChange={(next) => update({ notifyInvitations: next })}
-            label="New DateDrops"
+            label="New date plans"
             description="The invitation itself, with the plan and who you'd be meeting."
           />
           <Toggle
@@ -164,7 +164,7 @@ export default function SettingsPage() {
           <SettingsLink
             to="/demo"
             title="Demo controls"
-            body="Play the other side of a DateDrop with a demo profile"
+            body="Play the other side of a date plan with a demo profile"
           />
         </Card>
       </section>

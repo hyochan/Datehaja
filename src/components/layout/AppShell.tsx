@@ -27,12 +27,12 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Link
             to="/dashboard"
             className="flex items-center gap-2.5"
-            aria-label="DateDrop"
+            aria-label="DateHaja"
           >
             <Logo className="h-8 w-8" />
             <span className="leading-none">
               <span className="brand-wordmark block text-[20px] font-medium">
-                DateDrop
+                datehaja
               </span>
               <span className="docket-label mt-1 block text-[8px] text-muted">
                 {t("Private date concierge")}
@@ -156,7 +156,7 @@ export function ThemeToggle() {
   function choose(next: "light" | "dark") {
     setTheme(next);
     try {
-      localStorage.setItem("datedrop-theme", next);
+      localStorage.setItem("datehaja-theme", next);
     } catch {
       /* private mode — the choice just won't persist */
     }

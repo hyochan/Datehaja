@@ -27,7 +27,7 @@ export default function PrivacyPage() {
         <h1 className="text-[28px] leading-tight">{t("Privacy")}</h1>
         <p className="mt-1.5 text-[15.5px] leading-relaxed text-soft">
           {t(
-            "DateDrop's whole promise is that you can meet someone without handing over anything you'd rather keep. Here is exactly what that means.",
+            "DateHaja's whole promise is that you can meet someone without handing over anything you'd rather keep. Here is exactly what that means.",
           )}
         </p>
       </header>
@@ -112,8 +112,8 @@ export default function PrivacyPage() {
         <Card className="p-5">
           <p className="text-[15px] leading-relaxed">
             {t("Every invitation, confirmation and reminder is sent by")} {" "}
-            <strong className="font-medium">DateDrop Concierge</strong>{" "}
-            {t("from our own inbox. Your address is the recipient, never the sender, and never a CC. Two people on the same DateDrop are always emailed separately, so neither can see the other's address in a header.")}
+            <strong className="font-medium">DateHaja Concierge</strong>{" "}
+            {t("from our own inbox. Your address is the recipient, never the sender, and never a CC. Two people on the same date plan are always emailed separately, so neither can see the other's address in a header.")}
           </p>
           <p className="mt-3 text-[15px] leading-relaxed">
             {t("If you reply to one of those emails, it comes back to us — not to your match.")}
@@ -146,7 +146,7 @@ export default function PrivacyPage() {
             <Tag tone="warn">{t("No identity verification")}</Tag>
           </div>
           <p className="text-[15px] leading-relaxed">
-            {t("DateDrop does not verify anyone's identity. There is no ID check, no photo verification, and no background check. Please treat every match as someone you met on the internet, and read the")} {" "}
+            {t("DateHaja does not verify anyone's identity. There is no ID check, no photo verification, and no background check. Please treat every match as someone you met on the internet, and read the")} {" "}
             <Link to="/safety" className="underline underline-offset-2">
               {t("Safety Center")}
             </Link>{" "}

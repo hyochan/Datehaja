@@ -126,7 +126,7 @@ export const saveBasics = mutation({
     const now = Date.now();
 
     if (!args.ageConfirmed18) {
-      throw new Error("DateDrop is for adults only. You must confirm you are 18 or over.");
+      throw new Error("DateHaja is for adults only. You must confirm you are 18 or over.");
     }
 
     const displayName = clean(args.displayName, LIMITS.displayName);
@@ -137,7 +137,7 @@ export const saveBasics = mutation({
 
     const age = ageOn(args.dobMs, now);
     if (!Number.isFinite(args.dobMs) || age < MIN_AGE) {
-      throw new Error("You must be 18 or over to use DateDrop.");
+      throw new Error("You must be 18 or over to use DateHaja.");
     }
     if (age > MAX_AGE) throw new Error("Please check your date of birth.");
 
@@ -146,7 +146,7 @@ export const saveBasics = mutation({
     }
 
     const cityInfo = findCity(args.city);
-    if (!cityInfo) throw new Error("DateDrop isn't in that city yet.");
+    if (!cityInfo) throw new Error("DateHaja isn't in that city yet.");
     const area = findNeighborhood(args.city, args.neighborhood);
     if (!area) throw new Error("Pick an area from the list.");
 

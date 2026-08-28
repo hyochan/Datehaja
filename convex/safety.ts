@@ -36,7 +36,7 @@ import { describeDateTime } from "./lib/time";
  * blocking so someone can flag a real problem without being forced to also cut
  * contact, and vice versa.
  *
- * DateDrop does NOT verify identity. Nothing in the product claims that it does.
+ * DateHaja does NOT verify identity. Nothing in the product claims that it does.
  */
 
 /* ------------------------- private safety profile ------------------------- */
@@ -142,11 +142,11 @@ export const sharePlan = mutation({
       )
       .unique();
     if (!participant || participant.state !== "confirmed") {
-      throw new Error("Only a confirmed DateDrop can be shared.");
+      throw new Error("Only a confirmed date plan can be shared.");
     }
     const drop = await ctx.db.get("dateDrops", args.dropId);
     if (!drop || (drop.status !== "confirmed" && drop.status !== "completed")) {
-      throw new Error("This DateDrop is not confirmed.");
+      throw new Error("This date plan is not confirmed.");
     }
     const safetyProfile = await ctx.db
       .query("safetyProfiles")
@@ -303,7 +303,7 @@ export const deliverSafetyPlan = internalAction({
         text: content.text,
         html: content.html,
         labels: ["safety_plan"],
-        headers: { "X-DateDrop-Id": context.share.dropId },
+        headers: { "X-DateHaja-Id": context.share.dropId },
         idempotencyKey: `safety-plan-${args.shareId}`,
       });
       await ctx.runMutation(internal.mail.logEmail, {
@@ -364,7 +364,7 @@ export const blockFromDrop = mutation({
         q.eq("dropId", args.dropId).eq("userId", userId),
       )
       .unique();
-    if (!me) throw new Error("That DateDrop isn't yours.");
+    if (!me) throw new Error("That date plan isn't yours.");
 
     const participants = await ctx.db
       .query("dateDropParticipants")
@@ -373,7 +373,7 @@ export const blockFromDrop = mutation({
     // Insertion order would hand back whoever declined first, not the person
     // actually on the date. Always resolve the live counterpart.
     const other = pickCounterpart(participants, userId);
-    if (!other) throw new Error("There's nobody to block on this DateDrop.");
+    if (!other) throw new Error("There's nobody to block on this date plan.");
 
     await blockUserInternal(ctx, userId, other.userId, args.reason);
     return null;
@@ -404,7 +404,7 @@ async function blockUserInternal(
     });
   }
 
-  // Stand down every live DateDrop the two of them share.
+  // Stand down every live date plan the two of them share.
   const myDrops = await ctx.db
     .query("dateDropParticipants")
     .withIndex("by_user", (q) => q.eq("userId", blockerUserId))
@@ -432,7 +432,7 @@ async function blockUserInternal(
       status: "cancelled",
       cancelledAt: now,
       cancelledByUserId: blockerUserId,
-      cancelReason: "This DateDrop was cancelled for safety reasons.",
+      cancelReason: "This date was cancelled for safety reasons.",
       updatedAt: now,
     });
     for (const p of others) {
@@ -458,8 +458,8 @@ async function blockUserInternal(
     await ctx.db.insert("notifications", {
       userId: blockedUserId,
       kind: "cancelled",
-      title: "A DateDrop was cancelled",
-      body: "One of your DateDrops was cancelled. Your availability is open again.",
+      title: "A date was cancelled",
+      body: "One of your date plans was cancelled. Your availability is open again.",
       dropId: drop._id,
       href: "/dashboard",
       read: false,
@@ -493,7 +493,7 @@ export const report = mutation({
           q.eq("dropId", args.dropId!).eq("userId", userId),
         )
         .unique();
-      if (!me) throw new Error("That DateDrop isn't yours.");
+      if (!me) throw new Error("That date plan isn't yours.");
       const participants = await ctx.db
         .query("dateDropParticipants")
         .withIndex("by_drop", (q) => q.eq("dropId", args.dropId!))
@@ -501,7 +501,7 @@ export const report = mutation({
       reportedUserId = pickCounterpart(participants, userId)?.userId ?? null;
     }
     if (!reportedUserId) {
-      throw new Error("We need a DateDrop to attach this report to.");
+      throw new Error("We need a date plan to attach this report to.");
     }
 
     const reportId = await ctx.db.insert("reports", {
@@ -658,7 +658,7 @@ export const myVisibility = query({
         "Your exact address or coordinates",
         "Your date of birth",
         "Your full name (we only show your first name)",
-        "Your other DateDrops, past or present",
+        "Your other date plans, past or present",
       ],
     };
   },

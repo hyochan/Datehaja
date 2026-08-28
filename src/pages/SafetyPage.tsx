@@ -67,7 +67,7 @@ export default function SafetyPage() {
         <h1 className="text-[28px] leading-tight">{t("Safety Center")}</h1>
         <p className="mt-1.5 text-[15.5px] leading-relaxed text-soft">
           {t(
-            "DateDrop sends you to meet a stranger in public. Here's what we do, what we don't, and what's in your hands.",
+            "DateHaja sends you to meet a stranger in public. Here's what we do, what we don't, and what's in your hands.",
           )}
         </p>
       </header>
@@ -145,7 +145,7 @@ export default function SafetyPage() {
                     />
                     <span>
                       {t(
-                        "They agreed that I can store this email for DateDrop safety plans.",
+                        "They agreed that I can store this email for DateHaja safety plans.",
                       )}
                     </span>
                   </label>
@@ -174,7 +174,7 @@ export default function SafetyPage() {
           <Card className="p-5">
             <p className="text-[14.5px] leading-relaxed text-soft">
               {t(
-                "Sign in to add a trusted contact and choose whether DateDrop checks in after a date.",
+                "Sign in to add a trusted contact and choose whether DateHaja checks in after a date.",
               )}
             </p>
             <div className="mt-4">
@@ -199,7 +199,7 @@ export default function SafetyPage() {
           </div>
           <p className="text-[15px] leading-relaxed">
             {t(
-              "DateDrop does not verify identity in any form. Everything on a profile is self-reported. We say this plainly because a product that implies safety it hasn't earned is more dangerous than one that's honest.",
+              "DateHaja does not verify identity in any form. Everything on a profile is self-reported. We say this plainly because a product that implies safety it hasn't earned is more dangerous than one that's honest.",
             )}
           </p>
           <p className="mt-3 text-[15px] leading-relaxed">
@@ -219,7 +219,7 @@ export default function SafetyPage() {
           <Item
             title={t("Public places only")}
             body={t(
-              "Every DateDrop is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.",
+              "Every date is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.",
             )}
           />
           <Item
@@ -237,13 +237,13 @@ export default function SafetyPage() {
           <Item
             title={t("You can stop instantly")}
             body={t(
-              "One switch in Settings takes you out of everyone's candidate pool immediately, so no new DateDrop can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.",
+              "One switch in Settings takes you out of everyone's candidate pool immediately, so no new date plan can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.",
             )}
           />
           <Item
             title={t("Blocking is mutual and permanent")}
             body={t(
-              "Blocking someone cancels any DateDrop you share, frees both evenings, and permanently removes you from each other's candidate pool.",
+              "Blocking someone cancels any date plan you share, frees both evenings, and permanently removes you from each other's candidate pool.",
             )}
           />
         </Card>
@@ -258,7 +258,7 @@ export default function SafetyPage() {
           <ul className="space-y-3">
             {[
               t(
-                "Tell someone you trust where you're going and when. The DateDrop page has the venue, address and time — it's built to be forwarded.",
+                "Tell someone you trust where you're going and when. The date plan page has the venue, address and time — it's built to be forwarded.",
               ),
               t(
                 "Arrange your own way there and back. Don't accept a lift on a first date.",
@@ -270,7 +270,7 @@ export default function SafetyPage() {
                 "Keep an eye on your drink, and leave whenever you want to — you owe a stranger nothing.",
               ),
               t(
-                "If they pressure you for your number, socials or money, report it. That's exactly what DateDrop exists to make unnecessary.",
+                "If they pressure you for your number, socials or money, report it. That's exactly what DateHaja exists to make unnecessary.",
               ),
             ].map((tip) => (
               <li
@@ -293,7 +293,7 @@ export default function SafetyPage() {
         <Card className="p-5">
           <p className="text-[15px] leading-relaxed">
             {t(
-              "Open the DateDrop and use Report at the bottom of the page. The report reaches us with the DateDrop attached, so we can see who, when and where without you having to explain it twice.",
+              "Open the date plan and use Report at the bottom of the page. The report reaches us with the date plan attached, so we can see who, when and where without you having to explain it twice.",
             )}
           </p>
           <p className="mt-3 text-[15px] leading-relaxed">
@@ -303,7 +303,7 @@ export default function SafetyPage() {
           </p>
           <p className="mt-3 text-[15px] leading-relaxed">
             {t(
-              "You can also reply to any DateDrop Concierge email. It comes to us.",
+              "You can also reply to any DateHaja Concierge email. It comes to us.",
             )}
           </p>
         </Card>
@@ -320,7 +320,7 @@ export default function SafetyPage() {
           <LinkRow
             to="/settings"
             title={t("Settings")}
-            body={t("Pause DateDrops, manage blocks, control email")}
+            body={t("Pause matching, manage blocks, control email")}
           />
         </Card>
       </section>

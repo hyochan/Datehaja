@@ -24,7 +24,7 @@ http.route({
     return new Response(
       JSON.stringify({
         ok: true,
-        service: "datedrop",
+        service: "datehaja",
         integrations: {
           openai: Boolean(process.env.OPENAI_API_KEY),
           firecrawl: Boolean(process.env.FIRECRAWL_API_KEY) || "keyless",
@@ -60,7 +60,7 @@ http.route({
       status: 200,
       headers: {
         "Content-Type": "text/calendar; charset=utf-8",
-        "Content-Disposition": 'inline; filename="datedrop.ics"',
+        "Content-Disposition": 'inline; filename="datehaja.ics"',
         "Cache-Control": "private, no-store, max-age=0",
         "X-Content-Type-Options": "nosniff",
         "X-Robots-Tag": "noindex, nofollow",

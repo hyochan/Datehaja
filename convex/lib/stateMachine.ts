@@ -1,7 +1,7 @@
 import type { DropStatus, ParticipantState } from "./enums";
 
 /**
- * Explicit DateDrop lifecycle. Every transition in the app funnels through
+ * Explicit date-plan lifecycle. Every transition in the app funnels through
  * `assertDropTransition` so an out-of-order webhook, a double click, or a
  * retried job can never drive a drop into an impossible state.
  */
@@ -46,7 +46,7 @@ export function canTransitionDrop(from: DropStatus, to: DropStatus): boolean {
 
 export function assertDropTransition(from: DropStatus, to: DropStatus): void {
   if (!canTransitionDrop(from, to)) {
-    throw new Error(`Illegal DateDrop transition: ${from} → ${to}`);
+    throw new Error(`Illegal date-plan transition: ${from} → ${to}`);
   }
 }
 

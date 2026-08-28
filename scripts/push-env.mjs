@@ -44,7 +44,7 @@ const NEVER_PUSH = new Set([
   "SITE_URL",
 ]);
 
-/** Everything DateDrop's own code actually reads. */
+/** Everything DateHaja's own code actually reads. */
 const KNOWN = new Set([
   "OPENAI_API_KEY",
   "OPENAI_MODEL",
@@ -112,7 +112,7 @@ for (const [name, value] of push) {
   console.log(`  ${name.padEnd(26)} ${shown}`);
 }
 if (unknown.length) {
-  console.log(`\n  note: not read by DateDrop — ${unknown.join(", ")}`);
+  console.log(`\n  note: not read by DateHaja — ${unknown.join(", ")}`);
 }
 if (skipped.length) {
   console.log(`  skipped (deployment-specific or generated): ${skipped.join(", ")}`);
@@ -121,7 +121,7 @@ if (placeholders.length) {
   console.log(`  still placeholders: ${placeholders.join(", ")}`);
 }
 
-const tmp = join(tmpdir(), `datedrop-env-${process.pid}`);
+const tmp = join(tmpdir(), `datehaja-env-${process.pid}`);
 try {
   writeFileSync(tmp, push.map(([n, v]) => `${n}=${v}`).join("\n") + "\n", {
     mode: 0o600,

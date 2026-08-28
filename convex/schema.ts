@@ -124,7 +124,7 @@ export default defineSchema({
     notifyConfirmations: v.boolean(),
     notifyReminders: v.boolean(),
 
-    /** Instant "stop sending me DateDrops" switch. */
+    /** Instant "stop finding dates for me" switch. */
     dropsPaused: v.boolean(),
     maxDropsPerWeek: v.number(),
     /** Demo personas are fictional and clearly labelled. Users can opt out of
@@ -273,7 +273,7 @@ export default defineSchema({
     .index("by_userA", ["userAId"])
     .index("by_userB", ["userBId"]),
 
-  // ---- the DateDrop ----------------------------------------------------
+  // ---- date plans ------------------------------------------------------
   dateDrops: defineTable({
     status: dropStatusValidator,
     initiatorUserId: v.id("users"),

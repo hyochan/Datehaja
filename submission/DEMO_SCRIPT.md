@@ -1,4 +1,4 @@
-# DateDrop — 3-minute demo script
+# DateHaja — 3-minute demo script
 
 Target: **2:55 maximum**. Show the product moving; keep architecture claims tied
 to something visible on screen.
@@ -23,7 +23,7 @@ Live app: https://merry-bass-190.convex.site
 **On screen:** redesigned landing hero.
 
 > Dating apps ask who you like, then make you swipe and chat for days.
-> DateDrop asks one smaller question: when are you free?
+> DateHaja asks one smaller question: when are you free?
 
 Click **Read the two-minute brief**. Let the connected concierge flow settle on
 screen: two availability slips, research, two locked answers, one date ticket.
@@ -52,9 +52,9 @@ Keep Window B visible but untouched.
 
 ## 1:05–1:32 · A researched plan, not a profile
 
-**On screen:** open the DateDrop, then expand **How we built this**.
+**On screen:** open the date plan, then expand **How we built this**.
 
-> DateDrop arrives with a time, a real public venue, a route and a budget.
+> The date plan arrives with a time, a real public venue, a route and a budget.
 > Firecrawl researched the live web around our midpoint. Here are the source
 > pages, the supporting quotes and when they were checked. OpenAI composed the
 > plan only from that evidence. If something is uncertain, the app says so.
@@ -63,11 +63,11 @@ Briefly show model name, latency and token evidence—do not dwell on raw logs.
 
 ## 1:32–1:50 · AgentMail keeps both people private
 
-**On screen:** the real invitation email from DateDrop Concierge.
+**On screen:** the real invitation email from DateHaja Concierge.
 
-> AgentMail gives DateDrop its own inbox. We receive separate private
+> AgentMail gives DateHaja its own inbox. We receive separate private
 > invitations, so neither person sees the other's email address—not in the app,
-> sender field or CC list. A reply goes back to DateDrop, not to the match.
+> sender field or CC list. A reply goes back to DateHaja, not to the match.
 
 ## 1:50–2:12 · Both answer privately
 
@@ -75,7 +75,7 @@ Briefly show model name, latency and token evidence—do not dwell on raw logs.
 
 > I accept. The other person still cannot see my answer.
 
-Click **Accept this DateDrop**, open **Demo controls**, then click
+Click **Accept this date**, open **Demo controls**, then click
 **They accept** for the clearly labelled fictional persona.
 
 > The seeded persona lets a judge drive the second side without recruiting
@@ -91,11 +91,11 @@ Click **Accept this DateDrop**, open **Demo controls**, then click
 
 ## 2:30–2:50 · The plan leaves the app safely
 
-**On screen:** confirmed DateDrop, then its calendar and trusted-contact actions.
+**On screen:** confirmed date plan, then its calendar and trusted-contact actions.
 
 > One acceptance reserves the evening; two finalize the same calendar event;
 > a cancellation releases it. I can also send only my name, the time and this
-> public venue to a trusted contact. The match's identity never leaves DateDrop.
+> public venue to a trusted contact. The match's identity never leaves DateHaja.
 
 Briefly reveal the private post-date check-in heading without filling it in.
 
@@ -106,7 +106,7 @@ Briefly reveal the private post-date check-in heading without filling it in.
 
 **On screen:** return to the landing hero or final date ticket.
 
-> DateDrop only asks when you're free. We plan the date. You just say yes.
+> DateHaja only asks when you're free. Let's date. We'll make the plan.
 
 ---
 

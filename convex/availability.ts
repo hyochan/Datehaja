@@ -130,7 +130,7 @@ export const remove = mutation({
       );
     }
     if (window.status === "held") {
-      // A DateDrop is mid-flight on this window. Releasing it silently would
+      // A date plan is mid-flight on this window. Releasing it silently would
       // leave that drop pointing at an evening the user has taken back, so
       // withdraw them from it properly and let the normal departure logic
       // decide whether to look for a replacement or close the drop.

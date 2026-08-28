@@ -1,4 +1,4 @@
-/** Human labels for DateDrop lifecycle states. Users never see a raw enum. */
+/** Human labels for date-plan lifecycle states. Users never see a raw enum. */
 
 export type Tone = "neutral" | "ember" | "sage" | "dusk" | "warn";
 

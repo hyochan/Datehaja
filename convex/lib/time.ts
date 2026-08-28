@@ -19,7 +19,7 @@ export function overlapMinutes(a: Window, b: Window): number {
   return i ? Math.round((i.endMs - i.startMs) / MINUTE_MS) : 0;
 }
 
-/** A DateDrop needs a real block of time, not a 15-minute brush. */
+/** A real date needs a real block of time, not a 15-minute brush. */
 export const MIN_OVERLAP_MINUTES = 90;
 
 export function hasUsableOverlap(a: Window, b: Window): boolean {

@@ -40,7 +40,8 @@ export const SUPPORTED_LOCALES = [
 export type LocaleCode = (typeof SUPPORTED_LOCALES)[number]["code"];
 type TranslationPack = Record<string, string>;
 
-const STORAGE_KEY = "datedrop-locale";
+const STORAGE_KEY = "datehaja-locale";
+const LEGACY_STORAGE_KEY = "datedrop-locale";
 const DEFAULT_LOCALE: LocaleCode = "en-US";
 let runtimeLocale: LocaleCode | null = null;
 
@@ -67,8 +68,8 @@ const ko: TranslationPack = {
   "Service note 001": "서비스 노트 001",
   "Bring us a free evening.": "비어 있는 저녁을 알려주세요.",
   "We'll return a date.": "데이트로 돌려드릴게요.",
-  "No profiles to browse. No conversation to keep alive. DateDrop finds a compatible person, researches a real place, and sends one private invitation to each of you.":
-    "프로필을 넘겨보거나 대화를 억지로 이어갈 필요가 없습니다. DateDrop이 잘 맞는 사람과 실제 장소를 찾고, 두 사람에게 각각 비공개 초대를 보냅니다.",
+  "No profiles to browse. No conversation to keep alive. DateHaja finds a compatible person, researches a real place, and sends one private invitation to each of you.":
+    "프로필을 넘겨보거나 대화를 억지로 이어갈 필요가 없습니다. DateHaja가 잘 맞는 사람과 실제 장소를 찾고, 두 사람에게 각각 비공개 초대를 보냅니다.",
   "Open an evening": "저녁 한 칸 열기",
   "Read the two-minute brief": "2분 안내 읽기",
   "No swiping": "스와이프 없음",
@@ -86,7 +87,7 @@ const ko: TranslationPack = {
   "Perform small talk": "끝없는 가벼운 대화",
   "Negotiate a plan": "일정과 장소 조율하기",
   "Maybe meet": "어쩌면 만나기",
-  "The DateDrop route": "DateDrop 방식",
+  "The DateHaja route": "DateHaja 방식",
   "Say when you're free": "가능한 시간 알려주기",
   "Finding the person and the place": "사람과 장소 찾기",
   "Receive one considered plan": "신중하게 짠 계획 하나 받기",
@@ -95,16 +96,16 @@ const ko: TranslationPack = {
   "What arrives": "도착하는 것",
   "A plan,": "프로필이 아닌,",
   "not a profile.": "하나의 계획.",
-  "A DateDrop has a time, a public place, a budget, and one honest reason the two of you might enjoy it. Nothing to research. One decision to make.":
-    "DateDrop에는 시간, 공개된 장소, 예산, 그리고 두 사람이 즐거울 이유가 담깁니다. 따로 알아볼 것 없이 한 번만 결정하면 됩니다.",
+  "A date plan has a time, a public place, a budget, and one honest reason the two of you might enjoy it. Nothing to research. One decision to make.":
+    "데이트 계획에는 시간, 공개된 장소, 예산, 그리고 두 사람이 즐거울 이유가 담깁니다. 따로 알아볼 것 없이 한 번만 결정하면 됩니다.",
   "Places researched on the live web": "실시간 웹에서 조사한 장소",
   "Sources and evidence attached": "출처와 근거 첨부",
   "Constraints and budget respected": "조건과 예산 반영",
   "Private by construction": "처음부터 프라이버시 중심",
   "The date arrives.": "데이트는 도착하지만.",
   "Your details don't.": "개인정보는 가지 않습니다.",
-  "DateDrop Concierge sends every invitation separately. Before you both accept, your match gets a first name, age, neighbourhood, and a few interests — never your inbox or number.":
-    "DateDrop 컨시어지가 초대를 각자에게 따로 보냅니다. 두 사람 모두 수락하기 전에는 이름, 나이, 동네, 몇 가지 관심사만 보이며 이메일과 전화번호는 절대 공개되지 않습니다.",
+  "DateHaja Concierge sends every invitation separately. Before you both accept, your match gets a first name, age, neighbourhood, and a few interests — never your inbox or number.":
+    "DateHaja 컨시어지가 초대를 각자에게 따로 보냅니다. 두 사람 모두 수락하기 전에는 이름, 나이, 동네, 몇 가지 관심사만 보이며 이메일과 전화번호는 절대 공개되지 않습니다.",
   "Email address": "이메일 주소",
   "Phone number": "전화번호",
   "Home address": "집 주소",
@@ -112,16 +113,16 @@ const ko: TranslationPack = {
   "Full name": "성명",
   "Social handles": "소셜 계정",
   "Not shared": "공유 안 함",
-  "DateDrop is 18+. We do not verify identity. Read exactly what we do and don't do in the":
-    "DateDrop은 만 18세 이상만 이용할 수 있으며 신원을 인증하지 않습니다. 제공하는 보호 조치와 한계를",
+  "DateHaja is 18+. We do not verify identity. Read exactly what we do and don't do in the":
+    "DateHaja는 만 18세 이상만 이용할 수 있으며 신원을 인증하지 않습니다. 제공하는 보호 조치와 한계를",
   "Safety Center": "안전 센터",
   "Your invitation is open": "초대가 열려 있습니다",
   "When are you free?": "언제 시간이 비나요?",
   "That is still the only question we need answered.":
     "여전히 필요한 답은 이것 하나뿐입니다.",
-  "Get my first DateDrop": "첫 DateDrop 받기",
-  "We plan the date. You just say yes.":
-    "데이트는 저희가 준비할게요. 당신은 답만 해주세요.",
+  "Plan my first date": "첫 데이트 계획 받기",
+  "Let's date. We'll make the plan.":
+    "데이트하자. 계획은 저희가 준비할게요.",
   "Availability docket": "가능 시간 기록",
   Sat: "토",
   "AUG / SEOUL": "8월 / 서울",
@@ -134,7 +135,7 @@ const ko: TranslationPack = {
   Ready: "준비",
   "Next: compatibility → venue research → private invite":
     "다음: 궁합 확인 → 장소 조사 → 비공개 초대",
-  "New DateDrop": "새 DateDrop",
+  "New date plan": "새 데이트 계획",
   "Preview / grounded live": "미리보기 / 실시간 근거",
   "Preview / localized example": "미리보기 / 지역별 예시",
   Saturday: "토요일",
@@ -152,7 +153,7 @@ const ko: TranslationPack = {
   person: "1인",
   Pass: "패스",
   Accept: "수락",
-  "DateDrop home": "DateDrop 홈",
+  "DateHaja home": "DateHaja 홈",
   "Concierge brief": "컨시어지 안내",
   "Your free time is enough to begin.":
     "비어 있는 시간만 있으면 시작할 수 있어요.",
@@ -176,17 +177,17 @@ const ko: TranslationPack = {
   Email: "이메일",
   Password: "비밀번호",
   "At least 8 characters.": "8자 이상 입력하세요.",
-  "I'm 18 or over, and I understand DateDrop does not verify identity.":
-    "만 18세 이상이며 DateDrop이 신원을 인증하지 않는다는 점을 이해했습니다.",
+  "I'm 18 or over, and I understand DateHaja does not verify identity.":
+    "만 18세 이상이며 DateHaja가 신원을 인증하지 않는다는 점을 이해했습니다.",
   "Create my account": "계정 만들기",
   "Already have an account?": "이미 계정이 있나요?",
   "New here?": "처음이신가요?",
   "Create an account": "계정 만들기",
-  "Your email is used only by DateDrop Concierge to reach you. It is never shown to another user.":
-    "이메일은 DateDrop 컨시어지가 연락할 때만 사용하며 다른 사용자에게 공개하지 않습니다.",
+  "Your email is used only by DateHaja Concierge to reach you. It is never shown to another user.":
+    "이메일은 DateHaja 컨시어지가 연락할 때만 사용하며 다른 사용자에게 공개하지 않습니다.",
   "How privacy works": "개인정보 보호 방식",
-  "DateDrop is for adults only — please confirm you're 18 or over.":
-    "DateDrop은 성인 전용입니다. 만 18세 이상인지 확인해 주세요.",
+  "DateHaja is for adults only — please confirm you're 18 or over.":
+    "DateHaja는 성인 전용입니다. 만 18세 이상인지 확인해 주세요.",
   "Use at least 8 characters.": "8자 이상 사용해 주세요.",
   "That email is already registered. Try signing in instead.":
     "이미 등록된 이메일입니다. 로그인해 주세요.",
@@ -224,8 +225,8 @@ const ja: TranslationPack = {
   "Service note 001": "サービスノート 001",
   "Bring us a free evening.": "空いている夜を教えてください。",
   "We'll return a date.": "デートにしてお返しします。",
-  "No profiles to browse. No conversation to keep alive. DateDrop finds a compatible person, researches a real place, and sends one private invitation to each of you.":
-    "プロフィール探しも、無理な会話も不要です。DateDropが相性のよい相手と実在する場所を探し、それぞれに非公開の招待を送ります。",
+  "No profiles to browse. No conversation to keep alive. DateHaja finds a compatible person, researches a real place, and sends one private invitation to each of you.":
+    "プロフィール探しも、無理な会話も不要です。DateHajaが相性のよい相手と実在する場所を探し、それぞれに非公開の招待を送ります。",
   "Open an evening": "夜をひとつ空ける",
   "Read the two-minute brief": "2分ガイドを読む",
   "No swiping": "スワイプなし",
@@ -243,7 +244,7 @@ const ja: TranslationPack = {
   "Perform small talk": "延々と雑談",
   "Negotiate a plan": "予定と場所を調整",
   "Maybe meet": "会えるかもしれない",
-  "The DateDrop route": "DateDropの流れ",
+  "The DateHaja route": "DateHajaの流れ",
   "Say when you're free": "空いている時間を伝える",
   "Finding the person and the place": "相手と場所を探す",
   "Receive one considered plan": "よく考えられた提案を一つ受け取る",
@@ -252,16 +253,16 @@ const ja: TranslationPack = {
   "What arrives": "届くもの",
   "A plan,": "プロフィールではなく、",
   "not a profile.": "ひとつのプラン。",
-  "A DateDrop has a time, a public place, a budget, and one honest reason the two of you might enjoy it. Nothing to research. One decision to make.":
-    "DateDropには日時、公共の場所、予算、二人が楽しめそうな正直な理由が含まれます。調べ物は不要。決めるのは一度だけです。",
+  "A date plan has a time, a public place, a budget, and one honest reason the two of you might enjoy it. Nothing to research. One decision to make.":
+    "デートプランには日時、公共の場所、予算、二人が楽しめそうな正直な理由が含まれます。調べ物は不要。決めるのは一度だけです。",
   "Places researched on the live web": "現在のウェブ情報で調べた場所",
   "Sources and evidence attached": "情報源と根拠を添付",
   "Constraints and budget respected": "条件と予算を尊重",
   "Private by construction": "設計からプライベート",
   "The date arrives.": "デートは届く。",
   "Your details don't.": "個人情報は届かない。",
-  "DateDrop Concierge sends every invitation separately. Before you both accept, your match gets a first name, age, neighbourhood, and a few interests — never your inbox or number.":
-    "DateDropコンシェルジュが招待を別々に送ります。二人が承諾するまでは、名前、年齢、エリア、いくつかの興味だけが表示され、メールや電話番号は公開されません。",
+  "DateHaja Concierge sends every invitation separately. Before you both accept, your match gets a first name, age, neighbourhood, and a few interests — never your inbox or number.":
+    "DateHajaコンシェルジュが招待を別々に送ります。二人が承諾するまでは、名前、年齢、エリア、いくつかの興味だけが表示され、メールや電話番号は公開されません。",
   "Email address": "メールアドレス",
   "Phone number": "電話番号",
   "Home address": "自宅住所",
@@ -269,16 +270,16 @@ const ja: TranslationPack = {
   "Full name": "氏名",
   "Social handles": "SNSアカウント",
   "Not shared": "共有しない",
-  "DateDrop is 18+. We do not verify identity. Read exactly what we do and don't do in the":
-    "DateDropは18歳以上向けで、本人確認は行いません。詳しい保護内容と限界は",
+  "DateHaja is 18+. We do not verify identity. Read exactly what we do and don't do in the":
+    "DateHajaは18歳以上向けで、本人確認は行いません。詳しい保護内容と限界は",
   "Safety Center": "セーフティセンター",
   "Your invitation is open": "招待を受付中",
   "When are you free?": "いつ空いていますか？",
   "That is still the only question we need answered.":
     "必要なのは、今もこの答えだけです。",
-  "Get my first DateDrop": "最初のDateDropを受け取る",
-  "We plan the date. You just say yes.":
-    "デートは私たちが計画。あなたは返事をするだけ。",
+  "Plan my first date": "最初のデートを計画する",
+  "Let's date. We'll make the plan.":
+    "デートしよう。プランは私たちにおまかせ。",
   "Availability docket": "空き時間票",
   Sat: "土",
   "AUG / SEOUL": "8月 / ソウル",
@@ -291,7 +292,7 @@ const ja: TranslationPack = {
   Ready: "準備完了",
   "Next: compatibility → venue research → private invite":
     "次：相性確認 → 場所の調査 → 非公開招待",
-  "New DateDrop": "新しいDateDrop",
+  "New date plan": "新しいデートプラン",
   "Preview / grounded live": "プレビュー / 最新情報に基づく",
   "Preview / localized example": "プレビュー / 地域別の例",
   Saturday: "土曜日",
@@ -309,7 +310,7 @@ const ja: TranslationPack = {
   person: "1人",
   Pass: "見送る",
   Accept: "承諾",
-  "DateDrop home": "DateDropホーム",
+  "DateHaja home": "DateHajaホーム",
   "Concierge brief": "コンシェルジュガイド",
   "Your free time is enough to begin.": "空いている時間だけで始められます。",
   "One free evening goes in. A real date comes out.":
@@ -332,17 +333,17 @@ const ja: TranslationPack = {
   Email: "メール",
   Password: "パスワード",
   "At least 8 characters.": "8文字以上。",
-  "I'm 18 or over, and I understand DateDrop does not verify identity.":
-    "18歳以上で、DateDropが本人確認を行わないことを理解しました。",
+  "I'm 18 or over, and I understand DateHaja does not verify identity.":
+    "18歳以上で、DateHajaが本人確認を行わないことを理解しました。",
   "Create my account": "アカウントを作成",
   "Already have an account?": "すでにアカウントをお持ちですか？",
   "New here?": "初めてですか？",
   "Create an account": "アカウントを作成",
-  "Your email is used only by DateDrop Concierge to reach you. It is never shown to another user.":
-    "メールはDateDropコンシェルジュからの連絡にのみ使用し、他のユーザーには表示しません。",
+  "Your email is used only by DateHaja Concierge to reach you. It is never shown to another user.":
+    "メールはDateHajaコンシェルジュからの連絡にのみ使用し、他のユーザーには表示しません。",
   "How privacy works": "プライバシーの仕組み",
-  "DateDrop is for adults only — please confirm you're 18 or over.":
-    "DateDropは成人向けです。18歳以上であることを確認してください。",
+  "DateHaja is for adults only — please confirm you're 18 or over.":
+    "DateHajaは成人向けです。18歳以上であることを確認してください。",
   "Use at least 8 characters.": "8文字以上にしてください。",
   "That email is already registered. Try signing in instead.":
     "そのメールは登録済みです。ログインしてください。",
@@ -380,8 +381,8 @@ const de: TranslationPack = {
   "Service note 001": "Service-Notiz 001",
   "Bring us a free evening.": "Gib uns einen freien Abend.",
   "We'll return a date.": "Wir machen ein Date daraus.",
-  "No profiles to browse. No conversation to keep alive. DateDrop finds a compatible person, researches a real place, and sends one private invitation to each of you.":
-    "Keine Profile durchsuchen, keine Gespräche künstlich am Leben halten. DateDrop findet eine passende Person, recherchiert einen echten Ort und sendet euch getrennte private Einladungen.",
+  "No profiles to browse. No conversation to keep alive. DateHaja finds a compatible person, researches a real place, and sends one private invitation to each of you.":
+    "Keine Profile durchsuchen, keine Gespräche künstlich am Leben halten. DateHaja findet eine passende Person, recherchiert einen echten Ort und sendet euch getrennte private Einladungen.",
   "Open an evening": "Einen Abend freigeben",
   "Read the two-minute brief": "Zwei-Minuten-Info lesen",
   "No swiping": "Kein Swipen",
@@ -399,7 +400,7 @@ const de: TranslationPack = {
   "Perform small talk": "Smalltalk aufführen",
   "Negotiate a plan": "Einen Plan aushandeln",
   "Maybe meet": "Vielleicht treffen",
-  "The DateDrop route": "Der DateDrop-Weg",
+  "The DateHaja route": "Der DateHaja-Weg",
   "Say when you're free": "Sag, wann du Zeit hast",
   "Finding the person and the place": "Person und Ort finden",
   "Receive one considered plan": "Einen durchdachten Plan erhalten",
@@ -408,16 +409,16 @@ const de: TranslationPack = {
   "What arrives": "Was ankommt",
   "A plan,": "Ein Plan,",
   "not a profile.": "kein Profil.",
-  "A DateDrop has a time, a public place, a budget, and one honest reason the two of you might enjoy it. Nothing to research. One decision to make.":
-    "Ein DateDrop hat eine Zeit, einen öffentlichen Ort, ein Budget und einen ehrlichen Grund, warum es euch gefallen könnte. Nichts nachzurecherchieren. Eine Entscheidung.",
+  "A date plan has a time, a public place, a budget, and one honest reason the two of you might enjoy it. Nothing to research. One decision to make.":
+    "Ein Date-Plan hat eine Zeit, einen öffentlichen Ort, ein Budget und einen ehrlichen Grund, warum er euch gefallen könnte. Nichts nachzurecherchieren. Eine Entscheidung.",
   "Places researched on the live web": "Orte aktuell im Web recherchiert",
   "Sources and evidence attached": "Quellen und Belege beigefügt",
   "Constraints and budget respected": "Vorgaben und Budget berücksichtigt",
   "Private by construction": "Von Grund auf privat",
   "The date arrives.": "Das Date kommt an.",
   "Your details don't.": "Deine Daten nicht.",
-  "DateDrop Concierge sends every invitation separately. Before you both accept, your match gets a first name, age, neighbourhood, and a few interests — never your inbox or number.":
-    "DateDrop Concierge versendet jede Einladung getrennt. Bevor ihr beide zusagt, sieht dein Match nur Vorname, Alter, Viertel und einige Interessen — niemals E-Mail oder Telefonnummer.",
+  "DateHaja Concierge sends every invitation separately. Before you both accept, your match gets a first name, age, neighbourhood, and a few interests — never your inbox or number.":
+    "DateHaja Concierge versendet jede Einladung getrennt. Bevor ihr beide zusagt, sieht dein Match nur Vorname, Alter, Viertel und einige Interessen — niemals E-Mail oder Telefonnummer.",
   "Email address": "E-Mail-Adresse",
   "Phone number": "Telefonnummer",
   "Home address": "Wohnadresse",
@@ -425,16 +426,16 @@ const de: TranslationPack = {
   "Full name": "Vollständiger Name",
   "Social handles": "Social-Media-Namen",
   "Not shared": "Nicht geteilt",
-  "DateDrop is 18+. We do not verify identity. Read exactly what we do and don't do in the":
-    "DateDrop ist ab 18. Wir prüfen keine Identitäten. Was wir tun und nicht tun, steht im",
+  "DateHaja is 18+. We do not verify identity. Read exactly what we do and don't do in the":
+    "DateHaja ist ab 18. Wir prüfen keine Identitäten. Was wir tun und nicht tun, steht im",
   "Safety Center": "Sicherheitsbereich",
   "Your invitation is open": "Deine Einladung ist offen",
   "When are you free?": "Wann hast du Zeit?",
   "That is still the only question we need answered.":
     "Das ist weiterhin die einzige Frage, die wir stellen.",
-  "Get my first DateDrop": "Meinen ersten DateDrop erhalten",
-  "We plan the date. You just say yes.":
-    "Wir planen das Date. Du sagst nur Ja.",
+  "Plan my first date": "Mein erstes Date planen",
+  "Let's date. We'll make the plan.":
+    "Lass uns daten. Wir machen den Plan.",
   "Availability docket": "Zeitfenster-Akte",
   Sat: "Sa",
   "AUG / SEOUL": "AUG / SEOUL",
@@ -447,7 +448,7 @@ const de: TranslationPack = {
   Ready: "Bereit",
   "Next: compatibility → venue research → private invite":
     "Als Nächstes: Kompatibilität → Ortsrecherche → private Einladung",
-  "New DateDrop": "Neuer DateDrop",
+  "New date plan": "Neuer Date-Plan",
   "Preview / grounded live": "Vorschau / aktuell belegt",
   "Preview / localized example": "Vorschau / lokales Beispiel",
   Saturday: "Samstag",
@@ -467,7 +468,7 @@ const de: TranslationPack = {
   person: "Person",
   Pass: "Ablehnen",
   Accept: "Annehmen",
-  "DateDrop home": "DateDrop Startseite",
+  "DateHaja home": "DateHaja Startseite",
   "Concierge brief": "Concierge-Info",
   "Your free time is enough to begin.":
     "Deine freie Zeit reicht, um zu beginnen.",
@@ -491,17 +492,17 @@ const de: TranslationPack = {
   Email: "E-Mail",
   Password: "Passwort",
   "At least 8 characters.": "Mindestens 8 Zeichen.",
-  "I'm 18 or over, and I understand DateDrop does not verify identity.":
-    "Ich bin mindestens 18 und verstehe, dass DateDrop keine Identitäten prüft.",
+  "I'm 18 or over, and I understand DateHaja does not verify identity.":
+    "Ich bin mindestens 18 und verstehe, dass DateHaja keine Identitäten prüft.",
   "Create my account": "Konto erstellen",
   "Already have an account?": "Schon ein Konto?",
   "New here?": "Neu hier?",
   "Create an account": "Konto erstellen",
-  "Your email is used only by DateDrop Concierge to reach you. It is never shown to another user.":
-    "Deine E-Mail wird nur vom DateDrop Concierge verwendet und niemals anderen Nutzern gezeigt.",
+  "Your email is used only by DateHaja Concierge to reach you. It is never shown to another user.":
+    "Deine E-Mail wird nur vom DateHaja Concierge verwendet und niemals anderen Nutzern gezeigt.",
   "How privacy works": "So funktioniert Datenschutz",
-  "DateDrop is for adults only — please confirm you're 18 or over.":
-    "DateDrop ist nur für Erwachsene. Bitte bestätige, dass du mindestens 18 bist.",
+  "DateHaja is for adults only — please confirm you're 18 or over.":
+    "DateHaja ist nur für Erwachsene. Bitte bestätige, dass du mindestens 18 bist.",
   "Use at least 8 characters.": "Verwende mindestens 8 Zeichen.",
   "That email is already registered. Try signing in instead.":
     "Diese E-Mail ist bereits registriert. Bitte melde dich an.",
@@ -552,8 +553,8 @@ Object.assign(fr, {
   "Service note 001": "Note de service 001",
   "Bring us a free evening.": "Confiez-nous une soirée libre.",
   "We'll return a date.": "Nous en ferons un rendez-vous.",
-  "No profiles to browse. No conversation to keep alive. DateDrop finds a compatible person, researches a real place, and sends one private invitation to each of you.":
-    "Aucun profil à parcourir, aucune conversation à entretenir. DateDrop trouve une personne compatible, vérifie un lieu réel et vous envoie deux invitations privées séparées.",
+  "No profiles to browse. No conversation to keep alive. DateHaja finds a compatible person, researches a real place, and sends one private invitation to each of you.":
+    "Aucun profil à parcourir, aucune conversation à entretenir. DateHaja trouve une personne compatible, vérifie un lieu réel et vous envoie deux invitations privées séparées.",
   "Open an evening": "Libérer une soirée",
   "Read the two-minute brief": "Lire le brief de deux minutes",
   "No swiping": "Aucun swipe",
@@ -571,7 +572,7 @@ Object.assign(fr, {
   "Perform small talk": "Faire durer les banalités",
   "Negotiate a plan": "Négocier un programme",
   "Maybe meet": "Peut-être se rencontrer",
-  "The DateDrop route": "Le parcours DateDrop",
+  "The DateHaja route": "Le parcours DateHaja",
   "Say when you're free": "Dire quand vous êtes libre",
   "Finding the person and the place": "Trouver la personne et le lieu",
   "Receive one considered plan": "Recevoir un programme réfléchi",
@@ -580,16 +581,16 @@ Object.assign(fr, {
   "What arrives": "Ce qui arrive",
   "A plan,": "Un programme,",
   "not a profile.": "pas un profil.",
-  "A DateDrop has a time, a public place, a budget, and one honest reason the two of you might enjoy it. Nothing to research. One decision to make.":
-    "Un DateDrop comprend une heure, un lieu public, un budget et une raison sincère pour laquelle vous pourriez l'apprécier. Rien à rechercher. Une seule décision.",
+  "A date plan has a time, a public place, a budget, and one honest reason the two of you might enjoy it. Nothing to research. One decision to make.":
+    "Un projet de rendez-vous comprend une heure, un lieu public, un budget et une raison sincère pour laquelle vous pourriez l'apprécier. Rien à rechercher. Une seule décision.",
   "Places researched on the live web": "Lieux vérifiés sur le web en direct",
   "Sources and evidence attached": "Sources et preuves jointes",
   "Constraints and budget respected": "Contraintes et budget respectés",
   "Private by construction": "Privé par conception",
   "The date arrives.": "Le rendez-vous arrive.",
   "Your details don't.": "Pas vos coordonnées.",
-  "DateDrop Concierge sends every invitation separately. Before you both accept, your match gets a first name, age, neighbourhood, and a few interests — never your inbox or number.":
-    "DateDrop Concierge envoie chaque invitation séparément. Avant votre double accord, l'autre personne ne voit que prénom, âge, quartier et quelques centres d'intérêt — jamais votre e-mail ni votre numéro.",
+  "DateHaja Concierge sends every invitation separately. Before you both accept, your match gets a first name, age, neighbourhood, and a few interests — never your inbox or number.":
+    "DateHaja Concierge envoie chaque invitation séparément. Avant votre double accord, l'autre personne ne voit que prénom, âge, quartier et quelques centres d'intérêt — jamais votre e-mail ni votre numéro.",
   "Email address": "Adresse e-mail",
   "Phone number": "Numéro de téléphone",
   "Home address": "Adresse du domicile",
@@ -597,16 +598,16 @@ Object.assign(fr, {
   "Full name": "Nom complet",
   "Social handles": "Comptes sociaux",
   "Not shared": "Non partagé",
-  "DateDrop is 18+. We do not verify identity. Read exactly what we do and don't do in the":
-    "DateDrop est réservé aux 18 ans et plus. Nous ne vérifions pas l'identité. Consultez nos mesures et leurs limites dans le",
+  "DateHaja is 18+. We do not verify identity. Read exactly what we do and don't do in the":
+    "DateHaja est réservé aux 18 ans et plus. Nous ne vérifions pas l'identité. Consultez nos mesures et leurs limites dans le",
   "Safety Center": "Centre de sécurité",
   "Your invitation is open": "Votre invitation est ouverte",
   "When are you free?": "Quand êtes-vous libre ?",
   "That is still the only question we need answered.":
     "C'est toujours la seule question à laquelle nous avons besoin d'une réponse.",
-  "Get my first DateDrop": "Recevoir mon premier DateDrop",
-  "We plan the date. You just say yes.":
-    "Nous préparons le rendez-vous. Vous n'avez qu'à répondre.",
+  "Plan my first date": "Planifier mon premier rendez-vous",
+  "Let's date. We'll make the plan.":
+    "On se rencontre. Nous préparons tout.",
   "Availability docket": "Dossier de disponibilité",
   Sat: "Sam",
   "AUG / SEOUL": "AOÛT / SÉOUL",
@@ -619,7 +620,7 @@ Object.assign(fr, {
   Ready: "Prêt",
   "Next: compatibility → venue research → private invite":
     "Suite : compatibilité → recherche du lieu → invitation privée",
-  "New DateDrop": "Nouveau DateDrop",
+  "New date plan": "Nouveau projet de rendez-vous",
   "Preview / grounded live": "Aperçu / vérifié en direct",
   "Preview / localized example": "Aperçu / exemple local",
   Saturday: "Samedi",
@@ -637,7 +638,7 @@ Object.assign(fr, {
   person: "personne",
   Pass: "Passer",
   Accept: "Accepter",
-  "DateDrop home": "Accueil DateDrop",
+  "DateHaja home": "Accueil DateHaja",
   "Concierge brief": "Brief du concierge",
   "Your free time is enough to begin.":
     "Votre temps libre suffit pour commencer.",
@@ -661,17 +662,17 @@ Object.assign(fr, {
   Email: "E-mail",
   Password: "Mot de passe",
   "At least 8 characters.": "Au moins 8 caractères.",
-  "I'm 18 or over, and I understand DateDrop does not verify identity.":
-    "J'ai 18 ans ou plus et je comprends que DateDrop ne vérifie pas l'identité.",
+  "I'm 18 or over, and I understand DateHaja does not verify identity.":
+    "J'ai 18 ans ou plus et je comprends que DateHaja ne vérifie pas l'identité.",
   "Create my account": "Créer mon compte",
   "Already have an account?": "Vous avez déjà un compte ?",
   "New here?": "Nouveau ici ?",
   "Create an account": "Créer un compte",
-  "Your email is used only by DateDrop Concierge to reach you. It is never shown to another user.":
-    "Votre e-mail sert uniquement à DateDrop Concierge pour vous contacter et n'est jamais montré à un autre utilisateur.",
+  "Your email is used only by DateHaja Concierge to reach you. It is never shown to another user.":
+    "Votre e-mail sert uniquement à DateHaja Concierge pour vous contacter et n'est jamais montré à un autre utilisateur.",
   "How privacy works": "Comment fonctionne la confidentialité",
-  "DateDrop is for adults only — please confirm you're 18 or over.":
-    "DateDrop est réservé aux adultes. Confirmez que vous avez au moins 18 ans.",
+  "DateHaja is for adults only — please confirm you're 18 or over.":
+    "DateHaja est réservé aux adultes. Confirmez que vous avez au moins 18 ans.",
   "Use at least 8 characters.": "Utilisez au moins 8 caractères.",
   "That email is already registered. Try signing in instead.":
     "Cet e-mail est déjà enregistré. Essayez de vous connecter.",
@@ -709,8 +710,8 @@ Object.assign(nl, {
   "Service note 001": "Servicenotitie 001",
   "Bring us a free evening.": "Geef ons een vrije avond.",
   "We'll return a date.": "Wij maken er een date van.",
-  "No profiles to browse. No conversation to keep alive. DateDrop finds a compatible person, researches a real place, and sends one private invitation to each of you.":
-    "Geen profielen om door te bladeren en geen gesprek om kunstmatig gaande te houden. DateDrop vindt iemand die bij je past, onderzoekt een echte locatie en stuurt jullie ieder een privé-uitnodiging.",
+  "No profiles to browse. No conversation to keep alive. DateHaja finds a compatible person, researches a real place, and sends one private invitation to each of you.":
+    "Geen profielen om door te bladeren en geen gesprek om kunstmatig gaande te houden. DateHaja vindt iemand die bij je past, onderzoekt een echte locatie en stuurt jullie ieder een privé-uitnodiging.",
   "Open an evening": "Een avond vrijgeven",
   "Read the two-minute brief": "Lees de uitleg van twee minuten",
   "No swiping": "Niet swipen",
@@ -728,7 +729,7 @@ Object.assign(nl, {
   "Perform small talk": "Smalltalk volhouden",
   "Negotiate a plan": "Over een plan onderhandelen",
   "Maybe meet": "Misschien afspreken",
-  "The DateDrop route": "De DateDrop-route",
+  "The DateHaja route": "De DateHaja-route",
   "Say when you're free": "Zeg wanneer je vrij bent",
   "Finding the person and the place": "De persoon en plek vinden",
   "Receive one considered plan": "Ontvang één doordacht plan",
@@ -737,16 +738,16 @@ Object.assign(nl, {
   "What arrives": "Wat je ontvangt",
   "A plan,": "Een plan,",
   "not a profile.": "geen profiel.",
-  "A DateDrop has a time, a public place, a budget, and one honest reason the two of you might enjoy it. Nothing to research. One decision to make.":
-    "Een DateDrop bevat een tijd, een openbare plek, een budget en één eerlijke reden waarom jullie het samen leuk kunnen hebben. Niets om uit te zoeken. Eén beslissing.",
+  "A date plan has a time, a public place, a budget, and one honest reason the two of you might enjoy it. Nothing to research. One decision to make.":
+    "Een dateplan bevat een tijd, een openbare plek, een budget en één eerlijke reden waarom jullie het samen leuk kunnen hebben. Niets om uit te zoeken. Eén beslissing.",
   "Places researched on the live web": "Locaties live op het web onderzocht",
   "Sources and evidence attached": "Bronnen en bewijs toegevoegd",
   "Constraints and budget respected": "Wensen en budget gerespecteerd",
   "Private by construction": "Privé by design",
   "The date arrives.": "De date komt aan.",
   "Your details don't.": "Je gegevens niet.",
-  "DateDrop Concierge sends every invitation separately. Before you both accept, your match gets a first name, age, neighbourhood, and a few interests — never your inbox or number.":
-    "DateDrop Concierge verstuurt elke uitnodiging afzonderlijk. Voordat jullie beiden accepteren, ziet je match alleen voornaam, leeftijd, buurt en enkele interesses — nooit je e-mail of telefoonnummer.",
+  "DateHaja Concierge sends every invitation separately. Before you both accept, your match gets a first name, age, neighbourhood, and a few interests — never your inbox or number.":
+    "DateHaja Concierge verstuurt elke uitnodiging afzonderlijk. Voordat jullie beiden accepteren, ziet je match alleen voornaam, leeftijd, buurt en enkele interesses — nooit je e-mail of telefoonnummer.",
   "Email address": "E-mailadres",
   "Phone number": "Telefoonnummer",
   "Home address": "Woonadres",
@@ -754,16 +755,16 @@ Object.assign(nl, {
   "Full name": "Volledige naam",
   "Social handles": "Sociale accounts",
   "Not shared": "Niet gedeeld",
-  "DateDrop is 18+. We do not verify identity. Read exactly what we do and don't do in the":
-    "DateDrop is voor 18+. We verifiëren geen identiteit. Lees precies wat we wel en niet doen in het",
+  "DateHaja is 18+. We do not verify identity. Read exactly what we do and don't do in the":
+    "DateHaja is voor 18+. We verifiëren geen identiteit. Lees precies wat we wel en niet doen in het",
   "Safety Center": "Veiligheidscentrum",
   "Your invitation is open": "Je uitnodiging staat open",
   "When are you free?": "Wanneer ben je vrij?",
   "That is still the only question we need answered.":
     "Dat is nog steeds de enige vraag waarop we antwoord nodig hebben.",
-  "Get my first DateDrop": "Ontvang mijn eerste DateDrop",
-  "We plan the date. You just say yes.":
-    "Wij plannen de date. Jij hoeft alleen te antwoorden.",
+  "Plan my first date": "Plan mijn eerste date",
+  "Let's date. We'll make the plan.":
+    "Laten we daten. Wij maken het plan.",
   "Availability docket": "Beschikbaarheidsdossier",
   Sat: "Za",
   "AUG / SEOUL": "AUG / SEOUL",
@@ -776,7 +777,7 @@ Object.assign(nl, {
   Ready: "Gereed",
   "Next: compatibility → venue research → private invite":
     "Hierna: compatibiliteit → locatieonderzoek → privé-uitnodiging",
-  "New DateDrop": "Nieuwe DateDrop",
+  "New date plan": "Nieuw dateplan",
   "Preview / grounded live": "Voorbeeld / live onderbouwd",
   "Preview / localized example": "Voorbeeld / lokaal voorbeeld",
   Saturday: "Zaterdag",
@@ -796,7 +797,7 @@ Object.assign(nl, {
   person: "persoon",
   Pass: "Overslaan",
   Accept: "Accepteren",
-  "DateDrop home": "DateDrop-home",
+  "DateHaja home": "DateHaja-home",
   "Concierge brief": "Conciergebrief",
   "Your free time is enough to begin.":
     "Je vrije tijd is genoeg om te beginnen.",
@@ -820,17 +821,17 @@ Object.assign(nl, {
   Email: "E-mail",
   Password: "Wachtwoord",
   "At least 8 characters.": "Minstens 8 tekens.",
-  "I'm 18 or over, and I understand DateDrop does not verify identity.":
-    "Ik ben 18 jaar of ouder en begrijp dat DateDrop geen identiteit verifieert.",
+  "I'm 18 or over, and I understand DateHaja does not verify identity.":
+    "Ik ben 18 jaar of ouder en begrijp dat DateHaja geen identiteit verifieert.",
   "Create my account": "Mijn account maken",
   "Already have an account?": "Heb je al een account?",
   "New here?": "Nieuw hier?",
   "Create an account": "Account maken",
-  "Your email is used only by DateDrop Concierge to reach you. It is never shown to another user.":
-    "Je e-mailadres wordt alleen door DateDrop Concierge gebruikt om je te bereiken en wordt nooit aan een andere gebruiker getoond.",
+  "Your email is used only by DateHaja Concierge to reach you. It is never shown to another user.":
+    "Je e-mailadres wordt alleen door DateHaja Concierge gebruikt om je te bereiken en wordt nooit aan een andere gebruiker getoond.",
   "How privacy works": "Hoe privacy werkt",
-  "DateDrop is for adults only — please confirm you're 18 or over.":
-    "DateDrop is alleen voor volwassenen. Bevestig dat je 18 jaar of ouder bent.",
+  "DateHaja is for adults only — please confirm you're 18 or over.":
+    "DateHaja is alleen voor volwassenen. Bevestig dat je 18 jaar of ouder bent.",
   "Use at least 8 characters.": "Gebruik minstens 8 tekens.",
   "That email is already registered. Try signing in instead.":
     "Dit e-mailadres is al geregistreerd. Probeer in te loggen.",
@@ -868,8 +869,8 @@ Object.assign(sv, {
   "Service note 001": "Servicenotis 001",
   "Bring us a free evening.": "Ge oss en ledig kväll.",
   "We'll return a date.": "Vi gör den till en dejt.",
-  "No profiles to browse. No conversation to keep alive. DateDrop finds a compatible person, researches a real place, and sends one private invitation to each of you.":
-    "Inga profiler att bläddra bland och inga samtal att hålla vid liv. DateDrop hittar en kompatibel person, undersöker en verklig plats och skickar en privat inbjudan till var och en av er.",
+  "No profiles to browse. No conversation to keep alive. DateHaja finds a compatible person, researches a real place, and sends one private invitation to each of you.":
+    "Inga profiler att bläddra bland och inga samtal att hålla vid liv. DateHaja hittar en kompatibel person, undersöker en verklig plats och skickar en privat inbjudan till var och en av er.",
   "Open an evening": "Öppna en kväll",
   "Read the two-minute brief": "Läs tvåminutersguiden",
   "No swiping": "Inget swipande",
@@ -887,7 +888,7 @@ Object.assign(sv, {
   "Perform small talk": "Hålla igång småprat",
   "Negotiate a plan": "Förhandla fram en plan",
   "Maybe meet": "Kanske träffas",
-  "The DateDrop route": "DateDrop-vägen",
+  "The DateHaja route": "DateHaja-vägen",
   "Say when you're free": "Säg när du är ledig",
   "Finding the person and the place": "Hitta personen och platsen",
   "Receive one considered plan": "Få en genomtänkt plan",
@@ -896,16 +897,16 @@ Object.assign(sv, {
   "What arrives": "Det som kommer",
   "A plan,": "En plan,",
   "not a profile.": "inte en profil.",
-  "A DateDrop has a time, a public place, a budget, and one honest reason the two of you might enjoy it. Nothing to research. One decision to make.":
-    "En DateDrop har en tid, en offentlig plats, en budget och en ärlig anledning till att ni kan trivas ihop. Inget att undersöka. Ett beslut.",
+  "A date plan has a time, a public place, a budget, and one honest reason the two of you might enjoy it. Nothing to research. One decision to make.":
+    "En dejtplan har en tid, en offentlig plats, en budget och en ärlig anledning till att ni kan trivas ihop. Inget att undersöka. Ett beslut.",
   "Places researched on the live web": "Platser undersökta på webben i realtid",
   "Sources and evidence attached": "Källor och belägg bifogade",
   "Constraints and budget respected": "Önskemål och budget respekteras",
   "Private by construction": "Privat från grunden",
   "The date arrives.": "Dejten kommer.",
   "Your details don't.": "Inte dina uppgifter.",
-  "DateDrop Concierge sends every invitation separately. Before you both accept, your match gets a first name, age, neighbourhood, and a few interests — never your inbox or number.":
-    "DateDrop Concierge skickar varje inbjudan separat. Innan ni båda accepterar ser din match bara förnamn, ålder, område och några intressen — aldrig din e-post eller ditt nummer.",
+  "DateHaja Concierge sends every invitation separately. Before you both accept, your match gets a first name, age, neighbourhood, and a few interests — never your inbox or number.":
+    "DateHaja Concierge skickar varje inbjudan separat. Innan ni båda accepterar ser din match bara förnamn, ålder, område och några intressen — aldrig din e-post eller ditt nummer.",
   "Email address": "E-postadress",
   "Phone number": "Telefonnummer",
   "Home address": "Hemadress",
@@ -913,16 +914,16 @@ Object.assign(sv, {
   "Full name": "Fullständigt namn",
   "Social handles": "Sociala konton",
   "Not shared": "Delas inte",
-  "DateDrop is 18+. We do not verify identity. Read exactly what we do and don't do in the":
-    "DateDrop är för personer över 18 år. Vi verifierar inte identitet. Läs exakt vad vi gör och inte gör i vårt",
+  "DateHaja is 18+. We do not verify identity. Read exactly what we do and don't do in the":
+    "DateHaja är för personer över 18 år. Vi verifierar inte identitet. Läs exakt vad vi gör och inte gör i vårt",
   "Safety Center": "Säkerhetscenter",
   "Your invitation is open": "Din inbjudan är öppen",
   "When are you free?": "När är du ledig?",
   "That is still the only question we need answered.":
     "Det är fortfarande den enda frågan vi behöver svar på.",
-  "Get my first DateDrop": "Få min första DateDrop",
-  "We plan the date. You just say yes.":
-    "Vi planerar dejten. Du behöver bara svara.",
+  "Plan my first date": "Planera min första dejt",
+  "Let's date. We'll make the plan.":
+    "Låt oss dejta. Vi fixar planen.",
   "Availability docket": "Tillgänglighetsakt",
   Sat: "Lör",
   "AUG / SEOUL": "AUG / SEOUL",
@@ -935,7 +936,7 @@ Object.assign(sv, {
   Ready: "Klar",
   "Next: compatibility → venue research → private invite":
     "Nästa: kompatibilitet → platsresearch → privat inbjudan",
-  "New DateDrop": "Ny DateDrop",
+  "New date plan": "Ny dejtplan",
   "Preview / grounded live": "Förhandsvisning / livebelagd",
   "Preview / localized example": "Förhandsvisning / lokalt exempel",
   Saturday: "Lördag",
@@ -953,7 +954,7 @@ Object.assign(sv, {
   person: "person",
   Pass: "Avstå",
   Accept: "Acceptera",
-  "DateDrop home": "DateDrop hem",
+  "DateHaja home": "DateHaja hem",
   "Concierge brief": "Conciergeguide",
   "Your free time is enough to begin.": "Din lediga tid räcker för att börja.",
   "One free evening goes in. A real date comes out.":
@@ -976,17 +977,17 @@ Object.assign(sv, {
   Email: "E-post",
   Password: "Lösenord",
   "At least 8 characters.": "Minst 8 tecken.",
-  "I'm 18 or over, and I understand DateDrop does not verify identity.":
-    "Jag är 18 år eller äldre och förstår att DateDrop inte verifierar identitet.",
+  "I'm 18 or over, and I understand DateHaja does not verify identity.":
+    "Jag är 18 år eller äldre och förstår att DateHaja inte verifierar identitet.",
   "Create my account": "Skapa mitt konto",
   "Already have an account?": "Har du redan ett konto?",
   "New here?": "Ny här?",
   "Create an account": "Skapa ett konto",
-  "Your email is used only by DateDrop Concierge to reach you. It is never shown to another user.":
-    "Din e-post används bara av DateDrop Concierge för att nå dig och visas aldrig för en annan användare.",
+  "Your email is used only by DateHaja Concierge to reach you. It is never shown to another user.":
+    "Din e-post används bara av DateHaja Concierge för att nå dig och visas aldrig för en annan användare.",
   "How privacy works": "Så fungerar integritet",
-  "DateDrop is for adults only — please confirm you're 18 or over.":
-    "DateDrop är endast för vuxna. Bekräfta att du är minst 18 år.",
+  "DateHaja is for adults only — please confirm you're 18 or over.":
+    "DateHaja är endast för vuxna. Bekräfta att du är minst 18 år.",
   "Use at least 8 characters.": "Använd minst 8 tecken.",
   "That email is already registered. Try signing in instead.":
     "E-postadressen är redan registrerad. Försök logga in.",
@@ -1005,13 +1006,13 @@ Object.assign(ko, {
   "On it — we're looking now.": "알겠습니다. 지금 찾고 있어요.",
   "Your concierge desk": "나의 컨시어지 데스크",
   "Hi, {name}.": "안녕하세요, {name}님.",
-  "Your DateDrops": "나의 DateDrop",
+  "Your dates": "나의 데이트",
   "Tell us when. We handle who & where.":
     "시간만 알려주세요. 사람과 장소는 저희가 맡을게요.",
-  "Your next DateDrop": "다음 DateDrop",
+  "Your next date": "다음 데이트",
   "Waiting on you": "답변을 기다리는 중",
-  "You've got a DateDrop": "DateDrop이 도착했어요",
-  "You've got {count} DateDrops": "DateDrop {count}개가 도착했어요",
+  "Your date plan is ready": "데이트 계획이 도착했어요",
+  "{count} date plans are ready": "데이트 계획 {count}개가 도착했어요",
   Confirmed: "확정",
   "It's a date": "데이트가 확정됐어요",
   "You said yes": "수락 완료",
@@ -1025,7 +1026,7 @@ Object.assign(ko, {
   "You've still got an evening open.": "아직 가능한 저녁이 하나 있어요.",
   "You've still got {count} evenings open.":
     "아직 가능한 저녁이 {count}개 있어요.",
-  "Want another DateDrop?": "DateDrop을 하나 더 찾을까요?",
+  "Want another date?": "데이트를 하나 더 찾아볼까요?",
   "Find me a date": "데이트 찾아보기",
   "No open windows": "열린 시간이 없습니다",
   "Add an evening you're free and we'll start looking straight away.":
@@ -1045,11 +1046,11 @@ Object.assign(ko, {
     "가능한 시간이 {count}개 있습니다. 가장 잘 맞는 상대를 먼저 찾는 시간을 사용합니다.",
   "Add another time": "다른 시간 추가",
   "Working on it": "찾는 중",
-  "We're looking for your DateDrop.": "당신의 DateDrop을 찾고 있습니다.",
+  "We're planning your date.": "데이트를 계획하고 있어요.",
   "Checking who's free when you are": "같은 시간에 가능한 사람 확인",
   "Finding compatible people": "잘 맞는 사람 찾기",
   "Researching real date ideas": "실제 데이트 아이디어 조사",
-  "Building your DateDrop": "DateDrop 구성",
+  "Building your date plan": "데이트 계획 구성",
   "This usually takes under a minute. You can close this page — we'll email you the moment there's something to look at.":
     "보통 1분 안에 끝납니다. 이 페이지를 닫아도 괜찮아요. 확인할 내용이 생기면 바로 이메일로 알려드릴게요.",
 });
@@ -1058,13 +1059,13 @@ Object.assign(ja, {
   "On it — we're looking now.": "承知しました。今探しています。",
   "Your concierge desk": "コンシェルジュデスク",
   "Hi, {name}.": "こんにちは、{name}さん。",
-  "Your DateDrops": "あなたのDateDrop",
+  "Your dates": "あなたのデート",
   "Tell us when. We handle who & where.":
     "時間だけ教えてください。相手と場所は私たちが担当します。",
-  "Your next DateDrop": "次のDateDrop",
+  "Your next date": "次のデート",
   "Waiting on you": "あなたの回答待ち",
-  "You've got a DateDrop": "DateDropが届きました",
-  "You've got {count} DateDrops": "DateDropが{count}件届きました",
+  "Your date plan is ready": "デートプランが届きました",
+  "{count} date plans are ready": "デートプランが{count}件届きました",
   Confirmed: "確定",
   "It's a date": "デートが決まりました",
   "You said yes": "承諾済み",
@@ -1078,7 +1079,7 @@ Object.assign(ja, {
   "You've still got an evening open.": "空いている夜がまだ一つあります。",
   "You've still got {count} evenings open.":
     "空いている夜がまだ{count}件あります。",
-  "Want another DateDrop?": "もう一つDateDropを探しますか？",
+  "Want another date?": "もう一つデートを探しますか？",
   "Find me a date": "デートを探す",
   "No open windows": "空き時間がありません",
   "Add an evening you're free and we'll start looking straight away.":
@@ -1098,11 +1099,11 @@ Object.assign(ja, {
     "空き時間が{count}件あります。最もよい相手が先に見つかる時間を使います。",
   "Add another time": "別の時間を追加",
   "Working on it": "対応中",
-  "We're looking for your DateDrop.": "あなたのDateDropを探しています。",
+  "We're planning your date.": "あなたのデートを計画しています。",
   "Checking who's free when you are": "同じ時間に空いている人を確認",
   "Finding compatible people": "相性のよい人を検索",
   "Researching real date ideas": "実際のデート案を調査",
-  "Building your DateDrop": "DateDropを作成",
+  "Building your date plan": "デートプランを作成",
   "This usually takes under a minute. You can close this page — we'll email you the moment there's something to look at.":
     "通常1分以内に完了します。このページを閉じても大丈夫です。確認できる内容ができたらすぐメールします。",
 });
@@ -1111,13 +1112,13 @@ Object.assign(de, {
   "On it — we're looking now.": "Alles klar — wir suchen jetzt.",
   "Your concierge desk": "Dein Concierge-Schreibtisch",
   "Hi, {name}.": "Hallo, {name}.",
-  "Your DateDrops": "Deine DateDrops",
+  "Your dates": "Deine Dates",
   "Tell us when. We handle who & where.":
     "Sag uns wann. Wir kümmern uns um Person und Ort.",
-  "Your next DateDrop": "Dein nächster DateDrop",
+  "Your next date": "Dein nächstes Date",
   "Waiting on you": "Wartet auf dich",
-  "You've got a DateDrop": "Du hast einen DateDrop",
-  "You've got {count} DateDrops": "Du hast {count} DateDrops",
+  "Your date plan is ready": "Dein Date-Plan ist bereit",
+  "{count} date plans are ready": "{count} Date-Pläne sind bereit",
   Confirmed: "Bestätigt",
   "It's a date": "Das Date steht",
   "You said yes": "Du hast zugesagt",
@@ -1131,7 +1132,7 @@ Object.assign(de, {
   "You've still got an evening open.": "Du hast noch einen freien Abend.",
   "You've still got {count} evenings open.":
     "Du hast noch {count} freie Abende.",
-  "Want another DateDrop?": "Noch einen DateDrop?",
+  "Want another date?": "Noch ein Date?",
   "Find me a date": "Ein Date finden",
   "No open windows": "Keine freien Zeitfenster",
   "Add an evening you're free and we'll start looking straight away.":
@@ -1151,11 +1152,11 @@ Object.assign(de, {
     "{count} Zeitfenster sind offen. Wir nutzen das, das zuerst den besten Match findet.",
   "Add another time": "Weitere Zeit hinzufügen",
   "Working on it": "Wir arbeiten daran",
-  "We're looking for your DateDrop.": "Wir suchen deinen DateDrop.",
+  "We're planning your date.": "Wir planen dein Date.",
   "Checking who's free when you are": "Prüfen, wer gleichzeitig Zeit hat",
   "Finding compatible people": "Passende Menschen finden",
   "Researching real date ideas": "Echte Date-Ideen recherchieren",
-  "Building your DateDrop": "Deinen DateDrop erstellen",
+  "Building your date plan": "Deinen Date-Plan erstellen",
   "This usually takes under a minute. You can close this page — we'll email you the moment there's something to look at.":
     "Das dauert meist weniger als eine Minute. Du kannst die Seite schließen — wir mailen dir, sobald es etwas zu sehen gibt.",
 });
@@ -1164,13 +1165,13 @@ Object.assign(fr, {
   "On it — we're looking now.": "C'est parti — nous cherchons maintenant.",
   "Your concierge desk": "Votre bureau de conciergerie",
   "Hi, {name}.": "Bonjour, {name}.",
-  "Your DateDrops": "Vos DateDrops",
+  "Your dates": "Vos rendez-vous",
   "Tell us when. We handle who & where.":
     "Dites-nous quand. Nous gérons la personne et le lieu.",
-  "Your next DateDrop": "Votre prochain DateDrop",
+  "Your next date": "Votre prochain rendez-vous",
   "Waiting on you": "En attente de votre réponse",
-  "You've got a DateDrop": "Vous avez reçu un DateDrop",
-  "You've got {count} DateDrops": "Vous avez reçu {count} DateDrops",
+  "Your date plan is ready": "Votre projet de rendez-vous est prêt",
+  "{count} date plans are ready": "{count} projets de rendez-vous sont prêts",
   Confirmed: "Confirmé",
   "It's a date": "Le rendez-vous est confirmé",
   "You said yes": "Vous avez accepté",
@@ -1184,7 +1185,7 @@ Object.assign(fr, {
   "You've still got an evening open.": "Il vous reste une soirée libre.",
   "You've still got {count} evenings open.":
     "Il vous reste {count} soirées libres.",
-  "Want another DateDrop?": "Un autre DateDrop ?",
+  "Want another date?": "Un autre rendez-vous ?",
   "Find me a date": "Trouver un rendez-vous",
   "No open windows": "Aucun créneau libre",
   "Add an evening you're free and we'll start looking straight away.":
@@ -1204,12 +1205,12 @@ Object.assign(fr, {
     "{count} créneaux sont libres. Nous utiliserons celui qui trouve d'abord la meilleure compatibilité.",
   "Add another time": "Ajouter un autre horaire",
   "Working on it": "Recherche en cours",
-  "We're looking for your DateDrop.": "Nous cherchons votre DateDrop.",
+  "We're planning your date.": "Nous préparons votre rendez-vous.",
   "Checking who's free when you are":
     "Vérification des disponibilités communes",
   "Finding compatible people": "Recherche de personnes compatibles",
   "Researching real date ideas": "Recherche d'idées de rendez-vous réelles",
-  "Building your DateDrop": "Création de votre DateDrop",
+  "Building your date plan": "Création de votre rendez-vous",
   "This usually takes under a minute. You can close this page — we'll email you the moment there's something to look at.":
     "Cela prend généralement moins d'une minute. Vous pouvez fermer cette page — nous vous écrirons dès qu'il y aura quelque chose à voir.",
 });
@@ -1218,13 +1219,13 @@ Object.assign(nl, {
   "On it — we're looking now.": "Begrepen — we zoeken nu.",
   "Your concierge desk": "Je conciergebalie",
   "Hi, {name}.": "Hoi, {name}.",
-  "Your DateDrops": "Je DateDrops",
+  "Your dates": "Je dates",
   "Tell us when. We handle who & where.":
     "Zeg ons wanneer. Wij regelen wie en waar.",
-  "Your next DateDrop": "Je volgende DateDrop",
+  "Your next date": "Je volgende date",
   "Waiting on you": "Wacht op jou",
-  "You've got a DateDrop": "Je hebt een DateDrop",
-  "You've got {count} DateDrops": "Je hebt {count} DateDrops",
+  "Your date plan is ready": "Je dateplan staat klaar",
+  "{count} date plans are ready": "{count} dateplannen staan klaar",
   Confirmed: "Bevestigd",
   "It's a date": "De date staat",
   "You said yes": "Je hebt ja gezegd",
@@ -1238,7 +1239,7 @@ Object.assign(nl, {
   "You've still got an evening open.": "Je hebt nog een vrije avond.",
   "You've still got {count} evenings open.":
     "Je hebt nog {count} vrije avonden.",
-  "Want another DateDrop?": "Nog een DateDrop?",
+  "Want another date?": "Nog een date?",
   "Find me a date": "Vind een date",
   "No open windows": "Geen vrije tijdvakken",
   "Add an evening you're free and we'll start looking straight away.":
@@ -1258,11 +1259,11 @@ Object.assign(nl, {
     "{count} tijdvakken zijn open. We gebruiken het tijdvak dat als eerste de beste match vindt.",
   "Add another time": "Nog een tijd toevoegen",
   "Working on it": "We zijn bezig",
-  "We're looking for your DateDrop.": "We zoeken je DateDrop.",
+  "We're planning your date.": "We plannen je date.",
   "Checking who's free when you are": "Controleren wie tegelijk vrij is",
   "Finding compatible people": "Compatibele mensen zoeken",
   "Researching real date ideas": "Echte date-ideeën onderzoeken",
-  "Building your DateDrop": "Je DateDrop samenstellen",
+  "Building your date plan": "Je dateplan samenstellen",
   "This usually takes under a minute. You can close this page — we'll email you the moment there's something to look at.":
     "Dit duurt meestal minder dan een minuut. Je kunt deze pagina sluiten — we mailen zodra er iets te bekijken is.",
 });
@@ -1271,12 +1272,12 @@ Object.assign(sv, {
   "On it — we're looking now.": "Absolut — vi letar nu.",
   "Your concierge desk": "Ditt conciergebord",
   "Hi, {name}.": "Hej, {name}.",
-  "Your DateDrops": "Dina DateDrops",
+  "Your dates": "Dina dejter",
   "Tell us when. We handle who & where.": "Säg när. Vi ordnar vem och var.",
-  "Your next DateDrop": "Din nästa DateDrop",
+  "Your next date": "Din nästa dejt",
   "Waiting on you": "Väntar på dig",
-  "You've got a DateDrop": "Du har fått en DateDrop",
-  "You've got {count} DateDrops": "Du har fått {count} DateDrops",
+  "Your date plan is ready": "Din dejtplan är klar",
+  "{count} date plans are ready": "{count} dejtplaner är klara",
   Confirmed: "Bekräftad",
   "It's a date": "Dejten är klar",
   "You said yes": "Du har tackat ja",
@@ -1290,7 +1291,7 @@ Object.assign(sv, {
   "You've still got an evening open.": "Du har fortfarande en ledig kväll.",
   "You've still got {count} evenings open.":
     "Du har fortfarande {count} lediga kvällar.",
-  "Want another DateDrop?": "Vill du ha en DateDrop till?",
+  "Want another date?": "Vill du ha en dejt till?",
   "Find me a date": "Hitta en dejt",
   "No open windows": "Inga lediga tidsfönster",
   "Add an evening you're free and we'll start looking straight away.":
@@ -1310,34 +1311,34 @@ Object.assign(sv, {
     "{count} tidsfönster är öppna. Vi använder det som först hittar den bästa matchningen.",
   "Add another time": "Lägg till en tid",
   "Working on it": "Vi arbetar på det",
-  "We're looking for your DateDrop.": "Vi letar efter din DateDrop.",
+  "We're planning your date.": "Vi planerar din dejt.",
   "Checking who's free when you are": "Kontrollerar vem som är ledig samtidigt",
   "Finding compatible people": "Hittar kompatibla personer",
   "Researching real date ideas": "Undersöker riktiga dejtidéer",
-  "Building your DateDrop": "Bygger din DateDrop",
+  "Building your date plan": "Bygger din dejtplan",
   "This usually takes under a minute. You can close this page — we'll email you the moment there's something to look at.":
     "Det tar oftast mindre än en minut. Du kan stänga sidan — vi mejlar så snart det finns något att titta på.",
 });
 
 Object.assign(ko, {
   "Demo profile": "데모 프로필",
-  "This is the only thing DateDrop ever asks of you. The more windows you leave open, the better the match we can find.":
-    "DateDrop이 묻는 것은 이것뿐입니다. 가능한 시간을 더 열어둘수록 더 잘 맞는 상대를 찾을 수 있어요.",
+  "This is the only thing DateHaja ever asks of you. The more windows you leave open, the better the match we can find.":
+    "DateHaja가 묻는 것은 이것뿐입니다. 가능한 시간을 더 열어둘수록 더 잘 맞는 상대를 찾을 수 있어요.",
   "How we use this": "이 정보를 사용하는 방식",
   "We only match you with someone whose window genuinely overlaps yours by at least 90 minutes — enough time for a real date, not a coffee you'd rush. Nobody sees your calendar.":
     "최소 90분 이상 실제로 시간이 겹치는 사람만 연결합니다. 서두르는 커피가 아니라 제대로 된 데이트를 위한 시간이며, 누구도 당신의 캘린더를 볼 수 없습니다.",
-  "Every DateDrop you've been part of — accepted, passed, expired or done.":
-    "수락, 거절, 만료, 완료를 포함해 참여했던 모든 DateDrop입니다.",
+  "Every date plan you've been part of — accepted, passed, expired or done.":
+    "수락, 거절, 만료, 완료를 포함해 참여했던 모든 데이트 계획입니다.",
   Past: "지난 일정",
   "Nothing here yet": "아직 기록이 없어요",
-  "Your first DateDrop will show up here once you've responded to it.":
-    "첫 DateDrop에 답하면 여기에 표시됩니다.",
-  "Everything DateDrop has told you, newest first.":
-    "DateDrop이 전한 모든 소식을 최신순으로 보여드립니다.",
+  "Your first date plan will show up here once you've responded to it.":
+    "첫 데이트 계획에 답하면 여기에 표시됩니다.",
+  "Everything DateHaja has told you, newest first.":
+    "DateHaja가 전한 모든 소식을 최신순으로 보여드립니다.",
   "Mark all read": "모두 읽음",
   "Nothing yet": "아직 알림이 없어요",
-  "When a DateDrop lands, is confirmed, or changes, you'll see it here.":
-    "DateDrop이 도착하거나 확정·변경되면 이곳에 표시됩니다.",
+  "When a date plan lands, is confirmed, or changes, you'll see it here.":
+    "데이트 계획이 도착하거나 확정·변경되면 이곳에 표시됩니다.",
   "Been and gone": "완료",
   Cancelled: "취소됨",
   "Didn't fill": "성사되지 않음",
@@ -1350,23 +1351,23 @@ Object.assign(ko, {
 });
 Object.assign(ja, {
   "Demo profile": "デモプロフィール",
-  "This is the only thing DateDrop ever asks of you. The more windows you leave open, the better the match we can find.":
-    "DateDropが尋ねるのはこれだけです。空き時間を多く登録するほど、よりよい相手を見つけやすくなります。",
+  "This is the only thing DateHaja ever asks of you. The more windows you leave open, the better the match we can find.":
+    "DateHajaが尋ねるのはこれだけです。空き時間を多く登録するほど、よりよい相手を見つけやすくなります。",
   "How we use this": "この情報の使い方",
   "We only match you with someone whose window genuinely overlaps yours by at least 90 minutes — enough time for a real date, not a coffee you'd rush. Nobody sees your calendar.":
     "実際に90分以上予定が重なる人とのみマッチします。慌ただしいコーヒーではなく、きちんとしたデートのための時間です。カレンダーは誰にも見えません。",
-  "Every DateDrop you've been part of — accepted, passed, expired or done.":
-    "承諾、見送り、期限切れ、完了を含む、参加したすべてのDateDropです。",
+  "Every date plan you've been part of — accepted, passed, expired or done.":
+    "承諾、見送り、期限切れ、完了を含む、参加したすべてのデートプランです。",
   Past: "過去",
   "Nothing here yet": "まだ何もありません",
-  "Your first DateDrop will show up here once you've responded to it.":
-    "最初のDateDropに回答すると、ここに表示されます。",
-  "Everything DateDrop has told you, newest first.":
-    "DateDropからのお知らせを新しい順に表示します。",
+  "Your first date plan will show up here once you've responded to it.":
+    "最初のデートプランに回答すると、ここに表示されます。",
+  "Everything DateHaja has told you, newest first.":
+    "DateHajaからのお知らせを新しい順に表示します。",
   "Mark all read": "すべて既読にする",
   "Nothing yet": "まだ通知はありません",
-  "When a DateDrop lands, is confirmed, or changes, you'll see it here.":
-    "DateDropが届いたとき、確定・変更されたときにここへ表示されます。",
+  "When a date plan lands, is confirmed, or changes, you'll see it here.":
+    "デートプランが届いたとき、確定・変更されたときにここへ表示されます。",
   "Been and gone": "完了",
   Cancelled: "キャンセル済み",
   "Didn't fill": "成立せず",
@@ -1379,23 +1380,23 @@ Object.assign(ja, {
 });
 Object.assign(de, {
   "Demo profile": "Demo-Profil",
-  "This is the only thing DateDrop ever asks of you. The more windows you leave open, the better the match we can find.":
-    "Das ist alles, wonach DateDrop fragt. Je mehr Zeitfenster du offen lässt, desto besser können wir matchen.",
+  "This is the only thing DateHaja ever asks of you. The more windows you leave open, the better the match we can find.":
+    "Das ist alles, wonach DateHaja fragt. Je mehr Zeitfenster du offen lässt, desto besser können wir matchen.",
   "How we use this": "So nutzen wir das",
   "We only match you with someone whose window genuinely overlaps yours by at least 90 minutes — enough time for a real date, not a coffee you'd rush. Nobody sees your calendar.":
     "Wir matchen nur mit Personen, deren Zeitfenster sich mindestens 90 Minuten überschneidet — genug für ein echtes Date. Niemand sieht deinen Kalender.",
-  "Every DateDrop you've been part of — accepted, passed, expired or done.":
-    "Jeder DateDrop, an dem du beteiligt warst — angenommen, abgelehnt, abgelaufen oder beendet.",
+  "Every date plan you've been part of — accepted, passed, expired or done.":
+    "Jeder Date-Plan, an dem du beteiligt warst — angenommen, abgelehnt, abgelaufen oder beendet.",
   Past: "Vergangen",
   "Nothing here yet": "Noch nichts hier",
-  "Your first DateDrop will show up here once you've responded to it.":
-    "Dein erster DateDrop erscheint hier, sobald du darauf geantwortet hast.",
-  "Everything DateDrop has told you, newest first.":
-    "Alle Nachrichten von DateDrop, die neuesten zuerst.",
+  "Your first date plan will show up here once you've responded to it.":
+    "Dein erster Date-Plan erscheint hier, sobald du darauf geantwortet hast.",
+  "Everything DateHaja has told you, newest first.":
+    "Alle Nachrichten von DateHaja, die neuesten zuerst.",
   "Mark all read": "Alle als gelesen markieren",
   "Nothing yet": "Noch nichts",
-  "When a DateDrop lands, is confirmed, or changes, you'll see it here.":
-    "Wenn ein DateDrop ankommt, bestätigt oder geändert wird, siehst du es hier.",
+  "When a date plan lands, is confirmed, or changes, you'll see it here.":
+    "Wenn ein Date-Plan ankommt, bestätigt oder geändert wird, siehst du es hier.",
   "Been and gone": "Abgeschlossen",
   Cancelled: "Abgesagt",
   "Didn't fill": "Nicht zustande gekommen",
@@ -1408,23 +1409,23 @@ Object.assign(de, {
 });
 Object.assign(fr, {
   "Demo profile": "Profil de démonstration",
-  "This is the only thing DateDrop ever asks of you. The more windows you leave open, the better the match we can find.":
-    "C'est la seule chose que DateDrop vous demande. Plus vous laissez de créneaux, meilleure sera la compatibilité trouvée.",
+  "This is the only thing DateHaja ever asks of you. The more windows you leave open, the better the match we can find.":
+    "C'est la seule chose que DateHaja vous demande. Plus vous laissez de créneaux, meilleure sera la compatibilité trouvée.",
   "How we use this": "Comment nous l'utilisons",
   "We only match you with someone whose window genuinely overlaps yours by at least 90 minutes — enough time for a real date, not a coffee you'd rush. Nobody sees your calendar.":
     "Nous vous mettons uniquement en relation avec une personne dont le créneau chevauche le vôtre d'au moins 90 minutes — assez pour un vrai rendez-vous. Personne ne voit votre agenda.",
-  "Every DateDrop you've been part of — accepted, passed, expired or done.":
-    "Tous les DateDrops auxquels vous avez participé — acceptés, refusés, expirés ou terminés.",
+  "Every date plan you've been part of — accepted, passed, expired or done.":
+    "Tous les rendez-vous auxquels vous avez participé — acceptés, refusés, expirés ou terminés.",
   Past: "Passé",
   "Nothing here yet": "Rien pour le moment",
-  "Your first DateDrop will show up here once you've responded to it.":
-    "Votre premier DateDrop apparaîtra ici après votre réponse.",
-  "Everything DateDrop has told you, newest first.":
-    "Tous les messages de DateDrop, du plus récent au plus ancien.",
+  "Your first date plan will show up here once you've responded to it.":
+    "Votre premier projet de rendez-vous apparaîtra ici après votre réponse.",
+  "Everything DateHaja has told you, newest first.":
+    "Tous les messages de DateHaja, du plus récent au plus ancien.",
   "Mark all read": "Tout marquer comme lu",
   "Nothing yet": "Rien pour le moment",
-  "When a DateDrop lands, is confirmed, or changes, you'll see it here.":
-    "Lorsqu'un DateDrop arrive, est confirmé ou change, vous le verrez ici.",
+  "When a date plan lands, is confirmed, or changes, you'll see it here.":
+    "Lorsqu'un projet de rendez-vous arrive, est confirmé ou change, vous le verrez ici.",
   "Been and gone": "Terminé",
   Cancelled: "Annulé",
   "Didn't fill": "Non conclu",
@@ -1437,23 +1438,23 @@ Object.assign(fr, {
 });
 Object.assign(nl, {
   "Demo profile": "Demoprofiel",
-  "This is the only thing DateDrop ever asks of you. The more windows you leave open, the better the match we can find.":
-    "Dit is het enige wat DateDrop je vraagt. Hoe meer tijdvakken je openlaat, hoe beter de match die we kunnen vinden.",
+  "This is the only thing DateHaja ever asks of you. The more windows you leave open, the better the match we can find.":
+    "Dit is het enige wat DateHaja je vraagt. Hoe meer tijdvakken je openlaat, hoe beter de match die we kunnen vinden.",
   "How we use this": "Hoe we dit gebruiken",
   "We only match you with someone whose window genuinely overlaps yours by at least 90 minutes — enough time for a real date, not a coffee you'd rush. Nobody sees your calendar.":
     "We matchen je alleen met iemand van wie het tijdvak minstens 90 minuten met het jouwe overlapt — genoeg voor een echte date. Niemand ziet je agenda.",
-  "Every DateDrop you've been part of — accepted, passed, expired or done.":
-    "Elke DateDrop waaraan je deelnam — geaccepteerd, overgeslagen, verlopen of afgerond.",
+  "Every date plan you've been part of — accepted, passed, expired or done.":
+    "Elk dateplan waaraan je deelnam — geaccepteerd, overgeslagen, verlopen of afgerond.",
   Past: "Verleden",
   "Nothing here yet": "Hier staat nog niets",
-  "Your first DateDrop will show up here once you've responded to it.":
-    "Je eerste DateDrop verschijnt hier zodra je erop hebt gereageerd.",
-  "Everything DateDrop has told you, newest first.":
-    "Alles wat DateDrop je heeft verteld, nieuwste eerst.",
+  "Your first date plan will show up here once you've responded to it.":
+    "Je eerste dateplan verschijnt hier zodra je erop hebt gereageerd.",
+  "Everything DateHaja has told you, newest first.":
+    "Alles wat DateHaja je heeft verteld, nieuwste eerst.",
   "Mark all read": "Alles als gelezen markeren",
   "Nothing yet": "Nog niets",
-  "When a DateDrop lands, is confirmed, or changes, you'll see it here.":
-    "Wanneer een DateDrop aankomt, wordt bevestigd of verandert, zie je dat hier.",
+  "When a date plan lands, is confirmed, or changes, you'll see it here.":
+    "Wanneer een dateplan aankomt, wordt bevestigd of verandert, zie je dat hier.",
   "Been and gone": "Afgerond",
   Cancelled: "Geannuleerd",
   "Didn't fill": "Niet gelukt",
@@ -1466,23 +1467,23 @@ Object.assign(nl, {
 });
 Object.assign(sv, {
   "Demo profile": "Demoprofil",
-  "This is the only thing DateDrop ever asks of you. The more windows you leave open, the better the match we can find.":
-    "Det här är det enda DateDrop frågar efter. Ju fler tidsfönster du lämnar öppna, desto bättre matchning kan vi hitta.",
+  "This is the only thing DateHaja ever asks of you. The more windows you leave open, the better the match we can find.":
+    "Det här är det enda DateHaja frågar efter. Ju fler tidsfönster du lämnar öppna, desto bättre matchning kan vi hitta.",
   "How we use this": "Så använder vi detta",
   "We only match you with someone whose window genuinely overlaps yours by at least 90 minutes — enough time for a real date, not a coffee you'd rush. Nobody sees your calendar.":
     "Vi matchar dig bara med någon vars tid överlappar din med minst 90 minuter — tillräckligt för en riktig dejt. Ingen ser din kalender.",
-  "Every DateDrop you've been part of — accepted, passed, expired or done.":
-    "Varje DateDrop du deltagit i — accepterad, avstådd, utgången eller klar.",
+  "Every date plan you've been part of — accepted, passed, expired or done.":
+    "Varje dejtplan du deltagit i — accepterad, avstådd, utgången eller klar.",
   Past: "Tidigare",
   "Nothing here yet": "Inget här ännu",
-  "Your first DateDrop will show up here once you've responded to it.":
-    "Din första DateDrop visas här när du har svarat på den.",
-  "Everything DateDrop has told you, newest first.":
-    "Allt DateDrop har berättat för dig, nyast först.",
+  "Your first date plan will show up here once you've responded to it.":
+    "Din första dejtplan visas här när du har svarat på den.",
+  "Everything DateHaja has told you, newest first.":
+    "Allt DateHaja har berättat för dig, nyast först.",
   "Mark all read": "Markera alla som lästa",
   "Nothing yet": "Inget ännu",
-  "When a DateDrop lands, is confirmed, or changes, you'll see it here.":
-    "När en DateDrop kommer, bekräftas eller ändras ser du det här.",
+  "When a date plan lands, is confirmed, or changes, you'll see it here.":
+    "När en dejtplan kommer, bekräftas eller ändras ser du det här.",
   "Been and gone": "Avslutad",
   Cancelled: "Avbokad",
   "Didn't fill": "Blev inte av",
@@ -1513,8 +1514,8 @@ Object.assign(ko, {
     "정말 양보할 수 없는 조건만 표시하세요. 나머지는 선호로 반영합니다.",
   "This is what we hand to the research engine when it goes looking for places.":
     "장소를 조사할 때 이 정보를 기준으로 사용합니다.",
-  "This is the one thing DateDrop asks of you, ever. Add a window or two.":
-    "DateDrop이 부탁하는 유일한 일입니다. 가능한 시간을 한두 개 추가하세요.",
+  "This is the one thing DateHaja asks of you, ever. Add a window or two.":
+    "DateHaja가 부탁하는 유일한 일입니다. 가능한 시간을 한두 개 추가하세요.",
   "That's everything. We'll take it from here.":
     "모두 끝났습니다. 이제 저희가 맡을게요.",
   "What should we call you?": "어떻게 불러드릴까요?",
@@ -1540,9 +1541,9 @@ Object.assign(ko, {
   "Neighbourhood only — we never store or share your address.":
     "동네만 선택합니다. 주소는 저장하거나 공유하지 않습니다.",
   "Your neighbourhood": "나의 동네",
-  "I confirm I'm 18 or over. DateDrop is an adults-only service.":
-    "만 18세 이상이며 DateDrop이 성인 전용 서비스임을 확인합니다.",
-  "You're ready for DateDrop.": "DateDrop을 시작할 준비가 됐어요.",
+  "I confirm I'm 18 or over. DateHaja is an adults-only service.":
+    "만 18세 이상이며 DateHaja가 성인 전용 서비스임을 확인합니다.",
+  "You're ready for DateHaja.": "DateHaja를 시작할 준비가 됐어요.",
   "From here we do the work. When we find someone compatible who's free at the same time, we'll plan a real date and send it to you both.":
     "이제부터는 저희가 진행합니다. 같은 시간에 가능한 잘 맞는 사람을 찾으면 실제 데이트를 계획해 두 사람에게 보내드릴게요.",
   "Looking for": "찾는 대상",
@@ -1576,8 +1577,8 @@ Object.assign(ja, {
     "本当に譲れない条件だけを指定してください。それ以外は希望として扱います。",
   "This is what we hand to the research engine when it goes looking for places.":
     "場所を探す際の調査条件として使います。",
-  "This is the one thing DateDrop asks of you, ever. Add a window or two.":
-    "DateDropがお願いするのはこれだけです。空き時間を一つか二つ追加してください。",
+  "This is the one thing DateHaja asks of you, ever. Add a window or two.":
+    "DateHajaがお願いするのはこれだけです。空き時間を一つか二つ追加してください。",
   "That's everything. We'll take it from here.":
     "以上です。ここからは私たちにお任せください。",
   "What should we call you?": "何とお呼びすればよいですか？",
@@ -1603,9 +1604,9 @@ Object.assign(ja, {
   "Neighbourhood only — we never store or share your address.":
     "地域だけを選びます。住所は保存も共有もしません。",
   "Your neighbourhood": "あなたの地域",
-  "I confirm I'm 18 or over. DateDrop is an adults-only service.":
-    "18歳以上で、DateDropが成人向けサービスであることを確認します。",
-  "You're ready for DateDrop.": "DateDropの準備ができました。",
+  "I confirm I'm 18 or over. DateHaja is an adults-only service.":
+    "18歳以上で、DateHajaが成人向けサービスであることを確認します。",
+  "You're ready for DateHaja.": "DateHajaの準備ができました。",
   "From here we do the work. When we find someone compatible who's free at the same time, we'll plan a real date and send it to you both.":
     "ここからは私たちが進めます。同じ時間に空いている相性のよい人を見つけたら、実際のデートを計画して二人に送ります。",
   "Looking for": "探している相手",
@@ -1638,8 +1639,8 @@ Object.assign(de, {
     "Markiere nur echte Ausschlusskriterien — alles andere behandeln wir als Vorliebe.",
   "This is what we hand to the research engine when it goes looking for places.":
     "Damit sucht unsere Recherche nach passenden Orten.",
-  "This is the one thing DateDrop asks of you, ever. Add a window or two.":
-    "Das ist alles, worum DateDrop dich bittet. Füge ein oder zwei Zeitfenster hinzu.",
+  "This is the one thing DateHaja asks of you, ever. Add a window or two.":
+    "Das ist alles, worum DateHaja dich bittet. Füge ein oder zwei Zeitfenster hinzu.",
   "That's everything. We'll take it from here.":
     "Das war alles. Ab hier übernehmen wir.",
   "What should we call you?": "Wie sollen wir dich nennen?",
@@ -1666,9 +1667,9 @@ Object.assign(de, {
   "Neighbourhood only — we never store or share your address.":
     "Nur das Viertel — wir speichern oder teilen nie deine Adresse.",
   "Your neighbourhood": "Dein Viertel",
-  "I confirm I'm 18 or over. DateDrop is an adults-only service.":
-    "Ich bestätige, dass ich mindestens 18 bin. DateDrop ist nur für Erwachsene.",
-  "You're ready for DateDrop.": "Du bist bereit für DateDrop.",
+  "I confirm I'm 18 or over. DateHaja is an adults-only service.":
+    "Ich bestätige, dass ich mindestens 18 bin. DateHaja ist nur für Erwachsene.",
+  "You're ready for DateHaja.": "Du bist bereit für DateHaja.",
   "From here we do the work. When we find someone compatible who's free at the same time, we'll plan a real date and send it to you both.":
     "Ab hier übernehmen wir. Finden wir eine passende Person mit derselben freien Zeit, planen wir ein echtes Date und senden es euch beiden.",
   "Looking for": "Gesucht",
@@ -1701,8 +1702,8 @@ Object.assign(fr, {
     "Indiquez uniquement les vrais critères d'exclusion — le reste sera traité comme une préférence.",
   "This is what we hand to the research engine when it goes looking for places.":
     "Ce sont les critères transmis au moteur lorsqu'il cherche des lieux.",
-  "This is the one thing DateDrop asks of you, ever. Add a window or two.":
-    "C'est la seule chose que DateDrop vous demande. Ajoutez un ou deux créneaux.",
+  "This is the one thing DateHaja asks of you, ever. Add a window or two.":
+    "C'est la seule chose que DateHaja vous demande. Ajoutez un ou deux créneaux.",
   "That's everything. We'll take it from here.":
     "C'est tout. Nous prenons la suite.",
   "What should we call you?": "Comment devons-nous vous appeler ?",
@@ -1729,9 +1730,9 @@ Object.assign(fr, {
   "Neighbourhood only — we never store or share your address.":
     "Le quartier uniquement — nous ne stockons ni ne partageons votre adresse.",
   "Your neighbourhood": "Votre quartier",
-  "I confirm I'm 18 or over. DateDrop is an adults-only service.":
-    "Je confirme avoir au moins 18 ans. DateDrop est réservé aux adultes.",
-  "You're ready for DateDrop.": "Vous êtes prêt pour DateDrop.",
+  "I confirm I'm 18 or over. DateHaja is an adults-only service.":
+    "Je confirme avoir au moins 18 ans. DateHaja est réservé aux adultes.",
+  "You're ready for DateHaja.": "Vous êtes prêt pour DateHaja.",
   "From here we do the work. When we find someone compatible who's free at the same time, we'll plan a real date and send it to you both.":
     "À partir d'ici, nous travaillons. Quand nous trouvons une personne compatible libre au même moment, nous préparons un vrai rendez-vous et vous l'envoyons.",
   "Looking for": "Recherche",
@@ -1765,8 +1766,8 @@ Object.assign(nl, {
     "Markeer alleen echte uitsluitingscriteria — de rest behandelen we als voorkeur.",
   "This is what we hand to the research engine when it goes looking for places.":
     "Dit gebruiken we wanneer we naar locaties zoeken.",
-  "This is the one thing DateDrop asks of you, ever. Add a window or two.":
-    "Dit is het enige wat DateDrop van je vraagt. Voeg één of twee tijdvakken toe.",
+  "This is the one thing DateHaja asks of you, ever. Add a window or two.":
+    "Dit is het enige wat DateHaja van je vraagt. Voeg één of twee tijdvakken toe.",
   "That's everything. We'll take it from here.":
     "Dat was alles. Wij nemen het vanaf hier over.",
   "What should we call you?": "Hoe mogen we je noemen?",
@@ -1792,9 +1793,9 @@ Object.assign(nl, {
   "Neighbourhood only — we never store or share your address.":
     "Alleen de buurt — we bewaren of delen je adres nooit.",
   "Your neighbourhood": "Je buurt",
-  "I confirm I'm 18 or over. DateDrop is an adults-only service.":
-    "Ik bevestig dat ik 18 jaar of ouder ben. DateDrop is alleen voor volwassenen.",
-  "You're ready for DateDrop.": "Je bent klaar voor DateDrop.",
+  "I confirm I'm 18 or over. DateHaja is an adults-only service.":
+    "Ik bevestig dat ik 18 jaar of ouder ben. DateHaja is alleen voor volwassenen.",
+  "You're ready for DateHaja.": "Je bent klaar voor DateHaja.",
   "From here we do the work. When we find someone compatible who's free at the same time, we'll plan a real date and send it to you both.":
     "Vanaf hier doen wij het werk. Als we iemand vinden die past en tegelijk vrij is, plannen we een echte date en sturen die naar jullie beiden.",
   "Looking for": "Op zoek naar",
@@ -1828,8 +1829,8 @@ Object.assign(sv, {
     "Markera bara verkliga krav — allt annat behandlar vi som önskemål.",
   "This is what we hand to the research engine when it goes looking for places.":
     "Det här använder vi när vi söker efter platser.",
-  "This is the one thing DateDrop asks of you, ever. Add a window or two.":
-    "Det här är det enda DateDrop ber dig om. Lägg till ett eller två tidsfönster.",
+  "This is the one thing DateHaja asks of you, ever. Add a window or two.":
+    "Det här är det enda DateHaja ber dig om. Lägg till ett eller två tidsfönster.",
   "That's everything. We'll take it from here.":
     "Det var allt. Vi tar över härifrån.",
   "What should we call you?": "Vad ska vi kalla dig?",
@@ -1855,9 +1856,9 @@ Object.assign(sv, {
   "Neighbourhood only — we never store or share your address.":
     "Endast område — vi lagrar eller delar aldrig din adress.",
   "Your neighbourhood": "Ditt område",
-  "I confirm I'm 18 or over. DateDrop is an adults-only service.":
-    "Jag bekräftar att jag är minst 18 år. DateDrop är endast för vuxna.",
-  "You're ready for DateDrop.": "Du är redo för DateDrop.",
+  "I confirm I'm 18 or over. DateHaja is an adults-only service.":
+    "Jag bekräftar att jag är minst 18 år. DateHaja är endast för vuxna.",
+  "You're ready for DateHaja.": "Du är redo för DateHaja.",
   "From here we do the work. When we find someone compatible who's free at the same time, we'll plan a real date and send it to you both.":
     "Härifrån gör vi jobbet. När vi hittar någon kompatibel som är ledig samtidigt planerar vi en riktig dejt och skickar den till er båda.",
   "Looking for": "Söker",
@@ -1892,8 +1893,8 @@ Object.assign(ko, {
   "Add one evening you're free. That's genuinely all we need to start looking.":
     "가능한 저녁을 하나 추가하세요. 찾기 시작하는 데 정말 그것만 필요합니다.",
   "Remove this window": "이 시간 삭제",
-  "A held window means a DateDrop is in flight for it. Booked means the date is confirmed — cancel the date if you can't make it.":
-    "보류된 시간은 DateDrop을 진행 중이라는 뜻입니다. 예약됨은 데이트가 확정된 상태이므로 참석할 수 없다면 데이트를 취소하세요.",
+  "A held window means a date plan is in progress. Booked means the date is confirmed — cancel the date if you can't make it.":
+    "보류된 시간은 DateHaja를 진행 중이라는 뜻입니다. 예약됨은 데이트가 확정된 상태이므로 참석할 수 없다면 데이트를 취소하세요.",
   Held: "보류",
   Booked: "예약됨",
 });
@@ -1915,8 +1916,8 @@ Object.assign(ja, {
   "Add one evening you're free. That's genuinely all we need to start looking.":
     "空いている夜を一つ追加してください。探し始めるために必要なのは本当にそれだけです。",
   "Remove this window": "この時間を削除",
-  "A held window means a DateDrop is in flight for it. Booked means the date is confirmed — cancel the date if you can't make it.":
-    "保留はDateDropが進行中、予約済みはデート確定を意味します。参加できない場合はデートをキャンセルしてください。",
+  "A held window means a date plan is in progress. Booked means the date is confirmed — cancel the date if you can't make it.":
+    "保留はDateHajaが進行中、予約済みはデート確定を意味します。参加できない場合はデートをキャンセルしてください。",
   Held: "保留",
   Booked: "予約済み",
 });
@@ -1938,8 +1939,8 @@ Object.assign(de, {
   "Add one evening you're free. That's genuinely all we need to start looking.":
     "Füge einen freien Abend hinzu. Mehr brauchen wir wirklich nicht, um zu suchen.",
   "Remove this window": "Dieses Zeitfenster entfernen",
-  "A held window means a DateDrop is in flight for it. Booked means the date is confirmed — cancel the date if you can't make it.":
-    "Ein reserviertes Zeitfenster bedeutet, dass ein DateDrop läuft. Gebucht heißt bestätigt — sage das Date ab, wenn du nicht kannst.",
+  "A held window means a date plan is in progress. Booked means the date is confirmed — cancel the date if you can't make it.":
+    "Ein reserviertes Zeitfenster bedeutet, dass ein DateHaja läuft. Gebucht heißt bestätigt — sage das Date ab, wenn du nicht kannst.",
   Held: "Reserviert",
   Booked: "Gebucht",
 });
@@ -1961,8 +1962,8 @@ Object.assign(fr, {
   "Add one evening you're free. That's genuinely all we need to start looking.":
     "Ajoutez une soirée libre. C'est vraiment tout ce qu'il nous faut pour commencer.",
   "Remove this window": "Supprimer ce créneau",
-  "A held window means a DateDrop is in flight for it. Booked means the date is confirmed — cancel the date if you can't make it.":
-    "Un créneau retenu signifie qu'un DateDrop est en cours. Réservé signifie que le rendez-vous est confirmé — annulez si vous ne pouvez pas venir.",
+  "A held window means a date plan is in progress. Booked means the date is confirmed — cancel the date if you can't make it.":
+    "Un créneau retenu signifie qu'un DateHaja est en cours. Réservé signifie que le rendez-vous est confirmé — annulez si vous ne pouvez pas venir.",
   Held: "Retenu",
   Booked: "Réservé",
 });
@@ -1984,8 +1985,8 @@ Object.assign(nl, {
   "Add one evening you're free. That's genuinely all we need to start looking.":
     "Voeg één vrije avond toe. Dat is echt alles wat we nodig hebben om te beginnen.",
   "Remove this window": "Dit tijdvak verwijderen",
-  "A held window means a DateDrop is in flight for it. Booked means the date is confirmed — cancel the date if you can't make it.":
-    "Een vastgehouden tijdvak betekent dat een DateDrop onderweg is. Geboekt betekent bevestigd — annuleer als je niet kunt.",
+  "A held window means a date plan is in progress. Booked means the date is confirmed — cancel the date if you can't make it.":
+    "Een vastgehouden tijdvak betekent dat een DateHaja onderweg is. Geboekt betekent bevestigd — annuleer als je niet kunt.",
   Held: "Vastgehouden",
   Booked: "Geboekt",
 });
@@ -2007,16 +2008,16 @@ Object.assign(sv, {
   "Add one evening you're free. That's genuinely all we need to start looking.":
     "Lägg till en kväll du är ledig. Det är verkligen allt vi behöver för att börja.",
   "Remove this window": "Ta bort tidsfönstret",
-  "A held window means a DateDrop is in flight for it. Booked means the date is confirmed — cancel the date if you can't make it.":
-    "Ett reserverat tidsfönster betyder att en DateDrop pågår. Bokad betyder att dejten är bekräftad — avboka om du inte kan komma.",
+  "A held window means a date plan is in progress. Booked means the date is confirmed — cancel the date if you can't make it.":
+    "Ett reserverat tidsfönster betyder att en DateHaja pågår. Bokad betyder att dejten är bekräftad — avboka om du inte kan komma.",
   Held: "Reserverad",
   Booked: "Bokad",
 });
 
 Object.assign(ko, {
   "Public record · Privacy": "공개 안내서 · 개인정보",
-  "DateDrop's whole promise is that you can meet someone without handing over anything you'd rather keep. Here is exactly what that means.":
-    "DateDrop은 지키고 싶은 정보를 넘기지 않고도 누군가를 만날 수 있도록 설계했습니다. 그 의미를 정확히 설명합니다.",
+  "DateHaja's whole promise is that you can meet someone without handing over anything you'd rather keep. Here is exactly what that means.":
+    "DateHaja는 지키고 싶은 정보를 넘기지 않고도 누군가를 만날 수 있도록 설계했습니다. 그 의미를 정확히 설명합니다.",
   "Sign in to see your own profile exactly as a match would.":
     "로그인하면 상대방에게 보이는 내 프로필을 그대로 확인할 수 있습니다.",
   "Before you both accept": "두 사람 모두 수락하기 전",
@@ -2035,8 +2036,8 @@ Object.assign(ko, {
   "What we don't do": "제공하지 않는 것",
   "No identity verification": "신원 인증 없음",
   "Public record · Safety": "공개 안내서 · 안전",
-  "DateDrop sends you to meet a stranger in public. Here's what we do, what we don't, and what's in your hands.":
-    "DateDrop은 낯선 사람을 공공장소에서 만나도록 연결합니다. 저희가 하는 일과 하지 않는 일, 사용자가 지켜야 할 일을 설명합니다.",
+  "DateHaja sends you to meet a stranger in public. Here's what we do, what we don't, and what's in your hands.":
+    "DateHaja는 낯선 사람을 공공장소에서 만나도록 연결합니다. 저희가 하는 일과 하지 않는 일, 사용자가 지켜야 할 일을 설명합니다.",
   "We are not an emergency service": "긴급 구조 서비스가 아닙니다",
   "Be clear about this": "분명히 알아두세요",
   "What we don't verify": "인증하지 않는 항목",
@@ -2060,8 +2061,8 @@ Object.assign(ko, {
 });
 Object.assign(ja, {
   "Public record · Privacy": "公開ガイド · プライバシー",
-  "DateDrop's whole promise is that you can meet someone without handing over anything you'd rather keep. Here is exactly what that means.":
-    "DateDropは、守りたい情報を渡さずに誰かと会えることを約束します。その意味を正確に説明します。",
+  "DateHaja's whole promise is that you can meet someone without handing over anything you'd rather keep. Here is exactly what that means.":
+    "DateHajaは、守りたい情報を渡さずに誰かと会えることを約束します。その意味を正確に説明します。",
   "Sign in to see your own profile exactly as a match would.":
     "ログインすると、相手に見える自分のプロフィールをそのまま確認できます。",
   "Before you both accept": "二人が承諾する前",
@@ -2080,8 +2081,8 @@ Object.assign(ja, {
   "What we don't do": "行わないこと",
   "No identity verification": "本人確認なし",
   "Public record · Safety": "公開ガイド · 安全",
-  "DateDrop sends you to meet a stranger in public. Here's what we do, what we don't, and what's in your hands.":
-    "DateDropは知らない人と公共の場所で会うサービスです。私たちが行うこと、行わないこと、利用者にできることを説明します。",
+  "DateHaja sends you to meet a stranger in public. Here's what we do, what we don't, and what's in your hands.":
+    "DateHajaは知らない人と公共の場所で会うサービスです。私たちが行うこと、行わないこと、利用者にできることを説明します。",
   "We are not an emergency service": "緊急サービスではありません",
   "Be clear about this": "必ず理解してください",
   "What we don't verify": "確認しないこと",
@@ -2105,8 +2106,8 @@ Object.assign(ja, {
 });
 Object.assign(de, {
   "Public record · Privacy": "Öffentliche Information · Datenschutz",
-  "DateDrop's whole promise is that you can meet someone without handing over anything you'd rather keep. Here is exactly what that means.":
-    "DateDrop verspricht, dass du jemanden treffen kannst, ohne private Angaben preiszugeben. Hier steht genau, was das bedeutet.",
+  "DateHaja's whole promise is that you can meet someone without handing over anything you'd rather keep. Here is exactly what that means.":
+    "DateHaja verspricht, dass du jemanden treffen kannst, ohne private Angaben preiszugeben. Hier steht genau, was das bedeutet.",
   "Sign in to see your own profile exactly as a match would.":
     "Melde dich an, um dein Profil genau so zu sehen wie ein Match.",
   "Before you both accept": "Bevor ihr beide zusagt",
@@ -2125,8 +2126,8 @@ Object.assign(de, {
   "What we don't do": "Was wir nicht tun",
   "No identity verification": "Keine Identitätsprüfung",
   "Public record · Safety": "Öffentliche Information · Sicherheit",
-  "DateDrop sends you to meet a stranger in public. Here's what we do, what we don't, and what's in your hands.":
-    "DateDrop bringt dich mit einer fremden Person an einem öffentlichen Ort zusammen. Hier steht, was wir tun, nicht tun und was bei dir liegt.",
+  "DateHaja sends you to meet a stranger in public. Here's what we do, what we don't, and what's in your hands.":
+    "DateHaja bringt dich mit einer fremden Person an einem öffentlichen Ort zusammen. Hier steht, was wir tun, nicht tun und was bei dir liegt.",
   "We are not an emergency service": "Wir sind kein Notdienst",
   "Be clear about this": "Das muss klar sein",
   "What we don't verify": "Was wir nicht prüfen",
@@ -2151,8 +2152,8 @@ Object.assign(de, {
 });
 Object.assign(fr, {
   "Public record · Privacy": "Informations publiques · Confidentialité",
-  "DateDrop's whole promise is that you can meet someone without handing over anything you'd rather keep. Here is exactly what that means.":
-    "DateDrop promet de vous permettre de rencontrer quelqu'un sans livrer les informations que vous souhaitez garder. Voici ce que cela signifie précisément.",
+  "DateHaja's whole promise is that you can meet someone without handing over anything you'd rather keep. Here is exactly what that means.":
+    "DateHaja promet de vous permettre de rencontrer quelqu'un sans livrer les informations que vous souhaitez garder. Voici ce que cela signifie précisément.",
   "Sign in to see your own profile exactly as a match would.":
     "Connectez-vous pour voir votre profil exactement comme l'autre personne le verrait.",
   "Before you both accept": "Avant votre double accord",
@@ -2171,8 +2172,8 @@ Object.assign(fr, {
   "What we don't do": "Ce que nous ne faisons pas",
   "No identity verification": "Aucune vérification d'identité",
   "Public record · Safety": "Informations publiques · Sécurité",
-  "DateDrop sends you to meet a stranger in public. Here's what we do, what we don't, and what's in your hands.":
-    "DateDrop vous fait rencontrer un inconnu dans un lieu public. Voici ce que nous faisons, ne faisons pas et ce qui vous appartient.",
+  "DateHaja sends you to meet a stranger in public. Here's what we do, what we don't, and what's in your hands.":
+    "DateHaja vous fait rencontrer un inconnu dans un lieu public. Voici ce que nous faisons, ne faisons pas et ce qui vous appartient.",
   "We are not an emergency service": "Nous ne sommes pas un service d'urgence",
   "Be clear about this": "Soyons clairs",
   "What we don't verify": "Ce que nous ne vérifions pas",
@@ -2196,8 +2197,8 @@ Object.assign(fr, {
 });
 Object.assign(nl, {
   "Public record · Privacy": "Openbare informatie · Privacy",
-  "DateDrop's whole promise is that you can meet someone without handing over anything you'd rather keep. Here is exactly what that means.":
-    "DateDrop belooft dat je iemand kunt ontmoeten zonder gegevens af te staan die je privé wilt houden. Dit is precies wat dat betekent.",
+  "DateHaja's whole promise is that you can meet someone without handing over anything you'd rather keep. Here is exactly what that means.":
+    "DateHaja belooft dat je iemand kunt ontmoeten zonder gegevens af te staan die je privé wilt houden. Dit is precies wat dat betekent.",
   "Sign in to see your own profile exactly as a match would.":
     "Log in om je profiel precies te zien zoals een match het ziet.",
   "Before you both accept": "Voordat jullie beiden accepteren",
@@ -2216,8 +2217,8 @@ Object.assign(nl, {
   "What we don't do": "Wat we niet doen",
   "No identity verification": "Geen identiteitsverificatie",
   "Public record · Safety": "Openbare informatie · Veiligheid",
-  "DateDrop sends you to meet a stranger in public. Here's what we do, what we don't, and what's in your hands.":
-    "DateDrop laat je een onbekende in het openbaar ontmoeten. Dit doen we wel en niet, en dit ligt bij jou.",
+  "DateHaja sends you to meet a stranger in public. Here's what we do, what we don't, and what's in your hands.":
+    "DateHaja laat je een onbekende in het openbaar ontmoeten. Dit doen we wel en niet, en dit ligt bij jou.",
   "We are not an emergency service": "We zijn geen hulpdienst",
   "Be clear about this": "Wees hier duidelijk over",
   "What we don't verify": "Wat we niet verifiëren",
@@ -2241,8 +2242,8 @@ Object.assign(nl, {
 });
 Object.assign(sv, {
   "Public record · Privacy": "Offentlig information · Integritet",
-  "DateDrop's whole promise is that you can meet someone without handing over anything you'd rather keep. Here is exactly what that means.":
-    "DateDrop lovar att du kan träffa någon utan att lämna ut det du vill behålla privat. Här är exakt vad det betyder.",
+  "DateHaja's whole promise is that you can meet someone without handing over anything you'd rather keep. Here is exactly what that means.":
+    "DateHaja lovar att du kan träffa någon utan att lämna ut det du vill behålla privat. Här är exakt vad det betyder.",
   "Sign in to see your own profile exactly as a match would.":
     "Logga in för att se din profil precis som en match ser den.",
   "Before you both accept": "Innan ni båda accepterar",
@@ -2261,8 +2262,8 @@ Object.assign(sv, {
   "What we don't do": "Vad vi inte gör",
   "No identity verification": "Ingen identitetsverifiering",
   "Public record · Safety": "Offentlig information · Säkerhet",
-  "DateDrop sends you to meet a stranger in public. Here's what we do, what we don't, and what's in your hands.":
-    "DateDrop låter dig träffa en främling offentligt. Här är vad vi gör, inte gör och vad som ligger i dina händer.",
+  "DateHaja sends you to meet a stranger in public. Here's what we do, what we don't, and what's in your hands.":
+    "DateHaja låter dig träffa en främling offentligt. Här är vad vi gör, inte gör och vad som ligger i dina händer.",
   "We are not an emergency service": "Vi är ingen räddningstjänst",
   "Be clear about this": "Var tydlig med detta",
   "What we don't verify": "Vad vi inte verifierar",
@@ -2297,56 +2298,56 @@ Object.assign(ko, {
   "Your exact address or coordinates": "내 정확한 주소 또는 좌표",
   "Your date of birth": "내 생년월일",
   "Your full name (we only show your first name)": "내 성명(이름만 표시)",
-  "Your other DateDrops, past or present": "과거 또는 현재의 다른 DateDrop",
+  "Your other date plans, past or present": "과거 또는 현재의 다른 데이트 계획",
   "Every invitation, confirmation and reminder is sent by":
     "모든 초대, 확정 안내, 알림은",
-  "from our own inbox. Your address is the recipient, never the sender, and never a CC. Two people on the same DateDrop are always emailed separately, so neither can see the other's address in a header.":
-    "의 전용 메일함에서 발송됩니다. 당신의 주소는 수신자로만 사용되며 발신자나 참조에 들어가지 않습니다. 같은 DateDrop의 두 사람에게도 항상 따로 보내므로 메일 헤더에서 상대방 주소를 볼 수 없습니다.",
+  "from our own inbox. Your address is the recipient, never the sender, and never a CC. Two people on the same date plan are always emailed separately, so neither can see the other's address in a header.":
+    "의 전용 메일함에서 발송됩니다. 당신의 주소는 수신자로만 사용되며 발신자나 참조에 들어가지 않습니다. 같은 데이트 계획의 두 사람에게도 항상 따로 보내므로 메일 헤더에서 상대방 주소를 볼 수 없습니다.",
   "If you reply to one of those emails, it comes back to us — not to your match.":
     "그 이메일에 답장하면 상대방이 아니라 저희에게 도착합니다.",
   "You pick a neighbourhood, not an address. We store the neighbourhood's approximate centre rounded to about a kilometre, and use it only to work out roughly where a date should happen. Your match sees the neighbourhood name and nothing more precise — never a distance in kilometres, because a distance plus a map inverts to a location.":
     "주소가 아닌 동네를 선택합니다. 동네 중심을 약 1km 단위로 둥글게 저장해 데이트 지역을 정할 때만 사용합니다. 상대방은 동네 이름만 볼 수 있으며 거리나 더 정확한 위치는 공개하지 않습니다.",
   "Bios and notes are scrubbed for email addresses, phone numbers, links and messenger handles before anyone else can read them. It isn't that we don't trust you — it's that the product only works if nobody feels pressure to hand over contact details before they've met.":
     "소개글과 메모는 다른 사람이 읽기 전에 이메일, 전화번호, 링크, 메신저 계정을 자동으로 제거합니다. 만나기 전 연락처를 건네야 한다는 부담이 없어야 제품의 약속이 지켜지기 때문입니다.",
-  "DateDrop does not verify anyone's identity. There is no ID check, no photo verification, and no background check. Please treat every match as someone you met on the internet, and read the":
-    "DateDrop은 신분증, 사진, 신원 조회를 포함한 어떠한 신원 인증도 하지 않습니다. 모든 상대를 인터넷에서 처음 만난 사람으로 대하고",
+  "DateHaja does not verify anyone's identity. There is no ID check, no photo verification, and no background check. Please treat every match as someone you met on the internet, and read the":
+    "DateHaja는 신분증, 사진, 신원 조회를 포함한 어떠한 신원 인증도 하지 않습니다. 모든 상대를 인터넷에서 처음 만난 사람으로 대하고",
   "before your first date.": "를 첫 데이트 전에 읽어주세요.",
   "If you're in immediate danger, contact your local emergency services first. Reports here reach our team, not the police.":
-    "즉각적인 위험에 처했다면 먼저 지역 긴급 구조 기관에 연락하세요. 이곳의 신고는 경찰이 아닌 DateDrop 팀에 전달됩니다.",
-  "DateDrop does not verify identity in any form. Everything on a profile is self-reported. We say this plainly because a product that implies safety it hasn't earned is more dangerous than one that's honest.":
-    "DateDrop은 어떤 형태로도 신원을 확인하지 않으며 프로필 정보는 모두 사용자가 직접 입력합니다. 확보하지 못한 안전을 암시하는 것보다 한계를 솔직히 밝히는 것이 더 안전합니다.",
+    "즉각적인 위험에 처했다면 먼저 지역 긴급 구조 기관에 연락하세요. 이곳의 신고는 경찰이 아닌 DateHaja 팀에 전달됩니다.",
+  "DateHaja does not verify identity in any form. Everything on a profile is self-reported. We say this plainly because a product that implies safety it hasn't earned is more dangerous than one that's honest.":
+    "DateHaja는 어떤 형태로도 신원을 확인하지 않으며 프로필 정보는 모두 사용자가 직접 입력합니다. 확보하지 못한 안전을 암시하는 것보다 한계를 솔직히 밝히는 것이 더 안전합니다.",
   "What we do enforce: every account confirms it's 18 or over, blocked pairs are never matched again in either direction, and serious reports immediately restrict the reported account pending review.":
     "모든 계정은 만 18세 이상임을 확인해야 합니다. 차단된 두 사람은 어느 방향으로도 다시 매칭되지 않으며, 심각한 신고가 접수된 계정은 검토 전까지 즉시 제한됩니다.",
-  "Every DateDrop is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.":
-    "모든 DateDrop은 실시간 웹 조사로 확인한 실제 영업 중인 공공장소에서만 계획하며 사적 주소는 사용하지 않습니다.",
+  "Every date is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.":
+    "모든 데이트는 실시간 웹 조사로 확인한 실제 영업 중인 공공장소에서만 계획하며 사적 주소는 사용하지 않습니다.",
   "You can complete an entire date without your match ever having your email, number or socials. Nothing in the product asks you to hand them over.":
     "이메일, 전화번호, 소셜 계정을 상대방에게 주지 않고도 데이트 전 과정을 마칠 수 있습니다. 제품 어디에서도 공유를 요구하지 않습니다.",
   "Your location is stored as an approximate neighbourhood centre, and shown to a match only as a neighbourhood name.":
     "위치는 대략적인 동네 중심으로 저장되고 상대방에게는 동네 이름만 표시됩니다.",
-  "One switch in Settings takes you out of everyone's candidate pool immediately, so no new DateDrop can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.":
+  "One switch in Settings takes you out of everyone's candidate pool immediately, so no new date plan can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.":
     "설정의 스위치 하나로 즉시 모든 후보 목록에서 빠질 수 있습니다. 이미 진행 중인 검색은 초대 하나를 보낼 수 있지만 거절하면 더 이어지지 않으며 데이터는 삭제되지 않습니다.",
-  "Blocking someone cancels any DateDrop you share, frees both evenings, and permanently removes you from each other's candidate pool.":
-    "차단하면 함께한 DateDrop이 취소되고 두 사람의 시간이 풀리며 서로의 후보 목록에서 영구히 제외됩니다.",
-  "Tell someone you trust where you're going and when. The DateDrop page has the venue, address and time — it's built to be forwarded.":
-    "신뢰하는 사람에게 언제 어디로 가는지 알리세요. DateDrop 페이지의 장소, 주소, 시간은 바로 전달할 수 있습니다.",
+  "Blocking someone cancels any date plan you share, frees both evenings, and permanently removes you from each other's candidate pool.":
+    "차단하면 함께한 데이트 계획이 취소되고 두 사람의 시간이 풀리며 서로의 후보 목록에서 영구히 제외됩니다.",
+  "Tell someone you trust where you're going and when. The date plan page has the venue, address and time — it's built to be forwarded.":
+    "신뢰하는 사람에게 언제 어디로 가는지 알리세요. 데이트 계획 페이지의 장소, 주소, 시간은 바로 전달할 수 있습니다.",
   "Arrange your own way there and back. Don't accept a lift on a first date.":
     "왕복 교통편은 직접 준비하고 첫 데이트에서는 차를 얻어 타지 마세요.",
   "Stay in the public venue. If someone pushes to move somewhere private, that's your answer.":
     "공공장소에 머무르세요. 상대방이 사적인 곳으로 이동하자고 압박한다면 그 자체가 답입니다.",
   "Keep an eye on your drink, and leave whenever you want to — you owe a stranger nothing.":
     "음료를 지켜보고 원할 때 언제든 떠나세요. 낯선 사람에게 빚진 것은 없습니다.",
-  "If they pressure you for your number, socials or money, report it. That's exactly what DateDrop exists to make unnecessary.":
-    "전화번호, 소셜 계정, 돈을 요구하거나 압박하면 신고하세요. DateDrop은 그런 요구가 필요 없도록 만든 서비스입니다.",
-  "Open the DateDrop and use Report at the bottom of the page. The report reaches us with the DateDrop attached, so we can see who, when and where without you having to explain it twice.":
-    "DateDrop을 열고 페이지 아래의 신고를 누르세요. DateDrop 정보가 함께 전달되어 누구와 언제 어디서 있었는지 반복해서 설명하지 않아도 됩니다.",
+  "If they pressure you for your number, socials or money, report it. That's exactly what DateHaja exists to make unnecessary.":
+    "전화번호, 소셜 계정, 돈을 요구하거나 압박하면 신고하세요. DateHaja는 그런 요구가 필요 없도록 만든 서비스입니다.",
+  "Open the date plan and use Report at the bottom of the page. The report reaches us with the date plan attached, so we can see who, when and where without you having to explain it twice.":
+    "데이트 계획을 열고 페이지 아래의 신고를 누르세요. 계획 정보가 함께 전달되어 누구와 언제 어디서 있었는지 반복해서 설명하지 않아도 됩니다.",
   "Reports of harassment or of someone appearing to be under 18 immediately restrict that account while we look at it. You can block at the same time, or separately — the two are independent on purpose.":
     "괴롭힘이나 미성년자로 의심되는 신고는 검토 중 해당 계정을 즉시 제한합니다. 차단은 동시에 또는 별도로 할 수 있습니다.",
-  "You can also reply to any DateDrop Concierge email. It comes to us.":
-    "DateDrop 컨시어지 이메일에 답장해도 저희에게 전달됩니다.",
+  "You can also reply to any DateHaja Concierge email. It comes to us.":
+    "DateHaja 컨시어지 이메일에 답장해도 저희에게 전달됩니다.",
   "Exactly what a match can see about you":
     "상대방에게 보이는 내 정보의 정확한 범위",
-  "Pause DateDrops, manage blocks, control email":
-    "DateDrop 일시정지, 차단 관리, 이메일 설정",
+  "Pause matching, manage blocks, control email":
+    "DateHaja 일시정지, 차단 관리, 이메일 설정",
 });
 
 Object.assign(ja, {
@@ -2361,56 +2362,56 @@ Object.assign(ja, {
   "Your exact address or coordinates": "正確な住所や座標",
   "Your date of birth": "生年月日",
   "Your full name (we only show your first name)": "氏名（名前のみ表示）",
-  "Your other DateDrops, past or present": "過去・現在のほかのDateDrop",
+  "Your other date plans, past or present": "過去・現在のほかのデートプラン",
   "Every invitation, confirmation and reminder is sent by":
     "すべての招待、確定、リマインダーは",
-  "from our own inbox. Your address is the recipient, never the sender, and never a CC. Two people on the same DateDrop are always emailed separately, so neither can see the other's address in a header.":
-    "の専用メールボックスから送られます。あなたのアドレスは受信者としてのみ使われ、送信者やCCにはなりません。同じDateDropの二人にも常に別々に送るため、ヘッダーで相手のアドレスを見ることはできません。",
+  "from our own inbox. Your address is the recipient, never the sender, and never a CC. Two people on the same date plan are always emailed separately, so neither can see the other's address in a header.":
+    "の専用メールボックスから送られます。あなたのアドレスは受信者としてのみ使われ、送信者やCCにはなりません。同じデートプランの二人にも常に別々に送るため、ヘッダーで相手のアドレスを見ることはできません。",
   "If you reply to one of those emails, it comes back to us — not to your match.":
     "返信は相手ではなく私たちに届きます。",
   "You pick a neighbourhood, not an address. We store the neighbourhood's approximate centre rounded to about a kilometre, and use it only to work out roughly where a date should happen. Your match sees the neighbourhood name and nothing more precise — never a distance in kilometres, because a distance plus a map inverts to a location.":
     "住所ではなく地域を選びます。地域のおおよその中心を約1km単位で保存し、デート場所の目安にのみ使います。相手に見えるのは地域名だけで、距離や正確な位置は表示しません。",
   "Bios and notes are scrubbed for email addresses, phone numbers, links and messenger handles before anyone else can read them. It isn't that we don't trust you — it's that the product only works if nobody feels pressure to hand over contact details before they've met.":
     "紹介文やメモは、他の人が読む前にメール、電話番号、リンク、メッセンジャーIDを自動的に除きます。会う前に連絡先を渡す圧力がないことが大切だからです。",
-  "DateDrop does not verify anyone's identity. There is no ID check, no photo verification, and no background check. Please treat every match as someone you met on the internet, and read the":
-    "DateDropは身分証、写真、身元調査を含む本人確認を行いません。相手はインターネットで初めて会った人として扱い、最初のデート前に",
+  "DateHaja does not verify anyone's identity. There is no ID check, no photo verification, and no background check. Please treat every match as someone you met on the internet, and read the":
+    "DateHajaは身分証、写真、身元調査を含む本人確認を行いません。相手はインターネットで初めて会った人として扱い、最初のデート前に",
   "before your first date.": "を読んでください。",
   "If you're in immediate danger, contact your local emergency services first. Reports here reach our team, not the police.":
-    "差し迫った危険がある場合は、まず地域の緊急サービスに連絡してください。ここでの報告は警察ではなくDateDropチームに届きます。",
-  "DateDrop does not verify identity in any form. Everything on a profile is self-reported. We say this plainly because a product that implies safety it hasn't earned is more dangerous than one that's honest.":
-    "DateDropはいかなる本人確認も行わず、プロフィールはすべて自己申告です。確保していない安全を匂わせるより、限界を明確にする方が安全だと考えています。",
+    "差し迫った危険がある場合は、まず地域の緊急サービスに連絡してください。ここでの報告は警察ではなくDateHajaチームに届きます。",
+  "DateHaja does not verify identity in any form. Everything on a profile is self-reported. We say this plainly because a product that implies safety it hasn't earned is more dangerous than one that's honest.":
+    "DateHajaはいかなる本人確認も行わず、プロフィールはすべて自己申告です。確保していない安全を匂わせるより、限界を明確にする方が安全だと考えています。",
   "What we do enforce: every account confirms it's 18 or over, blocked pairs are never matched again in either direction, and serious reports immediately restrict the reported account pending review.":
     "すべてのアカウントは18歳以上を確認します。ブロックした二人は再びマッチせず、重大な報告を受けたアカウントは審査まで直ちに制限されます。",
-  "Every DateDrop is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.":
-    "すべてのDateDropは最新のウェブ調査で確認した営業中の公共施設で計画し、個人宅は使いません。",
+  "Every date is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.":
+    "すべてのデートは最新のウェブ調査で確認した営業中の公共施設で計画し、個人宅は使いません。",
   "You can complete an entire date without your match ever having your email, number or socials. Nothing in the product asks you to hand them over.":
     "メール、電話番号、SNSを相手に渡さずにデート全体を完了できます。製品内で共有を求めることはありません。",
   "Your location is stored as an approximate neighbourhood centre, and shown to a match only as a neighbourhood name.":
     "位置は地域のおおよその中心として保存され、相手には地域名だけが表示されます。",
-  "One switch in Settings takes you out of everyone's candidate pool immediately, so no new DateDrop can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.":
+  "One switch in Settings takes you out of everyone's candidate pool immediately, so no new date plan can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.":
     "設定のスイッチ一つで候補からすぐ外れます。進行中の検索から招待が一件届く場合はありますが、見送ればそれ以上は続きません。データは削除されません。",
-  "Blocking someone cancels any DateDrop you share, frees both evenings, and permanently removes you from each other's candidate pool.":
-    "ブロックすると共有するDateDropがキャンセルされ、二人の予定が解放され、お互いの候補から恒久的に外れます。",
-  "Tell someone you trust where you're going and when. The DateDrop page has the venue, address and time — it's built to be forwarded.":
-    "信頼できる人に行き先と時間を伝えてください。DateDropページの会場、住所、時間はそのまま共有できます。",
+  "Blocking someone cancels any date plan you share, frees both evenings, and permanently removes you from each other's candidate pool.":
+    "ブロックすると共有するデートプランがキャンセルされ、二人の予定が解放され、お互いの候補から恒久的に外れます。",
+  "Tell someone you trust where you're going and when. The date plan page has the venue, address and time — it's built to be forwarded.":
+    "信頼できる人に行き先と時間を伝えてください。デートプランの会場、住所、時間はそのまま共有できます。",
   "Arrange your own way there and back. Don't accept a lift on a first date.":
     "往復の交通手段は自分で用意し、初デートでは送迎を受けないでください。",
   "Stay in the public venue. If someone pushes to move somewhere private, that's your answer.":
     "公共の場所に留まりましょう。相手が個人的な場所への移動を強く求めたら、それが答えです。",
   "Keep an eye on your drink, and leave whenever you want to — you owe a stranger nothing.":
     "飲み物から目を離さず、いつでも帰って構いません。見知らぬ人に借りはありません。",
-  "If they pressure you for your number, socials or money, report it. That's exactly what DateDrop exists to make unnecessary.":
-    "電話番号、SNS、お金を要求されたら報告してください。DateDropはそうした要求を不要にするためのサービスです。",
-  "Open the DateDrop and use Report at the bottom of the page. The report reaches us with the DateDrop attached, so we can see who, when and where without you having to explain it twice.":
-    "DateDropを開き、ページ下部の報告を使ってください。DateDrop情報が添付されるため、相手、日時、場所を繰り返し説明する必要はありません。",
+  "If they pressure you for your number, socials or money, report it. That's exactly what DateHaja exists to make unnecessary.":
+    "電話番号、SNS、お金を要求されたら報告してください。DateHajaはそうした要求を不要にするためのサービスです。",
+  "Open the date plan and use Report at the bottom of the page. The report reaches us with the date plan attached, so we can see who, when and where without you having to explain it twice.":
+    "デートプランを開き、ページ下部の報告を使ってください。プラン情報が添付されるため、相手、日時、場所を繰り返し説明する必要はありません。",
   "Reports of harassment or of someone appearing to be under 18 immediately restrict that account while we look at it. You can block at the same time, or separately — the two are independent on purpose.":
     "嫌がらせや18歳未満に見える人の報告は、確認中そのアカウントを直ちに制限します。ブロックは同時にも別々にも行えます。",
-  "You can also reply to any DateDrop Concierge email. It comes to us.":
-    "DateDropコンシェルジュのメールに返信しても私たちに届きます。",
+  "You can also reply to any DateHaja Concierge email. It comes to us.":
+    "DateHajaコンシェルジュのメールに返信しても私たちに届きます。",
   "Exactly what a match can see about you":
     "相手に見えるあなたの情報の正確な範囲",
-  "Pause DateDrops, manage blocks, control email":
-    "DateDropの一時停止、ブロック管理、メール設定",
+  "Pause matching, manage blocks, control email":
+    "DateHajaの一時停止、ブロック管理、メール設定",
 });
 
 Object.assign(de, {
@@ -2426,11 +2427,11 @@ Object.assign(de, {
   "Your date of birth": "Dein Geburtsdatum",
   "Your full name (we only show your first name)":
     "Dein vollständiger Name (wir zeigen nur den Vornamen)",
-  "Your other DateDrops, past or present":
-    "Deine anderen DateDrops, vergangen oder aktuell",
+  "Your other date plans, past or present":
+    "Deine anderen Date-Pläne, vergangen oder aktuell",
   "Every invitation, confirmation and reminder is sent by":
     "Jede Einladung, Bestätigung und Erinnerung wird von",
-  "from our own inbox. Your address is the recipient, never the sender, and never a CC. Two people on the same DateDrop are always emailed separately, so neither can see the other's address in a header.":
+  "from our own inbox. Your address is the recipient, never the sender, and never a CC. Two people on the same date plan are always emailed separately, so neither can see the other's address in a header.":
     "aus unserem eigenen Postfach gesendet. Deine Adresse ist nur Empfänger, nie Absender oder CC. Beide Personen erhalten getrennte E-Mails und sehen die Adresse der anderen nicht.",
   "If you reply to one of those emails, it comes back to us — not to your match.":
     "Eine Antwort kommt zu uns, nicht zu deinem Match.",
@@ -2438,45 +2439,45 @@ Object.assign(de, {
     "Du wählst ein Viertel, keine Adresse. Wir speichern dessen ungefähren Mittelpunkt auf rund einen Kilometer gerundet und nutzen ihn nur für die Date-Gegend. Dein Match sieht nur den Namen des Viertels, nie Entfernung oder genaue Lage.",
   "Bios and notes are scrubbed for email addresses, phone numbers, links and messenger handles before anyone else can read them. It isn't that we don't trust you — it's that the product only works if nobody feels pressure to hand over contact details before they've met.":
     "Bios und Notizen werden vor dem Anzeigen von E-Mails, Telefonnummern, Links und Messenger-Namen bereinigt. Niemand soll sich vor einem Treffen zur Weitergabe von Kontaktdaten gedrängt fühlen.",
-  "DateDrop does not verify anyone's identity. There is no ID check, no photo verification, and no background check. Please treat every match as someone you met on the internet, and read the":
-    "DateDrop prüft keine Identitäten, Ausweise, Fotos oder Hintergründe. Behandle jedes Match wie eine Person aus dem Internet und lies vor dem ersten Date den",
+  "DateHaja does not verify anyone's identity. There is no ID check, no photo verification, and no background check. Please treat every match as someone you met on the internet, and read the":
+    "DateHaja prüft keine Identitäten, Ausweise, Fotos oder Hintergründe. Behandle jedes Match wie eine Person aus dem Internet und lies vor dem ersten Date den",
   "before your first date.": ".",
   "If you're in immediate danger, contact your local emergency services first. Reports here reach our team, not the police.":
     "Bei unmittelbarer Gefahr kontaktiere zuerst den örtlichen Notdienst. Meldungen hier erreichen unser Team, nicht die Polizei.",
-  "DateDrop does not verify identity in any form. Everything on a profile is self-reported. We say this plainly because a product that implies safety it hasn't earned is more dangerous than one that's honest.":
-    "DateDrop prüft Identitäten in keiner Form. Alle Profilangaben sind selbst gemacht. Ein Produkt, das unverdiente Sicherheit suggeriert, ist gefährlicher als ein ehrliches.",
+  "DateHaja does not verify identity in any form. Everything on a profile is self-reported. We say this plainly because a product that implies safety it hasn't earned is more dangerous than one that's honest.":
+    "DateHaja prüft Identitäten in keiner Form. Alle Profilangaben sind selbst gemacht. Ein Produkt, das unverdiente Sicherheit suggeriert, ist gefährlicher als ein ehrliches.",
   "What we do enforce: every account confirms it's 18 or over, blocked pairs are never matched again in either direction, and serious reports immediately restrict the reported account pending review.":
     "Jedes Konto bestätigt ein Mindestalter von 18. Blockierte Paare werden nie wieder gematcht, und ernste Meldungen schränken das gemeldete Konto bis zur Prüfung sofort ein.",
-  "Every DateDrop is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.":
-    "Jeder DateDrop findet an einem realen, öffentlichen und aktuell geöffneten Ort statt, der live im Web geprüft wurde. Private Adressen nutzen wir nie.",
+  "Every date is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.":
+    "Jedes Date findet an einem realen, öffentlichen und aktuell geöffneten Ort statt, der live im Web geprüft wurde. Private Adressen nutzen wir nie.",
   "You can complete an entire date without your match ever having your email, number or socials. Nothing in the product asks you to hand them over.":
     "Du kannst das ganze Date erleben, ohne E-Mail, Nummer oder Socials zu teilen. Das Produkt fordert sie nie an.",
   "Your location is stored as an approximate neighbourhood centre, and shown to a match only as a neighbourhood name.":
     "Dein Standort wird als ungefährer Mittelpunkt eines Viertels gespeichert und nur als Viertelname gezeigt.",
-  "One switch in Settings takes you out of everyone's candidate pool immediately, so no new DateDrop can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.":
+  "One switch in Settings takes you out of everyone's candidate pool immediately, so no new date plan can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.":
     "Ein Schalter in den Einstellungen entfernt dich sofort aus allen Kandidatenlisten. Eine laufende Suche kann noch eine Einladung liefern; lehne sie ab, dann folgt nichts Weiteres. Nichts wird gelöscht.",
-  "Blocking someone cancels any DateDrop you share, frees both evenings, and permanently removes you from each other's candidate pool.":
-    "Blockieren storniert gemeinsame DateDrops, gibt beide Abende frei und entfernt euch dauerhaft aus den Kandidatenlisten des jeweils anderen.",
-  "Tell someone you trust where you're going and when. The DateDrop page has the venue, address and time — it's built to be forwarded.":
-    "Sag einer vertrauten Person, wohin und wann du gehst. Die DateDrop-Seite mit Ort, Adresse und Zeit lässt sich weiterleiten.",
+  "Blocking someone cancels any date plan you share, frees both evenings, and permanently removes you from each other's candidate pool.":
+    "Blockieren storniert gemeinsame Date-Pläne, gibt beide Abende frei und entfernt euch dauerhaft aus den Kandidatenlisten des jeweils anderen.",
+  "Tell someone you trust where you're going and when. The date plan page has the venue, address and time — it's built to be forwarded.":
+    "Sag einer vertrauten Person, wohin und wann du gehst. Die Seite des Date-Plans mit Ort, Adresse und Zeit lässt sich weiterleiten.",
   "Arrange your own way there and back. Don't accept a lift on a first date.":
     "Organisiere Hin- und Rückweg selbst und nimm beim ersten Date keine Mitfahrgelegenheit an.",
   "Stay in the public venue. If someone pushes to move somewhere private, that's your answer.":
     "Bleib am öffentlichen Ort. Drängt jemand auf einen privaten Ort, ist das deine Antwort.",
   "Keep an eye on your drink, and leave whenever you want to — you owe a stranger nothing.":
     "Behalte dein Getränk im Blick und geh jederzeit — du schuldest einer fremden Person nichts.",
-  "If they pressure you for your number, socials or money, report it. That's exactly what DateDrop exists to make unnecessary.":
-    "Melde Druck wegen Nummer, Socials oder Geld. Genau das soll DateDrop unnötig machen.",
-  "Open the DateDrop and use Report at the bottom of the page. The report reaches us with the DateDrop attached, so we can see who, when and where without you having to explain it twice.":
-    "Öffne den DateDrop und nutze unten Melden. Der DateDrop wird angehängt, damit wir Person, Zeit und Ort sehen, ohne dass du alles doppelt erklären musst.",
+  "If they pressure you for your number, socials or money, report it. That's exactly what DateHaja exists to make unnecessary.":
+    "Melde Druck wegen Nummer, Socials oder Geld. Genau das soll DateHaja unnötig machen.",
+  "Open the date plan and use Report at the bottom of the page. The report reaches us with the date plan attached, so we can see who, when and where without you having to explain it twice.":
+    "Öffne den Date-Plan und nutze unten Melden. Der Plan wird angehängt, damit wir Person, Zeit und Ort sehen, ohne dass du alles doppelt erklären musst.",
   "Reports of harassment or of someone appearing to be under 18 immediately restrict that account while we look at it. You can block at the same time, or separately — the two are independent on purpose.":
     "Meldungen zu Belästigung oder mutmaßlich Minderjährigen schränken das Konto während der Prüfung sofort ein. Blockieren ist gleichzeitig oder separat möglich.",
-  "You can also reply to any DateDrop Concierge email. It comes to us.":
-    "Du kannst auch auf jede DateDrop-Concierge-Mail antworten. Sie kommt zu uns.",
+  "You can also reply to any DateHaja Concierge email. It comes to us.":
+    "Du kannst auch auf jede DateHaja-Concierge-Mail antworten. Sie kommt zu uns.",
   "Exactly what a match can see about you":
     "Genau was ein Match über dich sehen kann",
-  "Pause DateDrops, manage blocks, control email":
-    "DateDrops pausieren, Blockierungen verwalten, E-Mails steuern",
+  "Pause matching, manage blocks, control email":
+    "Matching pausieren, Blockierungen verwalten, E-Mails steuern",
 });
 
 Object.assign(fr, {
@@ -2493,11 +2494,11 @@ Object.assign(fr, {
   "Your date of birth": "Votre date de naissance",
   "Your full name (we only show your first name)":
     "Votre nom complet (seul le prénom est montré)",
-  "Your other DateDrops, past or present":
-    "Vos autres DateDrops, passés ou présents",
+  "Your other date plans, past or present":
+    "Vos autres rendez-vous, passés ou présents",
   "Every invitation, confirmation and reminder is sent by":
     "Chaque invitation, confirmation et rappel est envoyé par",
-  "from our own inbox. Your address is the recipient, never the sender, and never a CC. Two people on the same DateDrop are always emailed separately, so neither can see the other's address in a header.":
+  "from our own inbox. Your address is the recipient, never the sender, and never a CC. Two people on the same date plan are always emailed separately, so neither can see the other's address in a header.":
     "depuis notre propre boîte. Votre adresse est uniquement destinataire, jamais expéditeur ni en copie. Les deux personnes reçoivent toujours des e-mails séparés et ne voient pas l'adresse de l'autre.",
   "If you reply to one of those emails, it comes back to us — not to your match.":
     "Si vous répondez, le message nous revient — pas à l'autre personne.",
@@ -2505,44 +2506,44 @@ Object.assign(fr, {
     "Vous choisissez un quartier, pas une adresse. Nous stockons son centre approximatif arrondi à environ un kilomètre et l'utilisons uniquement pour situer le rendez-vous. L'autre personne ne voit que le nom du quartier, jamais une distance ni une position précise.",
   "Bios and notes are scrubbed for email addresses, phone numbers, links and messenger handles before anyone else can read them. It isn't that we don't trust you — it's that the product only works if nobody feels pressure to hand over contact details before they've met.":
     "Les bios et notes sont nettoyées des e-mails, numéros, liens et identifiants avant d'être lues. Personne ne doit se sentir obligé de donner ses coordonnées avant une rencontre.",
-  "DateDrop does not verify anyone's identity. There is no ID check, no photo verification, and no background check. Please treat every match as someone you met on the internet, and read the":
-    "DateDrop ne vérifie aucune identité, pièce, photo ni antécédent. Considérez chaque match comme une personne rencontrée sur internet et lisez le",
+  "DateHaja does not verify anyone's identity. There is no ID check, no photo verification, and no background check. Please treat every match as someone you met on the internet, and read the":
+    "DateHaja ne vérifie aucune identité, pièce, photo ni antécédent. Considérez chaque match comme une personne rencontrée sur internet et lisez le",
   "before your first date.": "avant votre premier rendez-vous.",
   "If you're in immediate danger, contact your local emergency services first. Reports here reach our team, not the police.":
     "En cas de danger immédiat, contactez d'abord les services d'urgence locaux. Les signalements ici arrivent à notre équipe, pas à la police.",
-  "DateDrop does not verify identity in any form. Everything on a profile is self-reported. We say this plainly because a product that implies safety it hasn't earned is more dangerous than one that's honest.":
-    "DateDrop ne vérifie l'identité sous aucune forme. Toutes les informations sont déclaratives. Un produit qui suggère une sécurité non acquise est plus dangereux qu'un produit honnête.",
+  "DateHaja does not verify identity in any form. Everything on a profile is self-reported. We say this plainly because a product that implies safety it hasn't earned is more dangerous than one that's honest.":
+    "DateHaja ne vérifie l'identité sous aucune forme. Toutes les informations sont déclaratives. Un produit qui suggère une sécurité non acquise est plus dangereux qu'un produit honnête.",
   "What we do enforce: every account confirms it's 18 or over, blocked pairs are never matched again in either direction, and serious reports immediately restrict the reported account pending review.":
     "Chaque compte confirme avoir au moins 18 ans. Les personnes bloquées ne sont plus jamais rapprochées et les signalements graves limitent immédiatement le compte pendant l'examen.",
-  "Every DateDrop is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.":
-    "Chaque DateDrop est prévu dans un lieu réel, public et actuellement ouvert, vérifié sur le web. Jamais à une adresse privée.",
+  "Every date is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.":
+    "Chaque rendez-vous est prévu dans un lieu réel, public et actuellement ouvert, vérifié sur le web. Jamais à une adresse privée.",
   "You can complete an entire date without your match ever having your email, number or socials. Nothing in the product asks you to hand them over.":
     "Vous pouvez vivre tout le rendez-vous sans partager e-mail, numéro ou réseaux sociaux. Le produit ne vous le demande jamais.",
   "Your location is stored as an approximate neighbourhood centre, and shown to a match only as a neighbourhood name.":
     "Votre localisation est stockée comme centre approximatif d'un quartier et affichée uniquement par son nom.",
-  "One switch in Settings takes you out of everyone's candidate pool immediately, so no new DateDrop can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.":
+  "One switch in Settings takes you out of everyone's candidate pool immediately, so no new date plan can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.":
     "Un bouton dans les réglages vous retire immédiatement de toutes les sélections. Une recherche déjà lancée peut encore produire une invitation ; refusez-la et rien d'autre ne suivra. Rien n'est supprimé.",
-  "Blocking someone cancels any DateDrop you share, frees both evenings, and permanently removes you from each other's candidate pool.":
-    "Bloquer quelqu'un annule tout DateDrop commun, libère les deux soirées et vous retire définitivement des sélections respectives.",
-  "Tell someone you trust where you're going and when. The DateDrop page has the venue, address and time — it's built to be forwarded.":
-    "Dites à une personne de confiance où et quand vous allez. La page DateDrop contient le lieu, l'adresse et l'heure et peut être transférée.",
+  "Blocking someone cancels any date plan you share, frees both evenings, and permanently removes you from each other's candidate pool.":
+    "Bloquer quelqu'un annule tout projet de rendez-vous commun, libère les deux soirées et vous retire définitivement des sélections respectives.",
+  "Tell someone you trust where you're going and when. The date plan page has the venue, address and time — it's built to be forwarded.":
+    "Dites à une personne de confiance où et quand vous allez. La page du rendez-vous contient le lieu, l'adresse et l'heure et peut être transférée.",
   "Arrange your own way there and back. Don't accept a lift on a first date.":
     "Organisez vous-même l'aller et le retour. N'acceptez pas d'être raccompagné au premier rendez-vous.",
   "Stay in the public venue. If someone pushes to move somewhere private, that's your answer.":
     "Restez dans le lieu public. Si l'autre personne insiste pour aller dans un lieu privé, vous avez votre réponse.",
   "Keep an eye on your drink, and leave whenever you want to — you owe a stranger nothing.":
     "Gardez votre boisson à l'œil et partez quand vous le souhaitez — vous ne devez rien à un inconnu.",
-  "If they pressure you for your number, socials or money, report it. That's exactly what DateDrop exists to make unnecessary.":
-    "Si l'on vous presse de donner numéro, réseaux ou argent, signalez-le. DateDrop existe précisément pour rendre cela inutile.",
-  "Open the DateDrop and use Report at the bottom of the page. The report reaches us with the DateDrop attached, so we can see who, when and where without you having to explain it twice.":
-    "Ouvrez le DateDrop et utilisez Signaler en bas. Le DateDrop est joint afin que nous voyions qui, quand et où sans vous faire répéter.",
+  "If they pressure you for your number, socials or money, report it. That's exactly what DateHaja exists to make unnecessary.":
+    "Si l'on vous presse de donner numéro, réseaux ou argent, signalez-le. DateHaja existe précisément pour rendre cela inutile.",
+  "Open the date plan and use Report at the bottom of the page. The report reaches us with the date plan attached, so we can see who, when and where without you having to explain it twice.":
+    "Ouvrez le projet de rendez-vous et utilisez Signaler en bas. Le projet est joint afin que nous voyions qui, quand et où sans vous faire répéter.",
   "Reports of harassment or of someone appearing to be under 18 immediately restrict that account while we look at it. You can block at the same time, or separately — the two are independent on purpose.":
     "Les signalements de harcèlement ou de personne semblant mineure limitent immédiatement le compte pendant l'examen. Le blocage peut être effectué en même temps ou séparément.",
-  "You can also reply to any DateDrop Concierge email. It comes to us.":
-    "Vous pouvez aussi répondre à tout e-mail DateDrop Concierge. Il nous parvient.",
+  "You can also reply to any DateHaja Concierge email. It comes to us.":
+    "Vous pouvez aussi répondre à tout e-mail DateHaja Concierge. Il nous parvient.",
   "Exactly what a match can see about you":
     "Exactement ce qu'un match peut voir de vous",
-  "Pause DateDrops, manage blocks, control email":
+  "Pause matching, manage blocks, control email":
     "Mettre en pause, gérer les blocages et les e-mails",
 });
 
@@ -2559,10 +2560,10 @@ Object.assign(nl, {
   "Your date of birth": "Je geboortedatum",
   "Your full name (we only show your first name)":
     "Je volledige naam (we tonen alleen je voornaam)",
-  "Your other DateDrops, past or present": "Je andere DateDrops, vroeger of nu",
+  "Your other date plans, past or present": "Je andere dateplannen, vroeger of nu",
   "Every invitation, confirmation and reminder is sent by":
     "Elke uitnodiging, bevestiging en herinnering wordt verzonden door",
-  "from our own inbox. Your address is the recipient, never the sender, and never a CC. Two people on the same DateDrop are always emailed separately, so neither can see the other's address in a header.":
+  "from our own inbox. Your address is the recipient, never the sender, and never a CC. Two people on the same date plan are always emailed separately, so neither can see the other's address in a header.":
     "vanuit onze eigen inbox. Je adres is alleen ontvanger, nooit afzender of cc. Beide personen krijgen altijd aparte e-mails en zien elkaars adres niet.",
   "If you reply to one of those emails, it comes back to us — not to your match.":
     "Een antwoord komt bij ons terecht, niet bij je match.",
@@ -2570,45 +2571,45 @@ Object.assign(nl, {
     "Je kiest een buurt, geen adres. We bewaren het globale middelpunt afgerond op ongeveer een kilometer en gebruiken dat alleen voor de omgeving van de date. Je match ziet uitsluitend de buurtnaam, nooit afstand of exacte locatie.",
   "Bios and notes are scrubbed for email addresses, phone numbers, links and messenger handles before anyone else can read them. It isn't that we don't trust you — it's that the product only works if nobody feels pressure to hand over contact details before they've met.":
     "Bio's en notities worden ontdaan van e-mailadressen, telefoonnummers, links en accounts voordat iemand ze leest. Niemand moet druk voelen om vóór een ontmoeting contactgegevens te delen.",
-  "DateDrop does not verify anyone's identity. There is no ID check, no photo verification, and no background check. Please treat every match as someone you met on the internet, and read the":
-    "DateDrop verifieert geen identiteit, identiteitsbewijs, foto of achtergrond. Behandel elke match als iemand die je online hebt ontmoet en lees het",
+  "DateHaja does not verify anyone's identity. There is no ID check, no photo verification, and no background check. Please treat every match as someone you met on the internet, and read the":
+    "DateHaja verifieert geen identiteit, identiteitsbewijs, foto of achtergrond. Behandel elke match als iemand die je online hebt ontmoet en lees het",
   "before your first date.": "vóór je eerste date.",
   "If you're in immediate danger, contact your local emergency services first. Reports here reach our team, not the police.":
     "Neem bij direct gevaar eerst contact op met de lokale hulpdiensten. Meldingen hier bereiken ons team, niet de politie.",
-  "DateDrop does not verify identity in any form. Everything on a profile is self-reported. We say this plainly because a product that implies safety it hasn't earned is more dangerous than one that's honest.":
-    "DateDrop verifieert identiteit op geen enkele manier. Alles op een profiel is zelf opgegeven. Een product dat onverdiende veiligheid suggereert is gevaarlijker dan een eerlijk product.",
+  "DateHaja does not verify identity in any form. Everything on a profile is self-reported. We say this plainly because a product that implies safety it hasn't earned is more dangerous than one that's honest.":
+    "DateHaja verifieert identiteit op geen enkele manier. Alles op een profiel is zelf opgegeven. Een product dat onverdiende veiligheid suggereert is gevaarlijker dan een eerlijk product.",
   "What we do enforce: every account confirms it's 18 or over, blocked pairs are never matched again in either direction, and serious reports immediately restrict the reported account pending review.":
     "Elk account bevestigt 18+ te zijn. Geblokkeerde personen worden nooit opnieuw gekoppeld en ernstige meldingen beperken het account direct tijdens onderzoek.",
-  "Every DateDrop is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.":
-    "Elke DateDrop wordt gepland op een echte, openbare en actuele locatie die live op het web is gecontroleerd. Nooit op een privéadres.",
+  "Every date is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.":
+    "Elke date wordt gepland op een echte, openbare en actuele locatie die live op het web is gecontroleerd. Nooit op een privéadres.",
   "You can complete an entire date without your match ever having your email, number or socials. Nothing in the product asks you to hand them over.":
     "Je kunt de hele date afronden zonder e-mail, nummer of socials te delen. Het product vraagt daar nooit om.",
   "Your location is stored as an approximate neighbourhood centre, and shown to a match only as a neighbourhood name.":
     "Je locatie wordt opgeslagen als globaal buurtcentrum en alleen als buurtnaam getoond.",
-  "One switch in Settings takes you out of everyone's candidate pool immediately, so no new DateDrop can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.":
+  "One switch in Settings takes you out of everyone's candidate pool immediately, so no new date plan can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.":
     "Eén schakelaar in Instellingen haalt je direct uit alle kandidatenlijsten. Een lopende zoekactie kan nog één uitnodiging opleveren; sla die over en er volgt niets. Er wordt niets verwijderd.",
-  "Blocking someone cancels any DateDrop you share, frees both evenings, and permanently removes you from each other's candidate pool.":
-    "Iemand blokkeren annuleert gedeelde DateDrops, maakt beide avonden vrij en verwijdert jullie permanent uit elkaars kandidatenlijsten.",
-  "Tell someone you trust where you're going and when. The DateDrop page has the venue, address and time — it's built to be forwarded.":
-    "Vertel iemand die je vertrouwt waar en wanneer je gaat. De DateDrop-pagina met locatie, adres en tijd is gemaakt om door te sturen.",
+  "Blocking someone cancels any date plan you share, frees both evenings, and permanently removes you from each other's candidate pool.":
+    "Iemand blokkeren annuleert gedeelde dateplannen, maakt beide avonden vrij en verwijdert jullie permanent uit elkaars kandidatenlijsten.",
+  "Tell someone you trust where you're going and when. The date plan page has the venue, address and time — it's built to be forwarded.":
+    "Vertel iemand die je vertrouwt waar en wanneer je gaat. De dateplanpagina met locatie, adres en tijd is gemaakt om door te sturen.",
   "Arrange your own way there and back. Don't accept a lift on a first date.":
     "Regel zelf vervoer heen en terug en neem geen lift aan op een eerste date.",
   "Stay in the public venue. If someone pushes to move somewhere private, that's your answer.":
     "Blijf op de openbare locatie. Als iemand aandringt op een privéplek, is dat je antwoord.",
   "Keep an eye on your drink, and leave whenever you want to — you owe a stranger nothing.":
     "Houd je drankje in de gaten en vertrek wanneer je wilt — je bent een onbekende niets verschuldigd.",
-  "If they pressure you for your number, socials or money, report it. That's exactly what DateDrop exists to make unnecessary.":
-    "Meld druk om je nummer, socials of geld te geven. DateDrop bestaat juist om dat overbodig te maken.",
-  "Open the DateDrop and use Report at the bottom of the page. The report reaches us with the DateDrop attached, so we can see who, when and where without you having to explain it twice.":
-    "Open de DateDrop en kies Melden onderaan. De DateDrop wordt meegestuurd zodat we persoon, tijd en plaats zien zonder dat je alles dubbel hoeft uit te leggen.",
+  "If they pressure you for your number, socials or money, report it. That's exactly what DateHaja exists to make unnecessary.":
+    "Meld druk om je nummer, socials of geld te geven. DateHaja bestaat juist om dat overbodig te maken.",
+  "Open the date plan and use Report at the bottom of the page. The report reaches us with the date plan attached, so we can see who, when and where without you having to explain it twice.":
+    "Open het dateplan en kies Melden onderaan. Het plan wordt meegestuurd zodat we persoon, tijd en plaats zien zonder dat je alles dubbel hoeft uit te leggen.",
   "Reports of harassment or of someone appearing to be under 18 immediately restrict that account while we look at it. You can block at the same time, or separately — the two are independent on purpose.":
     "Meldingen van intimidatie of iemand die onder 18 lijkt beperken het account direct tijdens onderzoek. Blokkeren kan tegelijk of apart.",
-  "You can also reply to any DateDrop Concierge email. It comes to us.":
-    "Je kunt ook antwoorden op elke DateDrop Concierge-mail. Die komt bij ons.",
+  "You can also reply to any DateHaja Concierge email. It comes to us.":
+    "Je kunt ook antwoorden op elke DateHaja Concierge-mail. Die komt bij ons.",
   "Exactly what a match can see about you":
     "Precies wat een match over je kan zien",
-  "Pause DateDrops, manage blocks, control email":
-    "DateDrops pauzeren, blokkades en e-mail beheren",
+  "Pause matching, manage blocks, control email":
+    "Matching pauzeren, blokkades en e-mail beheren",
 });
 
 Object.assign(sv, {
@@ -2624,11 +2625,11 @@ Object.assign(sv, {
   "Your date of birth": "Ditt födelsedatum",
   "Your full name (we only show your first name)":
     "Ditt fullständiga namn (vi visar bara förnamnet)",
-  "Your other DateDrops, past or present":
-    "Dina andra DateDrops, tidigare eller nuvarande",
+  "Your other date plans, past or present":
+    "Dina andra dejtplaner, tidigare eller nuvarande",
   "Every invitation, confirmation and reminder is sent by":
     "Varje inbjudan, bekräftelse och påminnelse skickas av",
-  "from our own inbox. Your address is the recipient, never the sender, and never a CC. Two people on the same DateDrop are always emailed separately, so neither can see the other's address in a header.":
+  "from our own inbox. Your address is the recipient, never the sender, and never a CC. Two people on the same date plan are always emailed separately, so neither can see the other's address in a header.":
     "från vår egen inkorg. Din adress är bara mottagare, aldrig avsändare eller kopia. Båda personerna får separata mejl och kan inte se den andras adress.",
   "If you reply to one of those emails, it comes back to us — not to your match.":
     "Ett svar kommer till oss, inte till din match.",
@@ -2636,44 +2637,44 @@ Object.assign(sv, {
     "Du väljer ett område, inte en adress. Vi lagrar områdets ungefärliga centrum avrundat till cirka en kilometer och använder det bara för dejtens område. Din match ser bara områdesnamnet, aldrig avstånd eller exakt plats.",
   "Bios and notes are scrubbed for email addresses, phone numbers, links and messenger handles before anyone else can read them. It isn't that we don't trust you — it's that the product only works if nobody feels pressure to hand over contact details before they've met.":
     "Presentationer och anteckningar rensas från e-post, telefonnummer, länkar och konton innan någon läser dem. Ingen ska känna press att lämna kontaktuppgifter före ett möte.",
-  "DateDrop does not verify anyone's identity. There is no ID check, no photo verification, and no background check. Please treat every match as someone you met on the internet, and read the":
-    "DateDrop verifierar inte identitet, ID, foto eller bakgrund. Behandla varje match som någon du träffat på nätet och läs vårt",
+  "DateHaja does not verify anyone's identity. There is no ID check, no photo verification, and no background check. Please treat every match as someone you met on the internet, and read the":
+    "DateHaja verifierar inte identitet, ID, foto eller bakgrund. Behandla varje match som någon du träffat på nätet och läs vårt",
   "before your first date.": "före din första dejt.",
   "If you're in immediate danger, contact your local emergency services first. Reports here reach our team, not the police.":
     "Vid omedelbar fara, kontakta först lokal räddningstjänst. Rapporter här når vårt team, inte polisen.",
-  "DateDrop does not verify identity in any form. Everything on a profile is self-reported. We say this plainly because a product that implies safety it hasn't earned is more dangerous than one that's honest.":
-    "DateDrop verifierar inte identitet i någon form. All profilinformation är självrapporterad. En produkt som antyder oförtjänt säkerhet är farligare än en ärlig produkt.",
+  "DateHaja does not verify identity in any form. Everything on a profile is self-reported. We say this plainly because a product that implies safety it hasn't earned is more dangerous than one that's honest.":
+    "DateHaja verifierar inte identitet i någon form. All profilinformation är självrapporterad. En produkt som antyder oförtjänt säkerhet är farligare än en ärlig produkt.",
   "What we do enforce: every account confirms it's 18 or over, blocked pairs are never matched again in either direction, and serious reports immediately restrict the reported account pending review.":
     "Varje konto bekräftar 18+. Blockerade personer matchas aldrig igen och allvarliga rapporter begränsar kontot direkt under granskning.",
-  "Every DateDrop is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.":
-    "Varje DateDrop planeras på en verklig, offentlig och öppen plats som kontrollerats live på webben. Aldrig på en privat adress.",
+  "Every date is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.":
+    "Varje dejt planeras på en verklig, offentlig och öppen plats som kontrollerats live på webben. Aldrig på en privat adress.",
   "You can complete an entire date without your match ever having your email, number or socials. Nothing in the product asks you to hand them over.":
     "Du kan genomföra hela dejten utan att dela e-post, nummer eller sociala konton. Produkten ber aldrig om det.",
   "Your location is stored as an approximate neighbourhood centre, and shown to a match only as a neighbourhood name.":
     "Din plats lagras som ett ungefärligt områdescentrum och visas bara som områdesnamn.",
-  "One switch in Settings takes you out of everyone's candidate pool immediately, so no new DateDrop can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.":
+  "One switch in Settings takes you out of everyone's candidate pool immediately, so no new date plan can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.":
     "En knapp i Inställningar tar direkt bort dig från alla kandidatlistor. En pågående sökning kan ge en sista inbjudan; avstå så följer inget mer. Inget raderas.",
-  "Blocking someone cancels any DateDrop you share, frees both evenings, and permanently removes you from each other's candidate pool.":
-    "Blockering avbryter gemensamma DateDrops, frigör båda kvällarna och tar permanent bort er från varandras kandidatlistor.",
-  "Tell someone you trust where you're going and when. The DateDrop page has the venue, address and time — it's built to be forwarded.":
-    "Berätta för någon du litar på vart och när du går. DateDrop-sidan med plats, adress och tid kan vidarebefordras.",
+  "Blocking someone cancels any date plan you share, frees both evenings, and permanently removes you from each other's candidate pool.":
+    "Blockering avbryter gemensamma dejtplaner, frigör båda kvällarna och tar permanent bort er från varandras kandidatlistor.",
+  "Tell someone you trust where you're going and when. The date plan page has the venue, address and time — it's built to be forwarded.":
+    "Berätta för någon du litar på vart och när du går. Dejtplanens sida med plats, adress och tid kan vidarebefordras.",
   "Arrange your own way there and back. Don't accept a lift on a first date.":
     "Ordna transport dit och hem själv. Tacka inte ja till skjuts på första dejten.",
   "Stay in the public venue. If someone pushes to move somewhere private, that's your answer.":
     "Stanna på den offentliga platsen. Om någon pressar på för en privat plats har du ditt svar.",
   "Keep an eye on your drink, and leave whenever you want to — you owe a stranger nothing.":
     "Håll koll på din dryck och gå när du vill — du är inte skyldig en främling något.",
-  "If they pressure you for your number, socials or money, report it. That's exactly what DateDrop exists to make unnecessary.":
-    "Rapportera press om nummer, sociala konton eller pengar. DateDrop finns för att göra sådant onödigt.",
-  "Open the DateDrop and use Report at the bottom of the page. The report reaches us with the DateDrop attached, so we can see who, when and where without you having to explain it twice.":
-    "Öppna DateDrop och använd Rapportera längst ned. DateDrop bifogas så att vi ser person, tid och plats utan att du behöver förklara allt två gånger.",
+  "If they pressure you for your number, socials or money, report it. That's exactly what DateHaja exists to make unnecessary.":
+    "Rapportera press om nummer, sociala konton eller pengar. DateHaja finns för att göra sådant onödigt.",
+  "Open the date plan and use Report at the bottom of the page. The report reaches us with the date plan attached, so we can see who, when and where without you having to explain it twice.":
+    "Öppna dejtplanen och använd Rapportera längst ned. Planen bifogas så att vi ser person, tid och plats utan att du behöver förklara allt två gånger.",
   "Reports of harassment or of someone appearing to be under 18 immediately restrict that account while we look at it. You can block at the same time, or separately — the two are independent on purpose.":
     "Rapporter om trakasserier eller någon som verkar under 18 begränsar kontot direkt under granskning. Blockering kan göras samtidigt eller separat.",
-  "You can also reply to any DateDrop Concierge email. It comes to us.":
-    "Du kan också svara på alla mejl från DateDrop Concierge. De kommer till oss.",
+  "You can also reply to any DateHaja Concierge email. It comes to us.":
+    "Du kan också svara på alla mejl från DateHaja Concierge. De kommer till oss.",
   "Exactly what a match can see about you": "Exakt vad en match kan se om dig",
-  "Pause DateDrops, manage blocks, control email":
-    "Pausa DateDrops, hantera blockeringar och e-post",
+  "Pause matching, manage blocks, control email":
+    "Pausa matchning, hantera blockeringar och e-post",
 });
 
 Object.assign(ko, {
@@ -2690,7 +2691,7 @@ Object.assign(ko, {
   "Your match never sees a pass.": "패스한 사실은 상대에게 보이지 않아요.",
   "Your calendar": "나의 캘린더",
   "Reserved, finalized, or cancelled.": "예약, 확정, 취소 상태가 이어져요.",
-  "Open your private DateDrops.": "비공개 DateDrop을 열어보세요.",
+  "Open your private dates.": "비공개 데이트를 열어보세요.",
   "No public profile": "공개 프로필 없음",
 });
 
@@ -2708,7 +2709,7 @@ Object.assign(ja, {
   "Your match never sees a pass.": "見送ったことは相手に伝わりません。",
   "Your calendar": "あなたのカレンダー",
   "Reserved, finalized, or cancelled.": "仮押さえ、確定、キャンセルを反映。",
-  "Open your private DateDrops.": "非公開のDateDropを開く。",
+  "Open your private dates.": "非公開のデートを開く。",
   "No public profile": "公開プロフィールなし",
 });
 
@@ -2726,7 +2727,7 @@ Object.assign(de, {
   "Your match never sees a pass.": "Dein Match sieht eine Absage nie.",
   "Your calendar": "Dein Kalender",
   "Reserved, finalized, or cancelled.": "Reserviert, bestätigt oder abgesagt.",
-  "Open your private DateDrops.": "Öffne deine privaten DateDrops.",
+  "Open your private dates.": "Öffne deine privaten Dates.",
   "No public profile": "Kein öffentliches Profil",
 });
 
@@ -2744,7 +2745,7 @@ Object.assign(fr, {
   "Your match never sees a pass.": "L'autre personne ne voit jamais un refus.",
   "Your calendar": "Votre calendrier",
   "Reserved, finalized, or cancelled.": "Réservé, confirmé ou annulé.",
-  "Open your private DateDrops.": "Ouvrez vos DateDrops privés.",
+  "Open your private dates.": "Ouvrez vos rendez-vous privés.",
   "No public profile": "Aucun profil public",
 });
 
@@ -2763,7 +2764,7 @@ Object.assign(nl, {
   "Your calendar": "Jouw agenda",
   "Reserved, finalized, or cancelled.":
     "Gereserveerd, bevestigd of geannuleerd.",
-  "Open your private DateDrops.": "Open je privé-DateDrops.",
+  "Open your private dates.": "Open je privé-dates.",
   "No public profile": "Geen openbaar profiel",
 });
 
@@ -2781,7 +2782,7 @@ Object.assign(sv, {
   "Your match never sees a pass.": "Den andra ser aldrig att du avstår.",
   "Your calendar": "Din kalender",
   "Reserved, finalized, or cancelled.": "Reserverad, bekräftad eller avbokad.",
-  "Open your private DateDrops.": "Öppna dina privata DateDrops.",
+  "Open your private dates.": "Öppna dina privata dejter.",
   "No public profile": "Ingen offentlig profil",
 });
 
@@ -2798,13 +2799,13 @@ Object.assign(ko, {
     "신분증 사본을 수집하거나 신원 인증을 했다고 주장하지 않아요. 실제 안전 조치로 이어지지 않는 개인정보는 위험만 늘립니다.",
   "Trusted contact name": "신뢰 연락처 이름",
   "Trusted contact email": "신뢰 연락처 이메일",
-  "They agreed that I can store this email for DateDrop safety plans.":
-    "이 이메일을 DateDrop 안전 일정 공유에 저장하는 데 동의받았어요.",
+  "They agreed that I can store this email for DateHaja safety plans.":
+    "이 이메일을 DateHaja 안전 일정 공유에 저장하는 데 동의받았어요.",
   "Ask me how the date went": "데이트 후 안부 묻기",
   "A private, optional check-in after the planned end time.":
     "예정 종료 시간 뒤에 보내는 선택형 비공개 체크인이에요.",
   "Save private safety settings": "비공개 안전 설정 저장",
-  "Sign in to add a trusted contact and choose whether DateDrop checks in after a date.":
+  "Sign in to add a trusted contact and choose whether DateHaja checks in after a date.":
     "로그인하면 신뢰 연락처를 추가하고 데이트 후 체크인 여부를 선택할 수 있어요.",
   "How did it go?": "데이트는 어땠나요?",
   "The plan is complete. Your private check-in is ready.":
@@ -2827,16 +2828,16 @@ Object.assign(ko, {
   "Paste the copied link into Google Calendar.":
     "복사한 링크를 Google Calendar에 붙여 넣으세요.",
   "Live calendar status": "실시간 캘린더 상태",
-  "Subscribe once; DateDrop keeps the same event ID as it moves from reserved to finalized or cancelled.":
+  "Subscribe once; DateHaja keeps the same event ID as it moves from reserved to finalized or cancelled.":
     "한 번 구독하면 같은 일정이 예약·확정·취소 상태로 이어져요.",
   "Google Calendar": "Google 캘린더",
   "Apple / calendar app": "Apple / 캘린더 앱",
   "Copy private link": "비공개 링크 복사",
-  "Anyone with this secret link can read your DateDrop times. Calendar apps refresh on their own schedule.":
-    "이 비밀 링크를 가진 사람은 DateDrop 시간을 볼 수 있어요. 캘린더 앱마다 반영 시간이 다를 수 있어요.",
+  "Anyone with this secret link can read your date times. Calendar apps refresh on their own schedule.":
+    "이 비밀 링크를 가진 사람은 데이트 시간을 볼 수 있어요. 캘린더 앱마다 반영 시간이 다를 수 있어요.",
   "Private response saved": "비공개 응답 저장됨",
   "Thanks for checking in.": "알려줘서 고마워요.",
-  "Your answers are never shown to your match. They help DateDrop improve matching, venues, and safety follow-up.":
+  "Your answers are never shown to your match. They help DateHaja improve matching, venues, and safety follow-up.":
     "응답은 상대에게 보이지 않으며 매칭, 장소, 안전 후속 조치를 개선하는 데 쓰여요.",
   "Update response": "응답 수정",
   "After the date": "데이트 후",
@@ -2859,8 +2860,8 @@ Object.assign(ko, {
   star: "점",
   stars: "점",
   "Anything else?": "더 남길 말이 있나요?",
-  "A private note for DateDrop — never your match.":
-    "상대에게는 보이지 않는 DateDrop 비공개 메모",
+  "A private note for DateHaja — never your match.":
+    "상대에게는 보이지 않는 DateHaja 비공개 메모",
   "I want safety follow-up": "안전 관련 후속 연락을 원해요",
   "Save this as a private safety follow-up request. For immediate danger, contact local emergency services.":
     "비공개 안전 후속 요청으로 저장합니다. 즉각적인 위험이라면 지역 응급 서비스에 먼저 연락하세요.",
@@ -2883,13 +2884,13 @@ Object.assign(ja, {
     "身分証の画像は収集せず、本人確認済みとも表示しません。実際の安全対策につながらない個人情報はリスクを増やすだけです。",
   "Trusted contact name": "信頼できる連絡先の名前",
   "Trusted contact email": "信頼できる連絡先のメール",
-  "They agreed that I can store this email for DateDrop safety plans.":
-    "このメールをDateDropの安全予定に保存する同意を得ています。",
+  "They agreed that I can store this email for DateHaja safety plans.":
+    "このメールをDateHajaの安全予定に保存する同意を得ています。",
   "Ask me how the date went": "デート後にチェックインする",
   "A private, optional check-in after the planned end time.":
     "予定終了後の任意の非公開チェックインです。",
   "Save private safety settings": "非公開の安全設定を保存",
-  "Sign in to add a trusted contact and choose whether DateDrop checks in after a date.":
+  "Sign in to add a trusted contact and choose whether DateHaja checks in after a date.":
     "ログインすると、信頼できる連絡先とデート後のチェックインを設定できます。",
   "How did it go?": "デートはいかがでしたか？",
   "The plan is complete. Your private check-in is ready.":
@@ -2912,16 +2913,16 @@ Object.assign(ja, {
   "Paste the copied link into Google Calendar.":
     "コピーしたリンクをGoogleカレンダーに貼り付けてください。",
   "Live calendar status": "カレンダーの最新状態",
-  "Subscribe once; DateDrop keeps the same event ID as it moves from reserved to finalized or cancelled.":
+  "Subscribe once; DateHaja keeps the same event ID as it moves from reserved to finalized or cancelled.":
     "一度購読すると、同じ予定が仮予約・確定・キャンセルへ更新されます。",
   "Google Calendar": "Googleカレンダー",
   "Apple / calendar app": "Apple／カレンダーアプリ",
   "Copy private link": "非公開リンクをコピー",
-  "Anyone with this secret link can read your DateDrop times. Calendar apps refresh on their own schedule.":
-    "この秘密リンクを知る人はDateDropの時間を確認できます。反映時間はカレンダーアプリごとに異なります。",
+  "Anyone with this secret link can read your date times. Calendar apps refresh on their own schedule.":
+    "この秘密リンクを知る人はデートの時間を確認できます。反映時間はカレンダーアプリごとに異なります。",
   "Private response saved": "非公開の回答を保存済み",
   "Thanks for checking in.": "知らせてくれてありがとうございます。",
-  "Your answers are never shown to your match. They help DateDrop improve matching, venues, and safety follow-up.":
+  "Your answers are never shown to your match. They help DateHaja improve matching, venues, and safety follow-up.":
     "回答は相手には表示されず、マッチング、会場、安全対応の改善に使われます。",
   "Update response": "回答を更新",
   "After the date": "デートの後",
@@ -2944,8 +2945,8 @@ Object.assign(ja, {
   star: "点",
   stars: "点",
   "Anything else?": "ほかにありますか？",
-  "A private note for DateDrop — never your match.":
-    "相手には見えないDateDropへの非公開メモ",
+  "A private note for DateHaja — never your match.":
+    "相手には見えないDateHajaへの非公開メモ",
   "I want safety follow-up": "安全に関するフォローを希望する",
   "Save this as a private safety follow-up request. For immediate danger, contact local emergency services.":
     "非公開の安全フォロー依頼として保存します。差し迫った危険がある場合は地域の緊急サービスへ連絡してください。",
@@ -2969,13 +2970,13 @@ Object.assign(de, {
     "Wir sammeln keine Ausweiskopien und behaupten keine Identitätsprüfung. Zusätzliche Daten ohne konkrete Schutzwirkung würden nur Risiken schaffen.",
   "Trusted contact name": "Name der Vertrauensperson",
   "Trusted contact email": "E-Mail der Vertrauensperson",
-  "They agreed that I can store this email for DateDrop safety plans.":
-    "Die Person hat zugestimmt, dass ich diese E-Mail für DateDrop-Sicherheitspläne speichere.",
+  "They agreed that I can store this email for DateHaja safety plans.":
+    "Die Person hat zugestimmt, dass ich diese E-Mail für DateHaja-Sicherheitspläne speichere.",
   "Ask me how the date went": "Nach dem Date nachfragen",
   "A private, optional check-in after the planned end time.":
     "Ein privater, optionaler Check-in nach dem geplanten Ende.",
   "Save private safety settings": "Private Sicherheitseinstellungen speichern",
-  "Sign in to add a trusted contact and choose whether DateDrop checks in after a date.":
+  "Sign in to add a trusted contact and choose whether DateHaja checks in after a date.":
     "Melde dich an, um eine Vertrauensperson und den Check-in nach dem Date einzurichten.",
   "How did it go?": "Wie war das Date?",
   "The plan is complete. Your private check-in is ready.":
@@ -2998,16 +2999,16 @@ Object.assign(de, {
   "Paste the copied link into Google Calendar.":
     "Füge den kopierten Link in Google Kalender ein.",
   "Live calendar status": "Aktueller Kalenderstatus",
-  "Subscribe once; DateDrop keeps the same event ID as it moves from reserved to finalized or cancelled.":
+  "Subscribe once; DateHaja keeps the same event ID as it moves from reserved to finalized or cancelled.":
     "Einmal abonnieren: Derselbe Termin wechselt zwischen reserviert, bestätigt und abgesagt.",
   "Google Calendar": "Google Kalender",
   "Apple / calendar app": "Apple / Kalender-App",
   "Copy private link": "Privaten Link kopieren",
-  "Anyone with this secret link can read your DateDrop times. Calendar apps refresh on their own schedule.":
-    "Jede Person mit diesem geheimen Link kann deine DateDrop-Zeiten sehen. Kalender-Apps aktualisieren nach ihrem eigenen Zeitplan.",
+  "Anyone with this secret link can read your date times. Calendar apps refresh on their own schedule.":
+    "Jede Person mit diesem geheimen Link kann deine Date-Zeiten sehen. Kalender-Apps aktualisieren nach ihrem eigenen Zeitplan.",
   "Private response saved": "Private Antwort gespeichert",
   "Thanks for checking in.": "Danke für deine Rückmeldung.",
-  "Your answers are never shown to your match. They help DateDrop improve matching, venues, and safety follow-up.":
+  "Your answers are never shown to your match. They help DateHaja improve matching, venues, and safety follow-up.":
     "Deine Antworten werden deinem Match nie gezeigt. Sie helfen uns, Matching, Orte und Sicherheitsmaßnahmen zu verbessern.",
   "Update response": "Antwort aktualisieren",
   "After the date": "Nach dem Date",
@@ -3030,8 +3031,8 @@ Object.assign(de, {
   star: "Stern",
   stars: "Sterne",
   "Anything else?": "Noch etwas?",
-  "A private note for DateDrop — never your match.":
-    "Eine private Notiz für DateDrop — nie für dein Match.",
+  "A private note for DateHaja — never your match.":
+    "Eine private Notiz für DateHaja — nie für dein Match.",
   "I want safety follow-up": "Ich möchte eine Sicherheitsnachfrage",
   "Save this as a private safety follow-up request. For immediate danger, contact local emergency services.":
     "Als private Sicherheitsanfrage speichern. Bei unmittelbarer Gefahr kontaktiere den örtlichen Notruf.",
@@ -3055,13 +3056,13 @@ Object.assign(fr, {
     "Nous ne collectons pas de copie d'identité et ne prétendons pas vérifier l'identité. Des données sans action de sécurité concrète ne feraient qu'ajouter un risque.",
   "Trusted contact name": "Nom du contact de confiance",
   "Trusted contact email": "E-mail du contact de confiance",
-  "They agreed that I can store this email for DateDrop safety plans.":
-    "Cette personne accepte que je conserve cet e-mail pour les plans de sécurité DateDrop.",
+  "They agreed that I can store this email for DateHaja safety plans.":
+    "Cette personne accepte que je conserve cet e-mail pour les plans de sécurité DateHaja.",
   "Ask me how the date went": "Me demander comment s'est passé le rendez-vous",
   "A private, optional check-in after the planned end time.":
     "Un suivi privé et facultatif après l'heure de fin prévue.",
   "Save private safety settings": "Enregistrer les paramètres privés",
-  "Sign in to add a trusted contact and choose whether DateDrop checks in after a date.":
+  "Sign in to add a trusted contact and choose whether DateHaja checks in after a date.":
     "Connectez-vous pour ajouter un contact de confiance et choisir le suivi après le rendez-vous.",
   "How did it go?": "Comment cela s'est-il passé ?",
   "The plan is complete. Your private check-in is ready.":
@@ -3084,16 +3085,16 @@ Object.assign(fr, {
   "Paste the copied link into Google Calendar.":
     "Collez le lien copié dans Google Agenda.",
   "Live calendar status": "Statut actuel de l'agenda",
-  "Subscribe once; DateDrop keeps the same event ID as it moves from reserved to finalized or cancelled.":
+  "Subscribe once; DateHaja keeps the same event ID as it moves from reserved to finalized or cancelled.":
     "Abonnez-vous une fois : le même événement passe de réservé à confirmé ou annulé.",
   "Google Calendar": "Google Agenda",
   "Apple / calendar app": "Apple / application d'agenda",
   "Copy private link": "Copier le lien privé",
-  "Anyone with this secret link can read your DateDrop times. Calendar apps refresh on their own schedule.":
-    "Toute personne ayant ce lien secret peut voir vos horaires DateDrop. Les applications d'agenda se mettent à jour à leur rythme.",
+  "Anyone with this secret link can read your date times. Calendar apps refresh on their own schedule.":
+    "Toute personne ayant ce lien secret peut voir les horaires de vos rendez-vous. Les applications d'agenda se mettent à jour à leur rythme.",
   "Private response saved": "Réponse privée enregistrée",
   "Thanks for checking in.": "Merci pour votre retour.",
-  "Your answers are never shown to your match. They help DateDrop improve matching, venues, and safety follow-up.":
+  "Your answers are never shown to your match. They help DateHaja improve matching, venues, and safety follow-up.":
     "Vos réponses ne sont jamais montrées à l'autre personne. Elles améliorent la mise en relation, les lieux et le suivi de sécurité.",
   "Update response": "Modifier la réponse",
   "After the date": "Après le rendez-vous",
@@ -3116,8 +3117,8 @@ Object.assign(fr, {
   star: "étoile",
   stars: "étoiles",
   "Anything else?": "Autre chose ?",
-  "A private note for DateDrop — never your match.":
-    "Une note privée pour DateDrop — jamais pour l'autre personne.",
+  "A private note for DateHaja — never your match.":
+    "Une note privée pour DateHaja — jamais pour l'autre personne.",
   "I want safety follow-up": "Je souhaite un suivi de sécurité",
   "Save this as a private safety follow-up request. For immediate danger, contact local emergency services.":
     "Enregistrer comme demande privée de suivi. En cas de danger immédiat, contactez les services d'urgence locaux.",
@@ -3140,13 +3141,13 @@ Object.assign(nl, {
     "We verzamelen geen identiteitsbewijzen en claimen geen identiteitscontrole. Extra gegevens zonder concrete veiligheidsactie zorgen alleen voor meer risico.",
   "Trusted contact name": "Naam vertrouwd contact",
   "Trusted contact email": "E-mail vertrouwd contact",
-  "They agreed that I can store this email for DateDrop safety plans.":
-    "Deze persoon stemt ermee in dat ik dit e-mailadres bewaar voor DateDrop-veiligheidsplannen.",
+  "They agreed that I can store this email for DateHaja safety plans.":
+    "Deze persoon stemt ermee in dat ik dit e-mailadres bewaar voor DateHaja-veiligheidsplannen.",
   "Ask me how the date went": "Vraag na de date hoe het ging",
   "A private, optional check-in after the planned end time.":
     "Een privé en optionele check-in na de geplande eindtijd.",
   "Save private safety settings": "Privé-instellingen opslaan",
-  "Sign in to add a trusted contact and choose whether DateDrop checks in after a date.":
+  "Sign in to add a trusted contact and choose whether DateHaja checks in after a date.":
     "Log in om een vertrouwd contact toe te voegen en een check-in na de date te kiezen.",
   "How did it go?": "Hoe ging het?",
   "The plan is complete. Your private check-in is ready.":
@@ -3169,16 +3170,16 @@ Object.assign(nl, {
   "Paste the copied link into Google Calendar.":
     "Plak de gekopieerde link in Google Agenda.",
   "Live calendar status": "Actuele agendastatus",
-  "Subscribe once; DateDrop keeps the same event ID as it moves from reserved to finalized or cancelled.":
+  "Subscribe once; DateHaja keeps the same event ID as it moves from reserved to finalized or cancelled.":
     "Abonneer één keer; dezelfde afspraak verandert van gereserveerd naar bevestigd of geannuleerd.",
   "Google Calendar": "Google Agenda",
   "Apple / calendar app": "Apple / agenda-app",
   "Copy private link": "Privélink kopiëren",
-  "Anyone with this secret link can read your DateDrop times. Calendar apps refresh on their own schedule.":
-    "Iedereen met deze geheime link kan je DateDrop-tijden zien. Agenda-apps verversen volgens hun eigen schema.",
+  "Anyone with this secret link can read your date times. Calendar apps refresh on their own schedule.":
+    "Iedereen met deze geheime link kan je datetijden zien. Agenda-apps verversen volgens hun eigen schema.",
   "Private response saved": "Privéreactie opgeslagen",
   "Thanks for checking in.": "Bedankt voor je check-in.",
-  "Your answers are never shown to your match. They help DateDrop improve matching, venues, and safety follow-up.":
+  "Your answers are never shown to your match. They help DateHaja improve matching, venues, and safety follow-up.":
     "Je antwoorden worden nooit aan je match getoond. Ze helpen matching, locaties en veiligheidsopvolging te verbeteren.",
   "Update response": "Reactie bijwerken",
   "After the date": "Na de date",
@@ -3201,8 +3202,8 @@ Object.assign(nl, {
   star: "ster",
   stars: "sterren",
   "Anything else?": "Nog iets?",
-  "A private note for DateDrop — never your match.":
-    "Een privénotitie voor DateDrop — nooit voor je match.",
+  "A private note for DateHaja — never your match.":
+    "Een privénotitie voor DateHaja — nooit voor je match.",
   "I want safety follow-up": "Ik wil veiligheidsopvolging",
   "Save this as a private safety follow-up request. For immediate danger, contact local emergency services.":
     "Opslaan als privéverzoek om veiligheidsopvolging. Neem bij direct gevaar contact op met lokale hulpdiensten.",
@@ -3225,13 +3226,13 @@ Object.assign(sv, {
     "Vi samlar inte in ID-kopior och påstår inte att identiteten är verifierad. Extra uppgifter utan konkret skydd skulle bara öka risken.",
   "Trusted contact name": "Trygghetskontaktens namn",
   "Trusted contact email": "Trygghetskontaktens e-post",
-  "They agreed that I can store this email for DateDrop safety plans.":
-    "Personen har godkänt att jag sparar e-posten för DateDrops trygghetsplaner.",
+  "They agreed that I can store this email for DateHaja safety plans.":
+    "Personen har godkänt att jag sparar e-posten för trygghetsplaner i DateHaja.",
   "Ask me how the date went": "Fråga hur dejten gick",
   "A private, optional check-in after the planned end time.":
     "En privat, valfri avstämning efter planerad sluttid.",
   "Save private safety settings": "Spara privata säkerhetsinställningar",
-  "Sign in to add a trusted contact and choose whether DateDrop checks in after a date.":
+  "Sign in to add a trusted contact and choose whether DateHaja checks in after a date.":
     "Logga in för att lägga till en trygghetskontakt och välja avstämning efter dejten.",
   "How did it go?": "Hur gick det?",
   "The plan is complete. Your private check-in is ready.":
@@ -3254,16 +3255,16 @@ Object.assign(sv, {
   "Paste the copied link into Google Calendar.":
     "Klistra in den kopierade länken i Google Kalender.",
   "Live calendar status": "Aktuell kalenderstatus",
-  "Subscribe once; DateDrop keeps the same event ID as it moves from reserved to finalized or cancelled.":
+  "Subscribe once; DateHaja keeps the same event ID as it moves from reserved to finalized or cancelled.":
     "Prenumerera en gång; samma händelse går från reserverad till bekräftad eller avbokad.",
   "Google Calendar": "Google Kalender",
   "Apple / calendar app": "Apple / kalenderapp",
   "Copy private link": "Kopiera privat länk",
-  "Anyone with this secret link can read your DateDrop times. Calendar apps refresh on their own schedule.":
-    "Den som har den hemliga länken kan se dina DateDrop-tider. Kalenderappar uppdaterar enligt eget schema.",
+  "Anyone with this secret link can read your date times. Calendar apps refresh on their own schedule.":
+    "Den som har den hemliga länken kan se dina dejttider. Kalenderappar uppdaterar enligt eget schema.",
   "Private response saved": "Privat svar sparat",
   "Thanks for checking in.": "Tack för att du berättade.",
-  "Your answers are never shown to your match. They help DateDrop improve matching, venues, and safety follow-up.":
+  "Your answers are never shown to your match. They help DateHaja improve matching, venues, and safety follow-up.":
     "Dina svar visas aldrig för din matchning. De hjälper oss förbättra matchning, platser och säkerhetsuppföljning.",
   "Update response": "Uppdatera svar",
   "After the date": "Efter dejten",
@@ -3286,8 +3287,8 @@ Object.assign(sv, {
   star: "stjärna",
   stars: "stjärnor",
   "Anything else?": "Något mer?",
-  "A private note for DateDrop — never your match.":
-    "En privat anteckning till DateDrop — aldrig till din matchning.",
+  "A private note for DateHaja — never your match.":
+    "En privat anteckning till DateHaja — aldrig till din matchning.",
   "I want safety follow-up": "Jag vill ha säkerhetsuppföljning",
   "Save this as a private safety follow-up request. For immediate danger, contact local emergency services.":
     "Spara som en privat begäran om säkerhetsuppföljning. Kontakta lokal räddningstjänst vid omedelbar fara.",
@@ -3357,7 +3358,9 @@ export function translate(
 function initialLocale(): LocaleCode {
   if (typeof window === "undefined") return DEFAULT_LOCALE;
   try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
+    const stored =
+      window.localStorage.getItem(STORAGE_KEY) ??
+      window.localStorage.getItem(LEGACY_STORAGE_KEY);
     if (isLocaleCode(stored)) {
       runtimeLocale = stored;
       return stored;
@@ -3402,10 +3405,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.lang = locale;
-    const title = `DateDrop — ${translate(locale, "We plan the date. You just say yes.")}`;
+    const title = `DateHaja — ${translate(locale, "Let's date. We'll make the plan.")}`;
     const description = translate(
       locale,
-      "No profiles to browse. No conversation to keep alive. DateDrop finds a compatible person, researches a real place, and sends one private invitation to each of you.",
+      "No profiles to browse. No conversation to keep alive. DateHaja finds a compatible person, researches a real place, and sends one private invitation to each of you.",
     );
     document.title = title;
     document

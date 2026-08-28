@@ -1,4 +1,4 @@
-/** Geo helpers. All coordinates in DateDrop are *approximate* — rounded to ~1km
+/** Geo helpers. All coordinates in DateHaja are *approximate* — rounded to ~1km
  *  before they are ever stored, and never returned to another user. */
 
 const EARTH_RADIUS_KM = 6371;

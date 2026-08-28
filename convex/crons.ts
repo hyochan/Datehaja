@@ -49,9 +49,9 @@ export const dailyTick = internalAction({
 const crons = cronJobs();
 
 // Deadlines, completions and stale windows.
-crons.interval("datedrop maintenance", { minutes: 10 }, internal.crons.tick, {});
+crons.interval("datehaja maintenance", { minutes: 10 }, internal.crons.tick, {});
 
 // Reminders and denormalised ages.
-crons.cron("datedrop daily", "0 9 * * *", internal.crons.dailyTick, {});
+crons.cron("datehaja daily", "0 9 * * *", internal.crons.dailyTick, {});
 
 export default crons;

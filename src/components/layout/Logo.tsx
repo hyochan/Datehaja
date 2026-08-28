@@ -1,4 +1,4 @@
-/** A warm little drop: the plan lands first, then the spark can follow. */
+/** Two people, one shared table, and a small spark between them. */
 export function Logo({ className }: { className?: string }) {
   return (
     <svg
@@ -6,23 +6,23 @@ export function Logo({ className }: { className?: string }) {
       viewBox="0 0 32 32"
       fill="none"
       role="img"
-      aria-label="DateDrop"
+      aria-label="DateHaja"
     >
       <circle cx="16" cy="16" r="15" className="fill-[var(--tint-ember-bg)]" />
+      <circle cx="10.7" cy="11.6" r="2.6" className="fill-ember-400" />
+      <circle cx="21.3" cy="11.6" r="2.6" className="fill-ember-400" />
       <path
-        d="M16 5.3c3.5 4 6.2 7.5 6.2 11.1 0 4-2.8 6.5-6.2 6.5s-6.2-2.5-6.2-6.5c0-3.6 2.7-7.1 6.2-11.1Z"
-        fill="currentColor"
+        d="M7.2 20.3c1.3-2.8 3-4.2 5.1-4.2 1.4 0 2.6.6 3.7 1.8 1.1-1.2 2.3-1.8 3.7-1.8 2.1 0 3.8 1.4 5.1 4.2"
+        stroke="currentColor"
         className="text-ember-400"
+        strokeWidth="2.2"
+        strokeLinecap="round"
       />
       <path
-        d="M12.9 16.7c0-1.6 2-2.1 3.1-.7 1.1-1.4 3.1-.9 3.1.7 0 1.5-1.4 2.6-3.1 3.7-1.7-1.1-3.1-2.2-3.1-3.7Z"
-        className="fill-white"
-      />
-      <path
-        d="M11 26.6c2.9.8 7.1.8 10 0"
+        d="M12.1 23.2h7.8M16 18.4v4.8"
         stroke="currentColor"
         className="text-ember-300"
-        strokeWidth="2"
+        strokeWidth="1.8"
         strokeLinecap="round"
       />
     </svg>

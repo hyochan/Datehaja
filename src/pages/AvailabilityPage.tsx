@@ -11,7 +11,7 @@ export default function AvailabilityPage() {
         <h1 className="text-[28px] leading-tight">{t("When you're free")}</h1>
         <p className="mt-1.5 text-[15.5px] leading-relaxed text-soft">
           {t(
-            "This is the only thing DateDrop ever asks of you. The more windows you leave open, the better the match we can find.",
+            "This is the only thing DateHaja ever asks of you. The more windows you leave open, the better the match we can find.",
           )}
         </p>
       </header>

@@ -69,17 +69,17 @@ export default function DashboardPage() {
         <h1 className="text-[30px] leading-tight">
           {firstName
             ? t("Hi, {name}.", { name: firstName.split(" ")[0] })
-            : t("Your DateDrops")}
+            : t("Your dates")}
         </h1>
         <p className="mt-1.5 text-[15.5px] text-soft">
           {t("Tell us when. We handle who & where.")}
         </p>
       </header>
 
-      {/* ------------------------- your next DateDrop ------------------------- */}
+      {/* --------------------------- your next date --------------------------- */}
       <section aria-labelledby="next-heading">
         <h2 id="next-heading" className="sr-only">
-          {t("Your next DateDrop")}
+          {t("Your next date")}
         </h2>
 
         {board === undefined ? (
@@ -94,8 +94,8 @@ export default function DashboardPage() {
               eyebrow={t("Waiting on you")}
               title={
                 invitations.length === 1
-                  ? t("You've got a DateDrop")
-                  : t("You've got {count} DateDrops", {
+                  ? t("Your date plan is ready")
+                  : t("{count} date plans are ready", {
                       count: invitations.length,
                     })
               }
@@ -173,7 +173,7 @@ export default function DashboardPage() {
             </Link>
           }
         />
-        {/* You can always ask for another DateDrop, even with one confirmed —
+        {/* You can always ask for another date, even with one confirmed —
             as long as you have an evening free and nothing is already running. */}
         {openWindows.length > 0 && !searching && !showingIdleCta && (
           <div className="mb-4 flex flex-wrap items-center gap-3 rounded-card border border-[var(--border)] bg-[var(--bg-sunken)] px-4 py-3.5">
@@ -183,7 +183,7 @@ export default function DashboardPage() {
                 : t("You've still got {count} evenings open.", {
                     count: openWindows.length,
                   })}{" "}
-              {t("Want another DateDrop?")}
+              {t("Want another date?")}
             </p>
             <Button onClick={findMeADate} loading={busy} size="sm">
               {t("Find me a date")}
@@ -294,7 +294,7 @@ function IdleCard({
   return (
     <Card className="p-6 sm:p-7">
       <div className="docket-label mb-1 text-muted">
-        {t("Your next DateDrop")}
+        {t("Your next date")}
       </div>
       <h2 className="font-display text-[24px] leading-tight sm:text-[27px]">
         {nextWindow
@@ -333,7 +333,7 @@ const STAGES = [
   { key: "hard_filter", label: "Checking who's free when you are" },
   { key: "ai_ranking", label: "Finding compatible people" },
   { key: "research", label: "Researching real date ideas" },
-  { key: "inviting", label: "Building your DateDrop" },
+  { key: "inviting", label: "Building your date plan" },
 ] as const;
 
 const STAGE_ORDER: Record<string, number> = {
@@ -368,7 +368,7 @@ function SearchProgress({ stage }: { stage: string }) {
       </div>
 
       <h2 className="font-display text-[24px] leading-tight">
-        {t("We're looking for your DateDrop.")}
+        {t("We're planning your date.")}
       </h2>
 
       <ol className="mt-6 space-y-3.5">

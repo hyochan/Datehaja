@@ -26,7 +26,7 @@ export default function HistoryPage() {
       <header>
         <h1 className="text-[28px] leading-tight">{t("History")}</h1>
         <p className="mt-1.5 text-[15px] text-soft">
-          {t("Every DateDrop you've been part of — accepted, passed, expired or done.")}
+          {t("Every date plan you've been part of — accepted, passed, expired or done.")}
         </p>
       </header>
 
@@ -47,7 +47,7 @@ export default function HistoryPage() {
           <Card>
             <EmptyState
               title={t("Nothing here yet")}
-              body={t("Your first DateDrop will show up here once you've responded to it.")}
+              body={t("Your first date plan will show up here once you've responded to it.")}
               action={<LinkButton to="/availability">{t("Add availability")}</LinkButton>}
             />
           </Card>

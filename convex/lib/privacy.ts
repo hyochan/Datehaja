@@ -3,7 +3,7 @@ import type { Gender } from "./enums";
 /**
  * Privacy projections.
  *
- * DateDrop's contract with its users is that another person only ever sees the
+ * DateHaja's contract with its users is that another person only ever sees the
  * handful of fields below — never an exact address, never an email address,
  * never a phone number, never coordinates, never the raw profile document.
  * Every path that returns another user's data goes through here.
@@ -56,7 +56,7 @@ export function toPublicPreview(profile: ProfileLike): PublicPreview {
 }
 
 /**
- * DateDrop shows a first name only. If a user typed a full name we trim it
+ * DateHaja shows a first name only. If a user typed a full name we trim it
  * rather than publishing more than they meant to share.
  */
 export function firstNameOnly(displayName: string): string {
@@ -81,7 +81,7 @@ const MESSENGER_RE =
 
 /**
  * Strip contact handles out of free text before it is shown to another user.
- * The whole point of DateDrop is that you meet without trading contact details,
+ * The whole point of DateHaja is that you meet without trading contact details,
  * so bios and notes are scrubbed rather than trusted.
  */
 export function redactContactInfo(text: string): string {

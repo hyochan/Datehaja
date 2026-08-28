@@ -12,7 +12,7 @@ import { DATE_TYPE_OPTIONS, DIETARY_OPTIONS } from "./lib/catalog";
 import { extractVenues } from "./lib/venueHeuristics";
 
 /**
- * The DateDrop research engine.
+ * The DateHaja research engine.
  *
  * Firecrawl does live web research for real, currently-open places near the
  * midpoint of two people, then the model turns those pages into structured

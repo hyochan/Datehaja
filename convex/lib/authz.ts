@@ -72,7 +72,7 @@ export async function requirePreferences(
   return prefs;
 }
 
-/** Ownership check for a DateDrop — the caller must be a participant. */
+/** Ownership check for a date plan — the caller must be a participant. */
 export async function requireParticipant(
   ctx: QueryCtx | MutationCtx,
   dropId: Id<"dateDrops">,
@@ -82,7 +82,7 @@ export async function requireParticipant(
     .query("dateDropParticipants")
     .withIndex("by_drop_and_user", (q) => q.eq("dropId", dropId).eq("userId", userId))
     .unique();
-  if (!participant) throw new Error("This DateDrop isn't yours.");
+  if (!participant) throw new Error("This date plan isn't yours.");
   return participant;
 }
 

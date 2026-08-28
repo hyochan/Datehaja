@@ -258,7 +258,7 @@ describe("a participant who passed", () => {
 
     await expect(
       asUser(t, s.bob.userId).mutation(api.dateDrops.cancel, { dropId: s.dropId }),
-    ).rejects.toThrow(/not on this DateDrop/i);
+    ).rejects.toThrow(/not on this date plan/i);
 
     const after = await t.run((ctx) => ctx.db.get("dateDrops", s.dropId));
     expect(after?.status).toBe("confirmed");
@@ -274,7 +274,7 @@ describe("a participant who passed", () => {
       asUser(t, s.bob.userId).mutation(api.dateDrops.confirmAttendance, {
         dropId: s.dropId,
       }),
-    ).rejects.toThrow(/not on this DateDrop/i);
+    ).rejects.toThrow(/not on this date plan/i);
   });
 
   test("never receives the replacement's photo", async () => {
@@ -390,7 +390,7 @@ describe("safety actions target the right person", () => {
 });
 
 describe("what the replacement is shown", () => {
-  test("their DateDrop describes the person still on it", async () => {
+  test("their date plan describes the person still on it", async () => {
     const t = convexTest(schema, modules);
     const s = await seedThreeWay(t);
     await toReplacementState(t, s);
@@ -536,7 +536,7 @@ describe("replacement bookkeeping", () => {
 });
 
 describe("taking back a held evening", () => {
-  test("stands the DateDrop down instead of orphaning it", async () => {
+  test("stands the date plan down instead of orphaning it", async () => {
     const t = convexTest(schema, modules);
     const s = await seedThreeWay(t);
     await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });

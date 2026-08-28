@@ -75,7 +75,7 @@ const HARD_STOP_CODES = new Set([
 /**
  * One structured call. Walks the model ladder on `model_not_found`, retries
  * once on a retryable 429/5xx, and gives up cleanly otherwise — a failed model
- * call must degrade the DateDrop, never corrupt it.
+ * call must degrade the date plan, never corrupt it.
  */
 export async function structured<T>(
   req: StructuredRequest,

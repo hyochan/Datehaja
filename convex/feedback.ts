@@ -59,7 +59,7 @@ export const submit = mutation({
     const userId = await requireUserId(ctx);
     await requireParticipant(ctx, args.dropId, userId);
     const drop = await ctx.db.get("dateDrops", args.dropId);
-    if (!drop) throw new Error("That DateDrop is gone.");
+    if (!drop) throw new Error("That date plan is gone.");
 
     const now = Date.now();
     if (
@@ -107,7 +107,7 @@ export const submit = mutation({
         userId,
         kind: "safety",
         title: "Your private check-in is saved",
-        body: "You asked for safety follow-up. Your response is private and attached to this DateDrop.",
+        body: "You asked for safety follow-up. Your response is private and attached to this date plan.",
         dropId: args.dropId,
         href: `/drop/${args.dropId}`,
         read: false,

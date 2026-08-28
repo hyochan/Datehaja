@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "datedrop",
+      "name": "datehaja",
       "dependencies": {
         "@auth/core": "0.41.1",
         "@convex-dev/auth": "^0.0.95",

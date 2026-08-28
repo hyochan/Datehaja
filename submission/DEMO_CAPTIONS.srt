@@ -4,7 +4,7 @@ Dating apps ask who you like, then make you swipe and chat for days.
 
 2
 00:00:08,500 --> 00:00:18,000
-DateDrop asks one smaller question: when are you free?
+DateHaja asks one smaller question: when are you free?
 
 3
 00:00:18,000 --> 00:00:29,500
@@ -60,4 +60,4 @@ Afterward, each person can check in privately about outcome and safety.
 
 16
 00:02:56,000 --> 00:02:59,000
-We plan the date. You just say yes.
+Let's date. We'll make the plan.

@@ -27,7 +27,7 @@ const CANCELLED_PARTICIPANT_STATES = new Set([
 ]);
 
 /**
- * Calendar state is derived from the same DateDrop + participant state used by
+ * Calendar state is derived from the same date-plan + participant state used by
  * the app. `reservedAt` prevents a declined invitation from appearing as a
  * cancellation in a calendar that never contained it.
  */
@@ -88,10 +88,10 @@ export function buildCalendar(events: CalendarEvent[]): string {
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//DateDrop//Private Date Concierge//EN",
+    "PRODID:-//DateHaja//Private Date Concierge//EN",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
-    "X-WR-CALNAME:DateDrop",
+    "X-WR-CALNAME:DateHaja",
     "REFRESH-INTERVAL;VALUE=DURATION:PT15M",
     "X-PUBLISHED-TTL:PT15M",
   ];

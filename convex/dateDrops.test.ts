@@ -16,7 +16,7 @@ type Ctx = Awaited<ReturnType<typeof setup>>;
 
 /**
  * Build a confirmed-shaped world: two users, profiles, preferences, matching
- * availability, and a DateDrop in `inviting` with both of them invited.
+ * availability, and a date plan in `inviting` with both of them invited.
  */
 async function setup(t: ReturnType<typeof convexTest>) {
   return await t.run(async (ctx) => {
@@ -165,7 +165,7 @@ function asUser(t: ReturnType<typeof convexTest>, userId: Id<"users">) {
 
 /* -------------------------------------------------------------------------- */
 
-describe("accepting a DateDrop", () => {
+describe("accepting a date plan", () => {
   test("one acceptance moves the drop to partially_accepted, not confirmed", async () => {
     const t = convexTest(schema, modules);
     const s: Ctx = await setup(t);
@@ -217,7 +217,7 @@ describe("accepting a DateDrop", () => {
     expect(second.confirmed).toBe(false);
   });
 
-  test("a stranger cannot accept someone else's DateDrop", async () => {
+  test("a stranger cannot accept someone else's date plan", async () => {
     const t = convexTest(schema, modules);
     const s: Ctx = await setup(t);
     await expect(
@@ -245,7 +245,7 @@ describe("accepting a DateDrop", () => {
   });
 });
 
-describe("passing on a DateDrop", () => {
+describe("passing on a date plan", () => {
   test("a pass frees that person's evening immediately", async () => {
     const t = convexTest(schema, modules);
     const s: Ctx = await setup(t);

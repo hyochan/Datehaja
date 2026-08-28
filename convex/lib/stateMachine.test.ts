@@ -23,7 +23,7 @@ const ALL_STATUSES: DropStatus[] = [
   "failed",
 ];
 
-describe("DateDrop transitions", () => {
+describe("date-plan transitions", () => {
   it("walks the happy path", () => {
     expect(canTransitionDrop("draft", "matching")).toBe(true);
     expect(canTransitionDrop("matching", "researching")).toBe(true);
@@ -50,7 +50,7 @@ describe("DateDrop transitions", () => {
 
   it("refuses to resurrect an expired drop", () => {
     expect(() => assertDropTransition("expired_no_match", "confirmed")).toThrow(
-      /Illegal DateDrop transition/,
+      /Illegal date-plan transition/,
     );
   });
 

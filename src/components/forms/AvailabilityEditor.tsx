@@ -217,7 +217,7 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
       {!compact && windows && windows.length > 0 && (
         <p className="px-1 text-[13px] leading-relaxed text-muted">
           {t(
-            "A held window means a DateDrop is in flight for it. Booked means the date is confirmed — cancel the date if you can't make it.",
+            "A held window means a date plan is in progress. Booked means the date is confirmed — cancel the date if you can't make it.",
           )}
         </p>
       )}

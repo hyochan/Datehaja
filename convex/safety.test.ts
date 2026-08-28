@@ -149,7 +149,7 @@ function asUser(t: ReturnType<typeof convexTest>, userId: Id<"users">) {
 }
 
 describe("blocking", () => {
-  test("blocking cancels the shared DateDrop and frees both evenings", async () => {
+  test("blocking cancels the shared date plan and frees both evenings", async () => {
     const t = convexTest(schema, modules);
     const s = await seedPair(t);
 
@@ -334,7 +334,7 @@ describe("reporting", () => {
     expect(profile?.moderationStatus).toBe("ok");
   });
 
-  test("you cannot report through a DateDrop you're not in", async () => {
+  test("you cannot report through a date plan you're not in", async () => {
     const t = convexTest(schema, modules);
     const s = await seedPair(t);
     const stranger = await t.run((ctx) =>
@@ -492,7 +492,7 @@ describe("AgentMail event persistence is idempotent", () => {
       messageId: "<m1@agentmail.to>",
       fromAddress: "someone@example.com",
       toAddress: "concierge@agentmail.to",
-      subject: "Re: your DateDrop",
+      subject: "Re: your date plan",
       preview: "hello",
       signatureVerified: true,
       rawPreview: "{}",

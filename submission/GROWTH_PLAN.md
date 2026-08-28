@@ -1,4 +1,4 @@
-# DateDrop growth plan
+# DateHaja growth plan
 
 ## The wedge
 
@@ -8,7 +8,7 @@ portable; liquidity still has to be earned city by city.
 
 The promise is one sentence:
 
-> Give DateDrop one free evening. Get one real, researched plan with one person
+> Give DateHaja one free evening. Get one real, researched plan with one person
 > who can actually make it.
 
 ## First 30 days
@@ -22,7 +22,7 @@ The promise is one sentence:
 - Do not buy traffic yet. Fix activation and safety before adding volume.
 
 Exit gate: at least 70% finish onboarding, 60% add availability, and five real
-DateDrops reach a private post-date response.
+date plans reach a private post-date response.
 
 ### 2. One-neighbourhood launch · 75–100 people
 
@@ -52,11 +52,11 @@ no-show rate below 10%, and at least 80% of check-ins marked safe.
    alumni groups, and friend-of-friend communities. Trust and density matter
    more than reach at the beginning.
 2. **Venue partners:** a small "good first-date venue" collection with public
-   evidence. Venues get qualified visits; DateDrop gets reliable plans and
+   evidence. Venues get qualified visits; DateHaja gets reliable plans and
    local distribution.
 3. **Product-led social:** show the live flow, not founder narration. The most
    shareable proof is a calendar event changing from reserved to finalized.
-4. **Trusted-contact exposure:** safety-plan emails explain DateDrop without
+4. **Trusted-contact exposure:** safety-plan emails explain DateHaja without
    exposing either participant. This is awareness, never an automatic referral
    or mailing list.
 5. **City waitlists:** collect demand by city, then invite balanced cohorts
@@ -67,7 +67,7 @@ no-show rate below 10%, and at least 80% of check-ins marked safe.
 ```text
 more overlapping evenings
         ↓
-faster, better DateDrops
+faster, better date plans
         ↓
 more completed safe dates
         ↓
@@ -88,7 +88,7 @@ the app.
 | Invitation | both people accept                | view rate, first acceptance, pass reason |
 | Fulfilment | date completed                    | cancellation, no-show, venue rating      |
 | Safety     | safe post-date check-in           | blocks, reports, follow-up requests      |
-| Retention  | another evening opened in 30 days | second DateDrop, pause rate              |
+| Retention  | another evening opened in 30 days | second date plan, pause rate             |
 | Referral   | invited person activates          | source cohort, city waitlist conversion  |
 
 Track aggregate funnel counts and cohort-level outcomes. Do not place names,
@@ -101,7 +101,7 @@ emails, exact locations, dating preferences, or feedback notes in analytics.
 - Do not fabricate testimonials, dates, engagement, or safety claims.
 - Do not collect government ID images ourselves. If identity verification is
   added later, use a specialist provider and retain only its status/reference.
-- Do not optimize for app engagement. A successful DateDrop gets people out of
+- Do not optimize for app engagement. A successful date gets people out of
   the app and into a safe public place.
 
 ## Hackathon launch sequence
@@ -136,7 +136,7 @@ The final two steps are qualification requirements, not optional growth work.
 
 ### Days 4–7 · prove liquidity
 
-- Target: five invitations and at least two both-accepted DateDrops.
+- Target: five invitations and at least two confirmed dates.
 - Keep the pool concentrated around Seongsu and Yeonnam.
 - Review every zero-candidate run and every pass reason. Change one constraint
   or explanation at a time so the result is attributable.
@@ -169,7 +169,7 @@ certain than it is.
 
 ## First outreach message
 
-> I'm testing DateDrop with a small Seoul group. You give it one evening you're
+> I'm testing DateHaja with a small Seoul group. You give it one evening you're
 > free; it finds someone compatible, researches a real public place, and sends
 > both people a private plan. No swiping or exchanging numbers. I'm looking for
 > honest feedback from adults who would genuinely consider one date in Seongsu
