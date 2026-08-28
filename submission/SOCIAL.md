@@ -37,7 +37,7 @@ both the AgentMail webhook and the React app itself via
 the workflow engine. Every DateDrop carries its own provenance — the pages
 Firecrawl crawled, the quote from each, and every model run — visible in the app.
 
-188 tests. Seeded with 14 clearly-marked fictional personas so a judge can see
+193 tests. Seeded with 14 clearly-marked fictional personas so a judge can see
 the whole loop in 60 seconds without recruiting a second human.
 
 Live: https://merry-bass-190.convex.site
@@ -156,8 +156,9 @@ Code: https://github.com/hyochan/datedrop
 
 ## Screenshots to capture
 
-1. **Landing hero** — dark mode, the headline and the three "no" items.
-2. **The comparison** — "The whole thing, backwards", both columns visible.
+1. **Landing hero** — dark mode, the headline and the availability docket.
+2. **Connected concierge flow** — both availability slips, research, two
+   private replies, and the final date ticket visible in one sequence.
 3. **Availability** — one window added, showing "Times are local to Seoul".
 4. **Matching progress** — mid-run, with two steps ticked.
 5. **A DateDrop invitation** — plan, cost, match preview, Accept/Pass.

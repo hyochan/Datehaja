@@ -210,7 +210,7 @@ node -e 'import("jose").then(async({generateKeyPair,exportPKCS8,exportJWK})=>{co
 Then set `JWT_PRIVATE_KEY` and `JWKS` from that file on the deployment and delete it.
 
 ```bash
-bun run test             # 188 tests
+bun run test             # 193 tests
 bun run typecheck
 bun run build
 bunx convex run demo:ensureSeeded '{}'    # seed the demo personas
@@ -316,7 +316,7 @@ src/
 
 ## Testing
 
-188 tests, `bun run test`.
+193 tests, `bun run test`.
 
 - **Unit** — hard filters (every exclusion reason and its soft counterpart), deterministic scoring bounds and ordering, lifecycle transitions including every illegal one, expiry and deadline rules, availability overlap, timezone handling across zones, and the privacy projections (including an assertion that no coordinate, DOB, email or surname can leak through).
 - **Integration** (`convex-test`) — accept, pass, withdraw, cancel, expire and complete driven as real signed-in users, plus the negative authorisation cases: a stranger can't accept your drop, a signed-out caller can't act, a non-participant sees `null`.

@@ -1,161 +1,122 @@
 # DateDrop — 3-minute demo script
 
-Target: under 3 minutes. Talk less, click through the real product.
+Target: **2:55 maximum**. Show the product moving; keep architecture claims tied
+to something visible on screen.
+
 Live app: https://merry-bass-190.convex.site
 
-Have **two browser windows** open side by side, both signed into the same
-account, both on `/dashboard`. Window A is the one you drive. Window B just
-sits there — it's the proof that Convex is doing the work.
+## Before recording
 
-Before recording, create the account with an email address you can actually
-receive mail at and keep that inbox open in a third tab. Do not use an address
-ending in `.test`: it is a reserved, non-deliverable TLD, so the AgentMail shot
-at 1:40 will not exist.
-
----
-
-## 0:00 – 0:20 · The inversion
-
-**On screen:** the landing page.
-
-> Every dating app asks you the same question: who do you like? So you swipe
-> through hundreds of people, match, text for four days, and then nobody wants
-> to be the one who says "so where should we go?"
->
-> DateDrop asks a different question. It only asks when you're free.
-
-*Scroll once to the "The whole thing, backwards" comparison. Let it sit for a
-beat.*
+- Deploy the current `main` build and confirm the redesigned landing is live.
+- Use **English (US)** and dark mode for the recording.
+- Create the account with an email address that can receive mail. Do not use a
+  `.test` address; the AgentMail invitation will not be deliverable.
+- Keep two browser windows signed into the same account on `/dashboard`.
+  Window B stays untouched until the realtime reveal.
+- Keep the real invitation email open in a third tab.
+- Prepare one availability window in Seoul, where the demo personas are seeded.
 
 ---
 
-## 0:20 – 0:45 · Availability is the only input
+## 0:00–0:18 · One evening in, one date out
 
-**On screen:** the availability page.
+**On screen:** redesigned landing hero.
 
-> This is the entire ask. Saturday, six to ten-thirty.
+> Dating apps ask who you like, then make you swipe and chat for days.
+> DateDrop asks one smaller question: when are you free?
 
-*Add the window. Go to the dashboard.*
+Click **Read the two-minute brief**. Let the connected concierge flow settle on
+screen: two availability slips, research, two locked answers, one date ticket.
 
-> Two evenings open. That's everything DateDrop knows about my plans.
+> One free evening goes in. A real date comes out.
 
-*Click **Find me a date**.*
+## 0:18–0:38 · Availability is the only input
 
----
+**On screen:** availability editor.
 
-## 0:45 – 1:15 · Real Convex, real work
+> This is the whole ask: Saturday, six to ten-thirty. Times are interpreted in
+> the city where the date happens, not the browser's timezone.
 
-**On screen:** the progress card advancing.
+Add the window, return to the dashboard, and click **Find me a date**.
 
-> Every one of those steps is a real document in Convex updating live —
-> nothing here is a spinner on a timer.
->
-> First, hard filters in plain TypeScript: age, mutual interest, distance, a
-> genuine ninety-minute overlap in our calendars, blocks, safety state. That
-> stage is the only thing allowed to exclude anyone.
->
-> Then a deterministic score on what we actually share. Then OpenAI ranks the
-> shortlist and writes the reason — it never sees a pair that failed the rules,
-> and it can't overrule them.
+## 0:38–1:05 · Convex is doing the work
 
----
+**On screen:** the matching progress card advancing.
 
-## 1:15 – 1:40 · Firecrawl doing real research
+> These are real Convex document updates, not a timed spinner. Hard filters in
+> TypeScript enforce age, mutual interest, distance, safety state and a real
+> calendar overlap. Then a deterministic score explains what fits. OpenAI ranks
+> only the survivors—it cannot overrule a rule.
 
-**On screen:** the DateDrop lands. Open it.
+Keep Window B visible but untouched.
 
-> Saturday, seven, Seongsu. Coffee, then dessert.
->
-> These are real places. Firecrawl searched the live web around the midpoint
-> between us, filtered by what we both said we'd enjoy and what we can spend.
+## 1:05–1:32 · A researched plan, not a profile
 
-*Expand **How we built this**.*
+**On screen:** open the DateDrop, then expand **How we built this**.
 
-> Here are the actual pages it crawled, the exact quote from each page that
-> supports the venue, and every model run behind the plan — model, latency,
-> tokens. If we couldn't confirm something from a source, it says so instead
-> of making it up.
+> DateDrop arrives with a time, a real public venue, a route and a budget.
+> Firecrawl researched the live web around our midpoint. Here are the source
+> pages, the supporting quotes and when they were checked. OpenAI composed the
+> plan only from that evidence. If something is uncertain, the app says so.
 
----
+Briefly show model name, latency and token evidence—do not dwell on raw logs.
 
-## 1:40 – 2:00 · AgentMail keeps it private
+## 1:32–1:50 · AgentMail keeps both people private
 
-**On screen:** the invitation email from DateDrop Concierge.
+**On screen:** the real invitation email from DateDrop Concierge.
 
-> Both of us got this privately, from DateDrop's own inbox on AgentMail. My
-> address is the recipient, never the sender, never a CC — and we're mailed
-> separately, so neither of us can see the other's address in a header.
->
-> Reply to it and it comes back to DateDrop, not to my match.
+> AgentMail gives DateDrop its own inbox. We receive separate private
+> invitations, so neither person sees the other's email address—not in the app,
+> sender field or CC list. A reply goes back to DateDrop, not to the match.
 
----
+## 1:50–2:12 · Both answer privately
 
-## 2:00 – 2:20 · Both say yes
+**On screen:** Window A, then Demo controls.
 
-**On screen:** window A.
+> I accept. The other person still cannot see my answer.
 
-> I accept.
+Click **Accept this DateDrop**, open **Demo controls**, then click
+**They accept** for the clearly labelled fictional persona.
 
-*Click **Accept this DateDrop**. Switch to **Demo controls**.*
+> The seeded persona lets a judge drive the second side without recruiting
+> another person.
 
-> DateDrop needs two people, so this deployment seeds clearly-marked fictional
-> profiles. Here's the other side of the same drop.
+## 2:12–2:30 · The realtime reveal
 
-*Click **They accept**.*
+**On screen:** point to untouched Window B as it changes to **It's a date**.
 
----
+> I have not refreshed or navigated this window. Convex queries are live
+> subscriptions, so the same transactional state appears immediately on both
+> screens.
 
-## 2:20 – 2:35 · It's a date, live
+## 2:30–2:47 · What never changed hands
 
-**On screen:** point at window B — untouched this entire time.
+**On screen:** confirmed DateDrop and its safety/privacy details.
 
-> I haven't refreshed that window once.
+> We now share a public venue, time and itinerary. We never exchanged phone
+> numbers, email addresses, socials, exact coordinates or free-text messages.
+> If one person passes, DateDrop keeps the other's evening and searches again.
 
-*Window B flips to **It's a date**.*
+## 2:47–2:58 · Close
 
-> That's Convex. Same documents, both subscriptions, no polling, no socket
-> code.
+**On screen:** return to the landing hero or final date ticket.
+
+> DateDrop only asks when you're free. We plan the date. You just say yes.
 
 ---
 
-## 2:35 – 2:50 · What we never traded
+## Recording checklist
 
-**On screen:** the confirmed DateDrop.
+- Final duration is under 3:00, including title and end frames.
+- Cursor is visible; no password manager, email address or secret is exposed.
+- The AgentMail message is genuinely delivered before recording begins.
+- Window B visibly remains untouched until the realtime reveal.
+- The expanded provenance panel contains real Firecrawl and OpenAI evidence.
+- Export at 1080p, H.264, with readable browser zoom and clear voice audio.
 
-> Venue, public address, time, itinerary, and how to find each other.
->
-> What we never exchanged: phone numbers, email addresses, socials, or
-> anything more precise than a neighbourhood. If one of us is late, there are
-> eight preset lines — and no free-text field, so there's nowhere to slip a
-> number and no pressure to.
+## Optional alternate ending
 
----
-
-## 2:50 – 3:00 · Close
-
-**On screen:** landing page.
-
-> Dating apps ask you who you like. DateDrop only asks when you're free.
->
-> DateDrop — we plan the date, you just say yes.
-
----
-
-## If you have 20 seconds spare, show the replacement
-
-This is the bit that surprises people. Instead of **They accept**, hit
-**They pass**:
-
-> They passed. Notice my evening is still held — DateDrop doesn't cancel on the
-> person who said yes. It goes and finds someone else who fits the same plan.
-> And if it can't find the right person before the cutoff, it cancels honestly
-> rather than forcing a bad match.
-
-## Recording notes
-
-- Use dark mode. It photographs better and the ember accent carries.
-- Seoul as the city — that's where the demo personas live.
-- Use a real, deliverable email address and confirm the welcome email arrives
-  before starting the take.
-- Window B must be visibly untouched. Don't click into it before the reveal.
-- Don't narrate the architecture. Point at the thing on screen doing it.
+If there is room, use **They pass** instead of **They accept** and show that the
+accepted person's evening remains held while replacement search begins. Record
+that as a separate short clip; do not risk pushing the main submission over
+three minutes.
