@@ -66,7 +66,7 @@ export default function LandingPage() {
           >
             ✦
           </span>
-          <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 pb-16 pt-12 sm:px-8 sm:pb-24 sm:pt-20 lg:grid-cols-[minmax(0,1.2fr)_minmax(20rem,0.8fr)] lg:gap-14 lg:py-28">
+          <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 pb-16 pt-12 sm:px-8 sm:pb-24 sm:pt-20 lg:grid-cols-[minmax(0,1.35fr)_minmax(19rem,0.65fr)] lg:gap-12 lg:py-28">
             <div>
               <div className="docket-label animate-fade-up text-[var(--accent-text)]">
                 <span className="mr-2" aria-hidden>
@@ -79,7 +79,7 @@ export default function LandingPage() {
                 style={{ animationDelay: "40ms" }}
               >
                 {t("Bring us a free evening.")}
-                <span className="mt-1 block italic text-[var(--accent-text)]">
+                <span className="hero-title-accent block italic text-[var(--accent-text)]">
                   {t("We'll return a date.")}
                 </span>
               </h1>
