@@ -1,16 +1,10 @@
 import { Link } from "react-router-dom";
+import type { ReactNode } from "react";
 import { Logo } from "../components/layout/Logo";
 import { LocaleSwitcher } from "../components/layout/LocaleSwitcher";
 import { ThemeToggle } from "../components/layout/AppShell";
 import { LinkButton } from "../components/ui/primitives";
 import { useI18n } from "../i18n";
-
-const DATE_DROP_WAY = [
-  { number: "01", label: "Say when you're free", icon: "calendar" },
-  { number: "02", label: "Receive one considered plan", icon: "spark" },
-  { number: "03", label: "Both answer privately", icon: "reply" },
-  { number: "04", label: "Meet in public", icon: "meet" },
-] as const;
 
 export default function LandingPage() {
   const { t } = useI18n();
@@ -66,7 +60,7 @@ export default function LandingPage() {
                 {t("Service note 001 · Seoul")}
               </div>
               <h1
-                className="hero-title mt-6 max-w-3xl animate-fade-up"
+                className="display-heading hero-title mt-6 max-w-3xl animate-fade-up"
                 style={{ animationDelay: "40ms" }}
               >
                 {t("Bring us a free evening.")}
@@ -125,34 +119,13 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section
-          id="how-it-works"
-          className="border-y border-[var(--border)] bg-[var(--bg-raised)]/50"
-        >
-          <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
-            <div className="grid gap-10 lg:grid-cols-[0.58fr_1.42fr] lg:items-center lg:gap-16">
-              <div className="max-w-sm">
-                <div className="docket-label text-[var(--accent-text)]">
-                  {t("The route")}
-                </div>
-                <h2 className="mt-4 text-[clamp(2.25rem,5vw,4.2rem)] leading-[0.98]">
-                  {t("Less matching.")}
-                  <br />
-                  {t("More meeting.")}
-                </h2>
-              </div>
-              <JourneyMap />
-            </div>
-          </div>
-        </section>
-
         <section>
           <div className="mx-auto grid max-w-6xl items-start gap-12 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
             <div className="lg:sticky lg:top-28">
               <div className="docket-label text-[var(--accent-text)]">
                 {t("What arrives")}
               </div>
-              <h2 className="mt-4 text-[clamp(2.2rem,5vw,4rem)] leading-[0.98]">
+              <h2 className="display-heading mt-4 text-[clamp(2.2rem,5vw,4rem)]">
                 {t("A plan,")}
                 <br />
                 {t("not a profile.")}
@@ -182,71 +155,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="romance-night overflow-hidden text-sand-50">
-          <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
-            <div>
-              <div className="docket-label text-ember-300">
-                {t("Private by construction")}
-              </div>
-              <h2 className="mt-4 text-[clamp(2.3rem,5vw,4.4rem)] leading-[0.98]">
-                {t("The date arrives.")}
-                <br />
-                {t("Your details don't.")}
-              </h2>
-              <div
-                className="mt-8 flex max-w-sm items-center gap-3"
-                aria-hidden
-              >
-                <MiniInvite label="A" />
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-ember-300/35 bg-ember-300/10 text-ember-200">
-                  <VisualIcon kind="lock" />
-                </span>
-                <MiniInvite label="B" />
-              </div>
-            </div>
-
-            <div>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                {[
-                  t("Email address"),
-                  t("Phone number"),
-                  t("Home address"),
-                  t("Exact location"),
-                  t("Full name"),
-                  t("Social handles"),
-                ].map((item, index) => (
-                  <div
-                    key={item}
-                    className="flex min-h-20 flex-col justify-between rounded-2xl border border-sand-500/25 bg-white/[0.035] p-3.5"
-                  >
-                    <span className="flex items-center justify-between text-ember-300">
-                      <VisualIcon kind="lock" />
-                      <span className="font-mono text-[9px] text-sand-500">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                    </span>
-                    <span className="mt-3 text-[12px] font-semibold text-sand-200">
-                      {item}
-                    </span>
-                    <span className="sr-only">{t("Not shared")}</span>
-                  </div>
-                ))}
-              </div>
-              <p className="border-t border-sand-500/30 py-5 text-[12px] leading-relaxed text-sand-400">
-                {t(
-                  "DateDrop is 18+. We do not verify identity. Read exactly what we do and don't do in the",
-                )}{" "}
-                <Link
-                  to="/safety"
-                  className="text-sand-200 underline underline-offset-4"
-                >
-                  {t("Safety Center")}
-                </Link>
-                .
-              </p>
-            </div>
-          </div>
-        </section>
+        <ConciergeFlow />
 
         <section className="px-5 py-10 sm:px-8 sm:py-14">
           <div className="soft-section mx-auto grid max-w-6xl items-center gap-8 px-6 py-10 sm:px-10 sm:py-12 md:grid-cols-[1fr_auto]">
@@ -254,7 +163,7 @@ export default function LandingPage() {
               <div className="docket-label text-[var(--accent-text)]">
                 {t("Your invitation is open")}
               </div>
-              <h2 className="mt-3 text-[clamp(2.15rem,5vw,3.8rem)] leading-none">
+              <h2 className="display-heading mt-3 text-[clamp(2.15rem,5vw,3.8rem)]">
                 {t("When are you free?")}
               </h2>
               <p className="mt-4 text-[15px] text-soft">
@@ -298,42 +207,209 @@ export default function LandingPage() {
   );
 }
 
-function JourneyMap() {
+function ConciergeFlow() {
   const { t } = useI18n();
 
   return (
-    <ol className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-      {DATE_DROP_WAY.map((step) => (
-        <li
-          key={step.number}
-          className="relative min-h-36 overflow-hidden rounded-[1.6rem] border border-[var(--border)] bg-[var(--bg-raised)] p-3.5 shadow-[var(--shadow-soft)] sm:p-4"
-        >
-          <span className="love-doodle h-11 w-11 sm:h-12 sm:w-12">
-            <VisualIcon kind={step.icon} />
-          </span>
-          <span className="docket-label absolute right-4 top-4 text-[var(--accent-text)]">
-            {step.number}
-          </span>
-          <span className="mt-5 block text-[13px] font-bold leading-snug sm:mt-7 sm:text-[14px]">
-            {t(step.label)}
-          </span>
-        </li>
-      ))}
-    </ol>
+    <section
+      id="how-it-works"
+      className="romance-night overflow-hidden text-sand-50"
+    >
+      <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
+        <div className="max-w-3xl">
+          <div className="docket-label text-ember-300">{t("How it works")}</div>
+          <h2 className="display-heading mt-4 text-[clamp(2.35rem,5vw,4.4rem)]">
+            {t("Your free time is enough to begin.")}
+          </h2>
+        </div>
+
+        <div className="mt-12 grid gap-3 md:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] md:items-stretch">
+          <FlowStage
+            number="01"
+            icon="calendar"
+            title={t("Say when you're free")}
+          >
+            <div className="space-y-2.5">
+              <AvailabilityWindow label="A" time="18:00—22:30" />
+              <AvailabilityWindow label="B" time="18:30—22:00" />
+            </div>
+          </FlowStage>
+
+          <FlowArrow />
+
+          <FlowStage
+            number="02"
+            icon="spark"
+            title={t("Finding the person and the place")}
+          >
+            <div className="flex flex-1 flex-col items-center justify-center gap-3">
+              <span className="relative flex h-20 w-20 items-center justify-center rounded-full border border-ember-300/35 bg-ember-300/10">
+                <span className="absolute -right-2 -top-2 text-ember-300">
+                  ✦
+                </span>
+                <Logo className="h-9 w-9" />
+              </span>
+              <div className="flex flex-wrap justify-center gap-1.5 text-[10px] font-bold text-sand-300">
+                <span className="rounded-full border border-sand-500/30 px-2.5 py-1">
+                  {t("Match")}
+                </span>
+                <span className="rounded-full border border-sand-500/30 px-2.5 py-1">
+                  {t("Places researched on the live web")}
+                </span>
+                <span className="rounded-full border border-sand-500/30 px-2.5 py-1">
+                  {t("Constraints and budget respected")}
+                </span>
+              </div>
+            </div>
+          </FlowStage>
+
+          <FlowArrow />
+
+          <FlowStage
+            number="03"
+            icon="reply"
+            title={t("Both answer privately")}
+          >
+            <div className="space-y-2.5">
+              <PrivateReply label="A" accept={t("Accept")} />
+              <PrivateReply label="B" accept={t("Accept")} />
+            </div>
+          </FlowStage>
+
+          <FlowArrow />
+
+          <FlowStage number="04" icon="meet" title={t("Meet in public")}>
+            <div className="overflow-hidden rounded-2xl border border-ember-300/25 bg-ember-300/[0.07]">
+              <div className="flex items-center justify-between border-b border-ember-300/20 px-3 py-2.5">
+                <span className="docket-label text-[9px] text-ember-300">
+                  {t("New DateDrop")}
+                </span>
+                <span className="font-mono text-[9px] text-sand-400">
+                  DD—001
+                </span>
+              </div>
+              <div className="grid grid-cols-[3.4rem_1fr] gap-3 p-3">
+                <div className="text-center">
+                  <div className="docket-label text-[9px] text-ember-300">
+                    {t("Sat")}
+                  </div>
+                  <div className="mt-1 font-display text-[28px]">29</div>
+                </div>
+                <div className="border-l border-sand-500/25 pl-3">
+                  <div className="text-[16px] font-bold">19:00</div>
+                  <div className="mt-1 text-[11px] font-semibold text-sand-200">
+                    Charmandre · Seongsu
+                  </div>
+                  <div className="mt-1 text-[10px] text-sand-400">
+                    ≈ ₩45,000 / {t("person")}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </FlowStage>
+        </div>
+
+        <div className="mt-6 flex flex-wrap gap-2 text-[11px] font-bold text-sand-300">
+          {[
+            ["lock", t("No contact details exchanged")],
+            ["meet", t("Public places only")],
+            ["source", t("Every venue has a live source")],
+          ].map(([icon, label]) => (
+            <span
+              key={label}
+              className="flex items-center gap-2 rounded-full border border-sand-500/30 bg-white/[0.035] px-3 py-2"
+            >
+              <VisualIcon kind={icon as VisualIconKind} />
+              {label}
+            </span>
+          ))}
+          <Link
+            to="/safety"
+            className="ml-auto rounded-full px-3 py-2 text-sand-400 underline decoration-sand-500 underline-offset-4 hover:text-sand-200"
+          >
+            18+ · {t("No identity verification")} · {t("Safety Center")}
+          </Link>
+        </div>
+      </div>
+    </section>
   );
 }
 
-function MiniInvite({ label }: { label: string }) {
+function FlowStage({
+  number,
+  icon,
+  title,
+  children,
+}: {
+  number: string;
+  icon: VisualIconKind;
+  title: string;
+  children: ReactNode;
+}) {
   return (
-    <span className="flex min-w-0 flex-1 items-center gap-2.5 rounded-2xl border border-sand-500/30 bg-white/[0.035] p-3">
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ember-300/15 text-[12px] font-bold text-ember-200">
+    <article className="flex min-h-64 flex-col rounded-[1.65rem] border border-sand-500/25 bg-white/[0.045] p-4 shadow-[0_22px_50px_-38px_rgb(0_0_0/0.75)]">
+      <div className="flex items-center justify-between text-ember-300">
+        <span className="flex h-10 w-10 items-center justify-center rounded-full border border-ember-300/30 bg-ember-300/10">
+          <VisualIcon kind={icon} />
+        </span>
+        <span className="font-mono text-[10px]">{number}</span>
+      </div>
+      <h3 className="mt-5 min-h-12 text-[15px] font-bold text-sand-50">
+        {title}
+      </h3>
+      <div className="mt-4 flex flex-1 flex-col justify-end">{children}</div>
+    </article>
+  );
+}
+
+function FlowArrow() {
+  return (
+    <div
+      className="flex items-center justify-center py-1 text-ember-300 md:px-0.5 md:py-0"
+      aria-hidden
+    >
+      <span className="flex h-9 w-9 rotate-90 items-center justify-center rounded-full border border-ember-300/30 bg-ember-300/10 font-mono text-[15px] md:rotate-0">
+        →
+      </span>
+    </div>
+  );
+}
+
+function AvailabilityWindow({ label, time }: { label: string; time: string }) {
+  const { t } = useI18n();
+
+  return (
+    <div className="flex items-center gap-2.5 rounded-2xl border border-sand-500/25 bg-white/[0.035] p-2.5">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ember-300/15 text-[11px] font-bold text-ember-200">
         {label}
       </span>
-      <span className="min-w-0 flex-1 space-y-1.5">
-        <span className="block h-1.5 w-full rounded-full bg-sand-300/25" />
-        <span className="block h-1.5 w-2/3 rounded-full bg-sand-300/15" />
+      <span className="min-w-0">
+        <span className="docket-label block text-[8px] text-sand-400">
+          {t("Window submitted")}
+        </span>
+        <span className="mt-1 block font-mono text-[11px] text-sand-100">
+          {t("Sat")} · {time}
+        </span>
       </span>
-    </span>
+    </div>
+  );
+}
+
+function PrivateReply({ label, accept }: { label: string; accept: string }) {
+  return (
+    <div className="rounded-2xl border border-sand-500/25 bg-white/[0.035] p-2.5">
+      <div className="flex items-center justify-between">
+        <span className="flex items-center gap-2 text-[11px] font-bold text-sand-200">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ember-300/15 text-ember-200">
+            {label}
+          </span>
+          <VisualIcon kind="lock" />
+        </span>
+        <span className="rounded-full bg-ember-500 px-2.5 py-1 text-[9px] font-bold text-white">
+          {accept} ✓
+        </span>
+      </div>
+    </div>
   );
 }
 

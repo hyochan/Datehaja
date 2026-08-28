@@ -76,10 +76,20 @@ function ScrollToTop() {
 
   useEffect(() => {
     if (hash) {
-      requestAnimationFrame(() => {
-        document.getElementById(hash.slice(1))?.scrollIntoView();
-      });
-      return;
+      let frame = 0;
+      let attempts = 0;
+
+      const scrollToAnchor = () => {
+        const target = document.getElementById(hash.slice(1));
+        if (target) {
+          target.scrollIntoView();
+          return;
+        }
+        if (attempts++ < 30) frame = requestAnimationFrame(scrollToAnchor);
+      };
+
+      frame = requestAnimationFrame(scrollToAnchor);
+      return () => cancelAnimationFrame(frame);
     }
 
     window.scrollTo(0, 0);
