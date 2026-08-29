@@ -9,6 +9,7 @@ import {
 import { api } from "@convex/_generated/api";
 import { AppShell } from "./components/layout/AppShell";
 import { Logo } from "./components/layout/Logo";
+import { Wordmark } from "./components/layout/Wordmark";
 import { LocaleSwitcher } from "./components/layout/LocaleSwitcher";
 import { Spinner } from "./components/ui/primitives";
 import { useI18n } from "./i18n";
@@ -28,6 +29,11 @@ const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 const SafetyPage = lazy(() => import("./pages/SafetyPage"));
 const DemoPage = lazy(() => import("./pages/DemoPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
+const TermsPage = lazy(() => import("./pages/TermsPage"));
+const CommunityGuidelinesPage = lazy(
+  () => import("./pages/CommunityGuidelinesPage"),
+);
+const LegalConsentPage = lazy(() => import("./pages/LegalConsentPage"));
 
 export default function App() {
   return (
@@ -56,6 +62,22 @@ export default function App() {
             element={
               <PublicPage>
                 <SafetyPage />
+              </PublicPage>
+            }
+          />
+          <Route
+            path="/terms"
+            element={
+              <PublicPage>
+                <TermsPage />
+              </PublicPage>
+            }
+          />
+          <Route
+            path="/community-guidelines"
+            element={
+              <PublicPage>
+                <CommunityGuidelinesPage />
               </PublicPage>
             }
           />
@@ -105,7 +127,28 @@ function AuthedRoutes() {
   if (state === undefined) return <FullPageLoader />;
 
   const onboarding = location.pathname.startsWith("/onboarding");
-  if (!state.complete && !onboarding) {
+  const legalAcceptance = location.pathname === "/legal/accept";
+  const readableWithoutConsent = [
+    "/terms",
+    "/privacy",
+    "/community-guidelines",
+    "/safety",
+  ].includes(location.pathname);
+
+  if (!state.legalAccepted && !legalAcceptance && !readableWithoutConsent) {
+    return <Navigate to="/legal/accept" replace />;
+  }
+  if (state.legalAccepted && legalAcceptance) {
+    return (
+      <Navigate to={state.complete ? "/dashboard" : "/onboarding"} replace />
+    );
+  }
+  if (
+    !state.complete &&
+    !onboarding &&
+    !legalAcceptance &&
+    !readableWithoutConsent
+  ) {
     return <Navigate to="/onboarding" replace />;
   }
   if (state.complete && onboarding) {
@@ -115,6 +158,7 @@ function AuthedRoutes() {
   return (
     <Suspense fallback={<FullPageLoader />}>
       <Routes>
+        <Route path="/legal/accept" element={<LegalConsentPage />} />
         <Route path="/onboarding" element={<OnboardingPage />} />
         <Route
           path="/"
@@ -216,6 +260,22 @@ function AuthedRoutes() {
           }
         />
         <Route
+          path="/terms"
+          element={
+            <AppShell>
+              <TermsPage />
+            </AppShell>
+          }
+        />
+        <Route
+          path="/community-guidelines"
+          element={
+            <AppShell>
+              <CommunityGuidelinesPage />
+            </AppShell>
+          }
+        />
+        <Route
           path="*"
           element={
             <AppShell>
@@ -243,9 +303,7 @@ function PublicPage({ children }: { children: React.ReactNode }) {
             >
               <Logo className="h-8 w-8" />
               <span>
-                <span className="brand-wordmark block text-[20px] leading-none">
-                  Datehaja
-                </span>
+                <Wordmark className="text-[22px]" />
                 <span className="docket-label mt-1 block text-[8px] text-muted">
                   {t("Public record")}
                 </span>

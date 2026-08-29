@@ -40,7 +40,7 @@ import {
 } from "./lib/time";
 import { firstNameOnly, redactContactInfo } from "./lib/privacy";
 import { truncate } from "./lib/text";
-import { formatMoney } from "./lib/catalog";
+import { findNeighborhood, formatMoney } from "./lib/catalog";
 import { buildDatePlan, rankCandidatesWithAI, type PersonBrief } from "./ai";
 import { buildFallbackPlan } from "./lib/fallbackPlan";
 import { researchDateOptions } from "./research";
@@ -72,7 +72,8 @@ export const requestDrop = mutation({
       .withIndex("by_user", (q) => q.eq("userId", userId))
       .unique();
     if (!profile) throw new Error("Finish your profile first.");
-    if (!profile.onboardingComplete) throw new Error("Finish onboarding first.");
+    if (!profile.onboardingComplete)
+      throw new Error("Finish onboarding first.");
     if (profile.status !== "active") {
       throw new Error("Matching is paused. Turn it back on in Settings.");
     }
@@ -132,7 +133,9 @@ export const requestDrop = mutation({
       startedAt: now,
     });
 
-    await ctx.scheduler.runAfter(0, internal.matching.runPipeline, { matchingRunId });
+    await ctx.scheduler.runAfter(0, internal.matching.runPipeline, {
+      matchingRunId,
+    });
     await recordAudit(ctx, {
       action: "matching.requested",
       actorUserId: userId,
@@ -199,7 +202,11 @@ export const stageFilterAndScore = internalMutation({
     const run = await ctx.db.get("matchingRuns", args.matchingRunId);
     if (!run) return { ok: false, reason: "run_missing", candidates: [] };
 
-    const seekerParty = await loadParty(ctx, run.initiatorUserId, run.availabilityId);
+    const seekerParty = await loadParty(
+      ctx,
+      run.initiatorUserId,
+      run.availabilityId,
+    );
     if (!seekerParty) {
       await ctx.db.patch("matchingRuns", run._id, {
         status: "failed",
@@ -211,6 +218,10 @@ export const stageFilterAndScore = internalMutation({
     }
 
     const blockedPairs = await loadBlockKeys(ctx, run.initiatorUserId);
+    const declinedCounterparts = await loadDeclinedCounterparts(
+      ctx,
+      run.initiatorUserId,
+    );
 
     // Pool: everyone active in the same city. Indexed, and bounded.
     const pool = await ctx.db
@@ -233,7 +244,10 @@ export const stageFilterAndScore = internalMutation({
       );
       if (!candidateParty) continue;
 
-      const verdict = hardFilter(seekerParty, candidateParty, { blockedPairs });
+      const verdict = hardFilter(seekerParty, candidateParty, {
+        blockedPairs,
+        excludedUserIds: declinedCounterparts,
+      });
       if (!verdict.ok) continue;
       hardPassCount += 1;
 
@@ -305,6 +319,76 @@ async function loadBlockKeys(
   return out;
 }
 
+/** A private "no" after a real date is respected without revealing who said it. */
+async function loadDeclinedCounterparts(
+  ctx: MutationCtx | QueryCtx,
+  userId: Id<"users">,
+): Promise<Set<string>> {
+  const declined = new Set<string>();
+  const feedback = await ctx.db
+    .query("dateFeedback")
+    .withIndex("by_user", (q) => q.eq("userId", userId))
+    .order("desc")
+    .take(100);
+  for (const row of feedback) {
+    if (row.meetAgain !== "no") continue;
+    if (row.reviewedUserId) {
+      declined.add(row.reviewedUserId as string);
+      continue;
+    }
+    const participants = await ctx.db
+      .query("dateDropParticipants")
+      .withIndex("by_drop", (q) => q.eq("dropId", row.dropId))
+      .take(10);
+    const other = participants.find((p) => p.userId !== userId);
+    if (other) declined.add(other.userId as string);
+  }
+  const inbound = await ctx.db
+    .query("dateFeedback")
+    .withIndex("by_reviewed_user", (q) => q.eq("reviewedUserId", userId))
+    .order("desc")
+    .take(100);
+  for (const row of inbound) {
+    if (row.meetAgain === "no") declined.add(row.userId as string);
+  }
+  return declined;
+}
+
+async function loadTrustSummary(
+  ctx: MutationCtx | QueryCtx,
+  userId: Id<"users">,
+): Promise<{ reviewCount: number; score: number }> {
+  const reviews = await ctx.db
+    .query("dateFeedback")
+    .withIndex("by_reviewed_user", (q) => q.eq("reviewedUserId", userId))
+    .order("desc")
+    .take(50);
+  if (reviews.length === 0) return { reviewCount: 0, score: 0.8 };
+
+  const values: number[] = [];
+  for (const review of reviews) {
+    if (review.outcome === "went") values.push(1);
+    if (review.outcome === "no_show") values.push(0);
+    if (review.profileAccuracy === "accurate") values.push(1);
+    if (review.profileAccuracy === "mostly_accurate") values.push(0.7);
+    if (review.profileAccuracy === "different") values.push(0.15);
+    if (review.respectful === "yes") values.push(1);
+    if (review.respectful === "mostly") values.push(0.7);
+    if (review.respectful === "no") values.push(0);
+    if (review.safety === "safe") values.push(1);
+    if (review.safety === "uncomfortable") values.push(0.35);
+    if (review.safety === "unsafe") values.push(0);
+  }
+
+  if (values.length === 0) return { reviewCount: reviews.length, score: 0.8 };
+  // A conservative prior prevents one subjective review from defining a person.
+  const priorWeight = 6;
+  const score =
+    (priorWeight * 0.8 + values.reduce((sum, value) => sum + value, 0)) /
+    (priorWeight + values.length);
+  return { reviewCount: reviews.length, score };
+}
+
 async function loadParty(
   ctx: MutationCtx | QueryCtx,
   userId: Id<"users">,
@@ -321,13 +405,18 @@ async function loadParty(
     .unique();
   if (!preferences) return null;
 
-  const window = availabilityId ? await ctx.db.get("availability", availabilityId) : null;
+  const window = availabilityId
+    ? await ctx.db.get("availability", availabilityId)
+    : null;
   if (!window || window.status !== "open") return null;
 
+  const trust = await loadTrustSummary(ctx, userId);
+
   return {
-    profile: toMatchProfile(profile),
+    profile: toMatchProfile(profile, trust),
     preferences: toMatchPreferences(preferences),
     window: { startMs: window.startMs, endMs: window.endMs },
+    dateIdea: window.note,
     availabilityId: window._id,
   };
 }
@@ -356,15 +445,24 @@ async function loadPartyForWindow(
   );
   if (!match) return null;
 
+  const trust = await loadTrustSummary(ctx, profile.userId);
+
   return {
-    profile: toMatchProfile(profile),
+    profile: toMatchProfile(profile, trust),
     preferences: toMatchPreferences(preferences),
     window: { startMs: match.startMs, endMs: match.endMs },
+    dateIdea: match.note,
     availabilityId: match._id,
   };
 }
 
-function toMatchProfile(p: Doc<"profiles">) {
+function toMatchProfile(
+  p: Doc<"profiles">,
+  trust: { reviewCount: number; score: number } = {
+    reviewCount: 0,
+    score: 0.8,
+  },
+) {
   return {
     userId: p.userId as string,
     displayName: p.displayName,
@@ -378,11 +476,15 @@ function toMatchProfile(p: Doc<"profiles">) {
     approxLat: p.approxLat,
     approxLng: p.approxLng,
     timezone: p.timezone,
+    bio: p.bio ?? "",
     interests: [...p.interests],
     hobbies: [...p.hobbies],
     languages: [...p.languages],
     socialEnergy: p.socialEnergy,
     firstDateVibe: [...p.firstDateVibe],
+    personalityTraits: [...(p.personalityTraits ?? [])],
+    styleTags: [...(p.styleTags ?? [])],
+    trust,
     lifestyle: { smokes: p.lifestyle.smokes, drinks: p.lifestyle.drinks },
     status: p.status,
     moderationStatus: p.moderationStatus,
@@ -398,6 +500,8 @@ function toMatchPreferences(p: Doc<"preferences">) {
     ageHard: p.ageHard,
     maxDistanceKm: p.maxDistanceKm,
     distanceHard: p.distanceHard,
+    preferredAreas: [...(p.preferredAreas ?? [])],
+    areaHard: p.areaHard ?? false,
     relationshipIntent: p.relationshipIntent,
     intentHard: p.intentHard,
     smoking: p.smoking,
@@ -405,6 +509,10 @@ function toMatchPreferences(p: Doc<"preferences">) {
     alcohol: p.alcohol,
     alcoholHard: p.alcoholHard,
     preferredDateTypes: [...p.preferredDateTypes],
+    preferredPersonalityTraits: [...(p.preferredPersonalityTraits ?? [])],
+    personalityPreference: p.personalityPreference ?? "no_preference",
+    preferredStyleTags: [...(p.preferredStyleTags ?? [])],
+    stylePreference: p.stylePreference ?? "no_preference",
     budgetMinPerPerson: p.budgetMinPerPerson,
     budgetMaxPerPerson: p.budgetMaxPerPerson,
     currency: p.currency,
@@ -428,10 +536,13 @@ function toBrief(party: Party): PersonBrief {
     area: p.neighborhood,
     city: p.city,
     occupation: null,
-    bio: "",
+    bio: p.bio ?? "",
     interests: [...p.interests, ...p.hobbies].slice(0, 8),
+    personalityTraits: [...(p.personalityTraits ?? [])],
+    styleTags: [...(p.styleTags ?? [])],
     socialEnergy: p.socialEnergy,
     firstDateVibe: [...p.firstDateVibe],
+    dateIdea: party.dateIdea ?? null,
     languages: [...p.languages],
     relationshipIntent: prefs.relationshipIntent,
     preferredDateTypes: [...prefs.preferredDateTypes],
@@ -499,7 +610,9 @@ export const applyRanking = internalMutation({
       return null;
     }
 
-    await ctx.db.patch("candidateScores", winner.row._id, { stage: "selected" });
+    await ctx.db.patch("candidateScores", winner.row._id, {
+      stage: "selected",
+    });
     for (const other of blended.slice(1)) {
       if (other.row.stage !== "ai_ranked") continue;
       await ctx.db.patch("candidateScores", other.row._id, {
@@ -543,7 +656,11 @@ export const getPlanningContext = internalQuery({
     const run = await ctx.db.get("matchingRuns", args.matchingRunId);
     if (!run) return null;
 
-    const seeker = await loadParty(ctx, run.initiatorUserId, run.availabilityId);
+    const seeker = await loadParty(
+      ctx,
+      run.initiatorUserId,
+      run.availabilityId,
+    );
     if (!seeker) return null;
 
     const partnerProfile = await ctx.db
@@ -552,7 +669,11 @@ export const getPlanningContext = internalQuery({
       .unique();
     if (!partnerProfile) return null;
 
-    const partner = await loadPartyForWindow(ctx, partnerProfile, seeker.window);
+    const partner = await loadPartyForWindow(
+      ctx,
+      partnerProfile,
+      seeker.window,
+    );
     if (!partner) return null;
 
     return { seeker, partner };
@@ -566,9 +687,12 @@ export const runPipeline = internalAction({
   returns: v.null(),
   handler: async (ctx, args) => {
     try {
-      const filtered = (await ctx.runMutation(internal.matching.stageFilterAndScore, {
-        matchingRunId: args.matchingRunId,
-      })) as FilterOutcome;
+      const filtered = (await ctx.runMutation(
+        internal.matching.stageFilterAndScore,
+        {
+          matchingRunId: args.matchingRunId,
+        },
+      )) as FilterOutcome;
 
       if (!filtered.ok || !filtered.seeker || !filtered.seekerUserId) {
         if (filtered.reason === "no_candidates" && filtered.seekerUserId) {
@@ -605,15 +729,19 @@ export const runPipeline = internalAction({
 
       if (!selection) return null;
 
-      const context = (await ctx.runQuery(internal.matching.getPlanningContext, {
-        matchingRunId: args.matchingRunId,
-        partnerUserId: selection.partnerUserId,
-      })) as { seeker: Party; partner: Party } | null;
+      const context = (await ctx.runQuery(
+        internal.matching.getPlanningContext,
+        {
+          matchingRunId: args.matchingRunId,
+          partnerUserId: selection.partnerUserId,
+        },
+      )) as { seeker: Party; partner: Party } | null;
 
       if (!context) {
         await ctx.runMutation(internal.matching.failRun, {
           matchingRunId: args.matchingRunId,
-          error: "The other person's availability changed while we were planning.",
+          error:
+            "The other person's availability changed while we were planning.",
         });
         return null;
       }
@@ -633,7 +761,8 @@ export const runPipeline = internalAction({
       if (!built) {
         await ctx.runMutation(internal.matching.failRun, {
           matchingRunId: args.matchingRunId,
-          error: "We couldn't find a place worth sending. We'll try again shortly.",
+          error:
+            "We couldn't find a place worth sending. We'll try again shortly.",
         });
         return null;
       }
@@ -643,12 +772,15 @@ export const runPipeline = internalAction({
         stage: "inviting",
       });
 
-      const dropId = (await ctx.runMutation(internal.matching.createDropFromPlan, {
-        matchingRunId: args.matchingRunId,
-        partnerUserId: selection.partnerUserId,
-        candidateScoreId: selection.candidateScoreId,
-        ...built.dropFields,
-      })) as Id<"dateDrops"> | null;
+      const dropId = (await ctx.runMutation(
+        internal.matching.createDropFromPlan,
+        {
+          matchingRunId: args.matchingRunId,
+          partnerUserId: selection.partnerUserId,
+          candidateScoreId: selection.candidateScoreId,
+          ...built.dropFields,
+        },
+      )) as Id<"dateDrops"> | null;
 
       if (!dropId) return null;
 
@@ -681,7 +813,9 @@ export const setStage = internalMutation({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    await ctx.db.patch("matchingRuns", args.matchingRunId, { stage: args.stage });
+    await ctx.db.patch("matchingRuns", args.matchingRunId, {
+      stage: args.stage,
+    });
     return null;
   },
 });
@@ -765,7 +899,9 @@ async function planDate(
     args.forcedWindow ?? intersectWindows(seeker.window, partner.window);
   if (!overlap) return null;
 
-  const availableMinutes = Math.round((overlap.endMs - overlap.startMs) / 60_000);
+  const availableMinutes = Math.round(
+    (overlap.endMs - overlap.startMs) / 60_000,
+  );
   if (availableMinutes < MIN_DATE_MINUTES) return null;
 
   const mid = midpoint(
@@ -774,15 +910,8 @@ async function planDate(
     partner.profile.approxLat,
     partner.profile.approxLng,
   );
-  // The area label stays human: whichever of the two neighbourhoods is closer
-  // to the midpoint is where we look.
-  const area =
-    Math.abs(seeker.profile.approxLat - mid.lat) +
-      Math.abs(seeker.profile.approxLng - mid.lng) <=
-    Math.abs(partner.profile.approxLat - mid.lat) +
-      Math.abs(partner.profile.approxLng - mid.lng)
-      ? seeker.profile.neighborhood
-      : partner.profile.neighborhood;
+  const meetingArea = chooseMeetingArea(seeker, partner, mid);
+  const area = meetingArea.name;
 
   const budgetLow = Math.max(
     seeker.preferences.budgetMinPerPerson,
@@ -835,9 +964,13 @@ async function planDate(
       currency: seeker.preferences.currency,
       interests: args.signals.sharedInterests.slice(0, 4),
       dateTypes,
+      dateIdea: seeker.dateIdea,
       vibe,
       dietary: [
-        ...new Set([...seeker.preferences.dietary, ...partner.preferences.dietary]),
+        ...new Set([
+          ...seeker.preferences.dietary,
+          ...partner.preferences.dietary,
+        ]),
       ],
       accessibility: [
         ...new Set([
@@ -852,9 +985,15 @@ async function planDate(
 
   if (research.venueCount === 0) return null;
 
-  const venues = (await ctx.runQuery(internal.research.getVenues, {
+  const researchedVenues = (await ctx.runQuery(internal.research.getVenues, {
     researchRunId: research.researchRunId,
   })) as Array<Doc<"venues">>;
+  const strictArea =
+    seeker.preferences.areaHard === true ||
+    partner.preferences.areaHard === true;
+  const venues = strictArea
+    ? researchedVenues.filter((venue) => venueMatchesArea(venue, area))
+    : researchedVenues;
 
   if (venues.length === 0) return null;
 
@@ -872,6 +1011,7 @@ async function planDate(
     personB: toBrief(partner),
     sharedInterests: args.signals.sharedInterests,
     sharedDateTypes: dateTypes,
+    dateIdea: seeker.dateIdea,
     venues: venues.map((venue) => ({
       venueId: venue._id,
       name: venue.name,
@@ -900,9 +1040,13 @@ async function planDate(
       availableMinutes: Math.min(availableMinutes, 180),
       sharedInterests: args.signals.sharedInterests,
       sharedDateTypes: dateTypes,
+      dateIdea: seeker.dateIdea,
       atmosphere: vibe,
       dietary: [
-        ...new Set([...seeker.preferences.dietary, ...partner.preferences.dietary]),
+        ...new Set([
+          ...seeker.preferences.dietary,
+          ...partner.preferences.dietary,
+        ]),
       ],
       aName: seeker.profile.displayName,
       bName: partner.profile.displayName,
@@ -937,7 +1081,10 @@ async function planDate(
 
   const totalMinutes = Math.max(
     plan.estimatedDurationMin,
-    itinerary.reduce((max, s) => Math.max(max, s.startOffsetMin + s.durationMin), 0),
+    itinerary.reduce(
+      (max, s) => Math.max(max, s.startOffsetMin + s.durationMin),
+      0,
+    ),
   );
 
   return {
@@ -945,8 +1092,8 @@ async function planDate(
       countryCode: seeker.profile.countryCode,
       city: seeker.profile.city,
       area,
-      approxLat: mid.lat,
-      approxLng: mid.lng,
+      approxLat: meetingArea.lat,
+      approxLng: meetingArea.lng,
       timezone: seeker.profile.timezone,
       startMs: dateStart,
       endMs: Math.min(overlap.endMs, dateStart + totalMinutes * 60_000),
@@ -971,6 +1118,69 @@ async function planDate(
   };
 }
 
+function venueMatchesArea(venue: Doc<"venues">, area: string): boolean {
+  const normalise = (value: string) =>
+    value.toLocaleLowerCase().replace(/[\s._-]+/g, "");
+  const target = normalise(area);
+  return [venue.district, venue.address].some((value) =>
+    normalise(value).includes(target),
+  );
+}
+
+function chooseMeetingArea(
+  seeker: Party,
+  partner: Party,
+  mid: { lat: number; lng: number },
+): { name: string; lat: number; lng: number } {
+  const seekerAreas = seeker.preferences.preferredAreas ?? [];
+  const partnerAreas = partner.preferences.preferredAreas ?? [];
+  const sharedAreas = intersect(seekerAreas, partnerAreas);
+
+  let candidates: string[];
+  if (sharedAreas.length > 0) {
+    candidates = sharedAreas;
+  } else if (seeker.preferences.areaHard && seekerAreas.length > 0) {
+    candidates = seekerAreas;
+  } else if (partner.preferences.areaHard && partnerAreas.length > 0) {
+    candidates = partnerAreas;
+  } else if (seekerAreas.length === 0) {
+    candidates = partnerAreas;
+  } else if (partnerAreas.length === 0) {
+    candidates = seekerAreas;
+  } else {
+    candidates = [...new Set([...seekerAreas, ...partnerAreas])];
+  }
+
+  const supported = candidates
+    .map((name) => findNeighborhood(seeker.profile.city, name))
+    .filter((area): area is NonNullable<typeof area> => area !== undefined)
+    .sort(
+      (a, b) =>
+        Math.abs(a.lat - mid.lat) +
+        Math.abs(a.lng - mid.lng) -
+        (Math.abs(b.lat - mid.lat) + Math.abs(b.lng - mid.lng)),
+    );
+  if (supported[0]) return supported[0];
+
+  // Legacy profiles without meeting-area preferences retain midpoint behavior.
+  const useSeeker =
+    Math.abs(seeker.profile.approxLat - mid.lat) +
+      Math.abs(seeker.profile.approxLng - mid.lng) <=
+    Math.abs(partner.profile.approxLat - mid.lat) +
+      Math.abs(partner.profile.approxLng - mid.lng);
+  return useSeeker
+    ? {
+        name: seeker.profile.neighborhood,
+        lat: seeker.profile.approxLat,
+        lng: seeker.profile.approxLng,
+      }
+    : {
+        name: partner.profile.neighborhood,
+        lat: partner.profile.approxLat,
+        lng: partner.profile.approxLng,
+      };
+}
+
 function clampBudget(value: number, low: number, high: number): number {
   if (!Number.isFinite(value)) return Math.round((low + high) / 2);
   return Math.max(low, Math.min(high * 1.15, Math.round(value)));
@@ -990,7 +1200,11 @@ const itineraryValidator = v.array(
     note: v.string(),
     mapsQuery: v.string(),
     sourceUrl: v.optional(v.string()),
-    confidence: v.union(v.literal("high"), v.literal("medium"), v.literal("low")),
+    confidence: v.union(
+      v.literal("high"),
+      v.literal("medium"),
+      v.literal("low"),
+    ),
   }),
 );
 
@@ -1233,7 +1447,14 @@ export const getReplacementContext = internalQuery({
       availabilityId: accepted.availabilityId,
     };
 
-    const excluded = new Set<string>(participants.map((p) => p.userId as string));
+    const excluded = new Set<string>(
+      participants.map((p) => p.userId as string),
+    );
+    const declinedCounterparts = await loadDeclinedCounterparts(
+      ctx,
+      accepted.userId,
+    );
+    for (const userId of declinedCounterparts) excluded.add(userId);
     const blockedPairs = await loadBlockKeys(ctx, accepted.userId);
 
     const pool = await ctx.db
@@ -1303,7 +1524,10 @@ export const getReplacementContext = internalQuery({
  * A replacement candidate inherits an already-generated plan, so their hard
  * constraints are checked against the plan itself before they are considered.
  */
-export function planStillWorks(drop: Doc<"dateDrops">, candidate: Party): boolean {
+export function planStillWorks(
+  drop: Doc<"dateDrops">,
+  candidate: Party,
+): boolean {
   if (
     candidate.preferences.budgetHard &&
     (drop.estimatedCostPerPerson < candidate.preferences.budgetMinPerPerson ||
@@ -1314,7 +1538,9 @@ export function planStillWorks(drop: Doc<"dateDrops">, candidate: Party): boolea
   if (candidate.preferences.currency !== drop.currency) return false;
 
   const categories = drop.itinerary.map((s) => s.category.toLowerCase());
-  const tags = drop.itinerary.map((s) => `${s.note} ${s.venueName}`.toLowerCase());
+  const tags = drop.itinerary.map((s) =>
+    `${s.note} ${s.venueName}`.toLowerCase(),
+  );
 
   // Someone who does not drink should not be sent to a bar as the whole date.
   if (
@@ -1348,10 +1574,13 @@ export const runReplacementPipeline = internalAction({
     if (!matchingRunId) return null;
 
     try {
-      const context = (await ctx.runQuery(internal.matching.getReplacementContext, {
-        dropId: args.dropId,
-        matchingRunId,
-      })) as {
+      const context = (await ctx.runQuery(
+        internal.matching.getReplacementContext,
+        {
+          dropId: args.dropId,
+          matchingRunId,
+        },
+      )) as {
         drop: Doc<"dateDrops">;
         holder: Party;
         holderBrief: PersonBrief;
@@ -1384,7 +1613,10 @@ export const runReplacementPipeline = internalAction({
             signals: c.signals,
           })),
         },
-      )) as Array<{ candidateScoreId: Id<"candidateScores">; userId: Id<"users"> }>;
+      )) as Array<{
+        candidateScoreId: Id<"candidateScores">;
+        userId: Id<"users">;
+      }>;
 
       const byUser = new Map(persisted.map((p) => [p.userId as string, p]));
 
@@ -1409,7 +1641,9 @@ export const runReplacementPipeline = internalAction({
 
       const best =
         ranked.length > 0
-          ? persisted.find((p) => p.candidateScoreId === ranked[0].candidateScoreId)
+          ? persisted.find(
+              (p) => p.candidateScoreId === ranked[0].candidateScoreId,
+            )
           : persisted[0];
       if (!best) {
         await ctx.runMutation(internal.matching.finishReplacementRun, {
@@ -1421,8 +1655,8 @@ export const runReplacementPipeline = internalAction({
 
       const chosen = context.candidates.find((c) => c.userId === best.userId);
       const rationale =
-        ranked.find((r) => r.candidateScoreId === best.candidateScoreId)?.rationale ??
-        context.drop.whyItFits;
+        ranked.find((r) => r.candidateScoreId === best.candidateScoreId)
+          ?.rationale ?? context.drop.whyItFits;
 
       const added = (await ctx.runMutation(
         internal.matching.addReplacementParticipant,
@@ -1434,8 +1668,7 @@ export const runReplacementPipeline = internalAction({
           privateWhyItFits: rationale,
           compatibilityBlurb: context.drop.whyItFits,
           availabilityId: chosen?.party.availabilityId as
-            | Id<"availability">
-            | undefined,
+            Id<"availability"> | undefined,
         },
       )) as boolean;
 
@@ -1478,8 +1711,10 @@ export const persistReplacementScores = internalMutation({
   },
   returns: v.any(),
   handler: async (ctx, args) => {
-    const out: Array<{ candidateScoreId: Id<"candidateScores">; userId: Id<"users"> }> =
-      [];
+    const out: Array<{
+      candidateScoreId: Id<"candidateScores">;
+      userId: Id<"users">;
+    }> = [];
     for (const c of args.candidates) {
       const [userAId, userBId] = pairKey(args.holderUserId, c.userId) as [
         Id<"users">,
@@ -1555,7 +1790,11 @@ export const addReplacementParticipant = internalMutation({
     let heldWindowId: Id<"availability"> | undefined;
     if (args.availabilityId) {
       const window = await ctx.db.get("availability", args.availabilityId);
-      if (!window || window.userId !== args.userId || window.status !== "open") {
+      if (
+        !window ||
+        window.userId !== args.userId ||
+        window.status !== "open"
+      ) {
         return false;
       }
       heldWindowId = window._id;

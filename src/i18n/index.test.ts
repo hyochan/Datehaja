@@ -42,6 +42,9 @@ describe("internationalisation", () => {
       "Text",
       "Brief",
       "Man",
+      "Japan",
+      "Canada",
+      "France",
     ]);
     for (const locale of [
       "ko-KR",

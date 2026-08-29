@@ -5,6 +5,8 @@ node_modules
 dist
 dist-ssr
 *.tsbuildinfo
+playwright-report/
+test-results/
 
 # Environment / secrets — never commit these
 .env

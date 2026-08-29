@@ -1,3 +1,4 @@
+/* oxlint-disable react/only-export-components -- provider and its tiny hooks belong together */
 import {
   createContext,
   useCallback,
@@ -9,7 +10,11 @@ import {
 } from "react";
 import { cx } from "./primitives";
 
-type Toast = { id: number; message: string; tone: "info" | "error" | "success" };
+type Toast = {
+  id: number;
+  message: string;
+  tone: "info" | "error" | "success";
+};
 
 const ToastContext = createContext<{
   show: (message: string, tone?: Toast["tone"]) => void;

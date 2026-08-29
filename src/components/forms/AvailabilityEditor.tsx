@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import type { Id } from "@convex/_generated/dataModel";
@@ -9,6 +9,7 @@ import {
   EmptyState,
   Notice,
   Spinner,
+  TextArea,
   TextInput,
 } from "../ui/primitives";
 import { readableError, useToast } from "../ui/Toast";
@@ -28,9 +29,16 @@ const QUICK_SLOTS = [
   { label: "All day", start: "11:00", end: "22:00" },
 ];
 
+const DATE_IDEA_PRESETS = [
+  "Watch a film",
+  "Take a walk",
+  "See an exhibition",
+  "Hear live music",
+] as const;
+
 /** The primary action of the whole product: say when you're free. */
 export function AvailabilityEditor({ compact }: { compact?: boolean }) {
-  const nowMs = useMemo(() => Date.now(), []);
+  const [nowMs] = useState(() => Date.now());
   const me = useQuery(api.profiles.me);
   const windows = useQuery(api.availability.upcoming, { nowMs });
   const addWindow = useMutation(api.availability.add);
@@ -43,10 +51,13 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
   const zone =
     (me?.profile as { timezone?: string } | null | undefined)?.timezone ??
     localTimezone();
-  const [date, setDate] = useState(() => toDateInputValue(nowMs + 2 * 86_400_000, zone));
+  const [date, setDate] = useState(() =>
+    toDateInputValue(nowMs + 2 * 86_400_000, zone),
+  );
   const [slot, setSlot] = useState(QUICK_SLOTS[0].label);
   const [customStart, setCustomStart] = useState("18:00");
   const [customEnd, setCustomEnd] = useState("22:30");
+  const [dateIdea, setDateIdea] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -57,11 +68,17 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
 
   async function handleAdd() {
     setError(null);
+    if (dateIdea.trim().length < 3) {
+      const message = t("Tell us what you'd like to do on this date.");
+      setError(message);
+      return;
+    }
     const startMs = fromDateAndTime(date, startTime, zone);
     const endMs = fromDateAndTime(date, endTime, zone);
     setBusy(true);
     try {
-      await addWindow({ startMs, endMs });
+      await addWindow({ startMs, endMs, note: dateIdea.trim() });
+      setDateIdea("");
       toast(t("Added to your availability."), "success");
     } catch (e) {
       const message = readableError(e);
@@ -77,10 +94,12 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
 
   return (
     <div className="space-y-4">
-      <Card className="p-5">
+      <Card className="date-composer p-5 sm:p-6">
         <div className="mb-4 flex flex-wrap items-end gap-3">
           <label className="flex-1 min-w-40">
-            <span className="mb-1.5 block text-[13px] font-medium text-soft">{t("Day")}</span>
+            <span className="mb-1.5 block text-[13px] font-medium text-soft">
+              {t("Day")}
+            </span>
             <TextInput
               type="date"
               value={date}
@@ -117,7 +136,9 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
         {usingCustom && (
           <div className="mb-4 flex items-end gap-3">
             <label className="flex-1">
-              <span className="mb-1.5 block text-[13px] font-medium text-soft">{t("From")}</span>
+              <span className="mb-1.5 block text-[13px] font-medium text-soft">
+                {t("From")}
+              </span>
               <TextInput
                 type="time"
                 value={customStart}
@@ -125,7 +146,9 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
               />
             </label>
             <label className="flex-1">
-              <span className="mb-1.5 block text-[13px] font-medium text-soft">{t("Until")}</span>
+              <span className="mb-1.5 block text-[13px] font-medium text-soft">
+                {t("Until")}
+              </span>
               <TextInput
                 type="time"
                 value={customEnd}
@@ -134,6 +157,35 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
             </label>
           </div>
         )}
+
+        <div className="mb-4">
+          <label htmlFor="date-idea">
+            <span className="mb-1.5 block text-[13px] font-medium text-soft">
+              {t("What would you like to do?")}
+            </span>
+            <span className="mb-2 block text-[12px] leading-relaxed text-muted">
+              {t(
+                "Start with the date, not the profile. A film by itself is a complete plan.",
+              )}
+            </span>
+          </label>
+          <TextArea
+            id="date-idea"
+            value={dateIdea}
+            maxLength={140}
+            placeholder={t(
+              "Watch an indie film. Happy to call it a night when the credits roll.",
+            )}
+            onChange={(event) => setDateIdea(event.target.value)}
+          />
+          <div className="mt-2 flex flex-wrap gap-2">
+            {DATE_IDEA_PRESETS.map((preset) => (
+              <Chip key={preset} onClick={() => setDateIdea(t(preset))}>
+                {t(preset)}
+              </Chip>
+            ))}
+          </div>
+        </div>
 
         {error && (
           <div className="mb-4">
@@ -162,14 +214,14 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
         <Card>
           <EmptyState
             title={t("Nothing on the calendar yet")}
-            body={t("Add one evening you're free. That's genuinely all we need to start looking.")}
+            body={t("Tell us what you'd like to do on this date.")}
           />
         </Card>
       ) : (
         <ul className="space-y-2">
           {windows.map((window) => (
             <li key={window._id}>
-              <Card className="flex items-center gap-4 p-4">
+              <Card className="availability-slip flex items-center gap-4 p-4">
                 <div className="min-w-0 flex-1">
                   <div className="text-[15px] font-medium">
                     {formatDay(window.startMs, window.timezone)}
@@ -177,6 +229,12 @@ export function AvailabilityEditor({ compact }: { compact?: boolean }) {
                   <div className="text-[13.5px] text-muted">
                     {formatRange(window.startMs, window.endMs, window.timezone)}
                   </div>
+                  {window.note && (
+                    <div className="mt-2 inline-flex max-w-full items-center gap-2 rounded-full bg-[var(--tint-ember-bg)] px-3 py-1.5 text-[11.5px] font-semibold text-[var(--tint-ember-fg)]">
+                      <span aria-hidden>✦</span>
+                      <span className="truncate">{window.note}</span>
+                    </div>
+                  )}
                 </div>
                 <WindowStatus status={window.status} />
                 {window.status !== "booked" && (

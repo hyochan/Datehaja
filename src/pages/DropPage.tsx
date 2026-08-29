@@ -74,10 +74,10 @@ export default function DropPage() {
     drop.status === "confirmed" || drop.status === "completed";
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
+    <div className="date-plan-page product-page mx-auto max-w-3xl space-y-7">
       <Link
         to="/dashboard"
-        className="inline-flex items-center gap-1.5 text-[14px] text-muted transition-colors hover:text-[var(--text)]"
+        className="date-plan-back inline-flex items-center gap-1.5 text-[14px] text-muted transition-colors hover:text-[var(--text)]"
       >
         <svg
           width="16"
@@ -183,6 +183,11 @@ type DropView = {
     languages: string[];
     socialEnergy: string;
     pronouns: string | null;
+    bio: string;
+    personalityTraits: string[];
+    styleTags: string[];
+    firstDateVibe: string[];
+    relationshipIntent: string | null;
     isDemo: boolean;
   } | null;
 };
@@ -190,7 +195,7 @@ type DropView = {
 function ConfirmedBanner({ completed }: { completed: boolean }) {
   const { t } = useI18n();
   return (
-    <div className="animate-drop-in rounded-card border border-[var(--tint-sage-border)] bg-[var(--tint-sage-bg)] px-6 py-5 text-center">
+    <div className="confirmed-ribbon animate-drop-in rounded-card border border-[var(--tint-sage-border)] bg-[var(--tint-sage-bg)] px-6 py-5 text-center">
       <div className="font-display text-[28px] leading-tight text-[var(--tint-sage-fg)]">
         {completed ? t("How did it go?") : t("It's a date.")}
       </div>
@@ -283,7 +288,7 @@ function CalendarPanel({ drop }: { drop: DropView }) {
   }
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="calendar-docket overflow-hidden">
       <div className="grid sm:grid-cols-[1fr_auto] sm:items-center">
         <div className="p-5 sm:p-6">
           <div className="mb-3 flex flex-wrap items-center gap-2.5">
@@ -342,7 +347,7 @@ function PlanCard({
   isConfirmed: boolean;
 }) {
   return (
-    <Card className="overflow-hidden">
+    <Card className="plan-docket overflow-hidden">
       <div className="border-b border-[var(--border)] p-6">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           {isInvitation ? (
@@ -499,70 +504,141 @@ function MatchCard({
   drop: DropView;
   isConfirmed: boolean;
 }) {
+  const { t } = useI18n();
   const match = drop.match!;
   return (
-    <Card className="p-6">
-      <div className="mb-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
-        {isConfirmed ? "You're meeting" : "Who you'd be meeting"}
+    <Card className="match-profile-card overflow-hidden">
+      <div className="border-b border-[var(--border)] bg-[var(--bg-sunken)] px-6 py-4">
+        <div className="flex items-center justify-between gap-3">
+          <div className="docket-label text-[var(--accent-text)]">
+            {t(isConfirmed ? "Your date" : "Your match")}
+          </div>
+          <Tag tone={drop.matchPhotoUrl ? "sage" : "neutral"}>
+            {drop.matchPhotoUrl ? t("Photo shared") : t("Photo optional")}
+          </Tag>
+        </div>
       </div>
 
-      <div className="flex items-start gap-4">
-        {drop.matchPhotoUrl ? (
-          <img
-            src={drop.matchPhotoUrl}
-            alt=""
-            className="h-16 w-16 shrink-0 rounded-full object-cover"
-          />
-        ) : (
-          <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[var(--tint-ember-bg)] font-display text-[24px] text-[var(--accent-text)]">
-            {match.displayName.slice(0, 1).toUpperCase()}
-          </span>
-        )}
-        <div className="min-w-0 flex-1">
-          <h2 className="text-[20px] leading-tight">
-            {match.displayName} · {match.age}
-          </h2>
-          <p className="mt-0.5 text-[14.5px] text-soft">
-            {match.area}
-            {match.occupation ? ` · ${match.occupation}` : ""}
-            {match.pronouns ? ` · ${match.pronouns}` : ""}
-          </p>
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {match.interests.map((interest) => (
-              <Chip key={interest} size="sm">
-                {interest}
-              </Chip>
-            ))}
-          </div>
-          {match.isDemo && (
-            <div className="mt-3">
-              <Tag tone="dusk">Fictional demo profile</Tag>
-            </div>
+      <div className="p-6">
+        <div className="flex items-start gap-4">
+          {drop.matchPhotoUrl ? (
+            <img
+              src={drop.matchPhotoUrl}
+              alt=""
+              className="h-16 w-16 shrink-0 rounded-full object-cover"
+            />
+          ) : (
+            <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[var(--tint-ember-bg)] font-display text-[24px] text-[var(--accent-text)]">
+              {match.displayName.slice(0, 1).toUpperCase()}
+            </span>
           )}
-        </div>
-      </div>
-
-      {(drop.privateWhyItFits || drop.whyItFits) && (
-        <div className="mt-5 rounded-xl bg-[var(--bg-sunken)] p-4">
-          <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-muted">
-            Why we think this fits
+          <div className="min-w-0 flex-1">
+            <h2 className="text-[20px] leading-tight">
+              {match.displayName} · {match.age}
+            </h2>
+            <p className="mt-0.5 text-[14.5px] text-soft">
+              {match.area}
+              {match.occupation ? ` · ${match.occupation}` : ""}
+              {match.pronouns ? ` · ${match.pronouns}` : ""}
+            </p>
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {match.interests.map((interest) => (
+                <Chip key={interest} size="sm">
+                  {interest}
+                </Chip>
+              ))}
+            </div>
+            {match.isDemo && (
+              <div className="mt-3">
+                <Tag tone="dusk">Fictional demo profile</Tag>
+              </div>
+            )}
           </div>
-          <p className="text-[15px] leading-relaxed">
-            {drop.privateWhyItFits || drop.whyItFits}
-          </p>
         </div>
-      )}
 
-      {!isConfirmed && (
-        <p className="mt-4 text-[13px] leading-relaxed text-muted">
-          That's everything they can see about you too — first name, age, area,
-          a few interests. No email, no number, no exact location.{" "}
-          <Link to="/privacy" className="underline underline-offset-2">
-            What they see
-          </Link>
-        </p>
-      )}
+        {match.bio && (
+          <div className="mt-5 border-l-2 border-[var(--color-ember-300)] pl-4">
+            <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-muted">
+              {t("In their own words")}
+            </div>
+            <p className="whitespace-pre-line text-[15px] leading-relaxed text-soft">
+              {match.bio}
+            </p>
+          </div>
+        )}
+
+        {(match.personalityTraits.length > 0 ||
+          match.styleTags.length > 0 ||
+          match.firstDateVibe.length > 0 ||
+          match.relationshipIntent) && (
+          <div className="mt-5 grid gap-4 rounded-xl border border-[var(--border)] p-4 sm:grid-cols-2">
+            {match.personalityTraits.length > 0 && (
+              <ProfileDetail
+                label={t("They describe themselves as")}
+                values={match.personalityTraits}
+              />
+            )}
+            {match.styleTags.length > 0 && (
+              <ProfileDetail
+                label={t("Their style")}
+                values={match.styleTags}
+              />
+            )}
+            {match.firstDateVibe.length > 0 && (
+              <ProfileDetail
+                label={t("A good first date feels")}
+                values={match.firstDateVibe}
+              />
+            )}
+            {match.relationshipIntent && (
+              <ProfileDetail
+                label={t("Open to")}
+                values={[match.relationshipIntent.replace(/_/g, " ")]}
+              />
+            )}
+          </div>
+        )}
+
+        {(drop.privateWhyItFits || drop.whyItFits) && (
+          <div className="mt-5 rounded-xl bg-[var(--bg-sunken)] p-4">
+            <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-muted">
+              Why we think this fits
+            </div>
+            <p className="text-[15px] leading-relaxed">
+              {drop.privateWhyItFits || drop.whyItFits}
+            </p>
+          </div>
+        )}
+
+        {!isConfirmed && (
+          <p className="mt-4 text-[13px] leading-relaxed text-muted">
+            {t(
+              "They receive the same kind of profile card. Contact details and exact location stay private.",
+            )}{" "}
+            <Link to="/privacy" className="underline underline-offset-2">
+              What they see
+            </Link>
+          </p>
+        )}
+      </div>
     </Card>
+  );
+}
+
+function ProfileDetail({ label, values }: { label: string; values: string[] }) {
+  return (
+    <div>
+      <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
+        {label}
+      </div>
+      <div className="flex flex-wrap gap-1.5">
+        {values.map((value) => (
+          <Chip key={value} size="sm">
+            {value}
+          </Chip>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -945,6 +1021,10 @@ function ConfirmedPanel({
 type DateOutcome = "went" | "no_show" | "left_early" | "did_not_go";
 type DateSafety = "safe" | "uncomfortable" | "unsafe" | "prefer_not_to_say";
 type MeetAgain = "yes" | "maybe" | "no" | "prefer_not_to_say";
+type ProfileAccuracy =
+  "accurate" | "mostly_accurate" | "different" | "prefer_not_to_say";
+type Respect = "yes" | "mostly" | "no" | "prefer_not_to_say";
+type Connection = "easy" | "mixed" | "difficult" | "prefer_not_to_say";
 
 function FeedbackPanel({ dropId }: { dropId: Id<"dateDrops"> }) {
   const { t } = useI18n();
@@ -956,6 +1036,10 @@ function FeedbackPanel({ dropId }: { dropId: Id<"dateDrops"> }) {
   const [outcome, setOutcome] = useState<DateOutcome | null>(null);
   const [safety, setSafety] = useState<DateSafety | null>(null);
   const [meetAgain, setMeetAgain] = useState<MeetAgain | null>(null);
+  const [profileAccuracy, setProfileAccuracy] =
+    useState<ProfileAccuracy | null>(null);
+  const [respectful, setRespectful] = useState<Respect | null>(null);
+  const [connection, setConnection] = useState<Connection | null>(null);
   const [venueRating, setVenueRating] = useState<number | null>(null);
   const [note, setNote] = useState("");
   const [followUpRequested, setFollowUpRequested] = useState(false);
@@ -965,6 +1049,9 @@ function FeedbackPanel({ dropId }: { dropId: Id<"dateDrops"> }) {
       setOutcome(feedback.outcome);
       setSafety(feedback.safety);
       setMeetAgain(feedback.meetAgain);
+      setProfileAccuracy(feedback.profileAccuracy);
+      setRespectful(feedback.respectful);
+      setConnection(feedback.connection);
       setVenueRating(feedback.venueRating);
       setNote(feedback.note ?? "");
       setFollowUpRequested(feedback.followUpRequested);
@@ -976,19 +1063,40 @@ function FeedbackPanel({ dropId }: { dropId: Id<"dateDrops"> }) {
     return <Skeleton className="h-44 w-full rounded-card" />;
 
   if (feedback && !editing) {
+    const mutual = feedback.mutualStatus === "mutual";
+    const waiting = feedback.mutualStatus === "waiting";
     return (
       <Card className="p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <Tag tone="sage">{t("Private response saved")}</Tag>
+            <Tag tone={mutual ? "sage" : "dusk"}>
+              {t(mutual ? "You both said yes" : "Private response sealed")}
+            </Tag>
             <h2 className="mt-3 text-[20px] leading-tight">
-              {t("Thanks for checking in.")}
+              {t(
+                mutual
+                  ? "You both want another date."
+                  : waiting
+                    ? "We'll only reveal a mutual yes."
+                    : "Your check-in is complete.",
+              )}
             </h2>
             <p className="mt-1.5 max-w-md text-[14px] leading-relaxed text-soft">
               {t(
-                "Your answers are never shown to your match. They help Datehaja improve matching, venues, and safety follow-up.",
+                mutual
+                  ? "Your private answers matched. Pick another activity when you're ready; every other review answer stays private."
+                  : waiting
+                    ? "Your answer stays sealed while we wait. Neither person sees a no, maybe, or who answered first."
+                    : "Neither person sees who said no or maybe. Accuracy, respect, and safety feedback only improve future matching.",
               )}
             </p>
+            {mutual && (
+              <div className="mt-4">
+                <LinkButton to="/availability" size="sm">
+                  {t("Open another evening")}
+                </LinkButton>
+              </div>
+            )}
           </div>
           <Button variant="secondary" size="sm" onClick={editExisting}>
             {t("Update response")}
@@ -1011,7 +1119,7 @@ function FeedbackPanel({ dropId }: { dropId: Id<"dateDrops"> }) {
         </h2>
         <p className="mt-1.5 max-w-xl text-[14px] leading-relaxed text-soft">
           {t(
-            "Entirely optional and private. Your match never sees these answers.",
+            "Your review stays private. Only an explicit yes is revealed, and only when you both choose it.",
           )}
         </p>
       </div>
@@ -1028,6 +1136,46 @@ function FeedbackPanel({ dropId }: { dropId: Id<"dateDrops"> }) {
             ["did_not_go", t("I didn't go")],
           ]}
         />
+
+        {outcome === "went" && (
+          <>
+            <FeedbackChoice
+              label={t("Did their profile feel accurate?")}
+              value={profileAccuracy}
+              onChange={setProfileAccuracy}
+              options={[
+                ["accurate", t("Yes, accurate")],
+                ["mostly_accurate", t("Mostly")],
+                ["different", t("Quite different")],
+                ["prefer_not_to_say", t("Prefer not to say")],
+              ]}
+            />
+
+            <FeedbackChoice
+              label={t("Did they respect your time and boundaries?")}
+              value={respectful}
+              onChange={setRespectful}
+              options={[
+                ["yes", t("Yes")],
+                ["mostly", t("Mostly")],
+                ["no", t("No")],
+                ["prefer_not_to_say", t("Prefer not to say")],
+              ]}
+            />
+
+            <FeedbackChoice
+              label={t("How did the conversation feel?")}
+              value={connection}
+              onChange={setConnection}
+              options={[
+                ["easy", t("Easy")],
+                ["mixed", t("Mixed")],
+                ["difficult", t("Difficult")],
+                ["prefer_not_to_say", t("Prefer not to say")],
+              ]}
+            />
+          </>
+        )}
 
         <FeedbackChoice
           label={t("Did you feel safe?")}
@@ -1117,7 +1265,13 @@ function FeedbackPanel({ dropId }: { dropId: Id<"dateDrops"> }) {
         <div className="flex flex-wrap items-center gap-3">
           <Button
             loading={busy}
-            disabled={!outcome || !safety || !meetAgain}
+            disabled={
+              !outcome ||
+              !safety ||
+              !meetAgain ||
+              (outcome === "went" &&
+                (!profileAccuracy || !respectful || !connection))
+            }
             onClick={async () => {
               if (!outcome || !safety || !meetAgain) return;
               setBusy(true);
@@ -1127,6 +1281,14 @@ function FeedbackPanel({ dropId }: { dropId: Id<"dateDrops"> }) {
                   outcome,
                   safety,
                   meetAgain,
+                  profileAccuracy:
+                    outcome === "went"
+                      ? (profileAccuracy ?? undefined)
+                      : undefined,
+                  respectful:
+                    outcome === "went" ? (respectful ?? undefined) : undefined,
+                  connection:
+                    outcome === "went" ? (connection ?? undefined) : undefined,
                   venueRating: venueRating ?? undefined,
                   note: note.trim() || undefined,
                   followUpRequested,
@@ -1429,9 +1591,9 @@ function SafetyPanel({ dropId }: { dropId: Id<"dateDrops"> }) {
         <div>
           <h3 className="mb-1 text-[18px]">Report this person</h3>
           <p className="mb-4 text-[14px] leading-relaxed text-soft">
-            This goes straight to our team with the date plan attached. If you're
-            in danger, contact your local emergency services first — we're not
-            an emergency service.
+            This goes straight to our team with the date plan attached. If
+            you're in danger, contact your local emergency services first —
+            we're not an emergency service.
           </p>
 
           <div className="mb-4 flex flex-wrap gap-2">

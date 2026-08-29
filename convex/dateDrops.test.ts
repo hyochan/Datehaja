@@ -20,7 +20,11 @@ type Ctx = Awaited<ReturnType<typeof setup>>;
  */
 async function setup(t: ReturnType<typeof convexTest>) {
   return await t.run(async (ctx) => {
-    async function makeUser(name: string, email: string, gender: "woman" | "man") {
+    async function makeUser(
+      name: string,
+      email: string,
+      gender: "woman" | "man",
+    ) {
       const userId = await ctx.db.insert("users", { name, email });
       await ctx.db.insert("profiles", {
         userId,
@@ -170,9 +174,12 @@ describe("accepting a date plan", () => {
     const t = convexTest(schema, modules);
     const s: Ctx = await setup(t);
 
-    const result = await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, {
-      dropId: s.dropId,
-    });
+    const result = await asUser(t, s.alice.userId).mutation(
+      api.dateDrops.accept,
+      {
+        dropId: s.dropId,
+      },
+    );
     expect(result.confirmed).toBe(false);
 
     const drop = await t.run((ctx) => ctx.db.get("dateDrops", s.dropId));
@@ -183,10 +190,15 @@ describe("accepting a date plan", () => {
     const t = convexTest(schema, modules);
     const s: Ctx = await setup(t);
 
-    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
-    const result = await asUser(t, s.bob.userId).mutation(api.dateDrops.accept, {
+    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, {
       dropId: s.dropId,
     });
+    const result = await asUser(t, s.bob.userId).mutation(
+      api.dateDrops.accept,
+      {
+        dropId: s.dropId,
+      },
+    );
     expect(result.confirmed).toBe(true);
 
     await t.run(async (ctx) => {
@@ -210,10 +222,15 @@ describe("accepting a date plan", () => {
   test("accepting twice is idempotent", async () => {
     const t = convexTest(schema, modules);
     const s: Ctx = await setup(t);
-    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
-    const second = await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, {
+    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, {
       dropId: s.dropId,
     });
+    const second = await asUser(t, s.alice.userId).mutation(
+      api.dateDrops.accept,
+      {
+        dropId: s.dropId,
+      },
+    );
     expect(second.confirmed).toBe(false);
   });
 
@@ -221,7 +238,9 @@ describe("accepting a date plan", () => {
     const t = convexTest(schema, modules);
     const s: Ctx = await setup(t);
     await expect(
-      asUser(t, s.carol.userId).mutation(api.dateDrops.accept, { dropId: s.dropId }),
+      asUser(t, s.carol.userId).mutation(api.dateDrops.accept, {
+        dropId: s.dropId,
+      }),
     ).rejects.toThrow(/isn't yours/);
   });
 
@@ -237,10 +256,14 @@ describe("accepting a date plan", () => {
     const t = convexTest(schema, modules);
     const s: Ctx = await setup(t);
     await t.run((ctx) =>
-      ctx.db.patch("dateDrops", s.dropId, { confirmDeadlineMs: Date.now() - 1000 }),
+      ctx.db.patch("dateDrops", s.dropId, {
+        confirmDeadlineMs: Date.now() - 1000,
+      }),
     );
     await expect(
-      asUser(t, s.alice.userId).mutation(api.dateDrops.accept, { dropId: s.dropId }),
+      asUser(t, s.alice.userId).mutation(api.dateDrops.accept, {
+        dropId: s.dropId,
+      }),
     ).rejects.toThrow(/closed/);
   });
 });
@@ -266,8 +289,12 @@ describe("passing on a date plan", () => {
     const t = convexTest(schema, modules);
     const s: Ctx = await setup(t);
 
-    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
-    await asUser(t, s.bob.userId).mutation(api.dateDrops.pass, { dropId: s.dropId });
+    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, {
+      dropId: s.dropId,
+    });
+    await asUser(t, s.bob.userId).mutation(api.dateDrops.pass, {
+      dropId: s.dropId,
+    });
 
     await t.run(async (ctx) => {
       const drop = await ctx.db.get("dateDrops", s.dropId);
@@ -282,8 +309,12 @@ describe("passing on a date plan", () => {
     const t = convexTest(schema, modules);
     const s: Ctx = await setup(t);
 
-    await asUser(t, s.alice.userId).mutation(api.dateDrops.pass, { dropId: s.dropId });
-    await asUser(t, s.bob.userId).mutation(api.dateDrops.pass, { dropId: s.dropId });
+    await asUser(t, s.alice.userId).mutation(api.dateDrops.pass, {
+      dropId: s.dropId,
+    });
+    await asUser(t, s.bob.userId).mutation(api.dateDrops.pass, {
+      dropId: s.dropId,
+    });
 
     const drop = await t.run((ctx) => ctx.db.get("dateDrops", s.dropId));
     expect(drop?.status).toBe("expired_no_match");
@@ -292,17 +323,25 @@ describe("passing on a date plan", () => {
   test("passing after accepting is refused — that's a withdrawal", async () => {
     const t = convexTest(schema, modules);
     const s: Ctx = await setup(t);
-    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
+    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, {
+      dropId: s.dropId,
+    });
     await expect(
-      asUser(t, s.alice.userId).mutation(api.dateDrops.pass, { dropId: s.dropId }),
+      asUser(t, s.alice.userId).mutation(api.dateDrops.pass, {
+        dropId: s.dropId,
+      }),
     ).rejects.toThrow(/already responded/);
   });
 
   test("withdrawing releases the evening and keeps the drop searching", async () => {
     const t = convexTest(schema, modules);
     const s: Ctx = await setup(t);
-    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
-    await asUser(t, s.alice.userId).mutation(api.dateDrops.withdraw, { dropId: s.dropId });
+    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, {
+      dropId: s.dropId,
+    });
+    await asUser(t, s.alice.userId).mutation(api.dateDrops.withdraw, {
+      dropId: s.dropId,
+    });
 
     await t.run(async (ctx) => {
       const window = await ctx.db.get("availability", s.alice.availabilityId);
@@ -318,10 +357,14 @@ describe("the 24-hour cutoff", () => {
   test("an overdue drop expires and frees both calendars", async () => {
     const t = convexTest(schema, modules);
     const s: Ctx = await setup(t);
-    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
+    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, {
+      dropId: s.dropId,
+    });
 
     await t.run((ctx) =>
-      ctx.db.patch("dateDrops", s.dropId, { confirmDeadlineMs: Date.now() - 60_000 }),
+      ctx.db.patch("dateDrops", s.dropId, {
+        confirmDeadlineMs: Date.now() - 60_000,
+      }),
     );
 
     const closed = await t.mutation(internal.dateDrops.expireOverdueDrops, {
@@ -341,13 +384,21 @@ describe("the 24-hour cutoff", () => {
   test("a confirmed drop is never expired by the cutoff job", async () => {
     const t = convexTest(schema, modules);
     const s: Ctx = await setup(t);
-    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
-    await asUser(t, s.bob.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
+    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, {
+      dropId: s.dropId,
+    });
+    await asUser(t, s.bob.userId).mutation(api.dateDrops.accept, {
+      dropId: s.dropId,
+    });
 
     await t.run((ctx) =>
-      ctx.db.patch("dateDrops", s.dropId, { confirmDeadlineMs: Date.now() - 60_000 }),
+      ctx.db.patch("dateDrops", s.dropId, {
+        confirmDeadlineMs: Date.now() - 60_000,
+      }),
     );
-    await t.mutation(internal.dateDrops.expireOverdueDrops, { nowMs: Date.now() });
+    await t.mutation(internal.dateDrops.expireOverdueDrops, {
+      nowMs: Date.now(),
+    });
 
     const drop = await t.run((ctx) => ctx.db.get("dateDrops", s.dropId));
     expect(drop?.status).toBe("confirmed");
@@ -356,8 +407,12 @@ describe("the 24-hour cutoff", () => {
   test("a finished date is completed and its window retired", async () => {
     const t = convexTest(schema, modules);
     const s: Ctx = await setup(t);
-    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
-    await asUser(t, s.bob.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
+    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, {
+      dropId: s.dropId,
+    });
+    await asUser(t, s.bob.userId).mutation(api.dateDrops.accept, {
+      dropId: s.dropId,
+    });
 
     const later = DATE_START + 8 * 3600_000;
     const completed = await t.mutation(internal.dateDrops.completePastDrops, {
@@ -378,8 +433,12 @@ describe("cancellation", () => {
   test("either participant can cancel a confirmed date", async () => {
     const t = convexTest(schema, modules);
     const s: Ctx = await setup(t);
-    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
-    await asUser(t, s.bob.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
+    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, {
+      dropId: s.dropId,
+    });
+    await asUser(t, s.bob.userId).mutation(api.dateDrops.accept, {
+      dropId: s.dropId,
+    });
 
     await asUser(t, s.bob.userId).mutation(api.dateDrops.cancel, {
       dropId: s.dropId,
@@ -399,7 +458,9 @@ describe("cancellation", () => {
     const t = convexTest(schema, modules);
     const s: Ctx = await setup(t);
     await expect(
-      asUser(t, s.carol.userId).mutation(api.dateDrops.cancel, { dropId: s.dropId }),
+      asUser(t, s.carol.userId).mutation(api.dateDrops.cancel, {
+        dropId: s.dropId,
+      }),
     ).rejects.toThrow(/isn't yours/);
   });
 });
@@ -432,7 +493,9 @@ describe("what a participant can see", () => {
         .query("profiles")
         .withIndex("by_user", (q) => q.eq("userId", s.bob.userId))
         .unique();
-      await ctx.db.patch("profiles", profile!._id, { photoStorageId: storageId });
+      await ctx.db.patch("profiles", profile!._id, {
+        photoStorageId: storageId,
+      });
     });
 
     const before = await asUser(t, s.alice.userId).query(api.dateDrops.get, {
@@ -440,13 +503,40 @@ describe("what a participant can see", () => {
     });
     expect(before?.matchPhotoUrl).toBeNull();
 
-    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
-    await asUser(t, s.bob.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
+    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, {
+      dropId: s.dropId,
+    });
+    await asUser(t, s.bob.userId).mutation(api.dateDrops.accept, {
+      dropId: s.dropId,
+    });
 
     const after = await asUser(t, s.alice.userId).query(api.dateDrops.get, {
       dropId: s.dropId,
     });
     expect(after?.matchPhotoUrl).toBeTypeOf("string");
+  });
+
+  test("a user can optionally share a photo with the initial match card", async () => {
+    const t = convexTest(schema, modules);
+    const s: Ctx = await setup(t);
+    const storageId = await t.run(async (ctx) =>
+      ctx.storage.store(new Blob(["x"], { type: "image/png" })),
+    );
+    await t.run(async (ctx) => {
+      const profile = await ctx.db
+        .query("profiles")
+        .withIndex("by_user", (q) => q.eq("userId", s.bob.userId))
+        .unique();
+      await ctx.db.patch("profiles", profile!._id, {
+        photoStorageId: storageId,
+        photoVisibility: "with_match",
+      });
+    });
+
+    const view = await asUser(t, s.alice.userId).query(api.dateDrops.get, {
+      dropId: s.dropId,
+    });
+    expect(view?.matchPhotoUrl).toBeTypeOf("string");
   });
 
   test("a non-participant gets nothing at all", async () => {
@@ -461,7 +551,9 @@ describe("what a participant can see", () => {
   test("accepting does not tell you whether the other person accepted", async () => {
     const t = convexTest(schema, modules);
     const s: Ctx = await setup(t);
-    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
+    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, {
+      dropId: s.dropId,
+    });
 
     const view = await asUser(t, s.alice.userId).query(api.dateDrops.get, {
       dropId: s.dropId,

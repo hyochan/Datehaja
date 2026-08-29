@@ -8,18 +8,18 @@ portable; liquidity still has to be earned city by city.
 
 The promise is one sentence:
 
-> Pick a night. Let's make it a date.
+> Tell us what you want to do. Find someone who wants to do it too.
 
 ## Brand position
 
 Datehaja should sound like a person making a warm invitation, not software
 describing a workflow.
 
-- **Korean:** `저녁 하나 비워봐. 우리, 데이트하자.`
-- **English:** `Pick a night. Let's make it a date.`
+- **Korean:** `뭐 하고 싶어? 그거 같이할 사람을 찾아줄게.`
+- **English:** `Tell us what you want to do. Find someone who wants to do it too.`
 - **Meaning line:** `Datehaja means “let's go on a date” in Korean.`
-- **Product proof:** one available evening becomes one researched, private date
-  invitation.
+- **Product proof:** one specific activity and an available time become one
+  researched, private invitation with a compatible new person.
 
 Use short verbs such as pick, meet, accept, and go. Avoid phrases such as
 “AI-powered matching experience” in user-facing growth material. The agents are
@@ -31,12 +31,12 @@ Datehaja does not need a large audience first. It needs enough compatible
 people to choose the same few evenings in the same small area. Early growth is
 therefore a scheduling and density problem, not a reach problem.
 
-The repeatable launch unit is a **Datehaja Night**:
+The repeatable launch unit is a **Datehaja Plan**:
 
-1. Monday–Wednesday: invite one trusted cohort to open Thursday, Friday, or
-   Saturday evening.
-2. Thursday: close that week's pool, match compatible overlaps, and research
-   the plans.
+1. Monday–Wednesday: invite one trusted cohort to propose one thing they
+   genuinely want to do on Thursday, Friday, or Saturday.
+2. Thursday: group compatible activity ideas and availability, then research
+   the simplest real plan for each pair.
 3. Friday–Saturday: the dates happen in a small set of public neighbourhoods.
 4. The next morning: collect the private safety check-in and offer one tap to
    open another evening.
@@ -62,8 +62,8 @@ date plans reach a private post-date response.
 - Concentrate on Seongsu, Yeonnam, and nearby areas before opening all Seoul.
 - Partner with small public venues that already work for first dates: clear
   pricing, easy transit, staff present, and simple exits.
-- Publish short real-product clips: free evening → live venue evidence → two
-  private answers → confirmed calendar event.
+- Publish short real-product clips: date idea → compatible new person → live
+  venue evidence → two private answers → confirmed calendar event.
 - Ask satisfied users for a short quote, never for their date's identity or
   private story.
 

@@ -1,40 +1,44 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <defs>
-    <radialGradient id="glow" cx="50%" cy="8%" r="62%">
-      <stop offset="0%" stop-color="#e2703f" stop-opacity="0.30"/>
-      <stop offset="100%" stop-color="#e2703f" stop-opacity="0"/>
+    <radialGradient id="glow" cx="35%" cy="10%" r="70%">
+      <stop offset="0%" stop-color="#e96f73" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#e96f73" stop-opacity="0"/>
     </radialGradient>
   </defs>
 
   <rect width="1200" height="630" fill="#100d14"/>
   <rect width="1200" height="630" fill="url(#glow)"/>
 
-  <!-- two open availability windows, one shared date -->
+  <!-- Original Datehaja date-window mark -->
   <g transform="translate(96,84)">
     <circle cx="24" cy="24" r="24" fill="#3a222d"/>
     <path d="M21 11.55h-2.55a8.7 8.7 0 0 0-8.7 8.7v5.7a8.7 8.7 0 0 0 8.7 8.7H21" fill="none" stroke="#e2703f" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M27 11.55h2.55a8.7 8.7 0 0 1 8.7 8.7v5.7a8.7 8.7 0 0 1-8.7 8.7H27" fill="none" stroke="#ec9a7e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M24 28.8c-3.825-2.25-5.4-4.275-5.4-6.225 0-1.725 1.275-3.075 3.075-3.075 1.05 0 1.875.45 2.325 1.275.525-.825 1.35-1.275 2.4-1.275 1.8 0 3.075 1.35 3.075 3.075 0 1.95-1.575 3.975-5.475 6.225Z" fill="#f08078"/>
   </g>
-  <text x="164" y="126" font-family="Georgia, 'Iowan Old Style', serif" font-size="40" fill="#f5f1ec" letter-spacing="-0.5">Datehaja</text>
+  <text x="164" y="126" font-family="'Cormorant Garamond', Georgia, 'Iowan Old Style', serif" font-weight="600" font-size="42" fill="#fff7f2" letter-spacing="-0.8"><tspan>Date</tspan><tspan font-style="italic" letter-spacing="-1.8">haja</tspan></text>
+  <path d="M244 134 Q282 140 326 132" fill="none" stroke="#f17c80" stroke-width="1.4" stroke-linecap="round" opacity=".8"/>
 
-  <text x="96" y="286" font-family="Georgia, 'Iowan Old Style', serif" font-size="82" fill="#f5f1ec" letter-spacing="-3">Pick a night.</text>
-  <text x="96" y="382" font-family="Georgia, 'Iowan Old Style', serif" font-size="72" fill="#e2703f" letter-spacing="-3">Let's make it a date.</text>
+  <text x="96" y="280" font-family="'Cormorant Garamond', Georgia, 'Iowan Old Style', serif" font-weight="600" font-size="72" fill="#fff7f2" letter-spacing="-2">What do you want to do?</text>
+  <text x="96" y="370" font-family="'Cormorant Garamond', Georgia, 'Iowan Old Style', serif" font-style="italic" font-weight="600" font-size="64" fill="#f17c80" letter-spacing="-2">Find someone to do it with.</text>
 
-  <text x="96" y="452" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="27" fill="#b8afc2">Tell us when you're free. We handle who &amp; where.</text>
+  <text x="96" y="444" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="27" fill="#cab9c2">A film, a walk, a gallery—or whatever sounds good.</text>
 
-  <g font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="22" fill="#9c92a8">
+  <g font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="22" fill="#ad9aa4">
     <g transform="translate(96,520)">
-      <path d="M0 6l12 12M12 6L0 18" stroke="#e2703f" stroke-width="2.6" stroke-linecap="round" fill="none"/>
-      <text x="26" y="20">No swiping</text>
+      <circle cx="7" cy="12" r="6" fill="#4e2a37"/>
+      <path d="M4 12l2 2 4-5" stroke="#f17c80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <text x="26" y="20">Activity first</text>
     </g>
-    <g transform="translate(300,520)">
-      <path d="M0 6l12 12M12 6L0 18" stroke="#e2703f" stroke-width="2.6" stroke-linecap="round" fill="none"/>
-      <text x="26" y="20">No endless chats</text>
+    <g transform="translate(315,520)">
+      <circle cx="7" cy="12" r="6" fill="#4e2a37"/>
+      <path d="M4 12l2 2 4-5" stroke="#f17c80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <text x="26" y="20">One real plan</text>
     </g>
-    <g transform="translate(560,520)">
-      <path d="M0 6l12 12M12 6L0 18" stroke="#e2703f" stroke-width="2.6" stroke-linecap="round" fill="none"/>
-      <text x="26" y="20">No exchanging contact info</text>
+    <g transform="translate(540,520)">
+      <circle cx="7" cy="12" r="6" fill="#4e2a37"/>
+      <path d="M4 12l2 2 4-5" stroke="#f17c80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <text x="26" y="20">Both answer privately</text>
     </g>
   </g>
 

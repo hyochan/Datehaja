@@ -55,6 +55,19 @@ export const atmosphereValidator = v.union(
   v.literal("either"),
 );
 
+/** How strongly a stated taste should influence matching. */
+export const preferenceStrengthValidator = v.union(
+  v.literal("important"),
+  v.literal("flexible"),
+  v.literal("no_preference"),
+);
+
+/** A photo is optional, and its owner decides when a match can see it. */
+export const photoVisibilityValidator = v.union(
+  v.literal("with_match"),
+  v.literal("after_accept"),
+);
+
 export const profileStatusValidator = v.union(
   v.literal("active"),
   v.literal("paused"),
@@ -140,6 +153,27 @@ export const meetAgainValidator = v.union(
   v.literal("yes"),
   v.literal("maybe"),
   v.literal("no"),
+  v.literal("prefer_not_to_say"),
+);
+
+export const profileAccuracyValidator = v.union(
+  v.literal("accurate"),
+  v.literal("mostly_accurate"),
+  v.literal("different"),
+  v.literal("prefer_not_to_say"),
+);
+
+export const respectValidator = v.union(
+  v.literal("yes"),
+  v.literal("mostly"),
+  v.literal("no"),
+  v.literal("prefer_not_to_say"),
+);
+
+export const connectionQualityValidator = v.union(
+  v.literal("easy"),
+  v.literal("mixed"),
+  v.literal("difficult"),
   v.literal("prefer_not_to_say"),
 );
 

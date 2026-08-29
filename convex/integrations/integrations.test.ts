@@ -1,20 +1,26 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { modelCandidates, structured } from "./openai";
 import { search, scrape } from "./firecrawl";
-import { parseAddress, safeIdempotencyKey } from "./agentmail";
+import { deleteWebhook, parseAddress, safeIdempotencyKey } from "./agentmail";
 import { extractVenues } from "../lib/venueHeuristics";
 import { buildFallbackPlan } from "../lib/fallbackPlan";
+import { buildSearchQueries } from "../research";
 
 const originalFetch = globalThis.fetch;
 const originalEnv = { ...process.env };
 
 function mockFetch(handler: (url: string, init?: RequestInit) => Response) {
-  globalThis.fetch = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) =>
-    handler(String(input), init),
+  globalThis.fetch = vi.fn(
+    async (input: RequestInfo | URL, init?: RequestInit) =>
+      handler(String(input), init),
   ) as unknown as typeof fetch;
 }
 
-function json(body: unknown, status = 200, headers: Record<string, string> = {}) {
+function json(
+  body: unknown,
+  status = 200,
+  headers: Record<string, string> = {},
+) {
   return new Response(JSON.stringify(body), {
     status,
     headers: { "Content-Type": "application/json", ...headers },
@@ -55,7 +61,12 @@ describe("OpenAI structured output", () => {
       instructions: "x",
       input: "y",
       schemaName: "s",
-      schema: { type: "object", properties: {}, required: [], additionalProperties: false },
+      schema: {
+        type: "object",
+        properties: {},
+        required: [],
+        additionalProperties: false,
+      },
     });
 
     expect(result.ok).toBe(true);
@@ -68,7 +79,10 @@ describe("OpenAI structured output", () => {
       json({
         status: "completed",
         output: [
-          { type: "message", content: [{ type: "refusal", refusal: "I can't help." }] },
+          {
+            type: "message",
+            content: [{ type: "refusal", refusal: "I can't help." }],
+          },
         ],
       }),
     );
@@ -87,7 +101,12 @@ describe("OpenAI structured output", () => {
       json({
         status: "incomplete",
         incomplete_details: { reason: "max_output_tokens" },
-        output: [{ type: "message", content: [{ type: "output_text", text: '{"a":' }] }],
+        output: [
+          {
+            type: "message",
+            content: [{ type: "output_text", text: '{"a":' }],
+          },
+        ],
       }),
     );
     const result = await structured({
@@ -106,11 +125,16 @@ describe("OpenAI structured output", () => {
       const body = JSON.parse(String(init?.body)) as { model: string };
       seen.push(body.model);
       if (seen.length < 2) {
-        return json({ error: { code: "model_not_found", message: "nope" } }, 404);
+        return json(
+          { error: { code: "model_not_found", message: "nope" } },
+          404,
+        );
       }
       return json({
         status: "completed",
-        output: [{ type: "message", content: [{ type: "output_text", text: "{}" }] }],
+        output: [
+          { type: "message", content: [{ type: "output_text", text: "{}" }] },
+        ],
       });
     });
 
@@ -144,7 +168,9 @@ describe("OpenAI structured output", () => {
       }
       return json({
         status: "completed",
-        output: [{ type: "message", content: [{ type: "output_text", text: "{}" }] }],
+        output: [
+          { type: "message", content: [{ type: "output_text", text: "{}" }] },
+        ],
       });
     });
 
@@ -206,7 +232,9 @@ describe("OpenAI structured output", () => {
       sent = JSON.parse(String(init?.body));
       return json({
         status: "completed",
-        output: [{ type: "message", content: [{ type: "output_text", text: "{}" }] }],
+        output: [
+          { type: "message", content: [{ type: "output_text", text: "{}" }] },
+        ],
       });
     });
     await structured({
@@ -231,7 +259,12 @@ describe("Firecrawl normalisation", () => {
         success: true,
         data: {
           web: [
-            { url: "https://a.test", title: "A", description: "d", position: 1 },
+            {
+              url: "https://a.test",
+              title: "A",
+              description: "d",
+              position: 1,
+            },
             { url: "https://b.test", title: "B", position: 2, markdown: "# B" },
           ],
         },
@@ -280,7 +313,10 @@ describe("Firecrawl normalisation", () => {
 
   it("tolerates a result row with no url", async () => {
     mockFetch(() =>
-      json({ success: true, data: { web: [{ title: "no url" }, { url: "https://ok.test" }] } }),
+      json({
+        success: true,
+        data: { web: [{ title: "no url" }, { url: "https://ok.test" }] },
+      }),
     );
     const { hits } = await search("q");
     expect(hits).toHaveLength(1);
@@ -309,7 +345,9 @@ describe("Firecrawl normalisation", () => {
 
 describe("AgentMail helpers", () => {
   it("pulls a bare address out of a display-name header", () => {
-    expect(parseAddress("Jane Doe <jane@example.com>")).toBe("jane@example.com");
+    expect(parseAddress("Jane Doe <jane@example.com>")).toBe(
+      "jane@example.com",
+    );
     expect(parseAddress("  JANE@example.com ")).toBe("jane@example.com");
   });
 
@@ -339,12 +377,52 @@ describe("AgentMail helpers", () => {
     });
 
     it("caps the length", () => {
-      expect(safeIdempotencyKey("a".repeat(500)).length).toBeLessThanOrEqual(200);
+      expect(safeIdempotencyKey("a".repeat(500)).length).toBeLessThanOrEqual(
+        200,
+      );
     });
+  });
+
+  it("deletes a duplicate webhook through the encoded REST path", async () => {
+    process.env.AGENTMAIL_API_KEY = "am-test";
+    mockFetch((url, init) => {
+      expect(url).toBe("https://api.agentmail.to/v0/webhooks/hook%2Flegacy");
+      expect(init?.method).toBe("DELETE");
+      expect(new Headers(init?.headers).get("Authorization")).toBe(
+        "Bearer am-test",
+      );
+      return new Response(null, { status: 204 });
+    });
+
+    await expect(deleteWebhook("hook/legacy")).resolves.toBeUndefined();
   });
 });
 
 /* --------------------------- deterministic fallbacks ----------------------- */
+
+describe("activity-led venue research", () => {
+  it("uses the person's specific date idea as the first search", () => {
+    const queries = buildSearchQueries({
+      city: "Seoul",
+      area: "Seongsu",
+      whenIso: "2026-08-29T10:00:00.000Z",
+      timezone: "Asia/Seoul",
+      budgetMin: 10_000,
+      budgetMax: 30_000,
+      currency: "KRW",
+      interests: ["Films"],
+      dateTypes: ["film"],
+      dateIdea: "Watch an indie film",
+      vibe: "quiet",
+      dietary: [],
+      accessibility: [],
+      indoorOutdoor: "indoor",
+      desiredDurationMin: 120,
+    });
+    expect(queries[0]).toContain("Watch an indie film");
+    expect(queries[0]).toContain("Seongsu Seoul");
+  });
+});
 
 describe("venue extraction without a model", () => {
   const page = {
@@ -383,7 +461,9 @@ describe("venue extraction without a model", () => {
   });
 
   it("captures hours, price and address when the page states them", () => {
-    const sedici = extractVenues(page, "Seongsu").find((v) => v.name === "Sediciseoul");
+    const sedici = extractVenues(page, "Seongsu").find(
+      (v) => v.name === "Sediciseoul",
+    );
     expect(sedici?.openingHours).toMatch(/17:00/);
     expect(sedici?.approximatePrice).toMatch(/25,000/);
     expect(sedici?.address).toMatch(/Seongsui-ro/);
@@ -402,9 +482,10 @@ describe("venue extraction without a model", () => {
     const venue = extractVenues(messy, "Seongsu")[0];
     expect(venue).toBeDefined();
     // Better to say nothing than to quote mangled markdown as a price.
-    expect(venue.approximatePrice === null || /^[₩$€£¥][\d,]+$/.test(venue.approximatePrice)).toBe(
-      true,
-    );
+    expect(
+      venue.approximatePrice === null ||
+        /^[₩$€£¥][\d,]+$/.test(venue.approximatePrice),
+    ).toBe(true);
   });
 
   it("never claims more than low confidence", () => {
@@ -422,7 +503,26 @@ describe("venue extraction without a model", () => {
 
   it("classifies categories from the surrounding text", () => {
     const venues = extractVenues(page, "Seongsu");
-    expect(venues.find((v) => v.name === "Parco Pizzeria")?.category).toBe("restaurant");
+    expect(venues.find((v) => v.name === "Parco Pizzeria")?.category).toBe(
+      "restaurant",
+    );
+  });
+
+  it("recognises an independent cinema as a date venue", () => {
+    const venues = extractVenues(
+      {
+        url: "https://cinema.test",
+        title: "Moveseed Cinema",
+        content: [
+          "## Moveseed Cinema",
+          "An independent cinema with nightly film screenings and reserved seating.",
+          "Open daily 14:00-23:00.",
+          "22 Seongsui-ro, Seongdong-gu",
+        ].join("\n"),
+      },
+      "Seongsu",
+    );
+    expect(venues[0]?.category).toBe("cinema");
   });
 
   it("rejects a blog section heading with nothing venue-like around it", () => {
@@ -459,7 +559,11 @@ describe("venue extraction without a model", () => {
   it("returns nothing from a page with no headings and no usable title", () => {
     expect(
       extractVenues(
-        { url: "https://x.test", title: "Best guide to things to do", content: "short" },
+        {
+          url: "https://x.test",
+          title: "Best guide to things to do",
+          content: "short",
+        },
         "Seongsu",
       ),
     ).toEqual([]);
@@ -511,7 +615,31 @@ describe("plan composition without a model", () => {
     const plan = buildFallbackPlan(base)!;
     expect(plan.stops).toHaveLength(2);
     expect(plan.stops[0].venueIndex).toBe(0);
-    expect(plan.stops[1].startOffsetMin).toBeGreaterThan(plan.stops[0].durationMin - 1);
+    expect(plan.stops[1].startOffsetMin).toBeGreaterThan(
+      plan.stops[0].durationMin - 1,
+    );
+  });
+
+  it("keeps a specific movie idea to one complete stop", () => {
+    const plan = buildFallbackPlan({
+      ...base,
+      dateIdea: "Watch an indie film",
+      sharedDateTypes: ["film"],
+      venues: [
+        {
+          name: "Moveseed Cinema",
+          category: "cinema",
+          district: "Seongsu",
+          approximatePrice: "₩15,000",
+          confidence: "high" as const,
+          tags: [],
+        },
+        ...base.venues,
+      ],
+    })!;
+    expect(plan.stops).toHaveLength(1);
+    expect(plan.stops[0].venueIndex).toBe(0);
+    expect(plan.title).toContain("Watch an indie film");
   });
 
   it("keeps the cost inside the agreed range", () => {
@@ -531,7 +659,9 @@ describe("plan composition without a model", () => {
       dietary: ["no_alcohol_venue"],
       venues: [base.venues[2], base.venues[1]],
     })!;
-    const chosen = plan.stops.map((s) => [base.venues[2], base.venues[1]][s.venueIndex]);
+    const chosen = plan.stops.map(
+      (s) => [base.venues[2], base.venues[1]][s.venueIndex],
+    );
     expect(chosen.some((v) => v.category === "bar")).toBe(false);
   });
 
@@ -547,7 +677,11 @@ describe("plan composition without a model", () => {
 
   it("never asks the two people to exchange contact details", () => {
     const plan = buildFallbackPlan(base)!;
-    const allText = [plan.summary, plan.whyItFits, plan.meetingInstructions].join(" ");
+    const allText = [
+      plan.summary,
+      plan.whyItFits,
+      plan.meetingInstructions,
+    ].join(" ");
     // Reassurance ("you won't need to swap numbers") is fine; an instruction is not.
     expect(allText).not.toMatch(
       /(?<!(?:won't|will not|do not|don't|no) need to )(?<!never )(swap|exchange|share|send|give)\s+(?:them\s+)?(?:your\s+)?(numbers?|phone|contact|instagram|whatsapp|kakao|email)/i,

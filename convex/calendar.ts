@@ -102,6 +102,28 @@ export const rotate = mutation({
   },
 });
 
+/** Revoke the capability URL. A user can create a fresh one later. */
+export const disable = mutation({
+  args: {},
+  returns: v.null(),
+  handler: async (ctx) => {
+    const userId = await requireUserId(ctx);
+    const existing = await ctx.db
+      .query("calendarFeeds")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .unique();
+    if (existing) {
+      await ctx.db.delete("calendarFeeds", existing._id);
+      await recordAudit(ctx, {
+        action: "calendar.disabled",
+        actorUserId: userId,
+        detail: "Revoked private calendar subscription",
+      });
+    }
+    return null;
+  },
+});
+
 const calendarEventValidator = v.object({
   uid: v.string(),
   startMs: v.number(),
@@ -155,7 +177,7 @@ export const getFeedByToken = internalQuery({
       events.push({
         // Keep the pre-rename namespace forever: changing a VEVENT UID creates
         // duplicate calendar entries for existing subscribers.
-        uid: `${drop._id}@datedrop`,
+        uid: `${drop._id}@datehaja`,
         startMs: drop.startMs,
         endMs: drop.endMs,
         updatedAt: drop.updatedAt,

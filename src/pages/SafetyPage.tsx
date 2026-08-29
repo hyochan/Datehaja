@@ -1,7 +1,9 @@
+/* oxlint-disable react/set-state-in-effect -- hydrate optional private settings from the live query */
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
+import { PageIntro } from "../components/layout/PageIntro";
 import {
   Button,
   Card,
@@ -59,18 +61,16 @@ export default function SafetyPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-8">
-      <header>
-        <div className="docket-label mb-2 text-[var(--accent-text)]">
-          {t("Public record · Safety")}
-        </div>
-        <h1 className="text-[28px] leading-tight">{t("Safety Center")}</h1>
-        <p className="mt-1.5 text-[15.5px] leading-relaxed text-soft">
-          {t(
-            "Datehaja sends you to meet a stranger in public. Here's what we do, what we don't, and what's in your hands.",
-          )}
-        </p>
-      </header>
+    <div className="product-page mx-auto max-w-3xl space-y-10">
+      <PageIntro
+        eyebrow={t("Public record · Safety")}
+        title={t("Safety Center")}
+        description={t(
+          "Datehaja sends you to meet a stranger in public. Here's what we do, what we don't, and what's in your hands.",
+        )}
+        motif="+"
+        tone="butter"
+      />
 
       <Notice tone="warn" title={t("We are not an emergency service")}>
         {t(

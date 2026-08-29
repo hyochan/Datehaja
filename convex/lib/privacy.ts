@@ -19,6 +19,11 @@ export type PublicPreview = {
   languages: string[];
   socialEnergy: string;
   pronouns: string | null;
+  bio: string;
+  personalityTraits: string[];
+  styleTags: string[];
+  firstDateVibe: string[];
+  relationshipIntent: string | null;
   isDemo: boolean;
 };
 
@@ -34,23 +39,40 @@ type ProfileLike = {
   languages: string[];
   socialEnergy: string;
   pronouns?: string;
+  bio: string;
+  personalityTraits?: string[];
+  styleTags?: string[];
+  firstDateVibe: string[];
   isDemo: boolean;
 };
 
 /** Fields never shown before both people have accepted. */
 export const MAX_PREVIEW_INTERESTS = 5;
 
-export function toPublicPreview(profile: ProfileLike): PublicPreview {
+export function toPublicPreview(
+  profile: ProfileLike,
+  relationshipIntent?: string,
+): PublicPreview {
   return {
     displayName: firstNameOnly(profile.displayName),
     age: profile.ageYears,
     area: profile.neighborhood,
     city: profile.city,
-    occupation: profile.showOccupation ? (profile.occupationCategory ?? null) : null,
-    interests: [...profile.interests, ...profile.hobbies].slice(0, MAX_PREVIEW_INTERESTS),
+    occupation: profile.showOccupation
+      ? (profile.occupationCategory ?? null)
+      : null,
+    interests: [...profile.interests, ...profile.hobbies].slice(
+      0,
+      MAX_PREVIEW_INTERESTS,
+    ),
     languages: profile.languages.slice(0, 3),
     socialEnergy: profile.socialEnergy,
     pronouns: profile.pronouns ?? null,
+    bio: profile.bio,
+    personalityTraits: (profile.personalityTraits ?? []).slice(0, 5),
+    styleTags: (profile.styleTags ?? []).slice(0, 3),
+    firstDateVibe: profile.firstDateVibe.slice(0, 4),
+    relationshipIntent: relationshipIntent ?? null,
     isDemo: profile.isDemo,
   };
 }
@@ -77,7 +99,7 @@ const PHONE_RE = /(?:\+?\d[\d\s().-]{7,}\d)/g;
 const URL_RE = /\b(?:https?:\/\/|www\.)\S+/gi;
 const HANDLE_RE = /(?:^|\s)@[A-Za-z0-9._]{2,}/g;
 const MESSENGER_RE =
-  /\b(?:kakao|katalk|카톡|카카오|line\s*id|wechat|telegram|insta(?:gram)?|snapchat|whats\s*app)\b\s*[:\-]?\s*\S{2,}/gi;
+  /\b(?:kakao|katalk|카톡|카카오|line\s*id|wechat|telegram|insta(?:gram)?|snapchat|whats\s*app)\b\s*[:-]?\s*\S{2,}/gi;
 
 /**
  * Strip contact handles out of free text before it is shown to another user.

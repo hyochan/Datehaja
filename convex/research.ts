@@ -4,7 +4,12 @@ import type { ActionCtx } from "./_generated/server";
 import type { Id } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
 import { confidenceValidator } from "./lib/enums";
-import { NOISE_DOMAINS, hasFirecrawlKey, scrape, search } from "./integrations/firecrawl";
+import {
+  NOISE_DOMAINS,
+  hasFirecrawlKey,
+  scrape,
+  search,
+} from "./integrations/firecrawl";
 import { normaliseVenues } from "./ai";
 import { hasOpenAI } from "./integrations/openai";
 import { truncate } from "./lib/text";
@@ -32,6 +37,7 @@ const queryValidator = v.object({
   currency: v.string(),
   interests: v.array(v.string()),
   dateTypes: v.array(v.string()),
+  dateIdea: v.optional(v.string()),
   vibe: v.string(),
   dietary: v.array(v.string()),
   accessibility: v.array(v.string()),
@@ -49,6 +55,7 @@ export type ResearchQuery = {
   currency: string;
   interests: string[];
   dateTypes: string[];
+  dateIdea?: string;
   vibe: string;
   dietary: string[];
   accessibility: string[];
@@ -151,7 +158,9 @@ export const getVenues = internalQuery({
   handler: async (ctx, args) => {
     return await ctx.db
       .query("venues")
-      .withIndex("by_research_run", (q) => q.eq("researchRunId", args.researchRunId))
+      .withIndex("by_research_run", (q) =>
+        q.eq("researchRunId", args.researchRunId),
+      )
       .take(40);
   },
 });
@@ -173,15 +182,26 @@ export function buildSearchQueries(q: ResearchQuery): string[] {
     .filter((d) => d !== "alcohol-free venue")
     .slice(0, 2)
     .join(" ");
-  const primary = q.dateTypes[0] ? (DATE_TYPE_LABEL.get(q.dateTypes[0]) ?? "dinner") : "dinner";
-  const secondary = q.dateTypes[1] ? (DATE_TYPE_LABEL.get(q.dateTypes[1]) ?? "coffee") : "coffee";
-  const vibe = q.vibe === "quiet" ? "quiet intimate" : q.vibe === "lively" ? "lively" : "";
+  const primary = q.dateTypes[0]
+    ? (DATE_TYPE_LABEL.get(q.dateTypes[0]) ?? "activity")
+    : "activity";
+  const secondary = q.dateTypes[1]
+    ? (DATE_TYPE_LABEL.get(q.dateTypes[1]) ?? "coffee")
+    : "coffee";
+  const vibe =
+    q.vibe === "quiet" ? "quiet intimate" : q.vibe === "lively" ? "lively" : "";
 
+  const requested = q.dateIdea?.trim();
   const queries = [
-    `best ${vibe} ${primary} ${dietary} in ${q.area} ${q.city} ${year} address opening hours`.replace(
-      /\s+/g,
-      " ",
-    ),
+    requested
+      ? `${requested} in ${q.area} ${q.city} ${year} venue address opening hours`.replace(
+          /\s+/g,
+          " ",
+        )
+      : `best ${vibe} ${primary} ${dietary} in ${q.area} ${q.city} ${year} address opening hours`.replace(
+          /\s+/g,
+          " ",
+        ),
     `${secondary} spots in ${q.area} ${q.city} good for a date ${year}`,
   ];
 
@@ -323,22 +343,22 @@ export async function researchDateOptions(
     venues = result.venues;
     error = result.error;
   } else {
-    error = "OPENAI_API_KEY is not configured — venues extracted without a model.";
+    error =
+      "OPENAI_API_KEY is not configured — venues extracted without a model.";
   }
 
   if (venues.length === 0) {
     extractedBy = "heuristics";
-    venues = sources
-      .slice(0, 8)
-      .flatMap((source) =>
-        extractVenues(source, args.query.area, 4).map((venue) => ({
-          ...venue,
-          sourceUrl: source.url,
-          reservationNeeded: null,
-        })),
-      );
+    venues = sources.slice(0, 8).flatMap((source) =>
+      extractVenues(source, args.query.area, 4).map((venue) => ({
+        ...venue,
+        sourceUrl: source.url,
+        reservationNeeded: null,
+      })),
+    );
     if (venues.length > 0 && !error) {
-      error = "Model extraction returned nothing — fell back to rule-based extraction.";
+      error =
+        "Model extraction returned nothing — fell back to rule-based extraction.";
     }
   }
   void extractedBy;
@@ -360,20 +380,25 @@ export async function researchDateOptions(
       reservationNeeded: venue.reservationNeeded ?? undefined,
       evidence: venue.evidence,
       tags: venue.tags,
-      mapsQuery: `${venue.name} ${venue.address || venue.district} ${args.query.city}`.trim(),
+      mapsQuery:
+        `${venue.name} ${venue.address || venue.district} ${args.query.city}`.trim(),
       confidence: venue.confidence,
     }));
 
-  const status = usable.length > 0 ? (error ? "partial" : "succeeded") : "failed";
+  const status =
+    usable.length > 0 ? (error ? "partial" : "succeeded") : "failed";
 
-  const venueIds: Id<"venues">[] = await ctx.runMutation(internal.research.finishRun, {
-    researchRunId,
-    status,
-    calls,
-    sourceUrls: sources.map((s) => s.url),
-    venues: usable,
-    error,
-  });
+  const venueIds: Id<"venues">[] = await ctx.runMutation(
+    internal.research.finishRun,
+    {
+      researchRunId,
+      status,
+      calls,
+      sourceUrls: sources.map((s) => s.url),
+      venues: usable,
+      error,
+    },
+  );
 
   return {
     researchRunId,

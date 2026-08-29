@@ -15,11 +15,19 @@ export const LIMITS = {
   availabilityWindows: 12,
 } as const;
 
-const CONTROL_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g;
+function stripControlCharacters(input: string): string {
+  return [...input]
+    .filter((character) => {
+      const code = character.charCodeAt(0);
+      return (
+        code === 9 || code === 10 || code === 13 || (code >= 32 && code !== 127)
+      );
+    })
+    .join("");
+}
 
 export function clean(input: string, maxLength: number): string {
-  return input
-    .replace(CONTROL_CHARS, "")
+  return stripControlCharacters(input)
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, maxLength);
@@ -27,8 +35,7 @@ export function clean(input: string, maxLength: number): string {
 
 /** Multi-line variant — keeps paragraph breaks, drops runs of blank lines. */
 export function cleanMultiline(input: string, maxLength: number): string {
-  return input
-    .replace(CONTROL_CHARS, "")
+  return stripControlCharacters(input)
     .replace(/\r\n/g, "\n")
     .replace(/[ \t]+/g, " ")
     .replace(/\n{3,}/g, "\n\n")

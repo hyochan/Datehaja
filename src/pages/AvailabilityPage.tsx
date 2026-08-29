@@ -1,4 +1,5 @@
 import { AvailabilityEditor } from "../components/forms/AvailabilityEditor";
+import { PageIntro } from "../components/layout/PageIntro";
 import { Notice } from "../components/ui/primitives";
 import { useI18n } from "../i18n";
 
@@ -6,15 +7,16 @@ export default function AvailabilityPage() {
   const { t } = useI18n();
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
-      <header>
-        <h1 className="text-[28px] leading-tight">{t("When you're free")}</h1>
-        <p className="mt-1.5 text-[15.5px] leading-relaxed text-soft">
-          {t(
-            "This is the only thing Datehaja ever asks of you. The more windows you leave open, the better the match we can find.",
-          )}
-        </p>
-      </header>
+    <div className="product-page mx-auto max-w-3xl space-y-8">
+      <PageIntro
+        eyebrow={t("Your availability")}
+        title={t("What would you like to do?")}
+        description={t(
+          "Start with the date, not the profile. A film by itself is a complete plan.",
+        )}
+        motif="↗"
+        tone="butter"
+      />
 
       <AvailabilityEditor />
 

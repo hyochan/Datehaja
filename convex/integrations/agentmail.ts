@@ -51,7 +51,8 @@ async function am<T>(
   init: RequestInit & { idempotencyKey?: string } = {},
 ): Promise<T> {
   const apiKey = process.env.AGENTMAIL_API_KEY;
-  if (!apiKey) throw new AgentMailError(0, "AGENTMAIL_API_KEY is not configured.");
+  if (!apiKey)
+    throw new AgentMailError(0, "AGENTMAIL_API_KEY is not configured.");
 
   const { idempotencyKey, headers, ...rest } = init;
   const res = await fetch(`${AGENTMAIL_BASE}${path}`, {
@@ -97,7 +98,10 @@ export async function createInbox(args: {
   });
 }
 
-export async function listInboxes(): Promise<{ inboxes: Inbox[]; count: number }> {
+export async function listInboxes(): Promise<{
+  inboxes: Inbox[];
+  count: number;
+}> {
   return am<{ inboxes: Inbox[]; count: number }>("/inboxes?limit=20");
 }
 
@@ -146,7 +150,11 @@ export async function replyToMessage(args: {
       idempotencyKey: args.idempotencyKey
         ? safeIdempotencyKey(args.idempotencyKey)
         : undefined,
-      body: JSON.stringify({ text: args.text, html: args.html, reply_all: false }),
+      body: JSON.stringify({
+        text: args.text,
+        html: args.html,
+        reply_all: false,
+      }),
     },
   );
 }
@@ -214,16 +222,17 @@ export async function listWebhooks(): Promise<{ webhooks: Webhook[] }> {
   return am<{ webhooks: Webhook[] }>("/webhooks");
 }
 
+export async function deleteWebhook(webhookId: string): Promise<void> {
+  await am<null>(`/webhooks/${pathId(webhookId)}`, { method: "DELETE" });
+}
+
 /* --------------------------- webhook verification -------------------------- */
 
 const b64ToBytes = (b64: string) =>
   Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
-const bytesToB64 = (bytes: Uint8Array) =>
-  btoa(String.fromCharCode(...bytes));
+const bytesToB64 = (bytes: Uint8Array) => btoa(String.fromCharCode(...bytes));
 
-export type VerifyOutcome =
-  | { ok: true }
-  | { ok: false; reason: string };
+export type VerifyOutcome = { ok: true } | { ok: false; reason: string };
 
 /**
  * AgentMail signs webhooks with Svix. The `svix` npm package needs Node crypto
@@ -279,7 +288,8 @@ export async function verifyWebhookSignature(args: {
 
   const matched = svixSignature.split(" ").some((part) => {
     const [version, sig] = part.split(",");
-    if (version !== "v1" || !sig || sig.length !== expected.length) return false;
+    if (version !== "v1" || !sig || sig.length !== expected.length)
+      return false;
     let diff = 0;
     for (let i = 0; i < sig.length; i++) {
       diff |= sig.charCodeAt(i) ^ expected.charCodeAt(i);

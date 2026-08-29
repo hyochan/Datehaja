@@ -26,26 +26,27 @@ submission portal asks for an unedited browser walkthrough.
 
 ---
 
-## 0:00–0:18 · One evening in, one date out
+## 0:00–0:18 · Start with the date, not a profile
 
 **On screen:** redesigned landing hero.
 
-> Dating apps ask who you like, then make you swipe and chat for days.
-> Datehaja asks one smaller question: when are you free?
+> Dating apps start with a wall of people. Datehaja starts with something more
+> natural: what do you actually want to do with someone new?
 
 Click **Read the two-minute brief**. Let the connected concierge flow settle on
 screen: two availability slips, research, two locked answers, one date ticket.
 
-> One free evening goes in. A real date comes out.
+> A film, a walk, an exhibition — bring the idea, and Datehaja finds the person.
 
-## 0:18–0:38 · Availability is the only input
+## 0:18–0:38 · The activity is the anchor
 
 **On screen:** availability editor.
 
-> This is the whole ask: Saturday, six to ten-thirty. Times are interpreted in
-> the city where the date happens, not the browser's timezone.
+> I choose Saturday, six to ten-thirty, and say what I want: an indie film.
+> The film can be the whole date. Datehaja never adds dinner just to make the
+> itinerary look busier.
 
-Add the window, return to the dashboard, and click **Find me a date**.
+Add the idea, return to the dashboard, and click **Find someone to go with**.
 
 ## 0:38–1:05 · Convex is doing the work
 
@@ -114,7 +115,7 @@ Briefly reveal the private post-date check-in heading without filling it in.
 
 **On screen:** return to the landing hero or final date ticket.
 
-> Datehaja only asks when you're free. Pick a night. Let's make it a date.
+> Tell Datehaja what you want to do. It finds someone who wants to do it too.
 
 ---
 

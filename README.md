@@ -1,12 +1,13 @@
 # Datehaja
 
-**Pick a night. Let's make it a date.**
+**Tell us what you want to do. Find someone who wants to do it too.**
 
 **데이트하자** means “let's go on a date” in Korean: a warm, direct invitation,
-not a dating-app label. Datehaja never asks who
-you like. It asks when you're free — then researches a real date at a real
-place, works out who you'd actually enjoy it with, and privately invites you
-both. No swiping. No endless chats. No exchanging contact information.
+not a dating-app label. Datehaja starts with the date you actually want — a
+film, a walk, an exhibition, live music, or anything else. It then finds a
+compatible new person who wants to join you, researches the real place, and
+privately invites you both. No swiping. No endless chats. No requirement to
+turn one good activity into a longer evening.
 
 **Live app:** https://datehaja.com
 **Built for:** the [Convex All Gas Hackathon](https://www.convex.dev/hackathons/all-gas) (Convex · OpenAI · Firecrawl · AgentMail)
@@ -25,9 +26,9 @@ And to get that far, you traded your phone number, your Instagram, or your email
 
 Invert it.
 
-| Every other dating app                                                              | Datehaja                                                                                              |
-| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| Browse → Swipe → Match → Chat forever → Maybe decide to meet → Work out where to go | Say when you're free → We find someone compatible → We plan a real date → You both say yes → You meet |
+| Every other dating app                                                              | Datehaja                                                                                     |
+| ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| Browse → Swipe → Match → Chat forever → Maybe decide to meet → Work out where to go | Say what you want to do → We find someone who wants it too → You both say yes → You go do it |
 
 A **date plan** is not a match. It's a time, a real place found by live web
 research, an estimated cost, a short honest reason it suits you both, and one
@@ -35,12 +36,12 @@ decision to make: accept or pass.
 
 ## How Datehaja works
 
-1. **You set availability.** "Saturday, 6–10:30 PM." That's the only thing Datehaja ever asks of you.
+1. **You name the date and the time.** “An indie film on Saturday, 6–10:30 PM. The film can be the whole date.” The activity is the anchor, not an afterthought.
 2. **Hard filters run in code.** Age, mutual gender interest, distance, genuine availability overlap, blocks, moderation state, budget, shared language. This stage is pure TypeScript and is the only thing allowed to exclude anyone.
 3. **Survivors are scored deterministically.** Shared interests, compatible date styles, distance, overlap length, budget fit, lifestyle and atmosphere fit — each contributing a known weight, with the signals recorded alongside the score.
 4. **OpenAI ranks the shortlist** and explains, in language you could show either person, why a particular pairing would work. It never sees a pair that failed step 2, and it cannot overrule a rule.
-5. **Firecrawl researches the actual evening.** Live web search around the midpoint of the two people, filtered by the date types, budget, dietary needs and accessibility requirements they both stated. Every venue keeps its source URL, a verbatim evidence snippet, and a timestamp.
-6. **OpenAI writes the plan** from those researched venues only — one or two stops, inside budget, respecting every stated constraint.
+5. **Firecrawl researches the requested activity.** Live web search around the midpoint of the two people, anchored by the specific date idea and filtered by budget, accessibility and their shared preferences. Every venue keeps its source URL, a verbatim evidence snippet, and a timestamp.
+6. **OpenAI writes the plan** from those researched venues only. A single film, walk, or exhibition is a complete date; it adds a second stop only when the request genuinely calls for one.
 7. **Datehaja Concierge invites both people privately**, by email, from its own AgentMail inbox. Neither sees the other's address.
 8. **They independently accept or pass.** Neither learns the other's answer until it's a date.
 9. **If one passes,** the other's evening stays held and Datehaja looks for someone else who fits the same plan — rather than cancelling on the person who said yes.
@@ -200,8 +201,8 @@ They are labelled **Demo profile** everywhere they appear, they never receive em
 
 1. Create an account at https://datehaja.com
 2. Onboard (city **Seoul** — that's where the demo personas are)
-3. Add an evening you're free
-4. **Find me a date** — watch the stages advance; each one is a real document update
+3. Add the date you want to have and when you are free
+4. **Find someone to go with** — watch the stages advance; each one is a real document update
 5. Open the date plan; expand **How we built this** to see the live pages Firecrawl crawled
 6. **Accept**
 7. Go to **Demo controls** → **They accept**, and watch it become _It's a date_. Open a second browser window on the dashboard first to see it flip live.
@@ -223,7 +224,9 @@ node -e 'import("jose").then(async({generateKeyPair,exportPKCS8,exportJWK})=>{co
 Then set `JWT_PRIVATE_KEY` and `JWKS` from that file on the deployment and delete it.
 
 ```bash
-bun run test             # 199 tests
+bun run test             # 211 tests
+bun run test:e2e         # public/legal/mobile browser smoke tests
+bun run test:e2e:full    # disposable account through match, accept and cancel
 bun run typecheck
 bun run build
 bunx convex run demo:ensureSeeded '{}'    # seed the demo personas
@@ -334,11 +337,13 @@ src/
 
 ## Testing
 
-199 tests, `bun run test`.
+211 automated unit and integration tests, plus Playwright browser coverage.
 
 - **Unit** — hard filters (every exclusion reason and its soft counterpart), deterministic scoring bounds and ordering, lifecycle transitions including every illegal one, expiry and deadline rules, availability overlap, timezone handling across zones, and the privacy projections (including an assertion that no coordinate, DOB, email or surname can leak through).
 - **Integration** (`convex-test`) — accept, pass, withdraw, cancel, expire and complete driven as real signed-in users, plus the negative authorisation cases: a stranger can't accept your drop, a signed-out caller can't act, a non-participant sees `null`.
 - **Provider parsing** — OpenAI reasoning-item traversal, refusals, truncation, the model ladder and billing hard-stops; Firecrawl's grouped `data.web` shape, HTTP errors and network failures; the Svix verifier against real signatures, tampered bodies, replays and wrong secrets.
+
+- **Browser E2E** — `bun run test:e2e` checks the landing page, public legal records, sign-up consent, and mobile overflow. `bun run test:e2e:full` creates a disposable account, completes the activity-first onboarding, runs live matching, accepts from both sides, verifies the finalized calendar state, and cancels the date.
 
 - **Replacement flow** — a dedicated suite for the three-participant shape a drop takes after someone passes, because that shape is where the subtle bugs live: the counterpart must be the person still on the date, and someone who has left must not be able to cancel it, read its notes, or receive the other person's photo.
 

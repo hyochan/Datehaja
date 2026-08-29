@@ -2,7 +2,14 @@ import { Link } from "react-router-dom";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import type { Id } from "@convex/_generated/dataModel";
-import { Button, Card, EmptyState, Skeleton, cx } from "../components/ui/primitives";
+import { PageIntro } from "../components/layout/PageIntro";
+import {
+  Button,
+  Card,
+  EmptyState,
+  Skeleton,
+  cx,
+} from "../components/ui/primitives";
 import { relativeTime } from "../lib/format";
 import { useI18n } from "../i18n";
 
@@ -13,20 +20,25 @@ export default function NotificationsPage() {
   const { t } = useI18n();
 
   return (
-    <div className="mx-auto max-w-2xl space-y-5">
-      <header className="flex items-end justify-between gap-4">
-        <div>
-          <h1 className="text-[28px] leading-tight">{t("Notifications")}</h1>
-          <p className="mt-1.5 text-[15px] text-soft">
-            {t("Everything Datehaja has told you, newest first.")}
-          </p>
-        </div>
-        {notifications && notifications.some((n) => !n.read) && (
-          <Button variant="ghost" size="sm" onClick={() => void markAllRead({})}>
-            {t("Mark all read")}
-          </Button>
-        )}
-      </header>
+    <div className="product-page mx-auto max-w-3xl space-y-7">
+      <PageIntro
+        eyebrow={t("Notifications")}
+        title={t("Notifications")}
+        description={t("Everything Datehaja has told you, newest first.")}
+        motif="•"
+        tone="coral"
+        action={
+          notifications && notifications.some((n) => !n.read) ? (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => void markAllRead({})}
+            >
+              {t("Mark all read")}
+            </Button>
+          ) : undefined
+        }
+      />
 
       {notifications === undefined ? (
         <Skeleton className="h-40 w-full rounded-card" />
@@ -34,7 +46,9 @@ export default function NotificationsPage() {
         <Card>
           <EmptyState
             title={t("Nothing yet")}
-            body={t("When a date plan lands, is confirmed, or changes, you'll see it here.")}
+            body={t(
+              "When a date plan lands, is confirmed, or changes, you'll see it here.",
+            )}
           />
         </Card>
       ) : (
@@ -43,7 +57,9 @@ export default function NotificationsPage() {
             const body = (
               <>
                 <div className="flex items-baseline justify-between gap-3">
-                  <span className="text-[15px] font-medium">{notification.title}</span>
+                  <span className="text-[15px] font-medium">
+                    {notification.title}
+                  </span>
                   <span className="shrink-0 text-[12.5px] text-muted">
                     {relativeTime(notification._creationTime)}
                   </span>
@@ -58,7 +74,8 @@ export default function NotificationsPage() {
                 <Card
                   className={cx(
                     "transition-colors",
-                    !notification.read && "border-[var(--tint-ember-border)] bg-[var(--tint-ember-bg)]",
+                    !notification.read &&
+                      "border-[var(--tint-ember-border)] bg-[var(--tint-ember-bg)]",
                   )}
                 >
                   {notification.href ? (
@@ -67,7 +84,8 @@ export default function NotificationsPage() {
                       className="block p-4"
                       onClick={() =>
                         void markRead({
-                          notificationId: notification._id as Id<"notifications">,
+                          notificationId:
+                            notification._id as Id<"notifications">,
                         })
                       }
                     >

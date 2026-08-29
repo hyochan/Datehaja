@@ -15,14 +15,19 @@ import {
   genderValidator,
   indoorOutdoorValidator,
   moderationStatusValidator,
+  connectionQualityValidator,
   meetAgainValidator,
   notificationKindValidator,
   participantStateValidator,
   passReasonValidator,
   profileStatusValidator,
+  photoVisibilityValidator,
+  preferenceStrengthValidator,
+  profileAccuracyValidator,
   relationshipIntentValidator,
   reportCategoryValidator,
   reportStatusValidator,
+  respectValidator,
   smokingValidator,
   socialEnergyValidator,
 } from "./lib/enums";
@@ -56,6 +61,10 @@ export default defineSchema({
     timezone: v.string(),
 
     bio: v.string(),
+    /** Optional self-described traits. These are safer than a numeric beauty rank. */
+    personalityTraits: v.optional(v.array(v.string())),
+    styleTags: v.optional(v.array(v.string())),
+    profileTruthConfirmed: v.optional(v.boolean()),
     occupationCategory: v.optional(v.string()),
     showOccupation: v.boolean(),
     interests: v.array(v.string()),
@@ -70,8 +79,9 @@ export default defineSchema({
       earlyBird: v.optional(v.boolean()),
     }),
 
-    /** Optional. Only revealed to the other participant after BOTH accept. */
+    /** Optional. Visibility is controlled separately and defaults to after accept. */
     photoStorageId: v.optional(v.id("_storage")),
+    photoVisibility: v.optional(photoVisibilityValidator),
 
     onboardingStep: v.number(),
     onboardingComplete: v.boolean(),
@@ -97,6 +107,9 @@ export default defineSchema({
 
     maxDistanceKm: v.number(),
     distanceHard: v.boolean(),
+    /** Neighbourhoods where this person is comfortable having the date. */
+    preferredAreas: v.optional(v.array(v.string())),
+    areaHard: v.optional(v.boolean()),
 
     relationshipIntent: relationshipIntentValidator,
     intentHard: v.boolean(),
@@ -108,6 +121,10 @@ export default defineSchema({
     alcoholHard: v.boolean(),
 
     preferredDateTypes: v.array(v.string()),
+    preferredPersonalityTraits: v.optional(v.array(v.string())),
+    personalityPreference: v.optional(preferenceStrengthValidator),
+    preferredStyleTags: v.optional(v.array(v.string())),
+    stylePreference: v.optional(preferenceStrengthValidator),
     budgetMinPerPerson: v.number(),
     budgetMaxPerPerson: v.number(),
     currency: v.string(),
@@ -132,6 +149,18 @@ export default defineSchema({
     allowDemoMatches: v.boolean(),
 
     updatedAt: v.number(),
+  }).index("by_user", ["userId"]),
+
+  // ---- legal acknowledgement -----------------------------------------
+  /** Versioned proof of the documents a user accepted. One record per user. */
+  legalConsents: defineTable({
+    userId: v.id("users"),
+    termsVersion: v.string(),
+    privacyVersion: v.string(),
+    communityVersion: v.string(),
+    acceptedAt: v.number(),
+    ageConfirmed: v.boolean(),
+    locale: v.string(),
   }).index("by_user", ["userId"]),
 
   // ---- availability ----------------------------------------------------
@@ -245,6 +274,8 @@ export default defineSchema({
       sharedInterests: v.array(v.string()),
       sharedLanguages: v.array(v.string()),
       distanceKm: v.number(),
+      sharedAreas: v.optional(v.array(v.string())),
+      areaMatch: v.optional(v.number()),
       overlapMinutes: v.number(),
       overlapStartMs: v.number(),
       overlapEndMs: v.number(),
@@ -254,6 +285,9 @@ export default defineSchema({
       sharedDateTypes: v.array(v.string()),
       styleMatch: v.number(),
       lifestyleMatch: v.number(),
+      personalityMatch: v.optional(v.number()),
+      tasteMatch: v.optional(v.number()),
+      trustMatch: v.optional(v.number()),
     }),
     aiScore: v.optional(v.number()),
     aiRationale: v.optional(v.string()),
@@ -326,6 +360,8 @@ export default defineSchema({
     cancelReason: v.optional(v.string()),
     expiredAt: v.optional(v.number()),
     completedAt: v.optional(v.number()),
+    /** Set only when both private post-date answers are an explicit yes. */
+    mutualMeetAgainAt: v.optional(v.number()),
     failureReason: v.optional(v.string()),
 
     isDemo: v.boolean(),
@@ -376,9 +412,14 @@ export default defineSchema({
   dateFeedback: defineTable({
     dropId: v.id("dateDrops"),
     userId: v.id("users"),
+    /** Counterpart being reviewed. Optional for legacy feedback rows. */
+    reviewedUserId: v.optional(v.id("users")),
     outcome: dateOutcomeValidator,
     safety: dateSafetyValidator,
     meetAgain: meetAgainValidator,
+    profileAccuracy: v.optional(profileAccuracyValidator),
+    respectful: v.optional(respectValidator),
+    connection: v.optional(connectionQualityValidator),
     venueRating: v.optional(v.number()),
     note: v.optional(v.string()),
     followUpRequested: v.boolean(),
@@ -387,6 +428,7 @@ export default defineSchema({
   })
     .index("by_drop", ["dropId"])
     .index("by_user", ["userId"])
+    .index("by_reviewed_user", ["reviewedUserId"])
     .index("by_drop_and_user", ["dropId", "userId"]),
 
   /** Secret capability URL for a user's read-only iCalendar subscription. */
@@ -414,6 +456,7 @@ export default defineSchema({
       currency: v.string(),
       interests: v.array(v.string()),
       dateTypes: v.array(v.string()),
+      dateIdea: v.optional(v.string()),
       vibe: v.string(),
       dietary: v.array(v.string()),
       accessibility: v.array(v.string()),

@@ -6,6 +6,7 @@ import { api } from "@convex/_generated/api";
 import { cx } from "../ui/primitives";
 import { Logo } from "./Logo";
 import { LocaleSwitcher } from "./LocaleSwitcher";
+import { Wordmark } from "./Wordmark";
 import { useI18n } from "../../i18n";
 
 const NAV = [
@@ -21,8 +22,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { t } = useI18n();
 
   return (
-    <div className="min-h-dvh">
-      <header className="glass-bar sticky top-0 z-30 border-b border-[var(--border)]">
+    <div className="app-shell min-h-dvh">
+      <header className="app-header glass-bar sticky top-0 z-30 border-b border-[var(--border)]">
         <div className="mx-auto flex h-[4.5rem] max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
           <Link
             to="/dashboard"
@@ -31,16 +32,14 @@ export function AppShell({ children }: { children: ReactNode }) {
           >
             <Logo className="h-8 w-8" />
             <span className="leading-none">
-              <span className="brand-wordmark block text-[20px] font-medium">
-                Datehaja
-              </span>
+              <Wordmark className="text-[22px]" />
               <span className="docket-label mt-1 block text-[8px] text-muted">
                 {t("Private date concierge")}
               </span>
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-1 rounded-full border border-[var(--border)] bg-[var(--bg-raised)] p-1 sm:flex">
+          <nav className="app-nav hidden items-center gap-1 rounded-full border border-[var(--border)] bg-[var(--bg-raised)] p-1 sm:flex">
             {NAV.map((item, index) => (
               <NavLink
                 key={item.to}
@@ -88,13 +87,13 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <main
         key={location.pathname}
-        className="mx-auto max-w-6xl px-4 pb-28 pt-7 sm:px-6 sm:pb-16 sm:pt-11"
+        className="app-main mx-auto max-w-6xl px-4 pb-28 pt-7 sm:px-6 sm:pb-16 sm:pt-11"
       >
         {children}
       </main>
 
       <nav
-        className="glass-bar fixed inset-x-3 bottom-3 z-30 overflow-hidden rounded-[1.4rem] border border-[var(--border)] pb-[env(safe-area-inset-bottom)] shadow-[var(--shadow-lift)] sm:hidden"
+        className="app-mobile-nav glass-bar fixed inset-x-3 bottom-3 z-30 overflow-hidden rounded-[1.4rem] border border-[var(--border)] pb-[env(safe-area-inset-bottom)] shadow-[var(--shadow-lift)] sm:hidden"
         aria-label={t("Main")}
       >
         <div className="flex">

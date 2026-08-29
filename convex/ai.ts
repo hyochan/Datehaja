@@ -69,8 +69,11 @@ export type PersonBrief = {
   occupation: string | null;
   bio: string;
   interests: string[];
+  personalityTraits: string[];
+  styleTags: string[];
   socialEnergy: string;
   firstDateVibe: string[];
+  dateIdea: string | null;
   languages: string[];
   relationshipIntent: string;
   preferredDateTypes: string[];
@@ -117,7 +120,7 @@ const RANK_SCHEMA = obj({
       suggested_date_type: {
         type: "string",
         description:
-          "One of: coffee, dinner, drinks, exhibition, museum, walk, dessert, live_music, casual_activity, surprise",
+          "One of: film, coffee, dinner, drinks, exhibition, museum, walk, dessert, live_music, casual_activity, surprise",
       },
     }),
   },
@@ -125,9 +128,11 @@ const RANK_SCHEMA = obj({
 
 const RANK_INSTRUCTIONS = `You match adults for a single first date on Datehaja.
 
-You are given one person (the seeker) and a shortlist of candidates who have ALREADY passed every hard requirement — age, distance, mutual interest, availability, safety. Your job is only to rank how well each pairing would work as one specific first date, and to explain it in human terms.
+You are given one person (the seeker) and a shortlist of candidates who have ALREADY passed every hard requirement — age, distance, meeting area, mutual interest, availability, safety. Your job is only to rank how well each pairing would work as one specific first date, and to explain it in human terms.
 
 Rules:
+- The seeker's dateIdea is the anchor when present. Prefer someone whose own idea, interests, or preferredDateTypes show they would genuinely enjoy joining that exact activity.
+- Do not turn a simple requested activity into a bigger itinerary. A film, walk, or exhibition can be the complete date.
 - Rank on shared interests, compatible first-date style, energy fit, and how naturally a good evening writes itself for the two of them.
 - NEVER rank on, infer, or mention gender, race, religion, nationality, disability, body, or income. If a bio implies any of these, ignore it.
 - Write the rationale as something you would happily show to both people. Warm, specific, no flattery, no scores, no mention of ranking or AI.
@@ -199,7 +204,8 @@ export async function rankCandidatesWithAI(
   const ranked: RankedCandidate[] = [];
   for (const row of result.data.ranked ?? []) {
     const idx = Number(row.candidate_index);
-    if (!Number.isInteger(idx) || idx < 0 || idx >= input.candidates.length) continue;
+    if (!Number.isInteger(idx) || idx < 0 || idx >= input.candidates.length)
+      continue;
     if (seen.has(idx)) continue;
     seen.add(idx);
     ranked.push({
@@ -207,7 +213,10 @@ export async function rankCandidatesWithAI(
       aiScore: clampScore(row.compatibility_score),
       rationale: sanitizeModelText(row.rationale, 260),
       friction: sanitizeModelText(row.friction, 180),
-      suggestedDateType: sanitizeModelText(row.suggested_date_type, 30).toLowerCase(),
+      suggestedDateType: sanitizeModelText(
+        row.suggested_date_type,
+        30,
+      ).toLowerCase(),
     });
   }
 
@@ -251,6 +260,7 @@ export type PlanInput = {
   personB: PersonBrief;
   sharedInterests: string[];
   sharedDateTypes: string[];
+  dateIdea?: string;
   venues: PlanVenue[];
 };
 
@@ -275,12 +285,12 @@ export type BuiltPlan = {
 const PLAN_SCHEMA = obj({
   title: {
     type: "string",
-    description: "Six words or fewer. E.g. 'Italian dinner, then dessert'.",
+    description: "Six words or fewer. E.g. 'An indie film in Seongsu'.",
   },
   theme: {
     type: "string",
     description:
-      "The shape of the evening as an arrow chain, e.g. 'Italian dinner → quiet dessert café'. Max 60 characters.",
+      "The shape of the date in plain language, e.g. 'One indie film' or 'Gallery → riverside walk'. Max 60 characters.",
   },
   summary: {
     type: "string",
@@ -306,7 +316,8 @@ const PLAN_SCHEMA = obj({
   },
   estimated_cost_per_person: {
     type: "integer",
-    description: "Whole number in the given currency, per person, for the whole date.",
+    description:
+      "Whole number in the given currency, per person, for the whole date.",
   },
   estimated_duration_minutes: { type: "integer", minimum: 45, maximum: 300 },
   stops: {
@@ -336,6 +347,8 @@ const PLAN_INSTRUCTIONS = `You design a single first date for Datehaja.
 You are given two people who have already been matched, the time window, a budget range, and a list of REAL venues found by live web research. Build one date from those venues.
 
 Rules:
+- When requested_date_idea is present, treat it as the plan's anchor. Find the simplest researched venue that makes that exact activity possible.
+- One stop is a complete date. Never add food, drinks, dessert, or a walk unless the requested activity or both people's preferences genuinely call for it.
 - Use ONLY the venues provided. Never invent a place, an address, or an opening time.
 - One or two stops. A great first date is usually simple. Two stops only when the second genuinely improves the evening (e.g. dinner then a quiet dessert place nearby).
 - Respect every dietary requirement and accessibility need listed for either person. If a venue would violate one, do not use it.
@@ -361,6 +374,7 @@ export async function buildDatePlan(
       person_b: input.personB,
       shared_interests: input.sharedInterests,
       shared_date_types: input.sharedDateTypes,
+      requested_date_idea: input.dateIdea ?? null,
       venues: input.venues.map((venue, index) => ({
         index,
         name: venue.name,
@@ -435,21 +449,32 @@ export async function buildDatePlan(
     .slice(0, 3)
     .map((s) => ({
       venueIndex: s.venue_index,
-      startOffsetMin: Math.max(0, Math.round(Number(s.start_offset_minutes) || 0)),
-      durationMin: Math.max(20, Math.min(180, Math.round(Number(s.duration_minutes) || 60))),
+      startOffsetMin: Math.max(
+        0,
+        Math.round(Number(s.start_offset_minutes) || 0),
+      ),
+      durationMin: Math.max(
+        20,
+        Math.min(180, Math.round(Number(s.duration_minutes) || 60)),
+      ),
       note: sanitizeModelText(s.note, 160),
     }))
     .sort((a, b) => a.startOffsetMin - b.startOffsetMin);
 
   if (stops.length === 0) {
-    return { plan: null, error: "Model produced no usable stops.", model: result.model };
+    return {
+      plan: null,
+      error: "Model produced no usable stops.",
+      model: result.model,
+    };
   }
 
   const cost = Number(d.estimated_cost_per_person);
   return {
     model: result.model,
     plan: {
-      title: sanitizeModelText(d.title, 60) || "A date worth leaving the app for",
+      title:
+        sanitizeModelText(d.title, 60) || "A date worth leaving the app for",
       theme: sanitizeModelText(d.theme, 70),
       summary: sanitizeModelText(d.summary, 320),
       whyItFits: sanitizeModelText(d.why_it_fits, 260),
@@ -493,7 +518,7 @@ const VENUE_SCHEMA = obj({
       category: {
         type: "string",
         description:
-          "One of: restaurant, cafe, bar, dessert, exhibition, museum, park, activity, live_music, other",
+          "One of: cinema, restaurant, cafe, bar, dessert, exhibition, museum, park, activity, live_music, other",
       },
       address: {
         type: "string",
@@ -504,7 +529,8 @@ const VENUE_SCHEMA = obj({
       opening_hours: { type: ["string", "null"] },
       approximate_price: {
         type: ["string", "null"],
-        description: "Price as the source states it, e.g. '₩18,000–25,000 per person'.",
+        description:
+          "Price as the source states it, e.g. '₩18,000–25,000 per person'.",
       },
       reservation_needed: { type: ["boolean", "null"] },
       evidence: {
@@ -545,7 +571,10 @@ export async function normaliseVenues(
     area: string;
     sources: Array<{ url: string; title: string; content: string }>;
   },
-): Promise<{ venues: Array<NormalisedVenue & { sourceUrl: string }>; error?: string }> {
+): Promise<{
+  venues: Array<NormalisedVenue & { sourceUrl: string }>;
+  error?: string;
+}> {
   if (args.sources.length === 0) return { venues: [] };
 
   const promptInput = JSON.stringify(
@@ -617,12 +646,16 @@ export async function normaliseVenues(
       category: sanitizeModelText(raw.category, 30).toLowerCase() || "other",
       address: sanitizeModelText(raw.address, 180),
       district: sanitizeModelText(raw.district, 60) || args.area,
-      openingHours: raw.opening_hours ? sanitizeModelText(raw.opening_hours, 160) : null,
+      openingHours: raw.opening_hours
+        ? sanitizeModelText(raw.opening_hours, 160)
+        : null,
       approximatePrice: raw.approximate_price
         ? sanitizeModelText(raw.approximate_price, 80)
         : null,
       reservationNeeded:
-        typeof raw.reservation_needed === "boolean" ? raw.reservation_needed : null,
+        typeof raw.reservation_needed === "boolean"
+          ? raw.reservation_needed
+          : null,
       evidence: sanitizeModelText(raw.evidence, 320),
       tags: (raw.tags ?? [])
         .slice(0, 8)

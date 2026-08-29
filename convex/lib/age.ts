@@ -20,7 +20,16 @@ export function parseDobString(value: string): number | null {
   const [year, month, day] = value.split("-").map(Number);
   if (month < 1 || month > 12 || day < 1 || day > 31) return null;
   const ms = dobToMs(year, month, day);
-  return Number.isFinite(ms) ? ms : null;
+  if (!Number.isFinite(ms)) return null;
+  const parsed = new Date(ms);
+  if (
+    parsed.getUTCFullYear() !== year ||
+    parsed.getUTCMonth() !== month - 1 ||
+    parsed.getUTCDate() !== day
+  ) {
+    return null;
+  }
+  return ms;
 }
 
 /** Completed years between a date of birth and a moment. */
@@ -31,7 +40,10 @@ export function ageOn(dobMs: number, nowMs: number): number {
 
   let age = now.getUTCFullYear() - dob.getUTCFullYear();
   const monthDiff = now.getUTCMonth() - dob.getUTCMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && now.getUTCDate() < dob.getUTCDate())) {
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && now.getUTCDate() < dob.getUTCDate())
+  ) {
     age -= 1;
   }
   return age;

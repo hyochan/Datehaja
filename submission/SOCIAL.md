@@ -6,14 +6,15 @@ Drafts only — nothing here has been posted. Post from your own accounts.
 
 ## Submission description (for vibeapps.dev)
 
-**Datehaja — Pick a night. Let's make it a date.**
+**Datehaja — Tell us what you want to do. Find someone who wants to do it too.**
 
 Dating apps are extraordinarily good at generating matches and extraordinarily
 bad at generating dates. You swipe, you match, you text for four days, and then
 nobody wants to be the one who asks "so where should we go?" — and to get that
 far you handed your phone number to a stranger.
 
-Datehaja inverts it. It never asks who you like. It asks when you're free.
+Datehaja inverts it. It starts with the date you actually want — a film, a
+walk, an exhibition, live music, or anything else — and the time you can go.
 
 Then it runs hard compatibility filters in plain TypeScript, scores the
 survivors deterministically, has OpenAI rank the shortlist and explain the
@@ -55,11 +56,10 @@ Code: https://github.com/hyochan/Datehaja
 
 > Dating apps ask you who you like.
 >
-> Datehaja only asks when you're free.
+> Datehaja asks what you actually want to do with someone new.
 >
-> Then it researches a real date at a real place, finds someone compatible, and
-> privately invites you both. No swiping. No four-day text thread. No
-> exchanging numbers.
+> A film, a walk, an exhibition — bring the idea. It finds someone compatible
+> who wants to join, researches the real place, and privately invites you both.
 >
 > Built for @convex All Gas 👇
 >
@@ -69,7 +69,7 @@ Code: https://github.com/hyochan/Datehaja
 
 > Built Datehaja for the @convex All Gas hackathon.
 >
-> It's a dating app where the only input is your availability.
+> It's a dating app that starts with the activity, not a wall of profiles.
 >
 > Hard filters in TypeScript → @OpenAI ranks + explains → @firecrawl
 > researches real venues live → @agentmail invites both people privately →
@@ -109,11 +109,11 @@ Code: https://github.com/hyochan/Datehaja
 
 ## LinkedIn
 
-> **Pick a night. Let's make it a date.**
+> **Tell us what you want to do. Find someone who wants to do it too.**
 >
 > Dating apps are good at creating matches and bad at creating dates.
 >
-> Datehaja asks for one free evening. Then it:
+> Datehaja asks for one real date idea and a time. Then it:
 >
 > - finds someone compatible who is actually free
 > - researches a real public venue with Firecrawl

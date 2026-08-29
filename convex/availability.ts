@@ -9,6 +9,7 @@ import {
   requireUserId,
 } from "./lib/authz";
 import { LIMITS, clean } from "./lib/text";
+import { redactContactInfo } from "./lib/privacy";
 import { validateAvailabilityWindow, windowsCollide } from "./lib/time";
 
 const availabilityDoc = v.object({
@@ -52,7 +53,9 @@ export const upcoming = query({
       )
       .order("asc")
       .take(50);
-    return all.filter((w) => w.status !== "cancelled" && w.status !== "expired");
+    return all.filter(
+      (w) => w.status !== "cancelled" && w.status !== "expired",
+    );
   },
 });
 
@@ -99,7 +102,9 @@ export const add = mutation({
       endMs: args.endMs,
       timezone: profile.timezone,
       status: "open",
-      note: args.note ? clean(args.note, LIMITS.note) : undefined,
+      note: args.note
+        ? redactContactInfo(clean(args.note, LIMITS.note))
+        : undefined,
     });
 
     await ctx.db.patch("profiles", profile._id, {

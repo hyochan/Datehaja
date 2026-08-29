@@ -5,31 +5,109 @@
  */
 
 export const INTEREST_OPTIONS = [
-  "Films", "Live music", "Running", "Hiking", "Yoga", "Climbing", "Cycling",
-  "Coffee", "Wine", "Craft beer", "Cooking", "Baking", "Board games",
-  "Photography", "Art galleries", "Museums", "Reading", "Poetry", "Theatre",
-  "Stand-up comedy", "Vinyl", "Jazz", "K-pop", "Indie rock", "Techno",
-  "Travel", "Languages", "Volunteering", "Design", "Architecture", "Startups",
-  "Football", "Basketball", "Tennis", "Swimming", "Surfing", "Skiing",
-  "Dogs", "Cats", "Plants", "Pottery", "Sewing", "Video games", "Anime",
-  "Podcasts", "History", "Astronomy", "Chess", "Dancing", "Street food",
+  "Films",
+  "Live music",
+  "Running",
+  "Hiking",
+  "Yoga",
+  "Climbing",
+  "Cycling",
+  "Coffee",
+  "Wine",
+  "Craft beer",
+  "Cooking",
+  "Baking",
+  "Board games",
+  "Photography",
+  "Art galleries",
+  "Museums",
+  "Reading",
+  "Poetry",
+  "Theatre",
+  "Stand-up comedy",
+  "Vinyl",
+  "Jazz",
+  "K-pop",
+  "Indie rock",
+  "Techno",
+  "Travel",
+  "Languages",
+  "Volunteering",
+  "Design",
+  "Architecture",
+  "Startups",
+  "Football",
+  "Basketball",
+  "Tennis",
+  "Swimming",
+  "Surfing",
+  "Skiing",
+  "Dogs",
+  "Cats",
+  "Plants",
+  "Pottery",
+  "Sewing",
+  "Video games",
+  "Anime",
+  "Podcasts",
+  "History",
+  "Astronomy",
+  "Chess",
+  "Dancing",
+  "Street food",
 ] as const;
 
 export const HOBBY_OPTIONS = [
-  "Journalling", "Gardening", "Cycling repair", "Home barista", "Knitting",
-  "Painting", "Guitar", "Piano", "Singing", "Weightlifting", "Pilates",
-  "Marathon training", "Bouldering", "Fermenting", "Woodwork", "Calligraphy",
-  "Birdwatching", "Fishing", "Camping", "Roller skating", "Skateboarding",
-  "Model building", "Puzzles", "Baking sourdough", "Mixology",
+  "Journalling",
+  "Gardening",
+  "Cycling repair",
+  "Home barista",
+  "Knitting",
+  "Painting",
+  "Guitar",
+  "Piano",
+  "Singing",
+  "Weightlifting",
+  "Pilates",
+  "Marathon training",
+  "Bouldering",
+  "Fermenting",
+  "Woodwork",
+  "Calligraphy",
+  "Birdwatching",
+  "Fishing",
+  "Camping",
+  "Roller skating",
+  "Skateboarding",
+  "Model building",
+  "Puzzles",
+  "Baking sourdough",
+  "Mixology",
 ] as const;
 
 export const LANGUAGE_OPTIONS = [
-  "English", "Korean", "Japanese", "Mandarin", "Cantonese", "Spanish",
-  "French", "German", "Italian", "Portuguese", "Russian", "Arabic",
-  "Hindi", "Vietnamese", "Thai", "Indonesian", "Dutch", "Swedish",
+  "English",
+  "Korean",
+  "Japanese",
+  "Mandarin",
+  "Cantonese",
+  "Spanish",
+  "French",
+  "German",
+  "Italian",
+  "Portuguese",
+  "Russian",
+  "Arabic",
+  "Hindi",
+  "Vietnamese",
+  "Thai",
+  "Indonesian",
+  "Dutch",
+  "Swedish",
 ] as const;
 
 export const DATE_TYPE_OPTIONS = [
+  { key: "film", label: "Film", emoji: "🎬" },
   { key: "coffee", label: "Coffee", emoji: "☕️" },
   { key: "dinner", label: "Dinner", emoji: "🍝" },
   { key: "drinks", label: "Drinks", emoji: "🍸" },
@@ -45,15 +123,60 @@ export const DATE_TYPE_OPTIONS = [
 export const DATE_TYPE_KEYS = DATE_TYPE_OPTIONS.map((d) => d.key);
 
 export const FIRST_DATE_VIBE_OPTIONS = [
-  "Quiet and slow", "Lively and social", "Somewhere to talk", "Somewhere to do",
-  "Outdoors", "Late night", "Daytime", "Short and easy", "Long and unhurried",
+  "Quiet and slow",
+  "Lively and social",
+  "Somewhere to talk",
+  "Somewhere to do",
+  "Outdoors",
+  "Late night",
+  "Daytime",
+  "Short and easy",
+  "Long and unhurried",
+] as const;
+
+export const PERSONALITY_TRAIT_OPTIONS = [
+  "Warm",
+  "Curious",
+  "Playful",
+  "Calm",
+  "Direct",
+  "Thoughtful",
+  "Spontaneous",
+  "Reliable",
+] as const;
+
+/** Self-described presentation, never an attractiveness score. */
+export const STYLE_TAG_OPTIONS = [
+  "Natural",
+  "Classic",
+  "Sporty",
+  "Creative",
+  "Minimal",
+  "Bold",
 ] as const;
 
 export const OCCUPATION_CATEGORIES = [
-  "Design", "Engineering", "Product", "Research", "Healthcare", "Education",
-  "Law", "Finance", "Hospitality", "Construction", "Retail", "Media",
-  "Arts", "Public service", "Non-profit", "Science", "Logistics",
-  "Self-employed", "Student", "Between things", "Prefer not to say",
+  "Design",
+  "Engineering",
+  "Product",
+  "Research",
+  "Healthcare",
+  "Education",
+  "Law",
+  "Finance",
+  "Hospitality",
+  "Construction",
+  "Retail",
+  "Media",
+  "Arts",
+  "Public service",
+  "Non-profit",
+  "Science",
+  "Logistics",
+  "Self-employed",
+  "Student",
+  "Between things",
+  "Prefer not to say",
 ] as const;
 
 export const DIETARY_OPTIONS = [
@@ -104,13 +227,30 @@ export const PRESET_MESSAGES = [
   { key: "running_late_20", body: "I'm running about 20 minutes late." },
   { key: "im_here", body: "I'm here." },
   { key: "move_30_later", body: "Could we push the time back by 30 minutes?" },
-  { key: "move_30_earlier", body: "Could we move the time 30 minutes earlier?" },
+  {
+    key: "move_30_earlier",
+    body: "Could we move the time 30 minutes earlier?",
+  },
   { key: "on_my_way", body: "On my way." },
   { key: "looking_forward", body: "Looking forward to it." },
   { key: "cant_find", body: "I'm having trouble finding the place." },
 ] as const;
 
 export type PresetMessageKey = (typeof PRESET_MESSAGES)[number]["key"];
+
+/** Initial launch countries. Matching stays city-local to preserve real density. */
+export const SUPPORTED_COUNTRIES = [
+  { code: "KR", name: "South Korea", flag: "🇰🇷", defaultCityKey: "seoul" },
+  { code: "JP", name: "Japan", flag: "🇯🇵", defaultCityKey: "tokyo" },
+  { code: "US", name: "United States", flag: "🇺🇸", defaultCityKey: "new-york" },
+  { code: "GB", name: "United Kingdom", flag: "🇬🇧", defaultCityKey: "london" },
+  { code: "CA", name: "Canada", flag: "🇨🇦", defaultCityKey: "toronto" },
+  { code: "AU", name: "Australia", flag: "🇦🇺", defaultCityKey: "sydney" },
+  { code: "DE", name: "Germany", flag: "🇩🇪", defaultCityKey: "berlin" },
+  { code: "FR", name: "France", flag: "🇫🇷", defaultCityKey: "paris" },
+  { code: "NL", name: "Netherlands", flag: "🇳🇱", defaultCityKey: "amsterdam" },
+  { code: "SE", name: "Sweden", flag: "🇸🇪", defaultCityKey: "stockholm" },
+] as const;
 
 /** Cities Datehaja can research and plan in. Approximate centroids only. */
 export const SUPPORTED_CITIES = [
@@ -204,6 +344,40 @@ export const SUPPORTED_CITIES = [
     ],
   },
   {
+    key: "toronto",
+    city: "Toronto",
+    countryCode: "CA",
+    timezone: "America/Toronto",
+    currency: "CAD",
+    lat: 43.65,
+    lng: -79.38,
+    neighborhoods: [
+      { name: "Queen West", lat: 43.65, lng: -79.42 },
+      { name: "Kensington Market", lat: 43.65, lng: -79.4 },
+      { name: "Yorkville", lat: 43.67, lng: -79.39 },
+      { name: "The Annex", lat: 43.67, lng: -79.4 },
+      { name: "Distillery District", lat: 43.65, lng: -79.36 },
+      { name: "Ossington", lat: 43.65, lng: -79.42 },
+    ],
+  },
+  {
+    key: "sydney",
+    city: "Sydney",
+    countryCode: "AU",
+    timezone: "Australia/Sydney",
+    currency: "AUD",
+    lat: -33.87,
+    lng: 151.21,
+    neighborhoods: [
+      { name: "Surry Hills", lat: -33.88, lng: 151.21 },
+      { name: "Newtown", lat: -33.9, lng: 151.17 },
+      { name: "Darlinghurst", lat: -33.88, lng: 151.22 },
+      { name: "The Rocks", lat: -33.86, lng: 151.21 },
+      { name: "Paddington", lat: -33.88, lng: 151.23 },
+      { name: "Manly", lat: -33.8, lng: 151.29 },
+    ],
+  },
+  {
     key: "berlin",
     city: "Berlin",
     countryCode: "DE",
@@ -219,9 +393,86 @@ export const SUPPORTED_CITIES = [
       { name: "Friedrichshain", lat: 52.51, lng: 13.45 },
     ],
   },
+  {
+    key: "paris",
+    city: "Paris",
+    countryCode: "FR",
+    timezone: "Europe/Paris",
+    currency: "EUR",
+    lat: 48.86,
+    lng: 2.35,
+    neighborhoods: [
+      { name: "Le Marais", lat: 48.86, lng: 2.36 },
+      { name: "Saint-Germain-des-Prés", lat: 48.85, lng: 2.33 },
+      { name: "Montmartre", lat: 48.89, lng: 2.34 },
+      { name: "Canal Saint-Martin", lat: 48.87, lng: 2.36 },
+      { name: "Bastille", lat: 48.85, lng: 2.37 },
+      { name: "Latin Quarter", lat: 48.85, lng: 2.35 },
+    ],
+  },
+  {
+    key: "amsterdam",
+    city: "Amsterdam",
+    countryCode: "NL",
+    timezone: "Europe/Amsterdam",
+    currency: "EUR",
+    lat: 52.37,
+    lng: 4.9,
+    neighborhoods: [
+      { name: "Jordaan", lat: 52.38, lng: 4.88 },
+      { name: "De Pijp", lat: 52.35, lng: 4.9 },
+      { name: "Oud-West", lat: 52.36, lng: 4.87 },
+      { name: "Noord", lat: 52.4, lng: 4.9 },
+      { name: "Oost", lat: 52.36, lng: 4.94 },
+      { name: "Centrum", lat: 52.37, lng: 4.9 },
+    ],
+  },
+  {
+    key: "stockholm",
+    city: "Stockholm",
+    countryCode: "SE",
+    timezone: "Europe/Stockholm",
+    currency: "SEK",
+    lat: 59.33,
+    lng: 18.07,
+    neighborhoods: [
+      { name: "Södermalm", lat: 59.32, lng: 18.07 },
+      { name: "Vasastan", lat: 59.34, lng: 18.04 },
+      { name: "Norrmalm", lat: 59.33, lng: 18.07 },
+      { name: "Östermalm", lat: 59.34, lng: 18.09 },
+      { name: "Kungsholmen", lat: 59.33, lng: 18.03 },
+    ],
+  },
 ] as const;
 
 export type SupportedCity = (typeof SUPPORTED_CITIES)[number];
+export type SupportedCountry = (typeof SUPPORTED_COUNTRIES)[number];
+
+export function citiesForCountry(countryCode: string): SupportedCity[] {
+  return SUPPORTED_CITIES.filter(
+    (city) => city.countryCode === countryCode.toUpperCase(),
+  );
+}
+
+export function findCityByKey(cityKey: string): SupportedCity | undefined {
+  return SUPPORTED_CITIES.find((city) => city.key === cityKey);
+}
+
+export function suggestCity(
+  region: string | undefined,
+  timezone: string | undefined,
+): SupportedCity {
+  const timezoneMatch = SUPPORTED_CITIES.find(
+    (city) => city.timezone === timezone,
+  );
+  if (timezoneMatch) return timezoneMatch;
+  const country = SUPPORTED_COUNTRIES.find(
+    (option) => option.code === region?.toUpperCase(),
+  );
+  return (
+    (country && findCityByKey(country.defaultCityKey)) ?? SUPPORTED_CITIES[0]
+  );
+}
 
 export function findCity(cityName: string): SupportedCity | undefined {
   return SUPPORTED_CITIES.find(
@@ -241,13 +492,31 @@ export function findNeighborhood(
 }
 
 /** Sensible default budget bands per currency, per person. */
-export const BUDGET_BANDS: Record<string, { min: number; max: number; step: number }> = {
+export const BUDGET_BANDS: Record<
+  string,
+  { min: number; max: number; step: number }
+> = {
   KRW: { min: 10000, max: 150000, step: 5000 },
   JPY: { min: 1000, max: 20000, step: 500 },
   USD: { min: 10, max: 200, step: 5 },
+  CAD: { min: 15, max: 220, step: 5 },
+  AUD: { min: 15, max: 250, step: 5 },
   GBP: { min: 10, max: 150, step: 5 },
   EUR: { min: 10, max: 150, step: 5 },
+  SEK: { min: 100, max: 1800, step: 50 },
 };
+
+/** A comfortable starter range, aligned to the currency's input step. */
+export function defaultBudgetRange(currency: string): {
+  min: number;
+  max: number;
+} {
+  const band = BUDGET_BANDS[currency] ?? BUDGET_BANDS.USD;
+  return {
+    min: Math.ceil((band.min * 2) / band.step) * band.step,
+    max: Math.floor(band.max / 2.2 / band.step) * band.step,
+  };
+}
 
 export function formatMoney(amount: number, currency: string): string {
   try {

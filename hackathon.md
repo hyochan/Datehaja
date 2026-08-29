@@ -2,7 +2,7 @@
 
 - **Project:** Datehaja
 - **Event:** Convex All Gas Hackathon
-- **What it does:** Asks only when you're free, then researches a real date at a real venue, matches you with someone compatible, and privately invites you both — without either of you seeing the other's contact details.
+- **What it does:** Starts with the date someone actually wants — a film, walk, exhibition, live music, or anything else — then finds a compatible new person who wants to join, researches the real venue, and privately invites them both.
 - **Live app:** https://datehaja.com
 - **Repo:** private
 - **Frontend:** Vercel custom-domain delivery + Convex static-hosting fallback
@@ -17,11 +17,13 @@
 ## Log
 
 ### 2026-08-26 - 30f362e
+
 Scaffolded the project: Vite 8, React 19, TypeScript, Tailwind v4, Convex 1.45.
 Chose Convex as the only backend and decided every secret would live on the
 deployment rather than in the repo (`.env.example`, `.gitignore`).
 
 ### 2026-08-26 - b1bb727
+
 Built the data model — 18 tables covering profiles, preferences, availability,
 date plans and participants, plus the observability tables the product needs to
 be honest about itself: `matchingRuns`, `candidateScores`, `researchRuns`,
@@ -31,6 +33,7 @@ indexes its real queries use; no hot path does a full scan. Registered the
 (`convex/schema.ts`, `convex/convex.config.ts`).
 
 ### 2026-08-26 - d71abaf
+
 Added Convex Auth (email + password) and the authorisation layer. No Convex
 function accepts a caller-supplied user id for authorisation — identity always
 comes from the session. Wrote `convex/lib/privacy.ts` as the single projection
@@ -39,6 +42,7 @@ interests, and nothing else. Convex features: queries, mutations, file storage,
 Convex Auth (`convex/auth.ts`, `convex/lib/authz.ts`, `convex/profiles.ts`).
 
 ### 2026-08-26 - 47ee5e5
+
 Wrote the matching engine and the date-plan state machine as pure functions.
 Stage 1 hard filters are the only thing allowed to exclude anyone: mutual
 gender interest, age ranges, distance, a genuine 90-minute availability
@@ -48,6 +52,7 @@ signals that produced the score. Illegal lifecycle transitions throw rather
 than corrupting a drop (`convex/lib/matching.ts`, `convex/lib/stateMachine.ts`).
 
 ### 2026-08-26 - 4944cbb
+
 Integrated the three sponsor services.
 
 OpenAI via `/v1/responses` with strict JSON Schema for candidate ranking, venue
@@ -68,6 +73,7 @@ model reasoning that did not happen. Convex features: actions
 (`convex/integrations/`, `convex/ai.ts`, `convex/research.ts`).
 
 ### 2026-08-26 - 996ca20
+
 Built the orchestration: hard filter → deterministic scoring → AI ranking →
 live research → plan generation → private invitations, chained with
 `ctx.scheduler`. A pass keeps the accepted person's evening held and searches
@@ -83,6 +89,7 @@ features: actions, HTTP actions, crons, scheduled functions
 `convex/safety.ts`, `convex/demo.ts`, `convex/crons.ts`, `convex/http.ts`).
 
 ### 2026-08-26 - 312bf83
+
 Built the web app: landing page, six-step onboarding, dashboard, date
 invitation and confirmation screens, availability editor, profile, preferences,
 notifications, privacy, safety centre and demo controls. The dashboard's
@@ -92,6 +99,7 @@ showing the pages Firecrawl actually crawled and the model runs behind the
 plan. Convex features: realtime queries (`src/`).
 
 ### 2026-08-26 - 1b4e4f3
+
 Added 163 tests. Unit tests cover the hard filters (every exclusion reason and
 its soft counterpart), scoring bounds, all illegal lifecycle transitions,
 expiry and deadline rules, availability overlap, timezone handling, and the
@@ -105,6 +113,7 @@ The tests found one real bug: withdrawing after accepting left the drop stuck
 in `partially_accepted` with nobody committed. Fixed in `convex/dateDrops.ts`.
 
 ### 2026-08-26 - 41483ba
+
 Deployed to production and ran the whole flow against the live site.
 
 Backend deployed to `merry-bass-190`; the React SPA is uploaded to
@@ -113,6 +122,7 @@ with Convex Auth's `/.well-known/*` routes and the AgentMail webhook (which is
 why the app keeps root routing and the static catch-all is registered last).
 
 Running it live surfaced three bugs, all fixed:
+
 - Availability was interpreted in the browser's timezone rather than the city
   the date happens in, so "Saturday 7pm" meant different things to different
   users.
@@ -123,6 +133,7 @@ Running it live surfaced three bugs, all fixed:
   denormalised `ageYears`.
 
 ### 2026-08-26 - 88184b6
+
 Verified integrations against the live production deployment, and recorded
 exactly what is and is not proven:
 
@@ -149,6 +160,7 @@ signed webhook in one call once a key exists. `GET /healthz` reports which
 integrations are live on the deployment.
 
 ### 2026-08-26 - 58ba634
+
 Added the OG image, touch icon and submission assets, and fixed four things
 found by using the deployed app: a confirmed date hid the way to ask for
 another date plan; heuristic venue names kept their markdown link brackets; a
@@ -156,6 +168,7 @@ price capture dragged surrounding prose along with it; and fallback plan notes
 read awkwardly.
 
 ### 2026-08-26 - 8cc3b85
+
 Ran a 44-agent adversarial audit across authorization, privacy, correctness,
 integration robustness, frontend/accessibility and copy honesty — every finding
 independently verified by a separate skeptic before being accepted. 38 findings
@@ -165,7 +178,7 @@ Two root causes accounted for most of the serious ones.
 
 **Identity by insertion order.** A date plan keeps every participant row it ever
 had, so after a replacement the oldest non-self row is the person who
-*declined*. Six call sites picked "the other person" that way: the replacement's
+_declined_. Six call sites picked "the other person" that way: the replacement's
 invitation email described the person who passed, blocking from a drop blocked
 the wrong account (leaving the real match still matchable, with no error shown),
 reporting filed against an uninvolved user and auto-flagged their account, and
@@ -207,6 +220,7 @@ all passing. Redeployed and re-verified against production: a replacement drop
 now names the replacement, not the persona who passed.
 
 ### 2026-08-27 - 642710e
+
 Wired the real credentials and verified each integration with a live call.
 
 - **Firecrawl — verified, now authenticated.** With a key, `/v2/search` returns
@@ -216,7 +230,7 @@ Wired the real credentials and verified each integration with a live call.
   auth failures, and the code had been gating the scrape follow-up behind
   `hasFirecrawlKey()` for that wrong reason. Gate removed; those domains are
   now excluded at search time instead.
-- **AgentMail — verified end to end.** Verified the existing `datedrop-concierge@agentmail.to`
+- **AgentMail — verified end to end.** Verified the dedicated Datehaja Concierge
   inbox and its webhook at `https://merry-bass-190.convex.site/webhooks/agentmail`
   subscribed to message.received, message.sent, message.delivered and
   message.bounced. Sent a real message (AWS SES message id returned), and the
@@ -236,18 +250,19 @@ addresses or ISO timestamps therefore failed silently at send time. Sanitising
 in the client means no call site has to remember. 187 tests.
 
 ### 2026-08-27 - 4aa019f
+
 Credit added to the OpenAI account, so the model path runs for the first time.
 All three stages now succeed against the live deployment: `rank_candidates`
 (5.9s), `venue_summary` (13.3s), `build_plan` (4.8s).
 
 The difference in output is the whole argument for the model path. Before, the
-rule-based fallback produced "Coffee → somewhere" from headings like "Cash and
-Tipping in South Korea". Now it produces:
+rule-based fallback produced generic plans from headings like "Cash and Tipping
+in South Korea". The model path instead grounded a concrete plan in a verified
+public venue and explained why it suited both people.
 
-> **Dinner and easy conversation** — British dinner → relaxed conversation,
-> Seongsu, ₩40,000. Charmandre British Kitchen.
-> "You both enjoy films, coffee, running, and photography, and both prefer a
-> quiet first date with time to talk."
+That production check used a restaurant request. Datehaja now treats the user's
+exact activity request as the anchor, so a film, walk, exhibition, live show, or
+meal can each be the complete date without an automatic second stop.
 
 Picked the model by measuring rather than by price list. On the hardest task —
 extracting venues from eight crawled pages — gpt-5-nano let blog headings
@@ -263,6 +278,7 @@ One date plan costs ~22,800 tokens end to end, about $0.0066. Venue extraction i
 80% of that, since it reads the crawled pages.
 
 ### 2026-08-28 - 8b85c6f
+
 Prepared the submission assets for recording and social launch. The demo
 checklist now requires a deliverable email before the take so the real
 AgentMail invitation can be shown. Verified the sponsors' current X handles,
@@ -270,6 +286,7 @@ updated the public test count, and reran the suite: 188 tests pass
 (`submission/DEMO_SCRIPT.md`, `submission/SOCIAL.md`).
 
 ### 2026-08-28 - 1f9281e
+
 Reworked the product around a private-concierge docket rather than a generic
 rounded dashboard: paper-and-ink tokens, compact status stamps, editorial
 layouts, and a rebuilt landing and authentication flow. Applied the same visual
@@ -280,6 +297,7 @@ sign-in, privacy, safety, protected-route redirect, and theme switch in a real
 browser; 188 tests and the production build pass (`src/`).
 
 ### 2026-08-28 - a2628f8
+
 Added country-aware internationalization for ten launch markets: the United
 States, United Kingdom, Canada, Australia, South Korea, Japan, Germany, France,
 the Netherlands, and Sweden. The selected locale is detected, persisted, and
@@ -290,6 +308,7 @@ locale in a real browser, including reload persistence and a 390px Korean
 mobile layout; 193 tests and the production build pass (`src/i18n/`, `src/`).
 
 ### 2026-08-28 - 32afc54
+
 Softened the concierge aesthetic into a warmer, more personal couple-service
 experience without borrowing another product's characters or layout. Replaced
 the institutional grid, square controls, and offset stamp shadows with a cream,
@@ -307,6 +326,7 @@ button contrast to accessible levels. The production build, lint (no errors),
 and all 193 tests pass (`src/`, `public/favicon.svg`, `index.html`).
 
 ### 2026-08-28 - bf0c538
+
 Replaced the Korean display serif after visual review showed that its calligraphic
 forms and English-tuned tight leading made the hero feel dated and crowded.
 Korean now uses Noto Sans KR at a controlled 700 weight, with script-specific
@@ -318,6 +338,7 @@ build and all 193 tests pass (`index.html`, `src/styles/index.css`,
 `src/pages/LandingPage.tsx`).
 
 ### 2026-08-28 - 4c14fb9
+
 Kept the real Vite development server and browser open for continuous visual
 review. The first landing-to-signup walkthrough exposed two issues that static
 checks missed: dark-mode invitation cards had a light-theme glow bright enough
@@ -330,6 +351,7 @@ lint (no errors), and all 193 tests pass (`src/App.tsx`,
 `src/styles/index.css`).
 
 ### 2026-08-28 - db70df1
+
 Replaced the landing page's long explanatory copy with a visual product story:
 a four-card date journey, hand-drawn evidence icons, a concrete invitation
 preview, and an A-to-B privacy diagram with locked data tiles. The hero now
@@ -344,6 +366,7 @@ browser reported no errors; the production build, lint (no errors), and all 193
 tests pass (`src/pages/LandingPage.tsx`, `src/App.tsx`, `src/i18n/index.tsx`).
 
 ### 2026-08-28 - 1c46100
+
 Replaced the abstract landing steps and repeated privacy panel with a complete
 visual service scenario. The new flow shows two availability windows entering
 the concierge, compatibility and live venue research, two separate private
@@ -361,6 +384,7 @@ pass (`src/pages/LandingPage.tsx`, `src/styles/index.css`, `src/App.tsx`,
 `src/i18n/index.tsx`).
 
 ### 2026-08-28 - cef5dba
+
 Turned the service scenario into one connected concierge desk: two availability
 slips travel through Datehaja's live research, become separate locked replies,
 and merge into a final public-place date ticket. The landing example now adapts
@@ -377,6 +401,7 @@ overflow. The production build, lint (no errors), and all 193 tests pass
 `src/i18n/index.tsx`).
 
 ### 2026-08-28 - 3fae84d
+
 Rewrote the submission recording plan around the final connected-concierge
 landing and a 2:58 product walkthrough. The shot list now opens with the visual
 service flow, then proves live Convex state, Firecrawl evidence, OpenAI model
@@ -388,6 +413,7 @@ tests. The video itself is not yet recorded (`submission/DEMO_SCRIPT.md`,
 `submission/SOCIAL.md`, `README.md`).
 
 ### 2026-08-29 - fce2091
+
 Finished the private product-hardening pass around the full date lifecycle. The
 sign-in page now explains the product reason for an account through a complete
 visual handoff: each invitation belongs to one person, each answer stays
@@ -420,6 +446,7 @@ Production and repository visibility were intentionally left unchanged during
 this private hardening pass.
 
 ### 2026-08-29 - 4c920bf
+
 Promoted the complete private hardening build to Convex production
 `merry-bass-190` and to `https://datehaja.com`. The deploy included the
 calendar-feed, date-feedback, safety-profile, and trusted-contact schemas and
@@ -437,8 +464,8 @@ message.
 
 A fresh production account completed protected-route redirect, sign-up, all
 six onboarding steps, Seoul availability, and the full matching pipeline. The
-researched dinner-and-coffee plan arrived in about 36 seconds with live venue
-sources and a ₩40,000 estimate. One acceptance changed the plan to Reserved;
+researched plan arrived in about 36 seconds with live venue sources and a clear
+cost estimate. One acceptance changed the plan to Reserved;
 a second fictional-persona acceptance changed an untouched browser tab to
 “It's a date” through a realtime Convex query without refresh. The same event
 then appeared as Finalized with Google Calendar and webcal actions. Trusted
@@ -446,13 +473,14 @@ contact sharing, the optional private post-date check-in, and the explicit
 limits on identity verification were also checked. No browser console errors
 were emitted.
 
-The active production AgentMail address remains the original
-`datedrop-concierge@agentmail.to`; changing that third-party inbox is isolated
-from the application deploy so the working webhook is not silently replaced.
+The active production AgentMail address was migrated to
+`datehaja-concierge@agentmail.to`; both development and production now use the
+same branded inbox and signed webhook.
 Completed a 2:39 narrated 1080p H.264/AAC submission cut at
 `submission/Datehaja-demo.mp4`, based on the production E2E evidence above.
 
 ### 2026-08-29 - 1c07262
+
 Normalized the product name casing to `Datehaja`, reflecting that
 “haja” is a single Korean verb rather than a second name. Updated every
 user-visible surface and technical reference: the 10-locale dictionary,
@@ -476,11 +504,8 @@ reports OpenAI, Firecrawl, AgentMail, its inbox, and its webhook ready.
 
 ### 2026-08-29 - active invitation brand and growth loop
 
-Shifted the brand voice from product narration to a direct human invitation:
-`Pick a night. Let's make it a date.` and
-`저녁 하나 비워봐. 우리, 데이트하자.` The landing hero, calls to action,
-footer, document metadata, Open Graph artwork, demo copy, social copy, and all
-non-English landing translations now use the same active direction.
+Shifted the brand voice from product narration to a direct human invitation.
+That direction later evolved into the activity-first promise documented below.
 
 Added the operational growth unit, **Datehaja Night**: concentrate a trusted
 Seoul cohort into three upcoming evenings, match the pool together, collect
@@ -521,26 +546,34 @@ fully ready.
 ### 2026-08-29 - customer-centred landing story
 
 Replaced the landing page's internal-system diagrams with the customer's actual
-journey. The hero now shows the emotional outcome — a real first date in a safe
-public bistro — alongside a concise Friday plan, mutual acceptance state,
-budget, privacy, and public-place promise. Removed the large A/B pipeline and
-technical “availability docket” presentation.
+journey. Removed the large A/B pipeline and technical “availability docket”
+presentation.
 
-The new three-moment flow is written entirely from the user's perspective:
-choose one evening, receive one considered plan, and answer privately. Each
-step now shows the exact small choice the person makes and the useful thing they
-receive, ending with a calendar-ready confirmed date. Added complete
-translations for every new phrase across all ten supported locales.
+The new three-moment flow is written entirely from the user's perspective and
+ends with a calendar-ready confirmed date. Added complete translations for
+every new phrase across all ten supported locales.
 
-Generated a bespoke, text-free editorial illustration of two adults beginning
-a first date in a staffed Seoul neighbourhood bistro. The warm paper-textured
-scene is served as a 1440×960 WebP at 123 KB and uses explicit dimensions and
-high-priority loading to avoid layout shift. It does not imply a testimonial or
-depict a private or unsafe venue.
+The first version used a restaurant illustration. It has since been replaced by
+the activity-first movie-date photography described in the current entry.
 
-Deployed the redesigned landing to Vercel production (deployment
-`dpl_Dr6wCacBP7C4s9etn9zvxyZuBQnc`, aliased to `https://datehaja.com`) and the
-Convex static-hosting fallback (deployment
-`fb7e6b01-6fe7-4c4a-aa61-7b03b50dedaf`). The live illustration matches the
-optimized local asset byte for byte, the production bundle contains the new
-customer-journey copy, and integration health remains fully ready.
+That earlier version was deployed to Vercel and the Convex static-hosting
+fallback. Its production verification passed before the activity-first pivot.
+
+### 2026-08-29 - activity-first product pivot
+
+Reframed Datehaja around a simple customer promise: say what you genuinely want
+to do, then find a new person who wants to do it with you. The product no longer
+assumes that a date is a meal or that a one-stop plan needs padding. Watching one
+film, walking one route, seeing one exhibition, or hearing one live set can be
+the entire date.
+
+This is a working product flow, not landing-page copy. Each availability window
+now carries a specific date idea. Matching uses it when evaluating candidates,
+Firecrawl searches for that exact activity near both people, and OpenAI is told
+to preserve the request as the plan anchor. The deterministic fallback also
+understands cinemas and keeps an explicit film request to one stop.
+
+Replaced the previous restaurant illustration with a candid, text-free image of
+two adults at a small independent cinema. Updated the landing, onboarding,
+dashboard, preferences, demo script, submission copy, metadata, growth plan,
+and all supported landing locales to tell the same activity-first story.

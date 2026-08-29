@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Logo } from "../components/layout/Logo";
+import { Wordmark } from "../components/layout/Wordmark";
 import { LocaleSwitcher } from "../components/layout/LocaleSwitcher";
 import { ThemeToggle } from "../components/layout/AppShell";
 import { LinkButton } from "../components/ui/primitives";
@@ -9,10 +10,8 @@ type LandingExample = {
   city: string;
   area: string;
   venue: string;
-  person: string;
   currency: string;
-  dinnerAmount: number;
-  totalAmount: number;
+  activityAmount: number;
   zoneLabel: string;
 };
 
@@ -20,101 +19,81 @@ const LANDING_EXAMPLES: Record<LocaleCode, LandingExample> = {
   "en-US": {
     city: "New York",
     area: "Williamsburg",
-    venue: "Neighborhood bistro",
-    person: "Alex",
+    venue: "Independent cinema",
     currency: "USD",
-    dinnerAmount: 38,
-    totalAmount: 62,
+    activityAmount: 18,
     zoneLabel: "EDT",
   },
   "en-GB": {
     city: "London",
     area: "Shoreditch",
-    venue: "Neighbourhood bistro",
-    person: "Jamie",
+    venue: "Independent cinema",
     currency: "GBP",
-    dinnerAmount: 32,
-    totalAmount: 52,
+    activityAmount: 16,
     zoneLabel: "BST",
   },
   "en-CA": {
-    city: "Montréal",
-    area: "Mile End",
-    venue: "Neighbourhood bistro",
-    person: "Riley",
+    city: "Toronto",
+    area: "Queen West",
+    venue: "Independent cinema",
     currency: "CAD",
-    dinnerAmount: 42,
-    totalAmount: 68,
+    activityAmount: 17,
     zoneLabel: "EDT",
   },
   "en-AU": {
-    city: "Melbourne",
-    area: "Fitzroy",
-    venue: "Neighbourhood bistro",
-    person: "Taylor",
+    city: "Sydney",
+    area: "Surry Hills",
+    venue: "Independent cinema",
     currency: "AUD",
-    dinnerAmount: 46,
-    totalAmount: 74,
+    activityAmount: 22,
     zoneLabel: "AEST",
   },
   "ko-KR": {
     city: "서울",
     area: "성수",
-    venue: "동네 비스트로",
-    person: "민준",
+    venue: "독립영화관",
     currency: "KRW",
-    dinnerAmount: 28_000,
-    totalAmount: 45_000,
+    activityAmount: 15_000,
     zoneLabel: "KST",
   },
   "ja-JP": {
     city: "東京",
     area: "中目黒",
-    venue: "街のビストロ",
-    person: "ハル",
+    venue: "ミニシアター",
     currency: "JPY",
-    dinnerAmount: 4_600,
-    totalAmount: 7_500,
+    activityAmount: 2_000,
     zoneLabel: "JST",
   },
   "de-DE": {
     city: "Berlin",
     area: "Kreuzberg",
-    venue: "Bistro im Viertel",
-    person: "Luca",
+    venue: "Programmkino",
     currency: "EUR",
-    dinnerAmount: 34,
-    totalAmount: 56,
+    activityAmount: 14,
     zoneLabel: "CEST",
   },
   "fr-FR": {
     city: "Paris",
     area: "Canal Saint-Martin",
-    venue: "Bistrot du quartier",
-    person: "Camille",
+    venue: "Cinéma indépendant",
     currency: "EUR",
-    dinnerAmount: 36,
-    totalAmount: 58,
+    activityAmount: 13,
     zoneLabel: "CEST",
   },
   "nl-NL": {
     city: "Amsterdam",
     area: "De Pijp",
-    venue: "Bistro in de buurt",
-    person: "Sam",
+    venue: "Filmhuis",
     currency: "EUR",
-    dinnerAmount: 35,
-    totalAmount: 57,
+    activityAmount: 15,
     zoneLabel: "CEST",
   },
   "sv-SE": {
     city: "Stockholm",
     area: "Södermalm",
-    venue: "Kvartersbistro",
-    person: "Noah",
+    venue: "Indiebiograf",
     currency: "SEK",
-    dinnerAmount: 390,
-    totalAmount: 650,
+    activityAmount: 160,
     zoneLabel: "CEST",
   },
 };
@@ -159,21 +138,25 @@ export default function LandingPage() {
   const example = LANDING_EXAMPLES[locale];
 
   return (
-    <div className="min-h-dvh">
-      <header className="glass-bar sticky top-0 z-30 border-b border-[var(--border)]">
-        <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-5 sm:px-8">
+    <div className="landing-page min-h-dvh">
+      <header className="glass-bar landing-header sticky top-0 z-30 border-b border-[var(--border)]">
+        <div className="mx-auto flex h-[4.75rem] max-w-6xl items-center justify-between px-5 sm:px-8">
           <div className="flex items-center gap-3">
             <Logo className="h-9 w-9" />
             <div className="leading-none">
-              <div className="brand-wordmark text-[22px] font-medium">
-                Datehaja
-              </div>
+              <Wordmark className="text-[24px]" />
               <div className="docket-label mt-1.5 text-[8px] text-muted">
                 {t("Let's make it a date")}
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-1 sm:gap-3">
+          <div className="flex items-center gap-1 sm:gap-2.5">
+            <Link
+              to="#how-it-works"
+              className="hidden rounded-full px-3 py-2 text-[12px] font-bold text-soft transition-colors hover:bg-[var(--bg-sunken)] hover:text-[var(--text)] md:inline-flex"
+            >
+              {t("How it works")}
+            </Link>
             <LocaleSwitcher compact />
             <ThemeToggle />
             <Link
@@ -187,113 +170,110 @@ export default function LandingPage() {
       </header>
 
       <main>
-        <section className="relative overflow-hidden">
-          <span
-            className="love-doodle absolute left-[4%] top-16 hidden h-12 w-12 rotate-[-12deg] text-[18px] xl:inline-flex"
-            aria-hidden
-          >
-            ♡
-          </span>
-          <span
-            className="love-doodle absolute right-[3%] top-24 hidden h-9 w-9 rotate-12 text-[13px] xl:inline-flex"
-            aria-hidden
-          >
-            ✦
-          </span>
-          <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 pb-16 pt-12 sm:px-8 sm:pb-24 sm:pt-20 lg:grid-cols-[minmax(0,1.35fr)_minmax(19rem,0.65fr)] lg:gap-12 lg:py-28">
-            <div>
-              <div className="docket-label animate-fade-up text-[var(--accent-text)]">
-                <span className="mr-2" aria-hidden>
-                  ♥
-                </span>
-                {t("Service note 001")} · {example.city}
+        <section className="landing-hero relative overflow-hidden">
+          <div className="hero-color-field hero-color-field-one" aria-hidden />
+          <div className="hero-color-field hero-color-field-two" aria-hidden />
+          <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-20 pt-12 sm:px-8 sm:pb-28 sm:pt-20 lg:min-h-[calc(100dvh-4.75rem)] lg:grid-cols-[minmax(0,0.94fr)_minmax(25rem,1.06fr)] lg:gap-10 lg:py-20">
+            <div className="relative z-10">
+              <div className="hero-kicker docket-label animate-fade-up text-[var(--accent-text)]">
+                <span className="hero-kicker-dot" aria-hidden />
+                {t("New people, real plans")} · {example.city}
               </div>
               <h1
                 className="display-heading hero-title mt-6 max-w-3xl animate-fade-up"
                 style={{ animationDelay: "40ms" }}
               >
-                {t("Pick a night.")}
+                {t("What do you want to do?")}
                 <span className="hero-title-accent block italic text-[var(--accent-text)]">
-                  {t("Let's make it a date.")}
+                  {t("Find someone to do it with.")}
                 </span>
               </h1>
               <p
-                className="mt-7 max-w-2xl animate-fade-up text-[16px] leading-relaxed text-soft sm:text-[18px]"
+                className="mt-7 max-w-xl animate-fade-up text-[16px] leading-[1.7] text-soft sm:text-[18px]"
                 style={{ animationDelay: "80ms" }}
               >
                 {t(
-                  "Tell us when you're free. We'll find someone compatible, plan a real date, and send it to you both.",
+                  "A film, a walk, a gallery—or whatever sounds good. Tell us the date you want; we'll find someone compatible to share it.",
                 )}
               </p>
               <div
-                className="mt-8 flex animate-fade-up flex-col items-start gap-4 sm:flex-row sm:items-center"
+                className="mt-8 flex animate-fade-up flex-col items-start gap-3 sm:flex-row sm:items-center"
                 style={{ animationDelay: "120ms" }}
               >
-                <LinkButton to="/signup" size="lg">
-                  {t("Find me a date")} <span aria-hidden>→</span>
+                <LinkButton
+                  to="/signup"
+                  size="lg"
+                  className="hero-primary-action"
+                >
+                  {t("Find someone to go with")}{" "}
+                  <span className="text-[20px]" aria-hidden>
+                    ↗
+                  </span>
                 </LinkButton>
                 <Link
                   to="#how-it-works"
-                  className="rounded-full px-3 py-2 text-[13px] font-bold text-muted transition-colors hover:bg-[var(--bg-sunken)] hover:text-[var(--text)]"
+                  className="hero-text-link group inline-flex items-center gap-2 rounded-full px-3 py-2 text-[13px] font-bold text-muted transition-colors hover:text-[var(--text)]"
                 >
+                  <span
+                    className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border-strong)] transition-transform group-hover:translate-y-0.5"
+                    aria-hidden
+                  >
+                    ↓
+                  </span>
                   {t("See what happens next")}
                 </Link>
               </div>
 
-              <dl
-                className="mt-14 grid animate-fade-up grid-cols-3 rounded-[1.5rem] border border-[var(--border)] bg-[var(--bg-raised)] p-1.5 shadow-[var(--shadow-soft)]"
+              <ul
+                className="hero-promises mt-10 flex animate-fade-up flex-wrap gap-2.5"
                 style={{ animationDelay: "160ms" }}
               >
                 {[
-                  ["01", t("No swiping")],
-                  ["02", t("No chat audition")],
-                  ["03", t("No contacts shared")],
-                ].map(([number, label], index) => (
-                  <div
+                  t("The activity comes first"),
+                  t("No forced chemistry"),
+                  t("No second stop required"),
+                ].map((label, index) => (
+                  <li
                     key={label}
-                    className={`rounded-[1.1rem] px-3 py-3.5 sm:px-5 ${index > 0 ? "border-l border-[var(--border)]" : ""}`}
+                    className={`hero-promise hero-promise-${index + 1}`}
                   >
-                    <dt className="docket-label text-[var(--accent-text)]">
-                      {number}
-                    </dt>
-                    <dd className="mt-1.5 text-[12px] font-medium leading-tight sm:text-[14px]">
-                      {label}
-                    </dd>
-                  </div>
+                    <span aria-hidden>{index === 1 ? "✦" : "✓"}</span>
+                    {label}
+                  </li>
                 ))}
-              </dl>
+              </ul>
             </div>
 
-            <div className="relative px-1 py-4 sm:px-8 lg:px-0">
-              <span
-                className="love-doodle absolute -right-1 -top-3 h-14 w-14 rotate-12 text-[21px]"
-                aria-hidden
-              >
-                ♡
-              </span>
-              <DateNightPreview example={example} locale={locale} />
-            </div>
+            <DateNightPreview example={example} locale={locale} />
           </div>
         </section>
 
         <CustomerJourney example={example} locale={locale} />
 
-        <section className="px-5 py-10 sm:px-8 sm:py-14">
-          <div className="soft-section mx-auto grid max-w-6xl items-center gap-8 px-6 py-10 sm:px-10 sm:py-12 md:grid-cols-[1fr_auto]">
-            <div>
+        <section className="landing-finale relative overflow-hidden px-5 py-16 sm:px-8 sm:py-24">
+          <span className="finale-orbit finale-orbit-one" aria-hidden>
+            ♡
+          </span>
+          <span className="finale-orbit finale-orbit-two" aria-hidden>
+            ✦
+          </span>
+          <div className="mx-auto grid max-w-6xl items-center gap-10 rounded-[2.5rem] px-7 py-12 sm:px-12 sm:py-16 md:grid-cols-[1fr_auto]">
+            <div className="relative z-10">
               <div className="docket-label text-[var(--accent-text)]">
-                {t("One night is enough")}
+                {t("Your idea comes first")}
               </div>
-              <h2 className="display-heading mt-3 text-[clamp(2.15rem,5vw,3.8rem)]">
-                {t("Shall we make it a date?")}
+              <h2 className="display-heading mt-3 max-w-3xl text-[clamp(2.4rem,6vw,5.4rem)]">
+                {t("What do you want to do next?")}
               </h2>
-              <p className="mt-4 text-[15px] text-soft">
-                {t("That is still the only question we need answered.")}
+              <p className="mt-5 text-[15px] leading-relaxed text-soft sm:text-[17px]">
+                {t("Bring the idea. We'll find the person.")}
               </p>
             </div>
-            <LinkButton to="/signup" size="lg">
-              {t("Find me a date")} <span aria-hidden>→</span>
-            </LinkButton>
+            <div className="relative z-10 flex justify-start md:justify-end">
+              <LinkButton to="/signup" size="lg" className="finale-action">
+                {t("Find someone to go with")} <span aria-hidden>↗</span>
+              </LinkButton>
+            </div>
           </div>
         </section>
       </main>
@@ -303,17 +283,24 @@ export default function LandingPage() {
           <div className="flex items-center gap-2.5">
             <Logo className="h-6 w-6" />
             <div>
-              <div className="brand-wordmark text-[17px] text-[var(--text)]">
-                Datehaja
-              </div>
+              <Wordmark className="text-[19px] text-[var(--text)]" />
               <div className="mt-0.5">
-                {t("Pick a night. Let's make it a date.")}
+                {t("Your idea. One new person. One real date.")}
               </div>
             </div>
           </div>
           <div className="flex gap-5">
+            <Link to="/terms" className="hover:text-[var(--text)]">
+              {t("Terms")}
+            </Link>
             <Link to="/privacy" className="hover:text-[var(--text)]">
               {t("Privacy")}
+            </Link>
+            <Link
+              to="/community-guidelines"
+              className="hover:text-[var(--text)]"
+            >
+              {t("Community")}
             </Link>
             <Link to="/safety" className="hover:text-[var(--text)]">
               {t("Safety")}
@@ -338,113 +325,141 @@ function CustomerJourney({
   const { t } = useI18n();
   const evening = sampleRange(locale, 19, 0, 22, 0);
   const dateTime = sampleTime(locale, 19, 0);
-  const dinnerAmount = sampleMoney(
+  const activityAmount = sampleMoney(
     locale,
-    example.dinnerAmount,
+    example.activityAmount,
     example.currency,
   );
 
   return (
     <section
       id="how-it-works"
-      className="romance-night scroll-mt-20 overflow-hidden text-sand-50"
+      className="romance-night journey-section scroll-mt-20 overflow-hidden text-sand-50"
     >
       <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
-        <div className="max-w-3xl">
-          <div className="docket-label text-ember-300">{t("How it works")}</div>
-          <h2 className="display-heading mt-4 text-[clamp(2.35rem,5vw,4.4rem)]">
-            {t("From “I'm free” to “see you there.”")}
-          </h2>
-          <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-sand-300 sm:text-[17px]">
-            {t("Three small choices. No audition in between.")}
+        <div className="grid items-end gap-6 md:grid-cols-[1fr_auto]">
+          <div className="max-w-3xl">
+            <div className="docket-label text-ember-300">
+              {t("How it works")}
+            </div>
+            <h2 className="display-heading mt-4 text-[clamp(2.6rem,6vw,5.2rem)]">
+              {t("Start with the date you actually want.")}
+            </h2>
+          </div>
+          <p className="max-w-sm text-[15px] leading-relaxed text-sand-300 sm:text-[17px] md:pb-2 md:text-right">
+            {t(
+              "The plan comes first. Then we find the right person to join you.",
+            )}
           </p>
         </div>
 
-        <div className="mt-12 grid gap-4 lg:grid-cols-3">
-          <article className="flex min-h-[25rem] flex-col rounded-[2rem] border border-sand-500/25 bg-white/[0.04] p-5 sm:p-7">
-            <SceneHeading
-              number="01"
-              icon="calendar"
-              title={t("Choose a night")}
+        <div className="journey-landscape relative mt-14">
+          <svg
+            className="journey-route"
+            viewBox="0 0 1200 520"
+            fill="none"
+            preserveAspectRatio="none"
+            aria-hidden
+          >
+            <path
+              className="journey-route-ghost"
+              d="M38 322C188 58 348 62 468 255c104 168 209 216 328 37 106-160 214-148 370 8"
             />
-            <p className="mt-4 text-[14px] leading-relaxed text-sand-300">
-              {t("Friday, 7–10 PM. That's all we need.")}
-            </p>
-            <div className="mt-auto pt-8">
-              <AvailabilityWindow
-                label="♥"
-                owner={t("Friday")}
-                time={evening}
+            <path
+              className="journey-route-live"
+              d="M38 322C188 58 348 62 468 255c104 168 209 216 328 37 106-160 214-148 370 8"
+            />
+          </svg>
+
+          <div className="journey-beats grid gap-5 lg:grid-cols-3 lg:gap-7">
+            <article className="journey-beat journey-beat-one flex min-h-[25rem] flex-col p-5 sm:p-7">
+              <SceneHeading
+                number="01"
+                icon="calendar"
+                title={t("Name the date")}
               />
-              <div className="mt-3 flex items-center gap-2 px-1 text-[11px] font-bold text-ember-200">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-ember-500 text-[9px] text-white">
-                  ✓
-                </span>
-                {t("Window submitted")}
-              </div>
-            </div>
-          </article>
-
-          <article className="flex min-h-[25rem] flex-col rounded-[2rem] border border-ember-300/30 bg-ember-300/[0.07] p-5 sm:p-7">
-            <SceneHeading
-              number="02"
-              icon="meet"
-              title={t("Receive one considered plan")}
-            />
-            <p className="mt-4 text-[14px] leading-relaxed text-sand-300">
-              {t("One person, one public place, one plan that fits.")}
-            </p>
-            <div className="mt-auto rounded-[1.5rem] border border-ember-300/25 bg-[#291a22] p-5 shadow-[0_24px_50px_-38px_rgb(0_0_0/0.9)]">
-              <div className="docket-label text-[9px] text-ember-300">
-                {t("New date plan")}
-              </div>
-              <div className="mt-3 font-display text-[26px] text-sand-50">
-                {dateTime} · {example.area}
-              </div>
-              <div className="mt-5">
-                <PlanStop
-                  time={dateTime}
-                  title={example.venue}
-                  body={t("Dinner · calm room · about {amount}", {
-                    amount: dinnerAmount,
-                  })}
+              <p className="mt-4 text-[14px] leading-relaxed text-[var(--beat-muted)]">
+                {t("A film and nothing after? That's a complete date.")}
+              </p>
+              <div className="mt-auto pt-8">
+                <AvailabilityWindow
+                  label="🎬"
+                  owner={t("Friday")}
+                  time={evening}
                 />
+                <div className="date-idea-ticket mt-3">
+                  <span className="docket-label text-[8px] text-[var(--beat-muted)]">
+                    {t("Your date idea")}
+                  </span>
+                  <strong>{t("Watch an indie film")}</strong>
+                  <small>{t("Film only. No second stop needed.")}</small>
+                </div>
               </div>
-              <div className="mt-4 border-t border-ember-300/15 pt-4 text-[12px] leading-relaxed text-sand-300">
-                {t(
-                  "You both prefer quieter first dates and share an interest in films and running.",
-                )}
-              </div>
-            </div>
-          </article>
+            </article>
 
-          <article className="flex min-h-[25rem] flex-col rounded-[2rem] border border-sand-500/25 bg-white/[0.04] p-5 sm:p-7">
-            <SceneHeading
-              number="03"
-              icon="reply"
-              title={t("Both answer privately")}
-            />
-            <p className="mt-4 text-[14px] leading-relaxed text-sand-300">
-              {t(
-                "When you both choose yes, the date is ready for your calendar.",
-              )}
-            </p>
-            <div className="mt-auto space-y-2.5 pt-8">
-              <PrivateReply owner={t("You")} accept={t("Accept")} />
-              <PrivateReply owner={t("Match")} accept={t("Accept")} />
-              <div className="mt-3 flex items-center justify-between rounded-2xl bg-ember-500 px-4 py-3 text-white">
-                <span className="flex items-center gap-2 text-[12px] font-bold">
-                  <span aria-hidden>♥</span> {t("It's a date")}
-                </span>
-                <span className="font-mono text-[9px] uppercase">
-                  {t("Added to calendar")}
-                </span>
+            <article className="journey-beat journey-beat-two flex min-h-[27rem] flex-col p-5 sm:p-7">
+              <SceneHeading
+                number="02"
+                icon="meet"
+                title={t("Find someone who wants the same thing")}
+              />
+              <p className="mt-4 text-[14px] leading-relaxed text-[var(--beat-muted)]">
+                {t(
+                  "We match the activity, timing, and the person—not a restaurant reservation.",
+                )}
+              </p>
+              <div className="journey-plan-ticket mt-auto rounded-[1.5rem] p-5">
+                <div className="docket-label text-[9px] text-[var(--beat-accent)]">
+                  {t("Film night")}
+                </div>
+                <div className="mt-3 font-display text-[26px] text-[var(--beat-text)]">
+                  {dateTime} · {example.area}
+                </div>
+                <div className="mt-5">
+                  <PlanStop
+                    time={dateTime}
+                    title={example.venue}
+                    body={t("One screening · about {amount}", {
+                      amount: activityAmount,
+                    })}
+                  />
+                </div>
+                <div className="mt-4 border-t border-[var(--beat-border)] pt-4 text-[12px] leading-relaxed text-[var(--beat-muted)]">
+                  {t(
+                    "You both want to see a film. Nothing else has to be added.",
+                  )}
+                </div>
               </div>
-            </div>
-          </article>
+            </article>
+
+            <article className="journey-beat journey-beat-three flex min-h-[25rem] flex-col p-5 sm:p-7">
+              <SceneHeading
+                number="03"
+                icon="reply"
+                title={t("Go do exactly that")}
+              />
+              <p className="mt-4 text-[14px] leading-relaxed text-[var(--beat-muted)]">
+                {t(
+                  "Both say yes. Meet in public. No pressure to make it more.",
+                )}
+              </p>
+              <div className="mt-auto space-y-2.5 pt-8">
+                <PrivateReply owner={t("You")} accept={t("Accept")} />
+                <PrivateReply owner={t("Match")} accept={t("Accept")} />
+                <div className="mt-3 flex items-center justify-between rounded-2xl bg-[var(--beat-accent)] px-4 py-3 text-white">
+                  <span className="flex items-center gap-2 text-[12px] font-bold">
+                    <span aria-hidden>♥</span> {t("It's a date")}
+                  </span>
+                  <span className="font-mono text-[9px] uppercase">
+                    {t("Added to calendar")}
+                  </span>
+                </div>
+              </div>
+            </article>
+          </div>
         </div>
 
-        <div className="mt-6 flex flex-wrap gap-2 text-[11px] font-bold text-sand-300">
+        <div className="journey-trust mt-10 flex flex-wrap gap-2 text-[11px] font-bold text-sand-300">
           {[
             ["lock", t("No contact details exchanged")],
             ["meet", t("Public places only")],
@@ -484,16 +499,20 @@ function SceneHeading({
   return (
     <div className={centered ? "text-center" : ""}>
       <div
-        className={`flex items-center gap-3 text-ember-300 ${
+        className={`flex items-center gap-3 text-[var(--beat-accent)] ${
           centered ? "justify-center" : "justify-between"
         }`}
       >
-        <span className="flex h-10 w-10 items-center justify-center rounded-full border border-ember-300/30 bg-ember-300/10">
+        <span className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--beat-border)] bg-[var(--beat-panel)]">
           <VisualIcon kind={icon} />
         </span>
-        <span className="font-mono text-[10px]">{number}</span>
+        <span className="journey-step-number font-mono text-[10px]">
+          {number}
+        </span>
       </div>
-      <h3 className="mt-4 text-[16px] font-bold text-sand-50">{title}</h3>
+      <h3 className="mt-5 text-[19px] font-bold text-[var(--beat-text)]">
+        {title}
+      </h3>
     </div>
   );
 }
@@ -508,15 +527,15 @@ function AvailabilityWindow({
   time: string;
 }) {
   return (
-    <div className="flex items-center gap-2.5 rounded-2xl border border-sand-500/25 bg-white/[0.035] p-3">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ember-300/15 text-[11px] font-bold text-ember-200">
+    <div className="flex items-center gap-2.5 rounded-2xl border border-[var(--beat-border)] bg-[var(--beat-panel)] p-3">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--beat-accent)] text-[11px] font-bold text-white">
         {label}
       </span>
       <span className="min-w-0">
-        <span className="docket-label block text-[8px] text-sand-400">
+        <span className="docket-label block text-[8px] text-[var(--beat-muted)]">
           {owner}
         </span>
-        <span className="mt-1 block font-mono text-[11px] text-sand-100">
+        <span className="mt-1 block font-mono text-[11px] text-[var(--beat-text)]">
           {time}
         </span>
       </span>
@@ -526,14 +545,16 @@ function AvailabilityWindow({
 
 function PrivateReply({ owner, accept }: { owner: string; accept: string }) {
   return (
-    <div className="rounded-2xl border border-sand-500/25 bg-white/[0.035] p-3">
+    <div className="rounded-2xl border border-[var(--beat-border)] bg-[var(--beat-panel)] p-3">
       <div className="flex items-center justify-between">
-        <span className="flex items-center gap-2 text-[11px] font-bold text-sand-200">
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ember-300/15 text-ember-200">♥</span>
+        <span className="flex items-center gap-2 text-[11px] font-bold text-[var(--beat-text)]">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--beat-accent)] text-white">
+            ♥
+          </span>
           {owner}
           <VisualIcon kind="lock" />
         </span>
-        <span className="rounded-full bg-ember-500 px-3 py-1.5 text-[9px] font-bold text-white">
+        <span className="rounded-full bg-[var(--beat-accent)] px-3 py-1.5 text-[9px] font-bold text-white">
           {accept} ✓
         </span>
       </div>
@@ -640,62 +661,90 @@ function DateNightPreview({
 }) {
   const { t } = useI18n();
   const dateTime = sampleTime(locale, 19, 0);
-  const estimate = sampleMoney(locale, example.totalAmount, example.currency);
+  const estimate = sampleMoney(
+    locale,
+    example.activityAmount,
+    example.currency,
+  );
 
   return (
-    <aside className="love-note mx-auto max-w-md overflow-hidden">
-      <div className="relative aspect-[4/3] overflow-hidden">
+    <aside
+      className="hero-stage relative mx-auto w-full max-w-[38rem]"
+      aria-label={t("Your idea, matched")}
+    >
+      <div className="hero-stage-wash" aria-hidden />
+      <svg className="hero-loop" viewBox="0 0 600 620" fill="none" aria-hidden>
+        <path d="M91 235C24 430 173 575 366 550c175-22 250-215 157-360C432 48 206 64 123 180" />
+      </svg>
+      <span className="hero-spark hero-spark-one" aria-hidden>
+        ✦
+      </span>
+      <span className="hero-spark hero-spark-two" aria-hidden>
+        ♡
+      </span>
+
+      <figure className="hero-photo-shell relative overflow-hidden">
         <img
-          src="/date-night-illustration.webp"
+          src="/movie-date-photo-v3.webp"
           alt=""
-          width={1440}
-          height={960}
+          width={1536}
+          height={1024}
           fetchPriority="high"
           decoding="async"
-          className="h-full w-full object-cover"
+          className="hero-photo h-full w-full object-cover"
           aria-hidden="true"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1b1117] via-transparent to-[#1b1117]/15" />
-        <div className="absolute left-4 top-4 rounded-full border border-white/20 bg-[#21151c]/80 px-3 py-2 backdrop-blur-md">
-          <span className="docket-label flex items-center gap-2 text-[9px] text-ember-200">
-            <Logo className="h-4 w-4" /> {t("Your Friday, planned")}
-          </span>
-        </div>
-        <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-          <div className="docket-label text-[9px] text-ember-200">
+        <div className="absolute inset-0 bg-gradient-to-t from-[#130c10]/70 via-transparent to-transparent" />
+        <figcaption className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-7">
+          <div className="docket-label text-[9px] text-[#ffd2c9]">
             {t("Friday")} · {dateTime} · {example.area}
           </div>
-          <div className="mt-2 font-display text-[26px] leading-tight sm:text-[30px]">
-            {t("Dinner, then dessert if it feels right.")}
+          <div className="mt-2 max-w-sm font-display text-[25px] leading-[1.12] sm:text-[33px]">
+            {t("One film. One new person. That's the whole plan.")}
           </div>
+        </figcaption>
+        <div className="absolute left-4 top-4 rounded-full border border-white/20 bg-[#21151c]/65 px-3 py-2 backdrop-blur-md sm:left-6 sm:top-6">
+          <span className="docket-label flex items-center gap-2 text-[9px] text-[#ffe7df]">
+            <Logo className="h-4 w-4" /> {t("Your idea, matched")}
+          </span>
+        </div>
+      </figure>
+
+      <div className="hero-plan-card">
+        <div className="flex items-center justify-between gap-5">
+          <span className="docket-label text-[9px] text-[var(--accent-text)]">
+            {t("Your date idea")}
+          </span>
+          <span className="font-mono text-[9px] text-muted">DD—001</span>
+        </div>
+        <div className="hero-route mt-3">
+          <div className="hero-route-stop">
+            <span className="hero-route-time">{dateTime}</span>
+            <span className="hero-route-copy">
+              <strong>{example.venue}</strong>
+              <small>{t("Film only. No second stop needed.")}</small>
+            </span>
+          </div>
+        </div>
+        <div className="mt-3 flex justify-end">
+          <span className="rounded-full bg-[var(--bg-sunken)] px-3 py-2 text-[9px] font-bold text-soft">
+            ≈ {estimate} / {t("person")}
+          </span>
         </div>
       </div>
 
-      <div className="p-5">
-        <div className="flex flex-wrap gap-2 text-[10px] font-bold text-muted">
-          <span className="rounded-full bg-[var(--tint-ember-bg)] px-3 py-2">
-            {t("Meet in public")}
+      <div className="hero-confirmation-card">
+        <span className="hero-confirmation-icon" aria-hidden>
+          ✓
+        </span>
+        <span>
+          <span className="docket-label block text-[8px] opacity-70">
+            {t("Both said yes")}
           </span>
-          <span className="rounded-full bg-[var(--tint-ember-bg)] px-3 py-2">
-            ≈ {estimate} / {t("person")}
+          <span className="mt-1 block text-[13px] font-extrabold">
+            {t("It's a date")}
           </span>
-          <span className="rounded-full bg-[var(--tint-ember-bg)] px-3 py-2">
-            {t("Your contact details stay yours")}
-          </span>
-        </div>
-        <div className="mt-4 flex items-center justify-between rounded-2xl border border-[var(--tint-ember-border)] bg-[var(--tint-ember-bg)] px-4 py-3">
-          <span>
-            <span className="docket-label block text-[8px] text-muted">
-              {t("Both said yes")}
-            </span>
-            <span className="mt-1 block text-[14px] font-bold text-[var(--accent-text)]">
-              {t("It's a date")}
-            </span>
-          </span>
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-ember-500 text-white">
-            ♥
-          </span>
-        </div>
+        </span>
       </div>
     </aside>
   );
@@ -712,12 +761,12 @@ function PlanStop({
 }) {
   return (
     <div className="grid grid-cols-[4.75rem_1fr] gap-3">
-      <span className="font-mono text-[10px] text-[var(--accent-text)]">
+      <span className="font-mono text-[10px] text-[var(--beat-accent)]">
         {time}
       </span>
       <div>
         <div className="text-[14px] font-semibold leading-tight">{title}</div>
-        <div className="mt-1 text-[12px] leading-relaxed text-muted">
+        <div className="mt-1 text-[12px] leading-relaxed text-[var(--beat-muted)]">
           {body}
         </div>
       </div>

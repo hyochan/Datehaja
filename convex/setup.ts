@@ -4,6 +4,7 @@ import { internal } from "./_generated/api";
 import {
   createInbox,
   createWebhook,
+  deleteWebhook,
   hasAgentMail,
   listInboxes,
   listWebhooks,
@@ -27,7 +28,10 @@ export const provisionAgentMail = internalAction({
   returns: v.any(),
   handler: async (_ctx, args) => {
     if (!hasAgentMail()) {
-      return { ok: false, error: "AGENTMAIL_API_KEY is not set on this deployment." };
+      return {
+        ok: false,
+        error: "AGENTMAIL_API_KEY is not set on this deployment.",
+      };
     }
 
     const username = args.username ?? "datehaja-concierge";
@@ -45,9 +49,14 @@ export const provisionAgentMail = internalAction({
     } catch (e) {
       // The username may already be taken by a previous run — fall back to lookup.
       const existing = await listInboxes().catch(() => null);
-      const match = existing?.inboxes?.find((i) => i.inbox_id.startsWith(username));
+      const match = existing?.inboxes?.find((i) =>
+        i.inbox_id.startsWith(username),
+      );
       if (!match) {
-        return { ok: false, error: `Could not create or find inbox: ${String(e)}` };
+        return {
+          ok: false,
+          error: `Could not create or find inbox: ${String(e)}`,
+        };
       }
       inboxId = match.inbox_id;
       inboxEmail = match.email ?? match.inbox_id;
@@ -56,6 +65,7 @@ export const provisionAgentMail = internalAction({
     let webhookId: string | null = null;
     let webhookSecret: string | null = null;
     let webhookError: string | null = null;
+    const removedWebhookIds: string[] = [];
 
     try {
       const hook = await createWebhook({
@@ -81,6 +91,18 @@ export const provisionAgentMail = internalAction({
       }
     }
 
+    if (webhookId) {
+      const current = await listWebhooks().catch(() => null);
+      const duplicates = (current?.webhooks ?? []).filter(
+        (webhook) =>
+          webhook.url === args.webhookUrl && webhook.webhook_id !== webhookId,
+      );
+      for (const duplicate of duplicates) {
+        await deleteWebhook(duplicate.webhook_id);
+        removedWebhookIds.push(duplicate.webhook_id);
+      }
+    }
+
     return {
       ok: true,
       inboxId,
@@ -89,10 +111,11 @@ export const provisionAgentMail = internalAction({
       webhookSecret,
       webhookUrl: args.webhookUrl,
       webhookError,
+      removedWebhookIds,
       next: [
         `npx convex env set AGENTMAIL_INBOX_ID "${inboxId}"`,
         webhookSecret
-          ? "npx convex env set AGENTMAIL_WEBHOOK_SECRET \"<secret from this output>\""
+          ? 'npx convex env set AGENTMAIL_WEBHOOK_SECRET "<secret from this output>"'
           : "Create the webhook manually in the AgentMail console, then set AGENTMAIL_WEBHOOK_SECRET.",
       ],
     };

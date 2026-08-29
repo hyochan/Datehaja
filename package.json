@@ -11,6 +11,8 @@
     "typecheck": "tsc -b --force",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:full": "DATEHAJA_FULL_E2E=1 playwright test tests/e2e/full-flow.spec.ts",
     "convex:dev": "convex dev",
     "convex:deploy": "convex deploy",
     "deploy": "static-hosting deploy",
@@ -33,6 +35,7 @@
   },
   "devDependencies": {
     "@edge-runtime/vm": "^5.0.0",
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.2",

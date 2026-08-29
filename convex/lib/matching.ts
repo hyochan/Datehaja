@@ -24,12 +24,22 @@ export type MatchProfile = {
   approxLat: number;
   approxLng: number;
   timezone: string;
+  bio?: string;
   interests: string[];
   hobbies: string[];
   languages: string[];
   socialEnergy: "introvert" | "ambivert" | "extrovert";
   firstDateVibe: string[];
-  lifestyle: { smokes: boolean; drinks: "none" | "occasional" | "social" | "no_preference" };
+  personalityTraits?: string[];
+  styleTags?: string[];
+  trust?: {
+    reviewCount: number;
+    score: number;
+  };
+  lifestyle: {
+    smokes: boolean;
+    drinks: "none" | "occasional" | "social" | "no_preference";
+  };
   status: "active" | "paused" | "suspended";
   moderationStatus: "ok" | "flagged" | "suspended";
   onboardingComplete: boolean;
@@ -42,6 +52,8 @@ export type MatchPreferences = {
   ageHard: boolean;
   maxDistanceKm: number;
   distanceHard: boolean;
+  preferredAreas?: string[];
+  areaHard?: boolean;
   relationshipIntent: "casual" | "open" | "serious" | "friendship" | "unsure";
   intentHard: boolean;
   smoking: "no_preference" | "non_smoker_only" | "smoker_ok";
@@ -49,6 +61,10 @@ export type MatchPreferences = {
   alcohol: "none" | "occasional" | "social" | "no_preference";
   alcoholHard: boolean;
   preferredDateTypes: string[];
+  preferredPersonalityTraits?: string[];
+  personalityPreference?: "important" | "flexible" | "no_preference";
+  preferredStyleTags?: string[];
+  stylePreference?: "important" | "flexible" | "no_preference";
   budgetMinPerPerson: number;
   budgetMaxPerPerson: number;
   currency: string;
@@ -65,6 +81,8 @@ export type Party = {
   profile: MatchProfile;
   preferences: MatchPreferences;
   window: Window;
+  /** The specific date this person wants for this availability window. */
+  dateIdea?: string;
   availabilityId?: string;
 };
 
@@ -75,9 +93,7 @@ export type HardFilterContext = {
   excludedUserIds?: ReadonlySet<string>;
 };
 
-export type HardFilterResult =
-  | { ok: true }
-  | { ok: false; reason: string };
+export type HardFilterResult = { ok: true } | { ok: false; reason: string };
 
 export function blockKey(a: string, b: string): string {
   return a < b ? `${a}|${b}` : `${b}|${a}`;
@@ -104,7 +120,8 @@ function genderInterest(seeker: MatchProfile, other: MatchProfile): boolean {
 }
 
 function eligibleProfile(p: MatchProfile): HardFilterResult {
-  if (!p.onboardingComplete) return { ok: false, reason: "onboarding_incomplete" };
+  if (!p.onboardingComplete)
+    return { ok: false, reason: "onboarding_incomplete" };
   if (!p.ageConfirmed18) return { ok: false, reason: "age_not_confirmed" };
   if (p.ageYears < 18) return { ok: false, reason: "under_18" };
   if (p.status !== "active") return { ok: false, reason: `status_${p.status}` };
@@ -128,9 +145,11 @@ export function hardFilter(
   }
 
   const seekerEligible = eligibleProfile(seeker.profile);
-  if (!seekerEligible.ok) return { ok: false, reason: `seeker_${seekerEligible.reason}` };
+  if (!seekerEligible.ok)
+    return { ok: false, reason: `seeker_${seekerEligible.reason}` };
   const candEligible = eligibleProfile(candidate.profile);
-  if (!candEligible.ok) return { ok: false, reason: `candidate_${candEligible.reason}` };
+  if (!candEligible.ok)
+    return { ok: false, reason: `candidate_${candEligible.reason}` };
 
   if (candidate.preferences.dropsPaused) {
     return { ok: false, reason: "candidate_paused_drops" };
@@ -140,7 +159,11 @@ export function hardFilter(
     return { ok: false, reason: "already_considered" };
   }
 
-  if (ctx.blockedPairs.has(blockKey(seeker.profile.userId, candidate.profile.userId))) {
+  if (
+    ctx.blockedPairs.has(
+      blockKey(seeker.profile.userId, candidate.profile.userId),
+    )
+  ) {
     return { ok: false, reason: "blocked" };
   }
 
@@ -149,7 +172,11 @@ export function hardFilter(
   if (candidate.profile.isDemo && !seeker.preferences.allowDemoMatches) {
     return { ok: false, reason: "demo_not_allowed" };
   }
-  if (seeker.profile.isDemo && !candidate.preferences.allowDemoMatches && !candidate.profile.isDemo) {
+  if (
+    seeker.profile.isDemo &&
+    !candidate.preferences.allowDemoMatches &&
+    !candidate.profile.isDemo
+  ) {
     return { ok: false, reason: "demo_not_allowed_reverse" };
   }
 
@@ -184,22 +211,48 @@ export function hardFilter(
     candidate.profile.approxLat,
     candidate.profile.approxLng,
   );
-  if (seeker.preferences.distanceHard && distanceKm > seeker.preferences.maxDistanceKm) {
+  if (
+    seeker.preferences.distanceHard &&
+    distanceKm > seeker.preferences.maxDistanceKm
+  ) {
     return { ok: false, reason: "seeker_distance" };
   }
-  if (candidate.preferences.distanceHard && distanceKm > candidate.preferences.maxDistanceKm) {
+  if (
+    candidate.preferences.distanceHard &&
+    distanceKm > candidate.preferences.maxDistanceKm
+  ) {
     return { ok: false, reason: "candidate_distance" };
+  }
+
+  // Meeting areas describe where the date may happen, not where either person
+  // lives. Two strict, disjoint area lists cannot produce a valid venue plan.
+  if (
+    seeker.preferences.areaHard &&
+    candidate.preferences.areaHard &&
+    (seeker.preferences.preferredAreas?.length ?? 0) > 0 &&
+    (candidate.preferences.preferredAreas?.length ?? 0) > 0 &&
+    intersect(
+      seeker.preferences.preferredAreas ?? [],
+      candidate.preferences.preferredAreas ?? [],
+    ).length === 0
+  ) {
+    return { ok: false, reason: "meeting_area" };
   }
 
   // A date needs a genuinely shared block of time.
   const overlap = intersectWindows(seeker.window, candidate.window);
-  if (!overlap || overlapMinutes(seeker.window, candidate.window) < MIN_OVERLAP_MINUTES) {
+  if (
+    !overlap ||
+    overlapMinutes(seeker.window, candidate.window) < MIN_OVERLAP_MINUTES
+  ) {
     return { ok: false, reason: "no_availability_overlap" };
   }
 
   // Relationship intent, when declared hard by either side.
-  const seekerOk = INTENT_COMPATIBILITY[seeker.preferences.relationshipIntent] ?? [];
-  const candOk = INTENT_COMPATIBILITY[candidate.preferences.relationshipIntent] ?? [];
+  const seekerOk =
+    INTENT_COMPATIBILITY[seeker.preferences.relationshipIntent] ?? [];
+  const candOk =
+    INTENT_COMPATIBILITY[candidate.preferences.relationshipIntent] ?? [];
   if (
     seeker.preferences.intentHard &&
     !seekerOk.includes(candidate.preferences.relationshipIntent)
@@ -266,7 +319,10 @@ export function hardFilter(
   }
 
   // A first date with no shared language is not a first date.
-  const sharedLangs = intersect(seeker.profile.languages, candidate.profile.languages);
+  const sharedLangs = intersect(
+    seeker.profile.languages,
+    candidate.profile.languages,
+  );
   if (
     seeker.profile.languages.length > 0 &&
     candidate.profile.languages.length > 0 &&
@@ -293,9 +349,18 @@ export type Signals = {
   sharedDateTypes: string[];
   styleMatch: number;
   lifestyleMatch: number;
+  personalityMatch: number;
+  tasteMatch: number;
+  trustMatch: number;
+  sharedAreas?: string[];
+  areaMatch?: number;
 };
 
-export type ScoredPair = { score: number; signals: Signals; breakdown: Record<string, number> };
+export type ScoredPair = {
+  score: number;
+  signals: Signals;
+  breakdown: Record<string, number>;
+};
 
 function norm(s: string): string {
   return s.trim().toLowerCase();
@@ -318,14 +383,18 @@ export function intersect(a: string[], b: string[]): string[] {
 const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
 
 const WEIGHTS = {
-  interests: 24,
-  dateTypes: 18,
-  distance: 13,
+  interests: 18,
+  dateTypes: 14,
+  distance: 6,
+  area: 4,
   availability: 10,
-  budget: 10,
-  lifestyle: 12,
-  style: 8,
-  language: 5,
+  budget: 8,
+  lifestyle: 10,
+  style: 6,
+  language: 4,
+  personality: 10,
+  taste: 6,
+  trust: 4,
 } as const;
 
 /**
@@ -345,32 +414,68 @@ export function scorePair(seeker: Party, candidate: Party): ScoredPair {
   );
   const unionSize =
     new Set(
-      [...sp.interests, ...sp.hobbies, ...cp.interests, ...cp.hobbies].map(norm),
+      [...sp.interests, ...sp.hobbies, ...cp.interests, ...cp.hobbies].map(
+        norm,
+      ),
     ).size || 1;
   // Reward absolute overlap first, Jaccard second — 3 shared loves beats
   // "we both listed exactly one thing and it matched".
   const interestScore =
     WEIGHTS.interests *
-    clamp01(0.65 * clamp01(sharedInterests.length / 4) + 0.35 * (sharedInterests.length / unionSize));
+    clamp01(
+      0.65 * clamp01(sharedInterests.length / 4) +
+        0.35 * (sharedInterests.length / unionSize),
+    );
 
-  const sharedDateTypes = intersect(spref.preferredDateTypes, cpref.preferredDateTypes);
-  const dateTypeScore =
-    WEIGHTS.dateTypes * clamp01(sharedDateTypes.length / 3);
+  const sharedDateTypes = intersect(
+    spref.preferredDateTypes,
+    cpref.preferredDateTypes,
+  );
+  const dateTypeScore = WEIGHTS.dateTypes * clamp01(sharedDateTypes.length / 3);
 
-  const distanceKm = haversineKm(sp.approxLat, sp.approxLng, cp.approxLat, cp.approxLng);
-  const tolerance = Math.max(1, Math.min(spref.maxDistanceKm, cpref.maxDistanceKm));
+  const distanceKm = haversineKm(
+    sp.approxLat,
+    sp.approxLng,
+    cp.approxLat,
+    cp.approxLng,
+  );
+  const tolerance = Math.max(
+    1,
+    Math.min(spref.maxDistanceKm, cpref.maxDistanceKm),
+  );
   const distanceScore = WEIGHTS.distance * clamp01(1 - distanceKm / tolerance);
 
+  const sharedAreas = intersect(
+    spref.preferredAreas ?? [],
+    cpref.preferredAreas ?? [],
+  );
+  const areaMatch = meetingAreaCompatibility(spref, cpref);
+  const areaScore = WEIGHTS.area * areaMatch;
+
   const overlap = intersectWindows(seeker.window, candidate.window);
-  const mins = overlap ? Math.round((overlap.endMs - overlap.startMs) / 60_000) : 0;
+  const mins = overlap
+    ? Math.round((overlap.endMs - overlap.startMs) / 60_000)
+    : 0;
   // 3h+ of shared time is all the room a first date needs.
   const availabilityScore = WEIGHTS.availability * clamp01(mins / 180);
 
-  const budgetLow = Math.max(spref.budgetMinPerPerson, cpref.budgetMinPerPerson);
-  const budgetHigh = Math.min(spref.budgetMaxPerPerson, cpref.budgetMaxPerPerson);
+  const budgetLow = Math.max(
+    spref.budgetMinPerPerson,
+    cpref.budgetMinPerPerson,
+  );
+  const budgetHigh = Math.min(
+    spref.budgetMaxPerPerson,
+    cpref.budgetMaxPerPerson,
+  );
   const budgetOverlap = budgetHigh >= budgetLow;
-  const seekerSpan = Math.max(1, spref.budgetMaxPerPerson - spref.budgetMinPerPerson);
-  const candSpan = Math.max(1, cpref.budgetMaxPerPerson - cpref.budgetMinPerPerson);
+  const seekerSpan = Math.max(
+    1,
+    spref.budgetMaxPerPerson - spref.budgetMinPerPerson,
+  );
+  const candSpan = Math.max(
+    1,
+    cpref.budgetMaxPerPerson - cpref.budgetMinPerPerson,
+  );
   const budgetScore = budgetOverlap
     ? WEIGHTS.budget *
       clamp01((budgetHigh - budgetLow) / Math.min(seekerSpan, candSpan))
@@ -382,33 +487,101 @@ export function scorePair(seeker: Party, candidate: Party): ScoredPair {
   const styleMatch = styleCompatibility(seeker, candidate);
   const styleScore = WEIGHTS.style * styleMatch;
 
+  const personalityMatch = reciprocalPreferenceCompatibility(
+    sp.personalityTraits ?? [],
+    cp.personalityTraits ?? [],
+    spref.preferredPersonalityTraits ?? [],
+    cpref.preferredPersonalityTraits ?? [],
+    spref.personalityPreference ?? "no_preference",
+    cpref.personalityPreference ?? "no_preference",
+  );
+  const personalityScore = WEIGHTS.personality * personalityMatch;
+
+  const tasteMatch = reciprocalPreferenceCompatibility(
+    sp.styleTags ?? [],
+    cp.styleTags ?? [],
+    spref.preferredStyleTags ?? [],
+    cpref.preferredStyleTags ?? [],
+    spref.stylePreference ?? "no_preference",
+    cpref.stylePreference ?? "no_preference",
+  );
+  const tasteScore = WEIGHTS.taste * tasteMatch;
+
+  // Reviews affect reliability only. Attraction and "meet again" answers are
+  // deliberately excluded so popularity never turns into a beauty ranking.
+  const trustMatch = clamp01(
+    ((sp.trust?.score ?? 0.8) + (cp.trust?.score ?? 0.8)) / 2,
+  );
+  const trustScore = WEIGHTS.trust * trustMatch;
+
   const sharedLanguages = intersect(sp.languages, cp.languages);
   const languageScore = WEIGHTS.language * clamp01(sharedLanguages.length / 2);
 
   // Soft penalties for preferences the user marked "nice to have" rather than
   // required — they did not exclude the candidate, but they still matter.
   let penalty = 0;
-  if (!spref.ageHard && (cp.ageYears < spref.ageMin || cp.ageYears > spref.ageMax)) penalty += 8;
-  if (!cpref.ageHard && (sp.ageYears < cpref.ageMin || sp.ageYears > cpref.ageMax)) penalty += 8;
+  if (
+    !spref.ageHard &&
+    (cp.ageYears < spref.ageMin || cp.ageYears > spref.ageMax)
+  )
+    penalty += 8;
+  if (
+    !cpref.ageHard &&
+    (sp.ageYears < cpref.ageMin || sp.ageYears > cpref.ageMax)
+  )
+    penalty += 8;
   if (!spref.distanceHard && distanceKm > spref.maxDistanceKm) penalty += 6;
   if (!cpref.distanceHard && distanceKm > cpref.maxDistanceKm) penalty += 6;
   if (
+    (spref.preferredAreas?.length ?? 0) > 0 &&
+    (cpref.preferredAreas?.length ?? 0) > 0 &&
+    sharedAreas.length === 0
+  ) {
+    penalty += 4;
+  }
+  if (
     !spref.intentHard &&
-    !(INTENT_COMPATIBILITY[spref.relationshipIntent] ?? []).includes(cpref.relationshipIntent)
+    !(INTENT_COMPATIBILITY[spref.relationshipIntent] ?? []).includes(
+      cpref.relationshipIntent,
+    )
   ) {
     penalty += 7;
   }
   if (!budgetOverlap) penalty += 5;
+  if (
+    spref.personalityPreference === "important" &&
+    (spref.preferredPersonalityTraits?.length ?? 0) > 0 &&
+    intersect(
+      spref.preferredPersonalityTraits ?? [],
+      cp.personalityTraits ?? [],
+    ).length === 0
+  ) {
+    penalty += 6;
+  }
+  if (
+    cpref.personalityPreference === "important" &&
+    (cpref.preferredPersonalityTraits?.length ?? 0) > 0 &&
+    intersect(
+      cpref.preferredPersonalityTraits ?? [],
+      sp.personalityTraits ?? [],
+    ).length === 0
+  ) {
+    penalty += 6;
+  }
 
   const breakdown = {
     interests: round1(interestScore),
     dateTypes: round1(dateTypeScore),
     distance: round1(distanceScore),
+    area: round1(areaScore),
     availability: round1(availabilityScore),
     budget: round1(budgetScore),
     lifestyle: round1(lifestyleScore),
     style: round1(styleScore),
     language: round1(languageScore),
+    personality: round1(personalityScore),
+    taste: round1(tasteScore),
+    trust: round1(trustScore),
     penalty: -round1(penalty),
   };
 
@@ -416,11 +589,15 @@ export function scorePair(seeker: Party, candidate: Party): ScoredPair {
     interestScore +
     dateTypeScore +
     distanceScore +
+    areaScore +
     availabilityScore +
     budgetScore +
     lifestyleScore +
     styleScore +
-    languageScore -
+    languageScore +
+    personalityScore +
+    tasteScore +
+    trustScore -
     penalty;
 
   return {
@@ -430,6 +607,8 @@ export function scorePair(seeker: Party, candidate: Party): ScoredPair {
       sharedInterests,
       sharedLanguages,
       distanceKm: round1(distanceKm),
+      sharedAreas,
+      areaMatch: round1(areaMatch * 100) / 100,
       overlapMinutes: mins,
       overlapStartMs: overlap?.startMs ?? 0,
       overlapEndMs: overlap?.endMs ?? 0,
@@ -439,8 +618,51 @@ export function scorePair(seeker: Party, candidate: Party): ScoredPair {
       sharedDateTypes,
       styleMatch: round1(styleMatch * 100) / 100,
       lifestyleMatch: round1(lifestyleMatch * 100) / 100,
+      personalityMatch: round1(personalityMatch * 100) / 100,
+      tasteMatch: round1(tasteMatch * 100) / 100,
+      trustMatch: round1(trustMatch * 100) / 100,
     },
   };
+}
+
+export function meetingAreaCompatibility(
+  a: Pick<MatchPreferences, "preferredAreas" | "areaHard">,
+  b: Pick<MatchPreferences, "preferredAreas" | "areaHard">,
+): number {
+  const aAreas = a.preferredAreas ?? [];
+  const bAreas = b.preferredAreas ?? [];
+  if (aAreas.length === 0 && bAreas.length === 0) return 0.75;
+  // One person is open to anywhere, so the other's choice can be honoured.
+  if (aAreas.length === 0 || bAreas.length === 0) return 0.9;
+  const shared = intersect(aAreas, bAreas).length;
+  if (shared === 0) return a.areaHard || b.areaHard ? 0.35 : 0.25;
+  return clamp01(0.7 + 0.3 * (shared / Math.min(aAreas.length, bAreas.length)));
+}
+
+function reciprocalPreferenceCompatibility(
+  aTraits: string[],
+  bTraits: string[],
+  aWants: string[],
+  bWants: string[],
+  aStrength: "important" | "flexible" | "no_preference",
+  bStrength: "important" | "flexible" | "no_preference",
+): number {
+  const directional = (
+    wants: string[],
+    actual: string[],
+    strength: "important" | "flexible" | "no_preference",
+  ) => {
+    if (strength === "no_preference" || wants.length === 0) return 0.75;
+    const overlap = intersect(wants, actual).length;
+    const ratio = clamp01(overlap / Math.min(3, wants.length));
+    return strength === "important" ? ratio : 0.4 + 0.6 * ratio;
+  };
+
+  return clamp01(
+    (directional(aWants, bTraits, aStrength) +
+      directional(bWants, aTraits, bStrength)) /
+      2,
+  );
 }
 
 function lifestyleCompatibility(a: Party, b: Party): number {
@@ -450,22 +672,31 @@ function lifestyleCompatibility(a: Party, b: Party): number {
   // Smoking
   parts += 1;
   const smokingClash =
-    (a.preferences.smoking === "non_smoker_only" && b.profile.lifestyle.smokes) ||
+    (a.preferences.smoking === "non_smoker_only" &&
+      b.profile.lifestyle.smokes) ||
     (b.preferences.smoking === "non_smoker_only" && a.profile.lifestyle.smokes);
   score += smokingClash ? 0 : 1;
 
   // Drinking habits — closeness on a 3-point scale.
   parts += 1;
-  const drinkRank = { none: 0, occasional: 1, social: 2, no_preference: 1 } as const;
+  const drinkRank = {
+    none: 0,
+    occasional: 1,
+    social: 2,
+    no_preference: 1,
+  } as const;
   const diff = Math.abs(
-    drinkRank[a.profile.lifestyle.drinks] - drinkRank[b.profile.lifestyle.drinks],
+    drinkRank[a.profile.lifestyle.drinks] -
+      drinkRank[b.profile.lifestyle.drinks],
   );
   score += 1 - diff / 2;
 
   // Social energy — introvert+extrovert is fine, just less of a slam dunk.
   parts += 1;
   const energyRank = { introvert: 0, ambivert: 1, extrovert: 2 } as const;
-  const eDiff = Math.abs(energyRank[a.profile.socialEnergy] - energyRank[b.profile.socialEnergy]);
+  const eDiff = Math.abs(
+    energyRank[a.profile.socialEnergy] - energyRank[b.profile.socialEnergy],
+  );
   score += 1 - eDiff / 3;
 
   return clamp01(score / parts);
@@ -476,10 +707,18 @@ function styleCompatibility(a: Party, b: Party): number {
   let parts = 0;
 
   parts += 1;
-  score += compatEnum(a.preferences.indoorOutdoor, b.preferences.indoorOutdoor, "either");
+  score += compatEnum(
+    a.preferences.indoorOutdoor,
+    b.preferences.indoorOutdoor,
+    "either",
+  );
 
   parts += 1;
-  score += compatEnum(a.preferences.atmosphere, b.preferences.atmosphere, "either");
+  score += compatEnum(
+    a.preferences.atmosphere,
+    b.preferences.atmosphere,
+    "either",
+  );
 
   parts += 1;
   const vibes = intersect(a.profile.firstDateVibe, b.profile.firstDateVibe);
@@ -504,7 +743,10 @@ function round1(n: number): number {
  * contributes judgement the rules cannot express. Neither can exceed 100 and
  * neither can resurrect a pair that failed Stage 1.
  */
-export function blendScore(deterministic: number, ai: number | undefined): number {
+export function blendScore(
+  deterministic: number,
+  ai: number | undefined,
+): number {
   if (ai === undefined || Number.isNaN(ai)) return round1(deterministic);
   return round1(0.45 * deterministic + 0.55 * Math.max(0, Math.min(100, ai)));
 }

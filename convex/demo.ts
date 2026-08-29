@@ -8,7 +8,12 @@ import { deriveDropStatus, isTerminalDrop } from "./lib/stateMachine";
 import { assertDropTransition } from "./lib/stateMachine";
 import { coarsen } from "./lib/geo";
 import { DAY_MS, HOUR_MS } from "./lib/time";
-import { findCity, findNeighborhood } from "./lib/catalog";
+import {
+  BUDGET_BANDS,
+  SUPPORTED_CITIES,
+  findCity,
+  findNeighborhood,
+} from "./lib/catalog";
 import { ageOn, dobToMs } from "./lib/age";
 import type { Gender } from "./lib/enums";
 
@@ -28,7 +33,9 @@ function personaDob(age: number, nowMs: number): number {
   const now = new Date(nowMs);
   const dob = dobToMs(now.getUTCFullYear() - age, now.getUTCMonth() + 1, 1);
   // Guard against a first-of-month edge landing them a year young.
-  return ageOn(dob, nowMs) === age ? dob : dobToMs(now.getUTCFullYear() - age - 1, 6, 15);
+  return ageOn(dob, nowMs) === age
+    ? dob
+    : dobToMs(now.getUTCFullYear() - age - 1, 6, 15);
 }
 
 type PersonaSpec = {
@@ -128,7 +135,13 @@ const SEOUL_PERSONAS: PersonaSpec[] = [
     neighborhood: "Euljiro",
     occupation: "Arts",
     bio: "Ceramicist with a day job. I know every quiet bar in Euljiro and I will happily draw you a map.",
-    interests: ["Art galleries", "Pottery", "Craft beer", "Vinyl", "Architecture"],
+    interests: [
+      "Art galleries",
+      "Pottery",
+      "Craft beer",
+      "Vinyl",
+      "Architecture",
+    ],
     hobbies: ["Pottery", "Calligraphy"],
     languages: ["Korean", "English"],
     socialEnergy: "ambivert",
@@ -240,7 +253,13 @@ const SEOUL_PERSONAS: PersonaSpec[] = [
     neighborhood: "Hongdae",
     occupation: "Engineering",
     bio: "Backend engineer, amateur drummer, permanent beginner at Spanish. I like places where the music is good and the queue is short.",
-    interests: ["Indie rock", "Live music", "Craft beer", "Video games", "Films"],
+    interests: [
+      "Indie rock",
+      "Live music",
+      "Craft beer",
+      "Video games",
+      "Films",
+    ],
     hobbies: ["Guitar", "Model building"],
     languages: ["Korean", "English"],
     socialEnergy: "introvert",
@@ -455,25 +474,48 @@ const SEOUL_PERSONAS: PersonaSpec[] = [
   },
 ];
 
+const LOCAL_LANGUAGE: Record<string, string> = {
+  KR: "Korean",
+  JP: "Japanese",
+  DE: "German",
+  FR: "French",
+  NL: "Dutch",
+  SE: "Swedish",
+};
+
+const GLOBAL_PERSONAS: PersonaSpec[] = [
+  ...SEOUL_PERSONAS,
+  ...SUPPORTED_CITIES.filter((city) => city.city !== "Seoul").flatMap(
+    (city) => {
+      const band = BUDGET_BANDS[city.currency] ?? BUDGET_BANDS.USD;
+      const localLanguage = LOCAL_LANGUAGE[city.countryCode] ?? "English";
+      const budget: [number, number] = [
+        Math.ceil((band.min * 2) / band.step) * band.step,
+        Math.floor(band.max / 2 / band.step) * band.step,
+      ];
+      return SEOUL_PERSONAS.slice(0, 4).map((template, index) => ({
+        ...template,
+        key: `${template.key}-${city.key}`,
+        city: city.city,
+        neighborhood:
+          city.neighborhoods[index % city.neighborhoods.length].name,
+        languages: [...new Set([localLanguage, "English"])],
+        budget,
+      }));
+    },
+  ),
+];
+
 /* ------------------------------- seeding --------------------------------- */
 
 export const seed = internalMutation({
   args: { nowMs: v.number(), force: v.optional(v.boolean()) },
   returns: v.object({ created: v.number(), windows: v.number() }),
   handler: async (ctx, args) => {
-    const existing = await ctx.db
-      .query("profiles")
-      .withIndex("by_demo_and_status", (q) => q.eq("isDemo", true).eq("status", "active"))
-      .take(100);
-
-    if (existing.length > 0 && !args.force) {
-      // Already seeded — just top the personas' availability back up.
-      const windows = await refreshDemoAvailability(ctx, args.nowMs);
-      return { created: 0, windows };
-    }
+    void args.force;
 
     let created = 0;
-    for (const persona of SEOUL_PERSONAS) {
+    for (const persona of GLOBAL_PERSONAS) {
       const email = `${persona.key}@demo.datehaja.invalid`;
       const already = await ctx.db
         .query("users")
@@ -530,6 +572,8 @@ export const seed = internalMutation({
         ageHard: true,
         maxDistanceKm: persona.maxDistanceKm,
         distanceHard: true,
+        preferredAreas: [persona.neighborhood],
+        areaHard: false,
         relationshipIntent: persona.intent,
         intentHard: false,
         smoking: "no_preference",
@@ -575,7 +619,9 @@ async function refreshDemoAvailability(
 ): Promise<number> {
   const personas = await ctx.db
     .query("profiles")
-    .withIndex("by_demo_and_status", (q) => q.eq("isDemo", true).eq("status", "active"))
+    .withIndex("by_demo_and_status", (q) =>
+      q.eq("isDemo", true).eq("status", "active"),
+    )
     .take(100);
 
   let created = 0;
@@ -590,9 +636,13 @@ async function refreshDemoAvailability(
     if (open.length >= 6) continue;
 
     const taken = new Set(upcoming.map((w) => w.startMs));
+    let remaining = 6 - open.length;
     for (let dayOffset = 1; dayOffset <= 12; dayOffset++) {
-      if (created > 400) break;
-      const dayStart = startOfLocalDay(nowMs + dayOffset * DAY_MS, persona.timezone);
+      if (remaining <= 0) break;
+      const dayStart = startOfLocalDay(
+        nowMs + dayOffset * DAY_MS,
+        persona.timezone,
+      );
 
       // Evening window most days, plus an afternoon window at weekends.
       const slots = [
@@ -614,6 +664,7 @@ async function refreshDemoAvailability(
         });
         taken.add(slot.start);
         created += 1;
+        remaining -= 1;
         break;
       }
     }
@@ -633,7 +684,8 @@ function startOfLocalDay(ms: number, timeZone: string): number {
     second: "2-digit",
     hour12: false,
   }).formatToParts(new Date(ms));
-  const get = (type: string) => Number(parts.find((p) => p.type === type)?.value ?? 0);
+  const get = (type: string) =>
+    Number(parts.find((p) => p.type === type)?.value ?? 0);
   const localMidnightOffset =
     get("hour") * HOUR_MS + get("minute") * 60_000 + get("second") * 1000;
   return ms - localMidnightOffset;
@@ -659,7 +711,9 @@ export const status = query({
   handler: async (ctx) => {
     const personas = await ctx.db
       .query("profiles")
-      .withIndex("by_demo_and_status", (q) => q.eq("isDemo", true).eq("status", "active"))
+      .withIndex("by_demo_and_status", (q) =>
+        q.eq("isDemo", true).eq("status", "active"),
+      )
       .take(100);
 
     let openWindowCount = 0;
@@ -709,7 +763,8 @@ export const respondAsPersona = mutation({
 
     const drop = await ctx.db.get("dateDrops", args.dropId);
     if (!drop) throw new Error("That date plan is gone.");
-    if (isTerminalDrop(drop.status)) throw new Error("This date plan is already closed.");
+    if (isTerminalDrop(drop.status))
+      throw new Error("This date plan is already closed.");
 
     const participants = await ctx.db
       .query("dateDropParticipants")
@@ -720,14 +775,17 @@ export const respondAsPersona = mutation({
       (p) =>
         p.userId !== userId && (p.state === "invited" || p.state === "viewed"),
     );
-    if (!other) throw new Error("Nobody on this date plan is waiting to respond.");
+    if (!other)
+      throw new Error("Nobody on this date plan is waiting to respond.");
 
     const otherProfile = await ctx.db
       .query("profiles")
       .withIndex("by_user", (q) => q.eq("userId", other.userId))
       .unique();
     if (!otherProfile?.isDemo) {
-      throw new Error("The other person is a real user — only they can respond.");
+      throw new Error(
+        "The other person is a real user — only they can respond.",
+      );
     }
 
     const now = Date.now();
@@ -775,9 +833,13 @@ export const respondAsPersona = mutation({
           drop.candidateAttempts < drop.maxCandidateAttempts &&
           now < drop.confirmDeadlineMs
         ) {
-          await ctx.scheduler.runAfter(0, internal.matching.runReplacementPipeline, {
-            dropId: drop._id,
-          });
+          await ctx.scheduler.runAfter(
+            0,
+            internal.matching.runReplacementPipeline,
+            {
+              dropId: drop._id,
+            },
+          );
         }
       }
 
@@ -812,12 +874,16 @@ export const respondAsPersona = mutation({
       });
       for (const p of refreshed) {
         if (p.state === "accepted") {
-          await ctx.db.patch("dateDropParticipants", p._id, { state: "confirmed" });
+          await ctx.db.patch("dateDropParticipants", p._id, {
+            state: "confirmed",
+          });
         }
         if (p.availabilityId) {
           const window = await ctx.db.get("availability", p.availabilityId);
           if (window && window.heldByDropId === drop._id) {
-            await ctx.db.patch("availability", window._id, { status: "booked" });
+            await ctx.db.patch("availability", window._id, {
+              status: "booked",
+            });
           }
         }
       }
@@ -873,13 +939,24 @@ export const personas = query({
   args: {},
   returns: v.array(v.any()),
   handler: async (ctx) => {
+    const userId = await currentUserId(ctx);
+    const myProfile = userId
+      ? await ctx.db
+          .query("profiles")
+          .withIndex("by_user", (q) => q.eq("userId", userId))
+          .unique()
+      : null;
     const profiles = await ctx.db
       .query("profiles")
-      .withIndex("by_demo_and_status", (q) => q.eq("isDemo", true).eq("status", "active"))
-      .take(30);
+      .withIndex("by_demo_and_status", (q) =>
+        q.eq("isDemo", true).eq("status", "active"),
+      )
+      .take(100);
 
     const out = [];
-    for (const profile of profiles) {
+    for (const profile of profiles.filter(
+      (candidate) => !myProfile || candidate.city === myProfile.city,
+    )) {
       const windows = await ctx.db
         .query("availability")
         .withIndex("by_user", (q) => q.eq("userId", profile.userId))

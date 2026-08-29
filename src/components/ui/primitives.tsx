@@ -1,3 +1,4 @@
+/* oxlint-disable react/only-export-components -- component utilities and primitives share one module */
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { Link } from "react-router-dom";
 
@@ -152,13 +153,16 @@ export function SectionHeading({
   action?: ReactNode;
 }) {
   return (
-    <div className="mb-5 flex items-end justify-between gap-4">
-      <div>
+    <div className="section-heading mb-5 flex items-end justify-between gap-4">
+      <div className="section-heading-copy">
         {eyebrow && (
-          <div className="docket-label mb-1 text-muted">{eyebrow}</div>
+          <div className="section-heading-eyebrow docket-label mb-1 text-muted">
+            {eyebrow}
+          </div>
         )}
         <h2 className="text-[22px] leading-tight">{title}</h2>
       </div>
+      <span className="section-heading-rule" aria-hidden />
       {action}
     </div>
   );

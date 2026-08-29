@@ -124,8 +124,17 @@ async function buildDropView(
       .withIndex("by_user", (q) => q.eq("userId", liveOther.userId))
       .unique();
     if (otherProfile) {
-      match = toPublicPreview(otherProfile);
-      if (revealed && otherProfile.photoStorageId) {
+      const otherPreferences = await ctx.db
+        .query("preferences")
+        .withIndex("by_user", (q) => q.eq("userId", liveOther.userId))
+        .unique();
+      match = toPublicPreview(
+        otherProfile,
+        otherPreferences?.relationshipIntent,
+      );
+      const canSeePhoto =
+        revealed || otherProfile.photoVisibility === "with_match";
+      if (canSeePhoto && otherProfile.photoStorageId) {
         matchPhotoUrl = await ctx.storage.getUrl(otherProfile.photoStorageId);
       }
     }
@@ -944,9 +953,7 @@ export const notifyClosed = internalAction({
       await ctx.runMutation(internal.notifications.create, {
         userId: participant.userId,
         kind: expired ? "expired" : "cancelled",
-        title: expired
-          ? "We cancelled this one"
-          : "That date was cancelled",
+        title: expired ? "We cancelled this one" : "That date was cancelled",
         body: expired
           ? "We couldn't find the right person for this plan, so we cancelled it rather than force a poor match."
           : (context.drop.cancelReason ?? "The date was cancelled."),
@@ -962,8 +969,7 @@ export const notifyClosed = internalAction({
           ? expiredEmail(data)
           : cancelledEmail({
               ...data,
-              reason:
-                context.drop.cancelReason ?? "The date was cancelled.",
+              reason: context.drop.cancelReason ?? "The date was cancelled.",
             }),
         idempotencyKey: `closed-${args.dropId}-${participant.userId}`,
         labels: [expired ? "expired" : "cancelled"],

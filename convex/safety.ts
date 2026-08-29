@@ -645,12 +645,18 @@ export const myVisibility = query({
       .withIndex("by_user", (q) => q.eq("userId", userId))
       .unique();
     if (!profile) return null;
+    const preferences = await ctx.db
+      .query("preferences")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .unique();
+    const preview = toPublicPreview(profile, preferences?.relationshipIntent);
 
     return {
-      beforeMatch: toPublicPreview(profile),
+      beforeMatch: preview,
       afterMatch: {
-        ...toPublicPreview(profile),
+        ...preview,
         photo: profile.photoStorageId ? "Your photo" : "No photo uploaded",
+        photoVisibility: profile.photoVisibility ?? "after_accept",
       },
       neverShared: [
         "Your email address",

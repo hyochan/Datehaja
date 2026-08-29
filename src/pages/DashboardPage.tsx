@@ -1,9 +1,10 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import { DropCard, type DropSummary } from "../components/dates/DropCard";
 import { Logo } from "../components/layout/Logo";
+import { PageIntro } from "../components/layout/PageIntro";
 import {
   Button,
   Card,
@@ -19,7 +20,7 @@ import { formatDay, formatRange } from "../lib/format";
 import { useI18n } from "../i18n";
 
 export default function DashboardPage() {
-  const nowMs = useMemo(() => Date.now(), []);
+  const [nowMs] = useState(() => Date.now());
   const board = useQuery(api.dateDrops.dashboard);
   const windows = useQuery(api.availability.upcoming, { nowMs });
   const run = useQuery(api.matching.activeRun);
@@ -58,23 +59,18 @@ export default function DashboardPage() {
     upcoming.length === 0;
 
   return (
-    <div className="space-y-10">
-      <header>
-        <div className="docket-label mb-2 text-[var(--accent-text)]">
-          <span className="mr-2" aria-hidden>
-            ♥
-          </span>
-          {t("Your concierge desk")}
-        </div>
-        <h1 className="text-[30px] leading-tight">
-          {firstName
+    <div className="product-page space-y-12">
+      <PageIntro
+        eyebrow={t("Your concierge desk")}
+        title={
+          firstName
             ? t("Hi, {name}.", { name: firstName.split(" ")[0] })
-            : t("Your dates")}
-        </h1>
-        <p className="mt-1.5 text-[15.5px] text-soft">
-          {t("Tell us when. We handle who & where.")}
-        </p>
-      </header>
+            : t("Your dates")
+        }
+        description={t("Bring the idea. We'll find the person.")}
+        motif="♡"
+        tone="coral"
+      />
 
       {/* --------------------------- your next date --------------------------- */}
       <section aria-labelledby="next-heading">
@@ -163,7 +159,7 @@ export default function DashboardPage() {
       <section aria-labelledby="availability-heading">
         <SectionHeading
           eyebrow={t("Your availability")}
-          title={t("When you're free")}
+          title={t("What would you like to do?")}
           action={
             <Link
               to="/availability"
@@ -186,7 +182,7 @@ export default function DashboardPage() {
               {t("Want another date?")}
             </p>
             <Button onClick={findMeADate} loading={busy} size="sm">
-              {t("Find me a date")}
+              {t("Find someone to go with")}
             </Button>
           </div>
         )}
@@ -196,9 +192,7 @@ export default function DashboardPage() {
           <Card>
             <EmptyState
               title={t("No open windows")}
-              body={t(
-                "Add an evening you're free and we'll start looking straight away.",
-              )}
+              body={t("Tell us what you'd like to do on this date.")}
               action={
                 <LinkButton to="/availability">
                   {t("Add availability")}
@@ -222,6 +216,11 @@ export default function DashboardPage() {
                         window.timezone,
                       )}
                     </div>
+                    {window.note && (
+                      <div className="mt-1.5 line-clamp-2 text-[12px] font-semibold text-[var(--accent-text)]">
+                        {window.note}
+                      </div>
+                    )}
                   </div>
                   <Tag tone="sage">{t("Open")}</Tag>
                 </Card>
@@ -266,7 +265,12 @@ function IdleCard({
   onFind,
 }: {
   openWindowCount: number;
-  nextWindow?: { startMs: number; endMs: number; timezone: string };
+  nextWindow?: {
+    startMs: number;
+    endMs: number;
+    timezone: string;
+    note?: string;
+  };
   busy: boolean;
   onFind: () => void;
 }) {
@@ -277,9 +281,9 @@ function IdleCard({
       <Card>
         <EmptyState
           icon={<Logo className="h-10 w-10" />}
-          title={t("We only need one thing")}
+          title={t("What would you like to do?")}
           body={t(
-            "Tell us when you're free. We'll find someone compatible, plan a real date, and send it to you both.",
+            "Start with the date, not the profile. A film by itself is a complete plan.",
           )}
           action={
             <LinkButton to="/availability" size="lg">
@@ -293,31 +297,25 @@ function IdleCard({
 
   return (
     <Card className="p-6 sm:p-7">
-      <div className="docket-label mb-1 text-muted">
-        {t("Your next date")}
-      </div>
+      <div className="docket-label mb-1 text-muted">{t("Your date idea")}</div>
       <h2 className="font-display text-[24px] leading-tight sm:text-[27px]">
+        {nextWindow?.note ??
+          (nextWindow
+            ? t("You're free {date}.", {
+                date: formatDay(nextWindow.startMs, nextWindow.timezone),
+              })
+            : t("You're free soon."))}
+      </h2>
+      <p className="mt-2 max-w-md text-[15px] leading-relaxed text-soft">
         {nextWindow
           ? t("You're free {date}.", {
               date: formatDay(nextWindow.startMs, nextWindow.timezone),
             })
-          : t("You're free soon.")}
-      </h2>
-      <p className="mt-2 max-w-md text-[15px] leading-relaxed text-soft">
-        {openWindowCount === 1
-          ? t(
-              "One window open. Ask us to look now, or add more times to widen the net.",
-            )
-          : t(
-              "{count} windows open. We'll use whichever finds the best match first.",
-              {
-                count: openWindowCount,
-              },
-            )}
+          : t("Bring the idea. We'll find the person.")}
       </p>
       <div className="mt-6 flex flex-wrap gap-3">
         <Button onClick={onFind} loading={busy} size="lg">
-          {t("Find me a date")}
+          {t("Find someone to go with")}
         </Button>
         <LinkButton to="/availability" variant="secondary" size="lg">
           {t("Add another time")}

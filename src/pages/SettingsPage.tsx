@@ -4,6 +4,7 @@ import { useMutation, useQuery } from "convex/react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { api } from "@convex/_generated/api";
 import type { Id } from "@convex/_generated/dataModel";
+import { PageIntro } from "../components/layout/PageIntro";
 import {
   Button,
   Card,
@@ -25,9 +26,12 @@ type Preferences = {
 export default function SettingsPage() {
   const me = useQuery(api.profiles.me);
   const blocked = useQuery(api.safety.blockedList);
+  const calendarFeed = useQuery(api.calendar.myFeed);
   const updatePrefs = useMutation(api.profiles.updateNotificationPreferences);
   const setStatus = useMutation(api.profiles.setStatus);
   const unblock = useMutation(api.safety.unblock);
+  const rotateCalendar = useMutation(api.calendar.rotate);
+  const disableCalendar = useMutation(api.calendar.disable);
   const { signOut } = useAuthActions();
   const toast = useToast();
   const [busy, setBusy] = useState(false);
@@ -38,7 +42,10 @@ export default function SettingsPage() {
   if (!me) return null;
 
   const prefs = me.preferences as Preferences | null;
-  const profile = me.profile as { status?: string; displayName?: string } | null;
+  const profile = me.profile as {
+    status?: string;
+    displayName?: string;
+  } | null;
   const paused = prefs?.dropsPaused === true || profile?.status === "paused";
 
   async function update(patch: Partial<Preferences>) {
@@ -53,13 +60,19 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-8">
-      <header>
-        <h1 className="text-[28px] leading-tight">Settings</h1>
-        <p className="mt-1.5 text-[15px] text-soft">
-          Signed in as {me.email ?? "—"}. Your email is never shown to another user.
-        </p>
-      </header>
+    <div className="product-page mx-auto max-w-3xl space-y-10">
+      <PageIntro
+        eyebrow="Your account"
+        title="Settings"
+        description={
+          <>
+            Signed in as {me.email ?? "—"}. Your email is never shown to another
+            user.
+          </>
+        }
+        motif="◌"
+        tone="sage"
+      />
 
       {/* -------------------------- the big switch -------------------------- */}
       <section>
@@ -73,7 +86,9 @@ export default function SettingsPage() {
               try {
                 await setStatus({ status: next ? "active" : "paused" });
                 toast(
-                  next ? "Matching is on again." : "Paused. You won't get any more.",
+                  next
+                    ? "Matching is on again."
+                    : "Paused. You won't get any more.",
                   "success",
                 );
               } catch (e) {
@@ -132,6 +147,62 @@ export default function SettingsPage() {
         </Card>
       </section>
 
+      <section>
+        <SectionHeading eyebrow="Connected apps" title="Private calendar" />
+        <Card className="p-5">
+          {calendarFeed === undefined ? (
+            <Skeleton className="h-16 w-full rounded-card" />
+          ) : calendarFeed === null ? (
+            <p className="text-[14px] leading-relaxed text-muted">
+              No calendar feed exists. Datehaja creates one only when you ask
+              from a date plan.
+            </p>
+          ) : (
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <div className="text-[15px] font-semibold">
+                  Calendar subscription active
+                </div>
+                <p className="mt-1 max-w-md text-[13px] leading-relaxed text-muted">
+                  Anyone with its secret link can read your Datehaja event
+                  times. Rotate a leaked link or revoke it completely.
+                </p>
+              </div>
+              <div className="flex shrink-0 flex-wrap gap-2">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={async () => {
+                    try {
+                      await rotateCalendar({});
+                      toast("Private calendar link rotated.", "success");
+                    } catch (error) {
+                      toast(readableError(error), "error");
+                    }
+                  }}
+                >
+                  Rotate link
+                </Button>
+                <Button
+                  size="sm"
+                  variant="danger"
+                  onClick={async () => {
+                    try {
+                      await disableCalendar({});
+                      toast("Private calendar feed revoked.", "success");
+                    } catch (error) {
+                      toast(readableError(error), "error");
+                    }
+                  }}
+                >
+                  Revoke
+                </Button>
+              </div>
+            </div>
+          )}
+        </Card>
+      </section>
+
       {/* ------------------------------- links ------------------------------ */}
       <section>
         <SectionHeading eyebrow="Your account" title="Profile & matching" />
@@ -157,6 +228,16 @@ export default function SettingsPage() {
             body="Exactly what another person can see about you"
           />
           <SettingsLink
+            to="/terms"
+            title="Terms of Service"
+            body="The agreement and current effective date"
+          />
+          <SettingsLink
+            to="/community-guidelines"
+            title="Community Guidelines"
+            body="Consent, conduct, reporting, and appeals"
+          />
+          <SettingsLink
             to="/safety"
             title="Safety Center"
             body="Blocking, reporting, and what we do and don't verify"
@@ -176,8 +257,8 @@ export default function SettingsPage() {
           <Skeleton className="h-16 w-full rounded-card" />
         ) : blocked.length === 0 ? (
           <Card className="p-5 text-[14.5px] text-muted">
-            You haven't blocked anyone. Blocking is mutual and permanent until you
-            undo it here.
+            You haven't blocked anyone. Blocking is mutual and permanent until
+            you undo it here.
           </Card>
         ) : (
           <Card className="divide-y divide-[var(--border)]">

@@ -42,12 +42,17 @@ export function DropCard({
     <Card
       as="li"
       className={cx(
-        "group overflow-hidden transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)]",
-        variant === "invitation" && "border-[var(--tint-ember-border)]",
-        variant === "confirmed" && "border-[var(--tint-sage-border)]",
+        "date-ticket group overflow-hidden transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)]",
+        variant === "invitation" &&
+          "date-ticket-invitation border-[var(--tint-ember-border)]",
+        variant === "confirmed" &&
+          "date-ticket-confirmed border-[var(--tint-sage-border)]",
       )}
     >
-      <Link to={`/drop/${drop.dropId}`} className="block p-5 sm:p-6">
+      <Link
+        to={`/drop/${drop.dropId}`}
+        className="date-ticket-body block p-5 sm:p-6"
+      >
         <div className="mb-3 flex items-center justify-between gap-3">
           <StatusTag drop={drop} variant={variant} />
           {variant === "invitation" && (

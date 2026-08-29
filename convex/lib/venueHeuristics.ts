@@ -22,13 +22,20 @@ export type HeuristicVenue = {
 };
 
 const CATEGORY_HINTS: Array<[RegExp, string]> = [
+  [
+    /\b(cinema|movie theater|movie theatre|film theater|film theatre|screening)\b/i,
+    "cinema",
+  ],
   [/\b(caf[eé]|coffee|roaster|espresso)\b/i, "cafe"],
   [/\b(dessert|patisserie|bakery|gelato|ice cream)\b/i, "dessert"],
   [/\b(bar|cocktail|pub|brewery|wine|izakaya|makgeolli)\b/i, "bar"],
   [/\b(museum|gallery|exhibition|art centre|art center)\b/i, "exhibition"],
   [/\b(park|garden|trail|riverside|walk)\b/i, "park"],
   [/\b(live music|jazz club|venue|concert)\b/i, "live_music"],
-  [/\b(restaurant|trattoria|osteria|bistro|kitchen|dining|pasta|pizza|noodle|bbq|grill)\b/i, "restaurant"],
+  [
+    /\b(restaurant|trattoria|osteria|bistro|kitchen|dining|pasta|pizza|noodle|bbq|grill)\b/i,
+    "restaurant",
+  ],
 ];
 
 /** Lines that look like an address rather than prose. */
@@ -39,7 +46,7 @@ const HOURS_RE =
 /** Just the amount, or an amount range. Nothing after it — prose that follows
  *  a price on a crawled page is almost never about the price. */
 const PRICE_RE =
-  /((?:[₩$€£¥]|KRW|USD|EUR|GBP|JPY)\s?[\d][\d,]{1,8}(?:\s?[–\-~]\s?(?:[₩$€£¥])?[\d][\d,]{1,8})?)/;
+  /((?:[₩$€£¥]|KRW|USD|CAD|AUD|EUR|GBP|JPY|SEK)\s?[\d][\d,]{1,8}(?:\s?[–\-~]\s?(?:[₩$€£¥])?[\d][\d,]{1,8})?)/;
 
 const STOPWORD_TITLES =
   /\b(best|top \d+|guide|things to do|where to|itinerary|list|blog|reddit|review|map|menu|near me|content|ahead|warning|caution|disclaimer|subscribe|newsletter|share this|read more|related|comments?|advertisement|sponsored|faq|conclusion|introduction|table of contents)\b/i;
@@ -63,7 +70,9 @@ function looksLikeVenueName(name: string): boolean {
     if (upper / letters.length > 0.7) return false;
   }
   // Sentence-shaped headings ("Where we ate in ...") rarely name a place.
-  if (/^(how|why|what|where|when|who|the best|our|my|we|you|here)\b/i.test(name)) {
+  if (
+    /^(how|why|what|where|when|who|the best|our|my|we|you|here)\b/i.test(name)
+  ) {
     return false;
   }
   return true;
@@ -74,7 +83,11 @@ function cleanPrice(raw: string | undefined): string | null {
   if (!raw) return null;
   const value = raw.trim().replace(/\s+/g, " ");
   if (value.length > 32) return null;
-  if (/[*_`()\[\]]/.test(value)) return null;
+  if (
+    ["*", "_", "`", "(", ")", "[", "]"].some((mark) => value.includes(mark))
+  ) {
+    return null;
+  }
   return value;
 }
 
@@ -103,7 +116,9 @@ function hasVenueEvidence(
   price: string | null,
 ): boolean {
   if (address || hours || price) return true;
-  return CATEGORY_HINTS.some(([pattern]) => pattern.test(`${name} ${evidence}`));
+  return CATEGORY_HINTS.some(([pattern]) =>
+    pattern.test(`${name} ${evidence}`),
+  );
 }
 
 function cleanName(raw: string): string {
@@ -158,9 +173,12 @@ export function extractVenues(
     if (evidence.length < 25) continue;
 
     const address = window.match(ADDRESS_RE)?.[1]?.trim().slice(0, 160) ?? "";
-    const openingHours = window.match(HOURS_RE)?.[1]?.trim().slice(0, 140) ?? null;
+    const openingHours =
+      window.match(HOURS_RE)?.[1]?.trim().slice(0, 140) ?? null;
     const approximatePrice = cleanPrice(window.match(PRICE_RE)?.[1]);
-    if (!hasVenueEvidence(name, evidence, address, openingHours, approximatePrice)) {
+    if (
+      !hasVenueEvidence(name, evidence, address, openingHours, approximatePrice)
+    ) {
       continue;
     }
 
@@ -186,13 +204,20 @@ export function extractVenues(
     const name = cleanName(source.title.split(/[|·—–-]/)[0]);
     if (looksLikeVenueName(name)) {
       const evidence = source.content.replace(/\s+/g, " ").trim().slice(0, 300);
-      const address = source.content.match(ADDRESS_RE)?.[1]?.trim().slice(0, 160) ?? "";
+      const address =
+        source.content.match(ADDRESS_RE)?.[1]?.trim().slice(0, 160) ?? "";
       const openingHours =
         source.content.match(HOURS_RE)?.[1]?.trim().slice(0, 140) ?? null;
       const approximatePrice = cleanPrice(source.content.match(PRICE_RE)?.[1]);
       if (
         evidence.length >= 40 &&
-        hasVenueEvidence(name, evidence, address, openingHours, approximatePrice)
+        hasVenueEvidence(
+          name,
+          evidence,
+          address,
+          openingHours,
+          approximatePrice,
+        )
       ) {
         out.push({
           name,

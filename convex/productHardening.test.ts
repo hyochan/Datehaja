@@ -118,7 +118,7 @@ describe("calendar lifecycle", () => {
   test("emits a stable, escaped iCalendar event", () => {
     const calendar = buildCalendar([
       {
-        uid: "drop-1@datedrop",
+        uid: "drop-1@datehaja",
         startMs: Date.UTC(2026, 7, 30, 9),
         endMs: Date.UTC(2026, 7, 30, 11),
         updatedAt: NOW,
@@ -182,6 +182,27 @@ describe("calendar lifecycle", () => {
     });
     expect(cancelled?.events[0]?.status).toBe("CANCELLED");
   });
+
+  test("a user can revoke a private calendar capability", async () => {
+    const t = convexTest(schema, modules);
+    const fixture = await createDrop(t, "confirmed");
+    const user = asUser(t, fixture.userId);
+    const feed = await user.mutation(api.calendar.enable, {});
+
+    expect(
+      await t.query(internal.calendar.getFeedByToken, {
+        token: feed.url.split("/calendar/")[1]!.replace(".ics", ""),
+      }),
+    ).not.toBeNull();
+
+    await user.mutation(api.calendar.disable, {});
+    expect(await user.query(api.calendar.myFeed, {})).toBeNull();
+    expect(
+      await t.query(internal.calendar.getFeedByToken, {
+        token: feed.url.split("/calendar/")[1]!.replace(".ics", ""),
+      }),
+    ).toBeNull();
+  });
 });
 
 describe("private post-date feedback", () => {
@@ -195,6 +216,9 @@ describe("private post-date feedback", () => {
       outcome: "went",
       safety: "safe",
       meetAgain: "maybe",
+      profileAccuracy: "accurate",
+      respectful: "yes",
+      connection: "easy",
       venueRating: 5,
       followUpRequested: false,
     });
@@ -212,6 +236,9 @@ describe("private post-date feedback", () => {
       outcome: "went",
       safety: "uncomfortable",
       meetAgain: "no",
+      profileAccuracy: "mostly_accurate",
+      respectful: "mostly",
+      connection: "mixed",
       followUpRequested: true,
     });
     const rows = await t.run((ctx) =>
@@ -238,6 +265,90 @@ describe("private post-date feedback", () => {
         followUpRequested: false,
       }),
     ).rejects.toThrow(/isn't yours/);
+  });
+
+  test("a completed date check-in requires the trust-quality questions", async () => {
+    const t = convexTest(schema, modules);
+    const fixture = await createDrop(t, "completed");
+
+    await expect(
+      asUser(t, fixture.userId).mutation(api.feedback.submit, {
+        dropId: fixture.dropId,
+        outcome: "went",
+        safety: "safe",
+        meetAgain: "maybe",
+        followUpRequested: false,
+      }),
+    ).rejects.toThrow(/profile accuracy, respect, and conversation/);
+  });
+
+  test("reveals only a mutual yes and keeps every other answer sealed", async () => {
+    const t = convexTest(schema, modules);
+    const fixture = await createDrop(t, "completed");
+    await t.run((ctx) =>
+      ctx.db.insert("dateDropParticipants", {
+        dropId: fixture.dropId,
+        userId: fixture.strangerId,
+        role: "invitee",
+        state: "confirmed",
+        privateWhyItFits: "Because films.",
+        compatibilityBlurb: "You both like films.",
+        invitedAt: NOW - 2 * 24 * 60 * 60 * 1000,
+        respondedAt: NOW - 24 * 60 * 60 * 1000,
+      }),
+    );
+
+    const first = asUser(t, fixture.userId);
+    const second = asUser(t, fixture.strangerId);
+    await first.mutation(api.feedback.submit, {
+      dropId: fixture.dropId,
+      outcome: "went",
+      safety: "safe",
+      meetAgain: "yes",
+      profileAccuracy: "accurate",
+      respectful: "yes",
+      connection: "easy",
+      followUpRequested: false,
+    });
+    expect(
+      await first.query(api.feedback.mine, { dropId: fixture.dropId }),
+    ).toMatchObject({ mutualStatus: "waiting", otherSubmitted: false });
+
+    await second.mutation(api.feedback.submit, {
+      dropId: fixture.dropId,
+      outcome: "went",
+      safety: "safe",
+      meetAgain: "no",
+      profileAccuracy: "mostly_accurate",
+      respectful: "yes",
+      connection: "easy",
+      followUpRequested: false,
+    });
+    expect(
+      await first.query(api.feedback.mine, { dropId: fixture.dropId }),
+    ).toMatchObject({ mutualStatus: "complete", otherSubmitted: true });
+
+    await second.mutation(api.feedback.submit, {
+      dropId: fixture.dropId,
+      outcome: "went",
+      safety: "safe",
+      meetAgain: "yes",
+      profileAccuracy: "mostly_accurate",
+      respectful: "yes",
+      connection: "easy",
+      followUpRequested: false,
+    });
+    expect(
+      await first.query(api.feedback.mine, { dropId: fixture.dropId }),
+    ).toMatchObject({ mutualStatus: "mutual", otherSubmitted: true });
+
+    const notifications = await t.run((ctx) =>
+      ctx.db
+        .query("notifications")
+        .withIndex("by_user", (q) => q.eq("userId", fixture.userId))
+        .collect(),
+    );
+    expect(notifications.some((row) => row.title.includes("both"))).toBe(true);
   });
 });
 

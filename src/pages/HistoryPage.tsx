@@ -1,7 +1,13 @@
 import { useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import { DropCard, type DropSummary } from "../components/dates/DropCard";
-import { Card, EmptyState, LinkButton, Skeleton } from "../components/ui/primitives";
+import { PageIntro } from "../components/layout/PageIntro";
+import {
+  Card,
+  EmptyState,
+  LinkButton,
+  Skeleton,
+} from "../components/ui/primitives";
 import { useI18n } from "../i18n";
 
 export default function HistoryPage() {
@@ -22,13 +28,16 @@ export default function HistoryPage() {
   const upcoming = (board?.upcoming ?? []) as DropSummary[];
 
   return (
-    <div className="mx-auto max-w-2xl space-y-8">
-      <header>
-        <h1 className="text-[28px] leading-tight">{t("History")}</h1>
-        <p className="mt-1.5 text-[15px] text-soft">
-          {t("Every date plan you've been part of — accepted, passed, expired or done.")}
-        </p>
-      </header>
+    <div className="product-page mx-auto max-w-3xl space-y-10">
+      <PageIntro
+        eyebrow={t("Previously")}
+        title={t("History")}
+        description={t(
+          "Every date plan you've been part of — accepted, passed, expired or done.",
+        )}
+        motif="∿"
+        tone="lilac"
+      />
 
       {upcoming.length > 0 && (
         <section>
@@ -47,8 +56,14 @@ export default function HistoryPage() {
           <Card>
             <EmptyState
               title={t("Nothing here yet")}
-              body={t("Your first date plan will show up here once you've responded to it.")}
-              action={<LinkButton to="/availability">{t("Add availability")}</LinkButton>}
+              body={t(
+                "Your first date plan will show up here once you've responded to it.",
+              )}
+              action={
+                <LinkButton to="/availability">
+                  {t("Add availability")}
+                </LinkButton>
+              }
             />
           </Card>
         ) : (

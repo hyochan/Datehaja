@@ -1,13 +1,17 @@
+/* oxlint-disable react/set-state-in-effect -- hydrate an editable form once from the live query */
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import type { Id } from "@convex/_generated/dataModel";
+import { PageIntro } from "../components/layout/PageIntro";
 import {
   FIRST_DATE_VIBE_OPTIONS,
   HOBBY_OPTIONS,
   INTEREST_OPTIONS,
   LANGUAGE_OPTIONS,
   OCCUPATION_CATEGORIES,
+  PERSONALITY_TRAIT_OPTIONS,
+  STYLE_TAG_OPTIONS,
 } from "@convex/lib/catalog";
 import { ChipGroup, SelectionCount } from "../components/forms/ChipGroup";
 import {
@@ -23,13 +27,16 @@ import {
   Toggle,
 } from "../components/ui/primitives";
 import { readableError, useToast } from "../components/ui/Toast";
+import { useI18n } from "../i18n";
 
 export default function ProfilePage() {
   const me = useQuery(api.profiles.me);
   const saveAbout = useMutation(api.profiles.saveAbout);
   const generateUploadUrl = useMutation(api.profiles.generatePhotoUploadUrl);
   const setPhoto = useMutation(api.profiles.setPhoto);
+  const setPhotoVisibility = useMutation(api.profiles.setPhotoVisibility);
   const toast = useToast();
+  const { t } = useI18n();
   const fileInput = useRef<HTMLInputElement>(null);
 
   const [loaded, setLoaded] = useState(false);
@@ -47,8 +54,16 @@ export default function ProfilePage() {
     "introvert" | "ambivert" | "extrovert"
   >("ambivert");
   const [firstDateVibe, setFirstDateVibe] = useState<string[]>([]);
+  const [personalityTraits, setPersonalityTraits] = useState<string[]>([]);
+  const [styleTags, setStyleTags] = useState<string[]>([]);
+  const [profileTruthConfirmed, setProfileTruthConfirmed] = useState(false);
+  const [photoVisibility, setPhotoVisibilityState] = useState<
+    "with_match" | "after_accept"
+  >("after_accept");
   const [smokes, setSmokes] = useState(false);
-  const [drinks, setDrinks] = useState<"none" | "occasional" | "social">("occasional");
+  const [drinks, setDrinks] = useState<"none" | "occasional" | "social">(
+    "occasional",
+  );
 
   useEffect(() => {
     if (loaded || !me?.profile) return;
@@ -61,6 +76,10 @@ export default function ProfilePage() {
       languages: string[];
       socialEnergy: "introvert" | "ambivert" | "extrovert";
       firstDateVibe: string[];
+      personalityTraits?: string[];
+      styleTags?: string[];
+      profileTruthConfirmed?: boolean;
+      photoVisibility?: "with_match" | "after_accept";
       lifestyle: { smokes: boolean; drinks: "none" | "occasional" | "social" };
     };
     setBio(p.bio);
@@ -71,12 +90,17 @@ export default function ProfilePage() {
     setLanguages(p.languages);
     setSocialEnergy(p.socialEnergy);
     setFirstDateVibe(p.firstDateVibe);
+    setPersonalityTraits(p.personalityTraits ?? []);
+    setStyleTags(p.styleTags ?? []);
+    setProfileTruthConfirmed(p.profileTruthConfirmed ?? false);
+    setPhotoVisibilityState(p.photoVisibility ?? "after_accept");
     setSmokes(p.lifestyle.smokes);
     setDrinks(p.lifestyle.drinks);
     setLoaded(true);
   }, [me, loaded]);
 
-  if (me === undefined) return <Skeleton className="h-96 w-full rounded-card" />;
+  if (me === undefined)
+    return <Skeleton className="h-96 w-full rounded-card" />;
   if (!me?.profile) return null;
 
   const profile = me.profile as {
@@ -97,9 +121,11 @@ export default function ProfilePage() {
         body: file,
       });
       if (!result.ok) throw new Error("Upload failed.");
-      const { storageId } = (await result.json()) as { storageId: Id<"_storage"> };
+      const { storageId } = (await result.json()) as {
+        storageId: Id<"_storage">;
+      };
       await setPhoto({ storageId });
-      toast("Photo saved. Only revealed after you both accept.", "success");
+      toast(t("Photo saved. Choose when a match can see it below."), "success");
     } catch (e) {
       toast(readableError(e), "error");
     } finally {
@@ -113,6 +139,9 @@ export default function ProfilePage() {
     try {
       await saveAbout({
         bio,
+        personalityTraits,
+        styleTags,
+        profileTruthConfirmed,
         occupationCategory: occupation || undefined,
         showOccupation,
         interests,
@@ -134,20 +163,17 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-8 pb-8">
-      <header>
-        <h1 className="text-[28px] leading-tight">Your profile</h1>
-        <p className="mt-1.5 text-[15px] text-soft">
-          {profile.displayName} · {profile.ageYears} · {profile.neighborhood},{" "}
-          {profile.city}
-        </p>
-      </header>
+    <div className="product-page mx-auto max-w-3xl space-y-10 pb-8">
+      <PageIntro
+        eyebrow="What your match can know"
+        title="Your profile"
+        description={`${profile.displayName} · ${profile.ageYears} · ${profile.neighborhood}, ${profile.city}`}
+        motif={profile.displayName.slice(0, 1).toUpperCase()}
+        tone="butter"
+      />
 
       <section>
-        <SectionHeading
-          eyebrow="Optional"
-          title="Photo"
-        />
+        <SectionHeading eyebrow="Optional" title="Photo" />
         <Card className="flex items-center gap-5 p-5">
           {me.photoUrl ? (
             <img
@@ -162,8 +188,9 @@ export default function ProfilePage() {
           )}
           <div className="min-w-0 flex-1">
             <p className="text-[14px] leading-relaxed text-soft">
-              Only revealed to your match after you've <em>both</em> accepted — never
-              before. Datehaja isn't a product you browse by face.
+              {t(
+                "A photo is optional. You decide whether a match sees it with your profile card or only after you both accept.",
+              )}
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Button
@@ -202,6 +229,33 @@ export default function ProfilePage() {
                 e.target.value = "";
               }}
             />
+            {me.photoUrl && (
+              <div className="mt-4 max-w-md">
+                <SegmentedControl
+                  value={photoVisibility}
+                  onChange={async (visibility) => {
+                    setPhotoVisibilityState(visibility);
+                    try {
+                      await setPhotoVisibility({ visibility });
+                      toast(t("Photo privacy saved."), "success");
+                    } catch (error) {
+                      toast(readableError(error), "error");
+                    }
+                  }}
+                  ariaLabel={t("Photo visibility")}
+                  options={[
+                    {
+                      value: "with_match",
+                      label: t("Show with my match card"),
+                    },
+                    {
+                      value: "after_accept",
+                      label: t("Only after we both accept"),
+                    },
+                  ]}
+                />
+              </div>
+            )}
           </div>
         </Card>
       </section>
@@ -216,7 +270,7 @@ export default function ProfilePage() {
           )}
 
           <Field
-            label="Bio"
+            label={t("Introduce yourself")}
             hint="Contact details are removed automatically before anyone sees this."
             htmlFor="bio"
           >
@@ -226,7 +280,38 @@ export default function ProfilePage() {
               maxLength={600}
               onChange={(e) => setBio(e.target.value)}
             />
-            <p className="mt-1.5 text-right text-[12px] text-muted">{bio.length}/600</p>
+            <p className="mt-1.5 text-right text-[12px] text-muted">
+              {bio.length}/600
+            </p>
+          </Field>
+
+          <Field
+            label={t("How would people who know you describe you?")}
+            hint={t(
+              "Pick up to five. Choose what is true, not what sounds impressive.",
+            )}
+          >
+            <ChipGroup
+              options={PERSONALITY_TRAIT_OPTIONS}
+              selected={personalityTraits}
+              onChange={setPersonalityTraits}
+              max={5}
+              ariaLabel={t("Your personality")}
+            />
+          </Field>
+
+          <Field
+            label={t("Your everyday style")}
+            hint={t("Optional and self-described — never an appearance score.")}
+            optional
+          >
+            <ChipGroup
+              options={STYLE_TAG_OPTIONS}
+              selected={styleTags}
+              onChange={setStyleTags}
+              max={3}
+              ariaLabel={t("Your style")}
+            />
           </Field>
 
           <Field label="What you do" optional htmlFor="occupation">
@@ -253,7 +338,10 @@ export default function ProfilePage() {
             )}
           </Field>
 
-          <Field label="Interests" hint="At least three — this drives matching.">
+          <Field
+            label="Interests"
+            hint="At least three — this drives matching."
+          >
             <ChipGroup
               options={INTEREST_OPTIONS}
               selected={interests}
@@ -310,7 +398,9 @@ export default function ProfilePage() {
           <Field label="Lifestyle">
             <Toggle checked={smokes} onChange={setSmokes} label="I smoke" />
             <div className="mt-3">
-              <span className="mb-2 block text-[13px] font-medium text-soft">I drink</span>
+              <span className="mb-2 block text-[13px] font-medium text-soft">
+                I drink
+              </span>
               <SegmentedControl
                 value={drinks}
                 onChange={setDrinks}
@@ -324,7 +414,23 @@ export default function ProfilePage() {
             </div>
           </Field>
 
-          <Button onClick={save} loading={busy} size="lg">
+          <div className="mb-6 rounded-xl border border-[var(--tint-sage-border)] bg-[var(--tint-sage-bg)] p-4">
+            <Toggle
+              checked={profileTruthConfirmed}
+              onChange={setProfileTruthConfirmed}
+              label={t("This profile reflects who I am today")}
+              description={t(
+                "Honest details lead to fewer awkward surprises and better matches. Private post-date feedback checks profile accuracy, not attractiveness.",
+              )}
+            />
+          </div>
+
+          <Button
+            onClick={save}
+            loading={busy}
+            disabled={!profileTruthConfirmed}
+            size="lg"
+          >
             Save profile
           </Button>
         </Card>

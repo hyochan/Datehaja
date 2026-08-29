@@ -1,7 +1,11 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useMutation } from "convex/react";
 import { useAuthActions } from "@convex-dev/auth/react";
+import { api } from "@convex/_generated/api";
+import { LEGAL_VERSIONS } from "@convex/lib/legal";
 import { Logo } from "../components/layout/Logo";
+import { Wordmark } from "../components/layout/Wordmark";
 import { LocaleSwitcher } from "../components/layout/LocaleSwitcher";
 import { Button, Field, Notice, TextInput } from "../components/ui/primitives";
 import { readableError, useToast } from "../components/ui/Toast";
@@ -9,14 +13,16 @@ import { useI18n } from "../i18n";
 
 export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
   const { signIn } = useAuthActions();
+  const acceptLegal = useMutation(api.legal.accept);
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const toast = useToast();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [ageConfirmed, setAgeConfirmed] = useState(false);
+  const [legalConfirmed, setLegalConfirmed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,6 +39,14 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
       );
       return;
     }
+    if (signingUp && !legalConfirmed) {
+      setError(
+        t(
+          "Please agree to the Terms and Community Guidelines and acknowledge the Privacy Notice.",
+        ),
+      );
+      return;
+    }
     if (signingUp && password.length < 8) {
       setError(t("Use at least 8 characters."));
       return;
@@ -45,6 +59,29 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
         password,
         flow: signingUp ? "signUp" : "signIn",
       });
+      if (signingUp) {
+        for (let attempt = 0; attempt < 4; attempt += 1) {
+          try {
+            await acceptLegal({
+              versions: LEGAL_VERSIONS,
+              termsAccepted: true,
+              privacyAcknowledged: true,
+              communityAccepted: true,
+              ageConfirmed: true,
+              locale,
+            });
+            break;
+          } catch {
+            // Auth state can take a moment to reach Convex after account
+            // creation. The mandatory route gate remains the final fallback.
+            if (attempt < 3) {
+              await new Promise((resolve) =>
+                window.setTimeout(resolve, 150 * (attempt + 1)),
+              );
+            }
+          }
+        }
+      }
       navigate(next && next.startsWith("/") ? next : "/dashboard", {
         replace: true,
       });
@@ -64,7 +101,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
   }
 
   return (
-    <div className="min-h-dvh lg:grid lg:grid-cols-[0.9fr_1.1fr]">
+    <div className="auth-page min-h-dvh lg:grid lg:grid-cols-[0.9fr_1.1fr]">
       <aside className="romance-night relative hidden min-h-dvh flex-col justify-between overflow-hidden p-10 text-sand-50 lg:flex xl:p-14">
         <span
           className="absolute right-[12%] top-[12%] rotate-12 text-5xl text-ember-300/45"
@@ -85,7 +122,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
         >
           <Logo className="h-9 w-9" />
           <span>
-            <span className="brand-wordmark block text-[22px]">Datehaja</span>
+            <Wordmark className="text-[24px]" />
             <span className="docket-label mt-1 block text-[8px] text-sand-400">
               {t("Private date concierge")}
             </span>
@@ -136,9 +173,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
             aria-label={t("Datehaja home")}
           >
             <Logo className="h-8 w-8" />
-            <span className="brand-wordmark text-[21px] font-medium">
-              Datehaja
-            </span>
+            <Wordmark className="text-[22px]" />
           </Link>
           <LocaleSwitcher compact />
           <span className="docket-label rounded-full bg-[var(--bg-sunken)] px-3 py-2 text-muted">
@@ -250,19 +285,59 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
                 </Field>
 
                 {signingUp && (
-                  <label className="mb-5 flex cursor-pointer items-start gap-3 rounded-2xl border border-[var(--border)] bg-[var(--bg-raised)] p-3.5 text-[14px] leading-relaxed">
-                    <input
-                      type="checkbox"
-                      checked={ageConfirmed}
-                      onChange={(e) => setAgeConfirmed(e.target.checked)}
-                      className="mt-0.5 h-4 w-4 shrink-0 rounded accent-[var(--color-ember-400)]"
-                    />
-                    <span>
-                      {t(
-                        "I'm 18 or over, and I understand Datehaja does not verify identity.",
-                      )}
-                    </span>
-                  </label>
+                  <div className="mb-5 space-y-2.5">
+                    <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-[var(--border)] bg-[var(--bg-raised)] p-3.5 text-[14px] leading-relaxed">
+                      <input
+                        type="checkbox"
+                        checked={ageConfirmed}
+                        onChange={(e) => setAgeConfirmed(e.target.checked)}
+                        className="mt-0.5 h-4 w-4 shrink-0 rounded accent-[var(--color-ember-400)]"
+                      />
+                      <span>
+                        {t(
+                          "I'm 18 or over, and I understand Datehaja does not verify identity.",
+                        )}
+                      </span>
+                    </label>
+                    <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-[var(--border)] bg-[var(--bg-raised)] p-3.5 text-[13px] leading-relaxed">
+                      <input
+                        type="checkbox"
+                        checked={legalConfirmed}
+                        onChange={(e) => setLegalConfirmed(e.target.checked)}
+                        className="mt-0.5 h-4 w-4 shrink-0 rounded accent-[var(--color-ember-400)]"
+                      />
+                      <span>
+                        {t("I agree to the")}{" "}
+                        <Link
+                          to="/terms"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-bold underline underline-offset-4"
+                        >
+                          {t("Terms of Service")}
+                        </Link>{" "}
+                        {t("and")}{" "}
+                        <Link
+                          to="/community-guidelines"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-bold underline underline-offset-4"
+                        >
+                          {t("Community Guidelines")}
+                        </Link>
+                        , {t("and acknowledge the")}{" "}
+                        <Link
+                          to="/privacy"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-bold underline underline-offset-4"
+                        >
+                          {t("Privacy Notice")}
+                        </Link>
+                        .
+                      </span>
+                    </label>
+                  </div>
                 )}
 
                 {error && (

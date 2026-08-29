@@ -16,10 +16,22 @@ const fullProfile = {
   city: "Seoul",
   occupationCategory: "Design",
   showOccupation: true,
-  interests: ["Films", "Running", "Coffee", "Design", "Photography", "Travel", "Jazz"],
+  interests: [
+    "Films",
+    "Running",
+    "Coffee",
+    "Design",
+    "Photography",
+    "Travel",
+    "Jazz",
+  ],
   hobbies: ["Home barista", "Marathon training"],
   languages: ["Korean", "English", "Russian", "French"],
   socialEnergy: "introvert",
+  bio: "Documentary editor who loves small cinemas.",
+  firstDateVibe: ["Quiet and slow"],
+  personalityTraits: ["Curious", "Thoughtful"],
+  styleTags: ["Natural"],
   pronouns: "she/her",
   isDemo: false,
 };
@@ -30,7 +42,9 @@ describe("toPublicPreview", () => {
   });
 
   it("caps how many interests leak out", () => {
-    expect(toPublicPreview(fullProfile).interests).toHaveLength(MAX_PREVIEW_INTERESTS);
+    expect(toPublicPreview(fullProfile).interests).toHaveLength(
+      MAX_PREVIEW_INTERESTS,
+    );
   });
 
   it("caps languages", () => {
@@ -48,7 +62,12 @@ describe("toPublicPreview", () => {
     const preview = toPublicPreview({
       ...fullProfile,
       // Extra fields a caller might accidentally pass in.
-      ...({ dobMs: 123, approxLat: 37.5, approxLng: 127.0, email: "a@b.com" } as object),
+      ...({
+        dobMs: 123,
+        approxLat: 37.5,
+        approxLng: 127.0,
+        email: "a@b.com",
+      } as object),
     });
     const keys = Object.keys(preview);
     expect(keys).not.toContain("dobMs");
@@ -61,6 +80,14 @@ describe("toPublicPreview", () => {
 
   it("marks demo personas so they can never be mistaken for real people", () => {
     expect(toPublicPreview({ ...fullProfile, isDemo: true }).isDemo).toBe(true);
+  });
+
+  it("includes only the self-description intended for a match card", () => {
+    const preview = toPublicPreview(fullProfile, "serious");
+    expect(preview.bio).toContain("Documentary editor");
+    expect(preview.personalityTraits).toEqual(["Curious", "Thoughtful"]);
+    expect(preview.styleTags).toEqual(["Natural"]);
+    expect(preview.relationshipIntent).toBe("serious");
   });
 });
 

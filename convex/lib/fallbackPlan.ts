@@ -26,6 +26,7 @@ export type FallbackInput = {
   availableMinutes: number;
   sharedInterests: string[];
   sharedDateTypes: string[];
+  dateIdea?: string;
   atmosphere: string;
   dietary: string[];
   aName: string;
@@ -53,6 +54,7 @@ export type FallbackPlan = {
 
 /** How well a venue category matches what both people said they'd enjoy. */
 const DATE_TYPE_TO_CATEGORY: Record<string, string[]> = {
+  film: ["cinema"],
   coffee: ["cafe"],
   dinner: ["restaurant"],
   drinks: ["bar"],
@@ -66,6 +68,7 @@ const DATE_TYPE_TO_CATEGORY: Record<string, string[]> = {
 };
 
 const CATEGORY_LABEL: Record<string, string> = {
+  cinema: "a film",
   restaurant: "dinner",
   cafe: "coffee",
   dessert: "dessert",
@@ -79,6 +82,7 @@ const CATEGORY_LABEL: Record<string, string> = {
 
 /** Rough minutes a stop of each kind deserves. */
 const CATEGORY_MINUTES: Record<string, number> = {
+  cinema: 120,
   restaurant: 90,
   cafe: 60,
   dessert: 50,
@@ -118,7 +122,7 @@ export function buildFallbackPlan(input: FallbackInput): FallbackPlan | null {
   const primary = scored[0];
   // A second stop only if there's time and it's a genuinely different kind of place.
   const secondary =
-    input.availableMinutes >= 150
+    !input.dateIdea && input.availableMinutes >= 150
       ? scored.find(
           (entry) =>
             entry.index !== primary.index &&
@@ -176,19 +180,27 @@ export function buildFallbackPlan(input: FallbackInput): FallbackPlan | null {
         : `You're both free at the same time and after a similar kind of evening.`;
 
   return {
-    title: secondaryLabel ? theme : `${capitalise(primaryLabel)} in ${input.area}`,
+    title:
+      input.dateIdea && !secondaryLabel
+        ? input.dateIdea.slice(0, 60)
+        : secondaryLabel
+          ? theme
+          : `${capitalise(primaryLabel)} in ${input.area}`,
     theme: `${theme} in ${input.area}`,
     summary: secondary
       ? `${primary.venue.name} first, then ${secondary.venue.name} a short walk away. Both are in ${input.area}, so there's no awkward journey between them.`
       : `${primary.venue.name} in ${input.area}. One place, unhurried — the simplest version of a good first date.`,
-    whyItFits: `${sharedPhrase} This is the kind of ${input.atmosphere === "quiet" ? "quieter" : ""} evening you both said you'd enjoy.`.replace(
-      /\s{2,}/g,
-      " ",
-    ),
+    whyItFits:
+      `${sharedPhrase} This is the kind of ${input.atmosphere === "quiet" ? "quieter" : ""} evening you both said you'd enjoy.`.replace(
+        /\s{2,}/g,
+        " ",
+      ),
     whyForA: `${primary.venue.name} matches what you said you'd enjoy on a first date.`,
     whyForB: `${primary.venue.name} matches what you said you'd enjoy on a first date.`,
     meetingInstructions: `Meet at ${primary.venue.name} in ${input.area}. If either of you is running late, use the one-tap notes on the date plan — you won't need to swap numbers.`,
-    estimatedCostPerPerson: Math.round((input.budgetLow + input.budgetHigh) / 2),
+    estimatedCostPerPerson: Math.round(
+      (input.budgetLow + input.budgetHigh) / 2,
+    ),
     estimatedDurationMin: Math.max(60, Math.min(240, totalMinutes)),
     stops,
   };
@@ -196,6 +208,7 @@ export function buildFallbackPlan(input: FallbackInput): FallbackPlan | null {
 
 /** Reads naturally in a sentence: "somewhere for coffee in Seongsu." */
 const CATEGORY_PHRASE: Record<string, string> = {
+  cinema: "somewhere to watch a film",
   restaurant: "somewhere to eat",
   cafe: "somewhere for coffee",
   dessert: "somewhere for dessert",
@@ -209,8 +222,10 @@ const CATEGORY_PHRASE: Record<string, string> = {
 
 function noteFor(venue: FallbackVenue, input: FallbackInput): string {
   const overlap = intersect(venue.tags, input.sharedInterests);
-  if (overlap.length > 0) return `Picked for the ${overlap[0].toLowerCase()} connection.`;
-  if (venue.approximatePrice) return `Around ${venue.approximatePrice} per person.`;
+  if (overlap.length > 0)
+    return `Picked for the ${overlap[0].toLowerCase()} connection.`;
+  if (venue.approximatePrice)
+    return `Around ${venue.approximatePrice} per person.`;
   return `${capitalise(CATEGORY_PHRASE[venue.category] ?? "a spot")} in ${venue.district}.`;
 }
 

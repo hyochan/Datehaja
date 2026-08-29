@@ -53,16 +53,63 @@ const ko: TranslationPack = {
   "Find me a date": "데이트 잡아줘",
   "One night is enough": "저녁 하나면 충분해요",
   "Shall we make it a date?": "우리, 데이트할까요?",
-  "Pick a night. Let's make it a date.":
-    "저녁 하나 비워봐. 우리, 데이트하자.",
+  "Pick a night. Let's make it a date.": "저녁 하나 비워봐. 우리, 데이트하자.",
   "See what happens next": "다음 장면 보기",
   "Your Friday, planned": "준비된 금요일",
   "Dinner, then dessert if it feels right.":
     "저녁을 먹고, 마음이 맞으면 디저트까지.",
+  "New people, real plans": "새로운 사람, 진짜 계획",
+  "What do you want to do?": "뭐 하고 싶어요?",
+  "Find someone to do it with.": "그걸 같이할 사람을 찾아드릴게요.",
+  "A film, a walk, a gallery—or whatever sounds good. Tell us the date you want; we'll find someone compatible to share it.":
+    "영화, 산책, 전시처럼 지금 하고 싶은 데이트를 말해주세요. 그 시간을 함께 즐길 새로운 사람을 찾아드릴게요.",
+  "Find someone to go with": "함께할 사람 찾기",
+  "The activity comes first": "하고 싶은 일이 먼저",
+  "No forced chemistry": "억지로 호감을 만들 필요 없음",
+  "No second stop required": "2차는 없어도 돼요",
+  "Your idea comes first": "하고 싶은 것이 먼저",
+  "What do you want to do next?": "다음엔 뭐 하고 싶어요?",
+  "Bring the idea. We'll find the person.":
+    "하고 싶은 걸 말해요. 함께할 사람은 우리가 찾을게요.",
+  "Your idea. One new person. One real date.":
+    "하고 싶은 것 하나. 새로운 사람 한 명. 진짜 데이트 한 번.",
+  "Start with the date you actually want.":
+    "진짜 하고 싶은 데이트에서 시작해요.",
+  "The plan comes first. Then we find the right person to join you.":
+    "계획이 먼저예요. 그다음 함께할 사람을 찾습니다.",
+  "Name the date": "하고 싶은 데이트 말하기",
+  "A film and nothing after? That's a complete date.":
+    "영화만 보고 끝? 그것만으로도 완성된 데이트예요.",
+  "Your date idea": "원하는 데이트",
+  "Watch an indie film": "독립영화 한 편 보기",
+  "Film only. No second stop needed.": "영화만. 2차는 없어도 돼요.",
+  "Find someone who wants the same thing": "같은 걸 하고 싶은 사람 찾기",
+  "We match the activity, timing, and the person—not a restaurant reservation.":
+    "식당 예약이 아니라 활동, 시간, 사람을 함께 맞춰요.",
+  "Film night": "영화 보는 날",
+  "One screening · about {amount}": "상영 한 편 · 약 {amount}",
+  "You both want to see a film. Nothing else has to be added.":
+    "두 사람 모두 영화를 보고 싶어 해요. 다른 일정을 더할 필요는 없어요.",
+  "Go do exactly that": "그대로 만나서 하기",
+  "Both say yes. Meet in public. No pressure to make it more.":
+    "둘 다 좋다고 하면 공개된 장소에서 만나요. 그 이상을 억지로 이어갈 필요는 없어요.",
+  "Your idea, matched": "하고 싶은 것, 매칭 완료",
+  "One film. One new person. That's the whole plan.":
+    "영화 한 편. 새로운 사람 한 명. 그걸로 충분해요.",
+  "What would you like to do?": "뭐 하고 싶어요?",
+  "Start with the date, not the profile. A film by itself is a complete plan.":
+    "프로필보다 데이트에서 시작해요. 영화 한 편만으로도 완성된 계획이에요.",
+  "Watch an indie film. Happy to call it a night when the credits roll.":
+    "독립영화 한 편 보기. 엔딩 크레딧이 올라가면 기분 좋게 마쳐도 좋아요.",
+  "Watch a film": "영화 보기",
+  "Take a walk": "산책하기",
+  "See an exhibition": "전시 보기",
+  "Hear live music": "라이브 음악 듣기",
+  "Tell us what you'd like to do on this date.":
+    "이번 데이트에서 하고 싶은 걸 알려주세요.",
   "Both said yes": "두 사람 모두 좋아요",
   "Added to calendar": "캘린더에 추가",
-  "From “I'm free” to “see you there.”":
-    "“시간 돼요”에서 “그때 봐요”까지.",
+  "From “I'm free” to “see you there.”": "“시간 돼요”에서 “그때 봐요”까지.",
   "Three small choices. No audition in between.":
     "작은 선택 세 번이면 충분해요. 나를 증명할 필요는 없어요.",
   "Choose a night": "저녁 하나 고르기",
@@ -234,12 +281,60 @@ const ja: TranslationPack = {
   "Find me a date": "デートを見つける",
   "One night is enough": "夜ひとつで十分",
   "Shall we make it a date?": "デートにしませんか？",
-  "Pick a night. Let's make it a date.":
-    "夜をひとつ選んで。デートにしよう。",
+  "Pick a night. Let's make it a date.": "夜をひとつ選んで。デートにしよう。",
   "See what happens next": "次の流れを見る",
   "Your Friday, planned": "予定が整った金曜日",
   "Dinner, then dessert if it feels right.":
     "夕食を楽しんで、気が合えばデザートへ。",
+  "New people, real plans": "新しい出会い、実際のプラン",
+  "What do you want to do?": "何をしたいですか？",
+  "Find someone to do it with.": "一緒に楽しむ人を見つけましょう。",
+  "A film, a walk, a gallery—or whatever sounds good. Tell us the date you want; we'll find someone compatible to share it.":
+    "映画、散歩、展覧会など、したいデートを教えてください。その時間を一緒に楽しめる新しい相手を探します。",
+  "Find someone to go with": "一緒に行く人を探す",
+  "The activity comes first": "やりたいことが先",
+  "No forced chemistry": "無理に盛り上げなくていい",
+  "No second stop required": "二軒目はなくてもいい",
+  "Your idea comes first": "あなたのアイデアが先",
+  "What do you want to do next?": "次は何をしたいですか？",
+  "Bring the idea. We'll find the person.":
+    "やりたいことを教えてください。一緒に行く人は私たちが探します。",
+  "Your idea. One new person. One real date.":
+    "やりたいこと一つ、新しい相手一人、本当のデート一回。",
+  "Start with the date you actually want.":
+    "本当にしたいデートから始めましょう。",
+  "The plan comes first. Then we find the right person to join you.":
+    "まずプランを決め、そのあと一緒に楽しめる相手を探します。",
+  "Name the date": "したいデートを伝える",
+  "A film and nothing after? That's a complete date.":
+    "映画だけで終わり？ それで十分、完成したデートです。",
+  "Your date idea": "あなたのデート案",
+  "Watch an indie film": "ミニシアターで映画を観る",
+  "Film only. No second stop needed.": "映画だけ。二軒目は不要です。",
+  "Find someone who wants the same thing": "同じことをしたい人を探す",
+  "We match the activity, timing, and the person—not a restaurant reservation.":
+    "レストラン予約ではなく、体験、時間、相手を合わせます。",
+  "Film night": "映画の夜",
+  "One screening · about {amount}": "上映一本・約{amount}",
+  "You both want to see a film. Nothing else has to be added.":
+    "二人とも映画を観たいと思っています。ほかに予定を足す必要はありません。",
+  "Go do exactly that": "そのまま会って楽しむ",
+  "Both say yes. Meet in public. No pressure to make it more.":
+    "二人が同意したら公共の場所で会います。それ以上を無理に続ける必要はありません。",
+  "Your idea, matched": "あなたのアイデアに相手が見つかりました",
+  "One film. One new person. That's the whole plan.":
+    "映画一本、新しい相手一人。それで十分です。",
+  "What would you like to do?": "何をしたいですか？",
+  "Start with the date, not the profile. A film by itself is a complete plan.":
+    "プロフィールではなくデートから。映画一本だけでも完成したプランです。",
+  "Watch an indie film. Happy to call it a night when the credits roll.":
+    "ミニシアターで映画を一本。エンドロールで気持ちよく解散しても大丈夫。",
+  "Watch a film": "映画を観る",
+  "Take a walk": "散歩する",
+  "See an exhibition": "展覧会を見る",
+  "Hear live music": "ライブ音楽を聴く",
+  "Tell us what you'd like to do on this date.":
+    "このデートで何をしたいか教えてください。",
   "Both said yes": "二人ともYES",
   "Added to calendar": "カレンダーに追加",
   "From “I'm free” to “see you there.”":
@@ -420,10 +515,59 @@ const de: TranslationPack = {
   "Your Friday, planned": "Dein Freitag, fertig geplant",
   "Dinner, then dessert if it feels right.":
     "Erst Abendessen – und wenn es passt, noch ein Dessert.",
+  "New people, real plans": "Neue Menschen, echte Pläne",
+  "What do you want to do?": "Was möchtest du unternehmen?",
+  "Find someone to do it with.": "Finde jemanden, der mitmacht.",
+  "A film, a walk, a gallery—or whatever sounds good. Tell us the date you want; we'll find someone compatible to share it.":
+    "Film, Spaziergang, Ausstellung oder etwas ganz anderes: Sag uns, welches Date du möchtest. Wir finden jemanden, der dazu passt.",
+  "Find someone to go with": "Begleitung finden",
+  "The activity comes first": "Die Aktivität kommt zuerst",
+  "No forced chemistry": "Keine erzwungene Chemie",
+  "No second stop required": "Keine zweite Station nötig",
+  "Your idea comes first": "Deine Idee kommt zuerst",
+  "What do you want to do next?": "Was möchtest du als Nächstes unternehmen?",
+  "Bring the idea. We'll find the person.":
+    "Bring die Idee mit. Wir finden die passende Person.",
+  "Your idea. One new person. One real date.":
+    "Deine Idee. Ein neuer Mensch. Ein echtes Date.",
+  "Start with the date you actually want.":
+    "Beginne mit dem Date, das du wirklich möchtest.",
+  "The plan comes first. Then we find the right person to join you.":
+    "Zuerst kommt der Plan. Dann finden wir die passende Begleitung.",
+  "Name the date": "Sag, was du unternehmen willst",
+  "A film and nothing after? That's a complete date.":
+    "Nur ein Film und danach nichts? Das ist ein vollständiges Date.",
+  "Your date idea": "Deine Date-Idee",
+  "Watch an indie film": "Einen Indie-Film ansehen",
+  "Film only. No second stop needed.":
+    "Nur der Film. Keine zweite Station nötig.",
+  "Find someone who wants the same thing": "Finde jemanden mit derselben Idee",
+  "We match the activity, timing, and the person—not a restaurant reservation.":
+    "Wir bringen Aktivität, Zeit und Menschen zusammen – keine Restaurantreservierung.",
+  "Film night": "Filmabend",
+  "One screening · about {amount}": "Eine Vorstellung · etwa {amount}",
+  "You both want to see a film. Nothing else has to be added.":
+    "Ihr möchtet beide einen Film sehen. Mehr muss nicht geplant werden.",
+  "Go do exactly that": "Trefft euch genau dafür",
+  "Both say yes. Meet in public. No pressure to make it more.":
+    "Beide sagen Ja und treffen sich öffentlich. Kein Druck, mehr daraus zu machen.",
+  "Your idea, matched": "Deine Idee, passend besetzt",
+  "One film. One new person. That's the whole plan.":
+    "Ein Film. Ein neuer Mensch. Das ist der ganze Plan.",
+  "What would you like to do?": "Was möchtest du unternehmen?",
+  "Start with the date, not the profile. A film by itself is a complete plan.":
+    "Beginne mit dem Date, nicht mit dem Profil. Ein Film allein ist ein vollständiger Plan.",
+  "Watch an indie film. Happy to call it a night when the credits roll.":
+    "Einen Indie-Film ansehen. Beim Abspann darf der Abend gern enden.",
+  "Watch a film": "Einen Film ansehen",
+  "Take a walk": "Spazieren gehen",
+  "See an exhibition": "Eine Ausstellung besuchen",
+  "Hear live music": "Live-Musik hören",
+  "Tell us what you'd like to do on this date.":
+    "Sag uns, was du bei diesem Date unternehmen möchtest.",
   "Both said yes": "Beide haben Ja gesagt",
   "Added to calendar": "Zum Kalender hinzugefügt",
-  "From “I'm free” to “see you there.”":
-    "Von „Ich habe Zeit“ bis „Bis dann“.",
+  "From “I'm free” to “see you there.”": "Von „Ich habe Zeit“ bis „Bis dann“.",
   "Three small choices. No audition in between.":
     "Drei kleine Entscheidungen. Kein Vorsprechen dazwischen.",
   "Choose a night": "Wähl einen Abend",
@@ -603,6 +747,43 @@ const sv: TranslationPack = Object.fromEntries(
 );
 
 Object.assign(fr, {
+  "Choose an image file.": "Choisissez un fichier image.",
+  "Photos must be under 6MB.": "Les photos doivent faire moins de 6 Mo.",
+  "Upload failed.": "Le téléversement a échoué.",
+  "Optional photo saved.": "Photo facultative enregistrée.",
+  "Write what a date would genuinely want to know. Contact details are removed automatically.":
+    "Écrivez ce qu’une rencontre voudrait vraiment savoir. Les coordonnées sont retirées automatiquement.",
+  "Your optional profile": "Votre photo facultative",
+  "Honest details reduce awkward surprises. Reviews check accuracy and respect, never attractiveness.":
+    "Des informations sincères évitent les mauvaises surprises. Les avis évaluent l’exactitude et le respect, jamais l’attirance.",
+  "There is no right answer. Choose ‘No preference’ if chemistry matters more than a type.":
+    "Il n’y a pas de bonne réponse. Choisissez « Sans préférence » si l’alchimie compte plus qu’un type.",
+  "Optional. This is about personal taste, not rating anyone's looks.":
+    "Facultatif. Il s’agit de goûts personnels, pas de noter l’apparence.",
+  "Photo saved. Choose when a match can see it below.":
+    "Photo enregistrée. Choisissez ci-dessous quand elle sera visible.",
+  "Honest details lead to fewer awkward surprises and better matches. Private post-date feedback checks profile accuracy, not attractiveness.":
+    "Des informations sincères évitent les surprises et améliorent les rencontres. Les avis privés vérifient l’exactitude du profil, pas l’attirance.",
+  "‘No preference’ removes this factor from matching.":
+    "« Sans préférence » retire ce critère de la mise en relation.",
+  "Optional personal taste, never an appearance score.":
+    "Goût personnel facultatif, jamais une note d’apparence.",
+  "They receive the same kind of profile card. Contact details and exact location stay private.":
+    "L’autre personne reçoit la même fiche. Les coordonnées et la position exacte restent privées.",
+  "Your review stays private. Only an explicit yes is revealed, and only when you both choose it.":
+    "Votre avis reste privé. Seul un oui explicite et mutuel est révélé.",
+  "Your match card": "Votre fiche de rencontre",
+  "Your photo is already on the match card by your choice. The venue's public address is added after you both accept.":
+    "Votre photo figure déjà sur la fiche selon votre choix. L’adresse publique est ajoutée après votre double accord.",
+  "Your private answers matched. Pick another activity when you're ready; every other review answer stays private.":
+    "Vos réponses privées concordent. Choisissez une autre activité quand vous le souhaitez ; les autres réponses restent privées.",
+  "Your answer stays sealed while we wait. Neither person sees a no, maybe, or who answered first.":
+    "Votre réponse reste scellée. Personne ne voit un non, un peut-être ou qui a répondu en premier.",
+  "Neither person sees who said no or maybe. Accuracy, respect, and safety feedback only improve future matching.":
+    "Personne ne voit qui a répondu non ou peut-être. Les retours sur l’exactitude, le respect et la sécurité servent uniquement aux prochaines rencontres.",
+  "A photo is optional. You decide whether a match sees it with your profile card or only after you both accept.":
+    "La photo est facultative. Vous choisissez si elle apparaît sur la fiche ou seulement après votre double accord.",
+  "Photo privacy saved.": "Visibilité de la photo enregistrée.",
   "Private date concierge": "Conciergerie de rendez-vous privée",
   "Let's make it a date": "On se donne rendez-vous",
   "Pick a night.": "Choisissez une soirée.",
@@ -616,6 +797,56 @@ Object.assign(fr, {
   "Your Friday, planned": "Votre vendredi, déjà organisé",
   "Dinner, then dessert if it feels right.":
     "Dîner, puis un dessert si le courant passe.",
+  "New people, real plans": "De nouvelles rencontres, de vrais projets",
+  "What do you want to do?": "Qu’avez-vous envie de faire ?",
+  "Find someone to do it with.": "Trouvez quelqu’un pour le faire avec vous.",
+  "A film, a walk, a gallery—or whatever sounds good. Tell us the date you want; we'll find someone compatible to share it.":
+    "Un film, une balade, une exposition ou toute autre envie : décrivez le rendez-vous souhaité, nous trouverons quelqu’un pour le partager.",
+  "Find someone to go with": "Trouver quelqu’un avec qui y aller",
+  "The activity comes first": "L’activité passe en premier",
+  "No forced chemistry": "Aucune alchimie forcée",
+  "No second stop required": "Aucune deuxième étape obligatoire",
+  "Your idea comes first": "Votre idée passe en premier",
+  "What do you want to do next?": "Qu’avez-vous envie de faire ensuite ?",
+  "Bring the idea. We'll find the person.":
+    "Apportez l’idée. Nous trouverons la personne.",
+  "Your idea. One new person. One real date.":
+    "Votre idée. Une nouvelle personne. Un vrai rendez-vous.",
+  "Start with the date you actually want.":
+    "Commencez par le rendez-vous dont vous avez vraiment envie.",
+  "The plan comes first. Then we find the right person to join you.":
+    "Le projet vient d’abord. Ensuite, nous trouvons la bonne personne pour vous accompagner.",
+  "Name the date": "Décrivez le rendez-vous",
+  "A film and nothing after? That's a complete date.":
+    "Un film et rien après ? C’est déjà un rendez-vous complet.",
+  "Your date idea": "Votre idée de rendez-vous",
+  "Watch an indie film": "Voir un film indépendant",
+  "Film only. No second stop needed.": "Le film suffit. Pas de deuxième étape.",
+  "Find someone who wants the same thing":
+    "Trouver quelqu’un qui en a aussi envie",
+  "We match the activity, timing, and the person—not a restaurant reservation.":
+    "Nous accordons l’activité, le moment et la personne, pas une réservation de restaurant.",
+  "Film night": "Soirée cinéma",
+  "One screening · about {amount}": "Une séance · environ {amount}",
+  "You both want to see a film. Nothing else has to be added.":
+    "Vous avez tous les deux envie de voir un film. Rien d’autre n’est nécessaire.",
+  "Go do exactly that": "Retrouvez-vous pour faire exactement cela",
+  "Both say yes. Meet in public. No pressure to make it more.":
+    "Vous dites oui tous les deux et vous vous retrouvez dans un lieu public. Aucune obligation d’en faire plus.",
+  "Your idea, matched": "Votre idée a trouvé sa personne",
+  "One film. One new person. That's the whole plan.":
+    "Un film. Une nouvelle personne. C’est tout le programme.",
+  "What would you like to do?": "Qu’avez-vous envie de faire ?",
+  "Start with the date, not the profile. A film by itself is a complete plan.":
+    "Commencez par le rendez-vous, pas par le profil. Un film seul est déjà un programme complet.",
+  "Watch an indie film. Happy to call it a night when the credits roll.":
+    "Voir un film indépendant et terminer tranquillement au générique si vous le souhaitez.",
+  "Watch a film": "Voir un film",
+  "Take a walk": "Faire une balade",
+  "See an exhibition": "Voir une exposition",
+  "Hear live music": "Écouter de la musique live",
+  "Tell us what you'd like to do on this date.":
+    "Dites-nous ce que vous aimeriez faire pendant ce rendez-vous.",
   "Both said yes": "Vous avez dit oui tous les deux",
   "Added to calendar": "Ajouté au calendrier",
   "From “I'm free” to “see you there.”":
@@ -784,6 +1015,40 @@ Object.assign(fr, {
 });
 
 Object.assign(nl, {
+  "Choose an image file.": "Kies een afbeeldingsbestand.",
+  "Photos must be under 6MB.": "Foto’s moeten kleiner zijn dan 6 MB.",
+  "Upload failed.": "Upload mislukt.",
+  "Optional photo saved.": "Optionele foto opgeslagen.",
+  "Write what a date would genuinely want to know. Contact details are removed automatically.":
+    "Schrijf wat een date echt over je wil weten. Contactgegevens worden automatisch verwijderd.",
+  "Your optional profile": "Jouw optionele profielfoto",
+  "Honest details reduce awkward surprises. Reviews check accuracy and respect, never attractiveness.":
+    "Eerlijke informatie voorkomt ongemakkelijke verrassingen. Reviews gaan over juistheid en respect, nooit aantrekkelijkheid.",
+  "There is no right answer. Choose ‘No preference’ if chemistry matters more than a type.":
+    "Er is geen goed antwoord. Kies ‘Maakt niet uit’ als chemie belangrijker is dan een type.",
+  "Optional. This is about personal taste, not rating anyone's looks.":
+    "Optioneel. Dit gaat over persoonlijke smaak, niet over uiterlijk beoordelen.",
+  "Photo saved. Choose when a match can see it below.":
+    "Foto opgeslagen. Kies hieronder wanneer een match die ziet.",
+  "Honest details lead to fewer awkward surprises and better matches. Private post-date feedback checks profile accuracy, not attractiveness.":
+    "Eerlijke informatie voorkomt verrassingen en verbetert matches. Privéfeedback controleert profieljuistheid, niet aantrekkelijkheid.",
+  "‘No preference’ removes this factor from matching.":
+    "‘Maakt niet uit’ haalt deze factor uit de matching.",
+  "Optional personal taste, never an appearance score.":
+    "Optionele persoonlijke smaak, nooit een uiterlijksscore.",
+  "They receive the same kind of profile card. Contact details and exact location stay private.":
+    "De ander ontvangt hetzelfde soort profielkaart. Contactgegevens en exacte locatie blijven privé.",
+  "Your review stays private. Only an explicit yes is revealed, and only when you both choose it.":
+    "Je review blijft privé. Alleen een uitdrukkelijk wederzijds ja wordt gedeeld.",
+  "Your match card": "Jouw matchkaart",
+  "Your photo is already on the match card by your choice. The venue's public address is added after you both accept.":
+    "Je foto staat door jouw keuze al op de matchkaart. Het openbare adres komt erbij nadat jullie beiden accepteren.",
+  "Your private answers matched. Pick another activity when you're ready; every other review answer stays private.":
+    "Jullie privéantwoorden komen overeen. Kies een nieuwe activiteit wanneer je wilt; alle andere antwoorden blijven privé.",
+  "Your answer stays sealed while we wait. Neither person sees a no, maybe, or who answered first.":
+    "Je antwoord blijft verzegeld. Niemand ziet een nee, misschien of wie eerst antwoordde.",
+  "Neither person sees who said no or maybe. Accuracy, respect, and safety feedback only improve future matching.":
+    "Niemand ziet wie nee of misschien koos. Feedback over juistheid, respect en veiligheid verbetert alleen toekomstige matches.",
   "Private date concierge": "Privé-dateconciërge",
   "Let's make it a date": "Maak er een date van",
   "Pick a night.": "Kies een avond.",
@@ -797,10 +1062,59 @@ Object.assign(nl, {
   "Your Friday, planned": "Jouw vrijdag, helemaal gepland",
   "Dinner, then dessert if it feels right.":
     "Eerst eten, en als het klikt nog een dessert.",
+  "New people, real plans": "Nieuwe mensen, echte plannen",
+  "What do you want to do?": "Waar heb je zin in?",
+  "Find someone to do it with.": "Vind iemand die met je meegaat.",
+  "A film, a walk, a gallery—or whatever sounds good. Tell us the date you want; we'll find someone compatible to share it.":
+    "Een film, een wandeling, een tentoonstelling of iets anders: vertel welke date je wilt, dan vinden wij iemand die erbij past.",
+  "Find someone to go with": "Vind iemand om mee te gaan",
+  "The activity comes first": "De activiteit komt eerst",
+  "No forced chemistry": "Geen geforceerde klik",
+  "No second stop required": "Geen tweede stop nodig",
+  "Your idea comes first": "Jouw idee komt eerst",
+  "What do you want to do next?": "Wat wil je hierna doen?",
+  "Bring the idea. We'll find the person.":
+    "Breng het idee. Wij vinden de persoon.",
+  "Your idea. One new person. One real date.":
+    "Jouw idee. Eén nieuw persoon. Eén echte date.",
+  "Start with the date you actually want.":
+    "Begin met de date waar je echt zin in hebt.",
+  "The plan comes first. Then we find the right person to join you.":
+    "Het plan komt eerst. Daarna vinden we de juiste persoon om mee te gaan.",
+  "Name the date": "Vertel welke date je wilt",
+  "A film and nothing after? That's a complete date.":
+    "Alleen een film en daarna niets? Dat is een complete date.",
+  "Your date idea": "Jouw date-idee",
+  "Watch an indie film": "Een indiefilm kijken",
+  "Film only. No second stop needed.":
+    "Alleen de film. Geen tweede stop nodig.",
+  "Find someone who wants the same thing": "Vind iemand die hetzelfde wil",
+  "We match the activity, timing, and the person—not a restaurant reservation.":
+    "We koppelen de activiteit, het moment en de persoon, niet een restaurantreservering.",
+  "Film night": "Filmavond",
+  "One screening · about {amount}": "Eén voorstelling · ongeveer {amount}",
+  "You both want to see a film. Nothing else has to be added.":
+    "Jullie willen allebei een film zien. Er hoeft niets bij.",
+  "Go do exactly that": "Ga precies dat samen doen",
+  "Both say yes. Meet in public. No pressure to make it more.":
+    "Jullie zeggen allebei ja en ontmoeten elkaar openbaar. Geen druk om er meer van te maken.",
+  "Your idea, matched": "Jouw idee, met een match",
+  "One film. One new person. That's the whole plan.":
+    "Eén film. Eén nieuw persoon. Dat is het hele plan.",
+  "What would you like to do?": "Waar heb je zin in?",
+  "Start with the date, not the profile. A film by itself is a complete plan.":
+    "Begin met de date, niet met het profiel. Alleen een film is al een compleet plan.",
+  "Watch an indie film. Happy to call it a night when the credits roll.":
+    "Een indiefilm kijken en met een goed gevoel stoppen bij de aftiteling.",
+  "Watch a film": "Een film kijken",
+  "Take a walk": "Een wandeling maken",
+  "See an exhibition": "Een tentoonstelling bezoeken",
+  "Hear live music": "Live muziek luisteren",
+  "Tell us what you'd like to do on this date.":
+    "Vertel ons wat je tijdens deze date wilt doen.",
   "Both said yes": "Jullie zeiden allebei ja",
   "Added to calendar": "Toegevoegd aan agenda",
-  "From “I'm free” to “see you there.”":
-    "Van ‘ik kan’ naar ‘tot dan’.",
+  "From “I'm free” to “see you there.”": "Van ‘ik kan’ naar ‘tot dan’.",
   "Three small choices. No audition in between.":
     "Drie kleine keuzes. Geen auditie tussendoor.",
   "Choose a night": "Kies een avond",
@@ -967,6 +1281,40 @@ Object.assign(nl, {
 });
 
 Object.assign(sv, {
+  "Choose an image file.": "Välj en bildfil.",
+  "Photos must be under 6MB.": "Bilder måste vara mindre än 6 MB.",
+  "Upload failed.": "Uppladdningen misslyckades.",
+  "Optional photo saved.": "Valfri bild sparad.",
+  "Write what a date would genuinely want to know. Contact details are removed automatically.":
+    "Skriv vad en dejt verkligen vill veta om dig. Kontaktuppgifter tas bort automatiskt.",
+  "Your optional profile": "Din valfria profilbild",
+  "Honest details reduce awkward surprises. Reviews check accuracy and respect, never attractiveness.":
+    "Ärliga uppgifter minskar obekväma överraskningar. Omdömen gäller korrekthet och respekt, aldrig attraktivitet.",
+  "There is no right answer. Choose ‘No preference’ if chemistry matters more than a type.":
+    "Det finns inget rätt svar. Välj ”Spelar ingen roll” om kemi är viktigare än en typ.",
+  "Optional. This is about personal taste, not rating anyone's looks.":
+    "Valfritt. Det handlar om personlig smak, inte om att betygsätta utseende.",
+  "Photo saved. Choose when a match can see it below.":
+    "Bilden är sparad. Välj nedan när en matchning får se den.",
+  "Honest details lead to fewer awkward surprises and better matches. Private post-date feedback checks profile accuracy, not attractiveness.":
+    "Ärliga uppgifter minskar överraskningar och ger bättre matchningar. Privat feedback gäller profilens korrekthet, inte attraktivitet.",
+  "‘No preference’ removes this factor from matching.":
+    "”Spelar ingen roll” tar bort faktorn från matchningen.",
+  "Optional personal taste, never an appearance score.":
+    "Valfri personlig smak, aldrig ett utseendebetyg.",
+  "They receive the same kind of profile card. Contact details and exact location stay private.":
+    "Den andra får samma typ av profilkort. Kontaktuppgifter och exakt plats förblir privata.",
+  "Your review stays private. Only an explicit yes is revealed, and only when you both choose it.":
+    "Ditt omdöme förblir privat. Bara ett uttryckligt ömsesidigt ja visas.",
+  "Your match card": "Ditt matchningskort",
+  "Your photo is already on the match card by your choice. The venue's public address is added after you both accept.":
+    "Din bild finns redan på matchningskortet enligt ditt val. Den offentliga adressen läggs till när båda tackat ja.",
+  "Your private answers matched. Pick another activity when you're ready; every other review answer stays private.":
+    "Era privata svar stämmer överens. Välj en ny aktivitet när ni vill; alla andra svar förblir privata.",
+  "Your answer stays sealed while we wait. Neither person sees a no, maybe, or who answered first.":
+    "Ditt svar förblir förseglat. Ingen ser ett nej, kanske eller vem som svarade först.",
+  "Neither person sees who said no or maybe. Accuracy, respect, and safety feedback only improve future matching.":
+    "Ingen ser vem som svarade nej eller kanske. Feedback om korrekthet, respekt och trygghet förbättrar bara framtida matchningar.",
   "Private date concierge": "Privat dejtconcierge",
   "Let's make it a date": "Låt oss göra det till en dejt",
   "Pick a night.": "Välj en kväll.",
@@ -980,6 +1328,54 @@ Object.assign(sv, {
   "Your Friday, planned": "Din fredag, färdigplanerad",
   "Dinner, then dessert if it feels right.":
     "Middag, och om det känns rätt även dessert.",
+  "New people, real plans": "Nya människor, riktiga planer",
+  "What do you want to do?": "Vad vill du göra?",
+  "Find someone to do it with.": "Hitta någon att göra det med.",
+  "A film, a walk, a gallery—or whatever sounds good. Tell us the date you want; we'll find someone compatible to share it.":
+    "En film, en promenad, en utställning eller något annat: berätta vilken dejt du vill ha, så hittar vi någon som passar.",
+  "Find someone to go with": "Hitta någon att gå med",
+  "The activity comes first": "Aktiviteten kommer först",
+  "No forced chemistry": "Ingen framtvingad kemi",
+  "No second stop required": "Inget andra stopp krävs",
+  "Your idea comes first": "Din idé kommer först",
+  "What do you want to do next?": "Vad vill du göra härnäst?",
+  "Bring the idea. We'll find the person.": "Ta med idén. Vi hittar personen.",
+  "Your idea. One new person. One real date.":
+    "Din idé. En ny person. En riktig dejt.",
+  "Start with the date you actually want.":
+    "Börja med dejten du faktiskt vill ha.",
+  "The plan comes first. Then we find the right person to join you.":
+    "Planen kommer först. Sedan hittar vi rätt person att följa med.",
+  "Name the date": "Berätta vilken dejt du vill ha",
+  "A film and nothing after? That's a complete date.":
+    "Bara en film och inget efteråt? Det är en komplett dejt.",
+  "Your date idea": "Din dejtidé",
+  "Watch an indie film": "Se en indiefilm",
+  "Film only. No second stop needed.": "Bara filmen. Inget andra stopp behövs.",
+  "Find someone who wants the same thing": "Hitta någon som vill samma sak",
+  "We match the activity, timing, and the person—not a restaurant reservation.":
+    "Vi matchar aktiviteten, tiden och personen – inte en restaurangbokning.",
+  "Film night": "Filmkväll",
+  "One screening · about {amount}": "En visning · cirka {amount}",
+  "You both want to see a film. Nothing else has to be added.":
+    "Ni vill båda se en film. Inget annat behöver läggas till.",
+  "Go do exactly that": "Träffas och gör just det",
+  "Both say yes. Meet in public. No pressure to make it more.":
+    "Båda säger ja och möts offentligt. Ingen press att göra mer av det.",
+  "Your idea, matched": "Din idé har fått en match",
+  "One film. One new person. That's the whole plan.":
+    "En film. En ny person. Det är hela planen.",
+  "What would you like to do?": "Vad vill du göra?",
+  "Start with the date, not the profile. A film by itself is a complete plan.":
+    "Börja med dejten, inte profilen. En film i sig är en komplett plan.",
+  "Watch an indie film. Happy to call it a night when the credits roll.":
+    "Se en indiefilm och avsluta gärna kvällen när eftertexterna rullar.",
+  "Watch a film": "Se en film",
+  "Take a walk": "Ta en promenad",
+  "See an exhibition": "Se en utställning",
+  "Hear live music": "Lyssna på livemusik",
+  "Tell us what you'd like to do on this date.":
+    "Berätta vad du vill göra på den här dejten.",
   "Both said yes": "Båda sa ja",
   "Added to calendar": "Tillagd i kalendern",
   "From “I'm free” to “see you there.”":
@@ -1147,6 +1543,14 @@ Object.assign(sv, {
 });
 
 Object.assign(ko, {
+  "It's a date.": "데이트가 확정됐어요.",
+  "Subscribe once; the same event moves from reserved to finalized or cancelled.":
+    "한 번 구독하면 같은 일정이 예약·확정·취소 상태로 바뀌어요.",
+  Yes: "네",
+  No: "아니요",
+  "Your match card": "내 매칭 카드",
+  "Your photo is already on the match card by your choice. The venue's public address is added after you both accept.":
+    "선택에 따라 사진은 이미 매칭 카드에 표시돼요. 두 사람 모두 수락하면 공개 장소 주소가 추가됩니다.",
   "On it — we're looking now.": "알겠습니다. 지금 찾고 있어요.",
   "Your concierge desk": "나의 컨시어지 데스크",
   "Hi, {name}.": "안녕하세요, {name}님.",
@@ -1200,6 +1604,40 @@ Object.assign(ko, {
 });
 
 Object.assign(ja, {
+  "Choose an image file.": "画像ファイルを選んでください。",
+  "Photos must be under 6MB.": "写真は6MB未満にしてください。",
+  "Upload failed.": "アップロードできませんでした。",
+  "Optional photo saved.": "任意の写真を保存しました。",
+  "Write what a date would genuinely want to know. Contact details are removed automatically.":
+    "相手が本当に知りたいあなたのことを書いてください。連絡先は自動で削除されます。",
+  "Your optional profile": "任意のプロフィール写真",
+  "Honest details reduce awkward surprises. Reviews check accuracy and respect, never attractiveness.":
+    "正直な情報は気まずい驚きを減らします。レビューは魅力度ではなく正確さと敬意を確認します。",
+  "There is no right answer. Choose ‘No preference’ if chemistry matters more than a type.":
+    "正解はありません。タイプより相性を重視するなら「こだわらない」を選んでください。",
+  "Optional. This is about personal taste, not rating anyone's looks.":
+    "任意です。外見の採点ではなく個人の好みです。",
+  "Photo saved. Choose when a match can see it below.":
+    "写真を保存しました。公開タイミングを選んでください。",
+  "Honest details lead to fewer awkward surprises and better matches. Private post-date feedback checks profile accuracy, not attractiveness.":
+    "正直な情報は気まずい驚きを減らし、より良い出会いにつながります。レビューは魅力度ではなくプロフィールの正確さを確認します。",
+  "‘No preference’ removes this factor from matching.":
+    "「こだわらない」を選ぶと、この項目はマッチングに使われません。",
+  "Optional personal taste, never an appearance score.":
+    "任意の好みであり、外見の点数には使いません。",
+  "They receive the same kind of profile card. Contact details and exact location stay private.":
+    "相手にも同じ範囲のプロフィールカードが届きます。連絡先と正確な位置は非公開です。",
+  "Your review stays private. Only an explicit yes is revealed, and only when you both choose it.":
+    "レビューは非公開です。お二人とも明確に「はい」を選んだ場合だけ再会の希望を知らせます。",
+  "Your match card": "あなたのマッチカード",
+  "Your photo is already on the match card by your choice. The venue's public address is added after you both accept.":
+    "選択により写真はすでにマッチカードに表示されています。双方の承諾後に公共の会場住所が追加されます。",
+  "Your private answers matched. Pick another activity when you're ready; every other review answer stays private.":
+    "非公開回答が一致しました。準備ができたら次の活動を選べます。その他の回答は非公開のままです。",
+  "Your answer stays sealed while we wait. Neither person sees a no, maybe, or who answered first.":
+    "待っている間、回答は封印されます。「いいえ」「たぶん」や回答順は公開されません。",
+  "Neither person sees who said no or maybe. Accuracy, respect, and safety feedback only improve future matching.":
+    "誰が「いいえ」や「たぶん」と答えたかは分かりません。正確さ・敬意・安全の回答は今後の改善だけに使います。",
   "On it — we're looking now.": "承知しました。今探しています。",
   "Your concierge desk": "コンシェルジュデスク",
   "Hi, {name}.": "こんにちは、{name}さん。",
@@ -1253,6 +1691,40 @@ Object.assign(ja, {
 });
 
 Object.assign(de, {
+  "Choose an image file.": "Wähle eine Bilddatei.",
+  "Photos must be under 6MB.": "Fotos müssen kleiner als 6 MB sein.",
+  "Upload failed.": "Upload fehlgeschlagen.",
+  "Optional photo saved.": "Optionales Foto gespeichert.",
+  "Write what a date would genuinely want to know. Contact details are removed automatically.":
+    "Schreibe, was ein Date wirklich über dich wissen möchte. Kontaktdaten werden automatisch entfernt.",
+  "Your optional profile": "Dein optionales Profilfoto",
+  "Honest details reduce awkward surprises. Reviews check accuracy and respect, never attractiveness.":
+    "Ehrliche Angaben vermeiden unangenehme Überraschungen. Bewertungen prüfen Genauigkeit und Respekt, nie Attraktivität.",
+  "There is no right answer. Choose ‘No preference’ if chemistry matters more than a type.":
+    "Es gibt keine richtige Antwort. Wähle „Egal“, wenn die Chemie wichtiger ist als ein Typ.",
+  "Optional. This is about personal taste, not rating anyone's looks.":
+    "Optional. Es geht um persönlichen Geschmack, nicht um die Bewertung von Aussehen.",
+  "Photo saved. Choose when a match can see it below.":
+    "Foto gespeichert. Wähle unten, wann ein Match es sehen darf.",
+  "Honest details lead to fewer awkward surprises and better matches. Private post-date feedback checks profile accuracy, not attractiveness.":
+    "Ehrliche Angaben vermeiden unangenehme Überraschungen und verbessern Matches. Privates Feedback prüft Profilgenauigkeit, nicht Attraktivität.",
+  "‘No preference’ removes this factor from matching.":
+    "„Egal“ entfernt diesen Faktor aus dem Matching.",
+  "Optional personal taste, never an appearance score.":
+    "Optionaler persönlicher Geschmack, niemals eine Aussehensnote.",
+  "They receive the same kind of profile card. Contact details and exact location stay private.":
+    "Die andere Person erhält dieselbe Art Profilkarte. Kontaktdaten und genauer Standort bleiben privat.",
+  "Your review stays private. Only an explicit yes is revealed, and only when you both choose it.":
+    "Deine Bewertung bleibt privat. Nur ein ausdrückliches beidseitiges Ja wird offengelegt.",
+  "Your match card": "Deine Match-Karte",
+  "Your photo is already on the match card by your choice. The venue's public address is added after you both accept.":
+    "Dein Foto ist nach deiner Wahl bereits auf der Match-Karte. Die öffentliche Adresse kommt nach eurer beider Zusage hinzu.",
+  "Your private answers matched. Pick another activity when you're ready; every other review answer stays private.":
+    "Eure privaten Antworten stimmen überein. Wählt eine neue Aktivität, wenn ihr bereit seid; alle anderen Antworten bleiben privat.",
+  "Your answer stays sealed while we wait. Neither person sees a no, maybe, or who answered first.":
+    "Deine Antwort bleibt versiegelt. Niemand sieht ein Nein, Vielleicht oder wer zuerst geantwortet hat.",
+  "Neither person sees who said no or maybe. Accuracy, respect, and safety feedback only improve future matching.":
+    "Niemand sieht, wer Nein oder Vielleicht gewählt hat. Feedback zu Genauigkeit, Respekt und Sicherheit verbessert nur künftige Matches.",
   "On it — we're looking now.": "Alles klar — wir suchen jetzt.",
   "Your concierge desk": "Dein Concierge-Schreibtisch",
   "Hi, {name}.": "Hallo, {name}.",
@@ -2704,7 +3176,8 @@ Object.assign(nl, {
   "Your date of birth": "Je geboortedatum",
   "Your full name (we only show your first name)":
     "Je volledige naam (we tonen alleen je voornaam)",
-  "Your other date plans, past or present": "Je andere dateplannen, vroeger of nu",
+  "Your other date plans, past or present":
+    "Je andere dateplannen, vroeger of nu",
   "Every invitation, confirmation and reminder is sent by":
     "Elke uitnodiging, bevestiging en herinnering wordt verzonden door",
   "from our own inbox. Your address is the recipient, never the sender, and never a CC. Two people on the same date plan are always emailed separately, so neither can see the other's address in a header.":
@@ -3442,6 +3915,636 @@ Object.assign(sv, {
   "Keep previous response": "Behåll föregående svar",
 });
 
+Object.assign(ko, {
+  "Please agree to the Terms and Community Guidelines and acknowledge the Privacy Notice.":
+    "이용약관과 커뮤니티 가이드라인에 동의하고 개인정보 처리방침을 확인해주세요.",
+  "I agree to the": "다음 문서에 동의합니다:",
+  "Terms of Service": "이용약관",
+  and: "및",
+  "Community Guidelines": "커뮤니티 가이드라인",
+  "and acknowledge the": "그리고 다음 문서를 확인했습니다:",
+  "Privacy Notice": "개인정보 처리방침",
+  Terms: "약관",
+  Community: "커뮤니티",
+});
+
+Object.assign(ja, {
+  "Please agree to the Terms and Community Guidelines and acknowledge the Privacy Notice.":
+    "利用規約とコミュニティガイドラインに同意し、プライバシー通知をご確認ください。",
+  "I agree to the": "次に同意します：",
+  "Terms of Service": "利用規約",
+  and: "および",
+  "Community Guidelines": "コミュニティガイドライン",
+  "and acknowledge the": "次を確認しました：",
+  "Privacy Notice": "プライバシー通知",
+  Terms: "利用規約",
+  Community: "コミュニティ",
+});
+
+Object.assign(de, {
+  "Please agree to the Terms and Community Guidelines and acknowledge the Privacy Notice.":
+    "Bitte stimme den Nutzungsbedingungen und Community-Richtlinien zu und bestätige den Datenschutzhinweis.",
+  "I agree to the": "Ich stimme zu:",
+  "Terms of Service": "Nutzungsbedingungen",
+  and: "und",
+  "Community Guidelines": "Community-Richtlinien",
+  "and acknowledge the": "und bestätige den",
+  "Privacy Notice": "Datenschutzhinweis",
+  Terms: "Bedingungen",
+  Community: "Gemeinschaft",
+});
+
+Object.assign(fr, {
+  "Please agree to the Terms and Community Guidelines and acknowledge the Privacy Notice.":
+    "Veuillez accepter les Conditions et les Règles de la communauté et prendre connaissance de l’avis de confidentialité.",
+  "I agree to the": "J’accepte les",
+  "Terms of Service": "Conditions d’utilisation",
+  and: "et",
+  "Community Guidelines": "Règles de la communauté",
+  "and acknowledge the": "et reconnais avoir lu l’",
+  "Privacy Notice": "Avis de confidentialité",
+  Terms: "Conditions",
+  Community: "Communauté",
+});
+
+Object.assign(nl, {
+  "Please agree to the Terms and Community Guidelines and acknowledge the Privacy Notice.":
+    "Ga akkoord met de Voorwaarden en Communityrichtlijnen en bevestig de Privacyverklaring.",
+  "I agree to the": "Ik ga akkoord met de",
+  "Terms of Service": "Gebruiksvoorwaarden",
+  and: "en",
+  "Community Guidelines": "Communityrichtlijnen",
+  "and acknowledge the": "en bevestig de",
+  "Privacy Notice": "Privacyverklaring",
+  Terms: "Voorwaarden",
+  Community: "Gemeenschap",
+});
+
+Object.assign(sv, {
+  "Please agree to the Terms and Community Guidelines and acknowledge the Privacy Notice.":
+    "Godkänn användarvillkoren och communityreglerna och bekräfta integritetsmeddelandet.",
+  "I agree to the": "Jag godkänner",
+  "Terms of Service": "Användarvillkor",
+  and: "och",
+  "Community Guidelines": "Communityregler",
+  "and acknowledge the": "och bekräftar",
+  "Privacy Notice": "Integritetsmeddelande",
+  Terms: "Villkor",
+  Community: "Gemenskap",
+});
+
+Object.assign(ko, {
+  "A photo is optional. You decide whether a match sees it with your profile card or only after you both accept.":
+    "사진은 선택 사항이에요. 매칭 카드에서 바로 보여줄지, 두 사람 모두 수락한 뒤 보여줄지 직접 정할 수 있어요.",
+  "Photo privacy saved.": "사진 공개 설정을 저장했어요.",
+  "Photo visibility": "사진 공개 시점",
+  "Show with my match card": "매칭 카드에서 공개",
+  "Only after we both accept": "두 사람 모두 수락한 뒤 공개",
+  "Photo saved. Choose when a match can see it below.":
+    "사진을 저장했어요. 상대에게 공개할 시점을 아래에서 선택하세요.",
+  "Introduce yourself": "자기소개",
+  "How would people who know you describe you?":
+    "나를 잘 아는 사람들은 나를 어떻게 말할까요?",
+  "Pick up to five. Choose what is true, not what sounds impressive.":
+    "멋져 보이는 말보다 실제 나와 가까운 표현을 최대 다섯 개 골라주세요.",
+  "Your personality": "나의 성격",
+  "Your everyday style": "평소 나의 스타일",
+  "Optional and self-described — never an appearance score.":
+    "선택 사항이며 스스로 표현하는 정보예요. 외모 점수로 사용하지 않아요.",
+  "Your style": "나의 스타일",
+  "This profile reflects who I am today":
+    "이 프로필은 현재의 나를 솔직하게 담고 있어요",
+  "Honest details lead to fewer awkward surprises and better matches. Private post-date feedback checks profile accuracy, not attractiveness.":
+    "솔직한 정보는 어색한 실망을 줄이고 더 좋은 매칭으로 이어져요. 데이트 후에는 매력 점수가 아니라 프로필의 정확성을 확인합니다.",
+  "Write what a date would genuinely want to know. Contact details are removed automatically.":
+    "상대가 실제로 궁금해할 나의 이야기를 적어주세요. 연락처는 자동으로 제거됩니다.",
+  "Profile photo": "프로필 사진",
+  "Optional. A thoughtful introduction works without one too.":
+    "선택 사항이에요. 사진 없이도 진솔한 소개만으로 충분해요.",
+  "Your optional profile": "선택한 프로필 사진",
+  "Replace photo": "사진 바꾸기",
+  "Add a photo": "사진 추가",
+  "Choose an image file.": "이미지 파일을 선택해주세요.",
+  "Photos must be under 6MB.": "사진은 6MB보다 작아야 해요.",
+  "Upload failed.": "업로드하지 못했어요.",
+  "Optional photo saved.": "선택한 사진을 저장했어요.",
+  "Honest details reduce awkward surprises. Reviews check accuracy and respect, never attractiveness.":
+    "솔직한 정보는 어색한 실망을 줄여요. 리뷰는 매력도가 아니라 정확성과 배려를 확인합니다.",
+  "Personality you tend to connect with": "마음이 잘 통하는 성격",
+  "There is no right answer. Choose ‘No preference’ if chemistry matters more than a type.":
+    "정답은 없어요. 특정 유형보다 실제 케미가 중요하다면 ‘상관없음’을 골라주세요.",
+  "Personality preference strength": "성격 선호 중요도",
+  "No preference": "상관없음",
+  Flexible: "유연하게",
+  Important: "중요해요",
+  "Preferred personality": "선호하는 성격",
+  "Style you tend to notice": "눈길이 가는 스타일",
+  "Optional. This is about personal taste, not rating anyone's looks.":
+    "선택 사항이에요. 사람의 외모를 평가하는 점수가 아니라 개인적인 취향입니다.",
+  "Style preference strength": "스타일 선호 중요도",
+  "Preferred style": "선호하는 스타일",
+  "Where can the date happen?": "어느 지역에서 데이트할 수 있나요?",
+  "Choose meeting areas, not where your match must live.":
+    "상대의 거주지가 아니라 실제로 만나기 편한 지역을 골라주세요.",
+  "Meeting area preference": "데이트 지역 선호",
+  "Any area": "지역 상관없음",
+  "Choose areas": "지역 선택",
+  "Preferred meeting areas": "선호 데이트 지역",
+  "Only plan dates in these areas": "선택한 지역에서만 데이트 잡기",
+  "‘No preference’ removes this factor from matching.":
+    "‘상관없음’을 선택하면 이 요소는 매칭에 반영하지 않아요.",
+  "Optional personal taste, never an appearance score.":
+    "선택형 개인 취향이며 외모 점수로 사용하지 않아요.",
+  "Your date": "만나게 될 사람",
+  "Your match": "매칭된 사람",
+  "Photo shared": "사진 공개됨",
+  "Photo optional": "사진 미등록",
+  "In their own words": "직접 쓴 자기소개",
+  "They describe themselves as": "스스로 표현한 성격",
+  "Their style": "평소 스타일",
+  "A good first date feels": "좋아하는 첫 데이트 분위기",
+  "Open to": "원하는 관계",
+  "They receive the same kind of profile card. Contact details and exact location stay private.":
+    "상대도 같은 범위의 내 프로필 카드를 받아요. 연락처와 정확한 위치는 계속 비공개입니다.",
+  "You both said yes": "두 사람 모두 다시 만나고 싶어요",
+  "Private response sealed": "비공개 응답 보관됨",
+  "You both want another date.": "두 사람 모두 다음 데이트를 원해요.",
+  "We'll only reveal a mutual yes.": "두 사람 모두 ‘좋아요’일 때만 알려드려요.",
+  "Your check-in is complete.": "데이트 리뷰를 마쳤어요.",
+  "Your private answers matched. Pick another activity when you're ready; every other review answer stays private.":
+    "두 사람의 비공개 답변이 일치했어요. 준비되면 다음 활동을 골라보세요. 다른 리뷰 답변은 계속 비공개입니다.",
+  "Your answer stays sealed while we wait. Neither person sees a no, maybe, or who answered first.":
+    "상대의 답을 기다리는 동안 응답은 봉인됩니다. ‘아니요’, ‘아마도’ 또는 누가 먼저 답했는지는 공개하지 않아요.",
+  "Neither person sees who said no or maybe. Accuracy, respect, and safety feedback only improve future matching.":
+    "누가 ‘아니요’나 ‘아마도’를 골랐는지는 서로 알 수 없어요. 정확성·배려·안전 피드백은 다음 매칭 개선에만 사용됩니다.",
+  "Open another evening": "다음 데이트 시간 열기",
+  "Your review stays private. Only an explicit yes is revealed, and only when you both choose it.":
+    "리뷰는 비공개예요. 두 사람 모두 명확히 ‘좋아요’를 선택했을 때만 재만남 의사를 알려드립니다.",
+  "Did their profile feel accurate?": "프로필과 실제 모습이 비슷했나요?",
+  "Yes, accurate": "네, 정확했어요",
+  Mostly: "대체로요",
+  "Quite different": "꽤 달랐어요",
+  "Did they respect your time and boundaries?": "시간과 경계를 존중했나요?",
+  "How did the conversation feel?": "대화는 어떻게 느껴졌나요?",
+  Easy: "편안했어요",
+  Mixed: "반반이었어요",
+  Difficult: "어려웠어요",
+});
+
+Object.assign(ja, {
+  "A photo is optional. You decide whether a match sees it with your profile card or only after you both accept.":
+    "写真は任意です。マッチカードで見せるか、お互いの承諾後に見せるか選べます。",
+  "Photo privacy saved.": "写真の公開設定を保存しました。",
+  "Photo visibility": "写真の公開タイミング",
+  "Show with my match card": "マッチカードで表示",
+  "Only after we both accept": "双方の承諾後のみ",
+  "Introduce yourself": "自己紹介",
+  "How would people who know you describe you?":
+    "親しい人はあなたをどう表しますか？",
+  "Pick up to five. Choose what is true, not what sounds impressive.":
+    "魅力的に聞こえる言葉より、実際の自分に合うものを5つまで選んでください。",
+  "Your personality": "あなたの性格",
+  "Your everyday style": "普段のスタイル",
+  "Optional and self-described — never an appearance score.":
+    "任意の自己表現で、外見の点数には使いません。",
+  "Your style": "あなたのスタイル",
+  "This profile reflects who I am today":
+    "このプロフィールは今の自分を正直に表しています",
+  "Profile photo": "プロフィール写真",
+  "Optional. A thoughtful introduction works without one too.":
+    "任意です。丁寧な自己紹介だけでも十分です。",
+  "Replace photo": "写真を変更",
+  "Add a photo": "写真を追加",
+  "Personality you tend to connect with": "気が合いやすい性格",
+  "Personality preference strength": "性格の希望度",
+  "No preference": "こだわらない",
+  Flexible: "柔軟",
+  Important: "重要",
+  "Preferred personality": "好みの性格",
+  "Style you tend to notice": "惹かれやすいスタイル",
+  "Style preference strength": "スタイルの希望度",
+  "Preferred style": "好みのスタイル",
+  "Where can the date happen?": "どのエリアで会えますか？",
+  "Choose meeting areas, not where your match must live.":
+    "相手の居住地ではなく、実際に会いやすいエリアを選んでください。",
+  "Meeting area preference": "待ち合わせエリアの希望",
+  "Any area": "エリアは問わない",
+  "Choose areas": "エリアを選ぶ",
+  "Preferred meeting areas": "希望する待ち合わせエリア",
+  "Only plan dates in these areas": "このエリア内だけでデートを計画する",
+  "Your date": "会う相手",
+  "Your match": "マッチした相手",
+  "Photo shared": "写真を共有済み",
+  "Photo optional": "写真は任意",
+  "In their own words": "本人からの紹介",
+  "They describe themselves as": "本人が表す性格",
+  "Their style": "普段のスタイル",
+  "A good first date feels": "好きな初デートの雰囲気",
+  "Open to": "希望する関係",
+  "You both said yes": "お二人ともまた会いたいと回答",
+  "Private response sealed": "非公開回答を保管中",
+  "You both want another date.": "お二人とも次のデートを望んでいます。",
+  "We'll only reveal a mutual yes.": "双方が「はい」の場合だけお知らせします。",
+  "Your check-in is complete.": "レビューが完了しました。",
+  "Open another evening": "次の予定を開く",
+  "Did their profile feel accurate?": "プロフィールは実際と合っていましたか？",
+  "Yes, accurate": "はい、正確でした",
+  Mostly: "ほぼ合っていた",
+  "Quite different": "かなり違った",
+  "Did they respect your time and boundaries?": "時間と境界を尊重しましたか？",
+  "How did the conversation feel?": "会話はどう感じましたか？",
+  Easy: "自然だった",
+  Mixed: "どちらとも言えない",
+  Difficult: "難しかった",
+});
+
+Object.assign(de, {
+  "A photo is optional. You decide whether a match sees it with your profile card or only after you both accept.":
+    "Ein Foto ist optional. Du bestimmst, ob es auf der Match-Karte oder erst nach eurer beider Zusage erscheint.",
+  "Photo privacy saved.": "Foto-Sichtbarkeit gespeichert.",
+  "Photo visibility": "Foto-Sichtbarkeit",
+  "Show with my match card": "Auf meiner Match-Karte zeigen",
+  "Only after we both accept": "Erst wenn wir beide zusagen",
+  "Introduce yourself": "Stell dich vor",
+  "How would people who know you describe you?":
+    "Wie würden dich Menschen beschreiben, die dich kennen?",
+  "Pick up to five. Choose what is true, not what sounds impressive.":
+    "Wähle bis zu fünf ehrliche Begriffe statt besonders beeindruckender.",
+  "Your personality": "Deine Persönlichkeit",
+  "Your everyday style": "Dein Alltagsstil",
+  "Optional and self-described — never an appearance score.":
+    "Optional und selbst beschrieben – niemals eine Aussehensnote.",
+  "Your style": "Dein Stil",
+  "This profile reflects who I am today":
+    "Dieses Profil entspricht meinem heutigen Ich",
+  "Profile photo": "Profilfoto",
+  "Optional. A thoughtful introduction works without one too.":
+    "Optional. Eine ehrliche Vorstellung funktioniert auch ohne Foto.",
+  "Replace photo": "Foto ersetzen",
+  "Add a photo": "Foto hinzufügen",
+  "Personality you tend to connect with":
+    "Persönlichkeit, mit der du dich oft verstehst",
+  "Personality preference strength": "Bedeutung der Persönlichkeit",
+  "No preference": "Egal",
+  Flexible: "Flexibel",
+  Important: "Wichtig",
+  "Preferred personality": "Bevorzugte Persönlichkeit",
+  "Style you tend to notice": "Stil, der dir auffällt",
+  "Style preference strength": "Bedeutung des Stils",
+  "Preferred style": "Bevorzugter Stil",
+  "Where can the date happen?": "Wo kann das Date stattfinden?",
+  "Choose meeting areas, not where your match must live.":
+    "Wähle Treffgebiete, nicht den Wohnort deines Matches.",
+  "Meeting area preference": "Bevorzugte Treffgebiete",
+  "Any area": "Jedes Gebiet",
+  "Choose areas": "Gebiete auswählen",
+  "Preferred meeting areas": "Gewünschte Treffgebiete",
+  "Only plan dates in these areas": "Dates nur in diesen Gebieten planen",
+  "Your date": "Dein Date",
+  "Your match": "Dein Match",
+  "Photo shared": "Foto geteilt",
+  "Photo optional": "Foto optional",
+  "In their own words": "In eigenen Worten",
+  "They describe themselves as": "So beschreibt sich die Person",
+  "Their style": "Ihr Stil",
+  "A good first date feels": "Ein gutes erstes Date fühlt sich so an",
+  "Open to": "Offen für",
+  "You both said yes": "Ihr habt beide Ja gesagt",
+  "Private response sealed": "Private Antwort versiegelt",
+  "You both want another date.": "Ihr möchtet euch beide wiedersehen.",
+  "We'll only reveal a mutual yes.": "Nur ein beidseitiges Ja wird gezeigt.",
+  "Your check-in is complete.": "Dein Check-in ist abgeschlossen.",
+  "Open another evening": "Einen weiteren Abend öffnen",
+  "Did their profile feel accurate?": "Passte das Profil zur Person?",
+  "Yes, accurate": "Ja, genau",
+  Mostly: "Größtenteils",
+  "Quite different": "Deutlich anders",
+  "Did they respect your time and boundaries?":
+    "Wurden deine Zeit und Grenzen respektiert?",
+  "How did the conversation feel?": "Wie fühlte sich das Gespräch an?",
+  Easy: "Leicht",
+  Mixed: "Gemischt",
+  Difficult: "Schwierig",
+});
+
+Object.assign(fr, {
+  "Photo visibility": "Visibilité de la photo",
+  "Show with my match card": "Afficher sur ma fiche de rencontre",
+  "Only after we both accept": "Seulement après notre double accord",
+  "Introduce yourself": "Présentez-vous",
+  "How would people who know you describe you?":
+    "Comment vos proches vous décriraient-ils ?",
+  "Pick up to five. Choose what is true, not what sounds impressive.":
+    "Choisissez jusqu’à cinq termes sincères, pas ceux qui semblent les plus impressionnants.",
+  "Your personality": "Votre personnalité",
+  "Your everyday style": "Votre style au quotidien",
+  "Optional and self-described — never an appearance score.":
+    "Facultatif et auto-décrit — jamais une note d’apparence.",
+  "Your style": "Votre style",
+  "This profile reflects who I am today":
+    "Ce profil reflète honnêtement qui je suis aujourd’hui",
+  "Profile photo": "Photo de profil",
+  "Optional. A thoughtful introduction works without one too.":
+    "Facultatif. Une présentation sincère suffit aussi.",
+  "Replace photo": "Remplacer la photo",
+  "Add a photo": "Ajouter une photo",
+  "Personality you tend to connect with":
+    "Personnalité avec laquelle le courant passe",
+  "Personality preference strength": "Importance de la personnalité",
+  "No preference": "Sans préférence",
+  Flexible: "Souple",
+  Important: "Essentiel",
+  "Preferred personality": "Personnalité préférée",
+  "Style you tend to notice": "Style qui vous attire",
+  "Style preference strength": "Importance du style",
+  "Preferred style": "Style préféré",
+  "Where can the date happen?": "Où le rendez-vous peut-il avoir lieu ?",
+  "Choose meeting areas, not where your match must live.":
+    "Choisissez des quartiers où vous retrouver, pas le lieu de résidence de votre rencontre.",
+  "Meeting area preference": "Préférence de quartier",
+  "Any area": "N’importe quel quartier",
+  "Choose areas": "Choisir des quartiers",
+  "Preferred meeting areas": "Quartiers de rendez-vous préférés",
+  "Only plan dates in these areas": "Planifier uniquement dans ces quartiers",
+  "Your date": "Votre rendez-vous",
+  "Your match": "Votre rencontre",
+  "Photo shared": "Photo partagée",
+  "Photo optional": "Photo facultative",
+  "In their own words": "Avec ses propres mots",
+  "They describe themselves as": "Cette personne se décrit comme",
+  "Their style": "Son style",
+  "A good first date feels": "L’ambiance d’un bon premier rendez-vous",
+  "Open to": "Ouvert à",
+  "You both said yes": "Vous avez tous les deux dit oui",
+  "Private response sealed": "Réponse privée scellée",
+  "You both want another date.": "Vous souhaitez tous les deux vous revoir.",
+  "We'll only reveal a mutual yes.": "Seul un oui mutuel est révélé.",
+  "Your check-in is complete.": "Votre retour est terminé.",
+  "Open another evening": "Proposer une autre soirée",
+  "Did their profile feel accurate?":
+    "Le profil correspondait-il à la personne ?",
+  "Yes, accurate": "Oui, fidèle",
+  Mostly: "Dans l’ensemble",
+  "Quite different": "Assez différent",
+  "Did they respect your time and boundaries?":
+    "Votre temps et vos limites ont-ils été respectés ?",
+  "How did the conversation feel?": "Comment était la conversation ?",
+  Easy: "Fluide",
+  Mixed: "Mitigée",
+  Difficult: "Difficile",
+});
+
+Object.assign(nl, {
+  "A photo is optional. You decide whether a match sees it with your profile card or only after you both accept.":
+    "Een foto is optioneel. Jij kiest of die op je matchkaart staat of pas nadat jullie allebei accepteren.",
+  "Photo privacy saved.": "Foto-instelling opgeslagen.",
+  "Photo visibility": "Zichtbaarheid foto",
+  "Show with my match card": "Tonen op mijn matchkaart",
+  "Only after we both accept": "Pas nadat we allebei accepteren",
+  "Introduce yourself": "Stel jezelf voor",
+  "How would people who know you describe you?":
+    "Hoe zouden mensen die je kennen je omschrijven?",
+  "Pick up to five. Choose what is true, not what sounds impressive.":
+    "Kies maximaal vijf eerlijke kenmerken, niet wat indrukwekkend klinkt.",
+  "Your personality": "Jouw persoonlijkheid",
+  "Your everyday style": "Jouw dagelijkse stijl",
+  "Optional and self-described — never an appearance score.":
+    "Optioneel en zelf beschreven — nooit een uiterlijksscore.",
+  "Your style": "Jouw stijl",
+  "This profile reflects who I am today":
+    "Dit profiel laat eerlijk zien wie ik nu ben",
+  "Profile photo": "Profielfoto",
+  "Optional. A thoughtful introduction works without one too.":
+    "Optioneel. Een oprechte introductie werkt ook zonder foto.",
+  "Replace photo": "Foto vervangen",
+  "Add a photo": "Foto toevoegen",
+  "Personality you tend to connect with":
+    "Persoonlijkheid waarmee het vaak klikt",
+  "Personality preference strength": "Belang van persoonlijkheid",
+  "No preference": "Maakt niet uit",
+  Flexible: "Flexibel",
+  Important: "Belangrijk",
+  "Preferred personality": "Gewenste persoonlijkheid",
+  "Style you tend to notice": "Stijl die je opvalt",
+  "Style preference strength": "Belang van stijl",
+  "Preferred style": "Gewenste stijl",
+  "Where can the date happen?": "Waar kan de date plaatsvinden?",
+  "Choose meeting areas, not where your match must live.":
+    "Kies ontmoetingsbuurten, niet waar je match moet wonen.",
+  "Meeting area preference": "Voorkeur voor ontmoetingsbuurt",
+  "Any area": "Elke buurt",
+  "Choose areas": "Buurten kiezen",
+  "Preferred meeting areas": "Voorkeursbuurten",
+  "Only plan dates in these areas": "Plan dates alleen in deze buurten",
+  "Your date": "Jouw date",
+  "Your match": "Jouw match",
+  "Photo shared": "Foto gedeeld",
+  "Photo optional": "Foto optioneel",
+  "In their own words": "In eigen woorden",
+  "They describe themselves as": "Zo omschrijft de persoon zichzelf",
+  "Their style": "Hun stijl",
+  "A good first date feels": "Zo voelt een goede eerste date",
+  "Open to": "Staat open voor",
+  "You both said yes": "Jullie zeiden allebei ja",
+  "Private response sealed": "Privéantwoord verzegeld",
+  "You both want another date.": "Jullie willen elkaar allebei opnieuw zien.",
+  "We'll only reveal a mutual yes.": "Alleen een wederzijds ja wordt gedeeld.",
+  "Your check-in is complete.": "Je check-in is afgerond.",
+  "Open another evening": "Nog een avond openen",
+  "Did their profile feel accurate?": "Klopte het profiel met de persoon?",
+  "Yes, accurate": "Ja, het klopte",
+  Mostly: "Grotendeels",
+  "Quite different": "Behoorlijk anders",
+  "Did they respect your time and boundaries?":
+    "Respecteerde de persoon je tijd en grenzen?",
+  "How did the conversation feel?": "Hoe voelde het gesprek?",
+  Easy: "Makkelijk",
+  Mixed: "Gemengd",
+  Difficult: "Moeilijk",
+});
+
+Object.assign(sv, {
+  "A photo is optional. You decide whether a match sees it with your profile card or only after you both accept.":
+    "En bild är valfri. Du väljer om den syns på matchningskortet eller först när båda tackat ja.",
+  "Photo privacy saved.": "Bildens sekretess sparad.",
+  "Photo visibility": "Bildens synlighet",
+  "Show with my match card": "Visa på mitt matchningskort",
+  "Only after we both accept": "Först när båda har tackat ja",
+  "Introduce yourself": "Presentera dig",
+  "How would people who know you describe you?":
+    "Hur skulle personer som känner dig beskriva dig?",
+  "Pick up to five. Choose what is true, not what sounds impressive.":
+    "Välj upp till fem ärliga ord, inte det som låter mest imponerande.",
+  "Your personality": "Din personlighet",
+  "Your everyday style": "Din vardagsstil",
+  "Optional and self-described — never an appearance score.":
+    "Valfritt och självbeskrivet — aldrig ett utseendebetyg.",
+  "Your style": "Din stil",
+  "This profile reflects who I am today":
+    "Profilen visar ärligt vem jag är idag",
+  "Profile photo": "Profilbild",
+  "Optional. A thoughtful introduction works without one too.":
+    "Valfritt. En ärlig presentation fungerar också utan bild.",
+  "Replace photo": "Byt bild",
+  "Add a photo": "Lägg till bild",
+  "Personality you tend to connect with": "Personlighet du brukar trivas med",
+  "Personality preference strength": "Hur viktig personligheten är",
+  "No preference": "Spelar ingen roll",
+  Flexible: "Flexibelt",
+  Important: "Viktigt",
+  "Preferred personality": "Önskad personlighet",
+  "Style you tend to notice": "Stil du brukar lägga märke till",
+  "Style preference strength": "Hur viktig stilen är",
+  "Preferred style": "Önskad stil",
+  "Where can the date happen?": "Var kan dejten äga rum?",
+  "Choose meeting areas, not where your match must live.":
+    "Välj områden där ni kan mötas, inte var din match måste bo.",
+  "Meeting area preference": "Önskat mötesområde",
+  "Any area": "Vilket område som helst",
+  "Choose areas": "Välj områden",
+  "Preferred meeting areas": "Föredragna mötesområden",
+  "Only plan dates in these areas": "Planera dejter endast i dessa områden",
+  "Your date": "Din dejt",
+  "Your match": "Din matchning",
+  "Photo shared": "Bild delad",
+  "Photo optional": "Bild valfri",
+  "In their own words": "Med egna ord",
+  "They describe themselves as": "Så beskriver personen sig",
+  "Their style": "Personens stil",
+  "A good first date feels": "Så känns en bra första dejt",
+  "Open to": "Öppen för",
+  "You both said yes": "Ni svarade båda ja",
+  "Private response sealed": "Privat svar förseglat",
+  "You both want another date.": "Ni vill båda ses igen.",
+  "We'll only reveal a mutual yes.": "Bara ett ömsesidigt ja visas.",
+  "Your check-in is complete.": "Din avstämning är klar.",
+  "Open another evening": "Öppna en ny kväll",
+  "Did their profile feel accurate?": "Stämde profilen med personen?",
+  "Yes, accurate": "Ja, den stämde",
+  Mostly: "Till största delen",
+  "Quite different": "Ganska annorlunda",
+  "Did they respect your time and boundaries?":
+    "Respekterade personen din tid och dina gränser?",
+  "How did the conversation feel?": "Hur kändes samtalet?",
+  Easy: "Lätt",
+  Mixed: "Blandat",
+  Difficult: "Svårt",
+});
+
+Object.assign(ko, {
+  Country: "국가",
+  "Service city": "서비스 도시",
+  "We match within one city so plans stay practical.":
+    "실제로 만날 수 있도록 같은 도시 안에서만 매칭해요.",
+  "This is the city where I want to meet people and go on dates.":
+    "이 도시에서 새로운 사람을 만나고 데이트하고 싶어요.",
+  "South Korea": "대한민국",
+  Japan: "일본",
+  "United States": "미국",
+  "United Kingdom": "영국",
+  Canada: "캐나다",
+  Australia: "호주",
+  Germany: "독일",
+  France: "프랑스",
+  Netherlands: "네덜란드",
+  Sweden: "스웨덴",
+});
+
+Object.assign(ja, {
+  Country: "国",
+  "Service city": "サービス提供都市",
+  "We match within one city so plans stay practical.":
+    "実際に会えるよう、同じ都市の中でマッチングします。",
+  "This is the city where I want to meet people and go on dates.":
+    "この都市で新しい人と出会い、デートしたいです。",
+  "South Korea": "韓国",
+  Japan: "日本",
+  "United States": "アメリカ",
+  "United Kingdom": "イギリス",
+  Canada: "カナダ",
+  Australia: "オーストラリア",
+  Germany: "ドイツ",
+  France: "フランス",
+  Netherlands: "オランダ",
+  Sweden: "スウェーデン",
+});
+
+Object.assign(de, {
+  Country: "Land",
+  "Service city": "Verfügbare Stadt",
+  "We match within one city so plans stay practical.":
+    "Wir matchen innerhalb einer Stadt, damit Treffen realistisch bleiben.",
+  "This is the city where I want to meet people and go on dates.":
+    "In dieser Stadt möchte ich Menschen treffen und Dates haben.",
+  "South Korea": "Südkorea",
+  Japan: "Japan",
+  "United States": "Vereinigte Staaten",
+  "United Kingdom": "Vereinigtes Königreich",
+  Canada: "Kanada",
+  Australia: "Australien",
+  Germany: "Deutschland",
+  France: "Frankreich",
+  Netherlands: "Niederlande",
+  Sweden: "Schweden",
+});
+
+Object.assign(fr, {
+  Country: "Pays",
+  "Service city": "Ville disponible",
+  "We match within one city so plans stay practical.":
+    "Nous mettons en relation dans une même ville pour permettre de vraies rencontres.",
+  "This is the city where I want to meet people and go on dates.":
+    "C’est dans cette ville que je souhaite rencontrer des personnes et avoir des rendez-vous.",
+  "South Korea": "Corée du Sud",
+  Japan: "Japon",
+  "United States": "États-Unis",
+  "United Kingdom": "Royaume-Uni",
+  Canada: "Canada",
+  Australia: "Australie",
+  Germany: "Allemagne",
+  France: "France",
+  Netherlands: "Pays-Bas",
+  Sweden: "Suède",
+});
+
+Object.assign(nl, {
+  Country: "Land",
+  "Service city": "Beschikbare stad",
+  "We match within one city so plans stay practical.":
+    "We matchen binnen één stad zodat een echte afspraak haalbaar blijft.",
+  "This is the city where I want to meet people and go on dates.":
+    "In deze stad wil ik mensen ontmoeten en op date gaan.",
+  "South Korea": "Zuid-Korea",
+  Japan: "Japan",
+  "United States": "Verenigde Staten",
+  "United Kingdom": "Verenigd Koninkrijk",
+  Canada: "Canada",
+  Australia: "Australië",
+  Germany: "Duitsland",
+  France: "Frankrijk",
+  Netherlands: "Nederland",
+  Sweden: "Zweden",
+});
+
+Object.assign(sv, {
+  Country: "Land",
+  "Service city": "Tillgänglig stad",
+  "We match within one city so plans stay practical.":
+    "Vi matchar inom samma stad så att riktiga träffar blir möjliga.",
+  "This is the city where I want to meet people and go on dates.":
+    "Det här är staden där jag vill träffa människor och gå på dejter.",
+  "South Korea": "Sydkorea",
+  Japan: "Japan",
+  "United States": "USA",
+  "United Kingdom": "Storbritannien",
+  Canada: "Kanada",
+  Australia: "Australien",
+  Germany: "Tyskland",
+  France: "Frankrike",
+  Netherlands: "Nederländerna",
+  Sweden: "Sverige",
+});
+
 const PACKS: Partial<Record<LocaleCode, TranslationPack>> = {
   "ko-KR": ko,
   "ja-JP": ja,
@@ -3549,7 +4652,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.lang = locale;
-    const title = `Datehaja — ${translate(locale, "Pick a night. Let's make it a date.")}`;
+    const title = `Datehaja — ${translate(locale, "What do you want to do?")}`;
     const description = translate(
       locale,
       "No profiles to browse. No conversation to keep alive. Datehaja finds a compatible person, researches a real place, and sends one private invitation to each of you.",

@@ -15,7 +15,10 @@ import { DAY_MS } from "./time";
 /* ------------------------------- fixtures -------------------------------- */
 
 const NOW = Date.UTC(2026, 7, 27, 12, 0, 0);
-const SATURDAY_EVENING = { startMs: NOW + 2 * DAY_MS, endMs: NOW + 2 * DAY_MS + 5 * 3600_000 };
+const SATURDAY_EVENING = {
+  startMs: NOW + 2 * DAY_MS,
+  endMs: NOW + 2 * DAY_MS + 5 * 3600_000,
+};
 
 function profile(overrides: Partial<MatchProfile> = {}): MatchProfile {
   return {
@@ -31,6 +34,7 @@ function profile(overrides: Partial<MatchProfile> = {}): MatchProfile {
     approxLat: 37.54,
     approxLng: 127.06,
     timezone: "Asia/Seoul",
+    bio: "Film lover.",
     interests: ["Films", "Running", "Coffee"],
     hobbies: ["Home barista"],
     languages: ["Korean", "English"],
@@ -45,7 +49,9 @@ function profile(overrides: Partial<MatchProfile> = {}): MatchProfile {
   };
 }
 
-function preferences(overrides: Partial<MatchPreferences> = {}): MatchPreferences {
+function preferences(
+  overrides: Partial<MatchPreferences> = {},
+): MatchPreferences {
   return {
     ageMin: 24,
     ageMax: 36,
@@ -85,7 +91,8 @@ function party(
   };
 }
 
-const seeker = () => party({ userId: "seeker", gender: "woman", interestedIn: ["man"] });
+const seeker = () =>
+  party({ userId: "seeker", gender: "woman", interestedIn: ["man"] });
 const candidate = () =>
   party({ userId: "candidate", gender: "man", interestedIn: ["woman"] });
 
@@ -100,11 +107,19 @@ describe("hardFilter", () => {
 
   it("never matches someone with themselves", () => {
     const me = seeker();
-    expect(hardFilter(me, me, noBlocks)).toEqual({ ok: false, reason: "same_user" });
+    expect(hardFilter(me, me, noBlocks)).toEqual({
+      ok: false,
+      reason: "same_user",
+    });
   });
 
   it("rejects anyone under 18 even if their profile claims otherwise", () => {
-    const minor = party({ userId: "minor", gender: "man", interestedIn: ["woman"], ageYears: 17 });
+    const minor = party({
+      userId: "minor",
+      gender: "man",
+      interestedIn: ["woman"],
+      ageYears: 17,
+    });
     expect(hardFilter(seeker(), minor, noBlocks)).toEqual({
       ok: false,
       reason: "candidate_under_18",
@@ -144,7 +159,12 @@ describe("hardFilter", () => {
   });
 
   it("enforces a hard age range from either side", () => {
-    const older = party({ userId: "c", gender: "man", interestedIn: ["woman"], ageYears: 44 });
+    const older = party({
+      userId: "c",
+      gender: "man",
+      interestedIn: ["woman"],
+      ageYears: 44,
+    });
     expect(hardFilter(seeker(), older, noBlocks)).toEqual({
       ok: false,
       reason: "seeker_age_range",
@@ -152,7 +172,12 @@ describe("hardFilter", () => {
   });
 
   it("treats a soft age range as a preference, not an exclusion", () => {
-    const older = party({ userId: "c", gender: "man", interestedIn: ["woman"], ageYears: 44 });
+    const older = party({
+      userId: "c",
+      gender: "man",
+      interestedIn: ["woman"],
+      ageYears: 44,
+    });
     const relaxed = party(
       { userId: "seeker", gender: "woman", interestedIn: ["man"] },
       { ageHard: false, ageMax: 36 },
@@ -164,11 +189,44 @@ describe("hardFilter", () => {
     expect(weak).toBeLessThan(strong);
   });
 
+  it("rejects two strict meeting-area lists that do not overlap", () => {
+    const west = party(
+      { userId: "seeker", gender: "woman", interestedIn: ["man"] },
+      { preferredAreas: ["Yeonnam"], areaHard: true },
+    );
+    const east = party(
+      { userId: "candidate", gender: "man", interestedIn: ["woman"] },
+      { preferredAreas: ["Jamsil"], areaHard: true },
+    );
+    expect(hardFilter(west, east, noBlocks)).toEqual({
+      ok: false,
+      reason: "meeting_area",
+    });
+  });
+
+  it("honours one strict area when the other person has no preference", () => {
+    const strict = party(
+      { userId: "seeker", gender: "woman", interestedIn: ["man"] },
+      { preferredAreas: ["Euljiro"], areaHard: true },
+    );
+    const open = party(
+      { userId: "candidate", gender: "man", interestedIn: ["woman"] },
+      { preferredAreas: [], areaHard: false },
+    );
+    expect(hardFilter(strict, open, noBlocks)).toEqual({ ok: true });
+  });
+
   it("excludes blocked pairs in both directions", () => {
     const ctx = { blockedPairs: new Set([blockKey("seeker", "candidate")]) };
-    expect(hardFilter(seeker(), candidate(), ctx)).toEqual({ ok: false, reason: "blocked" });
+    expect(hardFilter(seeker(), candidate(), ctx)).toEqual({
+      ok: false,
+      reason: "blocked",
+    });
     // The block key is order-independent, so the reverse lookup is also blocked.
-    expect(hardFilter(candidate(), seeker(), ctx)).toEqual({ ok: false, reason: "blocked" });
+    expect(hardFilter(candidate(), seeker(), ctx)).toEqual({
+      ok: false,
+      reason: "blocked",
+    });
   });
 
   it("excludes a paused candidate", () => {
@@ -291,7 +349,11 @@ describe("hardFilter", () => {
   it("enforces hard budget and currency compatibility", () => {
     const cheap = party(
       { userId: "seeker", gender: "woman", interestedIn: ["man"] },
-      { budgetMinPerPerson: 10000, budgetMaxPerPerson: 20000, budgetHard: true },
+      {
+        budgetMinPerPerson: 10000,
+        budgetMaxPerPerson: 20000,
+        budgetHard: true,
+      },
     );
     const expensive = party(
       { userId: "c", gender: "man", interestedIn: ["woman"] },
@@ -453,6 +515,23 @@ describe("scorePair", () => {
     );
   });
 
+  it("prefers a shared meeting area over disjoint soft preferences", () => {
+    const person = seeker();
+    person.preferences.preferredAreas = ["Seongsu", "Euljiro"];
+
+    const aligned = candidate();
+    aligned.preferences.preferredAreas = ["Euljiro"];
+
+    const different = candidate();
+    different.profile.userId = "other-area";
+    different.preferences.preferredAreas = ["Jamsil"];
+
+    const alignedScore = scorePair(person, aligned);
+    const differentScore = scorePair(person, different);
+    expect(alignedScore.score).toBeGreaterThan(differentScore.score);
+    expect(alignedScore.signals.sharedAreas).toEqual(["Euljiro"]);
+  });
+
   it("prefers a longer availability overlap", () => {
     const short = party(
       { userId: "short", gender: "man", interestedIn: ["woman"] },
@@ -464,6 +543,38 @@ describe("scorePair", () => {
     );
     expect(scorePair(seeker(), candidate()).score).toBeGreaterThan(
       scorePair(seeker(), short).score,
+    );
+  });
+
+  it("uses mutual personality and style preferences without beauty scores", () => {
+    const person = seeker();
+    person.profile.personalityTraits = ["Curious", "Warm"];
+    person.profile.styleTags = ["Natural"];
+    person.preferences.preferredPersonalityTraits = ["Thoughtful"];
+    person.preferences.personalityPreference = "important";
+    person.preferences.preferredStyleTags = ["Classic"];
+    person.preferences.stylePreference = "flexible";
+
+    const aligned = candidate();
+    aligned.profile.personalityTraits = ["Thoughtful", "Calm"];
+    aligned.profile.styleTags = ["Classic"];
+    aligned.preferences.preferredPersonalityTraits = ["Warm"];
+    aligned.preferences.personalityPreference = "important";
+    aligned.preferences.preferredStyleTags = ["Natural"];
+    aligned.preferences.stylePreference = "flexible";
+
+    const mismatched = candidate();
+    mismatched.profile.userId = "other";
+    mismatched.profile.personalityTraits = ["Direct"];
+    mismatched.profile.styleTags = ["Bold"];
+    mismatched.preferences.preferredPersonalityTraits = ["Playful"];
+    mismatched.preferences.personalityPreference = "important";
+
+    expect(scorePair(person, aligned).score).toBeGreaterThan(
+      scorePair(person, mismatched).score,
+    );
+    expect(scorePair(person, aligned).signals.personalityMatch).toBeGreaterThan(
+      scorePair(person, mismatched).signals.personalityMatch,
     );
   });
 });
@@ -478,7 +589,9 @@ describe("helpers", () => {
   });
 
   it("intersects case-insensitively without duplicates", () => {
-    expect(intersect(["Films", "films", "Coffee"], ["FILMS", "Tea"])).toEqual(["Films"]);
+    expect(intersect(["Films", "films", "Coffee"], ["FILMS", "Tea"])).toEqual([
+      "Films",
+    ]);
   });
 
   it("falls back to the deterministic score when the model is unavailable", () => {

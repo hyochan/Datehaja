@@ -11,6 +11,7 @@ import {
 } from "./lib/authz";
 import {
   ACCESSIBILITY_OPTIONS,
+  defaultBudgetRange,
   DATE_TYPE_KEYS,
   DIETARY_OPTIONS,
   FIRST_DATE_VIBE_OPTIONS,
@@ -18,6 +19,8 @@ import {
   INTEREST_OPTIONS,
   LANGUAGE_OPTIONS,
   OCCUPATION_CATEGORIES,
+  PERSONALITY_TRAIT_OPTIONS,
+  STYLE_TAG_OPTIONS,
   findCity,
   findNeighborhood,
 } from "./lib/catalog";
@@ -27,6 +30,8 @@ import {
   dayPreferenceValidator,
   genderValidator,
   indoorOutdoorValidator,
+  photoVisibilityValidator,
+  preferenceStrengthValidator,
   relationshipIntentValidator,
   smokingValidator,
   socialEnergyValidator,
@@ -35,6 +40,7 @@ import { coarsen } from "./lib/geo";
 import { containsContactInfo, redactContactInfo } from "./lib/privacy";
 import { LIMITS, clean, cleanMultiline, pickFrom } from "./lib/text";
 import { MAX_AGE, MIN_AGE, ageOn } from "./lib/age";
+import { legalVersionsMatch } from "./lib/legal";
 
 /* ------------------------------- queries -------------------------------- */
 
@@ -93,16 +99,38 @@ export const onboardingState = query({
     signedIn: v.boolean(),
     step: v.number(),
     complete: v.boolean(),
+    legalAccepted: v.boolean(),
   }),
   handler: async (ctx) => {
     const userId = await currentUserId(ctx);
-    if (!userId) return { signedIn: false, step: 0, complete: false };
+    if (!userId) {
+      return {
+        signedIn: false,
+        step: 0,
+        complete: false,
+        legalAccepted: false,
+      };
+    }
+    const consent = await ctx.db
+      .query("legalConsents")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .unique();
+    const legalAccepted =
+      consent !== null &&
+      legalVersionsMatch({
+        terms: consent.termsVersion,
+        privacy: consent.privacyVersion,
+        community: consent.communityVersion,
+      });
     const profile = await getProfileByUser(ctx, userId);
-    if (!profile) return { signedIn: true, step: 1, complete: false };
+    if (!profile) {
+      return { signedIn: true, step: 1, complete: false, legalAccepted };
+    }
     return {
       signedIn: true,
       step: profile.onboardingStep,
       complete: profile.onboardingComplete,
+      legalAccepted,
     };
   },
 });
@@ -126,7 +154,9 @@ export const saveBasics = mutation({
     const now = Date.now();
 
     if (!args.ageConfirmed18) {
-      throw new Error("Datehaja is for adults only. You must confirm you are 18 or over.");
+      throw new Error(
+        "Datehaja is for adults only. You must confirm you are 18 or over.",
+      );
     }
 
     const displayName = clean(args.displayName, LIMITS.displayName);
@@ -180,6 +210,9 @@ export const saveBasics = mutation({
       userId,
       ...patch,
       bio: "",
+      personalityTraits: [],
+      styleTags: [],
+      profileTruthConfirmed: false,
       showOccupation: false,
       interests: [],
       hobbies: [],
@@ -187,6 +220,7 @@ export const saveBasics = mutation({
       socialEnergy: "ambivert" as const,
       firstDateVibe: [],
       lifestyle: { smokes: false, drinks: "occasional" as const },
+      photoVisibility: "after_accept" as const,
       onboardingStep: 2,
       onboardingComplete: false,
       status: "active" as const,
@@ -202,15 +236,21 @@ export const saveBasics = mutation({
       ageHard: true,
       maxDistanceKm: 15,
       distanceHard: true,
+      preferredAreas: [area.name],
+      areaHard: false,
       relationshipIntent: "open" as const,
       intentHard: false,
       smoking: "no_preference" as const,
       smokingHard: false,
       alcohol: "no_preference" as const,
       alcoholHard: false,
-      preferredDateTypes: ["coffee", "dinner", "walk"],
-      budgetMinPerPerson: defaultBudget(cityInfo.currency).min,
-      budgetMaxPerPerson: defaultBudget(cityInfo.currency).max,
+      preferredDateTypes: ["film", "walk", "exhibition"],
+      preferredPersonalityTraits: [],
+      personalityPreference: "no_preference" as const,
+      preferredStyleTags: [],
+      stylePreference: "no_preference" as const,
+      budgetMinPerPerson: defaultBudgetRange(cityInfo.currency).min,
+      budgetMaxPerPerson: defaultBudgetRange(cityInfo.currency).max,
       currency: cityInfo.currency,
       budgetHard: false,
       dayPreference: "either" as const,
@@ -238,20 +278,12 @@ export const saveBasics = mutation({
   },
 });
 
-function defaultBudget(currency: string): { min: number; max: number } {
-  switch (currency) {
-    case "KRW":
-      return { min: 20000, max: 70000 };
-    case "JPY":
-      return { min: 2000, max: 8000 };
-    default:
-      return { min: 20, max: 70 };
-  }
-}
-
 export const saveAbout = mutation({
   args: {
     bio: v.string(),
+    personalityTraits: v.array(v.string()),
+    styleTags: v.array(v.string()),
+    profileTruthConfirmed: v.boolean(),
     occupationCategory: v.optional(v.string()),
     showOccupation: v.boolean(),
     interests: v.array(v.string()),
@@ -268,25 +300,49 @@ export const saveAbout = mutation({
     const profile = await requireProfile(ctx, userId);
 
     const bio = redactContactInfo(cleanMultiline(args.bio, LIMITS.bio));
+    if (!args.profileTruthConfirmed) {
+      throw new Error(
+        "Confirm that your profile reflects who you are today. Honest profiles make better dates.",
+      );
+    }
 
     const occupation =
       args.occupationCategory &&
-      (OCCUPATION_CATEGORIES as readonly string[]).includes(args.occupationCategory)
+      (OCCUPATION_CATEGORIES as readonly string[]).includes(
+        args.occupationCategory,
+      )
         ? args.occupationCategory
         : undefined;
 
-    const interests = pickFrom(args.interests, INTEREST_OPTIONS, LIMITS.interestCount);
+    const interests = pickFrom(
+      args.interests,
+      INTEREST_OPTIONS,
+      LIMITS.interestCount,
+    );
     if (interests.length < 3) {
-      throw new Error("Pick at least three interests — they're what we match on.");
+      throw new Error(
+        "Pick at least three interests — they're what we match on.",
+      );
     }
 
     await ctx.db.patch("profiles", profile._id, {
       bio,
+      personalityTraits: pickFrom(
+        args.personalityTraits,
+        PERSONALITY_TRAIT_OPTIONS,
+        5,
+      ),
+      styleTags: pickFrom(args.styleTags, STYLE_TAG_OPTIONS, 3),
+      profileTruthConfirmed: true,
       occupationCategory: occupation,
       showOccupation: args.showOccupation && occupation !== undefined,
       interests,
       hobbies: pickFrom(args.hobbies, HOBBY_OPTIONS, LIMITS.interestCount),
-      languages: pickFrom(args.languages, LANGUAGE_OPTIONS, LIMITS.languageCount),
+      languages: pickFrom(
+        args.languages,
+        LANGUAGE_OPTIONS,
+        LIMITS.languageCount,
+      ),
       socialEnergy: args.socialEnergy,
       firstDateVibe: pickFrom(
         args.firstDateVibe,
@@ -308,6 +364,8 @@ export const saveDatingPreferences = mutation({
     ageHard: v.boolean(),
     maxDistanceKm: v.number(),
     distanceHard: v.boolean(),
+    preferredAreas: v.array(v.string()),
+    areaHard: v.boolean(),
     relationshipIntent: relationshipIntentValidator,
     intentHard: v.boolean(),
     smoking: smokingValidator,
@@ -315,6 +373,10 @@ export const saveDatingPreferences = mutation({
     alcohol: alcoholValidator,
     alcoholHard: v.boolean(),
     dayPreference: dayPreferenceValidator,
+    preferredPersonalityTraits: v.array(v.string()),
+    personalityPreference: preferenceStrengthValidator,
+    preferredStyleTags: v.array(v.string()),
+    stylePreference: preferenceStrengthValidator,
   },
   returns: v.null(),
   handler: async (ctx, args) => {
@@ -329,6 +391,16 @@ export const saveDatingPreferences = mutation({
     const ageMin = Math.round(clampNumber(args.ageMin, MIN_AGE, MAX_AGE));
     const ageMax = Math.round(clampNumber(args.ageMax, MIN_AGE, MAX_AGE));
     if (ageMax < ageMin) throw new Error("Age range is upside down.");
+    const city = findCity(profile.city);
+    if (!city) throw new Error("Your city is not supported yet.");
+    const preferredAreas = pickFrom(
+      args.preferredAreas,
+      city.neighborhoods.map((area) => area.name),
+      6,
+    );
+    if (args.areaHard && preferredAreas.length === 0) {
+      throw new Error("Choose at least one required meeting area.");
+    }
 
     await ctx.db.patch("preferences", prefs._id, {
       ageMin,
@@ -336,6 +408,8 @@ export const saveDatingPreferences = mutation({
       ageHard: args.ageHard,
       maxDistanceKm: Math.round(clampNumber(args.maxDistanceKm, 1, 100)),
       distanceHard: args.distanceHard,
+      preferredAreas,
+      areaHard: args.areaHard && preferredAreas.length > 0,
       relationshipIntent: args.relationshipIntent,
       intentHard: args.intentHard,
       smoking: args.smoking,
@@ -343,6 +417,20 @@ export const saveDatingPreferences = mutation({
       alcohol: args.alcohol,
       alcoholHard: args.alcoholHard,
       dayPreference: args.dayPreference,
+      preferredPersonalityTraits:
+        args.personalityPreference === "no_preference"
+          ? []
+          : pickFrom(
+              args.preferredPersonalityTraits,
+              PERSONALITY_TRAIT_OPTIONS,
+              5,
+            ),
+      personalityPreference: args.personalityPreference,
+      preferredStyleTags:
+        args.stylePreference === "no_preference"
+          ? []
+          : pickFrom(args.preferredStyleTags, STYLE_TAG_OPTIONS, 3),
+      stylePreference: args.stylePreference,
       updatedAt: Date.now(),
     });
 
@@ -489,7 +577,9 @@ export const updateNotificationPreferences = mutation({
     if (!prefs) throw new Error("No preferences yet.");
 
     await ctx.db.patch("preferences", prefs._id, {
-      ...(args.notifyEmail !== undefined ? { notifyEmail: args.notifyEmail } : {}),
+      ...(args.notifyEmail !== undefined
+        ? { notifyEmail: args.notifyEmail }
+        : {}),
       ...(args.notifyInvitations !== undefined
         ? { notifyInvitations: args.notifyInvitations }
         : {}),
@@ -499,12 +589,18 @@ export const updateNotificationPreferences = mutation({
       ...(args.notifyReminders !== undefined
         ? { notifyReminders: args.notifyReminders }
         : {}),
-      ...(args.dropsPaused !== undefined ? { dropsPaused: args.dropsPaused } : {}),
+      ...(args.dropsPaused !== undefined
+        ? { dropsPaused: args.dropsPaused }
+        : {}),
       ...(args.allowDemoMatches !== undefined
         ? { allowDemoMatches: args.allowDemoMatches }
         : {}),
       ...(args.maxDropsPerWeek !== undefined
-        ? { maxDropsPerWeek: Math.round(clampNumber(args.maxDropsPerWeek, 1, 7)) }
+        ? {
+            maxDropsPerWeek: Math.round(
+              clampNumber(args.maxDropsPerWeek, 1, 7),
+            ),
+          }
         : {}),
       updatedAt: Date.now(),
     });
@@ -533,7 +629,8 @@ export const setPhoto = mutation({
     if (args.storageId) {
       const meta = await ctx.db.system.get("_storage", args.storageId);
       if (!meta) throw new Error("Upload didn't finish.");
-      if (meta.size > 6 * 1024 * 1024) throw new Error("Photos must be under 6MB.");
+      if (meta.size > 6 * 1024 * 1024)
+        throw new Error("Photos must be under 6MB.");
       if (!meta.contentType?.startsWith("image/")) {
         throw new Error("That file isn't an image.");
       }
@@ -544,6 +641,20 @@ export const setPhoto = mutation({
     }
     await ctx.db.patch("profiles", profile._id, {
       photoStorageId: args.storageId ?? undefined,
+      updatedAt: Date.now(),
+    });
+    return null;
+  },
+});
+
+export const setPhotoVisibility = mutation({
+  args: { visibility: photoVisibilityValidator },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const userId = await requireUserId(ctx);
+    const profile = await requireProfile(ctx, userId);
+    await ctx.db.patch("profiles", profile._id, {
+      photoVisibility: args.visibility,
       updatedAt: Date.now(),
     });
     return null;
