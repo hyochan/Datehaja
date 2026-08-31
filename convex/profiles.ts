@@ -126,10 +126,14 @@ export const onboardingState = query({
     if (!profile) {
       return { signedIn: true, step: 1, complete: false, legalAccepted };
     }
+    const agent = await ctx.db
+      .query("agentProfiles")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .unique();
     return {
       signedIn: true,
-      step: profile.onboardingStep,
-      complete: profile.onboardingComplete,
+      step: agent ? 7 : 1,
+      complete: profile.onboardingComplete && agent !== null,
       legalAccepted,
     };
   },

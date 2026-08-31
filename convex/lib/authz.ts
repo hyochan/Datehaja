@@ -75,11 +75,11 @@ export async function requirePreferences(
 /** Ownership check for a date plan — the caller must be a participant. */
 export async function requireParticipant(
   ctx: QueryCtx | MutationCtx,
-  dropId: Id<"dateDrops">,
+  dropId: Id<"datePlans">,
   userId: Id<"users">,
-): Promise<Doc<"dateDropParticipants">> {
+): Promise<Doc<"datePlanParticipants">> {
   const participant = await ctx.db
-    .query("dateDropParticipants")
+    .query("datePlanParticipants")
     .withIndex("by_drop_and_user", (q) => q.eq("dropId", dropId).eq("userId", userId))
     .unique();
   if (!participant) throw new Error("This date plan isn't yours.");
@@ -109,7 +109,7 @@ export async function recordAudit(
   args: {
     action: string;
     actorUserId?: Id<"users">;
-    dropId?: Id<"dateDrops">;
+    dropId?: Id<"datePlans">;
     targetUserId?: Id<"users">;
     detail: string;
   },

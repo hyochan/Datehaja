@@ -11,3 +11,10 @@ Convex agent skills for common tasks can be installed by running
 `npx convex ai-files install`.
 
 <!-- convex-ai-end -->
+
+## Product memory
+
+Before changing product scope, payments, launch sequencing, or deployment,
+read [`docs/PRODUCT_MEMORY.md`](docs/PRODUCT_MEMORY.md). The current priority is
+the Convex hackathon. Do not enable live billing until the real matchmaking
+business has written approval and credentials from the selected acquirers.

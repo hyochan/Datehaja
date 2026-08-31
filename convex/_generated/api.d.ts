@@ -8,14 +8,19 @@
  * @module
  */
 
+import type * as agentDates from "../agentDates.js";
+import type * as agents from "../agents.js";
 import type * as ai from "../ai.js";
 import type * as auth from "../auth.js";
+import type * as authProviders from "../authProviders.js";
 import type * as availability from "../availability.js";
+import type * as billing from "../billing.js";
 import type * as calendar from "../calendar.js";
 import type * as crons from "../crons.js";
-import type * as dateDrops from "../dateDrops.js";
+import type * as datePlans from "../datePlans.js";
 import type * as demo from "../demo.js";
 import type * as feedback from "../feedback.js";
+import type * as growth from "../growth.js";
 import type * as http from "../http.js";
 import type * as inspect from "../inspect.js";
 import type * as integrations_agentmail from "../integrations/agentmail.js";
@@ -23,6 +28,9 @@ import type * as integrations_firecrawl from "../integrations/firecrawl.js";
 import type * as integrations_openai from "../integrations/openai.js";
 import type * as legal from "../legal.js";
 import type * as lib_age from "../lib/age.js";
+import type * as lib_agentAvatar from "../lib/agentAvatar.js";
+import type * as lib_agentDatePacing from "../lib/agentDatePacing.js";
+import type * as lib_authEmail from "../lib/authEmail.js";
 import type * as lib_authz from "../lib/authz.js";
 import type * as lib_calendar from "../lib/calendar.js";
 import type * as lib_catalog from "../lib/catalog.js";
@@ -54,14 +62,19 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  agentDates: typeof agentDates;
+  agents: typeof agents;
   ai: typeof ai;
   auth: typeof auth;
+  authProviders: typeof authProviders;
   availability: typeof availability;
+  billing: typeof billing;
   calendar: typeof calendar;
   crons: typeof crons;
-  dateDrops: typeof dateDrops;
+  datePlans: typeof datePlans;
   demo: typeof demo;
   feedback: typeof feedback;
+  growth: typeof growth;
   http: typeof http;
   inspect: typeof inspect;
   "integrations/agentmail": typeof integrations_agentmail;
@@ -69,6 +82,9 @@ declare const fullApi: ApiFromModules<{
   "integrations/openai": typeof integrations_openai;
   legal: typeof legal;
   "lib/age": typeof lib_age;
+  "lib/agentAvatar": typeof lib_agentAvatar;
+  "lib/agentDatePacing": typeof lib_agentDatePacing;
+  "lib/authEmail": typeof lib_authEmail;
   "lib/authz": typeof lib_authz;
   "lib/calendar": typeof lib_calendar;
   "lib/catalog": typeof lib_catalog;

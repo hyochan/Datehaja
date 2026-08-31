@@ -337,7 +337,7 @@ async function loadDeclinedCounterparts(
       continue;
     }
     const participants = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop", (q) => q.eq("dropId", row.dropId))
       .take(10);
     const other = participants.find((p) => p.userId !== userId);
@@ -780,11 +780,11 @@ export const runPipeline = internalAction({
           candidateScoreId: selection.candidateScoreId,
           ...built.dropFields,
         },
-      )) as Id<"dateDrops"> | null;
+      )) as Id<"datePlans"> | null;
 
       if (!dropId) return null;
 
-      await ctx.scheduler.runAfter(0, internal.dateDrops.dispatchInvitations, {
+      await ctx.scheduler.runAfter(0, internal.datePlans.dispatchInvitations, {
         dropId,
       });
     } catch (e) {
@@ -886,7 +886,7 @@ async function planDate(
   ctx: ActionCtx,
   args: {
     matchingRunId?: Id<"matchingRuns">;
-    dropId?: Id<"dateDrops">;
+    dropId?: Id<"datePlans">;
     seeker: Party;
     partner: Party;
     signals: Signals;
@@ -1235,7 +1235,7 @@ export const createDropFromPlan = internalMutation({
     whyForPartner: v.string(),
     isDemo: v.boolean(),
   },
-  returns: v.union(v.id("dateDrops"), v.null()),
+  returns: v.union(v.id("datePlans"), v.null()),
   handler: async (ctx, args) => {
     const run = await ctx.db.get("matchingRuns", args.matchingRunId);
     if (!run) return null;
@@ -1272,7 +1272,7 @@ export const createDropFromPlan = internalMutation({
       return null;
     }
 
-    const dropId = await ctx.db.insert("dateDrops", {
+    const dropId = await ctx.db.insert("datePlans", {
       status: "inviting",
       initiatorUserId: run.initiatorUserId,
       countryCode: args.countryCode,
@@ -1301,7 +1301,7 @@ export const createDropFromPlan = internalMutation({
       updatedAt: now,
     });
 
-    await ctx.db.insert("dateDropParticipants", {
+    await ctx.db.insert("datePlanParticipants", {
       dropId,
       userId: run.initiatorUserId,
       role: "initiator",
@@ -1312,7 +1312,7 @@ export const createDropFromPlan = internalMutation({
       availabilityId: seekerWindow._id,
       invitedAt: now,
     });
-    await ctx.db.insert("dateDropParticipants", {
+    await ctx.db.insert("datePlanParticipants", {
       dropId,
       userId: args.partnerUserId,
       role: "invitee",
@@ -1373,17 +1373,17 @@ async function findOpenWindowCovering(
 /* ----------------------- Scenario B: find a replacement -------------------- */
 
 export const startReplacementRun = internalMutation({
-  args: { dropId: v.id("dateDrops") },
+  args: { dropId: v.id("datePlans") },
   returns: v.union(v.id("matchingRuns"), v.null()),
   handler: async (ctx, args) => {
-    const drop = await ctx.db.get("dateDrops", args.dropId);
+    const drop = await ctx.db.get("datePlans", args.dropId);
     if (!drop) return null;
     if (drop.status !== "partially_accepted") return null;
     if (drop.candidateAttempts >= drop.maxCandidateAttempts) return null;
     if (Date.now() >= drop.confirmDeadlineMs) return null;
 
     const participants = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop", (q) => q.eq("dropId", args.dropId))
       .take(10);
     const accepted = participants.find(
@@ -1405,7 +1405,7 @@ export const startReplacementRun = internalMutation({
       startedAt: Date.now(),
     });
 
-    await ctx.db.patch("dateDrops", args.dropId, {
+    await ctx.db.patch("datePlans", args.dropId, {
       candidateAttempts: drop.candidateAttempts + 1,
       updatedAt: Date.now(),
     });
@@ -1414,15 +1414,15 @@ export const startReplacementRun = internalMutation({
 });
 
 export const getReplacementContext = internalQuery({
-  args: { dropId: v.id("dateDrops"), matchingRunId: v.id("matchingRuns") },
+  args: { dropId: v.id("datePlans"), matchingRunId: v.id("matchingRuns") },
   returns: v.any(),
   handler: async (ctx, args) => {
-    const drop = await ctx.db.get("dateDrops", args.dropId);
+    const drop = await ctx.db.get("datePlans", args.dropId);
     const run = await ctx.db.get("matchingRuns", args.matchingRunId);
     if (!drop || !run) return null;
 
     const participants = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop", (q) => q.eq("dropId", args.dropId))
       .take(10);
     const accepted = participants.find(
@@ -1525,7 +1525,7 @@ export const getReplacementContext = internalQuery({
  * constraints are checked against the plan itself before they are considered.
  */
 export function planStillWorks(
-  drop: Doc<"dateDrops">,
+  drop: Doc<"datePlans">,
   candidate: Party,
 ): boolean {
   if (
@@ -1564,7 +1564,7 @@ export function planStillWorks(
 }
 
 export const runReplacementPipeline = internalAction({
-  args: { dropId: v.id("dateDrops") },
+  args: { dropId: v.id("datePlans") },
   returns: v.null(),
   handler: async (ctx, args) => {
     const matchingRunId = (await ctx.runMutation(
@@ -1581,7 +1581,7 @@ export const runReplacementPipeline = internalAction({
           matchingRunId,
         },
       )) as {
-        drop: Doc<"dateDrops">;
+        drop: Doc<"datePlans">;
         holder: Party;
         holderBrief: PersonBrief;
         holderUserId: Id<"users">;
@@ -1683,7 +1683,7 @@ export const runReplacementPipeline = internalAction({
         return null;
       }
 
-      await ctx.scheduler.runAfter(0, internal.dateDrops.dispatchInvitations, {
+      await ctx.scheduler.runAfter(0, internal.datePlans.dispatchInvitations, {
         dropId: args.dropId,
       });
     } catch (e) {
@@ -1763,7 +1763,7 @@ export const finishReplacementRun = internalMutation({
 
 export const addReplacementParticipant = internalMutation({
   args: {
-    dropId: v.id("dateDrops"),
+    dropId: v.id("datePlans"),
     matchingRunId: v.id("matchingRuns"),
     userId: v.id("users"),
     candidateScoreId: v.id("candidateScores"),
@@ -1773,11 +1773,11 @@ export const addReplacementParticipant = internalMutation({
   },
   returns: v.boolean(),
   handler: async (ctx, args) => {
-    const drop = await ctx.db.get("dateDrops", args.dropId);
+    const drop = await ctx.db.get("datePlans", args.dropId);
     if (!drop || drop.status !== "partially_accepted") return false;
 
     const existing = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop_and_user", (q) =>
         q.eq("dropId", args.dropId).eq("userId", args.userId),
       )
@@ -1801,7 +1801,7 @@ export const addReplacementParticipant = internalMutation({
     }
 
     const now = Date.now();
-    await ctx.db.insert("dateDropParticipants", {
+    await ctx.db.insert("datePlanParticipants", {
       dropId: args.dropId,
       userId: args.userId,
       role: "invitee",
@@ -1829,7 +1829,7 @@ export const addReplacementParticipant = internalMutation({
       dropId: args.dropId,
       finishedAt: now,
     });
-    await ctx.db.patch("dateDrops", args.dropId, { updatedAt: now });
+    await ctx.db.patch("datePlans", args.dropId, { updatedAt: now });
 
     await recordAudit(ctx, {
       action: "drop.replacement_invited",
@@ -1849,20 +1849,20 @@ export const addReplacementParticipant = internalMutation({
  * exposing raw scores to the people being matched.
  */
 export const dropProvenance = query({
-  args: { dropId: v.id("dateDrops") },
+  args: { dropId: v.id("datePlans") },
   returns: v.union(v.null(), v.any()),
   handler: async (ctx, args) => {
     const userId = await currentUserId(ctx);
     if (!userId) return null;
     const participant = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop_and_user", (q) =>
         q.eq("dropId", args.dropId).eq("userId", userId),
       )
       .unique();
     if (!participant) return null;
 
-    const drop = await ctx.db.get("dateDrops", args.dropId);
+    const drop = await ctx.db.get("datePlans", args.dropId);
     if (!drop) return null;
 
     const research = drop.researchRunId

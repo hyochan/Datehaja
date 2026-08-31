@@ -31,6 +31,7 @@ http.route({
           agentmail: Boolean(process.env.AGENTMAIL_API_KEY),
           agentmailInbox: Boolean(process.env.AGENTMAIL_INBOX_ID),
           agentmailWebhook: Boolean(process.env.AGENTMAIL_WEBHOOK_SECRET),
+          billing: "merchant_review",
         },
       }),
       { status: 200, headers: { "Content-Type": "application/json" } },

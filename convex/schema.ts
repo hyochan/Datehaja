@@ -3,6 +3,9 @@ import { v } from "convex/values";
 import { authTables } from "@convex-dev/auth/server";
 import {
   aiPurposeValidator,
+  agentQuestionCategoryValidator,
+  agentQuestionStatusValidator,
+  agentDecisionCodeValidator,
   alcoholValidator,
   atmosphereValidator,
   availabilityStatusValidator,
@@ -31,6 +34,7 @@ import {
   smokingValidator,
   socialEnergyValidator,
 } from "./lib/enums";
+import { agentAvatarValidator } from "./lib/agentAvatar";
 
 export default defineSchema({
   // ---- auth (users, authAccounts, authSessions, ...) -------------------
@@ -151,6 +155,159 @@ export default defineSchema({
     updatedAt: v.number(),
   }).index("by_user", ["userId"]),
 
+  // ---- personal dating agents ----------------------------------------
+  /** Private instructions and user-approved public traits for the user's AI Agent. */
+  agentProfiles: defineTable({
+    userId: v.id("users"),
+    name: v.string(),
+    /** A user-built visual identity for the Agent. Optional during rollout. */
+    avatar: v.optional(agentAvatarValidator),
+    /** The user's own description. Private to their agent. */
+    essence: v.string(),
+    desiredConnection: v.string(),
+    boundaries: v.array(v.string()),
+    voice: v.union(
+      v.literal("warm"),
+      v.literal("playful"),
+      v.literal("direct"),
+      v.literal("quiet"),
+    ),
+    autonomy: v.union(
+      v.literal("observe"),
+      v.literal("suggest"),
+      v.literal("advocate"),
+    ),
+    /** Compact private memory learned from human-agent conversations. */
+    privateMemory: v.string(),
+    /** Compact lessons from the Agent's own private date verdicts. */
+    scoutingMemory: v.optional(v.string()),
+    status: v.union(v.literal("active"), v.literal("paused")),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_user", ["userId"]),
+
+  /** Conversations are only between a person and their own agent. */
+  agentMessages: defineTable({
+    userId: v.id("users"),
+    /** Present when this message discusses one of the user's Agent dates. */
+    agentDateId: v.optional(v.id("agentDates")),
+    role: v.union(v.literal("human"), v.literal("agent")),
+    content: v.string(),
+    createdAt: v.number(),
+  }).index("by_user_and_created", ["userId", "createdAt"]),
+
+  /** Private, periodic prompts through which an Agent learns its owner. */
+  agentQuestions: defineTable({
+    userId: v.id("users"),
+    category: agentQuestionCategoryValidator,
+    prompt: v.string(),
+    locale: v.string(),
+    status: agentQuestionStatusValidator,
+    askedAt: v.number(),
+    answeredAt: v.optional(v.number()),
+  })
+    .index("by_user_and_status", ["userId", "status"])
+    .index("by_user_and_asked", ["userId", "askedAt"]),
+
+  /** A simulated date between two explicitly-labelled AI proxies. */
+  agentDates: defineTable({
+    initiatorUserId: v.id("users"),
+    counterpartUserId: v.id("users"),
+    status: v.union(
+      v.literal("queued"),
+      v.literal("running"),
+      v.literal("debrief_ready"),
+      v.literal("connected"),
+      v.literal("closed"),
+      v.literal("failed"),
+    ),
+    /** Real matches unfold naturally; labelled demo matches compress the waits. */
+    paceMode: v.optional(v.union(v.literal("demo"), v.literal("natural"))),
+    activity: v.optional(
+      v.union(
+        v.literal("arriving"),
+        v.literal("reading"),
+        v.literal("thinking"),
+        v.literal("wandering"),
+        v.literal("wrapping_up"),
+      ),
+    ),
+    nextTurnAt: v.optional(v.number()),
+    startedAt: v.optional(v.number()),
+    completedAt: v.optional(v.number()),
+    setting: v.string(),
+    worldSourceTitle: v.optional(v.string()),
+    worldSourceUrl: v.optional(v.string()),
+    compatibilityScore: v.number(),
+    summary: v.string(),
+    sparks: v.array(v.string()),
+    frictions: v.array(v.string()),
+    initiatorVerdict: v.union(
+      v.literal("pending"),
+      v.literal("encourage"),
+      v.literal("curious"),
+      v.literal("pass"),
+    ),
+    counterpartVerdict: v.union(
+      v.literal("pending"),
+      v.literal("encourage"),
+      v.literal("curious"),
+      v.literal("pass"),
+    ),
+    initiatorReason: v.string(),
+    counterpartReason: v.string(),
+    /** Private structured explanations. Only the owning side is projected. */
+    initiatorDecisionCode: v.optional(agentDecisionCodeValidator),
+    counterpartDecisionCode: v.optional(agentDecisionCodeValidator),
+    initiatorNextSearchNote: v.optional(v.string()),
+    counterpartNextSearchNote: v.optional(v.string()),
+    initiatorConsent: v.union(
+      v.literal("pending"),
+      v.literal("yes"),
+      v.literal("no"),
+    ),
+    counterpartConsent: v.union(
+      v.literal("pending"),
+      v.literal("yes"),
+      v.literal("no"),
+    ),
+    isDemoCounterpart: v.boolean(),
+    /** Public, explainable reasons these proxies crossed paths. No raw score. */
+    scoutSignals: v.optional(v.array(v.string())),
+    failureReason: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_initiator", ["initiatorUserId"])
+    .index("by_counterpart", ["counterpartUserId"])
+    .index("by_status", ["status"]),
+
+  agentDateTurns: defineTable({
+    agentDateId: v.id("agentDates"),
+    round: v.number(),
+    speakerUserId: v.id("users"),
+    speakerAgentName: v.string(),
+    content: v.string(),
+    subtext: v.string(),
+    createdAt: v.number(),
+  }).index("by_date_and_round", ["agentDateId", "round"]),
+
+  /** First-party growth events. Never store profile text or sensitive traits here. */
+  growthEvents: defineTable({
+    userId: v.optional(v.id("users")),
+    anonymousId: v.optional(v.string()),
+    event: v.string(),
+    city: v.optional(v.string()),
+    locale: v.optional(v.string()),
+    source: v.optional(v.string()),
+    campaign: v.optional(v.string()),
+    agentDateId: v.optional(v.id("agentDates")),
+    createdAt: v.number(),
+  })
+    .index("by_event", ["event"])
+    .index("by_user", ["userId"])
+    .index("by_date", ["agentDateId"]),
+
   // ---- legal acknowledgement -----------------------------------------
   /** Versioned proof of the documents a user accepted. One record per user. */
   legalConsents: defineTable({
@@ -170,7 +327,7 @@ export default defineSchema({
     endMs: v.number(),
     timezone: v.string(),
     status: availabilityStatusValidator,
-    heldByDropId: v.optional(v.id("dateDrops")),
+    heldByDropId: v.optional(v.id("datePlans")),
     note: v.optional(v.string()),
   })
     .index("by_user", ["userId"])
@@ -191,7 +348,7 @@ export default defineSchema({
   reports: defineTable({
     reporterUserId: v.id("users"),
     reportedUserId: v.id("users"),
-    dropId: v.optional(v.id("dateDrops")),
+    dropId: v.optional(v.id("datePlans")),
     category: reportCategoryValidator,
     details: v.string(),
     status: reportStatusValidator,
@@ -215,7 +372,7 @@ export default defineSchema({
   /** A user-triggered copy of a confirmed plan sent to their trusted contact. */
   safetyPlanShares: defineTable({
     userId: v.id("users"),
-    dropId: v.id("dateDrops"),
+    dropId: v.id("datePlans"),
     status: v.union(
       v.literal("queued"),
       v.literal("sent"),
@@ -233,7 +390,7 @@ export default defineSchema({
   matchingRuns: defineTable({
     initiatorUserId: v.id("users"),
     availabilityId: v.optional(v.id("availability")),
-    dropId: v.optional(v.id("dateDrops")),
+    dropId: v.optional(v.id("datePlans")),
     /** "seeking_second" when re-matching after a pass. */
     intent: v.union(v.literal("new_drop"), v.literal("seeking_second")),
     stage: v.union(
@@ -308,7 +465,7 @@ export default defineSchema({
     .index("by_userB", ["userBId"]),
 
   // ---- date plans ------------------------------------------------------
-  dateDrops: defineTable({
+  datePlans: defineTable({
     status: dropStatusValidator,
     initiatorUserId: v.id("users"),
 
@@ -376,8 +533,8 @@ export default defineSchema({
     .index("by_status_and_end", ["status", "endMs"])
     .index("by_initiator", ["initiatorUserId"]),
 
-  dateDropParticipants: defineTable({
-    dropId: v.id("dateDrops"),
+  datePlanParticipants: defineTable({
+    dropId: v.id("datePlans"),
     userId: v.id("users"),
     role: v.union(v.literal("initiator"), v.literal("invitee")),
     state: participantStateValidator,
@@ -410,7 +567,7 @@ export default defineSchema({
 
   /** Private post-date response. It is never shown to the other participant. */
   dateFeedback: defineTable({
-    dropId: v.id("dateDrops"),
+    dropId: v.id("datePlans"),
     userId: v.id("users"),
     /** Counterpart being reviewed. Optional for legacy feedback rows. */
     reviewedUserId: v.optional(v.id("users")),
@@ -444,7 +601,7 @@ export default defineSchema({
   // ---- research (Firecrawl) -------------------------------------------
   researchRuns: defineTable({
     provider: v.string(),
-    dropId: v.optional(v.id("dateDrops")),
+    dropId: v.optional(v.id("datePlans")),
     requestedByUserId: v.optional(v.id("users")),
     query: v.object({
       city: v.string(),
@@ -518,9 +675,10 @@ export default defineSchema({
     purpose: aiPurposeValidator,
     model: v.string(),
     endpoint: v.string(),
-    dropId: v.optional(v.id("dateDrops")),
+    dropId: v.optional(v.id("datePlans")),
     userId: v.optional(v.id("users")),
     matchingRunId: v.optional(v.id("matchingRuns")),
+    agentDateId: v.optional(v.id("agentDates")),
     inputSummary: v.string(),
     outputPreview: v.string(),
     promptTokens: v.optional(v.number()),
@@ -532,7 +690,8 @@ export default defineSchema({
   })
     .index("by_drop", ["dropId"])
     .index("by_purpose", ["purpose"])
-    .index("by_matching_run", ["matchingRunId"]),
+    .index("by_matching_run", ["matchingRunId"])
+    .index("by_agent_date", ["agentDateId"]),
 
   // ---- comms -----------------------------------------------------------
   notifications: defineTable({
@@ -540,7 +699,7 @@ export default defineSchema({
     kind: notificationKindValidator,
     title: v.string(),
     body: v.string(),
-    dropId: v.optional(v.id("dateDrops")),
+    dropId: v.optional(v.id("datePlans")),
     href: v.optional(v.string()),
     read: v.boolean(),
   })
@@ -549,7 +708,7 @@ export default defineSchema({
 
   emailMessages: defineTable({
     userId: v.optional(v.id("users")),
-    dropId: v.optional(v.id("dateDrops")),
+    dropId: v.optional(v.id("datePlans")),
     kind: emailKindValidator,
     toAddress: v.string(),
     fromAddress: v.string(),
@@ -581,7 +740,7 @@ export default defineSchema({
     subject: v.optional(v.string()),
     preview: v.optional(v.string()),
     userId: v.optional(v.id("users")),
-    dropId: v.optional(v.id("dateDrops")),
+    dropId: v.optional(v.id("datePlans")),
     signatureVerified: v.boolean(),
     processed: v.boolean(),
     processingError: v.optional(v.string()),
@@ -596,7 +755,7 @@ export default defineSchema({
 
   /** Deliberately constrained pre-date logistics. Not a chat app. */
   dateMessages: defineTable({
-    dropId: v.id("dateDrops"),
+    dropId: v.id("datePlans"),
     fromUserId: v.id("users"),
     presetKey: v.string(),
     body: v.string(),
@@ -609,7 +768,7 @@ export default defineSchema({
     actorType: v.union(v.literal("user"), v.literal("system")),
     actorUserId: v.optional(v.id("users")),
     action: v.string(),
-    dropId: v.optional(v.id("dateDrops")),
+    dropId: v.optional(v.id("datePlans")),
     targetUserId: v.optional(v.id("users")),
     detail: v.string(),
   })

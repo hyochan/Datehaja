@@ -13,14 +13,14 @@ export const tick = internalAction({
   returns: v.null(),
   handler: async (ctx) => {
     const nowMs = Date.now();
-    const expired = await ctx.runMutation(internal.dateDrops.expireOverdueDrops, {
+    const expired = await ctx.runMutation(internal.datePlans.expireOverdueDrops, {
       nowMs,
     });
-    const completed = await ctx.runMutation(internal.dateDrops.completePastDrops, {
+    const completed = await ctx.runMutation(internal.datePlans.completePastDrops, {
       nowMs,
     });
     const staleWindows = await ctx.runMutation(
-      internal.dateDrops.expireStaleAvailability,
+      internal.datePlans.expireStaleAvailability,
       { nowMs },
     );
     if (expired || completed || staleWindows) {
@@ -37,10 +37,10 @@ export const dailyTick = internalAction({
   returns: v.null(),
   handler: async (ctx) => {
     const nowMs = Date.now();
-    const reminders = await ctx.runMutation(internal.dateDrops.queueReminders, {
+    const reminders = await ctx.runMutation(internal.datePlans.queueReminders, {
       nowMs,
     });
-    const ages = await ctx.runMutation(internal.dateDrops.refreshAges, { nowMs });
+    const ages = await ctx.runMutation(internal.datePlans.refreshAges, { nowMs });
     console.log(`[cron] reminders=${reminders} agesRefreshed=${ages}`);
     return null;
   },

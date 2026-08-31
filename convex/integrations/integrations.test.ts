@@ -226,6 +226,14 @@ describe("OpenAI structured output", () => {
     expect(new Set(ladder).size).toBe(ladder.length);
   });
 
+  it("lets cost-sensitive Agent work prefer nano ahead of the global model", () => {
+    process.env.OPENAI_MODEL = "gpt-5.6-luna";
+    const ladder = modelCandidates(["gpt-5-nano", "gpt-5.6-luna"]);
+    expect(ladder[0]).toBe("gpt-5-nano");
+    expect(ladder[1]).toBe("gpt-5.6-luna");
+    expect(new Set(ladder).size).toBe(ladder.length);
+  });
+
   it("sends the strict json_schema in the Responses shape", async () => {
     let sent: Record<string, unknown> = {};
     mockFetch((_url, init) => {

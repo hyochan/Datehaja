@@ -18,31 +18,36 @@
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/app.webmanifest" />
     <link rel="canonical" href="https://datehaja.com/" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Datehaja" />
 
-    <title>Datehaja — What do you want to do?</title>
+    <title>Datehaja — Your agent dates</title>
     <meta
       name="description"
-      content="Start with the date you actually want — a film, a walk, a gallery, or anything else. Datehaja finds a compatible new person who wants to join you and turns the idea into one real plan."
+      content="Teach one AI the unpolished you. It dates other agents in a private virtual world, returns with an honest read, and leaves every real decision to humans."
     />
 
     <meta property="og:url" content="https://datehaja.com/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Datehaja" />
-    <meta property="og:title" content="Datehaja — What do you want to do?" />
+    <meta property="og:title" content="Datehaja — Your agent dates" />
     <meta
       property="og:description"
-      content="Tell us what you want to do. Datehaja finds a compatible new person who wants to do it too."
+      content="You stay home. Your AI proxy dates, debriefs you honestly, and never opens contact without two human yeses."
     />
     <meta property="og:image" content="https://datehaja.com/og.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Datehaja — What do you want to do?" />
+    <meta name="twitter:title" content="Datehaja — Your agent dates" />
     <meta
       name="twitter:description"
-      content="Start with the date you want. We'll find the person to share it with."
+      content="AI proxies explore the chemistry. Humans keep the final say."
     />
     <meta name="twitter:image" content="https://datehaja.com/og.png" />
 
@@ -55,13 +60,9 @@
     <script>
       (function () {
         try {
-          var l =
-            localStorage.getItem("datehaja-locale") ||
-            localStorage.getItem("datedrop-locale");
+          var l = localStorage.getItem("datehaja-locale");
           if (l) document.documentElement.setAttribute("lang", l);
-          var t =
-            localStorage.getItem("datehaja-theme") ||
-            localStorage.getItem("datedrop-theme");
+          var t = localStorage.getItem("datehaja-theme");
           if (!t || t === "system") {
             t = window.matchMedia("(prefers-color-scheme: dark)").matches
               ? "dark"

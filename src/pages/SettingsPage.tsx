@@ -1,4 +1,5 @@
-import { useState } from "react";
+/* oxlint-disable react/set-state-in-effect -- hydrate one editable agent form */
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery } from "convex/react";
 import { useAuthActions } from "@convex-dev/auth/react";
@@ -8,52 +9,113 @@ import { PageIntro } from "../components/layout/PageIntro";
 import {
   Button,
   Card,
+  Field,
   SectionHeading,
+  Select,
   Skeleton,
+  TextArea,
+  TextInput,
   Toggle,
 } from "../components/ui/primitives";
 import { readableError, useToast } from "../components/ui/Toast";
+import { useI18n } from "../i18n";
+import {
+  avatarForName,
+  DEFAULT_AVATAR,
+  type AvatarConfig,
+} from "../components/agent/AgentAvatar";
+import { AgentAvatarEditor } from "../components/agent/AgentAvatarEditor";
 
 type Preferences = {
   notifyEmail: boolean;
   notifyInvitations: boolean;
   notifyConfirmations: boolean;
-  notifyReminders: boolean;
   dropsPaused: boolean;
   allowDemoMatches: boolean;
 };
 
+type Agent = {
+  name: string;
+  avatar?: AvatarConfig;
+  essence: string;
+  desiredConnection: string;
+  boundaries: string[];
+  voice: "warm" | "playful" | "direct" | "quiet";
+  autonomy: "observe" | "suggest" | "advocate";
+};
+
 export default function SettingsPage() {
   const me = useQuery(api.profiles.me);
+  const mine = useQuery(api.agents.mine);
   const blocked = useQuery(api.safety.blockedList);
-  const calendarFeed = useQuery(api.calendar.myFeed);
   const updatePrefs = useMutation(api.profiles.updateNotificationPreferences);
   const setStatus = useMutation(api.profiles.setStatus);
+  const updateAgent = useMutation(api.agents.update);
   const unblock = useMutation(api.safety.unblock);
-  const rotateCalendar = useMutation(api.calendar.rotate);
-  const disableCalendar = useMutation(api.calendar.disable);
   const { signOut } = useAuthActions();
   const toast = useToast();
+  const { t } = useI18n();
+  const [hydrated, setHydrated] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [name, setName] = useState("");
+  const [avatar, setAvatar] = useState<AvatarConfig>(DEFAULT_AVATAR);
+  const [essence, setEssence] = useState("");
+  const [desired, setDesired] = useState("");
+  const [boundaries, setBoundaries] = useState("");
+  const [voice, setVoice] = useState<Agent["voice"]>("warm");
+  const [autonomy, setAutonomy] = useState<Agent["autonomy"]>("suggest");
 
-  if (me === undefined) {
+  useEffect(() => {
+    if (hydrated || !mine?.agent) return;
+    const agent = mine.agent as Agent;
+    setName(agent.name);
+    setAvatar(avatarForName(agent.name, agent.avatar));
+    setEssence(agent.essence);
+    setDesired(agent.desiredConnection);
+    setBoundaries(agent.boundaries.join("\n"));
+    setVoice(agent.voice);
+    setAutonomy(agent.autonomy);
+    setHydrated(true);
+  }, [hydrated, mine]);
+
+  if (me === undefined || mine === undefined) {
     return <Skeleton className="h-96 w-full rounded-card" />;
   }
-  if (!me) return null;
+  if (!me || !mine) return null;
 
   const prefs = me.preferences as Preferences | null;
-  const profile = me.profile as {
-    status?: string;
-    displayName?: string;
-  } | null;
+  const profile = me.profile as { status?: string } | null;
   const paused = prefs?.dropsPaused === true || profile?.status === "paused";
 
-  async function update(patch: Partial<Preferences>) {
+  async function updatePreferences(patch: Partial<Preferences>) {
     setBusy(true);
     try {
       await updatePrefs(patch);
-    } catch (e) {
-      toast(readableError(e), "error");
+    } catch (error) {
+      toast(readableError(error), "error");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function saveAgent() {
+    setBusy(true);
+    try {
+      await updateAgent({
+        name,
+        avatar,
+        essence,
+        desiredConnection: desired,
+        boundaries: boundaries
+          .split("\n")
+          .map((item) => item.trim())
+          .filter(Boolean),
+        voice,
+        autonomy,
+      });
+      toast(t("Your agent was updated."), "success");
+    } catch (error) {
+      toast(readableError(error), "error");
     } finally {
       setBusy(false);
     }
@@ -62,203 +124,265 @@ export default function SettingsPage() {
   return (
     <div className="product-page mx-auto max-w-3xl space-y-10">
       <PageIntro
-        eyebrow="Your account"
-        title="Settings"
-        description={
-          <>
-            Signed in as {me.email ?? "—"}. Your email is never shown to another
-            user.
-          </>
-        }
+        eyebrow={t("Private control room")}
+        title={t("Agent settings")}
+        description={t(
+          "Change how your Agent sounds, what it protects, and when it may date. Your private memory is never shown here as a public profile.",
+        )}
         motif="◌"
         tone="sage"
       />
 
-      {/* -------------------------- the big switch -------------------------- */}
       <section>
-        <SectionHeading eyebrow="Control" title="Matching" />
+        <SectionHeading
+          eyebrow={t("The big switch")}
+          title={t("Let my agent date")}
+        />
         <Card className="p-2">
           <Toggle
             checked={!paused}
             disabled={busy}
             onChange={async (next) => {
-              await update({ dropsPaused: !next });
+              setBusy(true);
               try {
+                await updatePrefs({ dropsPaused: !next });
                 await setStatus({ status: next ? "active" : "paused" });
                 toast(
                   next
-                    ? "Matching is on again."
-                    : "Paused. You won't get any more.",
+                    ? t("Your agent is available again.")
+                    : t("Your agent is staying home."),
                   "success",
                 );
-              } catch (e) {
-                toast(readableError(e), "error");
+              } catch (error) {
+                toast(readableError(error), "error");
+              } finally {
+                setBusy(false);
               }
             }}
-            label={paused ? "Matching is paused" : "Find dates for me"}
+            label={
+              paused
+                ? t("Agent dates are paused")
+                : t("My agent may meet other agents")
+            }
             description={
               paused
-                ? "You won't be matched with anyone and nobody will see your profile. Nothing is deleted."
-                : "Turn this off any time. You leave everyone's candidate pool straight away; a search already in flight may still deliver one last invitation."
+                ? t(
+                    "No new agent date can begin. Your conversations and past debriefs remain.",
+                  )
+                : t(
+                    "Turn this off at any time. A simulation already running may finish, but it can never share contact for you.",
+                  )
             }
           />
           <Toggle
             checked={prefs?.allowDemoMatches ?? true}
             disabled={busy}
-            onChange={(next) => update({ allowDemoMatches: next })}
-            label="Include demo profiles"
-            description="This deployment seeds clearly-marked fictional profiles so the product works from day one. Turn off to match only with real people."
+            onChange={(next) =>
+              void updatePreferences({ allowDemoMatches: next })
+            }
+            label={t("Include clearly labelled demo agents")}
+            description={t(
+              "Useful while the network is small. A demo can complete the consent flow but never reveals a real person or contact.",
+            )}
           />
         </Card>
       </section>
 
-      {/* ---------------------------- notifications ------------------------- */}
       <section>
-        <SectionHeading eyebrow="Email" title="What Concierge sends you" />
+        <SectionHeading
+          eyebrow={t("My other self")}
+          title={t("Make my Agent recognizable")}
+        />
+        <Card className="p-5 sm:p-7">
+          <AgentAvatarEditor name={name} value={avatar} onChange={setAvatar} />
+          <p className="mt-5 text-[13px] leading-relaxed text-muted">
+            {t(
+              "Your look travels with the agent through dates, transcripts, and debriefs. It is playful identity—not a claim about your real appearance.",
+            )}
+          </p>
+        </Card>
+      </section>
+
+      <section>
+        <SectionHeading
+          eyebrow={t("Private instructions")}
+          title={t("How my agent represents me")}
+        />
+        <Card className="p-5 sm:p-7">
+          <Field label={t("Agent name")} htmlFor="settings-agent-name">
+            <TextInput
+              id="settings-agent-name"
+              value={name}
+              maxLength={32}
+              onChange={(event) => setName(event.target.value)}
+            />
+          </Field>
+          <Field
+            label={t("The unpolished you")}
+            hint={t(
+              "Correct this whenever your agent starts sounding like a résumé.",
+            )}
+            htmlFor="settings-agent-essence"
+          >
+            <TextArea
+              id="settings-agent-essence"
+              rows={6}
+              value={essence}
+              maxLength={1200}
+              onChange={(event) => setEssence(event.target.value)}
+            />
+          </Field>
+          <Field
+            label={t("The connection it should look for")}
+            htmlFor="settings-agent-desired"
+          >
+            <TextArea
+              id="settings-agent-desired"
+              rows={4}
+              value={desired}
+              maxLength={700}
+              onChange={(event) => setDesired(event.target.value)}
+            />
+          </Field>
+          <Field
+            label={t("Hard boundaries")}
+            hint={t("One per line. These remain private to your agent.")}
+            htmlFor="settings-agent-boundaries"
+          >
+            <TextArea
+              id="settings-agent-boundaries"
+              rows={4}
+              value={boundaries}
+              onChange={(event) => setBoundaries(event.target.value)}
+            />
+          </Field>
+          <div className="grid gap-x-5 sm:grid-cols-2">
+            <Field label={t("Voice")} htmlFor="settings-agent-voice">
+              <Select
+                id="settings-agent-voice"
+                value={voice}
+                onChange={(event) =>
+                  setVoice(event.target.value as Agent["voice"])
+                }
+              >
+                <option value="warm">{t("Warm and perceptive")}</option>
+                <option value="playful">{t("Playful and quick")}</option>
+                <option value="direct">{t("Direct and candid")}</option>
+                <option value="quiet">{t("Quiet and considered")}</option>
+              </Select>
+            </Field>
+            <Field label={t("Advocacy")} htmlFor="settings-agent-autonomy">
+              <Select
+                id="settings-agent-autonomy"
+                value={autonomy}
+                onChange={(event) =>
+                  setAutonomy(event.target.value as Agent["autonomy"])
+                }
+              >
+                <option value="observe">{t("Observe — never push")}</option>
+                <option value="suggest">{t("Suggest — make the case")}</option>
+                <option value="advocate">
+                  {t("Advocate — push when convinced")}
+                </option>
+              </Select>
+            </Field>
+          </div>
+          <Button size="lg" loading={busy} onClick={() => void saveAgent()}>
+            {t("Save agent")}
+          </Button>
+        </Card>
+      </section>
+
+      <section>
+        <SectionHeading
+          eyebrow={t("Private delivery")}
+          title={t("What AgentMail sends")}
+        />
         <Card className="p-2">
           <Toggle
             checked={prefs?.notifyEmail ?? true}
             disabled={busy}
-            onChange={(next) => update({ notifyEmail: next })}
-            label="Email me at all"
-            description="Off means everything below is off too. Safety notices always send."
+            onChange={(next) => void updatePreferences({ notifyEmail: next })}
+            label={t("Email me at all")}
+            description={t(
+              "Turn off private debrief and connection emails. Safety notices can still send.",
+            )}
           />
           <Toggle
             checked={prefs?.notifyInvitations ?? true}
             disabled={busy || prefs?.notifyEmail === false}
-            onChange={(next) => update({ notifyInvitations: next })}
-            label="New date plans"
-            description="The invitation itself, with the plan and who you'd be meeting."
+            onChange={(next) =>
+              void updatePreferences({ notifyInvitations: next })
+            }
+            label={t("Agent debriefs")}
+            description={t(
+              "A separate private message when your agent returns.",
+            )}
           />
           <Toggle
             checked={prefs?.notifyConfirmations ?? true}
             disabled={busy || prefs?.notifyEmail === false}
-            onChange={(next) => update({ notifyConfirmations: next })}
-            label="Confirmations and changes"
-            description="When it's a date, when something moves, when one is cancelled."
-          />
-          <Toggle
-            checked={prefs?.notifyReminders ?? true}
-            disabled={busy || prefs?.notifyEmail === false}
-            onChange={(next) => update({ notifyReminders: next })}
-            label="Reminders"
-            description="A single nudge the day before a confirmed date."
+            onChange={(next) =>
+              void updatePreferences({ notifyConfirmations: next })
+            }
+            label={t("Mutual introductions")}
+            description={t(
+              "A message only when two humans independently say yes.",
+            )}
           />
         </Card>
       </section>
 
       <section>
-        <SectionHeading eyebrow="Connected apps" title="Private calendar" />
-        <Card className="p-5">
-          {calendarFeed === undefined ? (
-            <Skeleton className="h-16 w-full rounded-card" />
-          ) : calendarFeed === null ? (
-            <p className="text-[14px] leading-relaxed text-muted">
-              No calendar feed exists. Datehaja creates one only when you ask
-              from a date plan.
-            </p>
-          ) : (
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <div className="text-[15px] font-semibold">
-                  Calendar subscription active
-                </div>
-                <p className="mt-1 max-w-md text-[13px] leading-relaxed text-muted">
-                  Anyone with its secret link can read your Datehaja event
-                  times. Rotate a leaked link or revoke it completely.
-                </p>
-              </div>
-              <div className="flex shrink-0 flex-wrap gap-2">
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={async () => {
-                    try {
-                      await rotateCalendar({});
-                      toast("Private calendar link rotated.", "success");
-                    } catch (error) {
-                      toast(readableError(error), "error");
-                    }
-                  }}
-                >
-                  Rotate link
-                </Button>
-                <Button
-                  size="sm"
-                  variant="danger"
-                  onClick={async () => {
-                    try {
-                      await disableCalendar({});
-                      toast("Private calendar feed revoked.", "success");
-                    } catch (error) {
-                      toast(readableError(error), "error");
-                    }
-                  }}
-                >
-                  Revoke
-                </Button>
-              </div>
-            </div>
-          )}
-        </Card>
-      </section>
-
-      {/* ------------------------------- links ------------------------------ */}
-      <section>
-        <SectionHeading eyebrow="Your account" title="Profile & matching" />
+        <SectionHeading
+          eyebrow={t("The human")}
+          title={t("Profile, matching, and policy")}
+        />
         <Card className="divide-y divide-[var(--border)]">
           <SettingsLink
             to="/profile"
-            title="Profile"
-            body="Name, bio, interests, photo"
+            title={t("Human profile")}
+            body={t(
+              "Bio, interests, optional photo, and how it may appear after an agent date",
+            )}
           />
           <SettingsLink
             to="/preferences"
-            title="Matching preferences"
-            body="Age, distance, intent, budget, dietary and accessibility needs"
-          />
-          <SettingsLink
-            to="/availability"
-            title="Availability"
-            body="When you're free"
+            title={t("Matching boundaries")}
+            body={t("Age, distance, intent, lifestyle, and preferred areas")}
           />
           <SettingsLink
             to="/privacy"
-            title="Privacy"
-            body="Exactly what another person can see about you"
+            title={t("Privacy Notice")}
+            body={t("Exactly what each agent and human can receive")}
           />
           <SettingsLink
             to="/terms"
-            title="Terms of Service"
-            body="The agreement and current effective date"
+            title={t("Terms of Service")}
+            body={t("AI limitations, human consent, and beta conditions")}
           />
           <SettingsLink
             to="/community-guidelines"
-            title="Community Guidelines"
-            body="Consent, conduct, reporting, and appeals"
+            title={t("Community Guidelines")}
+            body={t("Truthfulness, prompt attacks, conduct, and reporting")}
           />
           <SettingsLink
             to="/safety"
-            title="Safety Center"
-            body="Blocking, reporting, and what we do and don't verify"
-          />
-          <SettingsLink
-            to="/demo"
-            title="Demo controls"
-            body="Play the other side of a date plan with a demo profile"
+            title={t("Safety Center")}
+            body={t("Before any real-world meeting")}
           />
         </Card>
       </section>
 
-      {/* ------------------------------ blocked ----------------------------- */}
       <section>
-        <SectionHeading eyebrow="Safety" title="Blocked people" />
+        <SectionHeading eyebrow={t("Safety")} title={t("Blocked people")} />
         {blocked === undefined ? (
           <Skeleton className="h-16 w-full rounded-card" />
         ) : blocked.length === 0 ? (
           <Card className="p-5 text-[14.5px] text-muted">
-            You haven't blocked anyone. Blocking is mutual and permanent until
-            you undo it here.
+            {t(
+              "You haven't blocked anyone. A block prevents both agents from ever being paired again.",
+            )}
           </Card>
         ) : (
           <Card className="divide-y divide-[var(--border)]">
@@ -274,13 +398,13 @@ export default function SettingsPage() {
                   onClick={async () => {
                     try {
                       await unblock({ userId: entry.userId as Id<"users"> });
-                      toast("Unblocked.", "success");
-                    } catch (e) {
-                      toast(readableError(e), "error");
+                      toast(t("Unblocked."), "success");
+                    } catch (error) {
+                      toast(readableError(error), "error");
                     }
                   }}
                 >
-                  Unblock
+                  {t("Unblock")}
                 </Button>
               </div>
             ))}
@@ -290,7 +414,7 @@ export default function SettingsPage() {
 
       <div className="pb-4">
         <Button variant="secondary" onClick={() => void signOut()}>
-          Sign out
+          {t("Sign out")}
         </Button>
       </div>
     </div>
@@ -315,20 +439,9 @@ function SettingsLink({
         <span className="block text-[15px] font-medium">{title}</span>
         <span className="mt-0.5 block text-[13.5px] text-muted">{body}</span>
       </span>
-      <svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden
-        className="shrink-0 text-muted"
-      >
-        <path d="M10 6l6 6-6 6" />
-      </svg>
+      <span className="shrink-0 text-muted" aria-hidden>
+        →
+      </span>
     </Link>
   );
 }

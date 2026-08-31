@@ -18,13 +18,13 @@ const PRESET_BY_KEY = new Map<string, string>(
 );
 
 export const list = query({
-  args: { dropId: v.id("dateDrops") },
+  args: { dropId: v.id("datePlans") },
   returns: v.array(v.any()),
   handler: async (ctx, args) => {
     const userId = await currentUserId(ctx);
     if (!userId) return [];
     const me = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop_and_user", (q) =>
         q.eq("dropId", args.dropId).eq("userId", userId),
       )
@@ -64,7 +64,7 @@ export const list = query({
 });
 
 export const send = mutation({
-  args: { dropId: v.id("dateDrops"), presetKey: v.string() },
+  args: { dropId: v.id("datePlans"), presetKey: v.string() },
   returns: v.null(),
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
@@ -73,7 +73,7 @@ export const send = mutation({
       throw new Error("Messages open once the date is confirmed.");
     }
 
-    const drop = await ctx.db.get("dateDrops", args.dropId);
+    const drop = await ctx.db.get("datePlans", args.dropId);
     if (!drop || drop.status !== "confirmed") {
       throw new Error("This date isn't confirmed.");
     }
@@ -101,7 +101,7 @@ export const send = mutation({
     });
 
     const participants = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop", (q) => q.eq("dropId", args.dropId))
       .take(10);
     const other = participants.find(

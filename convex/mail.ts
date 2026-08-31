@@ -35,7 +35,7 @@ export function appUrl(path = "/"): string {
 export const logEmail = internalMutation({
   args: {
     userId: v.optional(v.id("users")),
-    dropId: v.optional(v.id("dateDrops")),
+    dropId: v.optional(v.id("datePlans")),
     kind: emailKindValidator,
     toAddress: v.string(),
     fromAddress: v.string(),
@@ -62,7 +62,7 @@ export const logEmail = internalMutation({
 
 export const attachThreadToParticipant = internalMutation({
   args: {
-    dropId: v.id("dateDrops"),
+    dropId: v.id("datePlans"),
     userId: v.id("users"),
     messageId: v.string(),
     threadId: v.string(),
@@ -70,13 +70,13 @@ export const attachThreadToParticipant = internalMutation({
   returns: v.null(),
   handler: async (ctx, args) => {
     const participant = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop_and_user", (q) =>
         q.eq("dropId", args.dropId).eq("userId", args.userId),
       )
       .unique();
     if (!participant) return null;
-    await ctx.db.patch("dateDropParticipants", participant._id, {
+    await ctx.db.patch("datePlanParticipants", participant._id, {
       emailMessageId: args.messageId,
       emailThreadId: args.threadId,
     });
@@ -123,7 +123,9 @@ type EmailKind =
   | "cancelled"
   | "expired"
   | "safety"
-  | "concierge_reply";
+  | "concierge_reply"
+  | "agent_debrief"
+  | "agent_connection";
 
 /** Which preference toggle governs which kind of message. Safety mail always sends. */
 function isAllowed(
@@ -140,12 +142,14 @@ function isAllowed(
   if (!prefs.notifyEmail) return false;
   switch (kind) {
     case "invitation":
+    case "agent_debrief":
       return prefs.notifyInvitations;
     case "confirmed":
     case "accepted_waiting":
     case "updated":
     case "cancelled":
     case "expired":
+    case "agent_connection":
       return prefs.notifyConfirmations;
     case "reminder":
       return prefs.notifyReminders;
@@ -162,7 +166,7 @@ export async function sendConciergeEmail(
   ctx: ActionCtx,
   args: {
     userId: Id<"users">;
-    dropId?: Id<"dateDrops">;
+    dropId?: Id<"datePlans">;
     kind: EmailKind;
     content: EmailContent;
     /** Makes retries safe — the same key never sends twice. */
@@ -315,11 +319,11 @@ export const recordEvent = internalMutation({
 
     // Associate the event with the user and drop behind the thread, if we know it.
     let userId: Id<"users"> | undefined;
-    let dropId: Id<"dateDrops"> | undefined;
+    let dropId: Id<"datePlans"> | undefined;
 
     if (args.threadId) {
       const participant = await ctx.db
-        .query("dateDropParticipants")
+        .query("datePlanParticipants")
         .withIndex("by_thread", (q) => q.eq("emailThreadId", args.threadId))
         .first();
       if (participant) {
@@ -395,7 +399,7 @@ export const handleInbound = internalAction({
       _id: Id<"agentMailEvents">;
       eventType: string;
       userId?: Id<"users">;
-      dropId?: Id<"dateDrops">;
+      dropId?: Id<"datePlans">;
       fromAddress?: string;
     } | null;
 

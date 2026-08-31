@@ -66,7 +66,7 @@ export default function SafetyPage() {
         eyebrow={t("Public record · Safety")}
         title={t("Safety Center")}
         description={t(
-          "Datehaja sends you to meet a stranger in public. Here's what we do, what we don't, and what's in your hands.",
+          "Agents meet first. If two humans later choose a real introduction, here's what we do, what we don't, and what's still in your hands.",
         )}
         motif="+"
         tone="butter"

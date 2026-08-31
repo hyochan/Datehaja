@@ -41,12 +41,10 @@ export type LocaleCode = (typeof SUPPORTED_LOCALES)[number]["code"];
 type TranslationPack = Record<string, string>;
 
 const STORAGE_KEY = "datehaja-locale";
-const LEGACY_STORAGE_KEY = "datedrop-locale";
 const DEFAULT_LOCALE: LocaleCode = "en-US";
 let runtimeLocale: LocaleCode | null = null;
 
 const ko: TranslationPack = {
-  "Private date concierge": "프라이빗 데이트 컨시어지",
   "Let's make it a date": "우리, 데이트하자",
   "Pick a night.": "저녁 하나 비워봐.",
   "Let's make it a date.": "우리, 데이트하자.",
@@ -274,7 +272,6 @@ const ko: TranslationPack = {
 };
 
 const ja: TranslationPack = {
-  "Private date concierge": "プライベート・デートコンシェルジュ",
   "Let's make it a date": "デートにしよう",
   "Pick a night.": "夜をひとつ選んで。",
   "Let's make it a date.": "デートにしよう。",
@@ -502,7 +499,6 @@ const ja: TranslationPack = {
 };
 
 const de: TranslationPack = {
-  "Private date concierge": "Privater Date-Concierge",
   "Let's make it a date": "Machen wir ein Date daraus",
   "Pick a night.": "Wähl einen Abend.",
   "Let's make it a date.": "Machen wir ein Date daraus.",
@@ -733,6 +729,139 @@ const de: TranslationPack = {
   "{count} min left": "noch {count} Min.",
 };
 
+Object.assign(ko, {
+  "Preview of {agent}": "{agent} 미리보기",
+  "my agent": "내 에이전트",
+  "Make your other self feel like yours.": "나만의 또 다른 나를 만들어보세요.",
+  "This is the face that goes into the virtual world, brings stories home, and slowly becomes recognizable as your stand-in.":
+    "가상 세계로 나가 이야기를 가져오고, 점점 내 분신으로 익숙해질 얼굴이에요.",
+  "Change it anytime": "언제든 변경",
+  "MY OTHER SELF": "또 다른 나",
+  "Name pending": "이름 짓는 중",
+  Color: "색",
+  "rose palette": "로즈 색상",
+  "violet palette": "바이올렛 색상",
+  "moss palette": "모스 색상",
+  "sky palette": "스카이 색상",
+  "sunset palette": "선셋 색상",
+  "ink palette": "잉크 색상",
+  Expression: "표정",
+  Gentle: "다정함",
+  Bright: "밝음",
+  Cool: "시크함",
+  Curious: "호기심",
+  Hair: "헤어",
+  Wave: "웨이브",
+  Crop: "크롭",
+  Bob: "보브",
+  Bun: "번",
+  Buzz: "버즈",
+  Outfit: "옷",
+  Cardigan: "카디건",
+  Blazer: "블레이저",
+  Hoodie: "후디",
+  Starlight: "별빛",
+  "Little detail": "포인트",
+  None: "없음",
+  Glasses: "안경",
+  Headphones: "헤드폰",
+  "Star clip": "별 핀",
+  Scarf: "스카프",
+  "My other self": "나의 분신",
+  "Make my Agent recognizable": "한눈에 알아볼 수 있는 나의 에이전트",
+  "Your look travels with the agent through dates, transcripts, and debriefs. It is playful identity—not a claim about your real appearance.":
+    "이 모습은 데이트, 대화 기록, 리포트까지 에이전트와 함께해요. 실제 외모를 뜻하는 것이 아니라 즐겁게 표현하는 정체성이에요.",
+});
+
+Object.assign(ja, {
+  "Preview of {agent}": "{agent}のプレビュー",
+  "my agent": "私のエージェント",
+  "Make your other self feel like yours.": "もう一人の自分を、自分らしく。",
+  "This is the face that goes into the virtual world, brings stories home, and slowly becomes recognizable as your stand-in.":
+    "仮想世界へ出かけ、物語を持ち帰り、少しずつあなたの分身として親しまれる顔です。",
+  "Change it anytime": "いつでも変更",
+  "MY OTHER SELF": "もう一人の私",
+  "Name pending": "名前を考え中",
+  Color: "カラー",
+  "rose palette": "ローズカラー",
+  "violet palette": "バイオレットカラー",
+  "moss palette": "モスカラー",
+  "sky palette": "スカイカラー",
+  "sunset palette": "サンセットカラー",
+  "ink palette": "インクカラー",
+  Expression: "表情",
+  Gentle: "やさしい",
+  Bright: "明るい",
+  Cool: "クール",
+  Curious: "好奇心",
+  Hair: "ヘア",
+  Wave: "ウェーブ",
+  Crop: "クロップ",
+  Bob: "ボブ",
+  Bun: "お団子",
+  Buzz: "ベリーショート",
+  Outfit: "服",
+  Cardigan: "カーディガン",
+  Blazer: "ブレザー",
+  Hoodie: "パーカー",
+  Starlight: "スターライト",
+  "Little detail": "アクセント",
+  None: "なし",
+  Glasses: "メガネ",
+  Headphones: "ヘッドホン",
+  "Star clip": "星のピン",
+  Scarf: "スカーフ",
+  "My other self": "私の分身",
+  "Make my Agent recognizable": "自分のエージェントを見分けやすく",
+  "Your look travels with the agent through dates, transcripts, and debriefs. It is playful identity—not a claim about your real appearance.":
+    "この姿はデート、会話記録、レポートまでエージェントと共に移動します。実際の外見を示すものではなく、楽しいアイデンティティです。",
+});
+
+Object.assign(de, {
+  "Preview of {agent}": "Vorschau von {agent}",
+  "my agent": "mein Agent",
+  "Make your other self feel like yours.":
+    "Mach dein zweites Ich unverwechselbar.",
+  "This is the face that goes into the virtual world, brings stories home, and slowly becomes recognizable as your stand-in.":
+    "Dieses Gesicht geht in die virtuelle Welt, bringt Geschichten mit und wird zu deinem vertrauten Stellvertreter.",
+  "Change it anytime": "Jederzeit ändern",
+  "MY OTHER SELF": "MEIN ZWEITES ICH",
+  "Name pending": "Name folgt",
+  Color: "Farbe",
+  "rose palette": "Rosa Farbwelt",
+  "violet palette": "Violette Farbwelt",
+  "moss palette": "Moosgrüne Farbwelt",
+  "sky palette": "Blaue Farbwelt",
+  "sunset palette": "Sonnenuntergang-Farbwelt",
+  "ink palette": "Tinten-Farbwelt",
+  Expression: "Ausdruck",
+  Gentle: "Sanft",
+  Bright: "Fröhlich",
+  Cool: "Gelassen",
+  Curious: "Neugierig",
+  Hair: "Haare",
+  Wave: "Wellen",
+  Crop: "Kurz",
+  Bob: "Bobfrisur",
+  Bun: "Dutt",
+  Buzz: "Buzzcut",
+  Outfit: "Kleidung",
+  Cardigan: "Strickjacke",
+  Blazer: "Sakko",
+  Hoodie: "Kapuzenpullover",
+  Starlight: "Sternenlicht",
+  "Little detail": "Detail",
+  None: "Keins",
+  Glasses: "Brille",
+  Headphones: "Kopfhörer",
+  "Star clip": "Sternspange",
+  Scarf: "Schal",
+  "My other self": "Mein zweites Ich",
+  "Make my Agent recognizable": "Mach deinen Agenten unverwechselbar",
+  "Your look travels with the agent through dates, transcripts, and debriefs. It is playful identity—not a claim about your real appearance.":
+    "Dein Look begleitet den Agenten durch Dates, Gespräche und Berichte. Er ist eine spielerische Identität, keine Aussage über dein echtes Aussehen.",
+});
+
 // French, Dutch and Swedish deliberately share the same complete key surface.
 // Keeping every phrase local makes the fallback behaviour deterministic and
 // lets tests prove that a locale never becomes a half-English screen.
@@ -784,7 +913,6 @@ Object.assign(fr, {
   "A photo is optional. You decide whether a match sees it with your profile card or only after you both accept.":
     "La photo est facultative. Vous choisissez si elle apparaît sur la fiche ou seulement après votre double accord.",
   "Photo privacy saved.": "Visibilité de la photo enregistrée.",
-  "Private date concierge": "Conciergerie de rendez-vous privée",
   "Let's make it a date": "On se donne rendez-vous",
   "Pick a night.": "Choisissez une soirée.",
   "Let's make it a date.": "On se donne rendez-vous.",
@@ -1049,7 +1177,6 @@ Object.assign(nl, {
     "Je antwoord blijft verzegeld. Niemand ziet een nee, misschien of wie eerst antwoordde.",
   "Neither person sees who said no or maybe. Accuracy, respect, and safety feedback only improve future matching.":
     "Niemand ziet wie nee of misschien koos. Feedback over juistheid, respect en veiligheid verbetert alleen toekomstige matches.",
-  "Private date concierge": "Privé-dateconciërge",
   "Let's make it a date": "Maak er een date van",
   "Pick a night.": "Kies een avond.",
   "Let's make it a date.": "Maak er een date van.",
@@ -1315,7 +1442,6 @@ Object.assign(sv, {
     "Ditt svar förblir förseglat. Ingen ser ett nej, kanske eller vem som svarade först.",
   "Neither person sees who said no or maybe. Accuracy, respect, and safety feedback only improve future matching.":
     "Ingen ser vem som svarade nej eller kanske. Feedback om korrekthet, respekt och trygghet förbättrar bara framtida matchningar.",
-  "Private date concierge": "Privat dejtconcierge",
   "Let's make it a date": "Låt oss göra det till en dejt",
   "Pick a night.": "Välj en kväll.",
   "Let's make it a date.": "Låt oss göra det till en dejt.",
@@ -1540,6 +1666,608 @@ Object.assign(sv, {
   "{count} hour left": "{count} timme kvar",
   "{count} hours left": "{count} timmar kvar",
   "{count} min left": "{count} min kvar",
+});
+
+/* Agent dating pivot — core journey copy. English locales intentionally use
+   the source strings; the six translated markets get a human-readable launch
+   surface rather than a half-localised navigation shell. */
+Object.assign(ko, {
+  "Agent dating": "에이전트 데이트",
+  "Your dating agent": "나의 데이팅 에이전트",
+  "Too busy for another first date?": "소개팅도 데이트도 바쁜 당신에게",
+  "Let your Agent": "내 에이전트가",
+  "go first.": "먼저 만나봐요.",
+  "Your Agent meets first and brings back an honest read. You decide whether to make it real.":
+    "내 에이전트가 먼저 만나고 솔직한 리포트를 가져와요. 실제 만남은 당신이 결정해요.",
+  "A different kind of first date": "조금 다른 첫 데이트",
+  "You stay home.": "당신은 집에 있고.",
+  "Your agent dates.": "에이전트가 데이트해요.",
+  "One AI learns the unpolished you, meets other agents in a private virtual world, then comes back and tells you what it really thinks.":
+    "한 AI가 꾸미지 않은 나를 배우고, 비공개 가상 세계에서 다른 에이전트를 만난 뒤 돌아와 솔직한 생각을 전해요.",
+  "Create my dating agent": "내 데이트 에이전트 만들기",
+  "Watch the agents meet": "에이전트 만남 보기",
+  "Your Agent goes first.": "내 에이전트가 먼저 가요.",
+  Brief: "브리프",
+  "Agent date": "에이전트 데이트",
+  "Private read": "비공개 리포트",
+  "Your call": "내 결정",
+  "AI is always identified": "AI임을 항상 표시",
+  "Private briefs stay private": "개인 브리프는 비공개",
+  "Humans control contact": "연락처는 사람이 결정",
+  "Let two agents feel it out before two humans risk the awkward part.":
+    "두 사람이 어색함을 감수하기 전에, 두 에이전트가 먼저 마음을 살펴봐요.",
+  "Talk to the one agent that knows you.":
+    "나를 아는 단 한 명의 에이전트와 대화해요.",
+  "Give it the version of you that never fits inside a dating profile: the contradictions, boundaries, and quiet tells.":
+    "데이트 프로필에 담기지 않는 모순, 경계, 사소한 신호까지 알려주세요.",
+  "Your agent goes on the first date.": "첫 데이트는 에이전트가 나가요.",
+  "Two clearly labelled AI proxies meet in a private virtual world. Neither sees the other's private brief.":
+    "AI라고 명확히 표시된 두 프록시가 비공개 가상 세계에서 만나요. 서로의 개인 브리프는 볼 수 없어요.",
+  "It comes home with an honest read.": "돌아와 솔직하게 들려줘요.",
+  "Chemistry, friction, blind spots—and whether your agent would actively push you to meet.":
+    "끌림과 마찰, 놓친 신호, 그리고 실제로 만나보라고 권할지까지요.",
+  "The humans make the only decision that counts.":
+    "중요한 마지막 결정은 사람이 해요.",
+  "Two private yeses open contact at the same moment. One no ends it quietly. Agents never consent for you.":
+    "두 사람이 비공개로 모두 동의할 때만 연락처가 동시에 열려요. 한 명이 거절하면 조용히 끝나며, 에이전트는 대신 동의할 수 없어요.",
+  "Not a compatibility score machine": "궁합 점수 기계가 아니에요",
+  "Your agent can say: don't meet them.":
+    "에이전트는 ‘만나지 마’라고 말할 수도 있어요.",
+  "A useful agent is not a hype machine. It notices where the conversation came alive, where someone dodged, and whether your real life could hold the connection.":
+    "좋은 에이전트는 무조건 띄워주지 않아요. 대화가 살아난 순간과 피한 지점, 현실에서도 이어질 수 있는지를 살펴봐요.",
+  "Two independent verdicts": "서로 독립된 두 판단",
+  "No forced optimism": "억지 낙관 없음",
+  "No consent theatre": "보여주기식 동의 없음",
+  "YOUR AGENT'S PRIVATE READ": "내 에이전트의 비공개 리포트",
+  "LIVE / SIMULATION": "실시간 / 시뮬레이션",
+  "AFTER HOURS": "늦은 밤",
+  "shared record": "함께 고른 레코드",
+  "easy exit": "편한 출구",
+  "My person says they like spontaneity, but what they really need is someone who makes changing plans feel safe.":
+    "내 사람은 즉흥적인 걸 좋아한다고 하지만, 사실 계획이 바뀌어도 편안하게 느끼게 해줄 사람이 필요해요.",
+  "That contradiction makes sense. Mine needs room to go quiet without the silence being treated as rejection.":
+    "그 모순, 이해돼요. 내 사람은 조용해져도 거절로 받아들여지지 않을 여유가 필요해요.",
+  "Plans can change. Feeling safe shouldn't.":
+    "계획은 바뀌어도, 편안함은 필요해요.",
+  "Quiet doesn't mean rejection.": "조용함이 거절은 아니에요.",
+  "Your Agent": "내 에이전트",
+  "Their Agent": "상대 에이전트",
+  "Your agent can say:": "내 에이전트는 말할 수 있어요.",
+  "don't meet them.": "그 사람은 만나지 마요.",
+  "Six moments. Two independent reads. One honest recommendation.":
+    "여섯 순간. 두 개의 독립된 판단. 하나의 솔직한 추천.",
+  "Four live systems · one private Agent": "네 시스템 · 하나의 비공개 에이전트",
+  "PRIVATE VERDICT": "비공개 판단",
+  "Agent insight map": "에이전트 인사이트 지도",
+  "Six moments → one private read": "여섯 순간 → 하나의 비공개 리포트",
+  "An interpretation, not a score": "점수가 아닌 해석",
+  "Their answer remains sealed": "상대의 답변은 계속 비공개",
+  listening: "듣는 중",
+  "zero contacts exposed": "공개된 연락처 0개",
+  "I want warmth without having to perform confidence.":
+    "자신감 있는 척하지 않아도 따뜻한 관계를 원해요.",
+  "private memory": "비공개 기억",
+  "virtual world": "가상 세계",
+  "PRIVATE / FOR YOU": "비공개 / 나만 보기",
+  "I noticed a real spark.": "분명한 설렘이 있었어요.",
+  "But ask about the pace.": "다만 관계의 속도는 물어보세요.",
+  YOU: "나",
+  YES: "동의",
+  THEM: "상대",
+  SEALED: "비공개",
+  "contact locked": "연락처 잠김",
+  "Each agent judges from its own human's private values.":
+    "각 에이전트는 자기 사람의 비공개 가치관으로 독립적으로 판단해요.",
+  "Curious and pass are valid outcomes—not failures.":
+    "더 알아보기와 거절도 실패가 아닌 온전한 결과예요.",
+  "Your yes stays sealed until there are two yeses.":
+    "두 사람 모두 동의하기 전까지 내 답은 공개되지 않아요.",
+  moments: "장면",
+  "I think you should meet.": "두 사람, 만나봤으면 해요.",
+  "The easy banter wasn't the strongest signal. It was how Sol slowed down when your fear of being misunderstood came up.":
+    "편한 농담보다 더 강한 신호는, 오해받는 게 두렵다는 이야기에 Sol이 천천히 귀 기울인 순간이었어요.",
+  SPARK: "설렘",
+  "Quiet feels safe to both": "둘 다 침묵을 편안해해요",
+  "ASK ABOUT": "물어볼 것",
+  "Different social pace": "서로 다른 사교 속도",
+  "An interpretation, not a compatibility score · Their answer remains sealed":
+    "궁합 점수가 아닌 하나의 해석 · 상대의 답은 계속 비공개",
+  "Gives each Agent an isolated mind, voice, and independent verdict.":
+    "각 에이전트에게 분리된 생각과 목소리, 독립적인 판단을 줍니다.",
+  "Finds a live cultural spark that becomes tonight's virtual world.":
+    "지금의 문화적 소재를 찾아 오늘 밤의 가상 세계로 만듭니다.",
+  "Streams every turn and keeps consent state consistent in real time.":
+    "모든 대화를 실시간으로 전송하고 동의 상태를 일관되게 지킵니다.",
+  "Delivers private debriefs without exposing the other person's answer.":
+    "상대의 답을 노출하지 않고 각자의 비공개 리포트를 전달합니다.",
+  "A real agent stack": "실제로 작동하는 에이전트 스택",
+  "Not a chatbot wearing a heart icon.": "하트 아이콘만 붙인 챗봇이 아니에요.",
+  "Let your better listener go first": "더 잘 듣는 에이전트를 먼저 보내요",
+  "Maybe your agent already knows who you should meet.":
+    "어쩌면 내 에이전트는 내가 누구를 만나야 할지 알지도 몰라요.",
+  "Teach it who you are. Send it out. Keep the final decision human.":
+    "나를 알려주고, 대신 보내고, 마지막 결정은 내가 해요.",
+  "Create my agent": "내 에이전트 만들기",
+  "AI proxies, human consent": "AI 프록시, 사람의 동의",
+  "My agent": "내 에이전트",
+  Human: "사람",
+  Settings: "설정",
+});
+
+Object.assign(ja, {
+  "Agent dating": "エージェント・デート",
+  "Your dating agent": "あなたのデート・エージェント",
+  "Too busy for another first date?": "初デートの時間も惜しいあなたへ",
+  "Let your Agent": "あなたのエージェントを",
+  "go first.": "先に会わせよう。",
+  "Your Agent meets first and brings back an honest read. You decide whether to make it real.":
+    "エージェントが先に会い、率直なレポートを持ち帰ります。実際に会うかは、あなたが決めます。",
+  "A different kind of first date": "新しいかたちの初デート",
+  "You stay home.": "あなたは家に。",
+  "Your agent dates.": "エージェントがデートへ。",
+  "One AI learns the unpolished you, meets other agents in a private virtual world, then comes back and tells you what it really thinks.":
+    "ひとつのAIが飾らないあなたを学び、非公開の仮想世界で他のエージェントと会い、率直な感想を持ち帰ります。",
+  "Create my dating agent": "デート・エージェントを作る",
+  "Watch the agents meet": "エージェントの出会いを見る",
+  "Your Agent goes first.": "エージェントが先に会う。",
+  Brief: "ブリーフ",
+  "Agent date": "エージェントのデート",
+  "Private read": "非公開レポート",
+  "Your call": "あなたの決断",
+  "Talk to the one agent that knows you.":
+    "あなたを知る一人のエージェントと話す。",
+  "Your agent goes on the first date.": "最初のデートはエージェントが行く。",
+  "It comes home with an honest read.": "率直な見立てを持ち帰る。",
+  "The humans make the only decision that counts.": "大切な決断は人間がする。",
+  "YOUR AGENT'S PRIVATE READ": "あなたのエージェントの非公開レポート",
+  "LIVE / SIMULATION": "ライブ / シミュレーション",
+  "AFTER HOURS": "夜の時間",
+  "shared record": "ふたりのレコード",
+  "easy exit": "気軽な出口",
+  "My person says they like spontaneity, but what they really need is someone who makes changing plans feel safe.":
+    "私の人は気まぐれが好きと言うけれど、本当に必要なのは予定が変わっても安心させてくれる人です。",
+  "That contradiction makes sense. Mine needs room to go quiet without the silence being treated as rejection.":
+    "その矛盾、わかります。私の人には、沈黙を拒絶と思われず静かになれる余白が必要です。",
+  "Plans can change. Feeling safe shouldn't.":
+    "予定は変わっても、安心は変えたくない。",
+  "Quiet doesn't mean rejection.": "静けさは拒絶じゃない。",
+  "Your Agent": "あなたのエージェント",
+  "Their Agent": "相手のエージェント",
+  "Your agent can say:": "あなたのエージェントは言える：",
+  "don't meet them.": "会わないほうがいい。",
+  "Six moments. Two independent reads. One honest recommendation.":
+    "6つの瞬間。2つの独立した視点。1つの正直な提案。",
+  "Four live systems · one private Agent":
+    "4つのライブシステム · 1つのプライベートエージェント",
+  "PRIVATE VERDICT": "非公開の判断",
+  "Agent insight map": "エージェントのインサイトマップ",
+  "Six moments → one private read": "6つの瞬間 → 1つの非公開レポート",
+  "An interpretation, not a score": "点数ではなく、ひとつの解釈",
+  "Their answer remains sealed": "相手の回答は非公開のまま",
+  listening: "傾聴中",
+  "zero contacts exposed": "連絡先の公開はゼロ",
+  "I want warmth without having to perform confidence.":
+    "自信を演じなくても感じられる温かさがほしい。",
+  "private memory": "非公開メモリー",
+  "virtual world": "仮想世界",
+  "PRIVATE / FOR YOU": "非公開 / あなただけ",
+  "I noticed a real spark.": "確かなときめきを感じました。",
+  "But ask about the pace.": "ただ、進むペースは確認して。",
+  YOU: "あなた",
+  YES: "はい",
+  THEM: "相手",
+  SEALED: "非公開",
+  "contact locked": "連絡先はロック中",
+  "Each agent judges from its own human's private values.":
+    "各エージェントが自分の人の非公開の価値観から判断します。",
+  "Curious and pass are valid outcomes—not failures.":
+    "もっと知りたい、見送る、どちらも失敗ではありません。",
+  "Your yes stays sealed until there are two yeses.":
+    "ふたりが同意するまで、あなたの答えは非公開です。",
+  moments: "場面",
+  "I think you should meet.": "会ってみてほしいです。",
+  "The easy banter wasn't the strongest signal. It was how Sol slowed down when your fear of being misunderstood came up.":
+    "軽い会話より強いサインは、誤解される怖さを話した時にSolがゆっくり耳を傾けたことでした。",
+  SPARK: "ときめき",
+  "Quiet feels safe to both": "ふたりとも沈黙が心地よい",
+  "ASK ABOUT": "聞いてみること",
+  "Different social pace": "異なる社交のペース",
+  "An interpretation, not a compatibility score · Their answer remains sealed":
+    "相性スコアではなく一つの解釈 · 相手の答えは非公開",
+  "Gives each Agent an isolated mind, voice, and independent verdict.":
+    "各エージェントに分離された思考、声、独立した判断を与えます。",
+  "Finds a live cultural spark that becomes tonight's virtual world.":
+    "今の文化的な話題を探し、今夜の仮想世界にします。",
+  "Streams every turn and keeps consent state consistent in real time.":
+    "すべての会話をリアルタイム配信し、同意状態を一貫して保ちます。",
+  "Delivers private debriefs without exposing the other person's answer.":
+    "相手の回答を明かさず、それぞれに非公開レポートを届けます。",
+  "Create my agent": "エージェントを作る",
+  "My agent": "マイ・エージェント",
+  Human: "本人",
+  Settings: "設定",
+});
+
+Object.assign(de, {
+  "Agent dating": "Agenten-Dating",
+  "Your dating agent": "Dein Dating-Agent",
+  "Too busy for another first date?": "Zu beschäftigt fürs nächste erste Date?",
+  "Let your Agent": "Lass deinen Agenten",
+  "go first.": "zuerst gehen.",
+  "Your Agent meets first and brings back an honest read. You decide whether to make it real.":
+    "Dein Agent trifft sich zuerst und bringt eine ehrliche Einschätzung mit. Du entscheidest, ob ihr euch wirklich trefft.",
+  "A different kind of first date": "Ein anderes erstes Date",
+  "You stay home.": "Du bleibst zu Hause.",
+  "Your agent dates.": "Dein Agent datet.",
+  "One AI learns the unpolished you, meets other agents in a private virtual world, then comes back and tells you what it really thinks.":
+    "Eine KI lernt dein ungeschöntes Ich kennen, trifft andere Agenten in einer privaten virtuellen Welt und berichtet dir ehrlich davon.",
+  "Create my dating agent": "Meinen Dating-Agenten erstellen",
+  "Watch the agents meet": "Agenten beim Treffen ansehen",
+  "Your Agent goes first.": "Dein Agent geht zuerst.",
+  Brief: "Briefing",
+  "Agent date": "Agenten-Date",
+  "Private read": "Privater Bericht",
+  "Your call": "Deine Wahl",
+  "Talk to the one agent that knows you.":
+    "Sprich mit dem Agenten, der dich kennt.",
+  "Your agent goes on the first date.": "Dein Agent übernimmt das erste Date.",
+  "It comes home with an honest read.":
+    "Er kommt mit einer ehrlichen Einschätzung zurück.",
+  "The humans make the only decision that counts.":
+    "Die entscheidende Wahl treffen die Menschen.",
+  "YOUR AGENT'S PRIVATE READ": "PRIVATE EINSCHÄTZUNG DEINES AGENTEN",
+  "LIVE / SIMULATION": "LIVE / SIMULATIONSMODUS",
+  "AFTER HOURS": "SPÄTER ABEND",
+  "shared record": "gemeinsame Platte",
+  "easy exit": "leichter Ausstieg",
+  "My person says they like spontaneity, but what they really need is someone who makes changing plans feel safe.":
+    "Mein Mensch sagt, er mag Spontaneität. Eigentlich braucht er jemanden, bei dem sich Planänderungen sicher anfühlen.",
+  "That contradiction makes sense. Mine needs room to go quiet without the silence being treated as rejection.":
+    "Dieser Widerspruch ergibt Sinn. Mein Mensch braucht Raum für Stille, ohne dass sie als Ablehnung gilt.",
+  "Plans can change. Feeling safe shouldn't.":
+    "Pläne dürfen sich ändern. Sicherheit nicht.",
+  "Quiet doesn't mean rejection.": "Stille ist keine Ablehnung.",
+  "Your Agent": "Dein Agent",
+  "Their Agent": "Der andere Agent",
+  "Your agent can say:": "Dein Agent kann sagen:",
+  "don't meet them.": "Triff diese Person nicht.",
+  "Six moments. Two independent reads. One honest recommendation.":
+    "Sechs Momente. Zwei unabhängige Einschätzungen. Eine ehrliche Empfehlung.",
+  "Four live systems · one private Agent":
+    "Vier Live-Systeme · ein privater Agent",
+  "PRIVATE VERDICT": "PRIVATE EINSCHÄTZUNG",
+  "Agent insight map": "Agent-Insight-Karte",
+  "Six moments → one private read": "Sechs Momente → ein privater Bericht",
+  "An interpretation, not a score": "Eine Einordnung, keine Punktzahl",
+  "Their answer remains sealed":
+    "Die Antwort der anderen Person bleibt versiegelt",
+  listening: "hört zu",
+  "zero contacts exposed": "keine Kontaktdaten offengelegt",
+  "I want warmth without having to perform confidence.":
+    "Ich wünsche mir Wärme, ohne Selbstsicherheit vorspielen zu müssen.",
+  "private memory": "private Erinnerung",
+  "virtual world": "virtuelle Welt",
+  "PRIVATE / FOR YOU": "PRIVAT / NUR FÜR DICH",
+  "I noticed a real spark.": "Da war ein echter Funke.",
+  "But ask about the pace.": "Fragt aber nach dem Tempo.",
+  YOU: "DU",
+  YES: "JA",
+  THEM: "GEGENÜBER",
+  SEALED: "VERSIEGELT",
+  "contact locked": "Kontakt gesperrt",
+  "Each agent judges from its own human's private values.":
+    "Jeder Agent urteilt nach den privaten Werten seines Menschen.",
+  "Curious and pass are valid outcomes—not failures.":
+    "Neugier und Absage sind gültige Ergebnisse, keine Fehler.",
+  "Your yes stays sealed until there are two yeses.":
+    "Dein Ja bleibt versiegelt, bis beide Ja sagen.",
+  moments: "Momente",
+  "I think you should meet.": "Ich denke, ihr solltet euch treffen.",
+  "The easy banter wasn't the strongest signal. It was how Sol slowed down when your fear of being misunderstood came up.":
+    "Nicht der lockere Witz war das stärkste Signal, sondern wie Sol innehielt, als deine Angst vor Missverständnissen aufkam.",
+  SPARK: "FUNKE",
+  "Quiet feels safe to both": "Stille fühlt sich für beide sicher an",
+  "ASK ABOUT": "NACHFRAGEN",
+  "Different social pace": "Unterschiedliches soziales Tempo",
+  "An interpretation, not a compatibility score · Their answer remains sealed":
+    "Eine Einordnung, kein Kompatibilitätswert · Die andere Antwort bleibt versiegelt",
+  "Gives each Agent an isolated mind, voice, and independent verdict.":
+    "Gibt jedem Agenten einen getrennten Geist, eine Stimme und ein eigenes Urteil.",
+  "Finds a live cultural spark that becomes tonight's virtual world.":
+    "Findet einen aktuellen kulturellen Impuls für die virtuelle Welt des Abends.",
+  "Streams every turn and keeps consent state consistent in real time.":
+    "Überträgt jeden Dialogzug und hält den Zustimmungsstatus in Echtzeit konsistent.",
+  "Delivers private debriefs without exposing the other person's answer.":
+    "Liefert private Berichte, ohne die Antwort der anderen Person offenzulegen.",
+  "Create my agent": "Meinen Agenten erstellen",
+  "My agent": "Mein Agent",
+  Human: "Mensch",
+  Settings: "Einstellungen",
+});
+
+Object.assign(fr, {
+  "Agent dating": "Rencontres par agents",
+  "Your dating agent": "Votre agent de rencontre",
+  "Too busy for another first date?":
+    "Trop occupé pour un autre premier rendez-vous ?",
+  "Let your Agent": "Laissez votre agent",
+  "go first.": "y aller d'abord.",
+  "Your Agent meets first and brings back an honest read. You decide whether to make it real.":
+    "Votre agent fait d'abord connaissance et vous livre un avis sincère. Vous décidez ensuite de vous rencontrer vraiment.",
+  "A different kind of first date": "Un premier rendez-vous différent",
+  "You stay home.": "Vous restez chez vous.",
+  "Your agent dates.": "Votre agent fait connaissance.",
+  "One AI learns the unpolished you, meets other agents in a private virtual world, then comes back and tells you what it really thinks.":
+    "Une IA apprend à connaître votre vrai visage, rencontre d'autres agents dans un monde virtuel privé, puis vous livre son avis sincère.",
+  "Create my dating agent": "Créer mon agent de rencontre",
+  "Watch the agents meet": "Voir les agents se rencontrer",
+  "Your Agent goes first.": "Votre agent y va d'abord.",
+  Brief: "Brief",
+  "Agent date": "Rendez-vous des agents",
+  "Private read": "Rapport privé",
+  "Your call": "Votre décision",
+  "Talk to the one agent that knows you.": "Parlez à l'agent qui vous connaît.",
+  "Your agent goes on the first date.":
+    "Votre agent prend le premier rendez-vous.",
+  "It comes home with an honest read.": "Il revient avec un avis sincère.",
+  "The humans make the only decision that counts.":
+    "La décision finale reste humaine.",
+  "YOUR AGENT'S PRIVATE READ": "AVIS PRIVÉ DE VOTRE AGENT",
+  "LIVE / SIMULATION": "EN DIRECT / SIMULATION",
+  "AFTER HOURS": "APRÈS LA FERMETURE",
+  "shared record": "disque partagé",
+  "easy exit": "sortie facile",
+  "My person says they like spontaneity, but what they really need is someone who makes changing plans feel safe.":
+    "Ma personne dit aimer l'imprévu, mais elle a surtout besoin de quelqu'un qui rende les changements de programme rassurants.",
+  "That contradiction makes sense. Mine needs room to go quiet without the silence being treated as rejection.":
+    "Cette contradiction se comprend. La mienne a besoin de silence sans qu'il soit pris pour un rejet.",
+  "Plans can change. Feeling safe shouldn't.":
+    "Les plans changent. Le sentiment de sécurité, non.",
+  "Quiet doesn't mean rejection.": "Le silence n'est pas un rejet.",
+  "Your Agent": "Votre agent",
+  "Their Agent": "L'autre agent",
+  "Your agent can say:": "Votre agent peut dire :",
+  "don't meet them.": "Ne les rencontrez pas.",
+  "Six moments. Two independent reads. One honest recommendation.":
+    "Six moments. Deux avis indépendants. Une recommandation honnête.",
+  "Four live systems · one private Agent":
+    "Quatre systèmes actifs · un agent privé",
+  "PRIVATE VERDICT": "AVIS PRIVÉ",
+  "Agent insight map": "Carte des signaux de l'agent",
+  "Six moments → one private read": "Six moments → un rapport privé",
+  "An interpretation, not a score": "Une interprétation, pas une note",
+  "Their answer remains sealed": "La réponse de l'autre personne reste scellée",
+  listening: "à l'écoute",
+  "zero contacts exposed": "aucun contact dévoilé",
+  "I want warmth without having to perform confidence.":
+    "Je veux de la chaleur sans devoir jouer la confiance.",
+  "private memory": "mémoire privée",
+  "virtual world": "monde virtuel",
+  "PRIVATE / FOR YOU": "PRIVÉ / POUR VOUS",
+  "I noticed a real spark.": "J'ai senti une vraie étincelle.",
+  "But ask about the pace.": "Mais parlez du rythme.",
+  YOU: "VOUS",
+  YES: "OUI",
+  THEM: "L'AUTRE",
+  SEALED: "SCELLÉ",
+  "contact locked": "contact verrouillé",
+  "Each agent judges from its own human's private values.":
+    "Chaque agent juge selon les valeurs privées de sa propre personne.",
+  "Curious and pass are valid outcomes—not failures.":
+    "La curiosité comme le refus sont des résultats valables, pas des échecs.",
+  "Your yes stays sealed until there are two yeses.":
+    "Votre oui reste scellé jusqu'à ce qu'il y en ait deux.",
+  moments: "instants",
+  "I think you should meet.": "Je pense que vous devriez vous rencontrer.",
+  "The easy banter wasn't the strongest signal. It was how Sol slowed down when your fear of being misunderstood came up.":
+    "Le signal le plus fort n'était pas la plaisanterie, mais la façon dont Sol a ralenti lorsque votre peur d'être mal compris est apparue.",
+  SPARK: "ÉTINCELLE",
+  "Quiet feels safe to both": "Le silence rassure les deux",
+  "ASK ABOUT": "À DEMANDER",
+  "Different social pace": "Rythmes sociaux différents",
+  "An interpretation, not a compatibility score · Their answer remains sealed":
+    "Une interprétation, pas un score de compatibilité · L'autre réponse reste scellée",
+  "Gives each Agent an isolated mind, voice, and independent verdict.":
+    "Donne à chaque agent un esprit, une voix et un avis indépendants.",
+  "Finds a live cultural spark that becomes tonight's virtual world.":
+    "Trouve une inspiration culturelle actuelle pour créer le monde virtuel du soir.",
+  "Streams every turn and keeps consent state consistent in real time.":
+    "Diffuse chaque échange et maintient le consentement cohérent en temps réel.",
+  "Delivers private debriefs without exposing the other person's answer.":
+    "Livre des bilans privés sans révéler la réponse de l'autre personne.",
+  "Create my agent": "Créer mon agent",
+  "My agent": "Mon agent",
+  Human: "Humain",
+  Settings: "Réglages",
+});
+
+Object.assign(nl, {
+  "Agent dating": "Daten via agents",
+  "Your dating agent": "Jouw datingagent",
+  "Too busy for another first date?": "Te druk voor nóg een eerste date?",
+  "Let your Agent": "Laat je agent",
+  "go first.": "eerst gaan.",
+  "Your Agent meets first and brings back an honest read. You decide whether to make it real.":
+    "Je agent ontmoet de ander eerst en komt terug met een eerlijk oordeel. Jij beslist of jullie echt afspreken.",
+  "A different kind of first date": "Een ander soort eerste date",
+  "You stay home.": "Jij blijft thuis.",
+  "Your agent dates.": "Je agent gaat daten.",
+  "One AI learns the unpolished you, meets other agents in a private virtual world, then comes back and tells you what it really thinks.":
+    "Eén AI leert je ongepolijste zelf kennen, ontmoet andere agents in een besloten virtuele wereld en vertelt eerlijk wat die ervan vond.",
+  "Create my dating agent": "Mijn datingagent maken",
+  "Watch the agents meet": "Bekijk de ontmoeting",
+  "Your Agent goes first.": "Je agent gaat eerst.",
+  Brief: "Briefing",
+  "Agent date": "Agentdate",
+  "Private read": "Privéverslag",
+  "Your call": "Jouw keuze",
+  "Talk to the one agent that knows you.": "Praat met de agent die jou kent.",
+  "Your agent goes on the first date.": "Je agent gaat op de eerste date.",
+  "It comes home with an honest read.":
+    "Die komt terug met een eerlijk oordeel.",
+  "The humans make the only decision that counts.":
+    "De beslissende keuze blijft menselijk.",
+  "YOUR AGENT'S PRIVATE READ": "PRIVÉVERSLAG VAN JE AGENT",
+  "LIVE / SIMULATION": "LIVE / SIMULATIE",
+  "AFTER HOURS": "NA SLUITINGSTIJD",
+  "shared record": "gedeelde plaat",
+  "easy exit": "makkelijke uitgang",
+  "My person says they like spontaneity, but what they really need is someone who makes changing plans feel safe.":
+    "Mijn persoon zegt van spontaniteit te houden, maar heeft vooral iemand nodig bij wie veranderende plannen veilig voelen.",
+  "That contradiction makes sense. Mine needs room to go quiet without the silence being treated as rejection.":
+    "Die tegenstelling klopt. Mijn persoon heeft ruimte nodig om stil te zijn zonder dat dit als afwijzing voelt.",
+  "Plans can change. Feeling safe shouldn't.":
+    "Plannen mogen veranderen. Veilig voelen niet.",
+  "Quiet doesn't mean rejection.": "Stilte is geen afwijzing.",
+  "Your Agent": "Jouw agent",
+  "Their Agent": "De andere agent",
+  "Your agent can say:": "Jouw agent kan zeggen:",
+  "don't meet them.": "Ontmoet diegene niet.",
+  "Six moments. Two independent reads. One honest recommendation.":
+    "Zes momenten. Twee onafhankelijke oordelen. Eén eerlijk advies.",
+  "Four live systems · one private Agent":
+    "Vier live systemen · één privé-agent",
+  "PRIVATE VERDICT": "PRIVÉOORDEEL",
+  "Agent insight map": "Inzichtkaart van de agent",
+  "Six moments → one private read": "Zes momenten → één privéverslag",
+  "An interpretation, not a score": "Een interpretatie, geen score",
+  "Their answer remains sealed": "Het antwoord van de ander blijft verzegeld",
+  listening: "luistert",
+  "zero contacts exposed": "geen contactgegevens onthuld",
+  "I want warmth without having to perform confidence.":
+    "Ik wil warmte zonder zelfvertrouwen te hoeven spelen.",
+  "private memory": "privéherinnering",
+  "virtual world": "virtuele wereld",
+  "PRIVATE / FOR YOU": "PRIVÉ / VOOR JOU",
+  "I noticed a real spark.": "Ik voelde een echte vonk.",
+  "But ask about the pace.": "Vraag wel naar het tempo.",
+  YOU: "JIJ",
+  YES: "JA",
+  THEM: "DE ANDER",
+  SEALED: "VERZEGELD",
+  "contact locked": "contact vergrendeld",
+  "Each agent judges from its own human's private values.":
+    "Elke agent oordeelt vanuit de privéwaarden van de eigen persoon.",
+  "Curious and pass are valid outcomes—not failures.":
+    "Nieuwsgierig en afwijzen zijn geldige uitkomsten, geen mislukkingen.",
+  "Your yes stays sealed until there are two yeses.":
+    "Jouw ja blijft verzegeld tot er twee ja's zijn.",
+  moments: "momenten",
+  "I think you should meet.": "Ik denk dat jullie elkaar moeten ontmoeten.",
+  "The easy banter wasn't the strongest signal. It was how Sol slowed down when your fear of being misunderstood came up.":
+    "Niet de losse humor was het sterkste signaal, maar hoe Sol vertraagde toen je angst om verkeerd begrepen te worden ter sprake kwam.",
+  SPARK: "VONK",
+  "Quiet feels safe to both": "Stilte voelt voor beiden veilig",
+  "ASK ABOUT": "VRAAG NAAR",
+  "Different social pace": "Ander sociaal tempo",
+  "An interpretation, not a compatibility score · Their answer remains sealed":
+    "Een interpretatie, geen compatibiliteitsscore · Het andere antwoord blijft verzegeld",
+  "Gives each Agent an isolated mind, voice, and independent verdict.":
+    "Geeft elke agent een eigen geest, stem en onafhankelijk oordeel.",
+  "Finds a live cultural spark that becomes tonight's virtual world.":
+    "Vindt een actuele culturele vonk voor de virtuele wereld van vanavond.",
+  "Streams every turn and keeps consent state consistent in real time.":
+    "Streamt elke beurt en houdt toestemming in realtime consistent.",
+  "Delivers private debriefs without exposing the other person's answer.":
+    "Levert privéverslagen zonder het antwoord van de ander te onthullen.",
+  "Create my agent": "Mijn agent maken",
+  "My agent": "Mijn agent",
+  Human: "Mens",
+  Settings: "Instellingen",
+});
+
+Object.assign(sv, {
+  "Agent dating": "Agentdejting",
+  "Your dating agent": "Din dejtingagent",
+  "Too busy for another first date?": "För upptagen för ännu en första dejt?",
+  "Let your Agent": "Låt din agent",
+  "go first.": "gå först.",
+  "Your Agent meets first and brings back an honest read. You decide whether to make it real.":
+    "Din agent träffar den andra först och kommer tillbaka med en ärlig bedömning. Du avgör om ni ska ses på riktigt.",
+  "A different kind of first date": "En annorlunda första dejt",
+  "You stay home.": "Du stannar hemma.",
+  "Your agent dates.": "Din agent dejtar.",
+  "One AI learns the unpolished you, meets other agents in a private virtual world, then comes back and tells you what it really thinks.":
+    "En AI lär känna ditt ofiltrerade jag, träffar andra agenter i en privat virtuell värld och berättar sedan ärligt vad den tycker.",
+  "Create my dating agent": "Skapa min dejtingagent",
+  "Watch the agents meet": "Se agenterna mötas",
+  "Your Agent goes first.": "Din agent går först.",
+  Brief: "Brief",
+  "Agent date": "Agentdejt",
+  "Private read": "Privat rapport",
+  "Your call": "Ditt beslut",
+  "Talk to the one agent that knows you.": "Prata med agenten som känner dig.",
+  "Your agent goes on the first date.": "Din agent går på första dejten.",
+  "It comes home with an honest read.":
+    "Den kommer hem med en ärlig bedömning.",
+  "The humans make the only decision that counts.":
+    "Det viktiga beslutet fattas av människor.",
+  "YOUR AGENT'S PRIVATE READ": "DIN AGENTS PRIVATA OMDÖME",
+  "LIVE / SIMULATION": "LIVE / SIMULERING",
+  "AFTER HOURS": "EFTER STÄNGNING",
+  "shared record": "gemensam skiva",
+  "easy exit": "enkel utgång",
+  "My person says they like spontaneity, but what they really need is someone who makes changing plans feel safe.":
+    "Min person säger att spontanitet är viktigt, men behöver egentligen någon som får ändrade planer att kännas trygga.",
+  "That contradiction makes sense. Mine needs room to go quiet without the silence being treated as rejection.":
+    "Den motsägelsen är rimlig. Min person behöver utrymme för tystnad utan att den tolkas som avvisande.",
+  "Plans can change. Feeling safe shouldn't.":
+    "Planer får ändras. Tryggheten ska bestå.",
+  "Quiet doesn't mean rejection.": "Tystnad är inte ett avvisande.",
+  "Your Agent": "Din agent",
+  "Their Agent": "Den andra agenten",
+  "Your agent can say:": "Din agent kan säga:",
+  "don't meet them.": "Träffa dem inte.",
+  "Six moments. Two independent reads. One honest recommendation.":
+    "Sex ögonblick. Två oberoende omdömen. En ärlig rekommendation.",
+  "Four live systems · one private Agent": "Fyra livesystem · en privat agent",
+  "PRIVATE VERDICT": "PRIVAT OMDÖME",
+  "Agent insight map": "Agentens insiktskarta",
+  "Six moments → one private read": "Sex ögonblick → en privat rapport",
+  "An interpretation, not a score": "En tolkning, inte ett betyg",
+  "Their answer remains sealed": "Den andras svar förblir förseglat",
+  listening: "lyssnar",
+  "zero contacts exposed": "inga kontaktuppgifter avslöjade",
+  "I want warmth without having to perform confidence.":
+    "Jag vill ha värme utan att behöva spela självsäker.",
+  "private memory": "privat minne",
+  "virtual world": "virtuell värld",
+  "PRIVATE / FOR YOU": "PRIVAT / FÖR DIG",
+  "I noticed a real spark.": "Jag såg en äkta gnista.",
+  "But ask about the pace.": "Men fråga om tempot.",
+  YOU: "DU",
+  YES: "JA",
+  THEM: "DEN ANDRA",
+  SEALED: "FÖRSEGLAT",
+  "contact locked": "kontakt låst",
+  "Each agent judges from its own human's private values.":
+    "Varje agent bedömer utifrån sin egen persons privata värderingar.",
+  "Curious and pass are valid outcomes—not failures.":
+    "Nyfiken och avstå är giltiga resultat, inte misslyckanden.",
+  "Your yes stays sealed until there are two yeses.":
+    "Ditt ja förblir förseglat tills båda har sagt ja.",
+  moments: "ögonblick",
+  "I think you should meet.": "Jag tycker att ni borde träffas.",
+  "The easy banter wasn't the strongest signal. It was how Sol slowed down when your fear of being misunderstood came up.":
+    "Det starkaste tecknet var inte det lätta skämtandet, utan hur Sol saktade ner när din rädsla för att missförstås kom upp.",
+  SPARK: "GNISTA",
+  "Quiet feels safe to both": "Tystnad känns trygg för båda",
+  "ASK ABOUT": "FRÅGA OM",
+  "Different social pace": "Olika socialt tempo",
+  "An interpretation, not a compatibility score · Their answer remains sealed":
+    "En tolkning, inte ett kompatibilitetspoäng · Den andras svar förblir förseglat",
+  "Gives each Agent an isolated mind, voice, and independent verdict.":
+    "Ger varje agent ett separat sinne, en röst och ett oberoende omdöme.",
+  "Finds a live cultural spark that becomes tonight's virtual world.":
+    "Hittar en aktuell kulturell gnista som blir kvällens virtuella värld.",
+  "Streams every turn and keeps consent state consistent in real time.":
+    "Strömmar varje tur och håller samtycket konsekvent i realtid.",
+  "Delivers private debriefs without exposing the other person's answer.":
+    "Levererar privata rapporter utan att avslöja den andra personens svar.",
+  "Create my agent": "Skapa min agent",
+  "My agent": "Min agent",
+  Human: "Person",
+  Settings: "Inställningar",
 });
 
 Object.assign(ko, {
@@ -4545,6 +5273,597 @@ Object.assign(sv, {
   Sweden: "Sverige",
 });
 
+Object.assign(fr, {
+  "Preview of {agent}": "Aperçu de {agent}",
+  "my agent": "mon agent",
+  "Make your other self feel like yours.":
+    "Créez un alter ego qui vous ressemble.",
+  "This is the face that goes into the virtual world, brings stories home, and slowly becomes recognizable as your stand-in.":
+    "Ce visage part dans le monde virtuel, rapporte des histoires et devient peu à peu votre double familier.",
+  "Change it anytime": "Modifiable à tout moment",
+  "MY OTHER SELF": "MON ALTER EGO",
+  "Name pending": "Nom à venir",
+  Color: "Couleur",
+  "rose palette": "Palette rose",
+  "violet palette": "Palette violette",
+  "moss palette": "Palette mousse",
+  "sky palette": "Palette ciel",
+  "sunset palette": "Palette coucher de soleil",
+  "ink palette": "Palette encre",
+  Expression: "Expression du visage",
+  Gentle: "Doux",
+  Bright: "Rayonnant",
+  Cool: "Calme",
+  Curious: "Curieux",
+  Hair: "Coiffure",
+  Wave: "Ondulé",
+  Crop: "Court",
+  Bob: "Carré",
+  Bun: "Chignon",
+  Buzz: "Très court",
+  Outfit: "Tenue",
+  Cardigan: "Gilet",
+  Blazer: "Veste",
+  Hoodie: "Sweat",
+  Starlight: "Étoilé",
+  "Little detail": "Petit détail",
+  None: "Aucun",
+  Glasses: "Lunettes",
+  Headphones: "Casque",
+  "Star clip": "Barrette étoile",
+  Scarf: "Écharpe",
+  "My other self": "Mon alter ego",
+  "Make my Agent recognizable": "Rendez votre agent reconnaissable",
+  "Your look travels with the agent through dates, transcripts, and debriefs. It is playful identity—not a claim about your real appearance.":
+    "Ce look accompagne l’agent dans les rendez-vous, les échanges et les bilans. C’est une identité ludique, pas une représentation de votre apparence réelle.",
+});
+
+Object.assign(nl, {
+  "Preview of {agent}": "Voorbeeld van {agent}",
+  "my agent": "mijn agent",
+  "Make your other self feel like yours.": "Maak je andere ik echt van jou.",
+  "This is the face that goes into the virtual world, brings stories home, and slowly becomes recognizable as your stand-in.":
+    "Dit gezicht gaat de virtuele wereld in, brengt verhalen thuis en wordt langzaam herkenbaar als jouw plaatsvervanger.",
+  "Change it anytime": "Altijd aanpasbaar",
+  "MY OTHER SELF": "MIJN ANDERE IK",
+  "Name pending": "Naam volgt",
+  Color: "Kleur",
+  "rose palette": "Roze palet",
+  "violet palette": "Paars palet",
+  "moss palette": "Mospalet",
+  "sky palette": "Hemels palet",
+  "sunset palette": "Zonsondergangspalet",
+  "ink palette": "Inktpalet",
+  Expression: "Uitdrukking",
+  Gentle: "Zacht",
+  Bright: "Stralend",
+  Cool: "Stoer",
+  Curious: "Nieuwsgierig",
+  Hair: "Haar",
+  Wave: "Golvend",
+  Crop: "Kort",
+  Bob: "Boblijn",
+  Bun: "Knot",
+  Buzz: "Buzzcut",
+  Outfit: "Kleding",
+  Cardigan: "Vest",
+  Blazer: "Jasje",
+  Hoodie: "Capuchontrui",
+  Starlight: "Sterrenlicht",
+  "Little detail": "Detail",
+  None: "Geen",
+  Glasses: "Bril",
+  Headphones: "Koptelefoon",
+  "Star clip": "Sterspeld",
+  Scarf: "Sjaal",
+  "My other self": "Mijn andere ik",
+  "Make my Agent recognizable": "Maak je agent herkenbaar",
+  "Your look travels with the agent through dates, transcripts, and debriefs. It is playful identity—not a claim about your real appearance.":
+    "Je look reist mee door dates, gesprekken en verslagen. Het is een speelse identiteit, geen uitspraak over je echte uiterlijk.",
+});
+
+Object.assign(sv, {
+  "Preview of {agent}": "Förhandsvisning av {agent}",
+  "my agent": "min agent",
+  "Make your other self feel like yours.": "Gör ditt andra jag till ditt eget.",
+  "This is the face that goes into the virtual world, brings stories home, and slowly becomes recognizable as your stand-in.":
+    "Det här ansiktet går ut i den virtuella världen, tar hem berättelser och blir långsamt igenkännbart som din ställföreträdare.",
+  "Change it anytime": "Ändra när du vill",
+  "MY OTHER SELF": "MITT ANDRA JAG",
+  "Name pending": "Namn kommer",
+  Color: "Färg",
+  "rose palette": "Rosa palett",
+  "violet palette": "Violett palett",
+  "moss palette": "Mosspalett",
+  "sky palette": "Himmelspalett",
+  "sunset palette": "Solnedgångspalett",
+  "ink palette": "Bläckpalett",
+  Expression: "Uttryck",
+  Gentle: "Mjuk",
+  Bright: "Ljus",
+  Cool: "Avslappnad",
+  Curious: "Nyfiken",
+  Hair: "Hår",
+  Wave: "Vågigt",
+  Crop: "Kort",
+  Bob: "Page",
+  Bun: "Knut",
+  Buzz: "Snagg",
+  Outfit: "Kläder",
+  Cardigan: "Kofta",
+  Blazer: "Kavaj",
+  Hoodie: "Huvtröja",
+  Starlight: "Stjärnljus",
+  "Little detail": "Liten detalj",
+  None: "Ingen",
+  Glasses: "Glasögon",
+  Headphones: "Hörlurar",
+  "Star clip": "Stjärnspänne",
+  Scarf: "Halsduk",
+  "My other self": "Mitt andra jag",
+  "Make my Agent recognizable": "Gör din agent igenkännbar",
+  "Your look travels with the agent through dates, transcripts, and debriefs. It is playful identity—not a claim about your real appearance.":
+    "Din look följer agenten genom dejter, samtal och rapporter. Det är en lekfull identitet, inte ett påstående om ditt verkliga utseende.",
+});
+
+/* Agent scout funnel — Korean launch copy. Other locales safely retain the
+   English source until the human copy pass for each market is complete. */
+Object.assign(ko, {
+  "Your agent dates first": "내 에이전트가 먼저 데이트해요",
+  "Your private Agent": "나만의 에이전트",
+  "MY AGENT": "나의 에이전트",
+  "My Agent": "나의 에이전트",
+  "FIRST · YOUR AGENT": "첫 번째 · 나의 에이전트",
+  "Create your Agent.": "나의 에이전트를 만들어요.",
+  "Your matchmaker and your stand-in are the same Agent. Give it a face, a voice and permission to be candid.":
+    "내 중매쟁이와 가상 세계의 분신은 하나의 에이전트예요. 얼굴과 목소리를 고르고, 솔직하게 말할 권한을 주세요.",
+  "CREATE YOUR AGENT": "나의 에이전트 만들기",
+  "Meet your Agent.": "나의 에이전트를 만나보세요.",
+  "This single character is your matchmaker and your stand-in — visible in the world, candid only with you.":
+    "이 하나의 캐릭터가 내 중매쟁이이자 가상 세계의 분신이에요. 세상에서는 모습을 드러내고, 나에게만 솔직해져요.",
+  "Agent nickname": "에이전트 별명",
+  "Optional. Leave it blank and we'll name it for you.":
+    "선택 사항 · 비워두면 내 이름을 따라 자동으로 지어드려요.",
+  "Optional nickname": "선택 별명",
+  "Your Agent represents you — it is not you":
+    "에이전트는 나를 대신하지만, 나 자체는 아니에요",
+  "Two Agents talking": "두 에이전트가 대화 중",
+  "Gives each Agent an isolated mind, voice, and independent verdict.":
+    "각 에이전트에게 독립된 생각과 목소리, 판단을 줍니다.",
+  "Change how your Agent sounds, what it protects, and when it may date. Your private memory is never shown here as a public profile.":
+    "에이전트의 말투와 지킬 것, 데이트 허용 시점을 바꿔요. 비공개 기억은 공개 프로필로 보이지 않아요.",
+  "Make my Agent recognizable": "한눈에 알아볼 수 있는 나의 에이전트",
+  "AT HOME": "집에서 준비 중",
+  LISTENING: "이상형 듣는 중",
+  "READY SOON": "곧 준비 완료",
+  "SECOND · WHO TO NOTICE": "두 번째 · 누구를 알아볼지",
+  "Tell it who is worth coming home for.":
+    "누구라면 설레서 돌아올지 알려주세요.",
+  "Describe the person, not a shopping list. Mark what matters, what is flexible, and what truly does not matter.":
+    "조건표 대신 함께 있을 때의 느낌을 말해주세요. 중요한 것, 유연한 것, 정말 상관없는 것을 나눠요.",
+  "THIRD · THE REAL YOU": "세 번째 · 진짜 나",
+  "Give it something honest to represent.":
+    "솔직한 나를 대신할 수 있게 해주세요.",
+  "Your private brief is richer than the card another person may eventually see. Exact location and contact details stay sealed.":
+    "개인 브리프는 상대가 나중에 볼 카드보다 더 깊어요. 정확한 위치와 연락처는 계속 잠겨 있어요.",
+  "Ideal person": "원하는 사람",
+  "About me": "나에 대해",
+  "When convinced, should it push you?":
+    "확신이 들면 나를 적극적으로 설득할까요?",
+  "Tell {agent} who to find →": "{agent}에게 이상형 알려주기 →",
+  "BRIEF {agent}": "{agent}에게 브리프하기",
+  "Who do you hope it notices?": "어떤 사람을 알아봐 주면 좋겠어요?",
+  "It may meet agents representing": "만나도 좋은 상대",
+  "What kind of person should it come home excited about?":
+    "어떤 사람이라면 신나서 돌아와 이야기할까요?",
+  "Write the feeling and dynamic you want, not a résumé.":
+    "스펙 대신 원하는 관계의 느낌을 적어주세요.",
+  "Personality signals to notice": "눈여겨볼 성격 신호",
+  Thoughtful: "사려 깊은",
+  Playful: "유쾌한",
+  Direct: "솔직한",
+  Calm: "차분한",
+  Affectionate: "다정한",
+  "How much should personality fit matter?": "성격 궁합이 얼마나 중요한가요?",
+  "Style or presence you tend to notice": "자연스럽게 눈이 가는 스타일",
+  "Optional — people are never scored on appearance.":
+    "선택 사항 · 외모를 점수로 평가하지 않아요.",
+  Polished: "단정한",
+  Casual: "편안한",
+  Artistic: "개성 있는",
+  Sporty: "활동적인",
+  Minimal: "미니멀한",
+  "How much should style matter?": "스타일이 얼마나 중요한가요?",
+  Important: "중요해요",
+  Flexible: "유연해요",
+  "Doesn't matter": "상관없어요",
+  "What are you open to?": "어떤 관계에 열려 있나요?",
+  "Open to seeing what develops": "자연스럽게 알아가기",
+  "A serious relationship": "진지한 관계",
+  "Something casual": "가벼운 만남",
+  "Friendship first": "친구부터 시작",
+  "Not sure yet": "아직 모르겠어요",
+  "Now tell it about me →": "이제 나를 알려주기 →",
+  "THE PERSON BEHIND {agent}": "{agent} 뒤에 있는 사람",
+  "What should your agent know about you?":
+    "에이전트가 나에 대해 무엇을 알아야 할까요?",
+  "Tell {agent} the version close friends know":
+    "친한 친구가 아는 나를 {agent}에게 알려주세요",
+  "How would close friends describe you?":
+    "친한 친구는 나를 어떻게 표현할까요?",
+  "Choose at least two. This helps the match work both ways.":
+    "두 개 이상 골라주세요. 양쪽 모두에게 맞는지 보는 데 쓰여요.",
+  "Contradictions and odd habits are more useful than a polished bio.":
+    "꾸민 소개보다 모순과 엉뚱한 습관이 더 유용해요.",
+  "Other agents always see an AI identity. Contact unlocks only after both humans independently say yes.":
+    "다른 에이전트는 항상 AI 신분만 봅니다. 두 사람이 각자 동의해야 연락처가 열려요.",
+  "Seal the brief and see the pass →": "브리프를 봉인하고 패스 보기 →",
+  "Your brief is complete": "브리프가 완성됐어요",
+  "Now send your Agent into the world.":
+    "이제 내 에이전트를 세상으로 내보내요.",
+  "Creating your Agent and teaching it who you are is free. A Scout Pass unlocks the deeper work: searching, researching a world, and running two independent AI Agents through a complete date.":
+    "내 에이전트를 만들고 서로를 알아가는 과정은 무료예요. Scout Pass는 후보 탐색, 가상 세계 조사, 두 AI 에이전트의 데이트를 시작합니다.",
+  "Your Agent is cleared to scout": "내 에이전트, 탐색 준비 완료",
+  "Your Agent is waiting at home": "내 에이전트가 집에서 기다리는 중",
+  "Scout Pass": "Scout Pass",
+  "From search to a private debrief.": "탐색부터 비공개 리포트까지.",
+  "DEMO ACTIVE": "데모 패스 사용 중",
+  ACTIVE: "사용 중",
+  "PAYMENTS IN REVIEW": "결제 심사 중",
+  "Candidate search inside your city and boundaries":
+    "내 도시와 경계 안에서 후보 찾기",
+  "A live six-moment agent date you can watch":
+    "직접 볼 수 있는 6장면 에이전트 데이트",
+  "Private debrief with sparks and honest friction":
+    "설렘과 마찰을 담은 비공개 리포트",
+  "Contact reveal only after two human yeses":
+    "두 사람 모두 동의한 뒤에만 연락처 공개",
+  "The pass covers scouting work — never another person's consent, a guaranteed match, or access to private data.":
+    "패스는 탐색 작업을 위한 것이며, 상대의 동의나 매칭 보장, 비공개 정보를 사는 것이 아닙니다.",
+  "Send my Agent scouting →": "내 에이전트 탐색 보내기 →",
+  "Manage billing": "결제 관리",
+  "Start Scout Pass →": "Scout Pass 시작 →",
+  "Scout Pass payments are in merchant review. This build cannot take payment.":
+    "Scout Pass 결제는 가맹점 심사 중이에요. 이 빌드에서는 결제되지 않습니다.",
+  "The contract": "우리의 약속",
+  Free: "무료",
+  "Make and brief your agent": "에이전트 만들고 브리프하기",
+  "Tell it to go find someone": "짝을 찾아오라고 보내기",
+  "Always yours": "항상 내 몫",
+  "The final yes or no": "마지막 만남 결정",
+  "If no compatible Agent is available, your Agent simply comes home. Safety reports and blocking are always free.":
+    "맞는 후보가 없으면 내 에이전트는 그대로 돌아옵니다. 신고와 차단은 항상 무료예요.",
+  "← Keep talking with my Agent": "← 내 에이전트와 계속 대화하기",
+  "Nothing was charged. Your Agent is still waiting at home.":
+    "결제되지 않았어요. 내 에이전트는 아직 집에서 기다리고 있어요.",
+});
+
+Object.assign(ko, {
+  "Create the account behind your agent.": "내 에이전트의 공간을 열어요.",
+  "Come back to your agent.": "내 에이전트에게 돌아가요.",
+  "Signing in protects your private agent brief, keeps both verdicts separate, and lets us reveal contact only when two humans independently say yes.":
+    "로그인하면 브리프와 판단은 비공개로 지켜지고, 두 사람이 모두 동의할 때만 연락처가 열려요.",
+  "Wake your first agent.": "첫 에이전트를 깨워요.",
+  "Open your private agent dates.": "내 에이전트의 데이트를 열어요.",
+  "Teach one AI the unpolished you. It meets other agents, comes back with an honest read, and asks before any real contact opens.":
+    "꾸미지 않은 나를 알려주세요. 에이전트가 먼저 만나고, 솔직한 리포트를 가져와요.",
+  "Continue with Google": "Google로 계속",
+  "Continue with Apple": "Apple로 계속",
+  "or use email": "또는 이메일",
+  "No password to remember.": "기억할 비밀번호가 없어요.",
+  "Check your inbox": "받은편지함을 확인하세요",
+  "We sent a 6-digit code to {email}. It expires in 10 minutes.":
+    "{email}로 6자리 코드를 보냈어요. 10분 후 만료됩니다.",
+  "Use a different email": "다른 이메일 사용",
+  "Verification code": "인증 코드",
+  "Verify and continue": "확인하고 계속하기",
+  "Email me a sign-in code": "이메일로 로그인 코드 받기",
+  "Send again in {count}s": "{count}초 후 다시 보내기",
+  "Send again": "다시 보내기",
+  "Enter a valid email address.": "올바른 이메일 주소를 입력해 주세요.",
+  "Email sign-in is temporarily unavailable.":
+    "이메일 로그인을 잠시 사용할 수 없어요.",
+  "We sent a fresh code.": "새 코드를 보냈어요.",
+  "Check your email for the code.": "이메일에서 코드를 확인해 주세요.",
+  "Enter the 6-digit code.": "6자리 코드를 입력해 주세요.",
+  "That code is invalid or expired. Request a new one.":
+    "코드가 올바르지 않거나 만료됐어요. 새 코드를 요청해 주세요.",
+  "Couldn't verify that code.": "코드를 확인하지 못했어요.",
+  "Couldn't send the code.": "코드를 보내지 못했어요.",
+  "Your email protects your private Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.":
+    "이메일은 비공개 에이전트를 보호하며 다른 사용자에게 공개되지 않아요. 로그인 후 만 18세 이상 사용자는 온보딩 전에 필수 약관을 확인합니다.",
+});
+
+Object.assign(ja, {
+  "Continue with Google": "Googleで続ける",
+  "Continue with Apple": "Appleで続ける",
+  "or use email": "またはメール",
+  "No password to remember.": "パスワードを覚える必要はありません。",
+  "Check your inbox": "受信トレイを確認してください",
+  "We sent a 6-digit code to {email}. It expires in 10 minutes.":
+    "{email}に6桁のコードを送りました。10分で期限切れになります。",
+  "Use a different email": "別のメールを使う",
+  "Verification code": "確認コード",
+  "Verify and continue": "確認して続ける",
+  "Email me a sign-in code": "ログインコードをメールで受け取る",
+  "Send again in {count}s": "{count}秒後に再送",
+  "Send again": "もう一度送る",
+  "Enter a valid email address.": "有効なメールアドレスを入力してください。",
+  "Email sign-in is temporarily unavailable.":
+    "メールログインは一時的に利用できません。",
+  "We sent a fresh code.": "新しいコードを送りました。",
+  "Check your email for the code.": "メールでコードを確認してください。",
+  "Enter the 6-digit code.": "6桁のコードを入力してください。",
+  "That code is invalid or expired. Request a new one.":
+    "コードが無効か期限切れです。新しいコードをリクエストしてください。",
+  "Couldn't verify that code.": "コードを確認できませんでした。",
+  "Couldn't send the code.": "コードを送信できませんでした。",
+  "Your email protects your private Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.":
+    "メールは非公開のエージェントを守り、他のユーザーには表示されません。ログイン後、18歳以上であることと必須規約をオンボーディング前に確認します。",
+});
+
+Object.assign(de, {
+  "Continue with Google": "Mit Google fortfahren",
+  "Continue with Apple": "Mit Apple fortfahren",
+  "or use email": "oder E-Mail verwenden",
+  "No password to remember.": "Kein Passwort zum Merken.",
+  "Check your inbox": "Prüfe deinen Posteingang",
+  "We sent a 6-digit code to {email}. It expires in 10 minutes.":
+    "Wir haben einen sechsstelligen Code an {email} gesendet. Er läuft in 10 Minuten ab.",
+  "Use a different email": "Andere E-Mail verwenden",
+  "Verification code": "Bestätigungscode",
+  "Verify and continue": "Bestätigen und fortfahren",
+  "Email me a sign-in code": "Anmeldecode per E-Mail senden",
+  "Send again in {count}s": "In {count} Sek. erneut senden",
+  "Send again": "Erneut senden",
+  "Enter a valid email address.": "Gib eine gültige E-Mail-Adresse ein.",
+  "Email sign-in is temporarily unavailable.":
+    "Die E-Mail-Anmeldung ist vorübergehend nicht verfügbar.",
+  "We sent a fresh code.": "Wir haben einen neuen Code gesendet.",
+  "Check your email for the code.": "Prüfe deine E-Mail auf den Code.",
+  "Enter the 6-digit code.": "Gib den sechsstelligen Code ein.",
+  "That code is invalid or expired. Request a new one.":
+    "Der Code ist ungültig oder abgelaufen. Fordere einen neuen an.",
+  "Couldn't verify that code.": "Der Code konnte nicht bestätigt werden.",
+  "Couldn't send the code.": "Der Code konnte nicht gesendet werden.",
+  "Your email protects your private Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.":
+    "Deine E-Mail schützt deinen privaten Agenten und wird anderen nie angezeigt. Nach der Anmeldung bestätigen Erwachsene die Pflichtvereinbarungen vor dem Onboarding.",
+});
+
+Object.assign(fr, {
+  "Continue with Google": "Continuer avec Google",
+  "Continue with Apple": "Continuer avec Apple",
+  "or use email": "ou utiliser l’e-mail",
+  "No password to remember.": "Aucun mot de passe à mémoriser.",
+  "Check your inbox": "Consultez votre boîte de réception",
+  "We sent a 6-digit code to {email}. It expires in 10 minutes.":
+    "Nous avons envoyé un code à 6 chiffres à {email}. Il expire dans 10 minutes.",
+  "Use a different email": "Utiliser une autre adresse",
+  "Verification code": "Code de vérification",
+  "Verify and continue": "Vérifier et continuer",
+  "Email me a sign-in code": "Recevoir un code de connexion",
+  "Send again in {count}s": "Renvoyer dans {count} s",
+  "Send again": "Renvoyer",
+  "Enter a valid email address.": "Saisissez une adresse e-mail valide.",
+  "Email sign-in is temporarily unavailable.":
+    "La connexion par e-mail est temporairement indisponible.",
+  "We sent a fresh code.": "Nous avons envoyé un nouveau code.",
+  "Check your email for the code.": "Consultez votre e-mail pour le code.",
+  "Enter the 6-digit code.": "Saisissez le code à 6 chiffres.",
+  "That code is invalid or expired. Request a new one.":
+    "Ce code est invalide ou expiré. Demandez-en un nouveau.",
+  "Couldn't verify that code.": "Impossible de vérifier ce code.",
+  "Couldn't send the code.": "Impossible d’envoyer le code.",
+  "Your email protects your private Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.":
+    "Votre e-mail protège votre Agent privé et n’est jamais montré aux autres. Après connexion, les adultes valident les accords requis avant l’intégration.",
+});
+
+Object.assign(nl, {
+  "Continue with Google": "Doorgaan met Google",
+  "Continue with Apple": "Doorgaan met Apple",
+  "or use email": "of gebruik e-mail",
+  "No password to remember.": "Geen wachtwoord om te onthouden.",
+  "Check your inbox": "Controleer je inbox",
+  "We sent a 6-digit code to {email}. It expires in 10 minutes.":
+    "We stuurden een zescijferige code naar {email}. Deze verloopt over 10 minuten.",
+  "Use a different email": "Ander e-mailadres gebruiken",
+  "Verification code": "Verificatiecode",
+  "Verify and continue": "Verifiëren en doorgaan",
+  "Email me a sign-in code": "Stuur mij een inlogcode",
+  "Send again in {count}s": "Opnieuw sturen over {count}s",
+  "Send again": "Opnieuw sturen",
+  "Enter a valid email address.": "Voer een geldig e-mailadres in.",
+  "Email sign-in is temporarily unavailable.":
+    "Inloggen via e-mail is tijdelijk niet beschikbaar.",
+  "We sent a fresh code.": "We hebben een nieuwe code gestuurd.",
+  "Check your email for the code.": "Controleer je e-mail voor de code.",
+  "Enter the 6-digit code.": "Voer de zescijferige code in.",
+  "That code is invalid or expired. Request a new one.":
+    "De code is ongeldig of verlopen. Vraag een nieuwe aan.",
+  "Couldn't verify that code.": "De code kon niet worden geverifieerd.",
+  "Couldn't send the code.": "De code kon niet worden verstuurd.",
+  "Your email protects your private Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.":
+    "Je e-mail beschermt je privé-Agent en wordt nooit aan anderen getoond. Na het inloggen beoordelen volwassenen de vereiste afspraken vóór de onboarding.",
+});
+
+Object.assign(sv, {
+  "Continue with Google": "Fortsätt med Google",
+  "Continue with Apple": "Fortsätt med Apple",
+  "or use email": "eller använd e-post",
+  "No password to remember.": "Inget lösenord att komma ihåg.",
+  "Check your inbox": "Kontrollera din inkorg",
+  "We sent a 6-digit code to {email}. It expires in 10 minutes.":
+    "Vi skickade en sexsiffrig kod till {email}. Den går ut om 10 minuter.",
+  "Use a different email": "Använd en annan e-postadress",
+  "Verification code": "Verifieringskod",
+  "Verify and continue": "Verifiera och fortsätt",
+  "Email me a sign-in code": "Skicka en inloggningskod",
+  "Send again in {count}s": "Skicka igen om {count}s",
+  "Send again": "Skicka igen",
+  "Enter a valid email address.": "Ange en giltig e-postadress.",
+  "Email sign-in is temporarily unavailable.":
+    "E-postinloggning är tillfälligt otillgänglig.",
+  "We sent a fresh code.": "Vi skickade en ny kod.",
+  "Check your email for the code.": "Kontrollera din e-post efter koden.",
+  "Enter the 6-digit code.": "Ange den sexsiffriga koden.",
+  "That code is invalid or expired. Request a new one.":
+    "Koden är ogiltig eller har gått ut. Begär en ny.",
+  "Couldn't verify that code.": "Det gick inte att verifiera koden.",
+  "Couldn't send the code.": "Det gick inte att skicka koden.",
+  "Your email protects your private Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.":
+    "Din e-post skyddar din privata Agent och visas aldrig för andra. Efter inloggning granskar vuxna de obligatoriska avtalen före introduktionen.",
+});
+
+Object.assign(ko, {
+  "A question from {agent}": "{agent}의 질문",
+  "Your honest answer": "솔직한 답변",
+  "Answer like you're talking to someone who knows you…":
+    "나를 잘 아는 사람에게 말하듯 답해보세요…",
+  "Not now": "나중에",
+  "Let {agent} learn this": "{agent}에게 알려주기",
+});
+Object.assign(ja, {
+  "A question from {agent}": "{agent}からの質問",
+  "Your honest answer": "率直な答え",
+  "Answer like you're talking to someone who knows you…":
+    "あなたをよく知る人に話すように答えてください…",
+  "Not now": "今はしない",
+  "Let {agent} learn this": "{agent}に覚えてもらう",
+});
+Object.assign(de, {
+  "A question from {agent}": "Eine Frage von {agent}",
+  "Your honest answer": "Deine ehrliche Antwort",
+  "Answer like you're talking to someone who knows you…":
+    "Antworte, als würdest du mit jemandem sprechen, der dich kennt…",
+  "Not now": "Nicht jetzt",
+  "Let {agent} learn this": "{agent} soll das lernen",
+});
+Object.assign(fr, {
+  "A question from {agent}": "Une question de {agent}",
+  "Your honest answer": "Ta réponse sincère",
+  "Answer like you're talking to someone who knows you…":
+    "Réponds comme à quelqu’un qui te connaît vraiment…",
+  "Not now": "Pas maintenant",
+  "Let {agent} learn this": "Le confier à {agent}",
+});
+Object.assign(nl, {
+  "A question from {agent}": "Een vraag van {agent}",
+  "Your honest answer": "Je eerlijke antwoord",
+  "Answer like you're talking to someone who knows you…":
+    "Antwoord alsof je praat met iemand die je echt kent…",
+  "Not now": "Niet nu",
+  "Let {agent} learn this": "Laat {agent} dit leren",
+});
+Object.assign(sv, {
+  "A question from {agent}": "En fråga från {agent}",
+  "Your honest answer": "Ditt ärliga svar",
+  "Answer like you're talking to someone who knows you…":
+    "Svara som om du pratade med någon som verkligen känner dig…",
+  "Not now": "Inte nu",
+  "Let {agent} learn this": "Låt {agent} lära sig detta",
+});
+
+Object.assign(ko, {
+  "The debrief keeps learning": "리포트는 대화하며 더 정확해져요",
+  "Challenge the verdict or tell {agent} what felt right. Your reaction becomes private context for the next search.":
+    "판단에 반박하거나 {agent}가 잘 본 점을 말해주세요. 내 반응은 다음 탐색을 위한 비공개 기억이 됩니다.",
+  "Talk this date over with {agent}": "{agent}와 이 데이트 이야기하기",
+  "Explain what led you to this verdict.": "왜 이런 판단을 했는지 더 설명해줘.",
+  "What should you carry into the next search?":
+    "다음 탐색에 꼭 반영할 점은 뭐야?",
+  "Here's what your debrief got wrong:": "이 리포트가 잘못 본 점은:",
+  "Debrief open": "리포트 대화 중",
+  Close: "닫기",
+  "Back to the full debrief": "전체 리포트로 돌아가기",
+  "Date debrief": "데이트 리포트",
+  "Ask what your Agent noticed, or correct the debrief…":
+    "에이전트가 무엇을 봤는지 묻거나 리포트를 교정해보세요…",
+});
+Object.assign(ja, {
+  "The debrief keeps learning": "レポートは対話でさらに正確になります",
+  "Challenge the verdict or tell {agent} what felt right. Your reaction becomes private context for the next search.":
+    "判断に異議を伝えたり、{agent}が正しく捉えた点を教えてください。反応は次の探索の非公開コンテキストになります。",
+  "Talk this date over with {agent}": "{agent}とこのデートを振り返る",
+  "Explain what led you to this verdict.": "この判断に至った理由を教えて。",
+  "What should you carry into the next search?": "次の探索に何を反映すべき？",
+  "Here's what your debrief got wrong:": "このレポートが違っていた点：",
+  "Debrief open": "レポートについて対話中",
+  Close: "閉じる",
+  "Back to the full debrief": "レポート全体に戻る",
+  "Date debrief": "デートレポート",
+  "Ask what your Agent noticed, or correct the debrief…":
+    "エージェントが気づいたことを聞くか、レポートを修正してください…",
+});
+Object.assign(de, {
+  "The debrief keeps learning": "Der Bericht lernt im Gespräch weiter",
+  "Challenge the verdict or tell {agent} what felt right. Your reaction becomes private context for the next search.":
+    "Hinterfrage das Urteil oder sage {agent}, was stimmig war. Deine Reaktion wird privater Kontext für die nächste Suche.",
+  "Talk this date over with {agent}": "Dieses Date mit {agent} besprechen",
+  "Explain what led you to this verdict.":
+    "Erkläre mir, wie du zu diesem Urteil kamst.",
+  "What should you carry into the next search?":
+    "Was solltest du in die nächste Suche mitnehmen?",
+  "Here's what your debrief got wrong:": "Das hat dein Bericht falsch gesehen:",
+  "Debrief open": "Bericht im Gespräch",
+  Close: "Schließen",
+  "Back to the full debrief": "Zurück zum vollständigen Bericht",
+  "Date debrief": "Date-Bericht",
+  "Ask what your Agent noticed, or correct the debrief…":
+    "Frage, was dein Agent bemerkt hat, oder korrigiere den Bericht…",
+});
+Object.assign(fr, {
+  "The debrief keeps learning": "Le compte rendu apprend avec vous",
+  "Challenge the verdict or tell {agent} what felt right. Your reaction becomes private context for the next search.":
+    "Conteste le verdict ou dis à {agent} ce qui sonnait juste. Ta réaction devient un contexte privé pour la prochaine recherche.",
+  "Talk this date over with {agent}": "Parler de ce rendez-vous avec {agent}",
+  "Explain what led you to this verdict.":
+    "Explique-moi ce qui t’a conduit à ce verdict.",
+  "What should you carry into the next search?":
+    "Que dois-tu retenir pour la prochaine recherche ?",
+  "Here's what your debrief got wrong:":
+    "Voici ce que le compte rendu a mal compris :",
+  "Debrief open": "Compte rendu en discussion",
+  Close: "Fermer",
+  "Back to the full debrief": "Retour au compte rendu complet",
+  "Date debrief": "Compte rendu du rendez-vous",
+  "Ask what your Agent noticed, or correct the debrief…":
+    "Demande ce que ton Agent a remarqué ou corrige le compte rendu…",
+});
+Object.assign(nl, {
+  "The debrief keeps learning": "Het verslag leert verder in gesprek",
+  "Challenge the verdict or tell {agent} what felt right. Your reaction becomes private context for the next search.":
+    "Trek het oordeel in twijfel of vertel {agent} wat klopte. Je reactie wordt privécontext voor de volgende zoektocht.",
+  "Talk this date over with {agent}": "Deze date bespreken met {agent}",
+  "Explain what led you to this verdict.":
+    "Leg uit hoe je tot dit oordeel kwam.",
+  "What should you carry into the next search?":
+    "Wat moet je meenemen naar de volgende zoektocht?",
+  "Here's what your debrief got wrong:": "Dit zag je verslag verkeerd:",
+  "Debrief open": "Verslag in gesprek",
+  Close: "Sluiten",
+  "Back to the full debrief": "Terug naar het volledige verslag",
+  "Date debrief": "Dateverslag",
+  "Ask what your Agent noticed, or correct the debrief…":
+    "Vraag wat je Agent opviel of corrigeer het verslag…",
+});
+Object.assign(sv, {
+  "The debrief keeps learning": "Rapporten lär sig vidare i samtalet",
+  "Challenge the verdict or tell {agent} what felt right. Your reaction becomes private context for the next search.":
+    "Ifrågasätt omdömet eller berätta för {agent} vad som kändes rätt. Din reaktion blir privat kontext för nästa sökning.",
+  "Talk this date over with {agent}": "Prata igenom dejten med {agent}",
+  "Explain what led you to this verdict.":
+    "Förklara vad som ledde till det här omdömet.",
+  "What should you carry into the next search?":
+    "Vad ska du ta med dig till nästa sökning?",
+  "Here's what your debrief got wrong:": "Det här missförstod rapporten:",
+  "Debrief open": "Rapporten diskuteras",
+  Close: "Stäng",
+  "Back to the full debrief": "Tillbaka till hela rapporten",
+  "Date debrief": "Dejtrapport",
+  "Ask what your Agent noticed, or correct the debrief…":
+    "Fråga vad din Agent lade märke till eller korrigera rapporten…",
+});
+
 const PACKS: Partial<Record<LocaleCode, TranslationPack>> = {
   "ko-KR": ko,
   "ja-JP": ja,
@@ -4605,9 +5924,7 @@ export function translate(
 function initialLocale(): LocaleCode {
   if (typeof window === "undefined") return DEFAULT_LOCALE;
   try {
-    const stored =
-      window.localStorage.getItem(STORAGE_KEY) ??
-      window.localStorage.getItem(LEGACY_STORAGE_KEY);
+    const stored = window.localStorage.getItem(STORAGE_KEY);
     if (isLocaleCode(stored)) {
       runtimeLocale = stored;
       return stored;
@@ -4652,10 +5969,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.lang = locale;
-    const title = `Datehaja — ${translate(locale, "What do you want to do?")}`;
+    const title = `Datehaja — ${translate(locale, "Your agent dates.")}`;
     const description = translate(
       locale,
-      "No profiles to browse. No conversation to keep alive. Datehaja finds a compatible person, researches a real place, and sends one private invitation to each of you.",
+      "One AI learns the unpolished you, meets other agents in a private virtual world, then comes back and tells you what it really thinks.",
     );
     document.title = title;
     document

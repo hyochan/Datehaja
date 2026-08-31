@@ -747,27 +747,27 @@ export const status = query({
  */
 export const respondAsPersona = mutation({
   args: {
-    dropId: v.id("dateDrops"),
+    dropId: v.id("datePlans"),
     response: v.union(v.literal("accept"), v.literal("pass")),
   },
   returns: v.object({ confirmed: v.boolean(), personaName: v.string() }),
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
     const me = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop_and_user", (q) =>
         q.eq("dropId", args.dropId).eq("userId", userId),
       )
       .unique();
     if (!me) throw new Error("That date plan isn't yours.");
 
-    const drop = await ctx.db.get("dateDrops", args.dropId);
+    const drop = await ctx.db.get("datePlans", args.dropId);
     if (!drop) throw new Error("That date plan is gone.");
     if (isTerminalDrop(drop.status))
       throw new Error("This date plan is already closed.");
 
     const participants = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop", (q) => q.eq("dropId", args.dropId))
       .take(10);
 
@@ -792,7 +792,7 @@ export const respondAsPersona = mutation({
     const personaName = otherProfile.displayName;
 
     if (args.response === "pass") {
-      await ctx.db.patch("dateDropParticipants", other._id, {
+      await ctx.db.patch("datePlanParticipants", other._id, {
         state: "passed",
         respondedAt: now,
         passReason: "timing",
@@ -815,7 +815,7 @@ export const respondAsPersona = mutation({
       if (stillIn.length > 0) {
         if (drop.status !== "partially_accepted") {
           assertDropTransition(drop.status, "partially_accepted");
-          await ctx.db.patch("dateDrops", drop._id, {
+          await ctx.db.patch("datePlans", drop._id, {
             status: "partially_accepted",
             updatedAt: now,
           });
@@ -853,13 +853,13 @@ export const respondAsPersona = mutation({
       return { confirmed: false, personaName };
     }
 
-    await ctx.db.patch("dateDropParticipants", other._id, {
+    await ctx.db.patch("datePlanParticipants", other._id, {
       state: "accepted",
       respondedAt: now,
     });
 
     const refreshed = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop", (q) => q.eq("dropId", args.dropId))
       .take(10);
 
@@ -867,14 +867,14 @@ export const respondAsPersona = mutation({
     assertDropTransition(drop.status, nextStatus);
 
     if (nextStatus === "confirmed") {
-      await ctx.db.patch("dateDrops", drop._id, {
+      await ctx.db.patch("datePlans", drop._id, {
         status: "confirmed",
         confirmedAt: now,
         updatedAt: now,
       });
       for (const p of refreshed) {
         if (p.state === "accepted") {
-          await ctx.db.patch("dateDropParticipants", p._id, {
+          await ctx.db.patch("datePlanParticipants", p._id, {
             state: "confirmed",
           });
         }
@@ -887,7 +887,7 @@ export const respondAsPersona = mutation({
           }
         }
       }
-      await ctx.scheduler.runAfter(0, internal.dateDrops.notifyConfirmed, {
+      await ctx.scheduler.runAfter(0, internal.datePlans.notifyConfirmed, {
         dropId: drop._id,
       });
       await recordAudit(ctx, {
@@ -900,7 +900,7 @@ export const respondAsPersona = mutation({
       return { confirmed: true, personaName };
     }
 
-    await ctx.db.patch("dateDrops", drop._id, {
+    await ctx.db.patch("datePlans", drop._id, {
       status: nextStatus,
       updatedAt: now,
     });

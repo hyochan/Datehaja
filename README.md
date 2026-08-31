@@ -1,360 +1,197 @@
 # Datehaja
 
-**Tell us what you want to do. Find someone who wants to do it too.**
+**You stay home. Your agent dates.**
 
-**데이트하자** means “let's go on a date” in Korean: a warm, direct invitation,
-not a dating-app label. Datehaja starts with the date you actually want — a
-film, a walk, an exhibition, live music, or anything else. It then finds a
-compatible new person who wants to join you, researches the real place, and
-privately invites you both. No swiping. No endless chats. No requirement to
-turn one good activity into a longer evening.
+Datehaja is an agent-dating experiment for the Convex hackathon. Each person creates one private AI Agent: their matchmaker, confidant, and visible character in the virtual world. The Agent learns the parts of its person that do not fit inside a dating profile, dates another person&apos;s Agent, returns with an independent and candid debrief, and may advocate for the humans to meet. Contact opens only after two independent human yeses.
 
-**Live app:** https://datehaja.com
-**Built for:** the [Convex All Gas Hackathon](https://www.convex.dev/hackathons/all-gas) (Convex · OpenAI · Firecrawl · AgentMail)
+The agents can explore. Only humans can consent.
 
----
+## Why this exists
 
-## The problem
+Most dating products ask people to judge profiles, perform in chat, and invest emotional energy before they know whether a conversation has any shape. Datehaja moves that speculative work to personal agents without pretending that an AI is the person or that simulated chemistry proves real chemistry.
 
-Dating apps have optimised the wrong half of the funnel. They are extraordinarily good at generating matches and extraordinarily bad at generating dates.
+The intended loop is:
 
-You browse hundreds of profiles. You swipe. You match. You then perform several days of low-stakes text conversation whose entire purpose is to decide whether to have one drink. Most of those conversations die of natural causes. The ones that survive stall on the hardest question of all — _so, where should we go?_ — which nobody wants to be the one to answer.
-
-And to get that far, you traded your phone number, your Instagram, or your email to someone you've never met.
-
-## The solution
-
-Invert it.
-
-| Every other dating app                                                              | Datehaja                                                                                     |
-| ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| Browse → Swipe → Match → Chat forever → Maybe decide to meet → Work out where to go | Say what you want to do → We find someone who wants it too → You both say yes → You go do it |
-
-A **date plan** is not a match. It's a time, a real place found by live web
-research, an estimated cost, a short honest reason it suits you both, and one
-decision to make: accept or pass.
-
-## How Datehaja works
-
-1. **You name the date and the time.** “An indie film on Saturday, 6–10:30 PM. The film can be the whole date.” The activity is the anchor, not an afterthought.
-2. **Hard filters run in code.** Age, mutual gender interest, distance, genuine availability overlap, blocks, moderation state, budget, shared language. This stage is pure TypeScript and is the only thing allowed to exclude anyone.
-3. **Survivors are scored deterministically.** Shared interests, compatible date styles, distance, overlap length, budget fit, lifestyle and atmosphere fit — each contributing a known weight, with the signals recorded alongside the score.
-4. **OpenAI ranks the shortlist** and explains, in language you could show either person, why a particular pairing would work. It never sees a pair that failed step 2, and it cannot overrule a rule.
-5. **Firecrawl researches the requested activity.** Live web search around the midpoint of the two people, anchored by the specific date idea and filtered by budget, accessibility and their shared preferences. Every venue keeps its source URL, a verbatim evidence snippet, and a timestamp.
-6. **OpenAI writes the plan** from those researched venues only. A single film, walk, or exhibition is a complete date; it adds a second stop only when the request genuinely calls for one.
-7. **Datehaja Concierge invites both people privately**, by email, from its own AgentMail inbox. Neither sees the other's address.
-8. **They independently accept or pass.** Neither learns the other's answer until it's a date.
-9. **If one passes,** the other's evening stays held and Datehaja looks for someone else who fits the same plan — rather than cancelling on the person who said yes.
-10. **If nobody suitable is found before the cutoff,** the plan expires gracefully and says so honestly: _we couldn't find the right match for this date, so we cancelled it rather than force a poor one._
-11. **Your calendar follows the same lifecycle.** One acceptance creates a tentative reservation; two acceptances finalize it; a withdrawal, cancellation, or unsuccessful replacement marks that same event cancelled. Google Calendar, Apple Calendar, Outlook, and other iCalendar clients can subscribe through a private capability URL.
-12. **A trusted contact can receive the plan.** Only when the user asks, Datehaja Concierge sends their first name, time, and public venue — never the match's identity or contact details.
-13. **After the planned end, each person can check in privately.** Outcome, safety, whether they would meet again, and venue quality are optional and never shown to the other participant.
-
-## Architecture
-
-```mermaid
-flowchart TB
-    subgraph browser["Browser — datehaja.com"]
-        UI["React 19 SPA<br/>Vercel static delivery"]
-    end
-
-    subgraph convex["Convex — merry-bass-190.convex.cloud"]
-        Q["Queries<br/>realtime subscriptions"]
-        M["Mutations<br/>transactional state"]
-        A["Actions<br/>external I/O"]
-        H["HTTP actions<br/>webhooks + fallback static site"]
-        C["Crons<br/>cutoffs, reminders, completion"]
-        DB[("Database<br/>profiles · availability<br/>dateDrops · participants<br/>venues · aiRuns · researchRuns")]
-    end
-
-    subgraph external["External"]
-        OAI["OpenAI<br/>/v1/responses"]
-        FC["Firecrawl<br/>/v2/search · /v2/scrape"]
-        AM["AgentMail<br/>Concierge inbox"]
-    end
-
-    UI <-->|"WebSocket — live updates"| Q
-    UI -->|accept / pass / cancel| M
-    Q --- DB
-    M --- DB
-    M -->|ctx.scheduler| A
-    C --> M
-    A --> OAI
-    A --> FC
-    A --> AM
-    AM -->|"message.received<br/>Svix-signed"| H
-    H --> M
-    H -.->|convex.site fallback| UI
-```
-
-### The matching pipeline
+1. **Teach your agent.** Share contradictions, boundaries, desired connection, voice, and how strongly it may advocate.
+2. **Agents meet first.** Two eligible people&apos;s Agents have a six-turn simulated date. Each receives only its own human&apos;s private brief plus the public transcript.
+3. **Replay what happened.** The agents move through a spatial date world, react to nearby objects, and leave six inspectable moments—not a magic compatibility percentage.
+4. **Receive a private debrief.** Each Agent independently returns `encourage`, `curious`, or `pass`, with sparks, friction, and a plain-language reason.
+5. **Humans decide privately.** No user sees the other verdict, the other decision, or who answered first.
+6. **Two yeses open contact.** One no closes the date quietly. Demo dates never expose a real address.
 
 ```mermaid
 flowchart LR
-    W["Availability<br/>window"] --> HF["Stage 1<br/>hard filters<br/><i>pure code</i>"]
-    HF --> DS["Stage 2<br/>deterministic score<br/><i>explainable signals</i>"]
-    DS --> AI["Stage 3<br/>OpenAI ranking<br/><i>judgement + rationale</i>"]
-    AI --> R["Firecrawl<br/>live venue research"]
-    R --> P["OpenAI<br/>plan generation"]
-    P --> I["Private invitations<br/>via AgentMail"]
-    I --> D{"Both<br/>accept?"}
-    D -->|yes| CF["Confirmed"]
-    D -->|one passes| RP["Replacement search<br/><i>keeps the yes alive</i>"]
-    RP --> I
-    D -->|cutoff reached| EX["expired_no_match"]
+  H1[Human A] -->|private brief| A1[Agent A]
+  H2[Human B] -->|private brief| A2[Agent B]
+  A1 <-->|public simulated transcript| A2
+  A1 -->|private verdict| H1
+  A2 -->|private verdict| H2
+  H1 -->|sealed decision| C{Two human yeses?}
+  H2 -->|sealed decision| C
+  C -->|yes| O[Contact opens to both]
+  C -->|no| X[Close without disclosure]
 ```
 
-## Why Convex
+## What the sponsor stack actually does
 
-Convex isn't the database behind Datehaja; it's the whole backend, and the product would be materially worse on anything else.
+### Convex
 
-- **Realtime is the product.** When your match accepts, your screen says _It's a date_ without a refresh, a poll, or a socket you wrote. Every screen in the app is a `useQuery` subscription over the same documents the background jobs are writing.
-- **Every mutation is a transaction.** Accepting a date plan reads both participants, derives the next lifecycle state, patches the plan, books two availability windows and writes an audit event — atomically. There is no state where one person is confirmed and the other isn't.
-- **Actions do the messy part, mutations keep the truth.** OpenAI, Firecrawl and AgentMail are all called from actions. They can fail, time out, or return nonsense; none of that can leave a plan half-written, because the only writes happen in small mutations with validated arguments.
-- **The scheduler is the workflow engine.** `ctx.scheduler.runAfter` chains the pipeline; crons handle the 24-hour cutoff, reminders and completion. No queue to run, no worker to deploy.
-- **`convex/http.ts` is both the webhook endpoint and the fallback web server.** AgentMail stays on the stable `*.convex.site` endpoint while the same React app is also available there for recovery.
-- **Calendar sync is derived, not duplicated.** A secret iCalendar feed maps the transactional date-plan and participant states to `TENTATIVE`, `CONFIRMED`, or `CANCELLED` with one stable event UID, so an external calendar cannot drift from the app's source of truth.
-- **The production domain is a thin Vercel delivery layer.** It serves the Vite build at `datehaja.com`; every stateful feature still talks directly to the same Convex production deployment. The identical build remains on `@convex-dev/static-hosting` as a fallback.
+Convex is the product runtime, not just storage.
 
-Convex features used: schema, tables, indexes, queries, internal queries, mutations, internal mutations, actions, internal actions, HTTP actions, crons, scheduled functions, file storage, realtime queries, Convex Auth, and one registered component (`staticHosting`).
+- Agent chat, six-turn date transcripts, debrief state, and consent update in real time.
+- Each turn is persisted as it completes, so the UI does not poll a detached job.
+- Human consent is transactional. Contact is returned by the query only when both stored decisions are `yes`.
+- Access checks scope private messages, dates, and verdicts to their owners.
+- First-party funnel events live beside product state without copying profile text or contact details.
 
-## How OpenAI is used
+### OpenAI
 
-All model calls go through `/v1/responses` with a strict JSON Schema, from `convex/integrations/openai.ts`. Three jobs:
+OpenAI gives each Agent an isolated perspective.
 
-| Purpose           | What the model does                                                                                                      |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `rank_candidates` | Ranks an already-filtered shortlist and writes the "why you two" line, in language safe to show either person            |
-| `venue_summary`   | Turns crawled pages into structured venue records — name, category, address, hours, price, and a verbatim evidence quote |
-| `build_plan`      | Composes the date itself from the researched venues: stops, timings, cost, meeting instructions                          |
+- A private human-agent conversation learns durable corrections and preferences.
+- Date turns alternate between two separately prompted agents.
+- Each agent sees its own brief and the shared transcript, never the other private brief.
+- Verdicts are generated independently and may recommend, remain curious, or pass. A pass carries one private structured reason and a concrete lesson for the Agent's next date.
+- Prompts explicitly identify the speaker as AI, treat profile text as untrusted data, forbid contact disclosure, and prohibit manipulating consent.
+- Every run records model, latency, token usage, outcome, and a redacted preview in `aiRuns`.
+- Active Agent chat, date turns, and verdicts prefer `gpt-5-nano`; `gpt-5.6-luna` remains the first quality fallback and the proven default for heavier legacy research extraction.
 
-Design rules the code enforces:
+### Firecrawl
 
-- **The model ranks; it never filters.** Every hard constraint is programmatic. A pair that fails Stage 1 is never shown to the model, and a model score cannot resurrect it.
-- **Structured or nothing.** Free text is never parsed by hand. Refusals, truncation (`status: "incomplete"`) and non-JSON output are all detected and treated as failures rather than parsed optimistically.
-- **Prompts forbid sensitive-attribute reasoning** — gender, race, religion, nationality, disability, body, income — explicitly, and the code never puts those in the payload in the first place.
-- **A model ladder** handles availability, ordered cheapest-capable first. It was chosen by measuring the hardest task — extracting venues from eight crawled pages — not from the price list. `gpt-5.6-luna` matched `gpt-5-mini`'s output exactly at 2.5x the speed and a lower price, while the far pricier `gpt-5.6-terra` could not run the request at all on a new account: its tokens-per-minute allowance is too small for the payload. A TPM refusal now drops to the next model rather than failing, since smaller models carry roomier allowances. Billing failures (`credit_balance_exhausted` and friends) stop immediately instead of burning the ladder.
-- **One date plan costs about 23,000 tokens** across all three calls — roughly $0.0066 on `gpt-5.6-luna`. Venue extraction is 80% of that, because it reads the crawled pages.
-- **Every call is recorded** in `aiRuns` — purpose, model, latency, tokens, outcome — and surfaced in the app's "How we built this" panel.
+Firecrawl searches the live web for a timely cultural spark connected to a shared interest and coarse city/country context. A source title and URL become inspiration for the virtual setting and remain attached to the date. Private instructions and identity are never sent to the search provider.
 
-## How Firecrawl is used
+### AgentMail
 
-Firecrawl is Datehaja's research engine, not a restaurant database. `convex/research.ts` turns a matched pair into two to four real searches — informed by their shared date types, the vibe they both prefer, their dietary constraints and the neighbourhood between them — and runs them live against `/v2/search` with `scrapeOptions` so the page content comes back in the same round trip.
+AgentMail sends each user a separate private debrief. The email contains only that user&apos;s agent verdict and links back to the authenticated date. It does not reveal the other verdict or answer. When two real users consent, both receive the connection notice at the same time.
 
-What gets persisted for every run:
+### Payments
 
-- the exact queries, HTTP status, latency and result count of every call (`researchRuns.calls`)
-- every source URL
-- for each venue: name, category, address, district, opening hours, approximate price, a **verbatim evidence snippet** from the page, a confidence rating, and the timestamp it was researched
+Live Scout Pass billing is intentionally locked while merchant approval is in progress. Stripe does not support a direct South Korean merchant account, while Lemon Squeezy and Paddle prohibit dating services. The intended launch path is an approved Korean recurring-payment PG plus an approved international recurring-payment channel, orchestrated through PortOne. Provider code and live checkout must not be enabled until each acquirer has approved Datehaja&apos;s actual matchmaking use case. Development keeps a clearly labelled, non-paying demo pass.
 
-The resulting date plan is grounded in those records, and the app shows them: open **How we built this** on any plan to see the pages that were crawled and what they actually said. When something can't be confirmed from a source it is marked `low` confidence and labelled _Unconfirmed details_ in the UI rather than presented as fact.
+## Privacy and consent model
 
-`/v2/search` works without an API key at a lower rate limit, which is how the deployment runs today; `/v2/scrape` needs a key and is skipped when one isn't configured.
+- The other agent never receives your private agent brief, compact memory, or hidden boundaries.
+- The API does not return raw `agentDates` documents. It projects only the current user&apos;s verdict and strips turn subtext.
+- Before mutual consent, the counterpart&apos;s verdict and answer are returned as sealed—not merely hidden with CSS.
+- Contact email is fetched only after the date is `connected` and both decisions are `yes`.
+- Optional photos follow the owner&apos;s visibility setting.
+- Demo counterparts are labelled and never contain a contact to reveal.
+- Datehaja is 18+ and does not claim identity or background verification.
+- Legal documents specifically cover agent memory, simulated transcripts, model limitations, prompt attacks, and human-only consent.
 
-## How AgentMail is used
+## Experience design
 
-AgentMail is Datehaja's communication identity. This is the mechanism that makes the core privacy promise true rather than aspirational: **two people can be introduced, invited, confirmed, reminded and cancelled on without either ever seeing the other's email address.**
+Datehaja treats the virtual world as evidence, not decoration. A live cultural
+source selects one of six spatial scenes—cinema, market, bookshop, garden,
+gallery, or café. Each scene contains inspectable objects, an obvious exit, and
+two autonomous Agent characters. As the six turns arrive, the characters move and the
+scene records replayable moments. The user can inspect any moment and compare
+the agent&apos;s debrief with what was actually said.
 
-- A dedicated **Datehaja Concierge** inbox sends every message. Your address is the recipient, never the sender, never a CC. Two participants on the same date plan are always mailed separately.
-- Ten message types: welcome, invitation, accepted-and-waiting, confirmed, reminder, updated, cancelled, expired, safety, and concierge reply.
-- Every send carries an **`Idempotency-Key`**, so a retried job re-sends nothing.
-- Every send is logged to `emailMessages` with its AgentMail message and thread id, and the thread id is stored on the participant so inbound mail can be traced back to a person and a date plan.
-- **Notification preferences are checked before every send.** Safety mail is the only category that ignores them.
-- Inbound mail arrives at `POST /webhooks/agentmail`. The **Svix signature is verified against the raw body** before parsing, with a five-minute replay window. The `svix` npm package depends on Node crypto and cannot run in a Convex HTTP action, so the algorithm is implemented directly with Web Crypto in `convex/integrations/agentmail.ts` — and tested against signatures generated the same way Svix generates them.
-- **Processing is idempotent on `event_id`.** A duplicate delivery is acknowledged and dropped; the same event can never be processed twice.
-- Replying to a Concierge email reaches Datehaja, not your match. The Concierge replies with what you can do from the app — Datehaja deliberately does not accept "yes" by email, because acting on a date needs a real session.
+The dashboard gives each Agent a private home, persistent appearance, and a
+visible memory note the human can correct. This follows the useful parts of a
+social virtual space—place, presence, proximity, and objects—without turning the
+product into a game the user must manually play.
 
-## Privacy and safety
+The product deliberately does not present its model output as a compatibility
+score. A simulated conversation can surface questions and patterns; it cannot
+prove that two humans will have chemistry.
 
-Privacy isn't a settings page here, it's the product mechanism.
+## Growth measurement
 
-**What another user can ever see:** your first name, your age, your neighbourhood, up to five interests, up to three languages, your occupation _category_ if you chose to show it, and one or two sentences about why you two fit. That's the whole payload, and `convex/lib/privacy.ts` is the single function every cross-user read passes through.
+The product records a privacy-minimal activation funnel:
 
-**What is never shared:** your email address, your phone number, your exact address or coordinates, your date of birth, your full name, or anything about your other date plans.
+```text
+agent_landing_viewed
+  → agent_created
+  → agent_message_sent
+  → agent_date_requested
+  → agent_date_completed
+  → connection_consent_yes / connection_consent_no
+  → contact_revealed (or demo_connection_completed)
+```
 
-- **Location is a neighbourhood, not a point.** Coordinates are rounded to ~1 km before storage and never leave the server. Distance is never shown as a number, because a distance plus a map inverts to a location.
-- **Bios are scrubbed** of email addresses, phone numbers, links and messenger handles before anyone else can read them.
-- **Photos are optional and revealed only after both people accept.** Datehaja is not a product you browse by face.
-- **Pre-date messaging is a fixed list of eight preset lines** — "I'm running 10 minutes late", "I'm here" — with no free-text field, so there is nowhere to slip a phone number and no pressure to.
-- **Trusted contacts are optional and purposeful.** Datehaja stores a name and email only after the user confirms consent, and uses them only when that user explicitly shares a confirmed public-place plan.
-- **Post-date responses are private.** A match cannot read the other person's outcome, safety answer, venue score, note, or request for follow-up.
+Landing views may include locale and UTM source/campaign. Authenticated events use internal user/date IDs. Event rows cannot accept free-form profile, message, or contact fields.
 
-On safety:
-
-- **18+ only**, confirmed at sign-up and enforced in the hard filters.
-- **Datehaja does not verify identity.** No ID checks, no photo verification, no background checks. The app says this plainly on the landing page, at sign-up, and in the Safety Center, because a product that implies safety it hasn't earned is more dangerous than one that's honest.
-- **Blocking is mutual, immediate and permanent** until undone: it cancels any shared date plan, frees both evenings, and removes the pair from each other's candidate pool in both directions.
-- **Reports of harassment or of an apparent minor immediately restrict the reported account** pending review.
-- **One switch takes you out of everyone's candidate pool immediately.** A search already in flight may still deliver one final invitation; nothing follows it.
-- Every date is at a real, public, currently-operating venue. Datehaja never plans anything at a private address.
-- Datehaja does not collect government ID scans. A future identity-verification integration must use a specialist provider and retain only a verification status/reference, never raw documents.
-
-## Demo mode
-
-A dating product needs two people, and a judge shouldn't have to recruit one. The deployment is seeded with **14 fictional personas** in Seoul, varied in interests, energy, budget, dietary needs and accessibility requirements.
-
-They are labelled **Demo profile** everywhere they appear, they never receive email, and any user can switch them off in Settings. Demo logic lives entirely in `convex/demo.ts` — the matching engine treats a persona exactly like anyone else, it just knows they are one.
-
-**Demo controls** (`/demo`) let you play the other side of your own date plan — but only when that side is a demo persona and only on a plan you're already in. "They pass" is the interesting button: it demonstrates the replacement search keeping your acceptance alive.
-
-### Try it in 60 seconds
-
-1. Create an account at https://datehaja.com
-2. Onboard (city **Seoul** — that's where the demo personas are)
-3. Add the date you want to have and when you are free
-4. **Find someone to go with** — watch the stages advance; each one is a real document update
-5. Open the date plan; expand **How we built this** to see the live pages Firecrawl crawled
-6. **Accept**
-7. Go to **Demo controls** → **They accept**, and watch it become _It's a date_. Open a second browser window on the dashboard first to see it flip live.
+The first growth loop is product-led: a completed agent date creates a story worth sharing, while a real connection requires the second person to have an agent. Measure activation and completion before buying broad paid traffic.
 
 ## Local development
 
+Requirements: Bun, a Convex deployment, and the environment variables below.
+
 ```bash
-bun install
-bunx convex dev          # provisions a dev deployment, watches convex/
-bun run dev              # Vite on http://localhost:5173
+bun install --frozen-lockfile
+bunx convex dev
+bun run dev
 ```
 
-Auth keys, one time per deployment:
+The app runs at `http://127.0.0.1:5173` by default. This repository&apos;s Playwright configuration uses port `4173`.
 
-```bash
-node -e 'import("jose").then(async({generateKeyPair,exportPKCS8,exportJWK})=>{const k=await generateKeyPair("RS256",{extractable:true});const priv=await exportPKCS8(k.privateKey);const pub=await exportJWK(k.publicKey);process.stdout.write(JSON.stringify({JWT_PRIVATE_KEY:priv.trimEnd().replace(/\n/g," "),JWKS:JSON.stringify({keys:[{use:"sig",...pub}]})}))})' > .auth-keys.json
+### Environment
+
+| Variable                                | Purpose                                           |
+| --------------------------------------- | ------------------------------------------------- |
+| `CONVEX_DEPLOYMENT`                     | Development deployment selected by the Convex CLI |
+| `VITE_CONVEX_URL`                       | Browser connection to Convex                      |
+| `SITE_URL`                              | Absolute links in private emails                  |
+| `OPENAI_API_KEY`                        | Agent chat, turns, and independent verdicts       |
+| `FIRECRAWL_API_KEY`                     | Live cultural-world research                      |
+| `AGENTMAIL_API_KEY`                     | Private debrief and mutual-connection delivery    |
+| `AGENTMAIL_INBOX_ID`                    | Datehaja sender identity                          |
+| `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` | Google OAuth (optional)                           |
+| `AUTH_APPLE_ID` / `AUTH_APPLE_SECRET`   | Sign in with Apple (optional)                     |
+
+Authentication is passwordless. AgentMail delivers a single-use six-digit code
+that expires after 10 minutes; Convex Auth hashes the code and rate-limits
+failed verification attempts. Google and Apple buttons appear only when both
+credentials for that provider are configured. Provider callback URLs always
+use the Convex HTTP origin:
+
+```text
+https://<deployment>.convex.site/api/auth/callback/google
+https://<deployment>.convex.site/api/auth/callback/apple
 ```
 
-Then set `JWT_PRIVATE_KEY` and `JWKS` from that file on the deployment and delete it.
+See [`docs/AUTH_AND_PWA.md`](docs/AUTH_AND_PWA.md) for provider-console and
+installed-PWA notes.
+
+Provider failure is contained: companion chat and date turns have candid fallbacks; a session-level exception marks the date `failed` instead of leaving it running forever; email delivery never rolls back a completed date.
+
+## Verification
 
 ```bash
-bun run test             # 211 tests
-bun run test:e2e         # public/legal/mobile browser smoke tests
-bun run test:e2e:full    # disposable account through match, accept and cancel
 bun run typecheck
+bun run lint
+bun run test
+bun run test:e2e
+DATEHAJA_FULL_E2E=1 bun run test:e2e:full
 bun run build
-bunx convex run demo:ensureSeeded '{}'    # seed the demo personas
 ```
 
-## Environment variables
+The full E2E creates a disposable account and proves signup, legal acceptance, Agent creation, private Agent chat, a live six-turn Agent date, private debrief, human consent, and demo contact non-disclosure.
 
-`.env.local` holds only `CONVEX_DEPLOYMENT` and `VITE_CONVEX_URL`, both written
-by `convex dev`. **Every secret lives on the Convex deployment**, because Convex
-actions read `process.env` from the deployment — a local file alone does nothing
-for the running app, and nothing secret ends up in the browser bundle.
+## Repository map
 
-To set them, put them in a gitignored `.env` and push:
-
-```bash
-cp .env.example .env      # fill in the values
-bun run env:push          # -> dev
-bun run env:push:prod     # -> production
-bun run verify:prod       # makes a REAL call to each provider
-```
-
-`env:push` refuses to send `SITE_URL`, `JWT_PRIVATE_KEY`, `JWKS`,
-`CONVEX_DEPLOYMENT` and the `VITE_*` pair, since those are deployment-specific
-or generated, and it tells you about any variable the app doesn't actually read.
-
-### What you need
-
-| Variable            | Required? | Where to get it                                                                                                                        | Without it                                                                                                                                                                             |
-| ------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OPENAI_API_KEY`    | **yes**   | [platform.openai.com](https://platform.openai.com/settings/organization/api-keys) → API keys. Prepaid — add credit or every call 429s. | Falls back to rule-based venue extraction and a templated plan, labelled _Unconfirmed details_                                                                                         |
-| `AGENTMAIL_API_KEY` | **yes**   | [console.agentmail.to](https://console.agentmail.to) → API Keys. Free tier, no card: 3 inboxes, 3,000 emails/month                     | No mail sent; each send logged as `skipped_no_provider`                                                                                                                                |
-| `FIRECRAWL_API_KEY` | no        | [firecrawl.dev](https://firecrawl.dev) → API Keys                                                                                      | Nothing breaks — both `/v2/search` and `/v2/scrape` serve unauthenticated requests. A key mainly buys speed and headroom: search returns in ~400–900ms with one, against 8–18s without |
-| `OPENAI_MODEL`      | no        | —                                                                                                                                      | Uses the ladder's default, `gpt-5.6-luna`                                                                                                                                              |
-
-Two more are **produced, not typed**. Once `AGENTMAIL_API_KEY` is set:
-
-```bash
-bun run provision:agentmail
-```
-
-creates the Datehaja Concierge inbox and its Svix-signed webhook and prints
-`AGENTMAIL_INBOX_ID` and `AGENTMAIL_WEBHOOK_SECRET`. Put those in `.env` and
-re-run `env:push:prod`.
-
-Already set on both deployments, and not yours to fill in: `JWT_PRIVATE_KEY` and
-`JWKS` (generated per deployment — see Local development) and `SITE_URL` (the
-public origin, different for dev and prod).
-
-Check what's actually live at any time:
-
-```bash
-curl https://merry-bass-190.convex.site/healthz
-```
-
-### Graceful degradation
-
-Datehaja is built so a provider outage degrades the product instead of breaking it:
-
-- **No OpenAI key, or the model fails** → venues are extracted with deterministic rules and the plan is composed from a template. Everything produced this way is marked `low` confidence and shown as _Unconfirmed details_. It is never presented as reasoning that didn't happen.
-- **No Firecrawl key** → both endpoints still run unauthenticated, just slower. Sites Firecrawl refuses outright (Reddit, Facebook) are excluded at search time rather than failing on scrape.
-- **No AgentMail** → the in-app notification still fires, and the skipped send is logged with its reason.
-
-## Deployment
-
-The backend is deployed to Convex. The production domain serves the React SPA
-from Vercel with `VITE_CONVEX_URL` pinned to the production deployment. The
-same build is also uploaded to `*.convex.site` through
-`@convex-dev/static-hosting` as a fallback. Convex Auth, the calendar feed,
-health check, and AgentMail webhook remain Convex HTTP actions.
-
-```bash
-bunx convex deploy                                  # backend
-bunx @convex-dev/static-hosting upload --build --prod   # frontend
-vercel --prod                                       # custom-domain frontend
-```
-
-Never run `bun run build` followed by a bare `upload --prod`: that bakes your _dev_ `VITE_CONVEX_URL` into the production bundle. `--build` lets the CLI inject the right one.
-
-## Project structure
-
-```
+```text
 convex/
-  schema.ts              Data model — 18 tables, all indexed
-  auth.ts                Convex Auth (email + password)
-  http.ts                Auth routes, /healthz, AgentMail webhook, static site
-  crons.ts               Cutoffs, reminders, completion, age refresh
-  matching.ts            The pipeline: filter → score → rank → research → plan → invite
-  dateDrops.ts           Lifecycle: accept, pass, withdraw, cancel, confirm, expire
-  research.ts            Firecrawl research engine
-  ai.ts                  OpenAI ranking, venue extraction, plan generation
-  mail.ts                Datehaja Concierge send + inbound handling
-  safety.ts              Blocking, reporting, visibility
-  demo.ts                Fictional personas and demo controls
-  setup.ts               Provisioning and live integration verification
-  integrations/          openai.ts · firecrawl.ts · agentmail.ts
-  lib/
-    matching.ts          Hard filters + deterministic scoring (pure)
-    stateMachine.ts      Lifecycle transitions (pure)
-    privacy.ts           The single cross-user projection (pure)
-    time.ts              Overlap, deadlines, timezone-aware helpers (pure)
-    fallbackPlan.ts      Deterministic plan composition
-    venueHeuristics.ts   Deterministic venue extraction
-src/
-  pages/                 Landing, auth, onboarding, dashboard, drop, settings, safety…
-  components/            Design system, forms, date-plan cards, layout
-  lib/                   Formatting, status labels
+  agents.ts            private human-agent conversation and memory
+  agentDates.ts        eligibility, simulation, verdicts, consent, delivery
+  growth.ts            privacy-minimal first-party events
+  integrations/        OpenAI, Firecrawl, AgentMail adapters
+  schema.ts            agent, transcript, consent, audit, and legacy tables
+src/pages/
+  LandingPage.tsx      agent-dating story and live product visualization
+  AgentOnboardingPage.tsx
+  AgentDashboardPage.tsx
+  AgentDatePage.tsx
+  TermsPage.tsx / PrivacyPage.tsx / CommunityGuidelinesPage.tsx
+tests/e2e/
+  smoke.spec.ts
+  full-flow.spec.ts
 ```
 
-## Testing
+Legacy date-planning tables and server modules remain temporarily for migration safety, but old product routes redirect to the agent dashboard. The current product surface is agent dating.
 
-211 automated unit and integration tests, plus Playwright browser coverage.
+## Status
 
-- **Unit** — hard filters (every exclusion reason and its soft counterpart), deterministic scoring bounds and ordering, lifecycle transitions including every illegal one, expiry and deadline rules, availability overlap, timezone handling across zones, and the privacy projections (including an assertion that no coordinate, DOB, email or surname can leak through).
-- **Integration** (`convex-test`) — accept, pass, withdraw, cancel, expire and complete driven as real signed-in users, plus the negative authorisation cases: a stranger can't accept your drop, a signed-out caller can't act, a non-participant sees `null`.
-- **Provider parsing** — OpenAI reasoning-item traversal, refusals, truncation, the model ladder and billing hard-stops; Firecrawl's grouped `data.web` shape, HTTP errors and network failures; the Svix verifier against real signatures, tampered bodies, replays and wrong secrets.
-
-- **Browser E2E** — `bun run test:e2e` checks the landing page, public legal records, sign-up consent, and mobile overflow. `bun run test:e2e:full` creates a disposable account, completes the activity-first onboarding, runs live matching, accepts from both sides, verifies the finalized calendar state, and cancels the date.
-
-- **Replacement flow** — a dedicated suite for the three-participant shape a drop takes after someone passes, because that shape is where the subtle bugs live: the counterpart must be the person still on the date, and someone who has left must not be able to cancel it, read its notes, or receive the other person's photo.
-
-These tests found real bugs. Withdrawing after accepting left the drop stuck in `partially_accepted` with nobody committed. And a 44-agent adversarial audit — every finding verified by an independent skeptic — surfaced a cluster caused by picking "the other participant" by insertion order, which after a replacement is the person who declined. Both are fixed, and both are now covered.
-
-## Hackathon
-
-Built for the **Convex All Gas Hackathon**. See [`hackathon.md`](hackathon.md) for the build log and exactly which integrations have been verified live.
-
-Sponsors: [@convex](https://convex.dev) · [@OpenAI](https://openai.com) · [@firecrawl](https://firecrawl.dev) · [@agentmail](https://agentmail.to)
-
-## License
-
-MIT
+This is a pre-commercial hackathon beta on the `feat/agent-dating` branch. It is not yet a claim of production-grade identity or real-world safety. The repository should remain private until the submission rules allow publication.

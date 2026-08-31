@@ -10,8 +10,23 @@ test("landing and public legal records are reachable", async ({ page }) => {
   await page.goto("/");
   await expect(page).toHaveTitle(/Datehaja/i);
   await expect(
-    page.getByRole("heading", { name: /What do you want to do\?/i }),
+    page.getByRole("heading", { name: /Let your Agent.*go first/i }),
   ).toBeVisible();
+  const heroReplay = page.locator(".agent-loop-player").first();
+  await expect(heroReplay).toBeVisible();
+  await heroReplay.getByRole("button", { name: /03 Private read/i }).click();
+  await expect(heroReplay.locator(".agent-loop-report")).toBeVisible();
+  await heroReplay.getByRole("button", { name: /04 Your call/i }).click();
+  await expect(heroReplay.locator(".agent-loop-choice")).toBeVisible();
+  await expect(page.locator(".agent-sample-score")).toHaveText(/6.*moments/i);
+  await expect(page.getByLabel("Agent insight map")).toBeVisible();
+  await expect(page.locator(".agent-insight-moment")).toHaveCount(6);
+  await expect(page.getByLabel("A real agent stack")).toBeVisible();
+  await expect(page.locator(".agent-stack-node")).toHaveCount(4);
+  const landingOverflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - window.innerWidth,
+  );
+  expect(landingOverflow).toBeLessThanOrEqual(1);
 
   for (const [path, heading] of [
     ["/terms", "Terms of Service"],
@@ -26,15 +41,15 @@ test("landing and public legal records are reachable", async ({ page }) => {
   }
 });
 
-test("sign-up explains privacy and requires adult consent", async ({
+test("sign-up explains privacy and uses passwordless email", async ({
   page,
 }) => {
   await page.goto("/signup");
 
+  await expect(page.locator(".auth-agent-preview")).toBeVisible();
+
   await expect(
-    page.getByText(
-      /Signing in lets us show the right plan to the right person/i,
-    ),
+    page.getByText(/Signing in protects your private agent brief/i),
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Terms of Service" }),
@@ -46,13 +61,11 @@ test("sign-up explains privacy and requires adult consent", async ({
     page.getByRole("link", { name: "Privacy Notice" }),
   ).toBeVisible();
 
-  await page
-    .getByLabel("Email")
-    .fill(`missing-consent-${Date.now()}@example.test`);
-  await page.getByLabel("Password").fill("Testing!1234");
-  await page.getByRole("button", { name: /Create my account/i }).click();
-
-  await expect(page.getByText(/for adults only/i)).toBeVisible();
+  await expect(page.getByLabel("Password")).toHaveCount(0);
+  await expect(page.getByText(/No password to remember/i)).toBeVisible();
+  await page.getByLabel("Email").fill("not-an-email");
+  await page.getByRole("button", { name: /Email me a sign-in code/i }).click();
+  await expect(page.getByText(/valid email address/i)).toBeVisible();
 });
 
 test("mobile landing and sign-up stay within the viewport", async ({

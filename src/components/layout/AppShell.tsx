@@ -10,10 +10,9 @@ import { Wordmark } from "./Wordmark";
 import { useI18n } from "../../i18n";
 
 const NAV = [
-  { to: "/dashboard", label: "Home", icon: HomeIcon },
-  { to: "/availability", label: "When", icon: CalendarIcon },
-  { to: "/history", label: "History", icon: HistoryIcon },
-  { to: "/settings", label: "You", icon: PersonIcon },
+  { to: "/dashboard", label: "My agent", icon: HomeIcon },
+  { to: "/profile", label: "Human", icon: PersonIcon },
+  { to: "/settings", label: "Settings", icon: SettingsIcon },
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -34,7 +33,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <span className="leading-none">
               <Wordmark className="text-[22px]" />
               <span className="docket-label mt-1 block text-[8px] text-muted">
-                {t("Private date concierge")}
+                {t("Your dating agent")}
               </span>
             </span>
           </Link>
@@ -197,20 +196,11 @@ function HomeIcon() {
     </svg>
   );
 }
-function CalendarIcon() {
+function SettingsIcon() {
   return (
     <svg {...S}>
-      <rect x="3.5" y="5" width="17" height="15.5" rx="3" />
-      <path d="M3.5 10h17M8.5 3v4M15.5 3v4" />
-    </svg>
-  );
-}
-function HistoryIcon() {
-  return (
-    <svg {...S}>
-      <path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1" />
-      <path d="M3.5 4.5V9H8" />
-      <path d="M12 7.5V12l3 1.8" />
+      <circle cx="12" cy="12" r="3.2" />
+      <path d="M19.4 15a1.8 1.8 0 0 0 .36 2l.05.05-2.76 2.76-.05-.05a1.8 1.8 0 0 0-2-.36 1.8 1.8 0 0 0-1.1 1.65V21h-3.8v-.07A1.8 1.8 0 0 0 9 19.28a1.8 1.8 0 0 0-2 .36l-.05.05-2.76-2.76.05-.05a1.8 1.8 0 0 0 .36-2A1.8 1.8 0 0 0 3 13.8H3v-3.6h.07A1.8 1.8 0 0 0 4.72 9a1.8 1.8 0 0 0-.36-2l-.05-.05 2.76-2.76.05.05a1.8 1.8 0 0 0 2 .36A1.8 1.8 0 0 0 10.2 3H14a1.8 1.8 0 0 0 1.08 1.6 1.8 1.8 0 0 0 2-.36l.05-.05 2.76 2.76-.05.05a1.8 1.8 0 0 0-.36 2 1.8 1.8 0 0 0 1.52 1.1v3.8A1.8 1.8 0 0 0 19.4 15Z" />
     </svg>
   );
 }

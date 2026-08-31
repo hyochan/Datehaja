@@ -156,6 +156,35 @@ export const meetAgainValidator = v.union(
   v.literal("prefer_not_to_say"),
 );
 
+/** The primary, private reason behind an Agent's independent verdict.
+ * These codes are deliberately about fit, never a person's popularity or a
+ * protected characteristic. */
+export const AGENT_DECISION_CODES = [
+  "strong_alignment",
+  "worth_exploring",
+  "intent_mismatch",
+  "values_mismatch",
+  "communication_mismatch",
+  "lifestyle_mismatch",
+  "boundary_concern",
+  "practical_mismatch",
+  "insufficient_signal",
+] as const;
+
+export type AgentDecisionCode = (typeof AGENT_DECISION_CODES)[number];
+
+export const agentDecisionCodeValidator = v.union(
+  v.literal("strong_alignment"),
+  v.literal("worth_exploring"),
+  v.literal("intent_mismatch"),
+  v.literal("values_mismatch"),
+  v.literal("communication_mismatch"),
+  v.literal("lifestyle_mismatch"),
+  v.literal("boundary_concern"),
+  v.literal("practical_mismatch"),
+  v.literal("insufficient_signal"),
+);
+
 export const profileAccuracyValidator = v.union(
   v.literal("accurate"),
   v.literal("mostly_accurate"),
@@ -216,6 +245,8 @@ export const emailKindValidator = v.union(
   v.literal("expired"),
   v.literal("safety"),
   v.literal("concierge_reply"),
+  v.literal("agent_debrief"),
+  v.literal("agent_connection"),
 );
 
 export const aiPurposeValidator = v.union(
@@ -224,6 +255,26 @@ export const aiPurposeValidator = v.union(
   v.literal("compat_blurb"),
   v.literal("venue_summary"),
   v.literal("moderation"),
+  v.literal("agent_companion"),
+  v.literal("agent_date_turn"),
+  v.literal("agent_date_verdict"),
+);
+
+/** A rotating private prompt that helps an Agent learn its owner over time. */
+export const agentQuestionCategoryValidator = v.union(
+  v.literal("connection_pattern"),
+  v.literal("conflict_repair"),
+  v.literal("social_rhythm"),
+  v.literal("affection"),
+  v.literal("boundaries"),
+  v.literal("curiosity"),
+  v.literal("date_style"),
+);
+
+export const agentQuestionStatusValidator = v.union(
+  v.literal("open"),
+  v.literal("answered"),
+  v.literal("skipped"),
 );
 
 export const confidenceValidator = v.union(

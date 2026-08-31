@@ -1,0 +1,26 @@
+{
+  "name": "Datehaja — Your Agent Dates",
+  "short_name": "Datehaja",
+  "description": "Your private AI Agent dates other agents, then brings the honest read home to you.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#fff9f7",
+  "theme_color": "#fff9f7",
+  "categories": ["social", "lifestyle"],
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

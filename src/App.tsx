@@ -15,19 +15,17 @@ import { Spinner } from "./components/ui/primitives";
 import { useI18n } from "./i18n";
 import LandingPage from "./pages/LandingPage";
 import AuthPage from "./pages/AuthPage";
-import OnboardingPage from "./pages/OnboardingPage";
-import DashboardPage from "./pages/DashboardPage";
-import DropPage from "./pages/DropPage";
+import AgentOnboardingPage from "./pages/AgentOnboardingPage";
+import AgentDashboardPage from "./pages/AgentDashboardPage";
+import AgentDatePage from "./pages/AgentDatePage";
+import MembershipPage from "./pages/MembershipPage";
 
-const AvailabilityPage = lazy(() => import("./pages/AvailabilityPage"));
-const HistoryPage = lazy(() => import("./pages/HistoryPage"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const PreferencesPage = lazy(() => import("./pages/PreferencesPage"));
 const NotificationsPage = lazy(() => import("./pages/NotificationsPage"));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 const SafetyPage = lazy(() => import("./pages/SafetyPage"));
-const DemoPage = lazy(() => import("./pages/DemoPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const TermsPage = lazy(() => import("./pages/TermsPage"));
 const CommunityGuidelinesPage = lazy(
@@ -152,14 +150,14 @@ function AuthedRoutes() {
     return <Navigate to="/onboarding" replace />;
   }
   if (state.complete && onboarding) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/membership" replace />;
   }
 
   return (
     <Suspense fallback={<FullPageLoader />}>
       <Routes>
         <Route path="/legal/accept" element={<LegalConsentPage />} />
-        <Route path="/onboarding" element={<OnboardingPage />} />
+        <Route path="/onboarding" element={<AgentOnboardingPage />} />
         <Route
           path="/"
           element={
@@ -175,34 +173,31 @@ function AuthedRoutes() {
           path="/dashboard"
           element={
             <AppShell>
-              <DashboardPage />
+              <AgentDashboardPage />
             </AppShell>
           }
         />
         <Route
-          path="/drop/:dropId"
+          path="/agent-date/:agentDateId"
           element={
             <AppShell>
-              <DropPage />
+              <AgentDatePage />
+            </AppShell>
+          }
+        />
+        <Route
+          path="/membership"
+          element={
+            <AppShell>
+              <MembershipPage />
             </AppShell>
           }
         />
         <Route
           path="/availability"
-          element={
-            <AppShell>
-              <AvailabilityPage />
-            </AppShell>
-          }
+          element={<Navigate to="/dashboard" replace />}
         />
-        <Route
-          path="/history"
-          element={
-            <AppShell>
-              <HistoryPage />
-            </AppShell>
-          }
-        />
+        <Route path="/history" element={<Navigate to="/dashboard" replace />} />
         <Route
           path="/settings"
           element={
@@ -248,14 +243,6 @@ function AuthedRoutes() {
           element={
             <AppShell>
               <SafetyPage />
-            </AppShell>
-          }
-        />
-        <Route
-          path="/demo"
-          element={
-            <AppShell>
-              <DemoPage />
             </AppShell>
           }
         />

@@ -2,7 +2,7 @@
 
 - **Project:** Datehaja
 - **Event:** Convex All Gas Hackathon
-- **What it does:** Starts with the date someone actually wants — a film, walk, exhibition, live music, or anything else — then finds a compatible new person who wants to join, researches the real venue, and privately invites them both.
+- **What it does:** Each person creates one private AI Agent that is simultaneously their matchmaker, confidant, and visible character in the virtual world. Two clearly labelled Agents date, return with independent debriefs, and open human contact only after two sealed human yeses.
 - **Live app:** https://datehaja.com
 - **Repo:** private
 - **Frontend:** Vercel custom-domain delivery + Convex static-hosting fallback
@@ -10,11 +10,51 @@
 - **Components:** @convex-dev/static-hosting
 - **Convex features:** schema, tables, indexes, queries, mutations, actions, HTTP actions, crons, scheduled functions, file storage, realtime queries, pagination
 - **Auth:** Convex Auth
-- **AI models:** gpt-5.6-luna (configured default, with a cheapest-capable fallback ladder in `convex/integrations/openai.ts`)
+- **AI models:** gpt-5-nano for active Agent chat/dates, with gpt-5.6-luna as the first quality fallback and the proven default for heavier legacy extraction
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-08-28T19:33:52Z
+- **Last updated:** 2026-08-31T00:00:00+09:00
 
 ## Log
+
+### 2026-08-31 - agent dating and spatial-world pivot
+
+Rebuilt the active product around personal AI Agents rather than automated
+restaurant planning. A user now creates and styles one persistent character—the
+same Agent that listens privately, acts as matchmaker, and goes into the virtual
+world—then sends it to meet another person&apos;s Agent.
+The two agents receive isolated private briefs, alternate through six stored
+turns, and independently return `encourage`, `curious`, or `pass`. The other
+agent&apos;s private reasoning and the other human&apos;s answer remain sealed. Contact
+is fetched only after two transactional human yeses; demo dates never contain a
+real contact to expose.
+
+Added a spatial experience inspired by the mechanics that make virtual social
+spaces legible: persistent identity, location, proximity, interactive objects,
+and ambient presence. Firecrawl&apos;s live cultural source selects a cinema,
+market, bookshop, garden, gallery, or café world. Two small autonomous sprites
+move as each turn arrives, objects explain the local context, and the complete
+date becomes a six-moment replay. The dashboard now gives the Agent a private
+home and exposes its compact memory to its human for correction.
+
+Removed numeric compatibility from the user-facing debrief. The model still
+helps rank scarce candidates internally, but the product shows the transcript,
+specific sparks, specific friction, and the Agent&apos;s plain-language
+interpretation. It explicitly says that a simulation is not a prediction of
+real chemistry.
+
+The current active flow is signup → legal consent → Agent creation → private
+agent chat → agent-date request → realtime six-turn world → independent
+debrief → sealed human decision → mutual contact gate. The legacy concierge
+entries below remain as an implementation history; their routes are no longer
+the current product surface.
+
+Live Scout Pass billing is deliberately locked while merchant approval is in
+progress. Stripe does not support a direct South Korean merchant account, and
+Lemon Squeezy and Paddle prohibit dating services. The launch plan uses an
+approved Korean recurring-payment PG plus an approved international channel,
+orchestrated through PortOne. Until both the provider and acquirer approve the
+actual matchmaking category, the app exposes only a labelled, non-paying demo
+pass and cannot collect card data.
 
 ### 2026-08-26 - 30f362e
 
@@ -49,7 +89,7 @@ gender interest, age ranges, distance, a genuine 90-minute availability
 overlap, blocks in either direction, moderation state, budget, currency and
 shared language. Stage 2 scores the survivors deterministically and returns the
 signals that produced the score. Illegal lifecycle transitions throw rather
-than corrupting a drop (`convex/lib/matching.ts`, `convex/lib/stateMachine.ts`).
+than corrupting a date plan (`convex/lib/matching.ts`, `convex/lib/stateMachine.ts`).
 
 ### 2026-08-26 - 4944cbb
 
@@ -78,14 +118,14 @@ Built the orchestration: hard filter → deterministic scoring → AI ranking �
 live research → plan generation → private invitations, chained with
 `ctx.scheduler`. A pass keeps the accepted person's evening held and searches
 for a replacement rather than cancelling on them; a configurable cutoff
-(default 24 hours before the date) expires the drop and says so honestly.
+(default 24 hours before the date) expires the plan and says so honestly.
 
-Added safety — mutual blocking that cancels shared drops and frees both
+Added safety — mutual blocking that cancels shared plans and frees both
 calendars, reporting that restricts an account on serious categories — the
 Concierge email templates, constrained preset-only pre-date messaging, and 14
 clearly-marked fictional demo personas to solve the cold start. Convex
 features: actions, HTTP actions, crons, scheduled functions
-(`convex/matching.ts`, `convex/dateDrops.ts`, `convex/mail.ts`,
+(`convex/matching.ts`, `convex/datePlans.ts`, `convex/mail.ts`,
 `convex/safety.ts`, `convex/demo.ts`, `convex/crons.ts`, `convex/http.ts`).
 
 ### 2026-08-26 - 312bf83
@@ -109,8 +149,8 @@ negative authorisation cases. Provider parsing is tested against mocked
 responses, and the Svix verifier against real signatures, tampered bodies,
 replays and wrong secrets.
 
-The tests found one real bug: withdrawing after accepting left the drop stuck
-in `partially_accepted` with nobody committed. Fixed in `convex/dateDrops.ts`.
+The tests found one real bug: withdrawing after accepting left the plan stuck
+in `partially_accepted` with nobody committed. Fixed in `convex/datePlans.ts`.
 
 ### 2026-08-26 - 41483ba
 
@@ -179,29 +219,29 @@ Two root causes accounted for most of the serious ones.
 **Identity by insertion order.** A date plan keeps every participant row it ever
 had, so after a replacement the oldest non-self row is the person who
 _declined_. Six call sites picked "the other person" that way: the replacement's
-invitation email described the person who passed, blocking from a drop blocked
+invitation email described the person who passed, blocking from a plan blocked
 the wrong account (leaving the real match still matchable, with no error shown),
 reporting filed against an uninvolved user and auto-flagged their account, and
-the drop page named the wrong counterpart. All of it now routes through
+the date-plan page named the wrong counterpart. All of it now routes through
 `convex/lib/participants.ts`, which resolves the counterpart by commitment.
 
 **Authorization that checked membership but not liveness.** Someone who had
 passed could cancel a confirmed date between two other people, confirm
 attendance on it, read the confirmed pair's logistics notes, receive the other
-person's photo once the drop confirmed around them, and see it as an upcoming
+person's photo once the plan confirmed around them, and see it as an upcoming
 date on their own dashboard.
 
 Also fixed: a replacement could be attached to an availability window another
-drop already held; a replacement run could be left `running` forever, blocking
+plan already held; a replacement run could be left `running` forever, blocking
 the user's next search for ten minutes; releasing a held evening orphaned the
-drop rather than standing it down (now atomic, and it cancels a confirmed date
+plan rather than standing it down (now atomic, and it cancels a confirmed date
 rather than letting the other person turn up alone); the reminder and age sweeps
 could never reach rows past their first page; and the client and server
 disagreed about age on a user's 18th birthday, hard-blocking a valid sign-up —
 both now use calendar arithmetic in `convex/lib/age.ts` instead of dividing by
 an averaged year.
 
-`aiRuns` rows are written before the drop document exists, so "How we built
+`aiRuns` rows are written before the plan document exists, so "How we built
 this" showed no model runs despite the README saying it would; provenance now
 reads them by matching run as well.
 
@@ -216,7 +256,7 @@ themselves as toggles, and the segmented control supports arrow-key navigation
 as its `radiogroup` role promises.
 
 15 new regression tests covering the replacement flow specifically. 180 total,
-all passing. Redeployed and re-verified against production: a replacement drop
+all passing. Redeployed and re-verified against production: a replacement plan
 now names the replacement, not the persona who passed.
 
 ### 2026-08-27 - 642710e

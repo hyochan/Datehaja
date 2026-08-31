@@ -32,7 +32,7 @@ const feedbackValidator = v.object({
 });
 
 export const mine = query({
-  args: { dropId: v.id("dateDrops") },
+  args: { dropId: v.id("datePlans") },
   returns: v.union(v.null(), feedbackValidator),
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
@@ -44,7 +44,7 @@ export const mine = query({
       )
       .unique();
     if (!feedback) return null;
-    const drop = await ctx.db.get("dateDrops", args.dropId);
+    const drop = await ctx.db.get("datePlans", args.dropId);
     const responses = await ctx.db
       .query("dateFeedback")
       .withIndex("by_drop", (q) => q.eq("dropId", args.dropId))
@@ -74,7 +74,7 @@ export const mine = query({
 /** Private, optional post-date feedback. Never disclosed to the match. */
 export const submit = mutation({
   args: {
-    dropId: v.id("dateDrops"),
+    dropId: v.id("datePlans"),
     outcome: dateOutcomeValidator,
     safety: dateSafetyValidator,
     meetAgain: meetAgainValidator,
@@ -89,7 +89,7 @@ export const submit = mutation({
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
     await requireParticipant(ctx, args.dropId, userId);
-    const drop = await ctx.db.get("dateDrops", args.dropId);
+    const drop = await ctx.db.get("datePlans", args.dropId);
     if (!drop) throw new Error("That date plan is gone.");
 
     const now = Date.now();
@@ -120,7 +120,7 @@ export const submit = mutation({
       )
       .unique();
     const participants = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop", (q) => q.eq("dropId", args.dropId))
       .take(10);
     const counterpart = pickCounterpart(participants, userId);
@@ -163,7 +163,7 @@ export const submit = mutation({
       args.meetAgain === "yes" && otherFeedback?.meetAgain === "yes";
 
     if (isMutual && !drop.mutualMeetAgainAt && counterpart) {
-      await ctx.db.patch("dateDrops", drop._id, {
+      await ctx.db.patch("datePlans", drop._id, {
         mutualMeetAgainAt: now,
         updatedAt: now,
       });
@@ -179,7 +179,7 @@ export const submit = mutation({
         });
       }
     } else if (!isMutual && drop.mutualMeetAgainAt && counterpart) {
-      await ctx.db.patch("dateDrops", drop._id, {
+      await ctx.db.patch("datePlans", drop._id, {
         mutualMeetAgainAt: undefined,
         updatedAt: now,
       });

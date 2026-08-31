@@ -131,12 +131,12 @@ const shareStatusValidator = v.union(
 type ShareStatus = "queued" | "sent" | "failed" | "skipped_no_provider";
 
 export const sharePlan = mutation({
-  args: { dropId: v.id("dateDrops") },
+  args: { dropId: v.id("datePlans") },
   returns: v.object({ status: shareStatusValidator }),
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
     const participant = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop_and_user", (q) =>
         q.eq("dropId", args.dropId).eq("userId", userId),
       )
@@ -144,7 +144,7 @@ export const sharePlan = mutation({
     if (!participant || participant.state !== "confirmed") {
       throw new Error("Only a confirmed date plan can be shared.");
     }
-    const drop = await ctx.db.get("dateDrops", args.dropId);
+    const drop = await ctx.db.get("datePlans", args.dropId);
     if (!drop || (drop.status !== "confirmed" && drop.status !== "completed")) {
       throw new Error("This date plan is not confirmed.");
     }
@@ -213,7 +213,7 @@ export const getSafetyPlanShare = internalQuery({
       .query("profiles")
       .withIndex("by_user", (q) => q.eq("userId", share.userId))
       .unique();
-    const drop = await ctx.db.get("dateDrops", share.dropId);
+    const drop = await ctx.db.get("datePlans", share.dropId);
     if (!safetyProfile || !profile || !drop) return null;
     const firstStop = drop.itinerary[0];
     return {
@@ -254,7 +254,7 @@ export const deliverSafetyPlan = internalAction({
     const context = (await ctx.runQuery(internal.safety.getSafetyPlanShare, {
       shareId: args.shareId,
     })) as {
-      share: { userId: Id<"users">; dropId: Id<"dateDrops">; status: string };
+      share: { userId: Id<"users">; dropId: Id<"datePlans">; status: string };
       contactName: string | null;
       contactEmail: string | null;
       contactConsent: boolean;
@@ -352,14 +352,14 @@ export const deliverSafetyPlan = internalAction({
 
 export const blockFromDrop = mutation({
   args: {
-    dropId: v.id("dateDrops"),
+    dropId: v.id("datePlans"),
     reason: v.optional(v.string()),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
     const me = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop_and_user", (q) =>
         q.eq("dropId", args.dropId).eq("userId", userId),
       )
@@ -367,7 +367,7 @@ export const blockFromDrop = mutation({
     if (!me) throw new Error("That date plan isn't yours.");
 
     const participants = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop", (q) => q.eq("dropId", args.dropId))
       .take(10);
     // Insertion order would hand back whoever declined first, not the person
@@ -406,13 +406,13 @@ async function blockUserInternal(
 
   // Stand down every live date plan the two of them share.
   const myDrops = await ctx.db
-    .query("dateDropParticipants")
+    .query("datePlanParticipants")
     .withIndex("by_user", (q) => q.eq("userId", blockerUserId))
     .order("desc")
     .take(40);
 
   for (const membership of myDrops) {
-    const drop = await ctx.db.get("dateDrops", membership.dropId);
+    const drop = await ctx.db.get("datePlans", membership.dropId);
     if (!drop) continue;
     if (
       drop.status === "cancelled" ||
@@ -422,13 +422,13 @@ async function blockUserInternal(
       continue;
     }
     const others = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop", (q) => q.eq("dropId", drop._id))
       .take(10);
     if (!others.some((p) => p.userId === blockedUserId)) continue;
 
     const now = Date.now();
-    await ctx.db.patch("dateDrops", drop._id, {
+    await ctx.db.patch("datePlans", drop._id, {
       status: "cancelled",
       cancelledAt: now,
       cancelledByUserId: blockerUserId,
@@ -441,7 +441,7 @@ async function blockUserInternal(
         p.state !== "replaced" &&
         p.state !== "withdrawn"
       ) {
-        await ctx.db.patch("dateDropParticipants", p._id, {
+        await ctx.db.patch("datePlanParticipants", p._id, {
           state: "cancelled",
         });
       }
@@ -476,7 +476,7 @@ async function blockUserInternal(
 
 export const report = mutation({
   args: {
-    dropId: v.optional(v.id("dateDrops")),
+    dropId: v.optional(v.id("datePlans")),
     category: reportCategoryValidator,
     details: v.string(),
     alsoBlock: v.boolean(),
@@ -488,14 +488,14 @@ export const report = mutation({
     let reportedUserId: Id<"users"> | null = null;
     if (args.dropId) {
       const me = await ctx.db
-        .query("dateDropParticipants")
+        .query("datePlanParticipants")
         .withIndex("by_drop_and_user", (q) =>
           q.eq("dropId", args.dropId!).eq("userId", userId),
         )
         .unique();
       if (!me) throw new Error("That date plan isn't yours.");
       const participants = await ctx.db
-        .query("dateDropParticipants")
+        .query("datePlanParticipants")
         .withIndex("by_drop", (q) => q.eq("dropId", args.dropId!))
         .take(10);
       reportedUserId = pickCounterpart(participants, userId)?.userId ?? null;

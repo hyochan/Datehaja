@@ -1,9 +1,9 @@
-export const LEGAL_EFFECTIVE_DATE = "2026-08-29";
+export const LEGAL_EFFECTIVE_DATE = "2026-08-31";
 
 export const LEGAL_VERSIONS = Object.freeze({
-  terms: "2026-08-29-v2",
-  privacy: "2026-08-29-v2",
-  community: "2026-08-29-v2",
+  terms: "2026-08-31-v3",
+  privacy: "2026-08-31-v3",
+  community: "2026-08-31-v3",
 });
 
 export const LEGAL_CONTACT_EMAIL = "datehaja-concierge@agentmail.to";

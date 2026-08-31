@@ -66,13 +66,15 @@ export default function LegalConsentPage() {
           <div className="relative z-[1] max-w-xl">
             <div className="docket-label opacity-70">Before we begin</div>
             <h1 className="mt-3 text-[clamp(2.55rem,8vw,4.7rem)] leading-[0.94] tracking-[-0.045em]">
-              A clear yes,
+              Agents explore.
               <br />
-              before any match.
+              Humans decide.
             </h1>
             <p className="mt-5 max-w-lg text-[15px] leading-[1.7] opacity-75">
-              Datehaja records the exact document versions you accept. No hidden
-              marketing consent, no identity-verification claim.
+              Your Agent may simulate a date and make a recommendation. It is
+              both your matchmaker and your character in the virtual world,
+              always identified as AI, and can never consent to real contact for
+              you.
             </p>
           </div>
           <span className="legal-consent-mark" aria-hidden>
@@ -91,7 +93,8 @@ export default function LegalConsentPage() {
           <div className="space-y-3">
             <ConsentRow checked={age} onChange={setAge}>
               I confirm that I am 18 or over. I understand Datehaja does not
-              verify identity or run background checks.
+              verify identity or run background checks, and an agent's analysis
+              is not a safety guarantee.
             </ConsentRow>
             <ConsentRow checked={terms} onChange={setTerms}>
               I agree to the{" "}
@@ -104,8 +107,8 @@ export default function LegalConsentPage() {
             <ConsentRow checked={privacy} onChange={setPrivacy}>
               I acknowledge the{" "}
               <DocumentLink to="/privacy">Privacy Notice</DocumentLink>,
-              including how matching and venue-planning automation uses my
-              information.
+              including how my private agent brief, memory, simulated
+              transcripts, and consent decisions are processed.
             </ConsentRow>
           </div>
 
@@ -126,8 +129,8 @@ export default function LegalConsentPage() {
             Agree and continue <span aria-hidden>→</span>
           </Button>
           <p className="mt-4 text-center text-[11.5px] leading-relaxed text-muted">
-            Service emails are not marketing. You can control invitations,
-            confirmations, and reminders later in Settings.
+            Your private agent messages never become the other agent's brief.
+            Contact opens only after two independent human yeses.
           </p>
         </Card>
       </main>

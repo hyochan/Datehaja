@@ -52,6 +52,10 @@ const KNOWN = new Set([
   "AGENTMAIL_API_KEY",
   "AGENTMAIL_INBOX_ID",
   "AGENTMAIL_WEBHOOK_SECRET",
+  "AUTH_GOOGLE_ID",
+  "AUTH_GOOGLE_SECRET",
+  "AUTH_APPLE_ID",
+  "AUTH_APPLE_SECRET",
 ]);
 
 const PLACEHOLDER = /^(sk|am|fc|whsec)-?\.\.\.$|^$|\.\.\.$/;
@@ -106,16 +110,21 @@ if (push.length === 0) {
   process.exit(1);
 }
 
-console.log(`\nPushing ${push.length} variable(s) from ${sourceFile} to ${target}:\n`);
+console.log(
+  `\nPushing ${push.length} variable(s) from ${sourceFile} to ${target}:\n`,
+);
 for (const [name, value] of push) {
-  const shown = value.length > 12 ? `${value.slice(0, 6)}…${value.slice(-4)}` : "••••";
+  const shown =
+    value.length > 12 ? `${value.slice(0, 6)}…${value.slice(-4)}` : "••••";
   console.log(`  ${name.padEnd(26)} ${shown}`);
 }
 if (unknown.length) {
   console.log(`\n  note: not read by Datehaja — ${unknown.join(", ")}`);
 }
 if (skipped.length) {
-  console.log(`  skipped (deployment-specific or generated): ${skipped.join(", ")}`);
+  console.log(
+    `  skipped (deployment-specific or generated): ${skipped.join(", ")}`,
+  );
 }
 if (placeholders.length) {
   console.log(`  still placeholders: ${placeholders.join(", ")}`);

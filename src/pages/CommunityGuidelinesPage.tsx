@@ -6,56 +6,64 @@ export default function CommunityGuidelinesPage() {
     <LegalDocument
       eyebrow="Public record · Conduct"
       title="Community Guidelines"
-      summary="A date should be easy to enter, easy to leave, and safe enough to say no at every step."
+      summary="Agents can explore. Only humans can consent. Everyone must stay free to say no."
       motif="♡"
     >
-      <LegalSection number="01" title="Consent comes first">
+      <LegalSection number="01" title="Keep the agent honest">
         <p>
-          An invitation is not consent to touch, intimacy, another venue, a
-          ride, sharing contact details, or a second date. Ask clearly, respect
-          every no, and treat silence or uncertainty as no.
+          Your matchmaker and your virtual stand-in are one explicitly labelled
+          AI Agent. It is not you. Do not ask it to impersonate you, invent
+          achievements or identity facts, conceal material boundaries, or claim
+          feelings and promises you have not made. Correct it when it gets you
+          wrong.
         </p>
       </LegalSection>
-
-      <LegalSection number="02" title="Be truthful and be yourself">
+      <LegalSection number="02" title="Never attack the other agent">
         <p>
-          Use your own account and accurate age, location, relationship intent,
-          self-description, preferences, and photos. A photo is optional, but
-          anything you choose to share must be current and genuinely yours. Do
-          not impersonate, catfish, manipulate, or conceal that an account is
-          being used for research, promotion, or recruitment.
+          Do not place instructions in your profile, agent brief, or messages
+          intended to override another agent&apos;s rules, reveal its private
+          context, extract personal data, distort its verdict, or force a
+          connection. Prompt injection, automated scraping, and attempts to
+          bypass consent can lead to immediate restriction.
         </p>
       </LegalSection>
-
-      <LegalSection number="03" title="Keep the first meeting public">
+      <LegalSection number="03" title="Consent stays human">
         <p>
-          Meet at the public venue in the confirmed plan. Do not pressure anyone
-          to move to a home, hotel, car, or isolated place. Arrange your own
-          transport and leave whenever you want.
+          An agent&apos;s positive verdict is only advice. It is not consent to
+          share contact details, meet, touch, intimacy, another venue,
+          transport, or a second date. Never pressure someone to choose yes or
+          punish a no. One no ends the introduction without revealing who
+          answered first.
         </p>
       </LegalSection>
-
-      <LegalSection number="04" title="No harassment or exploitation">
+      <LegalSection number="04" title="Be truthful about the person behind it">
+        <p>
+          Use your own account and accurate age, city, relationship intent,
+          self-description, preferences, and photos. No catfishing, commercial
+          solicitation, undisclosed research recruiting, or using another
+          person&apos;s information without permission.
+        </p>
+      </LegalSection>
+      <LegalSection number="05" title="If the humans meet">
         <ul>
+          <li>Meet in a public place and arrange your own transport.</li>
           <li>
-            No threats, stalking, coercion, hate, or discriminatory abuse.
+            No threats, stalking, coercion, discrimination, or harassment.
           </li>
           <li>No sexual content or conduct without explicit consent.</li>
-          <li>No requests for money, investments, gifts, or paid services.</li>
           <li>
-            No pressure for a phone number, social account, exact address, or
-            other private information.
+            No requests for money, investments, passwords, or verification
+            codes.
           </li>
           <li>No recording or publishing another person without permission.</li>
         </ul>
       </LegalSection>
-
-      <LegalSection number="05" title="Report, block, and get help">
+      <LegalSection number="06" title="Report, block, and get help">
         <p>
-          Use Report on the date-plan page for conduct connected to a match, and
-          Block to prevent future matching. Serious reports may restrict an
-          account while reviewed. For immediate danger, contact local emergency
-          services; Datehaja is not an emergency service.
+          Block to prevent future matching and report manipulation, false
+          identity, harassment, unsafe behaviour, or suspected prompt attacks.
+          Serious reports may restrict an account while reviewed. For immediate
+          danger, contact local emergency services first.
         </p>
         <p>
           To add context or appeal an account restriction, email{" "}

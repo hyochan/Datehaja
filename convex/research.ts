@@ -65,7 +65,7 @@ export type ResearchQuery = {
 
 export const startRun = internalMutation({
   args: {
-    dropId: v.optional(v.id("dateDrops")),
+    dropId: v.optional(v.id("datePlans")),
     requestedByUserId: v.optional(v.id("users")),
     query: queryValidator,
     live: v.boolean(),
@@ -228,7 +228,7 @@ export type ResearchOutcome = {
 export async function researchDateOptions(
   ctx: ActionCtx,
   args: {
-    dropId?: Id<"dateDrops">;
+    dropId?: Id<"datePlans">;
     matchingRunId?: Id<"matchingRuns">;
     requestedByUserId?: Id<"users">;
     countryCode: string;

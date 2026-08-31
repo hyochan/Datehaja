@@ -28,7 +28,7 @@ async function createDrop(
     });
     const startMs = NOW - 3 * 60 * 60 * 1000;
     const endMs = NOW - 60 * 60 * 1000;
-    const dropId = await ctx.db.insert("dateDrops", {
+    const dropId = await ctx.db.insert("datePlans", {
       status,
       initiatorUserId: userId,
       countryCode: "KR",
@@ -69,7 +69,7 @@ async function createDrop(
       isDemo: false,
       updatedAt: NOW,
     });
-    const participantId = await ctx.db.insert("dateDropParticipants", {
+    const participantId = await ctx.db.insert("datePlanParticipants", {
       dropId,
       userId,
       role: "initiator",
@@ -155,11 +155,11 @@ describe("calendar lifecycle", () => {
     expect(reserved?.events[0]?.status).toBe("TENTATIVE");
 
     await t.run(async (ctx) => {
-      await ctx.db.patch("dateDrops", fixture.dropId, {
+      await ctx.db.patch("datePlans", fixture.dropId, {
         status: "confirmed",
         updatedAt: NOW + 1,
       });
-      await ctx.db.patch("dateDropParticipants", fixture.participantId, {
+      await ctx.db.patch("datePlanParticipants", fixture.participantId, {
         state: "confirmed",
       });
     });
@@ -169,11 +169,11 @@ describe("calendar lifecycle", () => {
     expect(finalized?.events[0]?.status).toBe("CONFIRMED");
 
     await t.run(async (ctx) => {
-      await ctx.db.patch("dateDrops", fixture.dropId, {
+      await ctx.db.patch("datePlans", fixture.dropId, {
         status: "cancelled",
         updatedAt: NOW + 2,
       });
-      await ctx.db.patch("dateDropParticipants", fixture.participantId, {
+      await ctx.db.patch("datePlanParticipants", fixture.participantId, {
         state: "cancelled",
       });
     });
@@ -286,7 +286,7 @@ describe("private post-date feedback", () => {
     const t = convexTest(schema, modules);
     const fixture = await createDrop(t, "completed");
     await t.run((ctx) =>
-      ctx.db.insert("dateDropParticipants", {
+      ctx.db.insert("datePlanParticipants", {
         dropId: fixture.dropId,
         userId: fixture.strangerId,
         role: "invitee",

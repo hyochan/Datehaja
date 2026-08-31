@@ -26,10 +26,15 @@ const MODEL_LADDER = [
   "gpt-4.1-mini",
 ];
 
-export function modelCandidates(): string[] {
+export function modelCandidates(preferredModels: string[] = []): string[] {
   const configured = process.env.OPENAI_MODEL?.trim();
-  if (!configured) return MODEL_LADDER;
-  return [configured, ...MODEL_LADDER.filter((m) => m !== configured)];
+  return [
+    ...new Set([
+      ...preferredModels.map((model) => model.trim()).filter(Boolean),
+      ...(configured ? [configured] : []),
+      ...MODEL_LADDER,
+    ]),
+  ];
 }
 
 export function hasOpenAI(): boolean {
@@ -58,6 +63,8 @@ export type StructuredRequest = {
   /** Must satisfy OpenAI strict mode: object root, additionalProperties:false,
    *  every property in `required`. */
   schema: Record<string, unknown>;
+  /** Task-local cheapest-capable models, tried before the global fallback. */
+  preferredModels?: string[];
   maxOutputTokens?: number;
   reasoningEffort?: "none" | "low" | "medium" | "high";
   verbosity?: "low" | "medium" | "high";
@@ -98,7 +105,7 @@ export async function structured<T>(
   let lastError = "Unknown error";
   let requestId: string | undefined;
 
-  for (const model of modelCandidates()) {
+  for (const model of modelCandidates(req.preferredModels)) {
     for (let attempt = 0; attempt < 2; attempt++) {
       const body = {
         model,
@@ -154,7 +161,9 @@ export async function structured<T>(
           return fail(lastError, model, started, requestId);
         }
         if (res.status === 429 && res.headers.get("retry-after")) {
-          await sleep(Math.min(4000, Number(res.headers.get("retry-after")) * 1000));
+          await sleep(
+            Math.min(4000, Number(res.headers.get("retry-after")) * 1000),
+          );
           continue; // retry same model
         }
         // A tokens-per-minute limit with no retry-after means this payload will
@@ -178,7 +187,12 @@ export async function structured<T>(
 
       const extracted = extractOutput(json);
       if (extracted.refusal) {
-        return fail(`Model refusal: ${extracted.refusal}`, model, started, requestId);
+        return fail(
+          `Model refusal: ${extracted.refusal}`,
+          model,
+          started,
+          requestId,
+        );
       }
       if (!extracted.text) {
         lastError = "Model returned no output_text item.";
@@ -232,7 +246,11 @@ function fail(
 type ResponsesPayload = {
   status?: string;
   incomplete_details?: { reason?: string };
-  usage?: { input_tokens?: number; output_tokens?: number; total_tokens?: number };
+  usage?: {
+    input_tokens?: number;
+    output_tokens?: number;
+    total_tokens?: number;
+  };
   output?: Array<{
     type?: string;
     content?: Array<{ type?: string; text?: string; refusal?: string }>;

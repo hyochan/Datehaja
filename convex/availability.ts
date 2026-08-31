@@ -20,7 +20,7 @@ const availabilityDoc = v.object({
   endMs: v.number(),
   timezone: v.string(),
   status: availabilityStatusValidator,
-  heldByDropId: v.optional(v.id("dateDrops")),
+  heldByDropId: v.optional(v.id("datePlans")),
   note: v.optional(v.string()),
 });
 
@@ -147,7 +147,7 @@ export const remove = mutation({
       // Same transaction, not scheduled: releasing the evening and leaving the
       // drop must never be able to come apart.
       if (dropId) {
-        await ctx.runMutation(internal.dateDrops.forceWithdraw, {
+        await ctx.runMutation(internal.datePlans.forceWithdraw, {
           dropId,
           userId,
           reason: "They took that evening back.",

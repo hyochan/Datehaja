@@ -155,7 +155,7 @@ export const getFeedByToken = internalQuery({
     if (!feed) return null;
 
     const memberships = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_user", (q) => q.eq("userId", feed.userId))
       .order("desc")
       .take(100);
@@ -163,7 +163,7 @@ export const getFeedByToken = internalQuery({
     const events: CalendarEvent[] = [];
     const site = siteOrigin();
     for (const membership of memberships) {
-      const drop = await ctx.db.get("dateDrops", membership.dropId);
+      const drop = await ctx.db.get("datePlans", membership.dropId);
       if (!drop) continue;
       const status = calendarEventStatus({
         dropStatus: drop.status,

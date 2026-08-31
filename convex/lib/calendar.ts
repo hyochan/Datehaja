@@ -88,7 +88,7 @@ export function buildCalendar(events: CalendarEvent[]): string {
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Datehaja//Private Date Concierge//EN",
+    "PRODID:-//Datehaja//Agent Dating//EN",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     "X-WR-CALNAME:Datehaja",

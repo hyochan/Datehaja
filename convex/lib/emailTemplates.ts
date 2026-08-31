@@ -448,3 +448,84 @@ If this was about safety, use the Report option in the app — it reaches us wit
     ),
   };
 }
+
+export function agentDebriefEmail(args: {
+  firstName: string;
+  agentName: string;
+  counterpartAgentName: string;
+  verdict: "encourage" | "curious" | "pass";
+  reason: string;
+  decisionLabel?: string;
+  nextSearchNote?: string;
+  url: string;
+}): EmailContent {
+  const headline =
+    args.verdict === "encourage"
+      ? `${args.agentName} thinks you should meet`
+      : args.verdict === "pass"
+        ? `${args.agentName} would let this one go`
+        : `${args.agentName} came back curious`;
+  const subject = `Your agent is back — a private debrief`;
+  const text = `Hi ${args.firstName},
+
+${args.agentName}'s simulated date with ${args.counterpartAgentName} is over.
+
+${headline}.
+${args.decisionLabel ? `Primary reason: ${args.decisionLabel}\n` : ""}${args.reason}
+${args.verdict === "pass" && args.nextSearchNote ? `\nWhat I'll look for next: ${args.nextSearchNote}\n` : ""}
+
+Read the transcript and decide privately: ${args.url}
+
+The other agent's verdict and the other person's answer remain sealed. Your agent cannot consent for you.
+
+— Datehaja`;
+
+  return {
+    subject,
+    text,
+    html: shell(
+      h1(headline) +
+        p(
+          `Hi ${args.firstName}, ${args.agentName}'s simulated date with ${args.counterpartAgentName} is over.`,
+        ) +
+        (args.decisionLabel ? p(`Primary reason: ${args.decisionLabel}`) : "") +
+        p(args.reason) +
+        (args.verdict === "pass" && args.nextSearchNote
+          ? p(`What I'll look for next: ${args.nextSearchNote}`)
+          : "") +
+        `<div style="margin-top:20px;">${button(args.url, "Open my private debrief")}</div>` +
+        `<p style="margin:18px 0 0;font-size:13px;line-height:1.6;color:${BRAND.muted};">The other agent's verdict and the other person's answer remain sealed. Your agent cannot consent for you.</p>`,
+      "This is a private service message about your Datehaja agent.",
+    ),
+  };
+}
+
+export function agentConnectionEmail(args: {
+  firstName: string;
+  counterpartFirstName: string;
+  url: string;
+}): EmailContent {
+  const subject = `Two humans said yes`;
+  const text = `Hi ${args.firstName},
+
+You and ${args.counterpartFirstName} independently chose an introduction. Contact is now available to both of you at the same time.
+
+Open the connection: ${args.url}
+
+The agents made a recommendation. The decision was yours.
+
+— Datehaja`;
+  return {
+    subject,
+    text,
+    html: shell(
+      h1("Two humans said yes.") +
+        p(
+          `Hi ${args.firstName}, you and ${args.counterpartFirstName} independently chose an introduction. Contact is now available to both of you at the same time.`,
+        ) +
+        `<div style="margin-top:20px;">${button(args.url, "Open the connection")}</div>` +
+        `<p style="margin:18px 0 0;font-size:13px;line-height:1.6;color:${BRAND.muted};">The agents made a recommendation. The decision was yours.</p>`,
+      "This is a private service message about your Datehaja connection.",
+    ),
+  };
+}

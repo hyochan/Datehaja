@@ -61,7 +61,7 @@ import { calendarEventStatus } from "./lib/calendar";
 /* --------------------------------- views ---------------------------------- */
 
 export type DropView = {
-  dropId: Id<"dateDrops">;
+  dropId: Id<"datePlans">;
   status: string;
   myState: string;
   role: string;
@@ -81,7 +81,7 @@ export type DropView = {
   currency: string;
   estimatedDurationMin: number;
   meetingInstructions: string;
-  itinerary: Doc<"dateDrops">["itinerary"];
+  itinerary: Doc<"datePlans">["itinerary"];
   confirmDeadlineMs: number;
   isDemo: boolean;
   /** Only present once both people have accepted. */
@@ -98,11 +98,11 @@ export type DropView = {
 
 async function buildDropView(
   ctx: QueryCtx,
-  drop: Doc<"dateDrops">,
-  me: Doc<"dateDropParticipants">,
+  drop: Doc<"datePlans">,
+  me: Doc<"datePlanParticipants">,
 ): Promise<DropView> {
   const participants = await ctx.db
-    .query("dateDropParticipants")
+    .query("datePlanParticipants")
     .withIndex("by_drop", (q) => q.eq("dropId", drop._id))
     .take(10);
 
@@ -193,19 +193,19 @@ async function buildDropView(
 }
 
 export const get = query({
-  args: { dropId: v.id("dateDrops") },
+  args: { dropId: v.id("datePlans") },
   returns: v.union(v.null(), v.any()),
   handler: async (ctx, args) => {
     const userId = await currentUserId(ctx);
     if (!userId) return null;
     const me = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop_and_user", (q) =>
         q.eq("dropId", args.dropId).eq("userId", userId),
       )
       .unique();
     if (!me) return null;
-    const drop = await ctx.db.get("dateDrops", args.dropId);
+    const drop = await ctx.db.get("datePlans", args.dropId);
     if (!drop) return null;
     return await buildDropView(ctx, drop, me);
   },
@@ -220,7 +220,7 @@ export const dashboard = query({
     if (!userId) return null;
 
     const memberships = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_user", (q) => q.eq("userId", userId))
       .order("desc")
       .take(60);
@@ -231,7 +231,7 @@ export const dashboard = query({
     const history: DropView[] = [];
 
     for (const membership of memberships) {
-      const drop = await ctx.db.get("dateDrops", membership.dropId);
+      const drop = await ctx.db.get("datePlans", membership.dropId);
       if (!drop) continue;
       const view = await buildDropView(ctx, drop, membership);
 
@@ -282,13 +282,13 @@ export const dashboard = query({
 /* -------------------------------- responses -------------------------------- */
 
 export const markViewed = mutation({
-  args: { dropId: v.id("dateDrops") },
+  args: { dropId: v.id("datePlans") },
   returns: v.null(),
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
     const me = await requireParticipant(ctx, args.dropId, userId);
     if (me.state !== "invited") return null;
-    await ctx.db.patch("dateDropParticipants", me._id, {
+    await ctx.db.patch("datePlanParticipants", me._id, {
       state: "viewed",
       viewedAt: Date.now(),
     });
@@ -297,12 +297,12 @@ export const markViewed = mutation({
 });
 
 export const accept = mutation({
-  args: { dropId: v.id("dateDrops") },
+  args: { dropId: v.id("datePlans") },
   returns: v.object({ confirmed: v.boolean() }),
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
     const me = await requireParticipant(ctx, args.dropId, userId);
-    const drop = await ctx.db.get("dateDrops", args.dropId);
+    const drop = await ctx.db.get("datePlans", args.dropId);
     if (!drop) throw new Error("That date plan is gone.");
 
     if (isTerminalDrop(drop.status)) {
@@ -319,14 +319,14 @@ export const accept = mutation({
       throw new Error("The window to accept this date has closed.");
     }
 
-    await ctx.db.patch("dateDropParticipants", me._id, {
+    await ctx.db.patch("datePlanParticipants", me._id, {
       state: "accepted",
       respondedAt: now,
       calendarReservedAt: me.calendarReservedAt ?? now,
     });
 
     const participants = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop", (q) => q.eq("dropId", args.dropId))
       .take(10);
 
@@ -338,7 +338,7 @@ export const accept = mutation({
       return { confirmed: true };
     }
 
-    await ctx.db.patch("dateDrops", drop._id, {
+    await ctx.db.patch("datePlans", drop._id, {
       status: nextStatus,
       updatedAt: now,
     });
@@ -349,7 +349,7 @@ export const accept = mutation({
       detail: `now ${nextStatus}`,
     });
 
-    await ctx.scheduler.runAfter(0, internal.dateDrops.notifyAcceptedWaiting, {
+    await ctx.scheduler.runAfter(0, internal.datePlans.notifyAcceptedWaiting, {
       dropId: drop._id,
       userId,
     });
@@ -359,11 +359,11 @@ export const accept = mutation({
 
 async function confirmDrop(
   ctx: MutationCtx,
-  drop: Doc<"dateDrops">,
-  participants: Doc<"dateDropParticipants">[],
+  drop: Doc<"datePlans">,
+  participants: Doc<"datePlanParticipants">[],
   now: number,
 ): Promise<void> {
-  await ctx.db.patch("dateDrops", drop._id, {
+  await ctx.db.patch("datePlans", drop._id, {
     status: "confirmed",
     confirmedAt: now,
     updatedAt: now,
@@ -371,7 +371,7 @@ async function confirmDrop(
 
   for (const p of participants) {
     if (p.state === "accepted") {
-      await ctx.db.patch("dateDropParticipants", p._id, { state: "confirmed" });
+      await ctx.db.patch("datePlanParticipants", p._id, { state: "confirmed" });
     }
     if (p.availabilityId) {
       const window = await ctx.db.get("availability", p.availabilityId);
@@ -387,28 +387,28 @@ async function confirmDrop(
     detail: `${drop.area}, ${drop.city}`,
   });
 
-  await ctx.scheduler.runAfter(0, internal.dateDrops.notifyConfirmed, {
+  await ctx.scheduler.runAfter(0, internal.datePlans.notifyConfirmed, {
     dropId: drop._id,
   });
 }
 
 export const pass = mutation({
   args: {
-    dropId: v.id("dateDrops"),
+    dropId: v.id("datePlans"),
     reason: v.optional(passReasonValidator),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
     const me = await requireParticipant(ctx, args.dropId, userId);
-    const drop = await ctx.db.get("dateDrops", args.dropId);
+    const drop = await ctx.db.get("datePlans", args.dropId);
     if (!drop) throw new Error("That date plan is gone.");
     if (me.state !== "invited" && me.state !== "viewed") {
       throw new Error("You've already responded to this one.");
     }
 
     const now = Date.now();
-    await ctx.db.patch("dateDropParticipants", me._id, {
+    await ctx.db.patch("datePlanParticipants", me._id, {
       state: "passed",
       respondedAt: now,
       passReason: args.reason ?? "unspecified",
@@ -442,19 +442,19 @@ export const pass = mutation({
 });
 
 export const withdraw = mutation({
-  args: { dropId: v.id("dateDrops") },
+  args: { dropId: v.id("datePlans") },
   returns: v.null(),
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
     const me = await requireParticipant(ctx, args.dropId, userId);
-    const drop = await ctx.db.get("dateDrops", args.dropId);
+    const drop = await ctx.db.get("datePlans", args.dropId);
     if (!drop) throw new Error("That date plan is gone.");
     if (me.state !== "accepted") {
       throw new Error("There's nothing to withdraw from.");
     }
     const now = Date.now();
 
-    await ctx.db.patch("dateDropParticipants", me._id, {
+    await ctx.db.patch("datePlanParticipants", me._id, {
       state: "withdrawn",
       respondedAt: now,
     });
@@ -484,11 +484,11 @@ export const withdraw = mutation({
  */
 async function resolveAfterDeparture(
   ctx: MutationCtx,
-  drop: Doc<"dateDrops">,
+  drop: Doc<"datePlans">,
   now: number,
 ): Promise<void> {
   const participants = await ctx.db
-    .query("dateDropParticipants")
+    .query("datePlanParticipants")
     .withIndex("by_drop", (q) => q.eq("dropId", drop._id))
     .take(10);
 
@@ -516,7 +516,7 @@ async function resolveAfterDeparture(
     // state with no acceptance behind it.
     if (drop.status === "partially_accepted") {
       assertDropTransition(drop.status, "inviting");
-      await ctx.db.patch("dateDrops", drop._id, {
+      await ctx.db.patch("datePlans", drop._id, {
         status: "inviting",
         updatedAt: now,
       });
@@ -530,7 +530,7 @@ async function resolveAfterDeparture(
 
   if (drop.status !== "partially_accepted") {
     assertDropTransition(drop.status, "partially_accepted");
-    await ctx.db.patch("dateDrops", drop._id, {
+    await ctx.db.patch("datePlans", drop._id, {
       status: "partially_accepted",
       updatedAt: now,
     });
@@ -559,17 +559,17 @@ async function resolveAfterDeparture(
 
 async function closeDrop(
   ctx: MutationCtx,
-  drop: Doc<"dateDrops">,
+  drop: Doc<"datePlans">,
   status: "expired_no_match" | "cancelled",
   now: number,
   reason: string,
   cancelledByUserId?: Id<"users">,
 ): Promise<void> {
-  const fresh = await ctx.db.get("dateDrops", drop._id);
+  const fresh = await ctx.db.get("datePlans", drop._id);
   if (!fresh || isTerminalDrop(fresh.status)) return;
 
   assertDropTransition(fresh.status, status);
-  await ctx.db.patch("dateDrops", drop._id, {
+  await ctx.db.patch("datePlans", drop._id, {
     status,
     cancelReason: truncate(reason, LIMITS.cancelReason),
     ...(status === "cancelled"
@@ -579,17 +579,17 @@ async function closeDrop(
   });
 
   const participants = await ctx.db
-    .query("dateDropParticipants")
+    .query("datePlanParticipants")
     .withIndex("by_drop", (q) => q.eq("dropId", drop._id))
     .take(10);
 
   for (const p of participants) {
     if (p.state === "accepted" || p.state === "confirmed") {
-      await ctx.db.patch("dateDropParticipants", p._id, {
+      await ctx.db.patch("datePlanParticipants", p._id, {
         state: status === "cancelled" ? "cancelled" : "expired",
       });
     } else if (p.state === "invited" || p.state === "viewed") {
-      await ctx.db.patch("dateDropParticipants", p._id, { state: "expired" });
+      await ctx.db.patch("datePlanParticipants", p._id, { state: "expired" });
     }
     if (p.availabilityId) {
       const window = await ctx.db.get("availability", p.availabilityId);
@@ -613,14 +613,14 @@ async function closeDrop(
     detail: reason,
   });
 
-  await ctx.scheduler.runAfter(0, internal.dateDrops.notifyClosed, {
+  await ctx.scheduler.runAfter(0, internal.datePlans.notifyClosed, {
     dropId: drop._id,
     status,
   });
 }
 
 export const cancel = mutation({
-  args: { dropId: v.id("dateDrops"), reason: v.optional(v.string()) },
+  args: { dropId: v.id("datePlans"), reason: v.optional(v.string()) },
   returns: v.null(),
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
@@ -630,7 +630,7 @@ export const cancel = mutation({
     if (!canActOnDrop(me.state)) {
       throw new Error("You're not on this date plan any more.");
     }
-    const drop = await ctx.db.get("dateDrops", args.dropId);
+    const drop = await ctx.db.get("datePlans", args.dropId);
     if (!drop) throw new Error("That date plan is gone.");
     if (isTerminalDrop(drop.status)) return null;
 
@@ -644,7 +644,7 @@ export const cancel = mutation({
 });
 
 export const confirmAttendance = mutation({
-  args: { dropId: v.id("dateDrops") },
+  args: { dropId: v.id("datePlans") },
   returns: v.null(),
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
@@ -652,11 +652,11 @@ export const confirmAttendance = mutation({
     if (me.state !== "confirmed") {
       throw new Error("You're not on this date plan.");
     }
-    const drop = await ctx.db.get("dateDrops", args.dropId);
+    const drop = await ctx.db.get("datePlans", args.dropId);
     if (!drop || drop.status !== "confirmed") {
       throw new Error("This date isn't confirmed.");
     }
-    await ctx.db.patch("dateDropParticipants", me._id, {
+    await ctx.db.patch("datePlanParticipants", me._id, {
       attendanceConfirmed: true,
     });
     return null;
@@ -670,25 +670,25 @@ export const confirmAttendance = mutation({
  */
 export const forceWithdraw = internalMutation({
   args: {
-    dropId: v.id("dateDrops"),
+    dropId: v.id("datePlans"),
     userId: v.id("users"),
     reason: v.string(),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     const me = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop_and_user", (q) =>
         q.eq("dropId", args.dropId).eq("userId", args.userId),
       )
       .unique();
     if (!me || !isActiveParticipant(me.state)) return null;
 
-    const drop = await ctx.db.get("dateDrops", args.dropId);
+    const drop = await ctx.db.get("datePlans", args.dropId);
     if (!drop || isTerminalDrop(drop.status)) return null;
 
     const now = Date.now();
-    await ctx.db.patch("dateDropParticipants", me._id, {
+    await ctx.db.patch("datePlanParticipants", me._id, {
       state: "withdrawn",
       respondedAt: now,
     });
@@ -715,13 +715,13 @@ export const forceWithdraw = internalMutation({
 /* ----------------------------- notifications ------------------------------- */
 
 export const getDropContext = internalQuery({
-  args: { dropId: v.id("dateDrops") },
+  args: { dropId: v.id("datePlans") },
   returns: v.any(),
   handler: async (ctx, args) => {
-    const drop = await ctx.db.get("dateDrops", args.dropId);
+    const drop = await ctx.db.get("datePlans", args.dropId);
     if (!drop) return null;
     const participants = await ctx.db
-      .query("dateDropParticipants")
+      .query("datePlanParticipants")
       .withIndex("by_drop", (q) => q.eq("dropId", args.dropId))
       .take(10);
 
@@ -749,9 +749,9 @@ export const getDropContext = internalQuery({
 });
 
 type DropContext = {
-  drop: Doc<"dateDrops">;
+  drop: Doc<"datePlans">;
   participants: Array<{
-    participantId: Id<"dateDropParticipants">;
+    participantId: Id<"datePlanParticipants">;
     userId: Id<"users">;
     state: string;
     role: string;
@@ -792,10 +792,10 @@ function emailData(
 
 /** Send the invitation email + in-app notification to everyone still invited. */
 export const dispatchInvitations = internalAction({
-  args: { dropId: v.id("dateDrops") },
+  args: { dropId: v.id("datePlans") },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const context = (await ctx.runQuery(internal.dateDrops.getDropContext, {
+    const context = (await ctx.runQuery(internal.datePlans.getDropContext, {
       dropId: args.dropId,
     })) as DropContext | null;
     if (!context) return null;
@@ -842,10 +842,10 @@ export const dispatchInvitations = internalAction({
 });
 
 export const notifyAcceptedWaiting = internalAction({
-  args: { dropId: v.id("dateDrops"), userId: v.id("users") },
+  args: { dropId: v.id("datePlans"), userId: v.id("users") },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const context = (await ctx.runQuery(internal.dateDrops.getDropContext, {
+    const context = (await ctx.runQuery(internal.datePlans.getDropContext, {
       dropId: args.dropId,
     })) as DropContext | null;
     if (!context) return null;
@@ -876,10 +876,10 @@ export const notifyAcceptedWaiting = internalAction({
 });
 
 export const notifyConfirmed = internalAction({
-  args: { dropId: v.id("dateDrops") },
+  args: { dropId: v.id("datePlans") },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const context = (await ctx.runQuery(internal.dateDrops.getDropContext, {
+    const context = (await ctx.runQuery(internal.datePlans.getDropContext, {
       dropId: args.dropId,
     })) as DropContext | null;
     if (!context) return null;
@@ -926,12 +926,12 @@ export const notifyConfirmed = internalAction({
 
 export const notifyClosed = internalAction({
   args: {
-    dropId: v.id("dateDrops"),
+    dropId: v.id("datePlans"),
     status: v.union(v.literal("expired_no_match"), v.literal("cancelled")),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const context = (await ctx.runQuery(internal.dateDrops.getDropContext, {
+    const context = (await ctx.runQuery(internal.datePlans.getDropContext, {
       dropId: args.dropId,
     })) as DropContext | null;
     if (!context) return null;
@@ -975,7 +975,7 @@ export const notifyClosed = internalAction({
         labels: [expired ? "expired" : "cancelled"],
       });
 
-      await ctx.runMutation(internal.dateDrops.markExpiryNotified, {
+      await ctx.runMutation(internal.datePlans.markExpiryNotified, {
         participantId: participant.participantId,
       });
     }
@@ -984,10 +984,10 @@ export const notifyClosed = internalAction({
 });
 
 export const markExpiryNotified = internalMutation({
-  args: { participantId: v.id("dateDropParticipants") },
+  args: { participantId: v.id("datePlanParticipants") },
   returns: v.null(),
   handler: async (ctx, args) => {
-    await ctx.db.patch("dateDropParticipants", args.participantId, {
+    await ctx.db.patch("datePlanParticipants", args.participantId, {
       expiryNotified: true,
     });
     return null;
@@ -995,10 +995,10 @@ export const markExpiryNotified = internalMutation({
 });
 
 export const markReminderSent = internalMutation({
-  args: { participantId: v.id("dateDropParticipants") },
+  args: { participantId: v.id("datePlanParticipants") },
   returns: v.null(),
   handler: async (ctx, args) => {
-    await ctx.db.patch("dateDropParticipants", args.participantId, {
+    await ctx.db.patch("datePlanParticipants", args.participantId, {
       reminderSentAt: Date.now(),
     });
     return null;
@@ -1006,10 +1006,10 @@ export const markReminderSent = internalMutation({
 });
 
 export const sendReminders = internalAction({
-  args: { dropId: v.id("dateDrops") },
+  args: { dropId: v.id("datePlans") },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const context = (await ctx.runQuery(internal.dateDrops.getDropContext, {
+    const context = (await ctx.runQuery(internal.datePlans.getDropContext, {
       dropId: args.dropId,
     })) as DropContext | null;
     if (!context || context.drop.status !== "confirmed") return null;
@@ -1047,7 +1047,7 @@ export const sendReminders = internalAction({
         labels: ["reminder"],
       });
 
-      await ctx.runMutation(internal.dateDrops.markReminderSent, {
+      await ctx.runMutation(internal.datePlans.markReminderSent, {
         participantId: participant.participantId,
       });
     }
@@ -1070,7 +1070,7 @@ export const expireOverdueDrops = internalMutation({
       "researching",
     ] as const) {
       const overdue = await ctx.db
-        .query("dateDrops")
+        .query("datePlans")
         .withIndex("by_status_and_deadline", (q) =>
           q.eq("status", status).lte("confirmDeadlineMs", args.nowMs),
         )
@@ -1096,20 +1096,20 @@ export const completePastDrops = internalMutation({
   returns: v.number(),
   handler: async (ctx, args) => {
     const past = await ctx.db
-      .query("dateDrops")
+      .query("datePlans")
       .withIndex("by_status_and_end", (q) =>
         q.eq("status", "confirmed").lte("endMs", args.nowMs),
       )
       .take(25);
 
     for (const drop of past) {
-      await ctx.db.patch("dateDrops", drop._id, {
+      await ctx.db.patch("datePlans", drop._id, {
         status: "completed",
         completedAt: args.nowMs,
         updatedAt: args.nowMs,
       });
       const participants = await ctx.db
-        .query("dateDropParticipants")
+        .query("datePlanParticipants")
         .withIndex("by_drop", (q) => q.eq("dropId", drop._id))
         .take(10);
       for (const p of participants) {
@@ -1154,7 +1154,7 @@ export const queueReminders = internalMutation({
   returns: v.number(),
   handler: async (ctx, args) => {
     const soon = await ctx.db
-      .query("dateDrops")
+      .query("datePlans")
       .withIndex("by_status_and_start", (q) =>
         q
           .eq("status", "confirmed")
@@ -1168,10 +1168,10 @@ export const queueReminders = internalMutation({
       // Without this marker the sweep would re-pick the same soonest batch
       // every run and never reach a backlog behind it.
       if (drop.remindersQueuedAt) continue;
-      await ctx.db.patch("dateDrops", drop._id, {
+      await ctx.db.patch("datePlans", drop._id, {
         remindersQueuedAt: args.nowMs,
       });
-      await ctx.scheduler.runAfter(0, internal.dateDrops.sendReminders, {
+      await ctx.scheduler.runAfter(0, internal.datePlans.sendReminders, {
         dropId: drop._id,
       });
       queued += 1;

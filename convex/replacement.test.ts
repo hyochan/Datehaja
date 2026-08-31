@@ -105,7 +105,7 @@ async function seedThreeWay(t: ReturnType<typeof convexTest>) {
     const bob = await makeUser("Bob", "man"); // first invitee, passes
     const carl = await makeUser("Carl", "man"); // replacement, accepts
 
-    const dropId = await ctx.db.insert("dateDrops", {
+    const dropId = await ctx.db.insert("datePlans", {
       status: "inviting",
       initiatorUserId: alice.userId,
       countryCode: "KR",
@@ -137,7 +137,7 @@ async function seedThreeWay(t: ReturnType<typeof convexTest>) {
       [alice, "initiator"],
       [bob, "invitee"],
     ] as const) {
-      await ctx.db.insert("dateDropParticipants", {
+      await ctx.db.insert("datePlanParticipants", {
         dropId,
         userId: person.userId,
         role,
@@ -166,8 +166,8 @@ async function toReplacementState(
   t: ReturnType<typeof convexTest>,
   s: Awaited<ReturnType<typeof seedThreeWay>>,
 ) {
-  await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
-  await asUser(t, s.bob.userId).mutation(api.dateDrops.pass, { dropId: s.dropId });
+  await asUser(t, s.alice.userId).mutation(api.datePlans.accept, { dropId: s.dropId });
+  await asUser(t, s.bob.userId).mutation(api.datePlans.pass, { dropId: s.dropId });
 
   const runId = await t.run(async (ctx) =>
     ctx.db.insert("matchingRuns", {
@@ -251,16 +251,16 @@ describe("a participant who passed", () => {
     const t = convexTest(schema, modules);
     const s = await seedThreeWay(t);
     await toReplacementState(t, s);
-    await asUser(t, s.carl.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
+    await asUser(t, s.carl.userId).mutation(api.datePlans.accept, { dropId: s.dropId });
 
-    const before = await t.run((ctx) => ctx.db.get("dateDrops", s.dropId));
+    const before = await t.run((ctx) => ctx.db.get("datePlans", s.dropId));
     expect(before?.status).toBe("confirmed");
 
     await expect(
-      asUser(t, s.bob.userId).mutation(api.dateDrops.cancel, { dropId: s.dropId }),
+      asUser(t, s.bob.userId).mutation(api.datePlans.cancel, { dropId: s.dropId }),
     ).rejects.toThrow(/not on this date plan/i);
 
-    const after = await t.run((ctx) => ctx.db.get("dateDrops", s.dropId));
+    const after = await t.run((ctx) => ctx.db.get("datePlans", s.dropId));
     expect(after?.status).toBe("confirmed");
   });
 
@@ -268,10 +268,10 @@ describe("a participant who passed", () => {
     const t = convexTest(schema, modules);
     const s = await seedThreeWay(t);
     await toReplacementState(t, s);
-    await asUser(t, s.carl.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
+    await asUser(t, s.carl.userId).mutation(api.datePlans.accept, { dropId: s.dropId });
 
     await expect(
-      asUser(t, s.bob.userId).mutation(api.dateDrops.confirmAttendance, {
+      asUser(t, s.bob.userId).mutation(api.datePlans.confirmAttendance, {
         dropId: s.dropId,
       }),
     ).rejects.toThrow(/not on this date plan/i);
@@ -293,15 +293,15 @@ describe("a participant who passed", () => {
       await ctx.db.patch("profiles", profile!._id, { photoStorageId: storageId });
     });
 
-    await asUser(t, s.carl.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
+    await asUser(t, s.carl.userId).mutation(api.datePlans.accept, { dropId: s.dropId });
 
-    const bobsView = await asUser(t, s.bob.userId).query(api.dateDrops.get, {
+    const bobsView = await asUser(t, s.bob.userId).query(api.datePlans.get, {
       dropId: s.dropId,
     });
     expect(bobsView?.matchPhotoUrl).toBeNull();
 
     // ...while the people actually on the date do get it.
-    const alicesView = await asUser(t, s.alice.userId).query(api.dateDrops.get, {
+    const alicesView = await asUser(t, s.alice.userId).query(api.datePlans.get, {
       dropId: s.dropId,
     });
     expect(alicesView?.matchPhotoUrl).toBeTypeOf("string");
@@ -311,7 +311,7 @@ describe("a participant who passed", () => {
     const t = convexTest(schema, modules);
     const s = await seedThreeWay(t);
     await toReplacementState(t, s);
-    await asUser(t, s.carl.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
+    await asUser(t, s.carl.userId).mutation(api.datePlans.accept, { dropId: s.dropId });
 
     await asUser(t, s.alice.userId).mutation(api.messages.send, {
       dropId: s.dropId,
@@ -330,9 +330,9 @@ describe("a participant who passed", () => {
     const t = convexTest(schema, modules);
     const s = await seedThreeWay(t);
     await toReplacementState(t, s);
-    await asUser(t, s.carl.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
+    await asUser(t, s.carl.userId).mutation(api.datePlans.accept, { dropId: s.dropId });
 
-    const board = (await asUser(t, s.bob.userId).query(api.dateDrops.dashboard, {})) as {
+    const board = (await asUser(t, s.bob.userId).query(api.datePlans.dashboard, {})) as {
       upcoming: unknown[];
       waiting: unknown[];
       history: Array<{ myState: string }>;
@@ -349,7 +349,7 @@ describe("safety actions target the right person", () => {
     const t = convexTest(schema, modules);
     const s = await seedThreeWay(t);
     await toReplacementState(t, s);
-    await asUser(t, s.carl.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
+    await asUser(t, s.carl.userId).mutation(api.datePlans.accept, { dropId: s.dropId });
 
     await asUser(t, s.alice.userId).mutation(api.safety.blockFromDrop, {
       dropId: s.dropId,
@@ -365,7 +365,7 @@ describe("safety actions target the right person", () => {
     const t = convexTest(schema, modules);
     const s = await seedThreeWay(t);
     await toReplacementState(t, s);
-    await asUser(t, s.carl.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
+    await asUser(t, s.carl.userId).mutation(api.datePlans.accept, { dropId: s.dropId });
 
     await asUser(t, s.alice.userId).mutation(api.safety.report, {
       dropId: s.dropId,
@@ -395,7 +395,7 @@ describe("what the replacement is shown", () => {
     const s = await seedThreeWay(t);
     await toReplacementState(t, s);
 
-    const carlsView = await asUser(t, s.carl.userId).query(api.dateDrops.get, {
+    const carlsView = await asUser(t, s.carl.userId).query(api.datePlans.get, {
       dropId: s.dropId,
     });
     expect(carlsView?.match?.displayName).toBe("Alice");
@@ -407,8 +407,8 @@ describe("replacement bookkeeping", () => {
   test("a window another drop already holds is never claimed", async () => {
     const t = convexTest(schema, modules);
     const s = await seedThreeWay(t);
-    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
-    await asUser(t, s.bob.userId).mutation(api.dateDrops.pass, { dropId: s.dropId });
+    await asUser(t, s.alice.userId).mutation(api.datePlans.accept, { dropId: s.dropId });
+    await asUser(t, s.bob.userId).mutation(api.datePlans.pass, { dropId: s.dropId });
 
     // Somebody else grabs Carl's evening first.
     await t.run((ctx) =>
@@ -466,7 +466,7 @@ describe("replacement bookkeeping", () => {
     expect(added).toBe(false);
     const participants = await t.run((ctx) =>
       ctx.db
-        .query("dateDropParticipants")
+        .query("datePlanParticipants")
         .withIndex("by_drop", (q) => q.eq("dropId", s.dropId))
         .collect(),
     );
@@ -476,9 +476,9 @@ describe("replacement bookkeeping", () => {
   test("adding to a drop that already closed is refused", async () => {
     const t = convexTest(schema, modules);
     const s = await seedThreeWay(t);
-    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
-    await asUser(t, s.bob.userId).mutation(api.dateDrops.pass, { dropId: s.dropId });
-    await asUser(t, s.alice.userId).mutation(api.dateDrops.cancel, {
+    await asUser(t, s.alice.userId).mutation(api.datePlans.accept, { dropId: s.dropId });
+    await asUser(t, s.bob.userId).mutation(api.datePlans.pass, { dropId: s.dropId });
+    await asUser(t, s.alice.userId).mutation(api.datePlans.cancel, {
       dropId: s.dropId,
       reason: "Changed my mind.",
     });
@@ -539,7 +539,7 @@ describe("taking back a held evening", () => {
   test("stands the date plan down instead of orphaning it", async () => {
     const t = convexTest(schema, modules);
     const s = await seedThreeWay(t);
-    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
+    await asUser(t, s.alice.userId).mutation(api.datePlans.accept, { dropId: s.dropId });
 
     // Alice removes the very window her accepted drop is holding.
     await asUser(t, s.alice.userId).mutation(api.availability.remove, {
@@ -552,7 +552,7 @@ describe("taking back a held evening", () => {
       expect(window?.heldByDropId).toBeUndefined();
 
       const participant = await ctx.db
-        .query("dateDropParticipants")
+        .query("datePlanParticipants")
         .withIndex("by_drop_and_user", (q) =>
           q.eq("dropId", s.dropId).eq("userId", s.alice.userId),
         )
@@ -565,8 +565,8 @@ describe("taking back a held evening", () => {
   test("cancels a confirmed date rather than letting the other person turn up alone", async () => {
     const t = convexTest(schema, modules);
     const s = await seedThreeWay(t);
-    await asUser(t, s.alice.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
-    await asUser(t, s.bob.userId).mutation(api.dateDrops.accept, { dropId: s.dropId });
+    await asUser(t, s.alice.userId).mutation(api.datePlans.accept, { dropId: s.dropId });
+    await asUser(t, s.bob.userId).mutation(api.datePlans.accept, { dropId: s.dropId });
 
     await t.run((ctx) =>
       ctx.db.patch("availability", s.alice.availabilityId, { status: "held" }),
@@ -575,7 +575,7 @@ describe("taking back a held evening", () => {
       availabilityId: s.alice.availabilityId,
     });
 
-    const drop = await t.run((ctx) => ctx.db.get("dateDrops", s.dropId));
+    const drop = await t.run((ctx) => ctx.db.get("datePlans", s.dropId));
     expect(drop?.status).toBe("cancelled");
   });
 });

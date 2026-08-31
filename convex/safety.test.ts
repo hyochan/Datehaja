@@ -94,7 +94,7 @@ async function seedPair(t: ReturnType<typeof convexTest>) {
     const alice = await makeUser("Alice", "woman");
     const bob = await makeUser("Bob", "man");
 
-    const dropId = await ctx.db.insert("dateDrops", {
+    const dropId = await ctx.db.insert("datePlans", {
       status: "inviting",
       initiatorUserId: alice.userId,
       countryCode: "KR",
@@ -125,7 +125,7 @@ async function seedPair(t: ReturnType<typeof convexTest>) {
       [alice, "initiator"],
       [bob, "invitee"],
     ] as const) {
-      await ctx.db.insert("dateDropParticipants", {
+      await ctx.db.insert("datePlanParticipants", {
         dropId,
         userId: person.userId,
         role,
@@ -158,7 +158,7 @@ describe("blocking", () => {
     });
 
     await t.run(async (ctx) => {
-      const drop = await ctx.db.get("dateDrops", s.dropId);
+      const drop = await ctx.db.get("datePlans", s.dropId);
       expect(drop?.status).toBe("cancelled");
       for (const person of [s.alice, s.bob]) {
         const window = await ctx.db.get("availability", person.availabilityId);
@@ -514,12 +514,12 @@ describe("AgentMail event persistence is idempotent", () => {
     const s = await seedPair(t);
     await t.run(async (ctx) => {
       const participant = await ctx.db
-        .query("dateDropParticipants")
+        .query("datePlanParticipants")
         .withIndex("by_drop_and_user", (q) =>
           q.eq("dropId", s.dropId).eq("userId", s.alice.userId),
         )
         .unique();
-      await ctx.db.patch("dateDropParticipants", participant!._id, {
+      await ctx.db.patch("datePlanParticipants", participant!._id, {
         emailThreadId: "thr_link",
         emailMessageId: "<m@agentmail.to>",
       });

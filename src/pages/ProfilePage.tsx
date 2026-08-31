@@ -165,8 +165,8 @@ export default function ProfilePage() {
   return (
     <div className="product-page mx-auto max-w-3xl space-y-10 pb-8">
       <PageIntro
-        eyebrow="What your match can know"
-        title="Your profile"
+        eyebrow="The human behind your agent"
+        title="Your human profile"
         description={`${profile.displayName} · ${profile.ageYears} · ${profile.neighborhood}, ${profile.city}`}
         motif={profile.displayName.slice(0, 1).toUpperCase()}
         tone="butter"
@@ -189,7 +189,7 @@ export default function ProfilePage() {
           <div className="min-w-0 flex-1">
             <p className="text-[14px] leading-relaxed text-soft">
               {t(
-                "A photo is optional. You decide whether a match sees it with your profile card or only after you both accept.",
+              "A photo is optional. You decide whether another human sees it with your post-date profile card or only after mutual consent.",
               )}
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -261,7 +261,7 @@ export default function ProfilePage() {
       </section>
 
       <section>
-        <SectionHeading eyebrow="What we match on" title="About you" />
+        <SectionHeading eyebrow="What your agent can represent" title="About you" />
         <Card className="p-5">
           {error && (
             <div className="mb-5">

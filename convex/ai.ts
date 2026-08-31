@@ -23,9 +23,10 @@ export const recordRun = internalMutation({
     purpose: aiPurposeValidator,
     model: v.string(),
     endpoint: v.string(),
-    dropId: v.optional(v.id("dateDrops")),
+    dropId: v.optional(v.id("datePlans")),
     userId: v.optional(v.id("users")),
     matchingRunId: v.optional(v.id("matchingRuns")),
+    agentDateId: v.optional(v.id("agentDates")),
     inputSummary: v.string(),
     outputPreview: v.string(),
     promptTokens: v.optional(v.number()),
@@ -247,7 +248,7 @@ export type PlanVenue = {
 };
 
 export type PlanInput = {
-  dropId?: Id<"dateDrops">;
+  dropId?: Id<"datePlans">;
   matchingRunId?: Id<"matchingRuns">;
   city: string;
   area: string;
@@ -565,7 +566,7 @@ Rules:
 export async function normaliseVenues(
   ctx: ActionCtx,
   args: {
-    dropId?: Id<"dateDrops">;
+    dropId?: Id<"datePlans">;
     matchingRunId?: Id<"matchingRuns">;
     city: string;
     area: string;
