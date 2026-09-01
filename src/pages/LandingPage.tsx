@@ -182,6 +182,47 @@ export default function LandingPage() {
           </div>
         </section>
 
+        <section className="agent-capture-section border-y border-[var(--border)] py-20 sm:py-28">
+          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+            <div className="agent-capture-heading">
+              <div>
+                <div className="docket-label text-[var(--accent-text)]">
+                  {t("A real agent stack")}
+                </div>
+                <h2 className="display-heading mt-4 text-[clamp(2.6rem,6vw,5.4rem)] leading-[0.9]">
+                  {t("Watch the agents meet")}
+                </h2>
+              </div>
+              <p>{t("Your Agent goes first.")}</p>
+            </div>
+
+            <div className="agent-capture-grid">
+              <CaptureCard
+                index="01"
+                image="/product-tour/agent-date-world.jpg"
+                alt={t("Two Agents talking")}
+                caption={t("Two Agents talking")}
+              />
+              <CaptureCard
+                index="02"
+                image="/product-tour/agent-report-dialogue.jpg"
+                alt={t(
+                  "Six moments. Two independent reads. One honest recommendation.",
+                )}
+                caption={t(
+                  "Six moments. Two independent reads. One honest recommendation.",
+                )}
+              />
+              <CaptureCard
+                index="03"
+                image="/product-tour/mutual-consent.jpg"
+                alt={t("Humans control contact")}
+                caption={t("Humans control contact")}
+              />
+            </div>
+          </div>
+        </section>
+
         <section
           id="agent-stack"
           className="agent-stack-section border-y border-[var(--border)] py-20 sm:py-24"
@@ -243,6 +284,28 @@ export default function LandingPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+function CaptureCard({
+  index,
+  image,
+  alt,
+  caption,
+}: {
+  index: string;
+  image: string;
+  alt: string;
+  caption: string;
+}) {
+  return (
+    <figure className="agent-capture-card">
+      <div className="agent-capture-phone">
+        <img src={image} alt={alt} loading="lazy" />
+        <span>{index}</span>
+      </div>
+      <figcaption>{caption}</figcaption>
+    </figure>
   );
 }
 

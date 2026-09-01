@@ -1,5 +1,6 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import type { GenericId, VId } from "convex/values";
 import { authTables } from "@convex-dev/auth/server";
 import {
   aiPurposeValidator,
@@ -35,6 +36,17 @@ import {
   socialEnergyValidator,
 } from "./lib/enums";
 import { agentAvatarValidator } from "./lib/agentAvatar";
+
+/**
+ * Runtime-compatible validator for references created before dateDrops was
+ * renamed to datePlans. The cast deliberately keeps new application code
+ * typed to datePlans while Convex can continue validating immutable legacy
+ * production history. All current writers emit datePlans IDs only.
+ */
+const datePlanIdValidator = v.union(
+  v.id("datePlans"),
+  v.id("dateDrops"),
+) as unknown as VId<GenericId<"datePlans">>;
 
 export default defineSchema({
   // ---- auth (users, authAccounts, authSessions, ...) -------------------
@@ -327,7 +339,7 @@ export default defineSchema({
     endMs: v.number(),
     timezone: v.string(),
     status: availabilityStatusValidator,
-    heldByDropId: v.optional(v.id("datePlans")),
+    heldByDropId: v.optional(datePlanIdValidator),
     note: v.optional(v.string()),
   })
     .index("by_user", ["userId"])
@@ -348,7 +360,7 @@ export default defineSchema({
   reports: defineTable({
     reporterUserId: v.id("users"),
     reportedUserId: v.id("users"),
-    dropId: v.optional(v.id("datePlans")),
+    dropId: v.optional(datePlanIdValidator),
     category: reportCategoryValidator,
     details: v.string(),
     status: reportStatusValidator,
@@ -372,7 +384,7 @@ export default defineSchema({
   /** A user-triggered copy of a confirmed plan sent to their trusted contact. */
   safetyPlanShares: defineTable({
     userId: v.id("users"),
-    dropId: v.id("datePlans"),
+    dropId: datePlanIdValidator,
     status: v.union(
       v.literal("queued"),
       v.literal("sent"),
@@ -390,7 +402,7 @@ export default defineSchema({
   matchingRuns: defineTable({
     initiatorUserId: v.id("users"),
     availabilityId: v.optional(v.id("availability")),
-    dropId: v.optional(v.id("datePlans")),
+    dropId: v.optional(datePlanIdValidator),
     /** "seeking_second" when re-matching after a pass. */
     intent: v.union(v.literal("new_drop"), v.literal("seeking_second")),
     stage: v.union(
@@ -534,7 +546,7 @@ export default defineSchema({
     .index("by_initiator", ["initiatorUserId"]),
 
   datePlanParticipants: defineTable({
-    dropId: v.id("datePlans"),
+    dropId: datePlanIdValidator,
     userId: v.id("users"),
     role: v.union(v.literal("initiator"), v.literal("invitee")),
     state: participantStateValidator,
@@ -567,7 +579,7 @@ export default defineSchema({
 
   /** Private post-date response. It is never shown to the other participant. */
   dateFeedback: defineTable({
-    dropId: v.id("datePlans"),
+    dropId: datePlanIdValidator,
     userId: v.id("users"),
     /** Counterpart being reviewed. Optional for legacy feedback rows. */
     reviewedUserId: v.optional(v.id("users")),
@@ -601,7 +613,7 @@ export default defineSchema({
   // ---- research (Firecrawl) -------------------------------------------
   researchRuns: defineTable({
     provider: v.string(),
-    dropId: v.optional(v.id("datePlans")),
+    dropId: v.optional(datePlanIdValidator),
     requestedByUserId: v.optional(v.id("users")),
     query: v.object({
       city: v.string(),
@@ -675,7 +687,7 @@ export default defineSchema({
     purpose: aiPurposeValidator,
     model: v.string(),
     endpoint: v.string(),
-    dropId: v.optional(v.id("datePlans")),
+    dropId: v.optional(datePlanIdValidator),
     userId: v.optional(v.id("users")),
     matchingRunId: v.optional(v.id("matchingRuns")),
     agentDateId: v.optional(v.id("agentDates")),
@@ -699,7 +711,7 @@ export default defineSchema({
     kind: notificationKindValidator,
     title: v.string(),
     body: v.string(),
-    dropId: v.optional(v.id("datePlans")),
+    dropId: v.optional(datePlanIdValidator),
     href: v.optional(v.string()),
     read: v.boolean(),
   })
@@ -708,7 +720,7 @@ export default defineSchema({
 
   emailMessages: defineTable({
     userId: v.optional(v.id("users")),
-    dropId: v.optional(v.id("datePlans")),
+    dropId: v.optional(datePlanIdValidator),
     kind: emailKindValidator,
     toAddress: v.string(),
     fromAddress: v.string(),
@@ -740,7 +752,7 @@ export default defineSchema({
     subject: v.optional(v.string()),
     preview: v.optional(v.string()),
     userId: v.optional(v.id("users")),
-    dropId: v.optional(v.id("datePlans")),
+    dropId: v.optional(datePlanIdValidator),
     signatureVerified: v.boolean(),
     processed: v.boolean(),
     processingError: v.optional(v.string()),
@@ -755,7 +767,7 @@ export default defineSchema({
 
   /** Deliberately constrained pre-date logistics. Not a chat app. */
   dateMessages: defineTable({
-    dropId: v.id("datePlans"),
+    dropId: datePlanIdValidator,
     fromUserId: v.id("users"),
     presetKey: v.string(),
     body: v.string(),
@@ -768,7 +780,7 @@ export default defineSchema({
     actorType: v.union(v.literal("user"), v.literal("system")),
     actorUserId: v.optional(v.id("users")),
     action: v.string(),
-    dropId: v.optional(v.id("datePlans")),
+    dropId: v.optional(datePlanIdValidator),
     targetUserId: v.optional(v.id("users")),
     detail: v.string(),
   })

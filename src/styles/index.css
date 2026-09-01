@@ -3399,6 +3399,141 @@ html[lang^="ja"] .agent-hero-title {
   }
 }
 
+.agent-capture-section {
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 8% 18%, rgb(224 91 116 / 12%), transparent 25rem),
+    radial-gradient(
+      circle at 92% 72%,
+      rgb(104 82 150 / 13%),
+      transparent 28rem
+    ),
+    var(--bg);
+}
+
+.agent-capture-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.agent-capture-heading p {
+  max-width: 18rem;
+  border-left: 1px solid var(--tint-ember-border);
+  padding-left: 1rem;
+  color: var(--text-soft);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.agent-capture-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(1rem, 3vw, 2rem);
+  margin-top: 3.5rem;
+}
+
+.agent-capture-card {
+  min-width: 0;
+}
+
+.agent-capture-card:nth-child(2) {
+  margin-top: 3.5rem;
+}
+
+.agent-capture-card:nth-child(3) {
+  margin-top: 1.25rem;
+}
+
+.agent-capture-phone {
+  position: relative;
+  aspect-ratio: 527 / 766;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklab, var(--border-strong) 85%, transparent);
+  border-radius: 2.2rem;
+  background: #21171e;
+  box-shadow: 0 2.6rem 4.8rem -3rem rgb(21 9 15 / 78%);
+  transform: translateZ(0);
+}
+
+.agent-capture-phone::after {
+  position: absolute;
+  inset: 0;
+  border: 0.42rem solid rgb(255 255 255 / 4%);
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
+}
+
+.agent-capture-phone img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 700ms cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+.agent-capture-card:hover .agent-capture-phone img {
+  transform: scale(1.025);
+}
+
+.agent-capture-phone > span {
+  position: absolute;
+  z-index: 2;
+  top: 1rem;
+  right: 1rem;
+  display: grid;
+  width: 2.2rem;
+  height: 2.2rem;
+  place-items: center;
+  border: 1px solid rgb(255 255 255 / 13%);
+  border-radius: 50%;
+  background: rgb(25 14 21 / 76%);
+  color: #f69ba4;
+  font: 800 0.58rem/1 var(--font-mono);
+  letter-spacing: 0.08em;
+  backdrop-filter: blur(12px);
+}
+
+.agent-capture-card figcaption {
+  margin-top: 1rem;
+  padding: 0 0.45rem;
+  color: var(--text-soft);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+@media (max-width: 48rem) {
+  .agent-capture-heading {
+    display: block;
+  }
+
+  .agent-capture-heading p {
+    margin-top: 1rem;
+  }
+
+  .agent-capture-grid {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    margin-right: -1.25rem;
+    padding-right: 1.25rem;
+    padding-bottom: 1.5rem;
+    scroll-snap-type: x mandatory;
+  }
+
+  .agent-capture-card,
+  .agent-capture-card:nth-child(2),
+  .agent-capture-card:nth-child(3) {
+    width: min(78vw, 20rem);
+    flex: 0 0 auto;
+    margin-top: 0;
+    scroll-snap-align: center;
+  }
+}
+
 .agent-debrief-section {
   isolation: isolate;
   background:

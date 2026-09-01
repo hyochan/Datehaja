@@ -12,9 +12,30 @@
 - **Auth:** Convex Auth
 - **AI models:** gpt-5-nano for active Agent chat/dates, with gpt-5.6-luna as the first quality fallback and the proven default for heavier legacy extraction
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-08-31T00:00:00+09:00
+- **Last updated:** 2026-09-01T14:25:00+09:00
 
 ## Log
+
+### 2026-09-01 - real product capture and launch review
+
+Replayed the product with the existing authenticated demo account and captured
+the real Agent world, six-turn transcript, persistent private Agent room,
+report correction conversation, and the two-human consent result. Curated the
+privacy-safe sequence under `submission/captures/` and reused three frames in a
+new visual landing triptych so a visitor can see the real shipped product
+instead of reading another explanation. The captures contain labelled demo
+people and no real contact details.
+
+Re-ran lint, the production build, all 254 unit and Convex tests, and the public
+desktop/mobile Playwright suite. The enabled browser tests passed; the two
+fresh-account suites remain intentionally gated until AgentMail's first-week
+ten-recipient restriction lifts on 2026-09-03T12:24:00.593Z.
+
+The Convex launch-readiness pass found no production errors, read-limit events,
+or OCC warnings in `merry-bass-190` over the last 72 hours. Development had one
+successful automatic OCC retry on an analytics rate-limit row and two expected
+AgentMail 429 responses from the temporary recipient restriction; neither
+affected production.
 
 ### 2026-08-31 - agent dating and spatial-world pivot
 
