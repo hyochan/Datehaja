@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@convex/_generated/api";
 import { SUPPORTED_LOCALES, useI18n, type LocaleCode } from "../../i18n";
 
 export function LocaleSwitcher({ compact = false }: { compact?: boolean }) {
   const { locale, setLocale, t } = useI18n();
+  const me = useQuery(api.profiles.me);
+  const persistPreferredLocale = useMutation(api.profiles.setPreferredLocale);
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const selected =
@@ -30,6 +34,12 @@ export function LocaleSwitcher({ compact = false }: { compact?: boolean }) {
   const selectLocale = (next: LocaleCode) => {
     setLocale(next);
     setOpen(false);
+    if (me?.profile) {
+      void persistPreferredLocale({ locale: next }).catch(() => {
+        // Keep the visible locale responsive. The next authenticated switch
+        // retries persistence instead of trapping the user in the menu.
+      });
+    }
   };
 
   return (

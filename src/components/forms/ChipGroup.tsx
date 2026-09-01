@@ -1,4 +1,5 @@
 import { Chip } from "../ui/primitives";
+import { useI18n } from "../../i18n";
 
 /**
  * `onChange` receives an updater rather than the next array.
@@ -17,7 +18,9 @@ export function ChipGroup({
   max,
   ariaLabel,
 }: {
-  options: ReadonlyArray<string | { key: string; label: string; emoji?: string }>;
+  options: ReadonlyArray<
+    string | { key: string; label: string; emoji?: string }
+  >;
   selected: string[];
   onChange: ChipChange;
   max?: number;
@@ -95,12 +98,17 @@ export function SelectionCount({
   min?: number;
   max?: number;
 }) {
+  const { t } = useI18n();
   const short = min !== undefined && count < min;
   return (
-    <p className={`mt-2 text-[13px] ${short ? "text-[var(--tint-ember-strong)]" : "text-muted"}`}>
-      {count} selected
-      {min !== undefined && count < min && ` — pick at least ${min}`}
-      {max !== undefined && count >= max && ` — that's the maximum`}
+    <p
+      className={`mt-2 text-[13px] ${short ? "text-[var(--tint-ember-strong)]" : "text-muted"}`}
+    >
+      {t("{count} selected", { count })}
+      {min !== undefined &&
+        count < min &&
+        t(" — pick at least {count}", { count: min })}
+      {max !== undefined && count >= max && t(" — that's the maximum")}
     </p>
   );
 }

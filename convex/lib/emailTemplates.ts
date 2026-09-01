@@ -13,8 +13,7 @@ const BRAND = {
 function shell(
   body: string,
   footerNote: string,
-  settingsNote =
-    "You can change what Datehaja emails you, or pause matching entirely, in Settings.",
+  settingsNote = "You can change what Datehaja emails you, or pause matching entirely, in Settings.",
 ): string {
   return `<!doctype html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -483,7 +482,8 @@ export function agentDebriefEmail(args: {
       privacy:
         "상대 에이전트의 판정과 상대방의 답은 계속 비공개예요. 내 에이전트가 나 대신 동의할 수는 없어요.",
       footer: "Datehaja 에이전트 데이트에 관한 비공개 서비스 메시지예요.",
-      settings: "설정에서 이메일 수신 방식을 바꾸거나 매칭을 잠시 멈출 수 있어요.",
+      settings:
+        "설정에서 이메일 수신 방식을 바꾸거나 매칭을 잠시 멈출 수 있어요.",
     },
     ja: {
       subject: "エージェントが戻りました — 非公開デートレポート",
@@ -519,7 +519,8 @@ export function agentDebriefEmail(args: {
       privacy:
         "Das Urteil des anderen Agents und die Antwort der anderen Person bleiben verborgen. Dein Agent kann nicht für dich zustimmen.",
       footer: "Eine private Servicenachricht zu deinem Datehaja-Agent.",
-      settings: "In den Einstellungen kannst du E-Mails ändern oder das Matching pausieren.",
+      settings:
+        "In den Einstellungen kannst du E-Mails ändern oder das Matching pausieren.",
     },
     fr: {
       subject: "Votre Agent est de retour — compte rendu privé",
@@ -537,7 +538,8 @@ export function agentDebriefEmail(args: {
       privacy:
         "L'avis de l'autre Agent et la réponse de l'autre personne restent secrets. Votre Agent ne peut pas consentir à votre place.",
       footer: "Message privé concernant votre Agent Datehaja.",
-      settings: "Dans les réglages, vous pouvez modifier les e-mails ou suspendre les rencontres.",
+      settings:
+        "Dans les réglages, vous pouvez modifier les e-mails ou suspendre les rencontres.",
     },
     nl: {
       subject: "Je Agent is terug — privéverslag",
@@ -555,7 +557,8 @@ export function agentDebriefEmail(args: {
       privacy:
         "Het oordeel van de andere Agent en het antwoord van de andere persoon blijven verborgen. Je Agent kan niet namens jou instemmen.",
       footer: "Een privébericht over je Datehaja-agent.",
-      settings: "In Instellingen kun je e-mails aanpassen of matching pauzeren.",
+      settings:
+        "In Instellingen kun je e-mails aanpassen of matching pauzeren.",
     },
     sv: {
       subject: "Din Agent är tillbaka — privat rapport",
@@ -629,31 +632,87 @@ ${localized.privacy}
 }
 
 export function agentConnectionEmail(args: {
+  locale?: string;
   firstName: string;
   counterpartFirstName: string;
   url: string;
 }): EmailContent {
-  const subject = `Two humans said yes`;
-  const text = `Hi ${args.firstName},
+  const language = args.locale?.split("-")[0] ?? "en";
+  const localized = {
+    ko: {
+      subject: "두 사람이 모두 만나고 싶다고 답했어요",
+      headline: "이제 서로를 직접 만나보세요.",
+      greeting: `${args.firstName}님, ${args.counterpartFirstName}님과 서로 독립적으로 만남을 선택했어요. 이제 두 사람에게 동시에 연락처가 공개됐어요.`,
+      button: "연결 확인하기",
+      note: "에이전트는 추천했고, 결정은 두 사람이 직접 했어요.",
+      footer: "Datehaja 연결에 관한 비공개 서비스 메시지예요.",
+    },
+    ja: {
+      subject: "ふたりとも会いたいと答えました",
+      headline: "今度は、ふたり自身で会いましょう。",
+      greeting: `${args.firstName}さんと${args.counterpartFirstName}さんは、それぞれ独立して紹介を希望しました。連絡先が同時に公開されました。`,
+      button: "つながりを確認する",
+      note: "エージェントは提案し、決めたのはふたりです。",
+      footer: "Datehajaのつながりに関する非公開メッセージです。",
+    },
+    de: {
+      subject: "Ihr habt beide Ja gesagt",
+      headline: "Jetzt trefft euch als ihr selbst.",
+      greeting: `Hallo ${args.firstName}, du und ${args.counterpartFirstName} habt euch unabhängig füreinander entschieden. Die Kontaktdaten sind jetzt für euch beide gleichzeitig sichtbar.`,
+      button: "Verbindung öffnen",
+      note: "Die Agents haben empfohlen. Die Entscheidung war eure.",
+      footer: "Eine private Servicenachricht zu deiner Datehaja-Verbindung.",
+    },
+    fr: {
+      subject: "Vous avez tous les deux dit oui",
+      headline: "À vous de vous rencontrer maintenant.",
+      greeting: `Bonjour ${args.firstName}, ${args.counterpartFirstName} et vous avez choisi cette rencontre séparément. Vos coordonnées sont maintenant visibles au même moment.`,
+      button: "Voir la mise en relation",
+      note: "Les Agents ont conseillé. La décision vous appartenait.",
+      footer: "Message privé concernant votre mise en relation Datehaja.",
+    },
+    nl: {
+      subject: "Jullie hebben allebei ja gezegd",
+      headline: "Ontmoet elkaar nu als jezelf.",
+      greeting: `Hoi ${args.firstName}, jij en ${args.counterpartFirstName} kozen onafhankelijk voor een kennismaking. Jullie contactgegevens zijn nu tegelijk zichtbaar.`,
+      button: "Verbinding openen",
+      note: "De Agents adviseerden. De beslissing was van jullie.",
+      footer: "Een privébericht over je Datehaja-verbinding.",
+    },
+    sv: {
+      subject: "Ni har båda sagt ja",
+      headline: "Nu kan ni träffas som er själva.",
+      greeting: `Hej ${args.firstName}, du och ${args.counterpartFirstName} valde varandra oberoende av varandra. Kontaktuppgifterna visas nu för er båda samtidigt.`,
+      button: "Öppna kontakten",
+      note: "Agenterna gav ett råd. Beslutet var ert.",
+      footer: "Ett privat servicemeddelande om din Datehaja-kontakt.",
+    },
+  }[language] ?? {
+    subject: "Two humans said yes",
+    headline: "Now meet as yourselves.",
+    greeting: `Hi ${args.firstName}, you and ${args.counterpartFirstName} independently chose an introduction. Contact is now available to both of you at the same time.`,
+    button: "Open the connection",
+    note: "The agents made a recommendation. The decision was yours.",
+    footer: "This is a private service message about your Datehaja connection.",
+  };
+  const text = `${localized.greeting}
 
-You and ${args.counterpartFirstName} independently chose an introduction. Contact is now available to both of you at the same time.
+${localized.headline}
 
-Open the connection: ${args.url}
+${localized.button}: ${args.url}
 
-The agents made a recommendation. The decision was yours.
+${localized.note}
 
 — Datehaja`;
   return {
-    subject,
+    subject: localized.subject,
     text,
     html: shell(
-      h1("Two humans said yes.") +
-        p(
-          `Hi ${args.firstName}, you and ${args.counterpartFirstName} independently chose an introduction. Contact is now available to both of you at the same time.`,
-        ) +
-        `<div style="margin-top:20px;">${button(args.url, "Open the connection")}</div>` +
-        `<p style="margin:18px 0 0;font-size:13px;line-height:1.6;color:${BRAND.muted};">The agents made a recommendation. The decision was yours.</p>`,
-      "This is a private service message about your Datehaja connection.",
+      h1(localized.headline) +
+        p(localized.greeting) +
+        `<div style="margin-top:20px;">${button(args.url, localized.button)}</div>` +
+        `<p style="margin:18px 0 0;font-size:13px;line-height:1.6;color:${BRAND.muted};">${escapeHtml(localized.note)}</p>`,
+      localized.footer,
     ),
   };
 }

@@ -5057,7 +5057,8 @@ html[lang^="ja"] .agent-debrief-title {
 .agent-loop-step.is-current > span {
   border-color: var(--tint-ember-border);
   background: var(--tint-ember-bg);
-  box-shadow: 0 0 0 0.32rem color-mix(in oklab, var(--accent-text) 7%, transparent);
+  box-shadow: 0 0 0 0.32rem
+    color-mix(in oklab, var(--accent-text) 7%, transparent);
 }
 .agent-loop-step strong {
   overflow: hidden;
@@ -6696,6 +6697,75 @@ html[lang^="ja"] .agent-debrief-title {
 }
 .onboarding-character-progress[data-complete="true"] > span i {
   background: var(--color-sage-500);
+}
+
+.onboarding-match-boundary {
+  position: relative;
+  margin: 1.5rem 0;
+  overflow: hidden;
+  border: 1px solid var(--tint-ember-border);
+  border-radius: 1.4rem;
+  background:
+    radial-gradient(circle at 95% 5%, var(--tint-ember-bg), transparent 36%),
+    var(--bg-raised);
+  padding: 1.15rem;
+}
+.onboarding-match-boundary::after {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--color-ember-500);
+  box-shadow:
+    0 0 0 0.4rem var(--tint-ember-bg),
+    0 0 2rem var(--color-ember-500);
+  content: "";
+}
+.onboarding-translation-consent {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0 0 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--bg-sunken);
+  padding: 0.9rem 1rem;
+  color: var(--text);
+  text-align: left;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease;
+}
+.onboarding-translation-consent:hover,
+.onboarding-translation-consent[aria-pressed="true"] {
+  border-color: var(--tint-sage-border);
+  background: var(--tint-sage-bg);
+}
+.onboarding-translation-consent > span:first-child {
+  display: grid;
+  width: 1.8rem;
+  height: 1.8rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--tint-sage-border);
+  border-radius: 50%;
+  color: var(--tint-sage-fg);
+  font: 700 0.72rem/1 var(--font-mono);
+}
+.onboarding-translation-consent > span:last-child {
+  display: grid;
+  gap: 0.2rem;
+}
+.onboarding-translation-consent strong {
+  font-size: 0.82rem;
+}
+.onboarding-translation-consent small {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  line-height: 1.5;
 }
 
 .onboarding-requirements {

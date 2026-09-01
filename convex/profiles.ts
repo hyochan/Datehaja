@@ -41,6 +41,8 @@ import { containsContactInfo, redactContactInfo } from "./lib/privacy";
 import { LIMITS, clean, cleanMultiline, pickFrom } from "./lib/text";
 import { MAX_AGE, MIN_AGE, ageOn } from "./lib/age";
 import { legalVersionsMatch } from "./lib/legal";
+import { isSupportedLocale } from "./lib/locales";
+import { normaliseMatchingBoundaryInput } from "./lib/matchingPreferenceInput";
 
 /* ------------------------------- queries -------------------------------- */
 
@@ -140,6 +142,74 @@ export const onboardingState = query({
 });
 
 /* ------------------------------ mutations ------------------------------- */
+
+/** Persisted independently from browser storage so every service email uses
+ *  the recipient's own language, even when another user started the flow. */
+export const setPreferredLocale = mutation({
+  args: { locale: v.string() },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const userId = await requireUserId(ctx);
+    if (!isSupportedLocale(args.locale)) {
+      throw new Error("Choose a supported language.");
+    }
+    const profile = await requireProfile(ctx, userId);
+    if (profile.preferredLocale === args.locale) return null;
+    await ctx.db.patch("profiles", profile._id, {
+      preferredLocale: args.locale,
+      updatedAt: Date.now(),
+    });
+    return null;
+  },
+});
+
+/** Existing owners can complete or revise the same explicit discovery
+ * boundaries used by the compact Agent onboarding. */
+export const saveAgentMatchingBoundaries = mutation({
+  args: {
+    languages: v.array(v.string()),
+    matchLocationScope: v.union(
+      v.literal("area"),
+      v.literal("city"),
+      v.literal("selected_cities"),
+    ),
+    preferredCountryCodes: v.array(v.string()),
+    preferredCities: v.array(v.string()),
+    preferredAreas: v.array(v.string()),
+    allowTranslatedDates: v.boolean(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const userId = await requireUserId(ctx);
+    const [profile, preferences] = await Promise.all([
+      requireProfile(ctx, userId),
+      getPreferencesByUser(ctx, userId),
+    ]);
+    if (!preferences) throw new Error("Finish the basics first.");
+    const normalized = normaliseMatchingBoundaryInput(profile.city, args);
+    const now = Date.now();
+    await Promise.all([
+      ctx.db.patch("profiles", profile._id, {
+        languages: normalized.languages,
+        updatedAt: now,
+      }),
+      ctx.db.patch("preferences", preferences._id, {
+        matchLocationScope: normalized.matchLocationScope,
+        preferredCountryCodes: normalized.preferredCountryCodes,
+        preferredCities: normalized.preferredCities,
+        preferredAreas: normalized.preferredAreas,
+        allowTranslatedDates: normalized.allowTranslatedDates,
+        updatedAt: now,
+      }),
+    ]);
+    await recordAudit(ctx, {
+      action: "profile.matching_boundaries_updated",
+      actorUserId: userId,
+      detail: `${normalized.matchLocationScope} / ${normalized.preferredCities.join(",")}`,
+    });
+    return null;
+  },
+});
 
 export const saveBasics = mutation({
   args: {

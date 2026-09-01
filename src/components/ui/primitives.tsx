@@ -1,6 +1,7 @@
 /* oxlint-disable react/only-export-components -- component utilities and primitives share one module */
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { useI18n } from "../../i18n";
 
 /* --------------------------------- utils --------------------------------- */
 
@@ -251,6 +252,7 @@ export function Field({
   htmlFor?: string;
   optional?: boolean;
 }) {
+  const { t } = useI18n();
   return (
     <div className="mb-5">
       <label
@@ -259,7 +261,9 @@ export function Field({
       >
         {label}
         {optional && (
-          <span className="text-[12px] font-normal text-muted">optional</span>
+          <span className="text-[12px] font-normal text-muted">
+            {t("Optional")}
+          </span>
         )}
       </label>
       {hint && (

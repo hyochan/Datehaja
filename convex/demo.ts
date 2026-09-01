@@ -16,6 +16,7 @@ import {
 } from "./lib/catalog";
 import { ageOn, dobToMs } from "./lib/age";
 import type { Gender } from "./lib/enums";
+import { normaliseSupportedLocale } from "./lib/locales";
 
 /**
  * Demo mode.
@@ -517,11 +518,44 @@ export const seed = internalMutation({
     let created = 0;
     for (const persona of GLOBAL_PERSONAS) {
       const email = `${persona.key}@demo.datehaja.invalid`;
+      const cityInfo = findCity(persona.city)!;
+      const area = findNeighborhood(persona.city, persona.neighborhood)!;
       const already = await ctx.db
         .query("users")
         .withIndex("email", (q) => q.eq("email", email))
         .first();
-      if (already) continue;
+      if (already) {
+        const [profile, preferences] = await Promise.all([
+          ctx.db
+            .query("profiles")
+            .withIndex("by_user", (q) => q.eq("userId", already._id))
+            .unique(),
+          ctx.db
+            .query("preferences")
+            .withIndex("by_user", (q) => q.eq("userId", already._id))
+            .unique(),
+        ]);
+        if (profile) {
+          await ctx.db.patch("profiles", profile._id, {
+            preferredLocale: normaliseSupportedLocale(
+              undefined,
+              cityInfo.countryCode,
+            ),
+            languages: persona.languages,
+            updatedAt: args.nowMs,
+          });
+        }
+        if (preferences) {
+          await ctx.db.patch("preferences", preferences._id, {
+            matchLocationScope: "city",
+            preferredCountryCodes: [cityInfo.countryCode],
+            preferredCities: [cityInfo.city],
+            allowTranslatedDates: false,
+            updatedAt: args.nowMs,
+          });
+        }
+        continue;
+      }
 
       const userId = await ctx.db.insert("users", {
         name: persona.displayName,
@@ -530,11 +564,12 @@ export const seed = internalMutation({
         emailVerificationTime: undefined,
       });
 
-      const cityInfo = findCity(persona.city)!;
-      const area = findNeighborhood(persona.city, persona.neighborhood)!;
-
       await ctx.db.insert("profiles", {
         userId,
+        preferredLocale: normaliseSupportedLocale(
+          undefined,
+          cityInfo.countryCode,
+        ),
         displayName: persona.displayName,
         dobMs: personaDob(persona.age, args.nowMs),
         ageYears: persona.age,
@@ -567,6 +602,10 @@ export const seed = internalMutation({
 
       await ctx.db.insert("preferences", {
         userId,
+        matchLocationScope: "city",
+        preferredCountryCodes: [cityInfo.countryCode],
+        preferredCities: [cityInfo.city],
+        allowTranslatedDates: false,
         ageMin: persona.ageRange[0],
         ageMax: persona.ageRange[1],
         ageHard: true,

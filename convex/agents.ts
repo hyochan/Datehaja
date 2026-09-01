@@ -34,6 +34,8 @@ import {
 } from "./lib/text";
 import { obj, structured } from "./integrations/openai";
 import { agentAvatarValidator } from "./lib/agentAvatar";
+import { SUPPORTED_LOCALES, normaliseSupportedLocale } from "./lib/locales";
+import { normaliseMatchingBoundaryInput } from "./lib/matchingPreferenceInput";
 
 const voiceValidator = v.union(
   v.literal("warm"),
@@ -45,6 +47,11 @@ const autonomyValidator = v.union(
   v.literal("observe"),
   v.literal("suggest"),
   v.literal("advocate"),
+);
+const matchLocationScopeValidator = v.union(
+  v.literal("area"),
+  v.literal("city"),
+  v.literal("selected_cities"),
 );
 
 function agentWelcome(name: string) {
@@ -161,18 +168,7 @@ type QuestionCategory =
 type QuestionLanguage = "en" | "ko" | "ja" | "de" | "fr" | "nl" | "sv";
 
 const QUESTION_INTERVAL_MS = 7 * 24 * 60 * 60 * 1000;
-const QUESTION_LOCALES = [
-  "en-US",
-  "en-GB",
-  "en-CA",
-  "en-AU",
-  "ko-KR",
-  "ja-JP",
-  "de-DE",
-  "fr-FR",
-  "nl-NL",
-  "sv-SE",
-] as const;
+const QUESTION_LOCALES = SUPPORTED_LOCALES;
 
 const AGENT_QUESTIONS: Array<{
   category: QuestionCategory;
@@ -341,7 +337,7 @@ async function createNextQuestion(
   }
   const profile = await getProfileByUser(ctx, args.userId);
   const locale = normaliseQuestionLocale(
-    args.locale ?? latest?.locale,
+    args.locale ?? profile?.preferredLocale ?? latest?.locale,
     profile?.countryCode,
   );
   const priorIndex = latest
@@ -454,6 +450,12 @@ export const bootstrap = mutation({
     preferredStyleTags: v.array(v.string()),
     stylePreference: preferenceStrengthValidator,
     locale: v.optional(v.string()),
+    languages: v.array(v.string()),
+    matchLocationScope: matchLocationScopeValidator,
+    preferredCountryCodes: v.array(v.string()),
+    preferredCities: v.array(v.string()),
+    preferredAreas: v.array(v.string()),
+    allowTranslatedDates: v.boolean(),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
@@ -478,6 +480,18 @@ export const bootstrap = mutation({
     const city = findCity(args.city);
     const area = city && findNeighborhood(city.city, args.neighborhood);
     if (!city || !area) throw new Error("Choose a supported city and area.");
+    const preferredLocale = normaliseSupportedLocale(
+      args.locale,
+      city.countryCode,
+    );
+    const matchingBoundaries = normaliseMatchingBoundaryInput(city.city, {
+      languages: args.languages,
+      matchLocationScope: args.matchLocationScope,
+      preferredCountryCodes: args.preferredCountryCodes,
+      preferredCities: args.preferredCities,
+      preferredAreas: args.preferredAreas,
+      allowTranslatedDates: args.allowTranslatedDates,
+    });
     const interests = cleanList(args.interests, 8, 40);
     if (interests.length < 3)
       throw new Error("Choose at least three interests.");
@@ -497,6 +511,7 @@ export const bootstrap = mutation({
 
     const profilePatch = {
       displayName,
+      preferredLocale,
       dobMs,
       ageYears: age,
       ageConfirmed18: true,
@@ -511,6 +526,7 @@ export const bootstrap = mutation({
       bio: essence.slice(0, 600),
       personalityTraits,
       interests,
+      languages: matchingBoundaries.languages,
       profileTruthConfirmed: true,
       onboardingStep: 7,
       onboardingComplete: true,
@@ -527,7 +543,7 @@ export const bootstrap = mutation({
         occupationCategory: undefined,
         showOccupation: false,
         hobbies: [],
-        languages: [],
+        languages: matchingBoundaries.languages,
         socialEnergy: "ambivert",
         firstDateVibe: [],
         lifestyle: { smokes: false, drinks: "occasional" },
@@ -541,6 +557,11 @@ export const bootstrap = mutation({
     const existingPreferences = await getPreferencesByUser(ctx, userId);
     const budget = defaultBudgetRange(city.currency);
     const preferenceFields = {
+      matchLocationScope: matchingBoundaries.matchLocationScope,
+      preferredCountryCodes: matchingBoundaries.preferredCountryCodes,
+      preferredCities: matchingBoundaries.preferredCities,
+      preferredAreas: matchingBoundaries.preferredAreas,
+      allowTranslatedDates: matchingBoundaries.allowTranslatedDates,
       relationshipIntent: args.relationshipIntent,
       preferredPersonalityTraits: cleanList(
         args.preferredPersonalityTraits,
@@ -560,7 +581,11 @@ export const bootstrap = mutation({
         ageHard: true,
         maxDistanceKm: 30,
         distanceHard: false,
-        preferredAreas: [area.name],
+        matchLocationScope: preferenceFields.matchLocationScope,
+        preferredCountryCodes: preferenceFields.preferredCountryCodes,
+        preferredCities: preferenceFields.preferredCities,
+        preferredAreas: preferenceFields.preferredAreas,
+        allowTranslatedDates: preferenceFields.allowTranslatedDates,
         areaHard: false,
         relationshipIntent: preferenceFields.relationshipIntent,
         intentHard: false,
@@ -635,6 +660,7 @@ export const bootstrap = mutation({
       userId,
       event: "agent_created",
       city: city.city,
+      locale: preferredLocale,
       createdAt: now,
     });
     await recordAudit(ctx, {
@@ -645,7 +671,7 @@ export const bootstrap = mutation({
     await createNextQuestion(ctx, {
       userId,
       nowMs: now + 1,
-      locale: args.locale,
+      locale: preferredLocale,
       notify: false,
     });
     return null;
@@ -947,7 +973,9 @@ export const replyContext = internalQuery({
               : date.counterpartNextSearchNote) ?? null,
           counterpartAgentName:
             counterpartAgent?.name ??
-            (counterpartProfile ? fallbackAgentName(counterpartUserId) : "Another Agent"),
+            (counterpartProfile
+              ? fallbackAgentName(counterpartUserId)
+              : "Another Agent"),
           turns: turns.map((turn) => ({
             round: turn.round,
             speakerAgentName: turn.speakerAgentName,

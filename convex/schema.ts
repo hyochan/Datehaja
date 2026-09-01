@@ -56,6 +56,9 @@ export default defineSchema({
   profiles: defineTable({
     userId: v.id("users"),
 
+    /** User-selected product/email locale. Optional while existing rows migrate. */
+    preferredLocale: v.optional(v.string()),
+
     displayName: v.string(),
     /** Private. Never returned to another user. */
     dobMs: v.number(),
@@ -116,6 +119,20 @@ export default defineSchema({
   // ---- dating preferences ---------------------------------------------
   preferences: defineTable({
     userId: v.id("users"),
+
+    /** Explicit geographic boundary for Agent discovery. Optional only for
+     *  legacy rows; real matching rejects incomplete boundaries. */
+    matchLocationScope: v.optional(
+      v.union(
+        v.literal("area"),
+        v.literal("city"),
+        v.literal("selected_cities"),
+      ),
+    ),
+    preferredCountryCodes: v.optional(v.array(v.string())),
+    preferredCities: v.optional(v.array(v.string())),
+    /** Translation is used only when both people explicitly enable it. */
+    allowTranslatedDates: v.optional(v.boolean()),
 
     ageMin: v.number(),
     ageMax: v.number(),

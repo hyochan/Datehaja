@@ -7,6 +7,29 @@ export const ABOUT_ME_MAX_INTERESTS = 8;
 export const ABOUT_ME_MIN_PERSONALITIES = 2;
 export const ABOUT_ME_MIN_ESSENCE_CHARACTERS = 30;
 
+export function getMatchingBoundaryProgress(input: {
+  locationScope: "area" | "city" | "selected_cities";
+  hasCity: boolean;
+  hasArea: boolean;
+  selectedCityCount: number;
+  languageCount: number;
+}) {
+  const hasLocation =
+    input.locationScope === "selected_cities"
+      ? input.selectedCityCount > 0
+      : input.locationScope === "area"
+        ? input.hasCity && input.hasArea
+        : input.hasCity;
+  const hasLanguage = input.languageCount > 0;
+
+  return {
+    completedRequirements: Number(hasLocation) + Number(hasLanguage),
+    hasLanguage,
+    hasLocation,
+    isReady: hasLocation && hasLanguage,
+  };
+}
+
 export function getIdealPersonProgress(
   interestedIn: readonly string[],
   desiredConnection: string,

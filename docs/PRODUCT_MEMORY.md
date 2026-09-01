@@ -1,6 +1,6 @@
 # Datehaja product memory
 
-Last updated: 2026-09-01
+Last updated: 2026-09-02
 
 This file is the durable product decision record for future work. Read it before
 changing priorities, billing, launch scope, or deployment.
@@ -33,6 +33,19 @@ sealed verdict or decision. The owner’s reactions and corrections update both
 private personal memory and compact scouting memory for future candidate
 selection. Analytics may record the internal date ID and that a discussion
 occurred, never the conversation text.
+
+Agent matching boundaries are explicit and mutual. Every real participant must
+choose at least one supported search location and one date language before
+entering the pool. A pair is eligible only when each person’s country, city and,
+when selected, neighborhood boundary includes the other. Different languages
+are allowed only when both people opt into Agent-translated dates. These are
+practical meeting boundaries, never nationality filters. Missing or one-sided
+settings mean no match rather than a speculative fallback.
+
+The signed-in locale is part of the private profile. Agent notifications,
+verdict reasons, debrief email, and mutual-contact email must be rendered in
+each recipient’s saved locale independently; one date must never reuse the
+initiator’s locale for the other recipient.
 
 ## Priority now: win the Convex hackathon
 

@@ -43,6 +43,71 @@ async function setup(t: ReturnType<typeof convexTest>) {
 }
 
 describe("periodic Agent learning", () => {
+  test("fresh Agent onboarding stores required matching boundaries", async () => {
+    const t = convexTest(schema, modules);
+    const owner = await t.run((ctx) =>
+      ctx.db.insert("users", {
+        name: "Rowan",
+        email: "rowan@test.invalid",
+      }),
+    );
+
+    await asUser(t, owner).mutation(api.agents.bootstrap, {
+      displayName: "Rowan",
+      dobMs: Date.UTC(1993, 5, 15),
+      gender: "man",
+      interestedIn: ["woman"],
+      city: "Stockholm",
+      neighborhood: "Södermalm",
+      interests: ["Films", "Coffee", "Art galleries"],
+      personalityTraits: ["Thoughtful", "Curious"],
+      agentName: "Orbit",
+      avatar: {
+        palette: "rose",
+        face: "gentle",
+        hair: "wave",
+        outfit: "cardigan",
+        accessory: "star",
+      },
+      essence:
+        "I am quiet at first, then warm and playful once I feel safe with someone.",
+      desiredConnection:
+        "Someone thoughtful who enjoys honest conversation and comfortable silence.",
+      boundaries: ["No pressure"],
+      voice: "warm",
+      autonomy: "suggest",
+      relationshipIntent: "open",
+      preferredPersonalityTraits: ["Thoughtful", "Curious"],
+      personalityPreference: "flexible",
+      preferredStyleTags: [],
+      stylePreference: "no_preference",
+      locale: "en-US",
+      languages: ["English"],
+      matchLocationScope: "city",
+      preferredCountryCodes: ["SE"],
+      preferredCities: ["Stockholm"],
+      preferredAreas: [],
+      allowTranslatedDates: false,
+    });
+
+    const result = await t.run(async (ctx) => ({
+      profile: await ctx.db
+        .query("profiles")
+        .withIndex("by_user", (q) => q.eq("userId", owner))
+        .unique(),
+      preferences: await ctx.db
+        .query("preferences")
+        .withIndex("by_user", (q) => q.eq("userId", owner))
+        .unique(),
+    }));
+
+    expect(result.profile?.languages).toEqual(["English"]);
+    expect(result.preferences?.matchLocationScope).toBe("city");
+    expect(result.preferences?.preferredCountryCodes).toEqual(["SE"]);
+    expect(result.preferences?.preferredCities).toEqual(["Stockholm"]);
+    expect(result.preferences?.allowTranslatedDates).toBe(false);
+  });
+
   test("renaming an Agent updates its generated introduction", async () => {
     const t = convexTest(schema, modules);
     const { owner } = await setup(t);
@@ -83,9 +148,7 @@ describe("periodic Agent learning", () => {
         .first(),
     }));
     expect(result.agent?.name).toBe("Juno");
-    expect(result.message?.content).toMatch(
-      /^I'm Juno, your dating agent\./,
-    );
+    expect(result.message?.content).toMatch(/^I'm Juno, your dating agent\./);
   });
 
   test("creates one localized open question and never duplicates it", async () => {

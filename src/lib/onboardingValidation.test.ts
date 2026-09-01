@@ -4,7 +4,44 @@ import {
   IDEAL_PERSON_MIN_CHARACTERS,
   getAboutMeProgress,
   getIdealPersonProgress,
+  getMatchingBoundaryProgress,
 } from "./onboardingValidation";
+
+describe("matching-boundary onboarding validation", () => {
+  it("requires an explicit city selection and at least one language", () => {
+    expect(
+      getMatchingBoundaryProgress({
+        locationScope: "selected_cities",
+        hasCity: true,
+        hasArea: true,
+        selectedCityCount: 0,
+        languageCount: 1,
+      }),
+    ).toMatchObject({ hasLocation: false, hasLanguage: true, isReady: false });
+
+    expect(
+      getMatchingBoundaryProgress({
+        locationScope: "selected_cities",
+        hasCity: true,
+        hasArea: true,
+        selectedCityCount: 2,
+        languageCount: 0,
+      }),
+    ).toMatchObject({ hasLocation: true, hasLanguage: false, isReady: false });
+  });
+
+  it("accepts a precise area plus a spoken language", () => {
+    expect(
+      getMatchingBoundaryProgress({
+        locationScope: "area",
+        hasCity: true,
+        hasArea: true,
+        selectedCityCount: 0,
+        languageCount: 1,
+      }),
+    ).toMatchObject({ completedRequirements: 2, isReady: true });
+  });
+});
 
 describe("ideal-person onboarding validation", () => {
   it("shows the exact amount of meaningful text still needed", () => {

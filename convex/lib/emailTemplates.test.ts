@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { agentDebriefEmail } from "./emailTemplates";
+import { agentConnectionEmail, agentDebriefEmail } from "./emailTemplates";
 
 const base = {
   firstName: "Mina",
@@ -23,10 +23,36 @@ describe("agent debrief email", () => {
   });
 
   it("retains English for English-region locales", () => {
-    const email = agentDebriefEmail({ ...base, locale: "en-GB" });
+    const email = agentDebriefEmail({
+      ...base,
+      locale: "en-GB",
+      reason: "The pace and emotional ease felt aligned.",
+    });
 
     expect(email.subject).toBe("Your agent is back — a private debrief");
     expect(email.text).toContain("Hi Mina");
+    expect(email.text).not.toMatch(/[가-힣]/);
     expect(email.html).toContain("Open my private debrief");
+  });
+
+  it("localizes a mutual connection to each recipient", () => {
+    const korean = agentConnectionEmail({
+      locale: "ko-KR",
+      firstName: "민아",
+      counterpartFirstName: "Eli",
+      url: base.url,
+    });
+    const english = agentConnectionEmail({
+      locale: "en-US",
+      firstName: "Eli",
+      counterpartFirstName: "Mina",
+      url: base.url,
+    });
+
+    expect(korean.subject).toBe("두 사람이 모두 만나고 싶다고 답했어요");
+    expect(korean.html).toContain("연결 확인하기");
+    expect(korean.text).not.toContain("Two humans said yes");
+    expect(english.subject).toBe("Two humans said yes");
+    expect(english.text).not.toMatch(/[가-힣]/);
   });
 });

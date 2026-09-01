@@ -23,6 +23,7 @@ async function setup(t: ReturnType<typeof convexTest>) {
       const userId = await ctx.db.insert("users", { name, email });
       await ctx.db.insert("profiles", {
         userId,
+        preferredLocale: name === "Bob Kim" ? "en-US" : "ko-KR",
         displayName: name,
         dobMs: NOW - 29 * 365.25 * 24 * 3600_000,
         ageYears: 29,
@@ -72,6 +73,44 @@ async function setup(t: ReturnType<typeof convexTest>) {
         createdAt: NOW,
         updatedAt: NOW,
       });
+      await ctx.db.insert("preferences", {
+        userId,
+        matchLocationScope: "city",
+        preferredCountryCodes: ["KR"],
+        preferredCities: ["Seoul"],
+        allowTranslatedDates: false,
+        ageMin: 18,
+        ageMax: 100,
+        ageHard: true,
+        maxDistanceKm: 30,
+        distanceHard: false,
+        preferredAreas: [],
+        areaHard: false,
+        relationshipIntent: "open",
+        intentHard: false,
+        smoking: "no_preference",
+        smokingHard: false,
+        alcohol: "no_preference",
+        alcoholHard: false,
+        preferredDateTypes: ["film", "coffee"],
+        budgetMinPerPerson: 20_000,
+        budgetMaxPerPerson: 80_000,
+        currency: "KRW",
+        budgetHard: false,
+        dayPreference: "either",
+        indoorOutdoor: "either",
+        atmosphere: "either",
+        dietary: [],
+        accessibility: [],
+        notifyEmail: false,
+        notifyInvitations: true,
+        notifyConfirmations: true,
+        notifyReminders: false,
+        dropsPaused: false,
+        maxDropsPerWeek: 3,
+        allowDemoMatches: true,
+        updatedAt: NOW,
+      });
       return userId;
     }
 
@@ -81,12 +120,7 @@ async function setup(t: ReturnType<typeof convexTest>) {
       "woman",
       "Aster",
     );
-    const bob = await person(
-      "Bob Kim",
-      "bob@test.invalid",
-      "man",
-      "Bori",
-    );
+    const bob = await person("Bob Kim", "bob@test.invalid", "man", "Bori");
     const carol = await person(
       "Carol Lee",
       "carol@test.invalid",
@@ -142,6 +176,128 @@ describe("agent-date privacy and human consent", () => {
     expect(date?.locale).toBe("ko-KR");
     expect(date?.setting).toBe("둘만의 가상 데이트 공간을 준비하고 있어요.");
     expect(date?.paceMode).toBe("demo");
+  });
+
+  test("projects each recipient's persisted locale for email delivery", async () => {
+    const t = convexTest(schema, modules);
+    const s = await setup(t);
+
+    const context = await t.query(internal.agentDates.deliveryContext, {
+      agentDateId: s.agentDateId,
+    });
+
+    expect(context?.a.locale).toBe("ko-KR");
+    expect(context?.b.locale).toBe("en-US");
+  });
+
+  test("lets an existing owner persist email locale and matching boundaries", async () => {
+    const t = convexTest(schema, modules);
+    const s = await setup(t);
+    const carol = asUser(t, s.carol);
+
+    await carol.mutation(api.profiles.setPreferredLocale, { locale: "ja-JP" });
+    await carol.mutation(api.profiles.saveAgentMatchingBoundaries, {
+      languages: ["Korean", "Japanese"],
+      matchLocationScope: "selected_cities",
+      preferredCountryCodes: ["JP"],
+      preferredCities: ["Tokyo"],
+      preferredAreas: [],
+      allowTranslatedDates: true,
+    });
+
+    const [profile, preferences] = await t.run(async (ctx) => [
+      await ctx.db
+        .query("profiles")
+        .withIndex("by_user", (q) => q.eq("userId", s.carol))
+        .unique(),
+      await ctx.db
+        .query("preferences")
+        .withIndex("by_user", (q) => q.eq("userId", s.carol))
+        .unique(),
+    ]);
+    expect(profile?.preferredLocale).toBe("ja-JP");
+    expect(profile?.languages).toEqual(["Korean", "Japanese"]);
+    expect(preferences?.preferredCountryCodes).toEqual(["JP"]);
+    expect(preferences?.preferredCities).toEqual(["Tokyo"]);
+    expect(preferences?.allowTranslatedDates).toBe(true);
+  });
+
+  test("rejects unsupported persisted locales and cities", async () => {
+    const t = convexTest(schema, modules);
+    const s = await setup(t);
+    const carol = asUser(t, s.carol);
+
+    await expect(
+      carol.mutation(api.profiles.setPreferredLocale, { locale: "xx-XX" }),
+    ).rejects.toThrow("supported language");
+    await expect(
+      carol.mutation(api.profiles.saveAgentMatchingBoundaries, {
+        languages: ["Korean"],
+        matchLocationScope: "selected_cities",
+        preferredCountryCodes: ["KR"],
+        preferredCities: ["Atlantis"],
+        preferredAreas: [],
+        allowTranslatedDates: false,
+      }),
+    ).rejects.toThrow("supported matching cities");
+  });
+
+  test("localizes stored notifications independently for both recipients", async () => {
+    const t = convexTest(schema, modules);
+    const s = await setup(t);
+
+    await t.mutation(internal.agentDates.finish, {
+      agentDateId: s.agentDateId,
+      aVerdict: "curious",
+      bVerdict: "curious",
+      aReason: "조금 더 알아볼 가치가 있어요.",
+      bReason: "One more conversation could be worthwhile.",
+      aDecisionCode: "worth_exploring",
+      bDecisionCode: "worth_exploring",
+      aNextSearchNote: "",
+      bNextSearchNote: "",
+      score: 70,
+      summary: "A balanced date.",
+      sparks: [],
+      frictions: [],
+      demoConsent: "pending",
+    });
+
+    const [aliceNotifications, bobNotifications] = await t.run(async (ctx) => [
+      await ctx.db
+        .query("notifications")
+        .withIndex("by_user", (q) => q.eq("userId", s.alice))
+        .take(10),
+      await ctx.db
+        .query("notifications")
+        .withIndex("by_user", (q) => q.eq("userId", s.bob))
+        .take(10),
+    ]);
+    expect(aliceNotifications.at(-1)?.title).toBe("에이전트가 돌아왔어요");
+    expect(bobNotifications.at(-1)?.title).toBe("Your agent went on a date");
+  });
+
+  test("blocks scouting until explicit matching boundaries are complete", async () => {
+    const t = convexTest(schema, modules);
+    const s = await setup(t);
+    await t.run(async (ctx) => {
+      const preferences = await ctx.db
+        .query("preferences")
+        .withIndex("by_user", (q) => q.eq("userId", s.carol))
+        .unique();
+      if (!preferences) throw new Error("Expected preferences.");
+      await ctx.db.patch("preferences", preferences._id, {
+        matchLocationScope: undefined,
+      });
+    });
+
+    await expect(
+      t.mutation(internal.agentDates.createRequest, {
+        userId: s.carol,
+        accessMode: "demo",
+        locale: "ko-KR",
+      }),
+    ).rejects.toThrow("Finish choosing where");
   });
 
   test("keeps a demo Agent name distinct and marks turn ownership", async () => {

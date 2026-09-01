@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "@convex/_generated/api";
 import {
   INTEREST_OPTIONS,
+  LANGUAGE_OPTIONS,
   SUPPORTED_CITIES,
   SUPPORTED_COUNTRIES,
   citiesForCountry,
@@ -33,12 +34,18 @@ import { readableError } from "../components/ui/Toast";
 import { useI18n } from "../i18n";
 import { dobStringToMs } from "../lib/format";
 import {
+  LANGUAGE_NATIVE_NAMES,
+  defaultLanguageForLocale,
+  type MatchLocationScope,
+} from "../lib/matchingPreferences";
+import {
   ABOUT_ME_MAX_INTERESTS,
   ABOUT_ME_MIN_ESSENCE_CHARACTERS,
   ABOUT_ME_MIN_NAME_CHARACTERS,
   IDEAL_PERSON_MIN_CHARACTERS,
   getAboutMeProgress,
   getIdealPersonProgress,
+  getMatchingBoundaryProgress,
 } from "../lib/onboardingValidation";
 
 type Gender = "woman" | "man" | "nonbinary" | "other";
@@ -124,6 +131,15 @@ export default function AgentOnboardingPage() {
   const [neighborhood, setNeighborhood] = useState<string>(
     suggested.neighborhoods[0].name,
   );
+  const [matchLocationScope, setMatchLocationScope] =
+    useState<MatchLocationScope>("city");
+  const [selectedCityKeys, setSelectedCityKeys] = useState<string[]>([
+    suggested.key,
+  ]);
+  const [languages, setLanguages] = useState<string[]>([
+    defaultLanguageForLocale(locale),
+  ]);
+  const [allowTranslatedDates, setAllowTranslatedDates] = useState(false);
   const [interests, setInterests] = useState<string[]>([]);
   const [personalityTraits, setPersonalityTraits] = useState<string[]>([]);
   const [agentName, setAgentName] = useState("");
@@ -161,6 +177,12 @@ export default function AgentOnboardingPage() {
       neighborhood?: string;
       bio?: string;
       interests?: string[];
+      languages?: string[];
+    } | null;
+    const preferences = me?.preferences as {
+      matchLocationScope?: MatchLocationScope;
+      preferredCities?: string[];
+      allowTranslatedDates?: boolean;
     } | null;
     if (profile) {
       setDisplayName(profile.displayName ?? "");
@@ -176,7 +198,20 @@ export default function AgentOnboardingPage() {
         );
       }
       setInterests(profile.interests ?? []);
+      if (profile.languages?.length) setLanguages(profile.languages);
       setEssence(profile.bio ?? "");
+    }
+    if (preferences?.matchLocationScope) {
+      setMatchLocationScope(preferences.matchLocationScope);
+    }
+    if (preferences?.preferredCities?.length) {
+      const cityKeys = SUPPORTED_CITIES.filter((option) =>
+        preferences.preferredCities?.includes(option.city),
+      ).map((option) => option.key);
+      if (cityKeys.length) setSelectedCityKeys(cityKeys);
+    }
+    if (preferences?.allowTranslatedDates !== undefined) {
+      setAllowTranslatedDates(preferences.allowTranslatedDates);
     }
     setHydrated(true);
   }, [hydrated, me]);
@@ -198,6 +233,18 @@ export default function AgentOnboardingPage() {
     personalityTraits,
     essence,
   });
+  const selectedMatchCities = SUPPORTED_CITIES.filter((option) =>
+    selectedCityKeys.includes(option.key),
+  );
+  const matchingProgress = getMatchingBoundaryProgress({
+    locationScope: matchLocationScope,
+    hasCity: Boolean(city.city),
+    hasArea: Boolean(neighborhood),
+    selectedCityCount: selectedMatchCities.length,
+    languageCount: languages.length,
+  });
+  const matchingLocationReady = matchingProgress.hasLocation;
+  const languagesReady = matchingProgress.hasLanguage;
   const dobHint = !dob
     ? existingAge !== undefined
       ? t("Age already verified ✓")
@@ -208,7 +255,7 @@ export default function AgentOnboardingPage() {
   const stepReady = {
     1: agentName.trim().length >= 2,
     2: idealPersonProgress.isReady,
-    3: aboutMeProgress.isReady,
+    3: aboutMeProgress.isReady && matchingLocationReady && languagesReady,
   } satisfies Record<Step, boolean>;
 
   function toggle<T>(value: T, values: T[], update: (next: T[]) => void) {
@@ -229,6 +276,14 @@ export default function AgentOnboardingPage() {
     }
   }
 
+  function toggleMatchCity(cityKey: string) {
+    setSelectedCityKeys((current) =>
+      current.includes(cityKey)
+        ? current.filter((key) => key !== cityKey)
+        : [...current, cityKey],
+    );
+  }
+
   async function submit() {
     if (!stepReady[3] || busy) return;
     setBusy(true);
@@ -242,6 +297,22 @@ export default function AgentOnboardingPage() {
         interestedIn,
         city: city.city,
         neighborhood,
+        languages,
+        matchLocationScope,
+        preferredCountryCodes: [
+          ...new Set(
+            (matchLocationScope === "selected_cities"
+              ? selectedMatchCities
+              : [city]
+            ).map((option) => option.countryCode),
+          ),
+        ],
+        preferredCities:
+          matchLocationScope === "selected_cities"
+            ? selectedMatchCities.map((option) => option.city)
+            : [city.city],
+        preferredAreas: matchLocationScope === "area" ? [neighborhood] : [],
+        allowTranslatedDates,
         interests,
         personalityTraits,
         agentName: agentDisplayName,
@@ -686,6 +757,117 @@ export default function AgentOnboardingPage() {
                     ))}
                   </div>
                 </Field>
+                <div className="onboarding-match-boundary">
+                  <div>
+                    <span className="docket-label text-[var(--accent-text)]">
+                      {t("MATCHING BOUNDARY")}
+                    </span>
+                    <h3 className="mt-2 text-[24px]">
+                      {t("Where may {agent} look?", {
+                        agent: agentDisplayName,
+                      })}
+                    </h3>
+                    <p className="mt-2 text-[13px] leading-[1.7] text-soft">
+                      {t(
+                        "A match happens only when both people's location choices include each other.",
+                      )}
+                    </p>
+                  </div>
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {(
+                      [
+                        ["area", "My selected area"],
+                        ["city", "Anywhere in my city"],
+                        ["selected_cities", "Cities I choose"],
+                      ] as Array<[MatchLocationScope, string]>
+                    ).map(([scope, label]) => (
+                      <Chip
+                        key={scope}
+                        selected={matchLocationScope === scope}
+                        onClick={() => setMatchLocationScope(scope)}
+                      >
+                        {t(label)}
+                      </Chip>
+                    ))}
+                  </div>
+                  {matchLocationScope === "selected_cities" && (
+                    <div className="mt-5">
+                      <p className="mb-3 text-[12px] font-bold text-soft">
+                        {t("{count} cities selected · choose at least one.", {
+                          count: selectedMatchCities.length,
+                        })}
+                      </p>
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        {SUPPORTED_CITIES.map((option) => {
+                          const country = SUPPORTED_COUNTRIES.find(
+                            (item) => item.code === option.countryCode,
+                          );
+                          return (
+                            <Chip
+                              key={option.key}
+                              selected={selectedCityKeys.includes(option.key)}
+                              onClick={() => toggleMatchCity(option.key)}
+                            >
+                              {country?.flag} {t(option.city)}
+                            </Chip>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                  <div className="mt-5 rounded-2xl border border-[var(--border)] bg-[var(--bg-sunken)] px-4 py-3 text-[12px] leading-[1.65] text-soft">
+                    {matchLocationScope === "area"
+                      ? t("Searching only around {area}, {city}.", {
+                          area: neighborhood,
+                          city: city.city,
+                        })
+                      : matchLocationScope === "city"
+                        ? t("Searching across {city}.", { city: city.city })
+                        : t("Searching only in your {count} selected cities.", {
+                            count: selectedMatchCities.length,
+                          })}
+                    <br />
+                    {t(
+                      "We match realistic meeting locations, not nationality.",
+                    )}
+                  </div>
+                </div>
+                <Field
+                  label={t("Languages you can comfortably use")}
+                  hint={t(
+                    "Choose at least one. A shared language is required unless both people allow translation.",
+                  )}
+                >
+                  <div className="flex flex-wrap gap-2">
+                    {LANGUAGE_OPTIONS.map((language) => (
+                      <Chip
+                        key={language}
+                        selected={languages.includes(language)}
+                        onClick={() =>
+                          toggle(language, languages, setLanguages)
+                        }
+                      >
+                        {LANGUAGE_NATIVE_NAMES[language] ?? language}
+                      </Chip>
+                    ))}
+                  </div>
+                </Field>
+                <button
+                  type="button"
+                  className="onboarding-translation-consent"
+                  aria-pressed={allowTranslatedDates}
+                  onClick={() => setAllowTranslatedDates((value) => !value)}
+                >
+                  <span aria-hidden="true">
+                    {allowTranslatedDates ? "✓" : "○"}
+                  </span>
+                  <span>
+                    <strong>{t("Allow translated Agent dates")}</strong>
+                    <small>
+                      {t("Only when the other person opts in too.")}
+                    </small>
+                  </span>
+                </button>
                 <Field
                   label={t("What reliably lights you up?")}
                   hint={t("{count} selected · choose 3 to 8.", {
@@ -850,7 +1032,11 @@ export default function AgentOnboardingPage() {
                   <span aria-hidden="true">
                     {aboutMeProgress.isReady
                       ? "✓"
-                      : `${aboutMeProgress.completedRequirements}/5`}
+                      : `${
+                          aboutMeProgress.completedRequirements +
+                          Number(matchingLocationReady) +
+                          Number(languagesReady)
+                        }/7`}
                   </span>
                   <strong>
                     {aboutMeProgress.isReady
@@ -884,6 +1070,14 @@ export default function AgentOnboardingPage() {
                     label={t("About you ({count}/30)", {
                       count: Math.min(aboutMeProgress.essenceLength, 30),
                     })}
+                  />
+                  <Requirement
+                    complete={matchingLocationReady}
+                    label={t("Matching location selected")}
+                  />
+                  <Requirement
+                    complete={languagesReady}
+                    label={t("At least one shared language")}
                   />
                 </div>
               </div>

@@ -37,6 +37,12 @@ import {
   planDebriefPause,
   type AgentDatePaceMode,
 } from "./lib/agentDatePacing";
+import {
+  candidateCitiesFor,
+  hasCompleteMatchingBoundaries,
+  mutualMatchingBoundaries,
+} from "./lib/agentMatchingBoundaries";
+import { normaliseSupportedLocale } from "./lib/locales";
 
 type AgentBrief = {
   userId: Id<"users">;
@@ -88,23 +94,21 @@ const AGENT_INTENT_COMPATIBILITY: Record<string, readonly string[]> = {
 };
 
 function dateLocale(value?: string) {
-  return /^(en-(US|GB|CA|AU)|ko-KR|ja-JP|de-DE|fr-FR|nl-NL|sv-SE)$/.test(
-    value ?? "",
-  )
-    ? value!
-    : "en-US";
+  return normaliseSupportedLocale(value);
 }
 
 function dateLanguage(locale?: string) {
   const language = dateLocale(locale).split("-")[0];
-  return {
-    ko: "Korean",
-    ja: "Japanese",
-    de: "German",
-    fr: "French",
-    nl: "Dutch",
-    sv: "Swedish",
-  }[language] ?? "English";
+  return (
+    {
+      ko: "Korean",
+      ja: "Japanese",
+      de: "German",
+      fr: "French",
+      nl: "Dutch",
+      sv: "Swedish",
+    }[language] ?? "English"
+  );
 }
 
 function localDateCopy(
@@ -167,8 +171,16 @@ const deliveryContextValidator = v.union(
   v.null(),
   v.object({
     date: schema.doc("agentDates"),
-    a: v.object({ firstName: v.string(), agentName: v.string() }),
-    b: v.object({ firstName: v.string(), agentName: v.string() }),
+    a: v.object({
+      firstName: v.string(),
+      agentName: v.string(),
+      locale: v.string(),
+    }),
+    b: v.object({
+      firstName: v.string(),
+      agentName: v.string(),
+      locale: v.string(),
+    }),
   }),
 );
 
@@ -336,6 +348,11 @@ export const createRequest = internalMutation({
     if (preferences?.dropsPaused) {
       throw new Error("Your agent is paused in Settings.");
     }
+    if (!hasCompleteMatchingBoundaries(profile, preferences)) {
+      throw new Error(
+        "Finish choosing where and in which languages your agent may search.",
+      );
+    }
     const rate = await checkRateLimit(
       ctx,
       `agent-date:${userId}`,
@@ -366,12 +383,24 @@ export const createRequest = internalMutation({
         ),
     );
 
-    const profiles = await ctx.db
-      .query("profiles")
-      .withIndex("by_status_and_city", (q) =>
-        q.eq("status", "active").eq("city", profile.city),
-      )
-      .take(100);
+    const candidateCities = candidateCitiesFor(profile, preferences);
+    const candidateBatches = await Promise.all(
+      candidateCities.map((city) =>
+        ctx.db
+          .query("profiles")
+          .withIndex("by_status_and_city", (q) =>
+            q.eq("status", "active").eq("city", city),
+          )
+          .take(40),
+      ),
+    );
+    const profiles = [
+      ...new Map(
+        candidateBatches
+          .flat()
+          .map((candidate) => [candidate._id, candidate] as const),
+      ).values(),
+    ];
     const candidates: Array<{
       profile: Doc<"profiles">;
       agent: Doc<"agentProfiles"> | null;
@@ -399,6 +428,13 @@ export const createRequest = internalMutation({
       ]);
       if (!candidate.isDemo && !candidateAgent) continue;
       if (!candidate.isDemo && candidatePreferences?.dropsPaused) continue;
+      const boundaries = mutualMatchingBoundaries(
+        profile,
+        preferences,
+        candidate,
+        candidatePreferences,
+      );
+      if (!boundaries.ok) continue;
       if (
         preferences?.ageHard &&
         (candidate.ageYears < preferences.ageMin ||
@@ -462,7 +498,12 @@ export const createRequest = internalMutation({
           styleForThem +
           (intentFits ? 10 : -12),
         signals: [
-          `Both are looking in ${profile.city}`,
+          candidate.city === profile.city
+            ? `Both are looking in ${profile.city}`
+            : `Both explicitly opened ${profile.city} and ${candidate.city}`,
+          boundaries.sharedLanguages.length > 0
+            ? `They share ${boundaries.sharedLanguages.slice(0, 2).join(" and ")}`
+            : "Both explicitly allow an Agent-translated date",
           sharedInterestNames.length > 0
             ? `Shared pull toward ${sharedInterestNames.slice(0, 2).join(" and ")}`
             : "Different interests with room for curiosity",
@@ -488,8 +529,11 @@ export const createRequest = internalMutation({
       counterpartUserId: selected.profile.userId,
       status: "queued",
       paceMode: args.accessMode === "demo" ? "demo" : "natural",
-      locale: dateLocale(args.locale),
-      setting: localDateCopy(args.locale, {
+      locale: normaliseSupportedLocale(
+        args.locale ?? profile.preferredLocale,
+        profile.countryCode,
+      ),
+      setting: localDateCopy(args.locale ?? profile.preferredLocale, {
         en: "A private virtual world is being prepared.",
         ko: "둘만의 가상 데이트 공간을 준비하고 있어요.",
         ja: "ふたりだけの仮想デート空間を準備しています。",
@@ -698,8 +742,7 @@ export const run = internalAction({
             sv: `Ett observatorium i månsken kring ${spark}`,
           });
       const paceMode: AgentDatePaceMode =
-        context.date.paceMode ??
-        (context.bProfile.isDemo ? "demo" : "natural");
+        context.date.paceMode ?? (context.bProfile.isDemo ? "demo" : "natural");
       const openingPause = planAgentDatePause({
         round: 1,
         previousMessageLength: 0,
@@ -740,10 +783,9 @@ export const runTurn = internalAction({
   returns: v.null(),
   handler: async (ctx, args) => {
     try {
-      const context = (await ctx.runQuery(
-        internal.agentDates.runContext,
-        { agentDateId: args.agentDateId },
-      )) as RunContext | null;
+      const context = (await ctx.runQuery(internal.agentDates.runContext, {
+        agentDateId: args.agentDateId,
+      })) as RunContext | null;
       if (
         !context?.aProfile ||
         !context.bProfile ||
@@ -804,18 +846,12 @@ export const runTurn = internalAction({
       });
       const reply = result.data
         ? sanitizeModelText(result.data.reply, 700)
-        : fallbackTurn(
-            self,
-            other,
-            spark,
-            args.round,
-            context.date.locale,
-          );
+        : fallbackTurn(self, other, spark, args.round, context.date.locale);
       const subtext = result.data
         ? sanitizeModelText(result.data.subtext, 260)
         : "The model was unavailable, so this turn stayed deliberately simple.";
-      const mode = context.date.paceMode ??
-        (context.bProfile.isDemo ? "demo" : "natural");
+      const mode =
+        context.date.paceMode ?? (context.bProfile.isDemo ? "demo" : "natural");
       const nextPause =
         args.round >= 6
           ? planDebriefPause(mode, Math.random)
@@ -865,6 +901,14 @@ export const finalize = internalAction({
       }
       const a = toAgent(context.aProfile, context.aAgent);
       const b = toAgent(context.bProfile, context.bAgent, a.agentName);
+      const aLocale = normaliseSupportedLocale(
+        context.aProfile.preferredLocale,
+        context.aProfile.countryCode,
+      );
+      const bLocale = normaliseSupportedLocale(
+        context.bProfile.preferredLocale,
+        context.bProfile.countryCode,
+      );
       const transcript = context.turns.map((turn) => ({
         speaker: turn.speakerAgentName,
         content: turn.content,
@@ -877,7 +921,7 @@ export const finalize = internalAction({
           b,
           context.date.setting,
           transcript,
-          context.date.locale,
+          aLocale,
         ),
         verdict(
           ctx,
@@ -886,7 +930,7 @@ export const finalize = internalAction({
           a,
           context.date.setting,
           transcript,
-          context.date.locale,
+          bLocale,
         ),
       ]);
       await ctx.runMutation(internal.agentDates.finish, {
@@ -959,18 +1003,33 @@ async function verdict(
     result,
   });
   if (!result.data) {
+    const fallback = localDateCopy(locale, {
+      en: "The simulation was pleasant, but I need a clearer read before pushing you toward a meeting.",
+      ko: "가상 데이트는 편안했지만, 실제 만남을 권하기에는 아직 더 분명한 신호가 필요해요.",
+      ja: "心地よい時間でしたが、実際に会うことを勧めるには、もう少しはっきりした手応えが必要です。",
+      de: "Das virtuelle Date war angenehm, aber vor einer Empfehlung brauche ich ein klareres Signal.",
+      fr: "Le rendez-vous virtuel était agréable, mais il me faut un signal plus clair avant de conseiller une rencontre.",
+      nl: "De virtuele date was prettig, maar ik wil een duidelijker signaal voordat ik een ontmoeting aanraad.",
+      sv: "Den virtuella dejten var trevlig, men jag behöver en tydligare signal innan jag rekommenderar ett möte.",
+    });
+    const next = localDateCopy(locale, {
+      en: "Look for a date that produces a clearer signal about communication and intent.",
+      ko: "다음에는 소통 방식과 만남의 의도가 더 분명히 드러나는 상대를 찾아볼게요.",
+      ja: "次は、会話の仕方と出会いの意図がより明確に伝わる相手を探します。",
+      de: "Beim nächsten Date suche ich nach klareren Signalen zu Kommunikation und Absicht.",
+      fr: "La prochaine fois, je chercherai des signes plus clairs sur la communication et les intentions.",
+      nl: "Volgende keer zoek ik naar duidelijkere signalen over communicatie en intentie.",
+      sv: "Nästa gång letar jag efter tydligare signaler om kommunikation och avsikt.",
+    });
     return {
       verdict: "curious",
       compatibility_score: 50,
       decision_code: "insufficient_signal",
-      reason:
-        "The simulation was pleasant, but I need a clearer read before pushing you toward a meeting.",
-      next_search_note:
-        "Look for a date that produces a clearer signal about communication and intent.",
-      summary:
-        "Two agents explored a possible connection without enough evidence for a strong claim.",
+      reason: fallback,
+      next_search_note: next,
+      summary: fallback,
       sparks: [],
-      frictions: ["Not enough signal yet"],
+      frictions: [next],
     };
   }
   return {
@@ -1201,6 +1260,18 @@ export const finish = internalMutation({
   handler: async (ctx, args) => {
     const date = await ctx.db.get("agentDates", args.agentDateId);
     if (!date) return null;
+    const [initiatorProfile, counterpartProfile] = await Promise.all([
+      getProfileByUser(ctx, date.initiatorUserId),
+      getProfileByUser(ctx, date.counterpartUserId),
+    ]);
+    const initiatorLocale = normaliseSupportedLocale(
+      initiatorProfile?.preferredLocale,
+      initiatorProfile?.countryCode,
+    );
+    const counterpartLocale = normaliseSupportedLocale(
+      counterpartProfile?.preferredLocale,
+      counterpartProfile?.countryCode,
+    );
     await ctx.db.patch("agentDates", args.agentDateId, {
       status: "debrief_ready",
       nextTurnAt: undefined,
@@ -1267,7 +1338,7 @@ export const finish = internalMutation({
     await ctx.runMutation(internal.notifications.create, {
       userId: date.initiatorUserId,
       kind: "system",
-      title: localDateCopy(date.locale, {
+      title: localDateCopy(initiatorLocale, {
         en: "Your agent is back",
         ko: "에이전트가 돌아왔어요",
         ja: "エージェントが戻りました",
@@ -1276,7 +1347,7 @@ export const finish = internalMutation({
         nl: "Je Agent is terug",
         sv: "Din Agent är tillbaka",
       }),
-      body: localDateCopy(date.locale, {
+      body: localDateCopy(initiatorLocale, {
         en: "The virtual date is over. Your private debrief is ready.",
         ko: "가상 데이트가 끝났어요. 나만의 비공개 리포트가 준비됐어요.",
         ja: "バーチャルデートが終わりました。あなただけの非公開レポートが完成しています。",
@@ -1291,7 +1362,7 @@ export const finish = internalMutation({
       await ctx.runMutation(internal.notifications.create, {
         userId: date.counterpartUserId,
         kind: "system",
-        title: localDateCopy(date.locale, {
+        title: localDateCopy(counterpartLocale, {
           en: "Your agent went on a date",
           ko: "내 에이전트가 데이트를 다녀왔어요",
           ja: "あなたのエージェントがデートをしました",
@@ -1300,7 +1371,7 @@ export const finish = internalMutation({
           nl: "Je Agent is op date geweest",
           sv: "Din Agent har varit på dejt",
         }),
-        body: localDateCopy(date.locale, {
+        body: localDateCopy(counterpartLocale, {
           en: "Read what happened, then decide for yourself.",
           ko: "무슨 일이 있었는지 읽고, 만나보고 싶은지 직접 결정하세요.",
           ja: "何があったのかを読んで、自分で決めてください。",
@@ -1344,11 +1415,19 @@ export const deliveryContext = internalQuery({
       a: {
         firstName: aProfile.displayName.split(/\s+/)[0],
         agentName: aAgentName,
+        locale: normaliseSupportedLocale(
+          aProfile.preferredLocale,
+          aProfile.countryCode,
+        ),
       },
       b: {
         firstName: bProfile.displayName.split(/\s+/)[0],
         agentName:
           bAgent?.name ?? syntheticAgent(bProfile, aAgentName).agentName,
+        locale: normaliseSupportedLocale(
+          bProfile.preferredLocale,
+          bProfile.countryCode,
+        ),
       },
     };
   },
@@ -1363,8 +1442,8 @@ export const deliverDebriefs = internalAction({
       args,
     )) as {
       date: Doc<"agentDates">;
-      a: { firstName: string; agentName: string };
-      b: { firstName: string; agentName: string };
+      a: { firstName: string; agentName: string; locale: string };
+      b: { firstName: string; agentName: string; locale: string };
     } | null;
     if (!info || info.date.initiatorVerdict === "pending") return null;
     const url = appUrl(`/agent-date/${args.agentDateId}`);
@@ -1372,17 +1451,17 @@ export const deliverDebriefs = internalAction({
       userId: info.date.initiatorUserId,
       kind: "agent_debrief",
       content: agentDebriefEmail({
-        locale: info.date.locale,
+        locale: info.a.locale,
         firstName: info.a.firstName,
         agentName: info.a.agentName,
         counterpartAgentName: info.b.agentName,
         verdict: info.date.initiatorVerdict,
         reason: info.date.initiatorReason,
         decisionLabel:
-          dateLanguage(info.date.locale) === "English" &&
+          dateLanguage(info.a.locale) === "English" &&
           info.date.initiatorDecisionCode
-          ? AGENT_DECISION_LABELS[info.date.initiatorDecisionCode]
-          : undefined,
+            ? AGENT_DECISION_LABELS[info.date.initiatorDecisionCode]
+            : undefined,
         nextSearchNote: info.date.initiatorNextSearchNote,
         url,
       }),
@@ -1397,17 +1476,17 @@ export const deliverDebriefs = internalAction({
         userId: info.date.counterpartUserId,
         kind: "agent_debrief",
         content: agentDebriefEmail({
-          locale: info.date.locale,
+          locale: info.b.locale,
           firstName: info.b.firstName,
           agentName: info.b.agentName,
           counterpartAgentName: info.a.agentName,
           verdict: info.date.counterpartVerdict,
           reason: info.date.counterpartReason,
           decisionLabel:
-            dateLanguage(info.date.locale) === "English" &&
+            dateLanguage(info.b.locale) === "English" &&
             info.date.counterpartDecisionCode
-            ? AGENT_DECISION_LABELS[info.date.counterpartDecisionCode]
-            : undefined,
+              ? AGENT_DECISION_LABELS[info.date.counterpartDecisionCode]
+              : undefined,
           nextSearchNote: info.date.counterpartNextSearchNote,
           url,
         }),
@@ -1428,8 +1507,8 @@ export const deliverConnection = internalAction({
       args,
     )) as {
       date: Doc<"agentDates">;
-      a: { firstName: string };
-      b: { firstName: string };
+      a: { firstName: string; locale: string };
+      b: { firstName: string; locale: string };
     } | null;
     if (
       !info ||
@@ -1444,6 +1523,7 @@ export const deliverConnection = internalAction({
         userId: info.date.initiatorUserId,
         kind: "agent_connection",
         content: agentConnectionEmail({
+          locale: info.a.locale,
           firstName: info.a.firstName,
           counterpartFirstName: info.b.firstName,
           url,
@@ -1455,6 +1535,7 @@ export const deliverConnection = internalAction({
         userId: info.date.counterpartUserId,
         kind: "agent_connection",
         content: agentConnectionEmail({
+          locale: info.b.locale,
           firstName: info.b.firstName,
           counterpartFirstName: info.a.firstName,
           url,
@@ -1512,7 +1593,8 @@ export const listMine = query({
           createdAt: date.createdAt,
           updatedAt: date.updatedAt,
           status: date.status,
-          paceMode: date.paceMode ?? (date.isDemoCounterpart ? "demo" : "natural"),
+          paceMode:
+            date.paceMode ?? (date.isDemoCounterpart ? "demo" : "natural"),
           activity: date.activity,
           nextTurnAt: date.nextTurnAt,
           setting: date.setting,
@@ -1521,8 +1603,7 @@ export const listMine = query({
             ? {
                 firstName: profile.displayName.split(/\s+/)[0],
                 agentName:
-                  agent?.name ??
-                  syntheticAgent(profile, myAgentName).agentName,
+                  agent?.name ?? syntheticAgent(profile, myAgentName).agentName,
                 avatar: agent?.avatar ?? null,
                 interests: profile.interests.slice(0, 4),
                 isDemo: profile.isDemo,
@@ -1593,7 +1674,8 @@ export const get = query({
       date: {
         _id: date._id,
         status: date.status,
-        paceMode: date.paceMode ?? (date.isDemoCounterpart ? "demo" : "natural"),
+        paceMode:
+          date.paceMode ?? (date.isDemoCounterpart ? "demo" : "natural"),
         activity: date.activity,
         nextTurnAt: date.nextTurnAt,
         startedAt: date.startedAt,

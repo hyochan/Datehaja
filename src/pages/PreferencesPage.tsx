@@ -8,6 +8,9 @@ import {
   BUDGET_BANDS,
   DATE_TYPE_OPTIONS,
   DIETARY_OPTIONS,
+  LANGUAGE_OPTIONS,
+  SUPPORTED_CITIES,
+  SUPPORTED_COUNTRIES,
   findCity,
   PERSONALITY_TRAIT_OPTIONS,
   STYLE_TAG_OPTIONS,
@@ -31,8 +34,18 @@ import {
 import { readableError, useToast } from "../components/ui/Toast";
 import { formatMoney } from "../lib/format";
 import { useI18n } from "../i18n";
+import {
+  LANGUAGE_NATIVE_NAMES,
+  defaultLanguageForLocale,
+  type MatchLocationScope,
+} from "../lib/matchingPreferences";
 
 type Prefs = {
+  matchLocationScope: MatchLocationScope;
+  preferredCountryCodes: string[];
+  preferredCities: string[];
+  allowTranslatedDates: boolean;
+  languages: string[];
   ageMin: number;
   ageMax: number;
   ageHard: boolean;
@@ -62,12 +75,33 @@ type Prefs = {
   accessibility: string[];
 };
 
+type StoredPrefs = Omit<
+  Prefs,
+  | "languages"
+  | "matchLocationScope"
+  | "preferredCountryCodes"
+  | "preferredCities"
+  | "allowTranslatedDates"
+> &
+  Partial<
+    Pick<
+      Prefs,
+      | "matchLocationScope"
+      | "preferredCountryCodes"
+      | "preferredCities"
+      | "allowTranslatedDates"
+    >
+  >;
+
 export default function PreferencesPage() {
   const me = useQuery(api.profiles.me);
   const saveDating = useMutation(api.profiles.saveDatingPreferences);
   const saveDate = useMutation(api.profiles.saveDatePreferences);
+  const saveMatchingBoundaries = useMutation(
+    api.profiles.saveAgentMatchingBoundaries,
+  );
   const toast = useToast();
-  const { t } = useI18n();
+  const { locale, t } = useI18n();
 
   const [loaded, setLoaded] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -76,10 +110,25 @@ export default function PreferencesPage() {
 
   useEffect(() => {
     if (loaded || !me?.preferences) return;
-    const preferences = me.preferences as Prefs;
-    const profile = me.profile as { city: string; neighborhood: string } | null;
+    const preferences = me.preferences as StoredPrefs;
+    const profile = me.profile as {
+      countryCode: string;
+      city: string;
+      neighborhood: string;
+      languages?: string[];
+    } | null;
     setP({
       ...preferences,
+      matchLocationScope: preferences.matchLocationScope ?? "city",
+      preferredCountryCodes:
+        preferences.preferredCountryCodes ??
+        (profile?.countryCode ? [profile.countryCode] : []),
+      preferredCities:
+        preferences.preferredCities ?? (profile?.city ? [profile.city] : []),
+      allowTranslatedDates: preferences.allowTranslatedDates ?? false,
+      languages: profile?.languages?.length
+        ? profile.languages
+        : [defaultLanguageForLocale(locale)],
       preferredAreas:
         preferences.preferredAreas ??
         (profile?.neighborhood ? [profile.neighborhood] : []),
@@ -91,15 +140,46 @@ export default function PreferencesPage() {
       stylePreference: preferences.stylePreference ?? "no_preference",
     });
     setLoaded(true);
-  }, [me, loaded]);
+  }, [me, loaded, locale]);
 
   if (me === undefined)
     return <Skeleton className="h-96 w-full rounded-card" />;
   if (!p) return null;
 
   const band = BUDGET_BANDS[p.currency] ?? BUDGET_BANDS.USD;
-  const profile = me?.profile as { city: string; neighborhood: string } | null;
+  const profile = me?.profile as {
+    countryCode: string;
+    city: string;
+    neighborhood: string;
+    languages?: string[];
+  } | null;
   const city = profile ? findCity(profile.city) : undefined;
+  const matchingCities =
+    p.matchLocationScope === "selected_cities"
+      ? p.preferredCities
+      : profile?.city
+        ? [profile.city]
+        : [];
+  const matchingCountries: string[] = [
+    ...new Set(
+      matchingCities
+        .map(
+          (cityName) =>
+            SUPPORTED_CITIES.find((option) => option.city === cityName)
+              ?.countryCode,
+        )
+        .filter(
+          (
+            countryCode,
+          ): countryCode is Exclude<typeof countryCode, undefined> =>
+            countryCode !== undefined,
+        ),
+    ),
+  ];
+  const matchingComplete =
+    matchingCities.length > 0 &&
+    p.languages.length > 0 &&
+    (p.matchLocationScope !== "area" || p.preferredAreas.length > 0);
   const set = <K extends keyof Prefs>(key: K, value: Prefs[K]) =>
     setP((current) => (current ? { ...current, [key]: value } : current));
 
@@ -108,6 +188,19 @@ export default function PreferencesPage() {
     setError(null);
     setBusy(true);
     try {
+      if (!matchingComplete) {
+        throw new Error(
+          t("Choose a matching location and at least one language."),
+        );
+      }
+      await saveMatchingBoundaries({
+        languages: p.languages,
+        matchLocationScope: p.matchLocationScope,
+        preferredCountryCodes: matchingCountries,
+        preferredCities: matchingCities,
+        preferredAreas: p.matchLocationScope === "area" ? p.preferredAreas : [],
+        allowTranslatedDates: p.allowTranslatedDates,
+      });
       await saveDating({
         ageMin: p.ageMin,
         ageMax: p.ageMax,
@@ -138,7 +231,7 @@ export default function PreferencesPage() {
         dietary: p.dietary,
         accessibility: p.accessibility,
       });
-      toast("Preferences saved.", "success");
+      toast(t("Preferences saved."), "success");
     } catch (e) {
       const message = readableError(e);
       setError(message);
@@ -151,9 +244,11 @@ export default function PreferencesPage() {
   return (
     <div className="product-page mx-auto max-w-3xl space-y-10 pb-8">
       <PageIntro
-        eyebrow="Your boundaries"
-        title="Matching preferences"
-        description="Hard requirements protect your boundaries. Everything else helps us find a more natural fit."
+        eyebrow={t("Your boundaries")}
+        title={t("Matching preferences")}
+        description={t(
+          "Hard requirements protect your boundaries. Everything else helps us find a more natural fit.",
+        )}
         motif="↔"
         tone="lilac"
       />
@@ -161,25 +256,147 @@ export default function PreferencesPage() {
       {error && <Notice tone="warn">{error}</Notice>}
 
       <section>
-        <SectionHeading eyebrow="Who" title="People" />
+        <SectionHeading
+          eyebrow={t("Agent search")}
+          title={t("Location and language")}
+        />
+        <Card className="p-5 sm:p-7">
+          <Notice tone="info" title={t("Two-way boundaries")}>
+            {t(
+              "Your Agent only considers someone when both location settings include each other and both people share a language—or both allow translation.",
+            )}
+          </Notice>
+          <Field
+            label={t("Where may your Agent look?")}
+            hint={t("We match realistic meeting locations, not nationality.")}
+          >
+            <SegmentedControl
+              value={p.matchLocationScope}
+              onChange={(value) => {
+                set("matchLocationScope", value);
+                if (
+                  value === "area" &&
+                  p.preferredAreas.length === 0 &&
+                  profile
+                ) {
+                  set("preferredAreas", [profile.neighborhood]);
+                }
+              }}
+              ariaLabel={t("Matching location boundary")}
+              options={[
+                { value: "area", label: t("My selected area") },
+                { value: "city", label: t("Anywhere in my city") },
+                { value: "selected_cities", label: t("Cities I choose") },
+              ]}
+            />
+            {p.matchLocationScope === "area" && city && (
+              <div className="mt-4">
+                <ChipGroup
+                  options={city.neighborhoods.map((area) => ({
+                    key: area.name,
+                    label: t(area.name),
+                  }))}
+                  selected={p.preferredAreas}
+                  onChange={(update) =>
+                    setP((current) =>
+                      current
+                        ? {
+                            ...current,
+                            preferredAreas: update(current.preferredAreas),
+                          }
+                        : current,
+                    )
+                  }
+                  max={8}
+                  ariaLabel={t("Preferred matching areas")}
+                />
+                <SelectionCount count={p.preferredAreas.length} min={1} />
+              </div>
+            )}
+            {p.matchLocationScope === "selected_cities" && (
+              <div className="mt-4">
+                <ChipGroup
+                  options={SUPPORTED_CITIES.map((option) => ({
+                    key: option.city,
+                    label: t(option.city),
+                    emoji: SUPPORTED_COUNTRIES.find(
+                      (country) => country.code === option.countryCode,
+                    )?.flag,
+                  }))}
+                  selected={p.preferredCities}
+                  onChange={(update) =>
+                    setP((current) =>
+                      current
+                        ? {
+                            ...current,
+                            preferredCities: update(current.preferredCities),
+                          }
+                        : current,
+                    )
+                  }
+                  max={10}
+                  ariaLabel={t("Selected matching cities")}
+                />
+                <SelectionCount count={p.preferredCities.length} min={1} />
+              </div>
+            )}
+          </Field>
+          <Field
+            label={t("Languages you can comfortably use")}
+            hint={t(
+              "Choose at least one. A shared language is required unless both people allow translation.",
+            )}
+          >
+            <ChipGroup
+              options={LANGUAGE_OPTIONS.map((language) => ({
+                key: language,
+                label: LANGUAGE_NATIVE_NAMES[language] ?? language,
+              }))}
+              selected={p.languages}
+              onChange={(update) =>
+                setP((current) =>
+                  current
+                    ? { ...current, languages: update(current.languages) }
+                    : current,
+                )
+              }
+              max={8}
+              ariaLabel={t("Spoken languages")}
+            />
+            <SelectionCount count={p.languages.length} min={1} max={8} />
+          </Field>
+          <Toggle
+            checked={p.allowTranslatedDates}
+            onChange={(value) => set("allowTranslatedDates", value)}
+            label={t("Allow translated Agent dates")}
+            description={t("Only when the other person opts in too.")}
+          />
+        </Card>
+      </section>
+
+      <section>
+        <SectionHeading eyebrow={t("Who")} title={t("People")} />
         <Card className="p-5">
-          <Field label="Age range" hint={`${p.ageMin} to ${p.ageMax}`}>
+          <Field
+            label={t("Age range")}
+            hint={t("{min} to {max}", { min: p.ageMin, max: p.ageMax })}
+          >
             <div className="flex items-center gap-3">
               <TextInput
                 type="number"
                 min={18}
                 max={99}
                 value={p.ageMin}
-                aria-label="Minimum age"
+                aria-label={t("Minimum age")}
                 onChange={(e) => set("ageMin", Number(e.target.value))}
               />
-              <span className="text-muted">to</span>
+              <span className="text-muted">{t("to")}</span>
               <TextInput
                 type="number"
                 min={18}
                 max={99}
                 value={p.ageMax}
-                aria-label="Maximum age"
+                aria-label={t("Maximum age")}
                 onChange={(e) => set("ageMax", Number(e.target.value))}
               />
             </div>
@@ -187,8 +404,8 @@ export default function PreferencesPage() {
           </Field>
 
           <Field
-            label="How far you'll travel"
-            hint={`Up to ${p.maxDistanceKm} km`}
+            label={t("How far you'll travel")}
+            hint={t("Up to {count} km", { count: p.maxDistanceKm })}
           >
             <input
               type="range"
@@ -197,7 +414,7 @@ export default function PreferencesPage() {
               value={p.maxDistanceKm}
               onChange={(e) => set("maxDistanceKm", Number(e.target.value))}
               className="w-full accent-[var(--color-ember-400)]"
-              aria-label="Maximum distance"
+              aria-label={t("Maximum distance")}
             />
             <Hard
               checked={p.distanceHard}
@@ -228,7 +445,10 @@ export default function PreferencesPage() {
             {p.preferredAreas.length > 0 && city && (
               <div className="mt-3">
                 <ChipGroup
-                  options={city.neighborhoods.map((area) => area.name)}
+                  options={city.neighborhoods.map((area) => ({
+                    key: area.name,
+                    label: t(area.name),
+                  }))}
                   selected={p.preferredAreas}
                   onChange={(update) =>
                     setP((current) => {
@@ -253,18 +473,18 @@ export default function PreferencesPage() {
             )}
           </Field>
 
-          <Field label="What you're looking for">
+          <Field label={t("What you're looking for")}>
             <ChipRadio
               options={[
-                { key: "casual" as const, label: "Something casual" },
-                { key: "open" as const, label: "Open to anything" },
-                { key: "serious" as const, label: "Something serious" },
-                { key: "friendship" as const, label: "Friendship first" },
-                { key: "unsure" as const, label: "Still working it out" },
+                { key: "casual" as const, label: t("Something casual") },
+                { key: "open" as const, label: t("Open to anything") },
+                { key: "serious" as const, label: t("Something serious") },
+                { key: "friendship" as const, label: t("Friendship first") },
+                { key: "unsure" as const, label: t("Still working it out") },
               ]}
               value={p.relationshipIntent}
               onChange={(next) => set("relationshipIntent", next)}
-              ariaLabel="Relationship intent"
+              ariaLabel={t("Relationship intent")}
             />
             <Hard
               checked={p.intentHard}
@@ -294,7 +514,10 @@ export default function PreferencesPage() {
             {p.personalityPreference !== "no_preference" && (
               <div className="mt-3">
                 <ChipGroup
-                  options={PERSONALITY_TRAIT_OPTIONS}
+                  options={PERSONALITY_TRAIT_OPTIONS.map((trait) => ({
+                    key: trait,
+                    label: t(trait),
+                  }))}
                   selected={p.preferredPersonalityTraits}
                   onChange={(update) =>
                     setP((current) =>
@@ -337,7 +560,10 @@ export default function PreferencesPage() {
             {p.stylePreference !== "no_preference" && (
               <div className="mt-3">
                 <ChipGroup
-                  options={STYLE_TAG_OPTIONS}
+                  options={STYLE_TAG_OPTIONS.map((style) => ({
+                    key: style,
+                    label: t(style),
+                  }))}
                   selected={p.preferredStyleTags}
                   onChange={(update) =>
                     setP((current) =>
@@ -358,15 +584,15 @@ export default function PreferencesPage() {
             )}
           </Field>
 
-          <Field label="Smoking">
+          <Field label={t("Smoking")}>
             <SegmentedControl
               value={p.smoking}
               onChange={(v) => set("smoking", v)}
-              ariaLabel="Smoking"
+              ariaLabel={t("Smoking")}
               options={[
-                { value: "no_preference", label: "No preference" },
-                { value: "non_smoker_only", label: "Non-smokers" },
-                { value: "smoker_ok", label: "Either" },
+                { value: "no_preference", label: t("No preference") },
+                { value: "non_smoker_only", label: t("Non-smokers") },
+                { value: "smoker_ok", label: t("Either") },
               ]}
             />
             {p.smoking === "non_smoker_only" && (
@@ -377,15 +603,15 @@ export default function PreferencesPage() {
             )}
           </Field>
 
-          <Field label="Alcohol">
+          <Field label={t("Alcohol")}>
             <SegmentedControl
               value={p.alcohol}
               onChange={(v) => set("alcohol", v)}
-              ariaLabel="Alcohol"
+              ariaLabel={t("Alcohol")}
               options={[
-                { value: "no_preference", label: "No preference" },
-                { value: "occasional", label: "A drink is fine" },
-                { value: "none", label: "Alcohol-free" },
+                { value: "no_preference", label: t("No preference") },
+                { value: "occasional", label: t("A drink is fine") },
+                { value: "none", label: t("Alcohol-free") },
               ]}
             />
             {p.alcohol === "none" && (
@@ -396,15 +622,15 @@ export default function PreferencesPage() {
             )}
           </Field>
 
-          <Field label="Best days">
+          <Field label={t("Best days")}>
             <SegmentedControl
               value={p.dayPreference}
               onChange={(v) => set("dayPreference", v)}
-              ariaLabel="Day preference"
+              ariaLabel={t("Day preference")}
               options={[
-                { value: "either", label: "Either" },
-                { value: "weekday", label: "Weekdays" },
-                { value: "weekend", label: "Weekends" },
+                { value: "either", label: t("Either") },
+                { value: "weekday", label: t("Weekdays") },
+                { value: "weekend", label: t("Weekends") },
               ]}
             />
           </Field>
@@ -412,16 +638,16 @@ export default function PreferencesPage() {
       </section>
 
       <section>
-        <SectionHeading eyebrow="What" title="The date itself" />
+        <SectionHeading eyebrow={t("What")} title={t("The date itself")} />
         <Card className="p-5">
           <Field
-            label="What you'd genuinely like to do"
-            hint="The activity comes first. One good stop is enough."
+            label={t("What you'd genuinely like to do")}
+            hint={t("The activity comes first. One good stop is enough.")}
           >
             <ChipGroup
               options={DATE_TYPE_OPTIONS.map((d) => ({
                 key: d.key,
-                label: d.label,
+                label: t(d.label),
                 emoji: d.emoji,
               }))}
               selected={p.preferredDateTypes}
@@ -435,39 +661,39 @@ export default function PreferencesPage() {
                     : cur,
                 )
               }
-              ariaLabel="Date types"
+              ariaLabel={t("Date types")}
             />
             <SelectionCount count={p.preferredDateTypes.length} min={1} />
           </Field>
 
-          <Field label="Indoors or outdoors">
+          <Field label={t("Indoors or outdoors")}>
             <SegmentedControl
               value={p.indoorOutdoor}
               onChange={(v) => set("indoorOutdoor", v)}
-              ariaLabel="Indoor or outdoor"
+              ariaLabel={t("Indoor or outdoor")}
               options={[
-                { value: "either", label: "Either" },
-                { value: "indoor", label: "Indoors" },
-                { value: "outdoor", label: "Outdoors" },
+                { value: "either", label: t("Either") },
+                { value: "indoor", label: t("Indoors") },
+                { value: "outdoor", label: t("Outdoors") },
               ]}
             />
           </Field>
 
-          <Field label="Atmosphere">
+          <Field label={t("Atmosphere")}>
             <SegmentedControl
               value={p.atmosphere}
               onChange={(v) => set("atmosphere", v)}
-              ariaLabel="Atmosphere"
+              ariaLabel={t("Atmosphere")}
               options={[
-                { value: "either", label: "Either" },
-                { value: "quiet", label: "Quiet" },
-                { value: "lively", label: "Lively" },
+                { value: "either", label: t("Either") },
+                { value: "quiet", label: t("Quiet") },
+                { value: "lively", label: t("Lively") },
               ]}
             />
           </Field>
 
           <Field
-            label="Comfortable spend, per person"
+            label={t("Comfortable spend, per person")}
             hint={`${formatMoney(p.budgetMinPerPerson, p.currency)} – ${formatMoney(p.budgetMaxPerPerson, p.currency)}`}
           >
             <div className="flex items-center gap-3">
@@ -476,18 +702,18 @@ export default function PreferencesPage() {
                 min={0}
                 step={band.step}
                 value={p.budgetMinPerPerson}
-                aria-label="Minimum budget"
+                aria-label={t("Minimum budget")}
                 onChange={(e) =>
                   set("budgetMinPerPerson", Number(e.target.value))
                 }
               />
-              <span className="text-muted">to</span>
+              <span className="text-muted">{t("to")}</span>
               <TextInput
                 type="number"
                 min={0}
                 step={band.step}
                 value={p.budgetMaxPerPerson}
-                aria-label="Maximum budget"
+                aria-label={t("Maximum budget")}
                 onChange={(e) =>
                   set("budgetMaxPerPerson", Number(e.target.value))
                 }
@@ -496,15 +722,15 @@ export default function PreferencesPage() {
             <Hard
               checked={p.budgetHard}
               onChange={(v) => set("budgetHard", v)}
-              label="Never plan anything outside this"
+              label={t("Never plan anything outside this")}
             />
           </Field>
 
-          <Field label="Dietary requirements" optional>
+          <Field label={t("Dietary requirements")} optional>
             <ChipGroup
               options={DIETARY_OPTIONS.map((d) => ({
                 key: d.key,
-                label: d.label,
+                label: t(d.label),
               }))}
               selected={p.dietary}
               onChange={(update) =>
@@ -512,19 +738,19 @@ export default function PreferencesPage() {
                   cur ? { ...cur, dietary: update(cur.dietary) } : cur,
                 )
               }
-              ariaLabel="Dietary requirements"
+              ariaLabel={t("Dietary requirements")}
             />
           </Field>
 
           <Field
-            label="Accessibility needs"
+            label={t("Accessibility needs")}
             optional
-            hint="Used when choosing venues. Never shared with your match."
+            hint={t("Used when choosing venues. Never shared with your match.")}
           >
             <ChipGroup
               options={ACCESSIBILITY_OPTIONS.map((a) => ({
                 key: a.key,
-                label: a.label,
+                label: t(a.label),
               }))}
               selected={p.accessibility}
               onChange={(update) =>
@@ -534,12 +760,17 @@ export default function PreferencesPage() {
                     : cur,
                 )
               }
-              ariaLabel="Accessibility needs"
+              ariaLabel={t("Accessibility needs")}
             />
           </Field>
 
-          <Button onClick={save} loading={busy} size="lg">
-            Save preferences
+          <Button
+            onClick={save}
+            loading={busy}
+            disabled={!matchingComplete}
+            size="lg"
+          >
+            {t("Save preferences")}
           </Button>
         </Card>
       </section>
@@ -556,16 +787,17 @@ function Hard({
   onChange: (next: boolean) => void;
   label?: string;
 }) {
+  const { t } = useI18n();
   return (
     <div className="mt-2">
       <Toggle
         checked={checked}
         onChange={onChange}
-        label={label}
+        label={t(label)}
         description={
           checked
-            ? "We'll never match you outside this."
-            : "We'll prefer this, but won't rule someone out for it."
+            ? t("We'll never match you outside this.")
+            : t("We'll prefer this, but won't rule someone out for it.")
         }
       />
     </div>

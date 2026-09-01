@@ -310,7 +310,7 @@ export default function SettingsPage() {
       <section>
         <SectionHeading
           eyebrow={t("Private delivery")}
-          title={t("What AgentMail sends")}
+          title={t("What arrives by email")}
         />
         <Card className="p-2">
           <Toggle
