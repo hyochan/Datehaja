@@ -6,7 +6,7 @@ type Translate = (key: string) => string;
 const FRAMES = ["Brief", "Agent date", "Private read", "Your call"] as const;
 
 const YOUR_AGENT = {
-  name: "Your Agent",
+  name: "Juno",
   avatar: {
     palette: "rose" as const,
     face: "gentle" as const,
@@ -17,7 +17,7 @@ const YOUR_AGENT = {
 };
 
 const THEIR_AGENT = {
-  name: "Their Agent",
+  name: "Sol",
   avatar: {
     palette: "violet" as const,
     face: "curious" as const,
@@ -99,7 +99,7 @@ export function AgentLoopPlayer({
 
         <AgentWorldSprite
           person={YOUR_AGENT}
-          displayName={t("Your Agent")}
+          displayName="Juno"
           position={yourPosition}
           side="a"
           speaking={frame === 1 || frame === 3}
@@ -108,7 +108,7 @@ export function AgentLoopPlayer({
         />
         <AgentWorldSprite
           person={THEIR_AGENT}
-          displayName={t("Their Agent")}
+          displayName="Sol"
           position={theirPosition}
           side="b"
           speaking={frame === 1}
@@ -128,11 +128,11 @@ export function AgentLoopPlayer({
 
         <div className="agent-loop-date-chat" aria-hidden={frame !== 1}>
           <p>
-            <b>{t("Your Agent")}</b>
+            <b>Juno</b>
             {t("Plans can change. Feeling safe shouldn't.")}
           </p>
           <p>
-            <b>{t("Their Agent")}</b>
+            <b>Sol</b>
             {t("Quiet doesn't mean rejection.")}
           </p>
           <span className="agent-loop-typing" aria-hidden="true">
@@ -166,7 +166,7 @@ export function AgentLoopPlayer({
               {t("Here's what your debrief got wrong:")}
             </p>
             <p>
-              <span>{t("Your Agent")}</span>
+              <span>Juno</span>
               {t("What should you carry into the next search?")}
             </p>
           </div>

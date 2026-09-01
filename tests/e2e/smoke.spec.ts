@@ -21,8 +21,12 @@ test("landing and public legal records are reachable", async ({ page }) => {
   await expect(page.locator(".agent-sample-score")).toHaveText(/6.*moments/i);
   await expect(page.getByLabel("Agent insight map")).toBeVisible();
   await expect(page.locator(".agent-insight-moment")).toHaveCount(6);
-  await expect(page.getByLabel("A real agent stack")).toBeVisible();
-  await expect(page.locator(".agent-stack-node")).toHaveCount(4);
+  await expect(page.locator(".agent-product-peek")).toHaveCount(3);
+  await expect(page.locator(".agent-capture-section")).not.toContainText(
+    "내 에이전트",
+  );
+  await expect(page.getByLabel("What your Agent handles")).toBeVisible();
+  await expect(page.locator(".agent-service-moment")).toHaveCount(4);
   const landingOverflow = await page.evaluate(
     () => document.documentElement.scrollWidth - window.innerWidth,
   );

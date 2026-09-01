@@ -200,7 +200,7 @@ export default function AgentDashboardPage() {
     setStarting(true);
     setError(null);
     try {
-      const id = await requestDate({});
+      const id = await requestDate({ locale });
       navigate(`/agent-date/${id}`);
     } catch (reason) {
       setError(readableError(reason));
@@ -209,91 +209,178 @@ export default function AgentDashboardPage() {
     }
   }
 
+  const activeDate = dates?.find(
+    (date: any) => date.status === "queued" || date.status === "running",
+  );
+  const latestDate = dates?.[0] as any | undefined;
+  const profile = mine.profile as {
+    displayName: string;
+    city: string;
+    interests: string[];
+  } | null;
+  const ownerName = profile?.displayName.split(/\s+/)[0] || t("You");
+  const formatTime = (value: number) =>
+    new Intl.DateTimeFormat(locale, {
+      hour: "numeric",
+      minute: "2-digit",
+    }).format(value);
+  const dateStateLabel = (date: any) => {
+    if (date.status === "queued") return t("Preparing the date world");
+    if (date.status === "running")
+      return t("{agent} is on a date", { agent: agent.name });
+    if (date.status === "connected") return t("Introduction opened");
+    if (date.status === "closed") return t("Closed with care");
+    if (date.status === "failed") return t("Date interrupted");
+    if (date.myVerdict === "encourage") return t("Your agent says meet");
+    if (date.myVerdict === "pass") return t("Your agent says pass");
+    return t("Private debrief ready");
+  };
+
   return (
     <div className="agent-dashboard">
       <section className="agent-command-grid">
-        <div className="agent-command-copy">
+        <Card className="agent-identity-card">
           <div className="flex items-center gap-3">
             <AgentAvatar
               name={agent.name}
               avatar={agent.avatar}
               className="agent-avatar-command"
-              label={`${agent.name}, your dating agent`}
+              label={t("{agent}, your dating agent", { agent: agent.name })}
             />
             <div>
               <div className="docket-label text-[var(--accent-text)]">
-                Your private agent
+                {t("Your private agent")}
               </div>
-              <h1 className="mt-1 text-[clamp(3rem,7vw,5.8rem)] leading-[0.9]">
+              <h1 className="agent-identity-name mt-1">
                 {agent.name}
               </h1>
             </div>
           </div>
-          <p className="mt-6 max-w-xl text-[17px] leading-[1.75] text-soft">
-            Talk normally. Correct what feels off. The better {agent.name}{" "}
-            understands the unpolished version of you, the more honest its dates
-            become.
+          <p className="agent-identity-intro mt-5 text-soft">
+            {t(
+              "Talk naturally. Correct what feels off. Every conversation helps {agent} represent the real you.",
+              { agent: agent.name },
+            )}
           </p>
-          <div className="mt-5 flex flex-wrap gap-2">
-            <Tag tone="dusk">{agent.voice} voice</Tag>
-            <Tag tone="sage">{agent.autonomy} mode</Tag>
-            <Tag tone="neutral">private memory</Tag>
+          <div className="agent-identity-tags mt-5 flex flex-wrap gap-2">
+            <Tag tone="dusk">
+              {t("{voice} voice", { voice: t(agent.voice) })}
+            </Tag>
+            <Tag tone="sage">
+              {t("{mode} mode", { mode: t(agent.autonomy) })}
+            </Tag>
+            <Tag tone="neutral">{t("private memory")}</Tag>
           </div>
-        </div>
+          <button
+            type="button"
+            className="agent-identity-chat-link"
+            onClick={() =>
+              document
+                .getElementById("private-line")
+                ?.scrollIntoView({ behavior: "smooth", block: "start" })
+            }
+          >
+            <span aria-hidden>↘</span>
+            {t("Talk with {agent}", { agent: agent.name })}
+          </button>
+        </Card>
 
-        <Card className="agent-launch-card overflow-hidden p-6 sm:p-8">
-          <AgentHomeWorld person={{ name: agent.name, avatar: agent.avatar }} />
-          <div className="relative z-[1] mt-8">
+        <Card className="agent-launch-card overflow-hidden">
+          <div className="agent-launch-copy">
             <div className="docket-label text-[var(--accent-text)]">
-              {scoutAccess?.allowed ? "Scout Pass ready" : "Ready to search"}
+              {activeDate
+                ? t("Live from the date world")
+                : scoutAccess?.allowed
+                  ? t("Scout Pass ready")
+                  : t("Ready to search")}
             </div>
-            <h2 className="mt-2 text-[32px]">
-              Send {agent.name} out to find your person.
+            <h2 className="agent-launch-title mt-2">
+              {activeDate
+                ? t("{agent} is out meeting someone.", { agent: agent.name })
+                : latestDate?.status === "debrief_ready"
+                  ? t("{agent} brought something home.", {
+                      agent: agent.name,
+                    })
+                  : t("Send {agent} out to meet someone.", {
+                      agent: agent.name,
+                    })}
             </h2>
-            <p className="mt-3 text-[14px] leading-[1.65] text-soft">
-              Your brief is ready. Once dispatched, {agent.name} searches your
-              city, meets a compatible Agent, and brings home an honest case for
-              — or against — a real introduction.
+            <p className="mt-3 text-[13px] leading-[1.65] text-soft">
+              {activeDate
+                ? t(
+                    "Drop in now. The six moments are saved as they happen, then {agent} returns with a private read.",
+                    { agent: agent.name },
+                  )
+                : t(
+                    "{agent} checks the brief, meets a compatible Agent, and returns with an honest recommendation.",
+                    { agent: agent.name },
+                  )}
             </p>
             <Button
               className="mt-6"
               fullWidth
               size="lg"
               loading={starting}
-              onClick={() => void startDate()}
+              onClick={() => {
+                if (activeDate) navigate(`/agent-date/${activeDate._id}`);
+                else if (latestDate?.status === "debrief_ready")
+                  navigate(`/agent-date/${latestDate._id}`);
+                else void startDate();
+              }}
             >
-              {scoutAccess === null
-                ? "Checking Scout Pass…"
+              {activeDate
+                ? t("Watch the date live →")
+                : latestDate?.status === "debrief_ready"
+                  ? t("Read the private debrief →")
+                  : scoutAccess === null
+                    ? t("Checking Scout Pass…")
                 : scoutAccess.allowed
-                  ? `Send ${agent.name} scouting →`
-                  : "Unlock scouting →"}
+                  ? t("Send {agent} scouting →", { agent: agent.name })
+                  : t("Unlock scouting →")}
             </Button>
             <p className="mt-3 text-center text-[11px] leading-relaxed text-muted">
               {scoutAccess?.mode === "demo"
-                ? "Development demo pass · no charge"
-                : "The pass funds the search, not a guaranteed match. Contact stays sealed."}
+                ? t("Development demo pass · no charge")
+                : t(
+                    "The pass funds the search, not a guaranteed match. Contact stays sealed.",
+                  )}
             </p>
+          </div>
+          <div className="agent-launch-world">
+            <AgentHomeWorld
+              person={{ name: agent.name, avatar: agent.avatar }}
+            />
           </div>
         </Card>
       </section>
 
-      <section className="agent-loop-rail" aria-label="How your scout works">
+      <section
+        className="agent-loop-rail"
+        aria-label={t("How your scout works")}
+      >
         <div className="agent-loop-step is-done">
           <span>01</span>
-          <strong>Briefed by you</strong>
-          <small>Agent, ideal person, honest profile</small>
+          <strong>{t("Briefed by you")}</strong>
+          <small>{t("Agent, ideal person, honest profile")}</small>
         </div>
         <i aria-hidden>→</i>
-        <div className="agent-loop-step">
+        <div className={cx("agent-loop-step", activeDate && "is-current")}>
           <span>02</span>
-          <strong>Scouts the agent world</strong>
-          <small>Watch the date unfold moment by moment</small>
+          <strong>{t("Scouts the agent world")}</strong>
+          <small>{t("Watch the date unfold moment by moment")}</small>
         </div>
         <i aria-hidden>→</i>
-        <div className="agent-loop-step">
+        <div
+          className={cx(
+            "agent-loop-step",
+            latestDate &&
+              !["queued", "running"].includes(latestDate.status) &&
+              "is-current",
+          )}
+        >
           <span>03</span>
-          <strong>Returns with a case</strong>
-          <small>Private debrief, then two human yeses</small>
+          <strong>{t("Returns with a case")}</strong>
+          <small>{t("Private debrief, then two human yeses")}</small>
         </div>
       </section>
 
@@ -308,19 +395,21 @@ export default function AgentDashboardPage() {
 
       <section
         id="private-line"
-        className="mt-10 scroll-mt-24 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]"
+        className="agent-workspace-grid mt-8 scroll-mt-24"
       >
-        <Card className="agent-chat-card flex min-h-[36rem] flex-col overflow-hidden">
+        <Card className="agent-chat-card flex flex-col overflow-hidden">
           <header className="flex items-center justify-between border-b border-[var(--border)] px-5 py-4 sm:px-6">
             <div>
-              <div className="docket-label text-muted">Private line</div>
+              <div className="docket-label text-muted">
+                {t("Private line")}
+              </div>
               <div className="mt-1 text-[14px] font-bold">
-                You ↔ {agent.name}
+                {t("You ↔ {agent}", { agent: agent.name })}
               </div>
             </div>
             <span className="flex items-center gap-2 text-[11px] text-muted">
               <span className="h-2 w-2 rounded-full bg-[var(--color-sage-500)]" />
-              only you can read this
+              {t("only you can read this")}
             </span>
           </header>
           {discussion && (
@@ -403,27 +492,73 @@ export default function AgentDashboardPage() {
                     className="agent-avatar-chat"
                   />
                 )}
-                <div
-                  className={cx(
-                    "agent-bubble rounded-[1.35rem] px-4 py-3 text-[14.5px] leading-[1.65]",
-                    item.role === "human"
-                      ? "rounded-br-md bg-[var(--text)] text-[var(--bg)]"
-                      : "rounded-bl-md border border-[var(--border)] bg-[var(--bg-raised)]",
-                  )}
-                >
-                  {item.agentDateId && (
-                    <div className="docket-label mb-1 opacity-60">
-                      {t("Date debrief")}
-                    </div>
-                  )}
-                  {item.content}
+                <div className="min-w-0">
+                  <div
+                    className={cx(
+                      "mb-1 flex items-center gap-2 px-1 text-[10px] text-muted",
+                      item.role === "human" && "justify-end",
+                    )}
+                  >
+                    <strong>
+                      {item.role === "human" ? ownerName : agent.name}
+                    </strong>
+                    <span>{formatTime(item.createdAt)}</span>
+                  </div>
+                  <div
+                    className={cx(
+                      "agent-bubble rounded-[1.35rem] px-4 py-3 text-[14.5px] leading-[1.65]",
+                      item.role === "human"
+                        ? "rounded-br-md bg-[var(--text)] text-[var(--bg)]"
+                        : "rounded-bl-md border border-[var(--border)] bg-[var(--bg-raised)]",
+                    )}
+                  >
+                    {item.agentDateId && (
+                      <div className="docket-label mb-1 opacity-60">
+                        {t("Date debrief")}
+                      </div>
+                    )}
+                    {item.role === "agent" &&
+                    /^I'm .+, your dating agent\. I'll learn how you actually connect,/i.test(
+                      item.content,
+                    )
+                      ? t(
+                          "I'm {agent}, your dating agent. I'll learn how you actually connect, meet other agents in a virtual world, and tell you the honest version — including when I think someone is worth meeting.",
+                          { agent: agent.name },
+                        )
+                      : item.content}
+                  </div>
                 </div>
               </div>
             ))}
             {waitingForAgent && (
               <div className="flex items-center gap-2 text-[12px] text-muted">
-                <Spinner className="h-3.5 w-3.5" /> {agent.name} is thinking,
-                not typing…
+                <Spinner className="h-3.5 w-3.5" />{" "}
+                {t("{agent} is thinking, not typing…", {
+                  agent: agent.name,
+                })}
+              </div>
+            )}
+            {!discussion && visibleMessages.length <= 1 && (
+              <div className="agent-chat-starters">
+                <span>{t("Try asking")}</span>
+                {[
+                  t("What do you understand about me so far?"),
+                  t("What will you look for on my behalf?"),
+                  t("Ask me something that would change your search."),
+                ].map((prompt) => (
+                  <button
+                    type="button"
+                    key={prompt}
+                    onClick={() => {
+                      setMessage(prompt);
+                      window.requestAnimationFrame(() =>
+                        messageRef.current?.focus(),
+                      );
+                    }}
+                  >
+                    {prompt}
+                  </button>
+                ))}
               </div>
             )}
             <div ref={endRef} />
@@ -438,13 +573,15 @@ export default function AgentDashboardPage() {
             <div className="flex items-end gap-2 rounded-[1.35rem] border border-[var(--border-strong)] bg-[var(--bg-raised)] p-2 pl-4 focus-within:border-[var(--tint-ember-border)]">
               <textarea
                 ref={messageRef}
-                aria-label={`Message ${agent.name}`}
+                aria-label={t("Message {agent}", { agent: agent.name })}
                 rows={2}
                 value={message}
                 placeholder={
                   discussion
                     ? t("Ask what your Agent noticed, or correct the debrief…")
-                    : "Tell your agent what people usually misunderstand about you…"
+                    : t(
+                        "Tell your agent what people usually misunderstand about you…",
+                      )
                 }
                 onChange={(event) => setMessage(event.target.value)}
                 onKeyDown={(event) => {
@@ -461,7 +598,7 @@ export default function AgentDashboardPage() {
                 disabled={!message.trim() || sending}
                 loading={sending}
               >
-                Send
+                {t("Send")}
               </Button>
             </div>
           </form>
@@ -471,11 +608,11 @@ export default function AgentDashboardPage() {
           {openQuestion && (
             <Card className="agent-question-note mb-5 overflow-hidden p-5 sm:p-6">
               <div className="agent-learning-path" aria-hidden="true">
-                <span className="is-current">you</span>
+                <span className="is-current">{t("you")}</span>
                 <i>→</i>
                 <span>{agent.name}</span>
                 <i>→</i>
-                <span>next date</span>
+                <span>{t("next date")}</span>
               </div>
               <div className="mt-5 flex items-start gap-3">
                 <AgentAvatar
@@ -488,7 +625,7 @@ export default function AgentDashboardPage() {
                     {t("A question from {agent}", { agent: agent.name })}
                   </div>
                   <h2 className="mt-2 text-[clamp(1.45rem,3vw,2rem)] leading-[1.18]">
-                    {openQuestion.prompt}
+                    {t(openQuestion.prompt)}
                   </h2>
                 </div>
               </div>
@@ -534,16 +671,18 @@ export default function AgentDashboardPage() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <div className="docket-label text-[var(--accent-text)]">
-                  What {agent.name} remembers
+                  {t("What {agent} remembers", { agent: agent.name })}
                 </div>
                 <p className="mt-3 text-[13px] leading-[1.65] text-soft">
                   {agent.privateMemory ||
-                    "Nothing distilled yet. Your corrections will become private memory here."}
+                    t(
+                      "Nothing distilled yet. Your corrections will become private memory here.",
+                    )}
                 </p>
                 {agent.scoutingMemory && (
                   <div className="mt-4 border-t border-[var(--border)] pt-4">
                     <div className="docket-label text-muted">
-                      Learned from Agent dates
+                      {t("Learned from Agent dates")}
                     </div>
                     <p className="mt-2 whitespace-pre-line text-[13px] leading-[1.65] text-soft">
                       {agent.scoutingMemory}
@@ -551,7 +690,10 @@ export default function AgentDashboardPage() {
                   </div>
                 )}
               </div>
-              <span className="agent-memory-lock" aria-label="Private to you">
+              <span
+                className="agent-memory-lock"
+                aria-label={t("Private to you")}
+              >
                 ⌾
               </span>
             </div>
@@ -559,20 +701,20 @@ export default function AgentDashboardPage() {
               type="button"
               className="mt-4 text-[11px] font-bold text-[var(--accent-text)]"
               onClick={() => {
-                setMessage("Please correct or forget this memory: ");
+                setMessage(t("Please correct or forget this memory: "));
                 window.requestAnimationFrame(() => messageRef.current?.focus());
               }}
             >
-              Correct this memory →
+              {t("Correct this memory →")}
             </button>
           </Card>
           <div className="mb-4 flex items-end justify-between gap-3">
             <div>
-              <div className="docket-label text-muted">Field notes</div>
-              <h2 className="mt-1 text-[26px]">Agent dates</h2>
+              <div className="docket-label text-muted">{t("Field notes")}</div>
+              <h2 className="mt-1 text-[26px]">{t("Agent dates")}</h2>
             </div>
             <span className="text-[12px] text-muted">
-              {dates?.length ?? 0} total
+              {t("{count} total", { count: dates?.length ?? 0 })}
             </span>
           </div>
           <div className="space-y-3">
@@ -583,10 +725,11 @@ export default function AgentDashboardPage() {
             ) : dates.length === 0 ? (
               <Card className="agent-empty-note p-7">
                 <div className="text-[30px]">✦</div>
-                <h3 className="mt-3 text-[22px]">No stories yet.</h3>
+                <h3 className="mt-3 text-[22px]">{t("No stories yet.")}</h3>
                 <p className="mt-2 text-[14px] leading-relaxed text-soft">
-                  Your first agent date will appear here as a transcript and an
-                  honest private debrief.
+                  {t(
+                    "Your first agent date will appear here as a transcript and an honest private debrief.",
+                  )}
                 </p>
               </Card>
             ) : (
@@ -602,16 +745,11 @@ export default function AgentDashboardPage() {
                         />
                         <div className="min-w-0">
                           <div className="docket-label text-[var(--accent-text)]">
-                            {date.status === "running" ||
-                            date.status === "queued"
-                              ? "in the virtual world"
-                              : date.myVerdict === "encourage"
-                                ? "your agent says go"
-                                : "debrief ready"}
+                            {dateStateLabel(date)}
                           </div>
                           <h3 className="mt-2 text-[21px]">
                             {agent.name} ×{" "}
-                            {date.counterpart?.agentName ?? "another agent"}
+                            {date.counterpart?.agentName ?? t("another agent")}
                           </h3>
                           <p className="mt-2 line-clamp-2 text-[13px] leading-relaxed text-soft">
                             {date.summary || date.setting}
@@ -619,7 +757,7 @@ export default function AgentDashboardPage() {
                         </div>
                       </div>
                       <span className="rounded-full bg-[var(--bg-sunken)] px-3 py-1 text-[11px] text-muted">
-                        {date.status.replaceAll("_", " ")}
+                        {dateStateLabel(date)}
                       </span>
                     </div>
                   </Card>

@@ -5,6 +5,7 @@ import {
   spriteForAvatar,
   type AvatarConfig,
 } from "./AgentAvatar";
+import { useI18n } from "../../i18n";
 
 type WorldTurn = {
   _id: string;
@@ -240,6 +241,7 @@ export function AgentDateWorld({
   turns: WorldTurn[];
   liveActivity?: string;
 }) {
+  const { t } = useI18n();
   const theme = worldThemeFor(`${setting} ${sourceTitle ?? ""}`);
   const complete = !["queued", "running"].includes(status);
   const [selectedMoment, setSelectedMoment] = useState<number | null>(() =>
@@ -276,20 +278,26 @@ export function AgentDateWorld({
     <section className={`agent-world agent-world-${theme.key}`}>
       <header className="agent-world-header">
         <div>
-          <div className="docket-label">{theme.kicker}</div>
-          <h2>{theme.title}</h2>
-          <p>{theme.arrival}</p>
+          <div className="docket-label">{t(theme.kicker)}</div>
+          <h2>{t(theme.title)}</h2>
+          <p>{t(theme.arrival)}</p>
         </div>
         <div className="agent-world-status">
           <span className={!complete ? "is-live" : ""} />
-          {complete ? "memory available" : liveActivity ?? "happening now"}
+          {complete
+            ? t("memory available")
+            : liveActivity ?? t("happening now")}
         </div>
       </header>
 
       <div
         className="agent-world-stage"
         role="region"
-        aria-label={`${mine.name} and ${counterpart.name} in ${theme.title}`}
+        aria-label={t("{mine} and {counterpart} in {place}", {
+          mine: mine.name,
+          counterpart: counterpart.name,
+          place: t(theme.title),
+        })}
       >
         <div className="agent-world-wall agent-world-wall-north" />
         <div className="agent-world-wall agent-world-wall-west" />
@@ -312,12 +320,12 @@ export function AgentDateWorld({
                 "--object-y": `${object.y}%`,
               } as CSSProperties
             }
-            aria-label={`Inspect ${object.label}`}
+            aria-label={t("Inspect {object}", { object: t(object.label) })}
             aria-pressed={activeObject === object.key}
             onClick={() => setActiveObject(object.key)}
           >
             <b>{object.icon}</b>
-            <span>{object.label}</span>
+            <span>{t(object.label)}</span>
           </button>
         ))}
 
@@ -352,23 +360,28 @@ export function AgentDateWorld({
         >
           <span>
             {moment === 0
-              ? "ARRIVAL"
-              : `MOMENT 0${moment} · ${positions.label}`}
+              ? t("ARRIVAL")
+              : t("MOMENT {number} · {label}", {
+                  number: `0${moment}`,
+                  label: t(positions.label),
+                })}
           </span>
           <strong>
-            {current?.speakerAgentName ?? "Two Agents enter separately"}
+            {current?.speakerAgentName ?? t("Two Agents enter separately")}
           </strong>
           <p>
             {current?.content ??
-              "Two proxies enter with separate briefs and no contact details."}
+              t(
+                "Two proxies enter with separate briefs and no contact details.",
+              )}
           </p>
         </div>
 
         {selectedObject && (
           <div className="agent-world-object-note">
-            <span>NEARBY OBJECT</span>
-            <strong>{selectedObject.label}</strong>
-            <p>{selectedObject.note}</p>
+            <span>{t("NEARBY OBJECT")}</span>
+            <strong>{t(selectedObject.label)}</strong>
+            <p>{t(selectedObject.note)}</p>
           </div>
         )}
       </div>
@@ -380,15 +393,22 @@ export function AgentDateWorld({
           onClick={replay}
           disabled={turns.length === 0}
         >
-          {playing ? "replaying…" : "replay the date"}{" "}
+          {playing ? t("replaying…") : t("replay the date")}{" "}
           <span aria-hidden>↻</span>
         </button>
-        <div className="agent-world-timeline" aria-label="Date replay moments">
+        <div
+          className="agent-world-timeline"
+          aria-label={t("Date replay moments")}
+        >
           {Array.from({ length: maxMoment + 1 }, (_, index) => (
             <button
               type="button"
               key={index}
-              aria-label={index === 0 ? "Arrival" : `Moment ${index}`}
+              aria-label={
+                index === 0
+                  ? t("Arrival")
+                  : t("Moment {number}", { number: index })
+              }
               aria-pressed={moment === index}
               onClick={() => {
                 setPlaying(false);
@@ -399,7 +419,7 @@ export function AgentDateWorld({
             </button>
           ))}
         </div>
-        <span>{turns.length}/6 memories</span>
+        <span>{t("{count}/6 memories", { count: turns.length })}</span>
       </footer>
     </section>
   );
@@ -422,6 +442,7 @@ export function AgentWorldSprite({
   className?: string;
   displayName?: string;
 }) {
+  const { t } = useI18n();
   const avatar = avatarForName(person.name, person.avatar);
   return (
     <span
@@ -435,7 +456,11 @@ export function AgentWorldSprite({
           : undefined
       }
       role="img"
-      aria-label={`${person.name}${speaking ? ", speaking" : ""}`}
+      aria-label={
+        speaking
+          ? t("{agent}, speaking", { agent: person.name })
+          : person.name
+      }
       data-side={side}
     >
       {emote && <i className="agent-world-emote">{emote}</i>}
@@ -454,11 +479,12 @@ export function AgentWorldSprite({
 }
 
 export function AgentHomeWorld({ person }: { person: WorldPerson }) {
+  const { t } = useI18n();
   return (
     <div
       className="agent-home-world"
       role="group"
-      aria-label={`${person.name}'s private room`}
+      aria-label={t("{agent}'s private room", { agent: person.name })}
     >
       <div className="agent-home-glow agent-home-glow-left" />
       <div className="agent-home-glow agent-home-glow-right" />
@@ -466,17 +492,17 @@ export function AgentHomeWorld({ person }: { person: WorldPerson }) {
         <b />
         <i />
         <i />
-        <span>PRIVATE ROOM</span>
+        <span>{t("PRIVATE ROOM")}</span>
       </div>
       <div className="agent-home-rug">
         <i />
       </div>
       <div className="agent-home-brief" aria-hidden="true">
-        <span>PRIVATE BRIEF</span>
+        <span>{t("PRIVATE BRIEF")}</span>
         <i />
         <i />
         <i />
-        <b>SEALED</b>
+        <b>{t("SEALED")}</b>
       </div>
       <div className="agent-home-shelf" aria-hidden="true">
         <i />
@@ -491,8 +517,8 @@ export function AgentHomeWorld({ person }: { person: WorldPerson }) {
           <b />
         </div>
         <div className="agent-home-portal-copy">
-          <small>NEXT STOP</small>
-          <strong>AGENT WORLD</strong>
+          <small>{t("NEXT STOP")}</small>
+          <strong>{t("AGENT WORLD")}</strong>
           <span aria-hidden="true">→</span>
         </div>
       </div>
@@ -504,10 +530,10 @@ export function AgentHomeWorld({ person }: { person: WorldPerson }) {
       <AgentWorldSprite
         person={person}
         className="agent-home-sprite"
-        displayName="Your Agent"
+        displayName={t("Your Agent")}
       />
       <div className="agent-home-presence">
-        <i /> ready to scout
+        <i /> {t("ready to scout")}
       </div>
     </div>
   );

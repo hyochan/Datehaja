@@ -8,12 +8,26 @@ export function Logo({ className }: { className?: string }) {
       role="img"
       aria-label="Datehaja"
     >
-      <circle cx="16" cy="16" r="15" className="fill-[var(--tint-ember-bg)]" />
+      <circle
+        cx="16"
+        cy="16"
+        r="15"
+        className="fill-[var(--tint-ember-bg)] stroke-[var(--tint-ember-border)]"
+        strokeWidth="0.8"
+      />
+      <circle
+        cx="16"
+        cy="16"
+        r="12.2"
+        className="stroke-[var(--accent-text)]"
+        strokeWidth="0.55"
+        opacity="0.2"
+      />
       <path
         d="M14 8.3h-1.7a5.8 5.8 0 0 0-5.8 5.8v3.8a5.8 5.8 0 0 0 5.8 5.8H14"
         stroke="currentColor"
         className="text-ember-400"
-        strokeWidth="2.35"
+        strokeWidth="2.6"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -21,7 +35,7 @@ export function Logo({ className }: { className?: string }) {
         d="M18 8.3h1.7a5.8 5.8 0 0 1 5.8 5.8v3.8a5.8 5.8 0 0 1-5.8 5.8H18"
         stroke="currentColor"
         className="text-ember-300"
-        strokeWidth="2.35"
+        strokeWidth="2.6"
         strokeLinecap="round"
         strokeLinejoin="round"
       />

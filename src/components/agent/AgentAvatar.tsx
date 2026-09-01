@@ -151,6 +151,8 @@ export function AgentAvatar({
       role={label ? "img" : undefined}
       aria-label={label}
       aria-hidden={label ? undefined : true}
+      data-avatar-hair={config.hair}
+      data-avatar-accessory={config.accessory}
       style={
         {
           "--avatar-bg": palette.background,
@@ -189,8 +191,18 @@ export function AgentAvatar({
           opacity=".08"
         />
 
+        {config.accessory === "headphones" && (
+          <path
+            d="M40 94V79c0-33 16-52 40-52s40 19 40 52v15"
+            stroke={palette.primary}
+            strokeWidth="7"
+            strokeLinecap="round"
+            fill="none"
+          />
+        )}
+
         {config.hair === "bun" && (
-          <circle cx="103" cy="42" r="20" fill={palette.ink} />
+          <circle cx="105" cy="38" r="18" fill={palette.ink} />
         )}
 
         <path d="M68 116h24v25H68z" fill="#e6b9a8" />
@@ -259,34 +271,117 @@ export function AgentAvatar({
         <circle cx="122" cy="90" r="7" fill="#e6b9a8" />
 
         {config.hair === "wave" && (
-          <path
-            d="M39 90c-8-38 15-61 45-58 29 3 43 25 36 62-7-7-8-17-8-28-13 3-28-2-39-13-7 13-19 22-34 25z"
-            fill={palette.ink}
-          />
+          <>
+            <path
+              d="M38 94c-8-37 11-64 42-64 30 0 48 25 42 65-8-6-11-18-10-31-10 3-21 0-30-8-7 10-18 17-34 20-1 8-3 14-10 18z"
+              fill={palette.ink}
+            />
+            <path
+              d="M43 72c6-2 10 1 14 6m51-13c-6 0-10 3-13 8"
+              stroke={palette.deep}
+              strokeWidth="3"
+              strokeLinecap="round"
+              fill="none"
+              opacity=".7"
+            />
+          </>
         )}
         {config.hair === "crop" && (
-          <path
-            d="M41 74c1-29 18-45 42-45 23 0 39 15 40 40-12-6-22-15-26-26-10 15-31 26-56 31z"
-            fill={palette.ink}
-          />
+          <>
+            <path
+              d="M40 76c1-29 17-46 42-46 22 0 37 13 41 37-9-2-17-8-22-17-10 12-28 21-49 22l-12 4z"
+              fill={palette.ink}
+            />
+            <path
+              d="m58 49 7 8 7-13 8 10 9-14 8 11"
+              stroke={palette.deep}
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+              opacity=".65"
+            />
+          </>
         )}
         {config.hair === "bob" && (
-          <path
-            d="M38 91c-5-39 13-61 43-61 31 0 46 23 42 65l-12 17-2-42c-10-3-21-9-29-20-8 12-18 20-31 22l1 40z"
-            fill={palette.ink}
-          />
+          <>
+            <path
+              d="M37 92c-4-40 13-63 44-63 30 0 46 23 43 64l-10 23-7-5 2-39c-11-3-21-10-29-21-8 12-18 20-30 23l2 37-7 6z"
+              fill={palette.ink}
+            />
+            <path
+              d="M43 108c5 5 10 7 16 7m58-8c-4 5-9 7-15 7"
+              stroke={palette.deep}
+              strokeWidth="3"
+              strokeLinecap="round"
+              fill="none"
+            />
+          </>
         )}
         {config.hair === "bun" && (
-          <path
-            d="M39 81c-2-33 16-52 43-52 25 0 42 19 40 51-12-5-22-16-27-31-10 17-28 28-56 32z"
-            fill={palette.ink}
-          />
+          <>
+            <path
+              d="M39 81c-2-33 16-52 43-52 25 0 42 19 40 51-12-5-22-16-27-31-10 17-28 28-56 32z"
+              fill={palette.ink}
+            />
+            <path
+              d="M88 34c8 0 15 4 20 10"
+              stroke={palette.deep}
+              strokeWidth="3"
+              strokeLinecap="round"
+              fill="none"
+              opacity=".7"
+            />
+          </>
         )}
         {config.hair === "buzz" && (
-          <path
-            d="M41 70c5-27 20-39 41-39 22 0 36 14 40 39-15-7-28-16-39-28-10 12-24 22-42 28z"
-            fill={palette.ink}
-          />
+          <>
+            <path
+              d="M41 72c4-27 19-42 41-42 23 0 38 16 41 43-12-6-26-9-41-9-16 0-30 3-41 8z"
+              fill="#d9ad9d"
+              stroke={palette.ink}
+              strokeWidth="2"
+            />
+            <path
+              d="M50 59h2m8-10h2m10 8h2m8-15h2m9 13h2m8-8h2M56 66h2m15-3h2m15 1h2m13 3h2"
+              stroke={palette.ink}
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              opacity=".62"
+            />
+          </>
+        )}
+
+        {config.accessory === "headphones" && (
+          <g>
+            <rect
+              x="31"
+              y="82"
+              width="16"
+              height="29"
+              rx="8"
+              fill={palette.primary}
+              stroke={palette.glow}
+              strokeWidth="2"
+            />
+            <rect
+              x="113"
+              y="82"
+              width="16"
+              height="29"
+              rx="8"
+              fill={palette.primary}
+              stroke={palette.glow}
+              strokeWidth="2"
+            />
+            <path
+              d="M37 89v15m86-15v15"
+              stroke={palette.deep}
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              opacity=".75"
+            />
+          </g>
         )}
 
         <path
@@ -373,12 +468,6 @@ export function AgentAvatar({
             <circle cx="64" cy="92" r="11" />
             <circle cx="96" cy="92" r="11" />
             <path d="M75 91h10m-33-2-12-4m68 4 12-4" />
-          </g>
-        )}
-        {config.accessory === "headphones" && (
-          <g fill="none" stroke={palette.primary} strokeWidth="5">
-            <path d="M43 87c0-29 14-45 37-45s37 16 37 45" />
-            <path d="M42 85v19m76-19v19" strokeLinecap="round" />
           </g>
         )}
         {config.accessory === "star" && (

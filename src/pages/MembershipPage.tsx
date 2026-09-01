@@ -102,20 +102,44 @@ export default function MembershipPage() {
   return (
     <div className="scout-pass-page">
       <header className="scout-pass-intro">
-        <div>
-          <div className="docket-label text-[var(--accent-text)]">
+        <div className="scout-pass-copy">
+          <div className="scout-pass-kicker docket-label text-[var(--accent-text)]">
+            <span aria-hidden>✓</span>
             {t("Your brief is complete")}
           </div>
-          <h1 className="mt-3 max-w-3xl text-[clamp(3.4rem,8vw,7.6rem)] leading-[0.88]">
+          <h1 className="scout-pass-title mt-5">
             {t("Now send your Agent into the world.")}
           </h1>
-          <p className="mt-6 max-w-xl text-[17px] leading-[1.75] text-soft">
+          <p className="scout-pass-summary mt-6 max-w-xl text-soft">
             {t(
               "Creating your Agent and teaching it who you are is free. A Scout Pass unlocks the deeper work: searching, researching a world, and running two independent AI Agents through a complete date.",
             )}
           </p>
+          <div className="scout-pass-flow" aria-label={t("How it works")}>
+            <span>
+              <small>01</small>
+              <strong>{t("Brief sealed")}</strong>
+            </span>
+            <i aria-hidden>→</i>
+            <span>
+              <small>02</small>
+              <strong>{t("Agent scouts")}</strong>
+            </span>
+            <i aria-hidden>→</i>
+            <span>
+              <small>03</small>
+              <strong>{t("You decide")}</strong>
+            </span>
+          </div>
         </div>
         <div className="scout-pass-world">
+          <div className="scout-pass-world-meta">
+            <span>
+              <i aria-hidden />
+              {agent.name}
+            </span>
+            <strong>{t("Home base")}</strong>
+          </div>
           <AgentHomeWorld person={{ name: agent.name, avatar: agent.avatar }} />
           <div className="scout-pass-world-caption">
             <span className="agent-world-status-dot" />

@@ -54,7 +54,7 @@ async function setup(t: ReturnType<typeof convexTest>) {
         userId,
         name: agentName,
         avatar: {
-          palette: agentName === "Alice's Agent" ? "rose" : "sky",
+          palette: agentName === "Aster" ? "rose" : "sky",
           face: "curious",
           hair: "wave",
           outfit: "cardigan",
@@ -79,19 +79,19 @@ async function setup(t: ReturnType<typeof convexTest>) {
       "Alice Park",
       "alice@test.invalid",
       "woman",
-      "Alice's Agent",
+      "Aster",
     );
     const bob = await person(
       "Bob Kim",
       "bob@test.invalid",
       "man",
-      "Bob's Agent",
+      "Bori",
     );
     const carol = await person(
       "Carol Lee",
       "carol@test.invalid",
       "woman",
-      "Carol's Agent",
+      "Clover",
     );
     const agentDateId = await ctx.db.insert("agentDates", {
       initiatorUserId: alice,
@@ -118,7 +118,7 @@ async function setup(t: ReturnType<typeof convexTest>) {
       agentDateId,
       round: 1,
       speakerUserId: alice,
-      speakerAgentName: "Alice's Agent",
+      speakerAgentName: "Aster",
       content: "What makes quiet feel companionable to your person?",
       subtext: "Private internal inference that must never leave the backend.",
       createdAt: NOW,
@@ -128,6 +128,65 @@ async function setup(t: ReturnType<typeof convexTest>) {
 }
 
 describe("agent-date privacy and human consent", () => {
+  test("persists the requested locale before the scheduled date begins", async () => {
+    const t = convexTest(schema, modules);
+    const s = await setup(t);
+
+    const agentDateId = await t.mutation(internal.agentDates.createRequest, {
+      userId: s.carol,
+      accessMode: "demo",
+      locale: "ko-KR",
+    });
+    const date = await t.run((ctx) => ctx.db.get("agentDates", agentDateId));
+
+    expect(date?.locale).toBe("ko-KR");
+    expect(date?.setting).toBe("둘만의 가상 데이트 공간을 준비하고 있어요.");
+    expect(date?.paceMode).toBe("demo");
+  });
+
+  test("keeps a demo Agent name distinct and marks turn ownership", async () => {
+    const t = convexTest(schema, modules);
+    const s = await setup(t);
+    const demoFallbacks = ["Juno", "Sol", "Miro", "Lumi", "Ari", "Noa"];
+    const firstChoice =
+      demoFallbacks[
+        String(s.bob)
+          .split("")
+          .reduce((sum, character) => sum + character.charCodeAt(0), 0) %
+          demoFallbacks.length
+      ] ?? "Juno";
+
+    await t.run(async (ctx) => {
+      const myAgent = await ctx.db
+        .query("agentProfiles")
+        .withIndex("by_user", (q) => q.eq("userId", s.alice))
+        .unique();
+      const demoAgent = await ctx.db
+        .query("agentProfiles")
+        .withIndex("by_user", (q) => q.eq("userId", s.bob))
+        .unique();
+      const demoProfile = await ctx.db
+        .query("profiles")
+        .withIndex("by_user", (q) => q.eq("userId", s.bob))
+        .unique();
+      if (!myAgent || !demoAgent || !demoProfile) {
+        throw new Error("Expected complete Agent fixtures.");
+      }
+      await ctx.db.patch(myAgent._id, { name: firstChoice });
+      await ctx.db.delete(demoAgent._id);
+      await ctx.db.patch(demoProfile._id, { isDemo: true });
+    });
+
+    const view = await asUser(t, s.alice).query(api.agentDates.get, {
+      agentDateId: s.agentDateId,
+    });
+    expect(view?.mine.agentName).toBe(firstChoice);
+    expect(view?.counterpart.agentName).not.toBe(firstChoice);
+    expect(view?.turns[0].isMine).toBe(true);
+    const list = await asUser(t, s.alice).query(api.agentDates.listMine, {});
+    expect(list[0].counterpart?.agentName).not.toBe(firstChoice);
+  });
+
   test("stores each live moment once and durably schedules the next one", async () => {
     const t = convexTest(schema, modules);
     const s = await setup(t);
@@ -142,7 +201,7 @@ describe("agent-date privacy and human consent", () => {
       agentDateId: s.agentDateId,
       round: 2,
       speakerUserId: s.bob,
-      speakerAgentName: "Bob's Agent",
+      speakerAgentName: "Bori",
       content: "I took a moment because that question deserved one.",
       subtext: "The pace felt safe.",
       nextDelayMs: 71_000,

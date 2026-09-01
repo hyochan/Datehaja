@@ -16,7 +16,6 @@ import {
   DEFAULT_AVATAR,
   type AvatarConfig,
 } from "../components/agent/AgentAvatar";
-import { AgentWorldSprite } from "../components/agent/AgentDateWorld";
 import { Logo } from "../components/layout/Logo";
 import { LocaleSwitcher } from "../components/layout/LocaleSwitcher";
 import { Wordmark } from "../components/layout/Wordmark";
@@ -33,6 +32,14 @@ import {
 import { readableError } from "../components/ui/Toast";
 import { useI18n } from "../i18n";
 import { dobStringToMs } from "../lib/format";
+import {
+  ABOUT_ME_MAX_INTERESTS,
+  ABOUT_ME_MIN_ESSENCE_CHARACTERS,
+  ABOUT_ME_MIN_NAME_CHARACTERS,
+  IDEAL_PERSON_MIN_CHARACTERS,
+  getAboutMeProgress,
+  getIdealPersonProgress,
+} from "../lib/onboardingValidation";
 
 type Gender = "woman" | "man" | "nonbinary" | "other";
 type Strength = "important" | "flexible" | "no_preference";
@@ -83,6 +90,18 @@ const STEP_COPY = {
     body: "Your private brief is richer than the card another person may eventually see. Exact location and contact details stay sealed.",
   },
 } satisfies Record<Step, { kicker: string; title: string; body: string }>;
+
+function isoDateYearsAgo(years: number): string {
+  const now = new Date();
+  const year = now.getFullYear() - years;
+  const month = now.getMonth();
+  const day = Math.min(now.getDate(), new Date(year, month + 1, 0).getDate());
+  return [
+    year,
+    String(month + 1).padStart(2, "0"),
+    String(day).padStart(2, "0"),
+  ].join("-");
+}
 
 export default function AgentOnboardingPage() {
   const me = useQuery(api.profiles.me);
@@ -164,19 +183,32 @@ export default function AgentOnboardingPage() {
 
   const city =
     SUPPORTED_CITIES.find((option) => option.key === cityKey) ?? suggested;
-  const ownerFirstName = displayName.trim().split(/\s+/)[0];
-  const agentDisplayName =
-    agentName.trim() ||
-    (ownerFirstName ? `${ownerFirstName}'s Agent` : t("My Agent"));
+  const agentDisplayName = agentName.trim() || t("Your Agent");
+  const existingAge = (me?.profile as { ageYears?: number } | null | undefined)
+    ?.ageYears;
+  const idealPersonProgress = getIdealPersonProgress(
+    interestedIn,
+    desiredConnection,
+  );
+  const aboutMeProgress = getAboutMeProgress({
+    displayName,
+    dob,
+    existingAge,
+    interests,
+    personalityTraits,
+    essence,
+  });
+  const dobHint = !dob
+    ? existingAge !== undefined
+      ? t("Age already verified ✓")
+      : t("Choose a date · adults aged 18 to 100 only.")
+    : aboutMeProgress.hasAdultDob
+      ? t("Age {age} ✓", { age: aboutMeProgress.age ?? "" })
+      : t("Enter a valid date for an adult aged 18 to 100.");
   const stepReady = {
-    1: true,
-    2: interestedIn.length > 0 && desiredConnection.trim().length >= 20,
-    3:
-      displayName.trim().length >= 2 &&
-      (dob.length === 10 || Boolean(me?.profile)) &&
-      interests.length >= 3 &&
-      personalityTraits.length >= 2 &&
-      essence.trim().length >= 30,
+    1: agentName.trim().length >= 2,
+    2: idealPersonProgress.isReady,
+    3: aboutMeProgress.isReady,
   } satisfies Record<Step, boolean>;
 
   function toggle<T>(value: T, values: T[], update: (next: T[]) => void) {
@@ -185,6 +217,16 @@ export default function AgentOnboardingPage() {
         ? values.filter((item) => item !== value)
         : [...values, value],
     );
+  }
+
+  function toggleInterest(interest: string) {
+    if (interests.includes(interest)) {
+      setInterests(interests.filter((item) => item !== interest));
+      return;
+    }
+    if (interests.length < ABOUT_ME_MAX_INTERESTS) {
+      setInterests([...interests, interest]);
+    }
   }
 
   async function submit() {
@@ -228,16 +270,16 @@ export default function AgentOnboardingPage() {
   return (
     <div className="agent-onboarding min-h-dvh">
       <header className="glass-bar border-b border-[var(--border)]">
-        <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-5 sm:px-8">
+        <div className="mx-auto flex h-[5rem] max-w-[80rem] items-center justify-between px-5 sm:h-[5.5rem] sm:px-8">
           <a
             href="/"
-            className="flex items-center gap-2.5"
+            className="brand-lockup flex items-center gap-2.5 sm:gap-3"
             aria-label={t("Datehaja home")}
           >
-            <Logo className="h-8 w-8" />
+            <Logo className="brand-lockup-logo h-9 w-9 sm:h-11 sm:w-11" />
             <span className="leading-none">
-              <Wordmark className="text-[22px]" />
-              <span className="docket-label mt-1 block text-[8px] text-muted">
+              <Wordmark className="text-[24px] sm:text-[28px]" />
+              <span className="docket-label mt-1.5 hidden text-[8px] text-muted sm:block sm:text-[9px]">
                 {t("Your agent dates first")}
               </span>
             </span>
@@ -246,7 +288,7 @@ export default function AgentOnboardingPage() {
         </div>
       </header>
 
-      <main className="mx-auto grid max-w-6xl gap-8 px-5 py-10 sm:px-8 lg:grid-cols-[0.72fr_1.28fr] lg:py-16">
+      <main className="mx-auto grid max-w-[80rem] gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[0.7fr_1.3fr] lg:py-16">
         <aside className="lg:sticky lg:top-10 lg:self-start">
           <div className="agent-onboarding-studio">
             <span className="agent-onboarding-studio-label">
@@ -260,25 +302,15 @@ export default function AgentOnboardingPage() {
                 agent: agentDisplayName,
               })}
             />
-            <div className="agent-onboarding-world-preview" aria-hidden>
-              <span>
-                {step === 1
-                  ? t("AT HOME")
-                  : step === 2
-                    ? t("LISTENING")
-                    : t("READY SOON")}
-              </span>
-              <AgentWorldSprite
-                person={{ name: agentDisplayName, avatar }}
-                className="agent-onboarding-sprite"
-              />
-              <i />
+            <div className="agent-onboarding-identity">
+              <span aria-hidden />
+              <strong>{agentDisplayName}</strong>
             </div>
           </div>
           <div className="docket-label mt-7 text-[var(--accent-text)]">
             {t(copy.kicker)}
           </div>
-          <h1 className="mt-3 max-w-md text-[clamp(3rem,7vw,5.2rem)] leading-[0.92]">
+          <h1 className="agent-onboarding-title mt-3 max-w-md text-[clamp(2.85rem,5.4vw,4.5rem)] leading-[1]">
             {t(copy.title)}
           </h1>
           <p className="mt-5 max-w-md text-[16px] leading-[1.75] text-soft">
@@ -322,6 +354,21 @@ export default function AgentOnboardingPage() {
                     "This single character is your matchmaker and your stand-in — visible in the world, candid only with you.",
                   )}
                 </p>
+                <Field
+                  label={t("Name your Agent")}
+                  hint={t(
+                    "This is how your Agent introduces itself. You can change it anytime.",
+                  )}
+                  htmlFor="agent-name"
+                >
+                  <TextInput
+                    id="agent-name"
+                    value={agentName}
+                    placeholder={t("e.g. Juno")}
+                    maxLength={32}
+                    onChange={(event) => setAgentName(event.target.value)}
+                  />
+                </Field>
                 <div className="mt-7">
                   <AgentAvatarEditor
                     name={agentDisplayName}
@@ -330,21 +377,6 @@ export default function AgentOnboardingPage() {
                     showPreview={false}
                   />
                 </div>
-                <Field
-                  label={t("Agent nickname")}
-                  hint={t(
-                    "Optional. Leave it blank and we'll name it for you.",
-                  )}
-                  htmlFor="agent-name"
-                >
-                  <TextInput
-                    id="agent-name"
-                    value={agentName}
-                    placeholder={t("Optional nickname")}
-                    maxLength={32}
-                    onChange={(event) => setAgentName(event.target.value)}
-                  />
-                </Field>
                 <div className="grid gap-x-5 sm:grid-cols-2">
                   <Field label={t("How should it sound?")}>
                     <Select
@@ -389,7 +421,10 @@ export default function AgentOnboardingPage() {
                 <h2 className="text-[34px]">
                   {t("Who do you hope it notices?")}
                 </h2>
-                <Field label={t("It may meet agents representing")}>
+                <Field
+                  label={t("It may meet agents representing")}
+                  hint={t("Choose at least one.")}
+                >
                   <div className="flex flex-wrap gap-2">
                     {GENDERS.map((option) => (
                       <Chip
@@ -417,6 +452,8 @@ export default function AgentOnboardingPage() {
                     id="desired-connection"
                     rows={5}
                     value={desiredConnection}
+                    minLength={IDEAL_PERSON_MIN_CHARACTERS}
+                    aria-describedby="desired-connection-progress"
                     placeholder={t(
                       "Someone I can disagree with safely, who enjoys their own life and still makes room for another person…",
                     )}
@@ -424,6 +461,38 @@ export default function AgentOnboardingPage() {
                       setDesiredConnection(event.target.value)
                     }
                   />
+                  <div
+                    id="desired-connection-progress"
+                    className="onboarding-character-progress"
+                    data-complete={idealPersonProgress.hasEnoughDescription}
+                  >
+                    <div>
+                      <span>
+                        {idealPersonProgress.hasEnoughDescription
+                          ? t("Enough to continue ✓")
+                          : t("{count} more characters", {
+                              count: idealPersonProgress.descriptionRemaining,
+                            })}
+                      </span>
+                      <strong>
+                        {t("{count} / 20 minimum", {
+                          count: idealPersonProgress.descriptionLength,
+                        })}
+                      </strong>
+                    </div>
+                    <span aria-hidden="true">
+                      <i
+                        style={{
+                          width: `${Math.min(
+                            100,
+                            (idealPersonProgress.descriptionLength /
+                              IDEAL_PERSON_MIN_CHARACTERS) *
+                              100,
+                          )}%`,
+                        }}
+                      />
+                    </span>
+                  </div>
                 </Field>
                 <Field label={t("Personality signals to notice")}>
                   <div className="flex flex-wrap gap-2">
@@ -521,30 +590,28 @@ export default function AgentOnboardingPage() {
                 <div className="mt-6 grid gap-x-5 sm:grid-cols-2">
                   <Field
                     label={t("What should we call you?")}
+                    hint={t("At least 2 characters.")}
                     htmlFor="display-name"
                   >
                     <TextInput
                       id="display-name"
                       value={displayName}
+                      minLength={ABOUT_ME_MIN_NAME_CHARACTERS}
                       onChange={(event) => setDisplayName(event.target.value)}
                     />
                   </Field>
                   <Field
                     label={t("Date of birth")}
-                    hint={
-                      me?.profile
-                        ? t("Already verified — only change it if needed.")
-                        : t("Adults only.")
-                    }
+                    hint={dobHint}
                     htmlFor="dob"
                   >
                     <TextInput
                       id="dob"
-                      placeholder="YYYY-MM-DD"
+                      type="date"
+                      min={isoDateYearsAgo(100)}
+                      max={isoDateYearsAgo(18)}
                       value={dob}
-                      onChange={(event) =>
-                        setDob(event.target.value.slice(0, 10))
-                      }
+                      onChange={(event) => setDob(event.target.value)}
                     />
                   </Field>
                 </div>
@@ -621,16 +688,20 @@ export default function AgentOnboardingPage() {
                 </Field>
                 <Field
                   label={t("What reliably lights you up?")}
-                  hint={t("Choose at least three.")}
+                  hint={t("{count} selected · choose 3 to 8.", {
+                    count: interests.length,
+                  })}
                 >
-                  <div className="flex max-h-48 flex-wrap gap-2 overflow-auto pr-2">
+                  <div className="flex flex-wrap gap-2">
                     {INTEREST_OPTIONS.slice(0, 36).map((interest) => (
                       <Chip
                         key={interest}
                         selected={interests.includes(interest)}
-                        onClick={() =>
-                          toggle(interest, interests, setInterests)
+                        disabled={
+                          interests.length >= ABOUT_ME_MAX_INTERESTS &&
+                          !interests.includes(interest)
                         }
+                        onClick={() => toggleInterest(interest)}
                       >
                         {t(interest)}
                       </Chip>
@@ -639,9 +710,9 @@ export default function AgentOnboardingPage() {
                 </Field>
                 <Field
                   label={t("How would close friends describe you?")}
-                  hint={t(
-                    "Choose at least two. This helps the match work both ways.",
-                  )}
+                  hint={t("{count} selected · choose at least two.", {
+                    count: personalityTraits.length,
+                  })}
                 >
                   <div className="flex flex-wrap gap-2">
                     {PERSONALITIES.map((trait) => (
@@ -670,11 +741,45 @@ export default function AgentOnboardingPage() {
                     id="agent-essence"
                     rows={6}
                     value={essence}
+                    minLength={ABOUT_ME_MIN_ESSENCE_CHARACTERS}
+                    aria-describedby="agent-essence-progress"
                     placeholder={t(
                       "I look outgoing, but I need quiet after crowded rooms. I fall for people who are curious without performing it…",
                     )}
                     onChange={(event) => setEssence(event.target.value)}
                   />
+                  <div
+                    id="agent-essence-progress"
+                    className="onboarding-character-progress"
+                    data-complete={aboutMeProgress.hasEssence}
+                  >
+                    <div>
+                      <span>
+                        {aboutMeProgress.hasEssence
+                          ? t("Enough to continue ✓")
+                          : t("{count} more characters", {
+                              count: aboutMeProgress.essenceRemaining,
+                            })}
+                      </span>
+                      <strong>
+                        {t("{count} / 30 minimum", {
+                          count: aboutMeProgress.essenceLength,
+                        })}
+                      </strong>
+                    </div>
+                    <span aria-hidden="true">
+                      <i
+                        style={{
+                          width: `${Math.min(
+                            100,
+                            (aboutMeProgress.essenceLength /
+                              ABOUT_ME_MIN_ESSENCE_CHARACTERS) *
+                              100,
+                          )}%`,
+                        }}
+                      />
+                    </span>
+                  </div>
                 </Field>
                 <Notice
                   tone="info"
@@ -696,6 +801,94 @@ export default function AgentOnboardingPage() {
               </p>
             )}
 
+            {step === 2 && (
+              <div
+                id="ideal-person-requirements"
+                className="onboarding-requirements"
+                data-complete={idealPersonProgress.isReady}
+              >
+                <div className="onboarding-requirements-title">
+                  <span aria-hidden="true">
+                    {idealPersonProgress.isReady
+                      ? "✓"
+                      : `${idealPersonProgress.completedRequirements}/2`}
+                  </span>
+                  <strong>
+                    {idealPersonProgress.isReady
+                      ? t("Ready for the next step")
+                      : t("Before you continue")}
+                  </strong>
+                </div>
+                <div className="onboarding-requirements-items">
+                  <span data-complete={idealPersonProgress.hasAudience}>
+                    <i aria-hidden="true">
+                      {idealPersonProgress.hasAudience ? "✓" : "○"}
+                    </i>
+                    {t("Choose who your Agent may meet")}
+                  </span>
+                  <span
+                    data-complete={idealPersonProgress.hasEnoughDescription}
+                  >
+                    <i aria-hidden="true">
+                      {idealPersonProgress.hasEnoughDescription ? "✓" : "○"}
+                    </i>
+                    {t("Describe the connection ({count}/20)", {
+                      count: idealPersonProgress.descriptionLength,
+                    })}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {step === 3 && (
+              <div
+                id="about-me-requirements"
+                className="onboarding-requirements onboarding-requirements-wide"
+                data-complete={aboutMeProgress.isReady}
+              >
+                <div className="onboarding-requirements-title">
+                  <span aria-hidden="true">
+                    {aboutMeProgress.isReady
+                      ? "✓"
+                      : `${aboutMeProgress.completedRequirements}/5`}
+                  </span>
+                  <strong>
+                    {aboutMeProgress.isReady
+                      ? t("Ready to create your Agent")
+                      : t("Complete these to continue")}
+                  </strong>
+                </div>
+                <div className="onboarding-requirements-items">
+                  <Requirement
+                    complete={aboutMeProgress.hasName}
+                    label={t("Your name (2+ characters)")}
+                  />
+                  <Requirement
+                    complete={aboutMeProgress.hasAdultDob}
+                    label={t("Adult birth date")}
+                  />
+                  <Requirement
+                    complete={aboutMeProgress.hasInterests}
+                    label={t("Interests ({count}/3)", {
+                      count: Math.min(interests.length, 3),
+                    })}
+                  />
+                  <Requirement
+                    complete={aboutMeProgress.hasPersonality}
+                    label={t("Personality ({count}/2)", {
+                      count: Math.min(personalityTraits.length, 2),
+                    })}
+                  />
+                  <Requirement
+                    complete={aboutMeProgress.hasEssence}
+                    label={t("About you ({count}/30)", {
+                      count: Math.min(aboutMeProgress.essenceLength, 30),
+                    })}
+                  />
+                </div>
+              </div>
+            )}
+
             <div className="mt-8 flex items-center justify-between gap-3 border-t border-[var(--border)] pt-6">
               {step > 1 ? (
                 <Button
@@ -711,6 +904,9 @@ export default function AgentOnboardingPage() {
                 <Button
                   size="lg"
                   disabled={!stepReady[step]}
+                  aria-describedby={
+                    step === 2 ? "ideal-person-requirements" : undefined
+                  }
                   onClick={() => setStep((step + 1) as Step)}
                 >
                   {step === 1
@@ -724,6 +920,7 @@ export default function AgentOnboardingPage() {
                   size="lg"
                   loading={busy}
                   disabled={!stepReady[3]}
+                  aria-describedby="about-me-requirements"
                   onClick={() => void submit()}
                 >
                   {t("Seal the brief and see the pass →")}
@@ -734,6 +931,21 @@ export default function AgentOnboardingPage() {
         </Card>
       </main>
     </div>
+  );
+}
+
+function Requirement({
+  complete,
+  label,
+}: {
+  complete: boolean;
+  label: string;
+}) {
+  return (
+    <span data-complete={complete}>
+      <i aria-hidden="true">{complete ? "✓" : "○"}</i>
+      {label}
+    </span>
   );
 }
 

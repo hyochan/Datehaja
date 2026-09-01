@@ -285,13 +285,13 @@ function PublicPage({ children }: { children: React.ReactNode }) {
           <div className="mx-auto flex h-20 max-w-4xl items-center justify-between px-5 sm:px-8">
             <Link
               to="/"
-              className="flex items-center gap-2.5"
+              className="brand-lockup flex items-center gap-2.5 sm:gap-3"
               aria-label={t("Datehaja home")}
             >
-              <Logo className="h-8 w-8" />
+              <Logo className="brand-lockup-logo h-9 w-9 sm:h-11 sm:w-11" />
               <span>
-                <Wordmark className="text-[22px]" />
-                <span className="docket-label mt-1 block text-[8px] text-muted">
+                <Wordmark className="text-[24px] sm:text-[28px]" />
+                <span className="docket-label mt-1.5 hidden text-[8px] text-muted sm:block sm:text-[9px]">
                   {t("Public record")}
                 </span>
               </span>

@@ -43,6 +43,51 @@ async function setup(t: ReturnType<typeof convexTest>) {
 }
 
 describe("periodic Agent learning", () => {
+  test("renaming an Agent updates its generated introduction", async () => {
+    const t = convexTest(schema, modules);
+    const { owner } = await setup(t);
+    await t.run((ctx) =>
+      ctx.db.insert("agentMessages", {
+        userId: owner,
+        role: "agent",
+        content:
+          "I'm Dali, your dating agent. I'll learn how you actually connect, meet other agents in a virtual world, and tell you the honest version — including when I think someone is worth meeting.",
+        createdAt: 1,
+      }),
+    );
+
+    await asUser(t, owner).mutation(api.agents.update, {
+      name: "Juno",
+      avatar: {
+        palette: "rose",
+        face: "gentle",
+        hair: "wave",
+        outfit: "cardigan",
+        accessory: "star",
+      },
+      essence: "Quiet at first, playful once a conversation feels safe.",
+      desiredConnection: "Someone curious who can be direct without rushing.",
+      boundaries: ["No pressure"],
+      voice: "warm",
+      autonomy: "suggest",
+    });
+
+    const result = await t.run(async (ctx) => ({
+      agent: await ctx.db
+        .query("agentProfiles")
+        .withIndex("by_user", (q) => q.eq("userId", owner))
+        .unique(),
+      message: await ctx.db
+        .query("agentMessages")
+        .withIndex("by_user_and_created", (q) => q.eq("userId", owner))
+        .first(),
+    }));
+    expect(result.agent?.name).toBe("Juno");
+    expect(result.message?.content).toMatch(
+      /^I'm Juno, your dating agent\./,
+    );
+  });
+
   test("creates one localized open question and never duplicates it", async () => {
     const t = convexTest(schema, modules);
     const { owner } = await setup(t);
@@ -189,7 +234,7 @@ describe("periodic Agent learning", () => {
     const agentDateId = await t.run(async (ctx) => {
       await ctx.db.insert("agentProfiles", {
         userId: stranger,
-        name: "Noah's Agent",
+        name: "Noah",
         essence: "Friendly but measured.",
         desiredConnection: "A calm and curious person.",
         boundaries: [],
@@ -244,7 +289,7 @@ describe("periodic Agent learning", () => {
     });
     expect(context.dateContext?.agentDateId).toBe(agentDateId);
     expect(context.dateContext?.myReason).toContain("quiet felt easy");
-    expect(context.dateContext?.counterpartAgentName).toBe("Noah's Agent");
+    expect(context.dateContext?.counterpartAgentName).toBe("Noah");
     expect(JSON.stringify(context.dateContext)).not.toContain(
       "sealed reason belongs only to Noah",
     );
@@ -253,7 +298,7 @@ describe("periodic Agent learning", () => {
     await t.run(async (ctx) => {
       await ctx.db.insert("agentProfiles", {
         userId: outsider,
-        name: "Owen's Agent",
+        name: "Owen",
         essence: "An outsider who must not see another person's debrief.",
         desiredConnection: "Someone unrelated to this private Agent date.",
         boundaries: [],

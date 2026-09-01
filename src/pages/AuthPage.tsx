@@ -10,6 +10,7 @@ import { Button, Field, Notice, TextInput } from "../components/ui/primitives";
 import { readableError, useToast } from "../components/ui/Toast";
 import { AgentLoopPlayer } from "../components/agent/AgentLoopPlayer";
 import { useI18n } from "../i18n";
+import { localDevelopmentCodeFor } from "../lib/developmentAuth";
 
 export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
   const { signIn } = useAuthActions();
@@ -34,6 +35,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
   const destination = next && next.startsWith("/") ? next : "/dashboard";
   const hasSocialProvider =
     authProviders?.google === true || authProviders?.apple === true;
+  const developmentCode = localDevelopmentCodeFor(email);
 
   useEffect(() => {
     if (resendIn <= 0) return;
@@ -58,10 +60,15 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
     await signIn("email", { email: normalized });
     setEmail(normalized);
     setOtpSent(true);
-    setResendIn(30);
-    setCode("");
+    const fixedDevelopmentCode = localDevelopmentCodeFor(normalized);
+    setResendIn(fixedDevelopmentCode ? 0 : 30);
+    setCode(fixedDevelopmentCode ?? "");
     toast(
-      fresh ? t("We sent a fresh code.") : t("Check your email for the code."),
+      fixedDevelopmentCode
+        ? t("Development code ready.")
+        : fresh
+          ? t("We sent a fresh code.")
+          : t("Check your email for the code."),
       "success",
     );
     return true;
@@ -78,8 +85,8 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
         return;
       }
 
-      if (!/^\d{6}$/.test(code)) {
-        setError(t("Enter the 6-digit code."));
+      if (!/^\d{8}$/.test(code)) {
+        setError(t("Enter the 8-digit code."));
         return;
       }
 
@@ -154,13 +161,13 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
         </span>
         <Link
           to="/"
-          className="inline-flex items-center gap-3 self-start"
+          className="brand-lockup inline-flex items-center gap-3 self-start"
           aria-label={t("Datehaja home")}
         >
-          <Logo className="h-9 w-9" />
+          <Logo className="brand-lockup-logo h-11 w-11" />
           <span>
-            <Wordmark className="text-[24px]" />
-            <span className="docket-label mt-1 block text-[8px] text-sand-400">
+            <Wordmark className="text-[29px]" />
+            <span className="docket-label mt-1.5 block text-[9px] text-sand-400">
               {t("Your dating agent")}
             </span>
           </span>
@@ -206,11 +213,11 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
         <header className="glass-bar flex h-20 items-center gap-2 border-b border-[var(--border)] px-5 sm:px-8 lg:justify-end">
           <Link
             to="/"
-            className="inline-flex items-center gap-2.5 lg:hidden"
+            className="brand-lockup inline-flex items-center gap-2.5 lg:hidden"
             aria-label={t("Datehaja home")}
           >
-            <Logo className="h-8 w-8" />
-            <Wordmark className="text-[22px]" />
+            <Logo className="brand-lockup-logo h-9 w-9" />
+            <Wordmark className="text-[24px]" />
           </Link>
           <LocaleSwitcher compact />
           <span className="docket-label rounded-full bg-[var(--bg-sunken)] px-3 py-2 text-muted">
@@ -302,7 +309,11 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
                   <Field
                     label={t("Email")}
                     htmlFor="email"
-                    hint={t("No password to remember.")}
+                    hint={
+                      developmentCode
+                        ? t("Development account — no email will be sent.")
+                        : t("No password to remember.")
+                    }
                   >
                     <TextInput
                       id="email"
@@ -320,13 +331,20 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
                   <div aria-live="polite">
                     <div className="mb-5 rounded-[1.2rem] border border-[var(--tint-sage-border)] bg-[var(--tint-sage-bg)] px-4 py-3.5">
                       <div className="text-[13px] font-bold text-[var(--tint-sage-fg)]">
-                        {t("Check your inbox")}
+                        {developmentCode
+                          ? t("Development sign-in")
+                          : t("Check your inbox")}
                       </div>
                       <p className="mt-1 text-[12.5px] leading-relaxed text-soft">
-                        {t(
-                          "We sent a 6-digit code to {email}. It expires in 10 minutes.",
-                          { email },
-                        )}
+                        {developmentCode
+                          ? t(
+                              "No email was sent. The test code {code} is already filled in.",
+                              { code: developmentCode },
+                            )
+                          : t(
+                              "We sent an 8-digit code to {email}. It expires in 10 minutes.",
+                              { email },
+                            )}
                       </p>
                       <button
                         type="button"
@@ -347,13 +365,13 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
                         autoComplete="one-time-code"
                         inputMode="numeric"
                         pattern="[0-9]*"
-                        maxLength={6}
+                        maxLength={8}
                         required
                         value={code}
-                        placeholder="000000"
+                        placeholder="00000000"
                         onChange={(event) =>
                           setCode(
-                            event.target.value.replace(/\D/g, "").slice(0, 6),
+                            event.target.value.replace(/\D/g, "").slice(0, 8),
                           )
                         }
                         invalid={Boolean(error)}
@@ -378,11 +396,13 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
                 >
                   {otpSent
                     ? t("Verify and continue")
-                    : t("Email me a sign-in code")}{" "}
+                    : developmentCode
+                      ? t("Use development code")
+                      : t("Email me a sign-in code")}{" "}
                   <span aria-hidden>→</span>
                 </Button>
 
-                {otpSent && (
+                {otpSent && !developmentCode && (
                   <button
                     type="button"
                     className="mx-auto mt-4 block text-[12px] font-bold text-muted transition-colors hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-50"

@@ -58,14 +58,14 @@ export default function NotificationsPage() {
               <>
                 <div className="flex items-baseline justify-between gap-3">
                   <span className="text-[15px] font-medium">
-                    {notification.title}
+                    {t(notification.title)}
                   </span>
                   <span className="shrink-0 text-[12.5px] text-muted">
                     {relativeTime(notification._creationTime)}
                   </span>
                 </div>
                 <p className="mt-1 text-[14px] leading-relaxed text-soft">
-                  {notification.body}
+                  {t(notification.body)}
                 </p>
               </>
             );

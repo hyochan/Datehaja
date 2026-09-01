@@ -13,6 +13,7 @@ import type * as agents from "../agents.js";
 import type * as ai from "../ai.js";
 import type * as auth from "../auth.js";
 import type * as authProviders from "../authProviders.js";
+import type * as authTestOtp from "../authTestOtp.js";
 import type * as availability from "../availability.js";
 import type * as billing from "../billing.js";
 import type * as calendar from "../calendar.js";
@@ -67,6 +68,7 @@ declare const fullApi: ApiFromModules<{
   ai: typeof ai;
   auth: typeof auth;
   authProviders: typeof authProviders;
+  authTestOtp: typeof authTestOtp;
   availability: typeof availability;
   billing: typeof billing;
   calendar: typeof calendar;

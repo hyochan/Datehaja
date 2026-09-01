@@ -13,7 +13,7 @@ provider is missing.
 
 ## Email OTP
 
-- Six numeric digits.
+- Eight numeric digits.
 - Ten-minute expiry.
 - Single-use; Convex Auth stores the hash rather than the plaintext code.
 - Six failed verification attempts per hour before rate limiting.
@@ -22,6 +22,12 @@ provider is missing.
 
 AgentMail needs `AGENTMAIL_API_KEY` and `AGENTMAIL_INBOX_ID` on each Convex
 deployment.
+
+Development deployments may set `ENVIRONMENT=development`. In that mode only,
+`hyo+test…@hyo.dev` aliases and the exact addresses in `DEV_FIXED_OTP_EMAILS`
+use `DEV_FIXED_OTP_CODE` (default `68686868`) without sending email. This keeps
+manual and E2E account creation quick without opening a universal production
+bypass.
 
 ## Google
 

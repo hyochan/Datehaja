@@ -235,6 +235,8 @@ export default defineSchema({
     ),
     /** Real matches unfold naturally; labelled demo matches compress the waits. */
     paceMode: v.optional(v.union(v.literal("demo"), v.literal("natural"))),
+    /** Locale selected by the initiating human; both Agents share it in-world. */
+    locale: v.optional(v.string()),
     activity: v.optional(
       v.union(
         v.literal("arriving"),

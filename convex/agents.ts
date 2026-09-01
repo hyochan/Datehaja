@@ -7,7 +7,7 @@ import {
   query,
 } from "./_generated/server";
 import type { MutationCtx } from "./_generated/server";
-import type { Doc } from "./_generated/dataModel";
+import type { Doc, Id } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
 import {
   checkRateLimit,
@@ -46,6 +46,39 @@ const autonomyValidator = v.union(
   v.literal("suggest"),
   v.literal("advocate"),
 );
+
+function agentWelcome(name: string) {
+  return `I'm ${name}, your dating agent. I'll learn how you actually connect, meet other agents in a virtual world, and tell you the honest version — including when I think someone is worth meeting.`;
+}
+
+function fallbackAgentName(userId: Id<"users">) {
+  const names = ["Juno", "Sol", "Miro", "Lumi", "Ari", "Noa"];
+  const seed = String(userId)
+    .split("")
+    .reduce((sum, character) => sum + character.charCodeAt(0), 0);
+  return names[seed % names.length] ?? "Juno";
+}
+
+async function refreshGeneratedWelcome(
+  ctx: MutationCtx,
+  userId: Id<"users">,
+  name: string,
+) {
+  const firstMessage = await ctx.db
+    .query("agentMessages")
+    .withIndex("by_user_and_created", (q) => q.eq("userId", userId))
+    .order("asc")
+    .first();
+  if (
+    firstMessage?.role === "agent" &&
+    /your dating agent\./i.test(firstMessage.content)
+  ) {
+    const content = agentWelcome(name);
+    if (firstMessage.content !== content) {
+      await ctx.db.patch("agentMessages", firstMessage._id, { content });
+    }
+  }
+}
 
 const agentProfileDocValidator = v.object({
   _id: v.id("agentProfiles"),
@@ -454,6 +487,10 @@ export const bootstrap = mutation({
     }
     const essence = cleanMultiline(args.essence, 1200);
     const desiredConnection = cleanMultiline(args.desiredConnection, 700);
+    const agentName = clean(args.agentName, 32);
+    if (agentName.length < 2) {
+      throw new Error("Give your dating agent a name.");
+    }
     if (essence.length < 30 || desiredConnection.length < 20) {
       throw new Error("Give your agent a little more to understand.");
     }
@@ -567,7 +604,7 @@ export const bootstrap = mutation({
       .withIndex("by_user", (q) => q.eq("userId", userId))
       .unique();
     const agentFields = {
-      name: clean(args.agentName, 32) || "My Agent",
+      name: agentName,
       avatar: args.avatar,
       essence,
       desiredConnection,
@@ -589,10 +626,11 @@ export const bootstrap = mutation({
       await ctx.db.insert("agentMessages", {
         userId,
         role: "agent",
-        content: `I'm ${agentFields.name}, your dating agent. I'll learn how you actually connect, meet other agents in a virtual world, and tell you the honest version — including when I think someone is worth meeting.`,
+        content: agentWelcome(agentFields.name),
         createdAt: now,
       });
     }
+    await refreshGeneratedWelcome(ctx, userId, agentFields.name);
     await ctx.db.insert("growthEvents", {
       userId,
       event: "agent_created",
@@ -817,6 +855,7 @@ export const update = mutation({
       autonomy: args.autonomy,
       updatedAt: Date.now(),
     });
+    await refreshGeneratedWelcome(ctx, userId, name);
     await recordAudit(ctx, {
       action: "agent.updated",
       actorUserId: userId,
@@ -908,9 +947,7 @@ export const replyContext = internalQuery({
               : date.counterpartNextSearchNote) ?? null,
           counterpartAgentName:
             counterpartAgent?.name ??
-            (counterpartProfile
-              ? `${counterpartProfile.displayName.split(/\s+/)[0]}'s Agent`
-              : "Another Agent"),
+            (counterpartProfile ? fallbackAgentName(counterpartUserId) : "Another Agent"),
           turns: turns.map((turn) => ({
             round: turn.round,
             speakerAgentName: turn.speakerAgentName,

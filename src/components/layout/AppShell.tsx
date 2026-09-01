@@ -23,16 +23,16 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="app-shell min-h-dvh">
       <header className="app-header glass-bar sticky top-0 z-30 border-b border-[var(--border)]">
-        <div className="mx-auto flex h-[4.5rem] max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+        <div className="mx-auto flex h-[5rem] max-w-[80rem] items-center justify-between gap-4 px-4 sm:h-[5.5rem] sm:px-7">
           <Link
             to="/dashboard"
-            className="flex items-center gap-2.5"
+            className="brand-lockup flex items-center gap-2.5 sm:gap-3"
             aria-label="Datehaja"
           >
-            <Logo className="h-8 w-8" />
+            <Logo className="brand-lockup-logo h-9 w-9 sm:h-11 sm:w-11" />
             <span className="leading-none">
-              <Wordmark className="text-[22px]" />
-              <span className="docket-label mt-1 block text-[8px] text-muted">
+              <Wordmark className="text-[24px] sm:text-[29px]" />
+              <span className="docket-label mt-1.5 hidden text-[8px] text-muted sm:block sm:text-[9px]">
                 {t("Your dating agent")}
               </span>
             </span>
@@ -45,7 +45,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 to={item.to}
                 className={({ isActive }) =>
                   cx(
-                    "relative flex items-center gap-2 rounded-full px-4 py-2 text-[13.5px] font-semibold transition-colors",
+                    "relative flex items-center gap-2.5 rounded-full px-4 py-2.5 text-[13.5px] font-semibold transition-colors lg:px-5",
                     isActive
                       ? "bg-[var(--tint-ember-bg)] text-[var(--accent-text)]"
                       : "text-muted hover:bg-[var(--bg-sunken)] hover:text-[var(--text)]",
@@ -86,7 +86,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <main
         key={location.pathname}
-        className="app-main mx-auto max-w-6xl px-4 pb-28 pt-7 sm:px-6 sm:pb-16 sm:pt-11"
+        className="app-main mx-auto max-w-[80rem] px-4 pb-28 pt-7 sm:px-7 sm:pb-16 sm:pt-11"
       >
         {children}
       </main>

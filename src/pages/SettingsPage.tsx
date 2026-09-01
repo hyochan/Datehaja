@@ -191,15 +191,37 @@ export default function SettingsPage() {
       <section>
         <SectionHeading
           eyebrow={t("My other self")}
-          title={t("Make my Agent recognizable")}
+          title={t("Name and style my Agent")}
         />
         <Card className="p-5 sm:p-7">
+          <Field
+            label={t("Agent name")}
+            hint={t(
+              "Other Agents meet this name—not your account name. Change it anytime.",
+            )}
+            htmlFor="settings-agent-name"
+          >
+            <TextInput
+              id="settings-agent-name"
+              value={name}
+              placeholder={t("e.g. Juno")}
+              maxLength={32}
+              onChange={(event) => setName(event.target.value)}
+            />
+          </Field>
           <AgentAvatarEditor name={name} value={avatar} onChange={setAvatar} />
           <p className="mt-5 text-[13px] leading-relaxed text-muted">
             {t(
               "Your look travels with the agent through dates, transcripts, and debriefs. It is playful identity—not a claim about your real appearance.",
             )}
           </p>
+          <Button
+            className="mt-5"
+            loading={busy}
+            onClick={() => void saveAgent()}
+          >
+            {t("Save name and look")}
+          </Button>
         </Card>
       </section>
 
@@ -209,14 +231,6 @@ export default function SettingsPage() {
           title={t("How my agent represents me")}
         />
         <Card className="p-5 sm:p-7">
-          <Field label={t("Agent name")} htmlFor="settings-agent-name">
-            <TextInput
-              id="settings-agent-name"
-              value={name}
-              maxLength={32}
-              onChange={(event) => setName(event.target.value)}
-            />
-          </Field>
           <Field
             label={t("The unpolished you")}
             hint={t(

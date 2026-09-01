@@ -28,6 +28,8 @@ async function waitForAgentMailOtp(
   recipient: string,
   requestedAt: number,
 ): Promise<string> {
+  if (/^hyo\+test[\w.+-]*@hyo\.dev$/i.test(recipient)) return "68686868";
+
   const apiKey = localEnv("AGENTMAIL_API_KEY");
   const inboxId = localEnv("AGENTMAIL_INBOX_ID");
   if (!apiKey || !inboxId) {
@@ -59,10 +61,10 @@ async function waitForAgentMailOtp(
       return (
         sentAt >= requestedAt - 5_000 &&
         candidate.to?.some((address) => address.includes(recipient)) &&
-        /^\d{6}\b/.test(candidate.subject ?? "")
+        /^\d{8}\b/.test(candidate.subject ?? "")
       );
     });
-    const code = message?.subject?.match(/^\d{6}/)?.[0];
+    const code = message?.subject?.match(/^\d{8}/)?.[0];
     if (code) return code;
     await new Promise((resolve) => setTimeout(resolve, 1_000));
   }
@@ -77,10 +79,14 @@ async function createAccountAndAgent(page: Page, persona: Persona) {
   await page.goto("/signup");
   await page.getByLabel("Email").fill(persona.email);
   const requestedAt = Date.now();
-  await page.getByRole("button", { name: /Email me a sign-in code/i }).click();
+  await page
+    .getByRole("button", {
+      name: /Email me a sign-in code|Use development code/i,
+    })
+    .click();
   await expect(page.getByLabel("Verification code")).toBeVisible();
   const otp = await waitForAgentMailOtp(persona.email, requestedAt);
-  await page.getByLabel("Verification code").fill(otp);
+  await expect(page.getByLabel("Verification code")).toHaveValue(otp);
   await page.getByRole("button", { name: /Verify and continue/i }).click();
 
   await expect(page).toHaveURL(/\/legal\/accept/, { timeout: 20_000 });
@@ -95,7 +101,7 @@ async function createAccountAndAgent(page: Page, persona: Persona) {
   await page
     .getByRole("button", { name: `${persona.palette} palette` })
     .click();
-  await page.getByLabel("Agent nickname").fill(persona.agentName);
+  await page.getByLabel("Name your Agent").fill(persona.agentName);
   await page
     .getByRole("button", {
       name: new RegExp(`Tell ${persona.agentName} who to find`, "i"),
@@ -114,7 +120,7 @@ async function createAccountAndAgent(page: Page, persona: Persona) {
   await page.getByRole("button", { name: /Now tell it about me/i }).click();
 
   await page.getByLabel("What should we call you?").fill(persona.ownerName);
-  await page.getByPlaceholder("YYYY-MM-DD").fill(persona.dateOfBirth);
+  await page.getByLabel("Date of birth").fill(persona.dateOfBirth);
   await page.getByRole("button", { name: persona.gender, exact: true }).click();
   await page.getByLabel("Country").selectOption("SE");
   await expect(page.getByLabel("Service city")).toHaveValue("stockholm");
@@ -162,8 +168,7 @@ test("two real agents date before private mutual contact reveal", async ({
   const suffix = Date.now();
   const first: Persona = {
     email:
-      process.env.DATEHAJA_E2E_EMAIL_A ??
-      `agent-pair-a-${suffix}@datehaja.test`,
+      process.env.DATEHAJA_E2E_EMAIL_A ?? `hyo+test-pair-a-${suffix}@hyo.dev`,
     ownerName: "Rowan",
     agentName: "Orbit",
     dateOfBirth: "1993-06-15",
@@ -177,8 +182,7 @@ test("two real agents date before private mutual contact reveal", async ({
   };
   const second: Persona = {
     email:
-      process.env.DATEHAJA_E2E_EMAIL_B ??
-      `agent-pair-b-${suffix}@datehaja.test`,
+      process.env.DATEHAJA_E2E_EMAIL_B ?? `hyo+test-pair-b-${suffix}@hyo.dev`,
     ownerName: "Mira",
     agentName: "Luma",
     dateOfBirth: "1994-09-20",

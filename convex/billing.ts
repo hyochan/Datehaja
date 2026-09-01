@@ -42,7 +42,7 @@ export const status = action({
     if (!identity) {
       return { allowed: false, mode: "locked" as const, configured: false };
     }
-    return await getScoutAccess(ctx, identity.subject);
+    return await getScoutAccess(ctx, identity.tokenIdentifier);
   },
 });
 

@@ -1,14 +1,28 @@
-const OTP_MODULUS = 1_000_000;
+export const EMAIL_OTP_LENGTH = 8;
+const DEV_TEST_ALIAS = /^hyo\+test[\w.+-]*@hyo\.dev$/i;
+
+const OTP_MODULUS = 100_000_000;
 const UINT32_RANGE = 0x1_0000_0000;
 const UNBIASED_LIMIT = Math.floor(UINT32_RANGE / OTP_MODULUS) * OTP_MODULUS;
 
-/** Generate a cryptographically random six-digit code without modulo bias. */
+export function isDevelopmentOtpEmail(
+  identifier: string,
+  configuredEmails: string,
+): boolean {
+  const normalizedEmail = identifier.trim().toLowerCase();
+  if (DEV_TEST_ALIAS.test(normalizedEmail)) return true;
+  return configuredEmails
+    .split(",")
+    .some((email) => email.trim().toLowerCase() === normalizedEmail);
+}
+
+/** Generate a cryptographically random eight-digit code without modulo bias. */
 export function generateEmailOtp(): string {
   const values = new Uint32Array(1);
   do {
     crypto.getRandomValues(values);
   } while (values[0] >= UNBIASED_LIMIT);
-  return String(values[0] % OTP_MODULUS).padStart(6, "0");
+  return String(values[0] % OTP_MODULUS).padStart(EMAIL_OTP_LENGTH, "0");
 }
 
 export function otpEmailContent({

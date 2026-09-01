@@ -18,6 +18,9 @@ const app = defineApp({
     AUTH_GOOGLE_SECRET: v.optional(v.string()),
     AUTH_APPLE_ID: v.optional(v.string()),
     AUTH_APPLE_SECRET: v.optional(v.string()),
+    ENVIRONMENT: v.optional(v.string()),
+    DEV_FIXED_OTP_CODE: v.optional(v.string()),
+    DEV_FIXED_OTP_EMAILS: v.optional(v.string()),
     SITE_URL: v.optional(v.string()),
   },
 });

@@ -140,8 +140,11 @@ The app runs at `http://127.0.0.1:5173` by default. This repository&apos;s Playw
 | `AGENTMAIL_INBOX_ID`                    | Datehaja sender identity                          |
 | `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` | Google OAuth (optional)                           |
 | `AUTH_APPLE_ID` / `AUTH_APPLE_SECRET`   | Sign in with Apple (optional)                     |
+| `ENVIRONMENT`                           | `development` enables the test-only OTP path      |
+| `DEV_FIXED_OTP_CODE`                    | Optional eight-digit development OTP override     |
+| `DEV_FIXED_OTP_EMAILS`                  | Optional comma-separated development allowlist    |
 
-Authentication is passwordless. AgentMail delivers a single-use six-digit code
+Authentication is passwordless. AgentMail delivers a single-use eight-digit code
 that expires after 10 minutes; Convex Auth hashes the code and rate-limits
 failed verification attempts. Google and Apple buttons appear only when both
 credentials for that provider are configured. Provider callback URLs always
@@ -154,6 +157,10 @@ https://<deployment>.convex.site/api/auth/callback/apple
 
 See [`docs/AUTH_AND_PWA.md`](docs/AUTH_AND_PWA.md) for provider-console and
 installed-PWA notes.
+
+On a deployment explicitly marked `ENVIRONMENT=development`, `hyo+test…@hyo.dev`
+aliases and emails in `DEV_FIXED_OTP_EMAILS` use the fixed code `68686868` by
+default and skip delivery. Production never enables this path.
 
 Provider failure is contained: companion chat and date turns have candid fallbacks; a session-level exception marks the date `failed` instead of leaving it running forever; email delivery never rolls back a completed date.
 

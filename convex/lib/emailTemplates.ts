@@ -10,7 +10,12 @@ const BRAND = {
   border: "#ece4d9",
 };
 
-function shell(body: string, footerNote: string): string {
+function shell(
+  body: string,
+  footerNote: string,
+  settingsNote =
+    "You can change what Datehaja emails you, or pause matching entirely, in Settings.",
+): string {
   return `<!doctype html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:${BRAND.sand};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${BRAND.ink};">
@@ -24,7 +29,7 @@ function shell(body: string, footerNote: string): string {
       </table>
       <div style="max-width:520px;margin:18px auto 0;font-size:12px;line-height:1.6;color:${BRAND.muted};text-align:left;">
         ${footerNote}<br>
-        You can change what Datehaja emails you, or pause matching entirely, in Settings.
+        ${settingsNote}
       </div>
     </td></tr>
   </table>
@@ -450,6 +455,7 @@ If this was about safety, use the Report option in the app — it reaches us wit
 }
 
 export function agentDebriefEmail(args: {
+  locale?: string;
   firstName: string;
   agentName: string;
   counterpartAgentName: string;
@@ -459,43 +465,165 @@ export function agentDebriefEmail(args: {
   nextSearchNote?: string;
   url: string;
 }): EmailContent {
-  const headline =
-    args.verdict === "encourage"
-      ? `${args.agentName} thinks you should meet`
-      : args.verdict === "pass"
-        ? `${args.agentName} would let this one go`
-        : `${args.agentName} came back curious`;
-  const subject = `Your agent is back — a private debrief`;
-  const text = `Hi ${args.firstName},
+  const language = args.locale?.split("-")[0] ?? "en";
+  const localized = {
+    ko: {
+      subject: "내 에이전트가 돌아왔어요 — 비공개 데이트 리포트",
+      headline:
+        args.verdict === "encourage"
+          ? `${args.agentName}: 이 사람은 만나봐도 좋아요`
+          : args.verdict === "pass"
+            ? `${args.agentName}: 이번 만남은 보내주는 게 좋겠어요`
+            : `${args.agentName}: 한 번 더 알아보고 싶어요`,
+      greeting: `${args.firstName}님, ${args.agentName}와 ${args.counterpartAgentName}가 가상 데이트를 마치고 돌아왔어요.`,
+      reason: "가장 크게 본 이유",
+      next: "다음에는 이런 사람을 찾아볼게요",
+      read: "대화와 리포트를 읽고 나서, 만나볼지 나만의 답을 남겨주세요",
+      button: "나만의 비공개 리포트 보기",
+      privacy:
+        "상대 에이전트의 판정과 상대방의 답은 계속 비공개예요. 내 에이전트가 나 대신 동의할 수는 없어요.",
+      footer: "Datehaja 에이전트 데이트에 관한 비공개 서비스 메시지예요.",
+      settings: "설정에서 이메일 수신 방식을 바꾸거나 매칭을 잠시 멈출 수 있어요.",
+    },
+    ja: {
+      subject: "エージェントが戻りました — 非公開デートレポート",
+      headline:
+        args.verdict === "encourage"
+          ? `${args.agentName}は、会ってみる価値があると思っています`
+          : args.verdict === "pass"
+            ? `${args.agentName}は、今回は見送るのがよいと思っています`
+            : `${args.agentName}は、もう少し知りたいと思っています`,
+      greeting: `${args.firstName}さん、${args.agentName}と${args.counterpartAgentName}がバーチャルデートから戻りました。`,
+      reason: "最も重要な理由",
+      next: "次に探すポイント",
+      read: "会話とレポートを読み、非公開で決めてください",
+      button: "非公開レポートを開く",
+      privacy:
+        "相手エージェントの判定と相手の回答は非公開のままです。エージェントがあなたの代わりに同意することはありません。",
+      footer: "Datehajaのエージェントデートに関する非公開メッセージです。",
+      settings: "メール設定の変更やマッチングの一時停止は設定から行えます。",
+    },
+    de: {
+      subject: "Dein Agent ist zurück — privater Date-Bericht",
+      headline:
+        args.verdict === "encourage"
+          ? `${args.agentName} findet, ihr solltet euch treffen`
+          : args.verdict === "pass"
+            ? `${args.agentName} würde dieses Date loslassen`
+            : `${args.agentName} ist neugierig zurückgekehrt`,
+      greeting: `Hallo ${args.firstName}, ${args.agentName} und ${args.counterpartAgentName} sind von ihrem virtuellen Date zurück.`,
+      reason: "Wichtigster Grund",
+      next: "Wonach ich als Nächstes suche",
+      read: "Lies das Gespräch und entscheide vertraulich",
+      button: "Privaten Bericht öffnen",
+      privacy:
+        "Das Urteil des anderen Agents und die Antwort der anderen Person bleiben verborgen. Dein Agent kann nicht für dich zustimmen.",
+      footer: "Eine private Servicenachricht zu deinem Datehaja-Agent.",
+      settings: "In den Einstellungen kannst du E-Mails ändern oder das Matching pausieren.",
+    },
+    fr: {
+      subject: "Votre Agent est de retour — compte rendu privé",
+      headline:
+        args.verdict === "encourage"
+          ? `${args.agentName} pense que vous devriez vous rencontrer`
+          : args.verdict === "pass"
+            ? `${args.agentName} laisserait passer cette rencontre`
+            : `${args.agentName} revient avec curiosité`,
+      greeting: `Bonjour ${args.firstName}, ${args.agentName} et ${args.counterpartAgentName} sont revenus de leur rendez-vous virtuel.`,
+      reason: "Raison principale",
+      next: "Ce que je chercherai ensuite",
+      read: "Lisez la conversation et décidez en privé",
+      button: "Ouvrir mon compte rendu privé",
+      privacy:
+        "L'avis de l'autre Agent et la réponse de l'autre personne restent secrets. Votre Agent ne peut pas consentir à votre place.",
+      footer: "Message privé concernant votre Agent Datehaja.",
+      settings: "Dans les réglages, vous pouvez modifier les e-mails ou suspendre les rencontres.",
+    },
+    nl: {
+      subject: "Je Agent is terug — privéverslag",
+      headline:
+        args.verdict === "encourage"
+          ? `${args.agentName} vindt dat jullie elkaar moeten ontmoeten`
+          : args.verdict === "pass"
+            ? `${args.agentName} zou deze ontmoeting laten gaan`
+            : `${args.agentName} kwam nieuwsgierig terug`,
+      greeting: `Hoi ${args.firstName}, ${args.agentName} en ${args.counterpartAgentName} zijn terug van hun virtuele date.`,
+      reason: "Belangrijkste reden",
+      next: "Waar ik hierna naar zoek",
+      read: "Lees het gesprek en beslis in alle rust",
+      button: "Mijn privéverslag openen",
+      privacy:
+        "Het oordeel van de andere Agent en het antwoord van de andere persoon blijven verborgen. Je Agent kan niet namens jou instemmen.",
+      footer: "Een privébericht over je Datehaja-agent.",
+      settings: "In Instellingen kun je e-mails aanpassen of matching pauzeren.",
+    },
+    sv: {
+      subject: "Din Agent är tillbaka — privat rapport",
+      headline:
+        args.verdict === "encourage"
+          ? `${args.agentName} tycker att ni borde träffas`
+          : args.verdict === "pass"
+            ? `${args.agentName} skulle släppa den här kontakten`
+            : `${args.agentName} kom tillbaka nyfiken`,
+      greeting: `Hej ${args.firstName}, ${args.agentName} och ${args.counterpartAgentName} är tillbaka från sin virtuella dejt.`,
+      reason: "Viktigaste skälet",
+      next: "Vad jag letar efter nästa gång",
+      read: "Läs samtalet och bestäm privat",
+      button: "Öppna min privata rapport",
+      privacy:
+        "Den andra Agentens omdöme och den andra personens svar förblir dolda. Din Agent kan inte samtycka åt dig.",
+      footer: "Ett privat servicemeddelande om din Datehaja-agent.",
+      settings: "I Inställningar kan du ändra e-post eller pausa matchningen.",
+    },
+  }[language] ?? {
+    subject: "Your agent is back — a private debrief",
+    headline:
+      args.verdict === "encourage"
+        ? `${args.agentName} thinks you should meet`
+        : args.verdict === "pass"
+          ? `${args.agentName} would let this one go`
+          : `${args.agentName} came back curious`,
+    greeting: `Hi ${args.firstName}, ${args.agentName} and ${args.counterpartAgentName} are back from their virtual date.`,
+    reason: "Primary reason",
+    next: "What I'll look for next",
+    read: "Read the transcript and decide privately",
+    button: "Open my private debrief",
+    privacy:
+      "The other agent's verdict and the other person's answer remain sealed. Your agent cannot consent for you.",
+    footer: "This is a private service message about your Datehaja agent.",
+    settings:
+      "You can change what Datehaja emails you, or pause matching entirely, in Settings.",
+  };
 
-${args.agentName}'s simulated date with ${args.counterpartAgentName} is over.
+  const text = `${localized.greeting}
 
-${headline}.
-${args.decisionLabel ? `Primary reason: ${args.decisionLabel}\n` : ""}${args.reason}
-${args.verdict === "pass" && args.nextSearchNote ? `\nWhat I'll look for next: ${args.nextSearchNote}\n` : ""}
+${localized.headline}.
+${args.decisionLabel ? `${localized.reason}: ${args.decisionLabel}\n` : ""}${args.reason}
+${args.verdict === "pass" && args.nextSearchNote ? `\n${localized.next}: ${args.nextSearchNote}\n` : ""}
 
-Read the transcript and decide privately: ${args.url}
+${localized.read}: ${args.url}
 
-The other agent's verdict and the other person's answer remain sealed. Your agent cannot consent for you.
+${localized.privacy}
 
 — Datehaja`;
 
   return {
-    subject,
+    subject: localized.subject,
     text,
     html: shell(
-      h1(headline) +
-        p(
-          `Hi ${args.firstName}, ${args.agentName}'s simulated date with ${args.counterpartAgentName} is over.`,
-        ) +
-        (args.decisionLabel ? p(`Primary reason: ${args.decisionLabel}`) : "") +
+      h1(localized.headline) +
+        p(localized.greeting) +
+        (args.decisionLabel
+          ? p(`${localized.reason}: ${args.decisionLabel}`)
+          : "") +
         p(args.reason) +
         (args.verdict === "pass" && args.nextSearchNote
-          ? p(`What I'll look for next: ${args.nextSearchNote}`)
+          ? p(`${localized.next}: ${args.nextSearchNote}`)
           : "") +
-        `<div style="margin-top:20px;">${button(args.url, "Open my private debrief")}</div>` +
-        `<p style="margin:18px 0 0;font-size:13px;line-height:1.6;color:${BRAND.muted};">The other agent's verdict and the other person's answer remain sealed. Your agent cannot consent for you.</p>`,
-      "This is a private service message about your Datehaja agent.",
+        `<div style="margin-top:20px;">${button(args.url, localized.button)}</div>` +
+        `<p style="margin:18px 0 0;font-size:13px;line-height:1.6;color:${BRAND.muted};">${escapeHtml(localized.privacy)}</p>`,
+      localized.footer,
+      localized.settings,
     ),
   };
 }

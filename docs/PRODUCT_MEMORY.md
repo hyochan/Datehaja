@@ -77,8 +77,11 @@ Authentication is passwordless: email OTP is the reliable default, with Google
 and Apple OAuth added when their deployment credentials are present. Do not
 restore a public password form.
 
-- Email OTP is six digits, single-use, expires after 10 minutes, and is sent by
+- Email OTP is eight digits, single-use, expires after 10 minutes, and is sent by
   the existing AgentMail inbox.
+- Development deployments may use `68686868` only for `hyo+test…@hyo.dev`
+  aliases or an explicit email allowlist. The bypass is disabled unless the
+  deployment is explicitly marked `ENVIRONMENT=development`.
 - Convex Auth stores only the hashed verification code and rate-limits failed
   attempts.
 - Verified email identities link to an existing account with the same email, so

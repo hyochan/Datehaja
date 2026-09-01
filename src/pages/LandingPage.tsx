@@ -10,6 +10,7 @@ import { LinkButton } from "../components/ui/primitives";
 import { useI18n } from "../i18n";
 import { AgentWorldSprite } from "../components/agent/AgentDateWorld";
 import { AgentLoopPlayer } from "../components/agent/AgentLoopPlayer";
+import { AgentAvatar } from "../components/agent/AgentAvatar";
 
 export default function LandingPage() {
   const { locale, t } = useI18n();
@@ -39,16 +40,16 @@ export default function LandingPage() {
   return (
     <div className="agent-landing min-h-dvh">
       <header className="glass-bar landing-header sticky top-0 z-30 border-b border-[var(--border)]">
-        <div className="mx-auto flex h-[4.75rem] max-w-6xl items-center justify-between px-5 sm:px-8">
+        <div className="mx-auto flex h-[5rem] max-w-[80rem] items-center justify-between px-5 sm:h-[5.5rem] sm:px-8">
           <Link
             to="/"
-            className="flex items-center gap-3"
+            className="brand-lockup flex items-center gap-2.5 sm:gap-3"
             aria-label={t("Datehaja home")}
           >
-            <Logo className="h-9 w-9" />
+            <Logo className="brand-lockup-logo h-9 w-9 sm:h-11 sm:w-11" />
             <div className="leading-none">
-              <Wordmark className="text-[24px]" />
-              <div className="docket-label mt-1.5 text-[8px] text-muted">
+              <Wordmark className="text-[24px] sm:text-[29px]" />
+              <div className="docket-label mt-1.5 hidden text-[8px] text-muted sm:block sm:text-[9px]">
                 {t("Your dating agent")}
               </div>
             </div>
@@ -75,13 +76,13 @@ export default function LandingPage() {
       <main>
         <section className="agent-hero relative overflow-hidden">
           <div className="agent-hero-glow" aria-hidden />
-          <div className="mx-auto grid max-w-6xl items-center gap-14 px-5 pb-20 pt-14 sm:px-8 sm:pb-28 sm:pt-20 lg:min-h-[calc(100dvh-4.75rem)] lg:grid-cols-[0.92fr_1.08fr] lg:gap-10 lg:py-20">
+          <div className="mx-auto grid max-w-[80rem] items-center gap-14 px-5 pb-20 pt-14 sm:px-8 sm:pb-28 sm:pt-20 lg:min-h-[calc(100dvh-5.5rem)] lg:grid-cols-[0.9fr_1.1fr] lg:gap-12 lg:py-20">
             <div className="relative z-[1]">
               <div className="docket-label flex items-center gap-2 text-[var(--accent-text)]">
                 <span className="h-2 w-2 rounded-full bg-ember-500" />
                 {t("Too busy for another first date?")}
               </div>
-              <h1 className="agent-hero-title display-heading mt-6 max-w-3xl text-[clamp(4rem,9vw,8.3rem)] leading-[0.84]">
+              <h1 className="agent-hero-title display-heading mt-6 max-w-3xl text-[clamp(3.8rem,7vw,6.8rem)] leading-[0.9]">
                 {t("Let your Agent")}{" "}
                 <span className="mt-2 block italic text-[var(--accent-text)]">
                   {t("go first.")}
@@ -117,7 +118,7 @@ export default function LandingPage() {
           id="how-it-works"
           className="agent-journey-section border-y border-[var(--border)] bg-[var(--bg-sunken)] py-16 sm:py-24"
         >
-          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <div className="mx-auto max-w-[80rem] px-5 sm:px-8">
             <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
               <div>
                 <div className="docket-label text-[var(--accent-text)]">
@@ -144,7 +145,7 @@ export default function LandingPage() {
             <i />
             <i />
           </div>
-          <div className="agent-debrief-layout mx-auto grid max-w-6xl gap-12 px-5 sm:px-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
+          <div className="agent-debrief-layout mx-auto grid max-w-[80rem] gap-12 px-5 sm:px-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
             <div className="agent-debrief-copy relative z-[1]">
               <div className="docket-label text-[var(--accent-text)]">
                 {t("Not a compatibility score machine")}
@@ -158,36 +159,18 @@ export default function LandingPage() {
                   "Six moments. Two independent reads. One honest recommendation.",
                 )}
               </p>
-              <div className="agent-principle-path mt-9">
-                <SmallPrinciple
-                  symbol="◎"
-                  title={t("Two independent verdicts")}
-                  body={t(
-                    "Each agent judges from its own human's private values.",
-                  )}
-                />
-                <SmallPrinciple
-                  symbol="⌁"
-                  title={t("No forced optimism")}
-                  body={t("Curious and pass are valid outcomes—not failures.")}
-                />
-                <SmallPrinciple
-                  symbol="◇"
-                  title={t("No consent theatre")}
-                  body={t("Your yes stays sealed until there are two yeses.")}
-                />
-              </div>
+              <AgentReturnNote t={t} />
             </div>
             <DebriefCard t={t} />
           </div>
         </section>
 
         <section className="agent-capture-section border-y border-[var(--border)] py-20 sm:py-28">
-          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <div className="mx-auto max-w-[80rem] px-5 sm:px-8">
             <div className="agent-capture-heading">
               <div>
                 <div className="docket-label text-[var(--accent-text)]">
-                  {t("A real agent stack")}
+                  {t("See the whole story")}
                 </div>
                 <h2 className="display-heading mt-4 text-[clamp(2.6rem,6vw,5.4rem)] leading-[0.9]">
                   {t("Watch the agents meet")}
@@ -197,28 +180,9 @@ export default function LandingPage() {
             </div>
 
             <div className="agent-capture-grid">
-              <CaptureCard
-                index="01"
-                image="/product-tour/agent-date-world.jpg"
-                alt={t("Two Agents talking")}
-                caption={t("Two Agents talking")}
-              />
-              <CaptureCard
-                index="02"
-                image="/product-tour/agent-report-dialogue.jpg"
-                alt={t(
-                  "Six moments. Two independent reads. One honest recommendation.",
-                )}
-                caption={t(
-                  "Six moments. Two independent reads. One honest recommendation.",
-                )}
-              />
-              <CaptureCard
-                index="03"
-                image="/product-tour/mutual-consent.jpg"
-                alt={t("Humans control contact")}
-                caption={t("Humans control contact")}
-              />
+              <ProductPeekCard index="01" scene="meet" t={t} />
+              <ProductPeekCard index="02" scene="debrief" t={t} />
+              <ProductPeekCard index="03" scene="consent" t={t} />
             </div>
           </div>
         </section>
@@ -227,33 +191,33 @@ export default function LandingPage() {
           id="agent-stack"
           className="agent-stack-section border-y border-[var(--border)] py-20 sm:py-24"
         >
-          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <div className="mx-auto max-w-[80rem] px-5 sm:px-8">
             <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-center">
               <div>
                 <div className="docket-label text-[var(--accent-text)]">
-                  {t("A real agent stack")}
+                  {t("While you get on with your day")}
                 </div>
                 <h2 className="mt-4 text-[clamp(2.7rem,5vw,4.7rem)] leading-[0.98]">
-                  {t("Not a chatbot wearing a heart icon.")}
+                  {t("Four quiet jobs. One Agent who knows you.")}
                 </h2>
                 <div className="agent-stack-pulse mt-7" aria-hidden="true">
                   <i />
-                  <span>{t("Four live systems · one private Agent")}</span>
+                  <span>{t("No new dashboard to learn")}</span>
                 </div>
               </div>
-              <AgentStackMap t={t} />
+              <AgentEverydayJourney t={t} />
             </div>
           </div>
         </section>
 
         <section className="py-16 sm:py-24">
-          <div className="agent-final-cta relative mx-auto max-w-6xl overflow-hidden rounded-[2.4rem] border border-[var(--border-strong)] px-6 py-16 text-center sm:px-12 sm:py-24">
+          <div className="agent-final-cta relative mx-auto max-w-[80rem] overflow-hidden rounded-[2.4rem] border border-[var(--border-strong)] px-6 py-16 text-center sm:px-12 sm:py-24">
             <div className="agent-final-orbit" aria-hidden />
-            <FinalAgentPair t={t} />
+            <FinalAgentPair />
             <div className="docket-label relative z-[1] text-[var(--accent-text)]">
               {t("Let your better listener go first")}
             </div>
-            <h2 className="display-heading relative z-[1] mx-auto mt-5 max-w-4xl text-[clamp(3.4rem,8vw,7rem)] leading-[0.9]">
+            <h2 className="display-heading relative z-[1] mx-auto mt-5 max-w-4xl text-[clamp(3rem,6vw,5.6rem)] leading-[0.96]">
               {t("Maybe your agent already knows who you should meet.")}
             </h2>
             <p className="relative z-[1] mx-auto mt-6 max-w-xl text-[15px] leading-[1.75] text-soft">
@@ -269,7 +233,7 @@ export default function LandingPage() {
       </main>
 
       <footer className="border-t border-[var(--border)] py-8">
-        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 text-[11px] text-muted sm:flex-row sm:items-center sm:justify-between sm:px-8">
+        <div className="mx-auto flex max-w-[80rem] flex-col gap-4 px-5 text-[11px] text-muted sm:flex-row sm:items-center sm:justify-between sm:px-8">
           <div className="flex items-center gap-2">
             <Logo className="h-6 w-6" />
             <Wordmark className="text-[18px]" />
@@ -287,45 +251,193 @@ export default function LandingPage() {
   );
 }
 
-function CaptureCard({
+function ProductPeekCard({
   index,
-  image,
-  alt,
-  caption,
+  scene,
+  t,
 }: {
   index: string;
-  image: string;
-  alt: string;
-  caption: string;
+  scene: "meet" | "debrief" | "consent";
+  t: (key: string) => string;
 }) {
+  const captions = {
+    meet: t("Juno and Sol meet in the date world"),
+    debrief: t("Juno returns with an honest private read"),
+    consent: t("Only two human yeses open the introduction"),
+  };
+
   return (
-    <figure className="agent-capture-card">
-      <div className="agent-capture-phone">
-        <img src={image} alt={alt} loading="lazy" />
-        <span>{index}</span>
+    <figure className={`agent-capture-card agent-product-peek is-${scene}`}>
+      <div className="agent-product-window">
+        <header>
+          <Logo className="h-6 w-6" />
+          <strong>Datehaja</strong>
+          <span>{index}</span>
+        </header>
+
+        {scene === "meet" && (
+          <div className="agent-peek-world">
+            <div className="agent-peek-place">
+              <small>{t("DATE WORLD")}</small>
+              <b>{t("The late café")}</b>
+            </div>
+            <AgentWorldSprite
+              person={{
+                name: "Juno",
+                avatar: {
+                  palette: "rose",
+                  face: "gentle",
+                  hair: "wave",
+                  outfit: "cardigan",
+                  accessory: "star",
+                },
+              }}
+              position={[27, 72]}
+              className="agent-peek-sprite"
+            />
+            <AgentWorldSprite
+              person={{
+                name: "Sol",
+                avatar: {
+                  palette: "violet",
+                  face: "curious",
+                  hair: "crop",
+                  outfit: "blazer",
+                  accessory: "glasses",
+                },
+              }}
+              position={[73, 72]}
+              side="b"
+              className="agent-peek-sprite"
+            />
+            <div className="agent-peek-signal" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+            </div>
+            <div className="agent-peek-line is-juno">
+              <b>Juno</b>
+              <span>{t("Quiet plans can still feel adventurous.")}</span>
+            </div>
+            <div className="agent-peek-line is-sol">
+              <b>Sol</b>
+              <span>{t("Only if changing them still feels safe.")}</span>
+            </div>
+          </div>
+        )}
+
+        {scene === "debrief" && (
+          <div className="agent-peek-debrief">
+            <div className="agent-peek-chat-head">
+              <AgentAvatar
+                name="Juno"
+                avatar={{
+                  palette: "rose",
+                  face: "gentle",
+                  hair: "wave",
+                  outfit: "cardigan",
+                  accessory: "star",
+                }}
+              />
+              <div>
+                <b>Juno</b>
+                <span>{t("back from the date")}</span>
+              </div>
+              <i aria-hidden="true" />
+            </div>
+            <div className="agent-peek-bubble is-agent">
+              {t("I am Juno, your dating agent.")}
+            </div>
+            <div className="agent-peek-bubble is-human">
+              {t("So—what did you notice?")}
+            </div>
+            <div className="agent-peek-bubble is-agent is-verdict">
+              <small>{t("MY HONEST READ")}</small>
+              <b>{t("There was a spark. Meet once.")}</b>
+              <span>{t("Ask about pace, not chemistry.")}</span>
+            </div>
+          </div>
+        )}
+
+        {scene === "consent" && (
+          <div className="agent-peek-consent">
+            <div className="agent-peek-consent-mark">✓</div>
+            <small>{t("TWO HUMANS SAID YES")}</small>
+            <h3>{t("Now meet as yourselves.")}</h3>
+            <div className="agent-peek-person">
+              <AgentAvatar
+                name="Mina"
+                avatar={{
+                  palette: "moss",
+                  face: "bright",
+                  hair: "bun",
+                  outfit: "hoodie",
+                  accessory: "none",
+                }}
+              />
+              <div>
+                <b>Mina, 29</b>
+                <span>{t("Seoul · film · quiet cafés")}</span>
+              </div>
+            </div>
+            <div className="agent-peek-contact">
+              <span>{t("Introduction opened")}</span>
+              <b>{t("Start with Juno's note")}</b>
+            </div>
+          </div>
+        )}
       </div>
-      <figcaption>{caption}</figcaption>
+      <figcaption>{captions[scene]}</figcaption>
     </figure>
   );
 }
 
-function SmallPrinciple({
-  symbol,
-  title,
-  body,
-}: {
-  symbol: string;
-  title: string;
-  body: string;
-}) {
+function AgentReturnNote({ t }: { t: (key: string) => string }) {
   return (
-    <div className="agent-principle">
-      <span>{symbol}</span>
-      <div>
-        <b>{title}</b>
-        <p>{body}</p>
+    <article
+      className="agent-return-note"
+      aria-label={t("Juno's private note")}
+    >
+      <header>
+        <AgentAvatar
+          name="Juno"
+          avatar={{
+            palette: "rose",
+            face: "gentle",
+            hair: "wave",
+            outfit: "cardigan",
+            accessory: "star",
+          }}
+        />
+        <div>
+          <b>Juno</b>
+          <span>{t("back from the date")}</span>
+        </div>
+        <small>{t("PRIVATE")}</small>
+      </header>
+      <blockquote>{t("There was a spark. I would meet once.")}</blockquote>
+      <div
+        className="agent-return-film"
+        aria-label={t("Three moments Juno noticed")}
+      >
+        <span>
+          <i>01</i>
+          {t("Easy laugh")}
+        </span>
+        <span>
+          <i>02</i>
+          {t("Comfortable pause")}
+        </span>
+        <span className="is-caution">
+          <i>03</i>
+          {t("Different pace")}
+        </span>
       </div>
-    </div>
+      <footer>
+        <span>{t("Juno's call")}</span>
+        <b>{t("Meet once")}</b>
+      </footer>
+    </article>
   );
 }
 
@@ -386,7 +498,7 @@ function DebriefCard({ t }: { t: (key: string) => string }) {
         </div>
         <AgentWorldSprite
           person={{
-            name: t("Your Agent"),
+            name: "Juno",
             avatar: {
               palette: "rose",
               face: "gentle",
@@ -414,84 +526,86 @@ function DebriefCard({ t }: { t: (key: string) => string }) {
   );
 }
 
-function AgentStackMap({ t }: { t: (key: string) => string }) {
+function AgentEverydayJourney({ t }: { t: (key: string) => string }) {
+  const moments = [
+    {
+      stage: t("BEFORE"),
+      title: t("Listens and remembers"),
+      body: t("Your conversations shape who Juno looks for."),
+      mark: "01",
+    },
+    {
+      stage: t("SCOUTING"),
+      title: t("Finds a fresh place and spark"),
+      body: t("Current public place and culture data—not stale suggestions."),
+      mark: "02",
+    },
+    {
+      stage: t("DURING"),
+      title: t("Keeps the date room live"),
+      body: t("Drop in anytime and watch the conversation unfold."),
+      mark: "03",
+    },
+    {
+      stage: t("AFTER"),
+      title: t("Brings the result home"),
+      body: t("A private report appears in the app and arrives by email."),
+      mark: "04",
+    },
+  ];
+
   return (
-    <div className="agent-stack-map" aria-label={t("A real agent stack")}>
-      <svg viewBox="0 0 760 420" aria-hidden="true">
-        <path d="M146 92 C250 92 252 205 380 205" />
-        <path d="M614 92 C510 92 508 205 380 205" />
-        <path d="M146 330 C250 330 252 215 380 215" />
-        <path d="M614 330 C510 330 508 215 380 215" />
-      </svg>
-      <div className="agent-stack-core">
-        <Logo className="h-11 w-11" />
-        <strong>{t("Your Agent")}</strong>
-        <span>{t("listening")}</span>
+    <div
+      className="agent-everyday-journey"
+      aria-label={t("What your Agent handles")}
+    >
+      <div className="agent-everyday-agent">
+        <div className="agent-everyday-stage">
+          <span className="agent-everyday-kicker">{t("JUNO IS OUT")}</span>
+          <AgentWorldSprite
+            person={{
+              name: "Juno",
+              avatar: {
+                palette: "rose",
+                face: "gentle",
+                hair: "wave",
+                outfit: "cardigan",
+                accessory: "star",
+              },
+            }}
+            position={[50, 84]}
+          />
+          <i className="agent-everyday-path" aria-hidden="true" />
+        </div>
+        <div className="agent-email-slip">
+          <small>{t("PRIVATE EMAIL")}</small>
+          <b>{t("Juno is back.")}</b>
+          <span>{t("Your date report is ready")}</span>
+          <i aria-hidden="true">↗</i>
+        </div>
       </div>
-      <StackCell
-        className="is-openai"
-        label="OpenAI"
-        symbol="◌"
-        text={t(
-          "Gives each Agent an isolated mind, voice, and independent verdict.",
-        )}
-      />
-      <StackCell
-        className="is-firecrawl"
-        label="Firecrawl"
-        symbol="✦"
-        text={t(
-          "Finds a live cultural spark that becomes tonight's virtual world.",
-        )}
-      />
-      <StackCell
-        className="is-convex"
-        label="Convex"
-        symbol="⌁"
-        text={t(
-          "Streams every turn and keeps consent state consistent in real time.",
-        )}
-      />
-      <StackCell
-        className="is-agentmail"
-        label="AgentMail"
-        symbol="↗"
-        text={t(
-          "Delivers private debriefs without exposing the other person's answer.",
-        )}
-      />
+      <ol className="agent-service-list">
+        {moments.map((moment) => (
+          <li className="agent-service-moment" key={moment.mark}>
+            <span>{moment.mark}</span>
+            <div>
+              <small>{moment.stage}</small>
+              <b>{moment.title}</b>
+              <p>{moment.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
     </div>
   );
 }
 
-function StackCell({
-  className,
-  label,
-  symbol,
-  text,
-}: {
-  className: string;
-  label: string;
-  symbol: string;
-  text: string;
-}) {
-  return (
-    <div className={`agent-stack-node ${className}`}>
-      <span aria-hidden="true">{symbol}</span>
-      <div>
-        <div className="docket-label">{label}</div>
-        <p>{text}</p>
-      </div>
-    </div>
-  );
-}
-
-function FinalAgentPair({ t }: { t: (key: string) => string }) {
+function FinalAgentPair() {
   return (
     <div className="agent-final-pair" aria-hidden="true">
       <AgentWorldSprite
         person={{
-          name: t("Your Agent"),
+          name: "Juno",
           avatar: {
             palette: "rose",
             face: "gentle",
@@ -510,7 +624,7 @@ function FinalAgentPair({ t }: { t: (key: string) => string }) {
       </span>
       <AgentWorldSprite
         person={{
-          name: t("Their Agent"),
+          name: "Sol",
           avatar: {
             palette: "violet",
             face: "curious",

@@ -36,6 +36,9 @@ type Env = {
   readonly AUTH_APPLE_SECRET: string | undefined;
   readonly AUTH_GOOGLE_ID: string | undefined;
   readonly AUTH_GOOGLE_SECRET: string | undefined;
+  readonly DEV_FIXED_OTP_CODE: string | undefined;
+  readonly DEV_FIXED_OTP_EMAILS: string | undefined;
+  readonly ENVIRONMENT: string | undefined;
   readonly SITE_URL: string | undefined;
 };
 
