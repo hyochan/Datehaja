@@ -1,5 +1,6 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "datehaja",
@@ -7,6 +8,7 @@
         "@auth/core": "0.41.1",
         "@convex-dev/auth": "^0.0.95",
         "@convex-dev/static-hosting": "^0.2.1",
+        "@rive-app/react-canvas": "^4.33.1",
         "agentmail": "^0.5.20",
         "convex": "^1.45.0",
         "jose": "^6.2.10",
@@ -195,6 +197,10 @@
     "@panva/hkdf": ["@panva/hkdf@1.2.1", "", {}, "sha512-6oclG6Y3PiDFcoyk8srjLfVKyMfVCKJ27JwNPViuXziFpmdz+MZnZN/aKY0JGXgYuO/VghU0jcOAZgWXZ1Dmrw=="],
 
     "@playwright/test": ["@playwright/test@1.62.1", "", { "dependencies": { "playwright": "1.62.1" }, "bin": { "playwright": "cli.js" } }, "sha512-DTcUc8qii+cpHvtOwggMtBRMjKZHXYWdw8syRYu2vtzuq4Wxphqq4NfCs5Zt44L6mA8rfDfj+PHnxFc/FeK6mQ=="],
+
+    "@rive-app/canvas": ["@rive-app/canvas@2.41.1", "", {}, "sha512-6pEi7q0NBMURLdgnl7DQK2yaEuCqi09bXOhHlPIh0+9undsPrNR6fmjRLNdV3xtmV2U9QcatTJvmB5MxZL7BIg=="],
+
+    "@rive-app/react-canvas": ["@rive-app/react-canvas@4.33.1", "", { "dependencies": { "@rive-app/canvas": "2.41.1" }, "peerDependencies": { "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0" } }, "sha512-5u8mP7ZYCwwM5GOXsy61y1hTT6CMcmTH42xx1lqje82c2bGOpq017mFpTXgoUce53NE0cAZ9O9pknWOgdFq7Hw=="],
 
     "@rolldown/binding-android-arm-eabi": ["@rolldown/binding-android-arm-eabi@1.2.6", "", { "os": "android", "cpu": "arm" }, "sha512-b+jTcARdTiFLI6jB4a5XjTm0RWd6KcRfQj/I2356fxUZemiho9zQLxo0RtCuMDAyKcLo6cEltkgbQp6d1+sjjQ=="],
 

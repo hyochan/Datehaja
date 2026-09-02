@@ -45,7 +45,7 @@ export function spriteForAvatar(avatar: AvatarConfig) {
   return spritePathFor(avatar.palette, avatar.face);
 }
 
-const PALETTES: Record<
+export const PALETTES: Record<
   AvatarPalette,
   {
     background: string;

@@ -27,6 +27,7 @@
     "@auth/core": "0.41.1",
     "@convex-dev/auth": "^0.0.95",
     "@convex-dev/static-hosting": "^0.2.1",
+    "@rive-app/react-canvas": "^4.33.1",
     "agentmail": "^0.5.20",
     "convex": "^1.45.0",
     "jose": "^6.2.10",

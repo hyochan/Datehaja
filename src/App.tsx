@@ -32,6 +32,10 @@ const CommunityGuidelinesPage = lazy(
   () => import("./pages/CommunityGuidelinesPage"),
 );
 const LegalConsentPage = lazy(() => import("./pages/LegalConsentPage"));
+const AvatarLabPage = lazy(() => import("./pages/AvatarLabPage"));
+const labRoute = import.meta.env.DEV ? (
+  <Route path="/lab/avatar" element={<AvatarLabPage />} />
+) : null;
 
 export default function App() {
   return (
@@ -79,6 +83,7 @@ export default function App() {
               </PublicPage>
             }
           />
+          {labRoute}
           <Route path="*" element={<RedirectToSignIn />} />
         </Routes>
       </Unauthenticated>
@@ -158,6 +163,7 @@ function AuthedRoutes() {
       <Routes>
         <Route path="/legal/accept" element={<LegalConsentPage />} />
         <Route path="/onboarding" element={<AgentOnboardingPage />} />
+        {labRoute}
         <Route
           path="/"
           element={
