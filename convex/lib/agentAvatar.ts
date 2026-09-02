@@ -77,7 +77,7 @@ export const SPRITE_FACE_VARIANTS: Record<
 /** Genders that have an eyes-closed frame (`<gender>-<palette>-blink.png`). */
 export const SPRITE_V3_BLINK: Record<AvatarGenderName, boolean> = {
   female: true,
-  male: false,
+  male: true,
 };
 
 /** The eyes-closed frame layered over the sprite for a blink, if drawn. */
