@@ -36,17 +36,38 @@ type DateDiscussion = {
     agentName: string;
     avatar: AvatarConfig | null;
     reason: string;
+    consent: "pending" | "yes" | "no";
   };
   counterpart: {
+    firstName: string;
     agentName: string;
     avatar: AvatarConfig | null;
+    isDemo: boolean;
+    contactEmail: string | null;
   };
 };
+
+function looksLikeMeetIntent(content: string) {
+  const normalized = content.trim().toLocaleLowerCase();
+  return [
+    /만나\s*(볼|봐|보고|고|자|도|겠|고 싶)/,
+    /소개\s*(받|해|시켜)/,
+    /연결\s*(해|할|하고)/,
+    /\b(want|would like|ready|think).{0,24}\b(meet|introduction|connect)\b/,
+    /\byes.{0,24}\b(meet|introduction|connect)\b/,
+    /会ってみ|会いたい|紹介を希望|つながりたい/,
+    /treffen|kennenlernen|vorstellen/,
+    /rencontrer|présentation|mise en relation/,
+    /ontmoeten|kennismaken/,
+    /träffa|mötas|introduktion/,
+  ].some((pattern) => pattern.test(normalized));
+}
 
 export default function AgentDashboardPage() {
   const mine = useQuery(api.agents.mine);
   const dates = useQuery(api.agentDates.listMine);
   const send = useMutation(api.agents.send);
+  const consent = useMutation(api.agentDates.consent);
   const ensureQuestion = useMutation(api.agents.ensureQuestion);
   const answerQuestion = useMutation(api.agents.answerQuestion);
   const skipQuestion = useMutation(api.agents.skipQuestion);
@@ -68,6 +89,11 @@ export default function AgentDashboardPage() {
   const [questionAnswer, setQuestionAnswer] = useState("");
   const [sending, setSending] = useState(false);
   const [answering, setAnswering] = useState(false);
+  const [consenting, setConsenting] = useState(false);
+  const [consentError, setConsentError] = useState<string | null>(null);
+  const [dismissedConsentMessageId, setDismissedConsentMessageId] = useState<
+    string | null
+  >(null);
   const [starting, setStarting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [scoutAccess, setScoutAccess] = useState<{
@@ -140,8 +166,25 @@ export default function AgentDashboardPage() {
         t("Explain what led you to this verdict."),
         t("What should you carry into the next search?"),
         t("Here's what your debrief got wrong:"),
+        t("I think I want to meet them."),
       ]
     : [];
+  const latestDiscussionHumanMessage = discussion
+    ? [...visibleMessages]
+        .reverse()
+        .find(
+          (item) =>
+            item.role === "human" && item.agentDateId === discussion.date._id,
+        )
+    : undefined;
+  const showConsentConfirmation = Boolean(
+    discussion &&
+    discussion.date.status === "debrief_ready" &&
+    discussion.mine.consent === "pending" &&
+    latestDiscussionHumanMessage &&
+    latestDiscussionHumanMessage._id !== dismissedConsentMessageId &&
+    looksLikeMeetIntent(latestDiscussionHumanMessage.content),
+  );
 
   async function submitMessage() {
     const content = message.trim();
@@ -174,6 +217,24 @@ export default function AgentDashboardPage() {
       setError(readableError(reason));
     } finally {
       setAnswering(false);
+    }
+  }
+
+  async function confirmIntroduction() {
+    if (!discussion || consenting || discussion.mine.consent !== "pending") {
+      return;
+    }
+    setConsenting(true);
+    setConsentError(null);
+    try {
+      await consent({
+        agentDateId: discussion.date._id,
+        decision: "yes",
+      });
+    } catch (reason) {
+      setConsentError(readableError(reason));
+    } finally {
+      setConsenting(false);
     }
   }
 
@@ -251,9 +312,7 @@ export default function AgentDashboardPage() {
               <div className="docket-label text-[var(--accent-text)]">
                 {t("Your private agent")}
               </div>
-              <h1 className="agent-identity-name mt-1">
-                {agent.name}
-              </h1>
+              <h1 className="agent-identity-name mt-1">{agent.name}</h1>
             </div>
           </div>
           <p className="agent-identity-intro mt-5 text-soft">
@@ -334,9 +393,9 @@ export default function AgentDashboardPage() {
                   ? t("Read the private debrief →")
                   : scoutAccess === null
                     ? t("Checking Scout Pass…")
-                : scoutAccess.allowed
-                  ? t("Send {agent} scouting →", { agent: agent.name })
-                  : t("Unlock scouting →")}
+                    : scoutAccess.allowed
+                      ? t("Send {agent} scouting →", { agent: agent.name })
+                      : t("Unlock scouting →")}
             </Button>
             <p className="mt-3 text-center text-[11px] leading-relaxed text-muted">
               {scoutAccess?.mode === "demo"
@@ -400,9 +459,7 @@ export default function AgentDashboardPage() {
         <Card className="agent-chat-card flex flex-col overflow-hidden">
           <header className="flex items-center justify-between border-b border-[var(--border)] px-5 py-4 sm:px-6">
             <div>
-              <div className="docket-label text-muted">
-                {t("Private line")}
-              </div>
+              <div className="docket-label text-muted">{t("Private line")}</div>
               <div className="mt-1 text-[14px] font-bold">
                 {t("You ↔ {agent}", { agent: agent.name })}
               </div>
@@ -536,6 +593,88 @@ export default function AgentDashboardPage() {
                 {t("{agent} is thinking, not typing…", {
                   agent: agent.name,
                 })}
+              </div>
+            )}
+            {showConsentConfirmation && discussion && (
+              <div className="agent-consent-confirmation">
+                <div className="flex items-start gap-3">
+                  <AgentAvatar
+                    name={discussion.mine.agentName}
+                    avatar={discussion.mine.avatar}
+                    className="agent-avatar-note"
+                  />
+                  <div className="min-w-0">
+                    <div className="docket-label text-[var(--accent-text)]">
+                      {t("Your decision, not your Agent's")}
+                    </div>
+                    <h3 className="mt-2 text-[22px] leading-tight">
+                      {t(
+                        "Shall I send your introduction request to {person}?",
+                        {
+                          person: discussion.counterpart.firstName,
+                        },
+                      )}
+                    </h3>
+                    <p className="mt-2 text-[12px] leading-relaxed text-soft">
+                      {t(
+                        "Your message helps {agent} understand you, but only the button below counts as consent. Your answer stays sealed unless both people say yes.",
+                        { agent: discussion.mine.agentName },
+                      )}
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+                  <Button
+                    size="sm"
+                    loading={consenting}
+                    onClick={() => void confirmIntroduction()}
+                  >
+                    {t("Yes, send my introduction request →")}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    disabled={consenting}
+                    onClick={() =>
+                      setDismissedConsentMessageId(
+                        latestDiscussionHumanMessage?._id ?? null,
+                      )
+                    }
+                  >
+                    {t("Not yet — keep talking")}
+                  </Button>
+                </div>
+                {consentError && (
+                  <p
+                    className="mt-3 text-[12px] text-[var(--tint-ember-strong)]"
+                    role="alert"
+                  >
+                    {consentError}
+                  </p>
+                )}
+              </div>
+            )}
+            {discussion?.mine.consent === "yes" && (
+              <div className="agent-consent-status">
+                <span aria-hidden>✓</span>
+                <div>
+                  <strong>
+                    {discussion.date.status === "connected"
+                      ? t("You both said yes. The introduction is open.")
+                      : t("Your yes is sealed.")}
+                  </strong>
+                  <p>
+                    {discussion.date.status === "connected"
+                      ? discussion.counterpart.contactEmail
+                        ? t("Open the full debrief to see the shared contact.")
+                        : t(
+                            "This demo completed the full two-person consent flow.",
+                          )
+                      : t(
+                          "We won't reveal whether the other person has answered unless they also say yes.",
+                        )}
+                  </p>
+                </div>
               </div>
             )}
             {!discussion && visibleMessages.length <= 1 && (

@@ -5809,6 +5809,23 @@ Object.assign(ko, {
   "What should you carry into the next search?":
     "다음 탐색에 꼭 반영할 점은 뭐야?",
   "Here's what your debrief got wrong:": "이 리포트가 잘못 본 점은:",
+  "I think I want to meet them.": "그래, 이 사람은 한번 만나보고 싶어.",
+  "Your decision, not your Agent's": "에이전트가 아닌, 나의 결정",
+  "Shall I send your introduction request to {person}?":
+    "{person}님에게 연결 요청을 보낼까요?",
+  "Your message helps {agent} understand you, but only the button below counts as consent. Your answer stays sealed unless both people say yes.":
+    "이 말은 에이전트 {agent}의 이해에 반영돼요. 실제 동의는 아래 버튼을 눌러야만 완료되며, 두 사람 모두 동의하기 전까지 내 답은 비공개예요.",
+  "Yes, send my introduction request →": "네, 연결 요청 보내기 →",
+  "Not yet — keep talking": "아직은 아니야 — 더 이야기하기",
+  "You both said yes. The introduction is open.":
+    "두 사람 모두 동의했어요. 연결이 열렸습니다.",
+  "Your yes is sealed.": "내 답은 비공개로 보관 중이에요.",
+  "Open the full debrief to see the shared contact.":
+    "전체 리포트에서 공개된 연락처를 확인하세요.",
+  "This demo completed the full two-person consent flow.":
+    "데모에서 두 사람의 동의 흐름이 끝까지 완료됐어요.",
+  "We won't reveal whether the other person has answered unless they also say yes.":
+    "상대도 동의하기 전에는 상대의 답변 여부를 공개하지 않아요.",
   "Debrief open": "리포트 대화 중",
   Close: "닫기",
   "Back to the full debrief": "전체 리포트로 돌아가기",
@@ -5824,6 +5841,23 @@ Object.assign(ja, {
   "Explain what led you to this verdict.": "この判断に至った理由を教えて。",
   "What should you carry into the next search?": "次の探索に何を反映すべき？",
   "Here's what your debrief got wrong:": "このレポートが違っていた点：",
+  "I think I want to meet them.": "この人に会ってみたい。",
+  "Your decision, not your Agent's": "Agentではなく、あなたの決定",
+  "Shall I send your introduction request to {person}?":
+    "{person}さんに紹介リクエストを送りますか？",
+  "Your message helps {agent} understand you, but only the button below counts as consent. Your answer stays sealed unless both people say yes.":
+    "この言葉は{agent}があなたを理解する助けになります。実際の同意は下のボタンでのみ成立し、ふたりが同意するまで回答は非公開です。",
+  "Yes, send my introduction request →": "はい、紹介を希望します →",
+  "Not yet — keep talking": "まだ決めない — もう少し話す",
+  "You both said yes. The introduction is open.":
+    "ふたりとも同意しました。紹介が開きました。",
+  "Your yes is sealed.": "あなたの回答は非公開で保管中です。",
+  "Open the full debrief to see the shared contact.":
+    "全レポートで共有された連絡先を確認してください。",
+  "This demo completed the full two-person consent flow.":
+    "デモでふたりの同意フローが最後まで完了しました。",
+  "We won't reveal whether the other person has answered unless they also say yes.":
+    "相手も同意するまで、相手の回答状況は公開しません。",
   "Debrief open": "レポートについて対話中",
   Close: "閉じる",
   "Back to the full debrief": "レポート全体に戻る",
@@ -5841,6 +5875,24 @@ Object.assign(de, {
   "What should you carry into the next search?":
     "Was solltest du in die nächste Suche mitnehmen?",
   "Here's what your debrief got wrong:": "Das hat dein Bericht falsch gesehen:",
+  "I think I want to meet them.": "Ich glaube, ich möchte die Person treffen.",
+  "Your decision, not your Agent's":
+    "Deine Entscheidung, nicht die deines Agents",
+  "Shall I send your introduction request to {person}?":
+    "Soll ich deine Kontaktanfrage an {person} senden?",
+  "Your message helps {agent} understand you, but only the button below counts as consent. Your answer stays sealed unless both people say yes.":
+    "Deine Nachricht hilft {agent}, dich zu verstehen. Als Zustimmung zählt nur der Button unten. Deine Antwort bleibt verborgen, bis beide Ja sagen.",
+  "Yes, send my introduction request →": "Ja, Kontaktanfrage senden →",
+  "Not yet — keep talking": "Noch nicht — weiterreden",
+  "You both said yes. The introduction is open.":
+    "Ihr habt beide Ja gesagt. Der Kontakt ist geöffnet.",
+  "Your yes is sealed.": "Dein Ja bleibt vertraulich versiegelt.",
+  "Open the full debrief to see the shared contact.":
+    "Öffne den vollständigen Bericht, um den geteilten Kontakt zu sehen.",
+  "This demo completed the full two-person consent flow.":
+    "Die Demo hat den vollständigen Zustimmungsablauf durchlaufen.",
+  "We won't reveal whether the other person has answered unless they also say yes.":
+    "Wir zeigen nicht, ob die andere Person geantwortet hat, solange sie nicht ebenfalls Ja sagt.",
   "Debrief open": "Bericht im Gespräch",
   Close: "Schließen",
   "Back to the full debrief": "Zurück zum vollständigen Bericht",
@@ -5859,6 +5911,24 @@ Object.assign(fr, {
     "Que dois-tu retenir pour la prochaine recherche ?",
   "Here's what your debrief got wrong:":
     "Voici ce que le compte rendu a mal compris :",
+  "I think I want to meet them.":
+    "Je crois que j’aimerais rencontrer cette personne.",
+  "Your decision, not your Agent's": "Votre décision, pas celle de votre Agent",
+  "Shall I send your introduction request to {person}?":
+    "Envoyer votre demande de mise en relation à {person} ?",
+  "Your message helps {agent} understand you, but only the button below counts as consent. Your answer stays sealed unless both people say yes.":
+    "Votre message aide {agent} à vous comprendre, mais seul le bouton ci-dessous vaut consentement. Votre réponse reste secrète tant que les deux personnes n’ont pas dit oui.",
+  "Yes, send my introduction request →": "Oui, envoyer ma demande →",
+  "Not yet — keep talking": "Pas encore — continuer à parler",
+  "You both said yes. The introduction is open.":
+    "Vous avez tous les deux dit oui. La mise en relation est ouverte.",
+  "Your yes is sealed.": "Votre oui est conservé en privé.",
+  "Open the full debrief to see the shared contact.":
+    "Ouvrez le compte rendu complet pour voir le contact partagé.",
+  "This demo completed the full two-person consent flow.":
+    "La démo a terminé tout le parcours de double consentement.",
+  "We won't reveal whether the other person has answered unless they also say yes.":
+    "Nous ne révélons pas la réponse de l’autre personne tant qu’elle n’a pas également dit oui.",
   "Debrief open": "Compte rendu en discussion",
   Close: "Fermer",
   "Back to the full debrief": "Retour au compte rendu complet",
@@ -5876,6 +5946,23 @@ Object.assign(nl, {
   "What should you carry into the next search?":
     "Wat moet je meenemen naar de volgende zoektocht?",
   "Here's what your debrief got wrong:": "Dit zag je verslag verkeerd:",
+  "I think I want to meet them.": "Ik denk dat ik deze persoon wil ontmoeten.",
+  "Your decision, not your Agent's": "Jouw beslissing, niet die van je Agent",
+  "Shall I send your introduction request to {person}?":
+    "Zal ik je kennismakingsverzoek naar {person} sturen?",
+  "Your message helps {agent} understand you, but only the button below counts as consent. Your answer stays sealed unless both people say yes.":
+    "Je bericht helpt {agent} je begrijpen, maar alleen de knop hieronder geldt als toestemming. Je antwoord blijft verborgen tot jullie allebei ja zeggen.",
+  "Yes, send my introduction request →": "Ja, stuur mijn verzoek →",
+  "Not yet — keep talking": "Nog niet — verder praten",
+  "You both said yes. The introduction is open.":
+    "Jullie zeiden allebei ja. De kennismaking is geopend.",
+  "Your yes is sealed.": "Jouw ja wordt privé bewaard.",
+  "Open the full debrief to see the shared contact.":
+    "Open het volledige verslag om het gedeelde contact te zien.",
+  "This demo completed the full two-person consent flow.":
+    "De demo heeft de volledige toestemmingsflow afgerond.",
+  "We won't reveal whether the other person has answered unless they also say yes.":
+    "We laten pas zien of de ander antwoordde wanneer die ook ja zegt.",
   "Debrief open": "Verslag in gesprek",
   Close: "Sluiten",
   "Back to the full debrief": "Terug naar het volledige verslag",
@@ -5893,6 +5980,23 @@ Object.assign(sv, {
   "What should you carry into the next search?":
     "Vad ska du ta med dig till nästa sökning?",
   "Here's what your debrief got wrong:": "Det här missförstod rapporten:",
+  "I think I want to meet them.": "Jag tror att jag vill träffa personen.",
+  "Your decision, not your Agent's": "Ditt beslut, inte din Agents",
+  "Shall I send your introduction request to {person}?":
+    "Ska jag skicka din kontaktförfrågan till {person}?",
+  "Your message helps {agent} understand you, but only the button below counts as consent. Your answer stays sealed unless both people say yes.":
+    "Ditt meddelande hjälper {agent} att förstå dig, men bara knappen nedan räknas som samtycke. Ditt svar förblir dolt tills båda säger ja.",
+  "Yes, send my introduction request →": "Ja, skicka min förfrågan →",
+  "Not yet — keep talking": "Inte än — fortsätt prata",
+  "You both said yes. The introduction is open.":
+    "Ni har båda sagt ja. Kontakten är öppen.",
+  "Your yes is sealed.": "Ditt ja förvaras privat.",
+  "Open the full debrief to see the shared contact.":
+    "Öppna hela rapporten för att se den delade kontakten.",
+  "This demo completed the full two-person consent flow.":
+    "Demon slutförde hela samtyckesflödet för två personer.",
+  "We won't reveal whether the other person has answered unless they also say yes.":
+    "Vi visar inte om den andra personen har svarat förrän även den säger ja.",
   "Debrief open": "Rapporten diskuteras",
   Close: "Stäng",
   "Back to the full debrief": "Tillbaka till hela rapporten",

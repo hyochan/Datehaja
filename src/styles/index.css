@@ -4652,6 +4652,73 @@ html[lang^="ja"] .agent-debrief-title {
   transform: translateY(-1px);
 }
 
+.agent-consent-confirmation {
+  position: relative;
+  overflow: hidden;
+  max-width: 34rem;
+  margin: 1.1rem auto 0;
+  padding: 1.15rem;
+  border: 1px solid var(--tint-ember-border);
+  border-radius: 1.5rem;
+  background:
+    radial-gradient(
+      circle at 100% 0,
+      color-mix(in oklab, var(--accent-text) 18%, transparent),
+      transparent 9rem
+    ),
+    linear-gradient(145deg, var(--tint-ember-bg), var(--bg-raised));
+  box-shadow: 0 1.4rem 2.8rem -2.4rem var(--shadow-ink);
+}
+
+.agent-consent-confirmation::after {
+  position: absolute;
+  right: -1.5rem;
+  bottom: -1.8rem;
+  width: 5rem;
+  height: 5rem;
+  border: 1px solid color-mix(in oklab, var(--accent-text) 22%, transparent);
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.agent-consent-status {
+  display: flex;
+  max-width: 34rem;
+  gap: 0.75rem;
+  align-items: flex-start;
+  margin: 1rem auto 0;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--tint-sage-border);
+  border-radius: 1.15rem;
+  background: var(--tint-sage-bg);
+}
+
+.agent-consent-status > span {
+  display: grid;
+  width: 1.65rem;
+  height: 1.65rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-sage-600);
+  color: var(--bg);
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.agent-consent-status strong {
+  display: block;
+  font-size: 0.78rem;
+}
+
+.agent-consent-status p {
+  margin-top: 0.22rem;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  line-height: 1.5;
+}
+
 .agent-debrief-dialogue {
   position: relative;
   overflow: hidden;

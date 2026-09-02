@@ -24,7 +24,11 @@ import { clean, cleanMultiline, sanitizeModelText } from "./lib/text";
 import { obj, structured, type StructuredResult } from "./integrations/openai";
 import { search } from "./integrations/firecrawl";
 import { appUrl, sendConciergeEmail } from "./mail";
-import { agentConnectionEmail, agentDebriefEmail } from "./lib/emailTemplates";
+import {
+  agentConnectionEmail,
+  agentDebriefEmail,
+  type AgentDateEmailReport,
+} from "./lib/emailTemplates";
 import { agentAvatarValidator } from "./lib/agentAvatar";
 import schema from "./schema";
 import {
@@ -171,6 +175,13 @@ const deliveryContextValidator = v.union(
   v.null(),
   v.object({
     date: schema.doc("agentDates"),
+    turns: v.array(
+      v.object({
+        round: v.number(),
+        speakerAgentName: v.string(),
+        content: v.string(),
+      }),
+    ),
     a: v.object({
       firstName: v.string(),
       agentName: v.string(),
@@ -183,6 +194,40 @@ const deliveryContextValidator = v.union(
     }),
   }),
 );
+
+type AgentDateDeliveryContext = {
+  date: Doc<"agentDates">;
+  turns: Array<{
+    round: number;
+    speakerAgentName: string;
+    content: string;
+  }>;
+  a: { firstName: string; agentName: string; locale: string };
+  b: { firstName: string; agentName: string; locale: string };
+};
+
+function emailReportFor(
+  info: AgentDateDeliveryContext,
+  owner: "a" | "b",
+): AgentDateEmailReport {
+  const highlightIndexes = new Set([
+    0,
+    Math.floor((info.turns.length - 1) / 2),
+    info.turns.length - 1,
+  ]);
+  const ownerAgent = owner === "a" ? info.a.agentName : info.b.agentName;
+  const counterpartAgent = owner === "a" ? info.b.agentName : info.a.agentName;
+  return {
+    setting: info.date.setting,
+    agentName: ownerAgent,
+    counterpartAgentName: counterpartAgent,
+    totalMoments: info.turns.length,
+    summary: info.date.summary,
+    sparks: info.date.sparks.slice(0, 2),
+    frictions: info.date.frictions.slice(0, 2),
+    moments: info.turns.filter((_, index) => highlightIndexes.has(index)),
+  };
+}
 
 const listItemValidator = v.object({
   _id: v.id("agentDates"),
@@ -319,6 +364,15 @@ export const request = action({
     const access = await getScoutAccess(ctx, identity.tokenIdentifier);
     if (!access.allowed) {
       throw new Error("A Scout Pass is required before your agent can search.");
+    }
+    if (access.mode !== "subscription") {
+      const demoWorldReady: boolean = await ctx.runQuery(
+        internal.demo.hasReadyWorldFor,
+        { userId },
+      );
+      if (!demoWorldReady) {
+        await ctx.runMutation(internal.demo.seed, { nowMs: Date.now() });
+      }
     }
     return await ctx.runMutation(internal.agentDates.createRequest, {
       userId,
@@ -1396,7 +1450,7 @@ export const deliveryContext = internalQuery({
   handler: async (ctx, args) => {
     const date = await ctx.db.get("agentDates", args.agentDateId);
     if (!date) return null;
-    const [aProfile, bProfile, aAgent, bAgent] = await Promise.all([
+    const [aProfile, bProfile, aAgent, bAgent, turns] = await Promise.all([
       getProfileByUser(ctx, date.initiatorUserId),
       getProfileByUser(ctx, date.counterpartUserId),
       ctx.db
@@ -1407,11 +1461,21 @@ export const deliveryContext = internalQuery({
         .query("agentProfiles")
         .withIndex("by_user", (q) => q.eq("userId", date.counterpartUserId))
         .unique(),
+      ctx.db
+        .query("agentDateTurns")
+        .withIndex("by_date_and_round", (q) => q.eq("agentDateId", date._id))
+        .order("asc")
+        .take(6),
     ]);
     if (!aProfile || !bProfile) return null;
     const aAgentName = aAgent?.name ?? syntheticAgent(aProfile).agentName;
     return {
       date,
+      turns: turns.map((turn) => ({
+        round: turn.round,
+        speakerAgentName: turn.speakerAgentName,
+        content: turn.content,
+      })),
       a: {
         firstName: aProfile.displayName.split(/\s+/)[0],
         agentName: aAgentName,
@@ -1440,13 +1504,10 @@ export const deliverDebriefs = internalAction({
     const info = (await ctx.runQuery(
       internal.agentDates.deliveryContext,
       args,
-    )) as {
-      date: Doc<"agentDates">;
-      a: { firstName: string; agentName: string; locale: string };
-      b: { firstName: string; agentName: string; locale: string };
-    } | null;
+    )) as AgentDateDeliveryContext | null;
     if (!info || info.date.initiatorVerdict === "pending") return null;
     const url = appUrl(`/agent-date/${args.agentDateId}`);
+    const conversationUrl = appUrl(`/dashboard?date=${args.agentDateId}`);
     await sendConciergeEmail(ctx, {
       userId: info.date.initiatorUserId,
       kind: "agent_debrief",
@@ -1463,7 +1524,9 @@ export const deliverDebriefs = internalAction({
             ? AGENT_DECISION_LABELS[info.date.initiatorDecisionCode]
             : undefined,
         nextSearchNote: info.date.initiatorNextSearchNote,
+        report: emailReportFor(info, "a"),
         url,
+        conversationUrl,
       }),
       idempotencyKey: `agent-debrief-${args.agentDateId}-${info.date.initiatorUserId}`,
       labels: ["agent_debrief"],
@@ -1488,7 +1551,9 @@ export const deliverDebriefs = internalAction({
               ? AGENT_DECISION_LABELS[info.date.counterpartDecisionCode]
               : undefined,
           nextSearchNote: info.date.counterpartNextSearchNote,
+          report: emailReportFor(info, "b"),
           url,
+          conversationUrl,
         }),
         idempotencyKey: `agent-debrief-${args.agentDateId}-${info.date.counterpartUserId}`,
         labels: ["agent_debrief"],
@@ -1505,11 +1570,7 @@ export const deliverConnection = internalAction({
     const info = (await ctx.runQuery(
       internal.agentDates.deliveryContext,
       args,
-    )) as {
-      date: Doc<"agentDates">;
-      a: { firstName: string; locale: string };
-      b: { firstName: string; locale: string };
-    } | null;
+    )) as AgentDateDeliveryContext | null;
     if (
       !info ||
       info.date.status !== "connected" ||
@@ -1518,6 +1579,7 @@ export const deliverConnection = internalAction({
       return null;
     }
     const url = appUrl(`/agent-date/${args.agentDateId}`);
+    const conversationUrl = appUrl(`/dashboard?date=${args.agentDateId}`);
     await Promise.all([
       sendConciergeEmail(ctx, {
         userId: info.date.initiatorUserId,
@@ -1526,7 +1588,10 @@ export const deliverConnection = internalAction({
           locale: info.a.locale,
           firstName: info.a.firstName,
           counterpartFirstName: info.b.firstName,
+          agentReason: info.date.initiatorReason,
+          report: emailReportFor(info, "a"),
           url,
+          conversationUrl,
         }),
         idempotencyKey: `agent-connection-${args.agentDateId}-${info.date.initiatorUserId}`,
         labels: ["agent_connection"],
@@ -1538,7 +1603,10 @@ export const deliverConnection = internalAction({
           locale: info.b.locale,
           firstName: info.b.firstName,
           counterpartFirstName: info.a.firstName,
+          agentReason: info.date.counterpartReason,
+          report: emailReportFor(info, "b"),
           url,
+          conversationUrl,
         }),
         idempotencyKey: `agent-connection-${args.agentDateId}-${info.date.counterpartUserId}`,
         labels: ["agent_connection"],

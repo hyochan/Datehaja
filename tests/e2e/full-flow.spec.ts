@@ -129,9 +129,9 @@ test("account to private agent debrief and human consent", async ({ page }) => {
     name: /Now tell it about me/i,
   });
   await expect(idealPersonNext).toBeDisabled();
-  await expect(page.getByText("0/2")).toBeVisible();
+  await expect(page.getByText("0/2", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Woman", exact: true }).click();
-  await expect(page.getByText("1/2")).toBeVisible();
+  await expect(page.getByText("1/2", { exact: true })).toBeVisible();
   await page
     .getByLabel("What kind of person should it come home excited about?")
     .fill("1234567890123456789");
@@ -225,7 +225,9 @@ test("account to private agent debrief and human consent", async ({ page }) => {
     page.getByRole("region", { name: /Juno and .* in/i }),
   ).toBeVisible();
   await expect(page.getByText("Your private debrief")).toBeVisible();
-  await expect(page.getByText(/Primary signal|Why I passed/i)).toBeVisible();
+  await expect(page.getByText(/Primary signal|Why I passed/i)).toBeVisible({
+    timeout: 120_000,
+  });
   await expect(page.getByRole("button", { name: /Introduce us/i })).toBeVisible(
     { timeout: 120_000 },
   );

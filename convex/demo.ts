@@ -1,5 +1,10 @@
 import { v } from "convex/values";
-import { internalMutation, mutation, query } from "./_generated/server";
+import {
+  internalMutation,
+  internalQuery,
+  mutation,
+  query,
+} from "./_generated/server";
 import type { MutationCtx } from "./_generated/server";
 import type { Id } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
@@ -17,6 +22,7 @@ import {
 import { ageOn, dobToMs } from "./lib/age";
 import type { Gender } from "./lib/enums";
 import { normaliseSupportedLocale } from "./lib/locales";
+import { hasCompleteMatchingBoundaries } from "./lib/agentMatchingBoundaries";
 
 /**
  * Demo mode.
@@ -508,6 +514,44 @@ const GLOBAL_PERSONAS: PersonaSpec[] = [
 ];
 
 /* ------------------------------- seeding --------------------------------- */
+
+/**
+ * Cheap readiness check for demo scouting. Older deployments may contain
+ * only the original Seoul personas or pre-boundary demo rows. The public
+ * Agent action uses this before seeding so a cold city is repaired once.
+ * Four complete personas preserve a useful mix of genders and interests
+ * without rewriting the whole demo world on every request.
+ */
+export const hasReadyWorldFor = internalQuery({
+  args: { userId: v.id("users") },
+  returns: v.boolean(),
+  handler: async (ctx, args) => {
+    const profile = await ctx.db
+      .query("profiles")
+      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .unique();
+    if (!profile) return false;
+
+    const candidates = await ctx.db
+      .query("profiles")
+      .withIndex("by_status_and_city", (q) =>
+        q.eq("status", "active").eq("city", profile.city),
+      )
+      .take(40);
+    let readyPersonas = 0;
+    for (const candidate of candidates) {
+      if (!candidate.isDemo) continue;
+      const preferences = await ctx.db
+        .query("preferences")
+        .withIndex("by_user", (q) => q.eq("userId", candidate.userId))
+        .unique();
+      if (hasCompleteMatchingBoundaries(candidate, preferences)) {
+        readyPersonas += 1;
+      }
+    }
+    return readyPersonas >= 4;
+  },
+});
 
 export const seed = internalMutation({
   args: { nowMs: v.number(), force: v.optional(v.boolean()) },

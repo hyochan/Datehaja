@@ -47,6 +47,13 @@ verdict reasons, debrief email, and mutual-contact email must be rendered in
 each recipient’s saved locale independently; one date must never reuse the
 initiator’s locale for the other recipient.
 
+Agent emails must feel like a compact meeting report, not a system alert. A
+completed-date email visualizes the virtual setting, both Agent names, the
+number of saved moments, up to three representative conversation excerpts,
+one shared spark, one shared friction, and only the recipient's own Agent
+verdict. Internal subtext and the other side's sealed verdict never leave the
+backend.
+
 ## Priority now: win the Convex hackathon
 
 Until the hackathon closes, optimize for one convincing, reliable story:
@@ -186,6 +193,14 @@ landing → agent created → first private message → scouting requested
 Analytics must use internal IDs and structured properties; never copy profile
 text, private Agent memory, transcripts, contact details, or precise location
 into growth events.
+
+The debrief loop continues after email. Every Agent debrief and mutual
+connection email must offer a deep link back to the date-scoped private chat.
+There, the person can question or correct their Agent before deciding. A phrase
+such as “I want to meet them” may reveal an explicit confirmation card, but it
+must never change consent by itself. Only the person's final confirmation
+button records a yes; the Agent cannot approve, consent, or send the request on
+their behalf. The answer stays sealed until both people independently say yes.
 
 ## When priorities may change
 

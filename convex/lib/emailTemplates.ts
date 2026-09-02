@@ -6,6 +6,10 @@ const BRAND = {
   ink: "#16121b",
   sand: "#fcfaf7",
   ember: "#d4552b",
+  wine: "#281820",
+  rose: "#ff9b9f",
+  blush: "#fff0ed",
+  sage: "#d9efd9",
   muted: "#7a7183",
   border: "#ece4d9",
 };
@@ -36,7 +40,11 @@ function shell(
 }
 
 function button(href: string, label: string): string {
-  return `<a href="${href}" style="display:inline-block;background:${BRAND.ember};color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:13px 24px;border-radius:999px;">${label}</a>`;
+  return `<a href="${escapeHtml(href)}" style="display:inline-block;background:${BRAND.ember};color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:13px 24px;border-radius:999px;">${escapeHtml(label)}</a>`;
+}
+
+function secondaryButton(href: string, label: string): string {
+  return `<a href="${escapeHtml(href)}" style="display:inline-block;background:#ffffff;color:${BRAND.wine};border:1px solid ${BRAND.border};text-decoration:none;font-weight:600;font-size:14px;padding:12px 20px;border-radius:999px;">${escapeHtml(label)}</a>`;
 }
 
 function h1(text: string): string {
@@ -61,6 +69,208 @@ export function escapeHtml(value: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+export type AgentDateEmailReport = {
+  setting: string;
+  agentName: string;
+  counterpartAgentName: string;
+  totalMoments: number;
+  summary: string;
+  sparks: string[];
+  frictions: string[];
+  moments: Array<{
+    round: number;
+    speakerAgentName: string;
+    content: string;
+  }>;
+};
+
+function compactEmailText(value: string, maxLength = 170): string {
+  const clean = value.replace(/\s+/g, " ").trim();
+  return clean.length <= maxLength
+    ? clean
+    : `${clean.slice(0, maxLength - 1).trimEnd()}…`;
+}
+
+function agentDateReportCopy(locale?: string) {
+  const language = locale?.split("-")[0] ?? "en";
+  return (
+    {
+      ko: {
+        eyebrow: "에이전트 데이트 기록",
+        scene: "어디서",
+        agents: "누가",
+        moments: "개의 장면",
+        summary: "데이트 분위기",
+        conversation: "이런 대화를 나눴어요",
+        spark: "마음이 움직인 순간",
+        friction: "조금 걸렸던 부분",
+        privateRead: "내 에이전트의 한마디",
+        noSignal: "아직 또렷한 신호는 없었어요.",
+      },
+      ja: {
+        eyebrow: "エージェントデート記録",
+        scene: "場所",
+        agents: "ふたり",
+        moments: "シーン",
+        summary: "デートの空気",
+        conversation: "こんな話をしました",
+        spark: "心が動いた瞬間",
+        friction: "少し気になったこと",
+        privateRead: "私のエージェントの見立て",
+        noSignal: "まだはっきりしたサインはありませんでした。",
+      },
+      de: {
+        eyebrow: "Agent-Date-Protokoll",
+        scene: "Ort",
+        agents: "Wer",
+        moments: "Momente",
+        summary: "Stimmung",
+        conversation: "Darüber haben sie gesprochen",
+        spark: "Was Nähe geschaffen hat",
+        friction: "Was noch offen blieb",
+        privateRead: "Die Einschätzung deines Agents",
+        noSignal: "Noch kein klares Signal.",
+      },
+      fr: {
+        eyebrow: "Carnet du rendez-vous des Agents",
+        scene: "Lieu",
+        agents: "Qui",
+        moments: "moments",
+        summary: "Ambiance",
+        conversation: "Ce qu'ils se sont raconté",
+        spark: "Ce qui a créé un élan",
+        friction: "Ce qui reste à éclaircir",
+        privateRead: "L'avis de votre Agent",
+        noSignal: "Aucun signal net pour le moment.",
+      },
+      nl: {
+        eyebrow: "Verslag van de Agent-date",
+        scene: "Waar",
+        agents: "Wie",
+        moments: "momenten",
+        summary: "Sfeer",
+        conversation: "Waar ze over praatten",
+        spark: "Wat iets losmaakte",
+        friction: "Wat nog schuurt",
+        privateRead: "De kijk van je Agent",
+        noSignal: "Nog geen duidelijk signaal.",
+      },
+      sv: {
+        eyebrow: "Anteckningar från Agent-dejten",
+        scene: "Var",
+        agents: "Vilka",
+        moments: "ögonblick",
+        summary: "Känslan",
+        conversation: "Det här pratade de om",
+        spark: "Det som väckte något",
+        friction: "Det som fortfarande skaver",
+        privateRead: "Din Agents läsning",
+        noSignal: "Ingen tydlig signal ännu.",
+      },
+    }[language] ?? {
+      eyebrow: "Agent date notes",
+      scene: "Where",
+      agents: "Who",
+      moments: "moments",
+      summary: "The atmosphere",
+      conversation: "What they talked about",
+      spark: "What created a spark",
+      friction: "What still needs care",
+      privateRead: "Your Agent's read",
+      noSignal: "No clear signal yet.",
+    }
+  );
+}
+
+function agentDateReportText(
+  locale: string | undefined,
+  report: AgentDateEmailReport,
+  privateRead: string,
+): string {
+  const copy = agentDateReportCopy(locale);
+  const moments = report.moments
+    .map(
+      (moment) =>
+        `${String(moment.round).padStart(2, "0")} · ${moment.speakerAgentName}: ${compactEmailText(moment.content)}`,
+    )
+    .join("\n");
+  return `${copy.eyebrow}
+${copy.scene}: ${report.setting}
+${copy.agents}: ${report.agentName} ↔ ${report.counterpartAgentName}
+${report.totalMoments} ${copy.moments}
+
+${copy.summary}: ${report.summary}
+
+${copy.conversation}
+${moments}
+
+${copy.spark}: ${report.sparks[0] ?? copy.noSignal}
+${copy.friction}: ${report.frictions[0] ?? copy.noSignal}
+${copy.privateRead}: ${privateRead}`;
+}
+
+function agentDateReportHtml(
+  locale: string | undefined,
+  report: AgentDateEmailReport,
+  privateRead: string,
+): string {
+  const copy = agentDateReportCopy(locale);
+  const moments = report.moments
+    .map(
+      (moment) => `<tr><td style="padding:0 0 12px 0;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#34242d;border:1px solid #4c3541;border-radius:14px;">
+          <tr>
+            <td style="width:42px;padding:14px 0 14px 14px;vertical-align:top;color:${BRAND.rose};font-size:11px;font-weight:700;letter-spacing:.08em;">${String(moment.round).padStart(2, "0")}</td>
+            <td style="padding:12px 14px 13px 10px;vertical-align:top;">
+              <div style="margin-bottom:4px;color:#ffb2b5;font-size:12px;font-weight:700;">${escapeHtml(moment.speakerAgentName)}</div>
+              <div style="color:#fff8f5;font-size:14px;line-height:1.55;">${escapeHtml(compactEmailText(moment.content))}</div>
+            </td>
+          </tr>
+        </table>
+      </td></tr>`,
+    )
+    .join("");
+
+  const signalCard = (label: string, value: string, color: string) =>
+    `<td width="50%" style="padding:0 5px 0 0;vertical-align:top;">
+      <div style="min-height:92px;background:${color};border-radius:14px;padding:14px;">
+        <div style="margin-bottom:7px;color:${BRAND.muted};font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;">${escapeHtml(label)}</div>
+        <div style="color:${BRAND.ink};font-size:13px;line-height:1.5;font-weight:600;">${escapeHtml(compactEmailText(value, 120))}</div>
+      </div>
+    </td>`;
+
+  return `<div style="margin:22px 0 20px;background:${BRAND.wine};border-radius:20px;padding:20px;box-shadow:0 16px 34px rgba(40,24,32,.14);">
+    <div style="margin-bottom:14px;color:${BRAND.rose};font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;">${escapeHtml(copy.eyebrow)}</div>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:14px;border-collapse:separate;border-spacing:0;">
+      <tr>
+        <td style="width:62%;padding:14px;background:#fff7f2;border-radius:14px 0 0 14px;vertical-align:top;">
+          <div style="margin-bottom:5px;color:${BRAND.muted};font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;">${escapeHtml(copy.scene)}</div>
+          <div style="color:${BRAND.ink};font-size:14px;line-height:1.45;font-weight:700;">${escapeHtml(compactEmailText(report.setting, 100))}</div>
+        </td>
+        <td style="padding:14px;background:${BRAND.blush};border-left:1px solid #ead8d3;border-radius:0 14px 14px 0;vertical-align:top;">
+          <div style="margin-bottom:5px;color:${BRAND.muted};font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;">${escapeHtml(copy.agents)}</div>
+          <div style="color:${BRAND.ink};font-size:13px;line-height:1.45;font-weight:700;">${escapeHtml(report.agentName)} ↔ ${escapeHtml(report.counterpartAgentName)}</div>
+          <div style="margin-top:5px;color:${BRAND.ember};font-size:11px;font-weight:700;">${report.totalMoments} ${escapeHtml(copy.moments)}</div>
+        </td>
+      </tr>
+    </table>
+    <div style="margin:0 0 18px;padding:0 2px;">
+      <div style="margin-bottom:5px;color:#d9c5ce;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;">${escapeHtml(copy.summary)}</div>
+      <div style="color:#eadce2;font-size:13px;line-height:1.6;">${escapeHtml(compactEmailText(report.summary, 220))}</div>
+    </div>
+    <div style="margin:0 0 10px;color:#d9c5ce;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;">${escapeHtml(copy.conversation)}</div>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${moments}</table>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:4px;"><tr>
+      ${signalCard(copy.spark, report.sparks[0] ?? copy.noSignal, BRAND.sage)}
+      ${signalCard(copy.friction, report.frictions[0] ?? copy.noSignal, BRAND.blush)}
+    </tr></table>
+    <div style="margin-top:10px;background:#fffaf7;border-radius:14px;padding:15px 16px;">
+      <div style="margin-bottom:6px;color:${BRAND.ember};font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">${escapeHtml(copy.privateRead)}</div>
+      <div style="color:${BRAND.ink};font-size:14px;line-height:1.55;font-weight:600;">${escapeHtml(compactEmailText(privateRead, 220))}</div>
+    </div>
+  </div>`;
 }
 
 export type DropEmailData = {
@@ -462,7 +672,9 @@ export function agentDebriefEmail(args: {
   reason: string;
   decisionLabel?: string;
   nextSearchNote?: string;
+  report: AgentDateEmailReport;
   url: string;
+  conversationUrl: string;
 }): EmailContent {
   const language = args.locale?.split("-")[0] ?? "en";
   const localized = {
@@ -479,6 +691,9 @@ export function agentDebriefEmail(args: {
       next: "다음에는 이런 사람을 찾아볼게요",
       read: "대화와 리포트를 읽고 나서, 만나볼지 나만의 답을 남겨주세요",
       button: "나만의 비공개 리포트 보기",
+      talk: `${args.agentName} 에이전트와 이 데이트 더 이야기하기`,
+      talkNote:
+        "궁금한 점이나 마음에 걸리는 부분을 내 에이전트에게 말해보세요. 대화 끝에 만나고 싶다면 내가 직접 최종 승인할 수 있어요.",
       privacy:
         "상대 에이전트의 판정과 상대방의 답은 계속 비공개예요. 내 에이전트가 나 대신 동의할 수는 없어요.",
       footer: "Datehaja 에이전트 데이트에 관한 비공개 서비스 메시지예요.",
@@ -498,6 +713,9 @@ export function agentDebriefEmail(args: {
       next: "次に探すポイント",
       read: "会話とレポートを読み、非公開で決めてください",
       button: "非公開レポートを開く",
+      talk: `${args.agentName}とこのデートについて話す`,
+      talkNote:
+        "気になる点を自分のエージェントに話してください。会いたいと思ったら、会話の最後に自分で承認できます。",
       privacy:
         "相手エージェントの判定と相手の回答は非公開のままです。エージェントがあなたの代わりに同意することはありません。",
       footer: "Datehajaのエージェントデートに関する非公開メッセージです。",
@@ -516,6 +734,9 @@ export function agentDebriefEmail(args: {
       next: "Wonach ich als Nächstes suche",
       read: "Lies das Gespräch und entscheide vertraulich",
       button: "Privaten Bericht öffnen",
+      talk: `Mit ${args.agentName} über dieses Date sprechen`,
+      talkNote:
+        "Besprich offene Fragen mit deinem Agent. Wenn du die Person treffen möchtest, bestätigst du am Ende selbst.",
       privacy:
         "Das Urteil des anderen Agents und die Antwort der anderen Person bleiben verborgen. Dein Agent kann nicht für dich zustimmen.",
       footer: "Eine private Servicenachricht zu deinem Datehaja-Agent.",
@@ -535,6 +756,9 @@ export function agentDebriefEmail(args: {
       next: "Ce que je chercherai ensuite",
       read: "Lisez la conversation et décidez en privé",
       button: "Ouvrir mon compte rendu privé",
+      talk: `Parler de ce rendez-vous avec ${args.agentName}`,
+      talkNote:
+        "Parlez à votre Agent de ce qui vous intrigue ou vous retient. Si vous souhaitez rencontrer cette personne, vous confirmerez vous-même à la fin.",
       privacy:
         "L'avis de l'autre Agent et la réponse de l'autre personne restent secrets. Votre Agent ne peut pas consentir à votre place.",
       footer: "Message privé concernant votre Agent Datehaja.",
@@ -554,6 +778,9 @@ export function agentDebriefEmail(args: {
       next: "Waar ik hierna naar zoek",
       read: "Lees het gesprek en beslis in alle rust",
       button: "Mijn privéverslag openen",
+      talk: `Deze date bespreken met ${args.agentName}`,
+      talkNote:
+        "Bespreek je vragen of twijfels met je Agent. Wil je daarna kennismaken, dan bevestig je dat zelf aan het einde.",
       privacy:
         "Het oordeel van de andere Agent en het antwoord van de andere persoon blijven verborgen. Je Agent kan niet namens jou instemmen.",
       footer: "Een privébericht over je Datehaja-agent.",
@@ -573,6 +800,9 @@ export function agentDebriefEmail(args: {
       next: "Vad jag letar efter nästa gång",
       read: "Läs samtalet och bestäm privat",
       button: "Öppna min privata rapport",
+      talk: `Prata om dejten med ${args.agentName}`,
+      talkNote:
+        "Prata med din Agent om det som känns spännande eller osäkert. Vill du träffas bekräftar du det själv i slutet.",
       privacy:
         "Den andra Agentens omdöme och den andra personens svar förblir dolda. Din Agent kan inte samtycka åt dig.",
       footer: "Ett privat servicemeddelande om din Datehaja-agent.",
@@ -591,6 +821,9 @@ export function agentDebriefEmail(args: {
     next: "What I'll look for next",
     read: "Read the transcript and decide privately",
     button: "Open my private debrief",
+    talk: `Talk this date over with ${args.agentName}`,
+    talkNote:
+      "Tell your Agent what intrigues you or still feels uncertain. If you want to meet, you make the final confirmation yourself at the end.",
     privacy:
       "The other agent's verdict and the other person's answer remain sealed. Your agent cannot consent for you.",
     footer: "This is a private service message about your Datehaja agent.",
@@ -601,8 +834,13 @@ export function agentDebriefEmail(args: {
   const text = `${localized.greeting}
 
 ${localized.headline}.
-${args.decisionLabel ? `${localized.reason}: ${args.decisionLabel}\n` : ""}${args.reason}
+${agentDateReportText(args.locale, args.report, args.reason)}
+
+${args.decisionLabel ? `${localized.reason}: ${args.decisionLabel}\n` : ""}
 ${args.verdict === "pass" && args.nextSearchNote ? `\n${localized.next}: ${args.nextSearchNote}\n` : ""}
+
+${localized.talkNote}
+${localized.talk}: ${args.conversationUrl}
 
 ${localized.read}: ${args.url}
 
@@ -616,14 +854,16 @@ ${localized.privacy}
     html: shell(
       h1(localized.headline) +
         p(localized.greeting) +
+        agentDateReportHtml(args.locale, args.report, args.reason) +
         (args.decisionLabel
           ? p(`${localized.reason}: ${args.decisionLabel}`)
           : "") +
-        p(args.reason) +
         (args.verdict === "pass" && args.nextSearchNote
           ? p(`${localized.next}: ${args.nextSearchNote}`)
           : "") +
-        `<div style="margin-top:20px;">${button(args.url, localized.button)}</div>` +
+        p(localized.talkNote) +
+        `<div style="margin-top:20px;">${button(args.conversationUrl, localized.talk)}</div>` +
+        `<div style="margin-top:10px;">${secondaryButton(args.url, localized.button)}</div>` +
         `<p style="margin:18px 0 0;font-size:13px;line-height:1.6;color:${BRAND.muted};">${escapeHtml(localized.privacy)}</p>`,
       localized.footer,
       localized.settings,
@@ -635,7 +875,10 @@ export function agentConnectionEmail(args: {
   locale?: string;
   firstName: string;
   counterpartFirstName: string;
+  agentReason: string;
+  report: AgentDateEmailReport;
   url: string;
+  conversationUrl: string;
 }): EmailContent {
   const language = args.locale?.split("-")[0] ?? "en";
   const localized = {
@@ -644,62 +887,84 @@ export function agentConnectionEmail(args: {
       headline: "이제 서로를 직접 만나보세요.",
       greeting: `${args.firstName}님, ${args.counterpartFirstName}님과 서로 독립적으로 만남을 선택했어요. 이제 두 사람에게 동시에 연락처가 공개됐어요.`,
       button: "연결 확인하기",
+      talk: `${args.report.agentName} 에이전트와 이 만남 이야기하기`,
       note: "에이전트는 추천했고, 결정은 두 사람이 직접 했어요.",
       footer: "Datehaja 연결에 관한 비공개 서비스 메시지예요.",
+      settings:
+        "설정에서 이메일 수신 방식을 바꾸거나 매칭을 잠시 멈출 수 있어요.",
     },
     ja: {
       subject: "ふたりとも会いたいと答えました",
       headline: "今度は、ふたり自身で会いましょう。",
       greeting: `${args.firstName}さんと${args.counterpartFirstName}さんは、それぞれ独立して紹介を希望しました。連絡先が同時に公開されました。`,
       button: "つながりを確認する",
+      talk: `${args.report.agentName}とこの出会いについて話す`,
       note: "エージェントは提案し、決めたのはふたりです。",
       footer: "Datehajaのつながりに関する非公開メッセージです。",
+      settings: "メール設定の変更やマッチングの一時停止は設定から行えます。",
     },
     de: {
       subject: "Ihr habt beide Ja gesagt",
       headline: "Jetzt trefft euch als ihr selbst.",
       greeting: `Hallo ${args.firstName}, du und ${args.counterpartFirstName} habt euch unabhängig füreinander entschieden. Die Kontaktdaten sind jetzt für euch beide gleichzeitig sichtbar.`,
       button: "Verbindung öffnen",
+      talk: `Mit ${args.report.agentName} darüber sprechen`,
       note: "Die Agents haben empfohlen. Die Entscheidung war eure.",
       footer: "Eine private Servicenachricht zu deiner Datehaja-Verbindung.",
+      settings:
+        "In den Einstellungen kannst du E-Mails ändern oder das Matching pausieren.",
     },
     fr: {
       subject: "Vous avez tous les deux dit oui",
       headline: "À vous de vous rencontrer maintenant.",
       greeting: `Bonjour ${args.firstName}, ${args.counterpartFirstName} et vous avez choisi cette rencontre séparément. Vos coordonnées sont maintenant visibles au même moment.`,
       button: "Voir la mise en relation",
+      talk: `En parler avec ${args.report.agentName}`,
       note: "Les Agents ont conseillé. La décision vous appartenait.",
       footer: "Message privé concernant votre mise en relation Datehaja.",
+      settings:
+        "Dans les réglages, vous pouvez modifier les e-mails ou suspendre les rencontres.",
     },
     nl: {
       subject: "Jullie hebben allebei ja gezegd",
       headline: "Ontmoet elkaar nu als jezelf.",
       greeting: `Hoi ${args.firstName}, jij en ${args.counterpartFirstName} kozen onafhankelijk voor een kennismaking. Jullie contactgegevens zijn nu tegelijk zichtbaar.`,
       button: "Verbinding openen",
+      talk: `Erover praten met ${args.report.agentName}`,
       note: "De Agents adviseerden. De beslissing was van jullie.",
       footer: "Een privébericht over je Datehaja-verbinding.",
+      settings:
+        "In Instellingen kun je e-mails aanpassen of matching pauzeren.",
     },
     sv: {
       subject: "Ni har båda sagt ja",
       headline: "Nu kan ni träffas som er själva.",
       greeting: `Hej ${args.firstName}, du och ${args.counterpartFirstName} valde varandra oberoende av varandra. Kontaktuppgifterna visas nu för er båda samtidigt.`,
       button: "Öppna kontakten",
+      talk: `Prata med ${args.report.agentName} om mötet`,
       note: "Agenterna gav ett råd. Beslutet var ert.",
       footer: "Ett privat servicemeddelande om din Datehaja-kontakt.",
+      settings: "I Inställningar kan du ändra e-post eller pausa matchningen.",
     },
   }[language] ?? {
     subject: "Two humans said yes",
     headline: "Now meet as yourselves.",
     greeting: `Hi ${args.firstName}, you and ${args.counterpartFirstName} independently chose an introduction. Contact is now available to both of you at the same time.`,
     button: "Open the connection",
+    talk: `Talk it over with ${args.report.agentName}`,
     note: "The agents made a recommendation. The decision was yours.",
     footer: "This is a private service message about your Datehaja connection.",
+    settings:
+      "You can change what Datehaja emails you, or pause matching entirely, in Settings.",
   };
   const text = `${localized.greeting}
 
 ${localized.headline}
 
+${agentDateReportText(args.locale, args.report, args.agentReason)}
+
 ${localized.button}: ${args.url}
+${localized.talk}: ${args.conversationUrl}
 
 ${localized.note}
 
@@ -710,9 +975,12 @@ ${localized.note}
     html: shell(
       h1(localized.headline) +
         p(localized.greeting) +
+        agentDateReportHtml(args.locale, args.report, args.agentReason) +
         `<div style="margin-top:20px;">${button(args.url, localized.button)}</div>` +
+        `<div style="margin-top:10px;">${secondaryButton(args.conversationUrl, localized.talk)}</div>` +
         `<p style="margin:18px 0 0;font-size:13px;line-height:1.6;color:${BRAND.muted};">${escapeHtml(localized.note)}</p>`,
       localized.footer,
+      localized.settings,
     ),
   };
 }

@@ -188,6 +188,16 @@ describe("agent-date privacy and human consent", () => {
 
     expect(context?.a.locale).toBe("ko-KR");
     expect(context?.b.locale).toBe("en-US");
+    expect(context?.turns).toEqual([
+      {
+        round: 1,
+        speakerAgentName: "Aster",
+        content: "What makes quiet feel companionable to your person?",
+      },
+    ]);
+    expect(JSON.stringify(context)).not.toContain(
+      "Private internal inference that must never leave the backend.",
+    );
   });
 
   test("lets an existing owner persist email locale and matching boundaries", async () => {
