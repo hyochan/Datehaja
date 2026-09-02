@@ -142,6 +142,7 @@ describe("internationalisation", () => {
       "Text",
       "Brief",
       "Man",
+      "Agent",
       "Japan",
       "Canada",
       "France",

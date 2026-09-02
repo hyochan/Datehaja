@@ -10,13 +10,22 @@ import {
 } from "./AgentAvatar";
 
 describe("agent world sprites", () => {
-  it("maps every avatar palette to a versioned transparent asset", () => {
+  it("maps every avatar palette to a painted v3 sprite for the default look", () => {
     expect(Object.keys(AVATAR_SPRITES)).toEqual([...AVATAR_OPTIONS.palette]);
 
     for (const palette of AVATAR_OPTIONS.palette) {
       const source = spriteForAvatar({ ...DEFAULT_AVATAR, palette });
-      expect(source).toBe(`/agents/sprite-${palette}-v2.png`);
+      expect(source).toBe(`/agents/v3/female-${palette}-gentle.png`);
     }
+  });
+
+  it("falls back to the base expression when a face has no v3 sprite yet", () => {
+    const source = spriteForAvatar({
+      ...DEFAULT_AVATAR,
+      palette: "sky",
+      face: "curious",
+    });
+    expect(source).toMatch(/^\/agents\/(v3\/female-sky-[a-z]+|sprite-sky-v2)\.png$/);
   });
 
   it("renders each chosen hairstyle and headphone state into the portrait", () => {

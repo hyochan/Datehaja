@@ -1,7 +1,9 @@
 /* oxlint-disable react/only-export-components -- the renderer owns its compact avatar contract */
 import { useId, type CSSProperties } from "react";
 import {
+  AVATAR_GENDERS,
   AVATAR_PALETTES,
+  DEFAULT_AVATAR_GENDER,
   avatarPaletteForName,
   spritePathFor,
 } from "@convex/lib/agentAvatar";
@@ -12,6 +14,7 @@ export type AvatarHair = "wave" | "crop" | "bob" | "bun" | "buzz";
 export type AvatarOutfit = "cardigan" | "blazer" | "hoodie" | "starlight";
 export type AvatarAccessory =
   "none" | "glasses" | "headphones" | "star" | "scarf";
+export type AvatarGender = (typeof AVATAR_GENDERS)[number];
 
 export type AvatarConfig = {
   palette: AvatarPalette;
@@ -19,6 +22,8 @@ export type AvatarConfig = {
   hair: AvatarHair;
   outfit: AvatarOutfit;
   accessory: AvatarAccessory;
+  /** Which painted base the field sprite uses; older avatars have none. */
+  gender?: AvatarGender;
 };
 
 export const DEFAULT_AVATAR: AvatarConfig = {
@@ -27,9 +32,11 @@ export const DEFAULT_AVATAR: AvatarConfig = {
   hair: "wave",
   outfit: "cardigan",
   accessory: "none",
+  gender: DEFAULT_AVATAR_GENDER,
 };
 
 export const AVATAR_OPTIONS = {
+  gender: AVATAR_GENDERS,
   palette: AVATAR_PALETTES,
   face: ["gentle", "bright", "cool", "curious"],
   hair: ["wave", "crop", "bob", "bun", "buzz"],
@@ -42,7 +49,7 @@ export const AVATAR_SPRITES = Object.fromEntries(
 ) as Record<AvatarPalette, string>;
 
 export function spriteForAvatar(avatar: AvatarConfig) {
-  return spritePathFor(avatar.palette, avatar.face);
+  return spritePathFor(avatar.palette, avatar.face, avatar.gender);
 }
 
 export const PALETTES: Record<
@@ -126,6 +133,7 @@ export function avatarForName(
     accessory:
       avatar?.accessory ??
       AVATAR_OPTIONS.accessory[(hash * 7) % AVATAR_OPTIONS.accessory.length],
+    gender: avatar?.gender ?? DEFAULT_AVATAR_GENDER,
   };
 }
 

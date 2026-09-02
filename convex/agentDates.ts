@@ -193,6 +193,7 @@ const deliveryContextValidator = v.union(
       locale: v.string(),
       palette: v.optional(v.string()),
       face: v.optional(v.string()),
+      gender: v.optional(v.string()),
     }),
     b: v.object({
       firstName: v.string(),
@@ -200,6 +201,7 @@ const deliveryContextValidator = v.union(
       locale: v.string(),
       palette: v.optional(v.string()),
       face: v.optional(v.string()),
+      gender: v.optional(v.string()),
     }),
   }),
 );
@@ -218,6 +220,7 @@ type AgentDateDeliveryContext = {
     locale: string;
     palette?: string;
     face?: string;
+    gender?: string;
   };
   b: {
     firstName: string;
@@ -225,6 +228,7 @@ type AgentDateDeliveryContext = {
     locale: string;
     palette?: string;
     face?: string;
+    gender?: string;
   };
 };
 
@@ -256,10 +260,10 @@ function emailReportFor(
     ownerPalette,
     counterpartPalette,
     ownerSpriteUrl: hasSiteUrl
-      ? appUrl(spritePathFor(ownerPalette, mine.face))
+      ? appUrl(spritePathFor(ownerPalette, mine.face, mine.gender))
       : undefined,
     counterpartSpriteUrl: hasSiteUrl
-      ? appUrl(spritePathFor(counterpartPalette, theirs.face))
+      ? appUrl(spritePathFor(counterpartPalette, theirs.face, theirs.gender))
       : undefined,
     worldSourceTitle: info.date.worldSourceTitle,
     totalMoments: info.turns.length,
@@ -1544,6 +1548,7 @@ export const deliveryContext = internalQuery({
         ),
         palette: aAgent?.avatar?.palette,
         face: aAgent?.avatar?.face,
+        gender: aAgent?.avatar?.gender,
       },
       b: {
         firstName: bProfile.displayName.split(/\s+/)[0],
@@ -1555,6 +1560,7 @@ export const deliveryContext = internalQuery({
         ),
         palette: bAgent?.avatar?.palette,
         face: bAgent?.avatar?.face,
+        gender: bAgent?.avatar?.gender,
       },
     };
   },

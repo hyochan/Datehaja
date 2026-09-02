@@ -6047,7 +6047,6 @@ html[lang^="ja"] .agent-debrief-title {
   height: 100%;
   object-fit: contain;
   pointer-events: none;
-  image-rendering: pixelated;
   user-select: none;
 }
 

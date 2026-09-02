@@ -13,6 +13,7 @@ import { AgentLoopPlayer } from "../components/agent/AgentLoopPlayer";
 import { AgentAvatar } from "../components/agent/AgentAvatar";
 
 const JUNO_AVATAR = {
+  gender: "female",
   palette: "rose",
   face: "gentle",
   hair: "wave",
@@ -26,6 +27,7 @@ const SOL_AVATAR = {
   hair: "crop",
   outfit: "blazer",
   accessory: "glasses",
+  gender: "male",
 } as const;
 
 

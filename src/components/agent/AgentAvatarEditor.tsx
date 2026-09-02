@@ -17,6 +17,10 @@ const PALETTE_COLORS: Record<AvatarPalette, string> = {
 };
 
 const LABELS = {
+  gender: {
+    female: "Woman",
+    male: "Man",
+  },
   face: {
     gentle: "Gentle",
     bright: "Bright",
@@ -80,6 +84,17 @@ export function AgentAvatarEditor({
       )}
 
       <div className="avatar-editor-controls">
+        <AvatarChoice label={t("Agent")}>
+          {AVATAR_OPTIONS.gender.map((option) => (
+            <ChoiceButton
+              key={option}
+              selected={(value.gender ?? "female") === option}
+              onClick={() => set("gender", option)}
+            >
+              {t(LABELS.gender[option])}
+            </ChoiceButton>
+          ))}
+        </AvatarChoice>
         <AvatarChoice label={t("Color")}>
           {AVATAR_OPTIONS.palette.map((option) => (
             <button
