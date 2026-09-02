@@ -52,7 +52,7 @@ export const DEFAULT_AVATAR_GENDER: AvatarGenderName = "female";
  * `<gender>-<palette>-<face>.png`; anything missing falls back to the v2 set.
  */
 export const SPRITE_V3_FACES: Record<AvatarGenderName, readonly AvatarFaceName[]> = {
-  female: ["gentle"],
+  female: ["gentle", "bright", "cool", "curious"],
   male: ["gentle"],
 };
 
@@ -73,6 +73,26 @@ export const SPRITE_FACE_VARIANTS: Record<
   sunset: [],
   ink: [],
 };
+
+/** Genders that have an eyes-closed frame (`<gender>-<palette>-blink.png`). */
+export const SPRITE_V3_BLINK: Record<AvatarGenderName, boolean> = {
+  female: true,
+  male: false,
+};
+
+/** The eyes-closed frame layered over the sprite for a blink, if drawn. */
+export function blinkSpritePathFor(
+  palette: AvatarPaletteName,
+  gender?: string,
+): string | null {
+  const who = (
+    gender && (AVATAR_GENDERS as readonly string[]).includes(gender)
+      ? gender
+      : DEFAULT_AVATAR_GENDER
+  ) as AvatarGenderName;
+  if (!SPRITE_V3_BLINK[who] || SPRITE_V3_FACES[who].length === 0) return null;
+  return `/agents/v3/${who}-${palette}-blink.png`;
+}
 
 /**
  * Site-relative path of the hosted character sprite. When the owner picked a

@@ -19,6 +19,7 @@ const YOUR_AGENT = {
 const THEIR_AGENT = {
   name: "Sol",
   avatar: {
+    gender: "male" as const,
     palette: "violet" as const,
     face: "curious" as const,
     hair: "crop" as const,

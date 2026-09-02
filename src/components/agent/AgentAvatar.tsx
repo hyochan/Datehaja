@@ -5,6 +5,7 @@ import {
   AVATAR_PALETTES,
   DEFAULT_AVATAR_GENDER,
   avatarPaletteForName,
+  blinkSpritePathFor,
   spritePathFor,
 } from "@convex/lib/agentAvatar";
 
@@ -50,6 +51,15 @@ export const AVATAR_SPRITES = Object.fromEntries(
 
 export function spriteForAvatar(avatar: AvatarConfig) {
   return spritePathFor(avatar.palette, avatar.face, avatar.gender);
+}
+
+export function blinkSpriteForAvatar(avatar: AvatarConfig) {
+  return blinkSpritePathFor(avatar.palette, avatar.gender);
+}
+
+/** Seconds to offset idle motion so a row of agents never blinks in unison. */
+export function idleDelayForName(name: string) {
+  return (hashName(name || "Datehaja") % 47) / 10;
 }
 
 export const PALETTES: Record<

@@ -6038,7 +6038,42 @@ html[lang^="ja"] .agent-debrief-title {
   filter: drop-shadow(0 0.7rem 0.45rem rgb(10 8 12 / 30%));
   transform-origin: 50% 92%;
   animation: agent-sprite-idle 3.8s ease-in-out infinite;
+  animation-delay: var(--sprite-idle-delay, 0s);
   will-change: transform;
+}
+
+/* Eyes-closed frame layered over the sprite; flickers on for one blink. */
+.agent-world-sprite-blink {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  animation: agent-sprite-blink 5.4s steps(1, end) infinite;
+  animation-delay: var(--sprite-idle-delay, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agent-world-sprite-blink {
+    animation: none;
+  }
+}
+
+@keyframes agent-sprite-blink {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  91% {
+    opacity: 1;
+  }
+  94% {
+    opacity: 0;
+  }
 }
 
 .agent-world-sprite-art {
@@ -6046,6 +6081,7 @@ html[lang^="ja"] .agent-debrief-title {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  object-position: bottom center;
   pointer-events: none;
   user-select: none;
 }

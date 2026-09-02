@@ -2,6 +2,8 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import {
   avatarForName,
+  blinkSpriteForAvatar,
+  idleDelayForName,
   spriteForAvatar,
   type AvatarConfig,
 } from "./AgentAvatar";
@@ -444,16 +446,20 @@ export function AgentWorldSprite({
 }) {
   const { t } = useI18n();
   const avatar = avatarForName(person.name, person.avatar);
+  const blink = blinkSpriteForAvatar(avatar);
   return (
     <span
       className={`agent-world-sprite palette-${avatar.palette} hair-${avatar.hair} outfit-${avatar.outfit} ${speaking ? "is-speaking" : ""} ${className}`}
       style={
-        position
-          ? ({
-              "--sprite-x": `${position[0]}%`,
-              "--sprite-y": `${position[1]}%`,
-            } as CSSProperties)
-          : undefined
+        {
+          ...(position
+            ? {
+                "--sprite-x": `${position[0]}%`,
+                "--sprite-y": `${position[1]}%`,
+              }
+            : {}),
+          "--sprite-idle-delay": `${idleDelayForName(person.name)}s`,
+        } as CSSProperties
       }
       role="img"
       aria-label={
@@ -471,6 +477,14 @@ export function AgentWorldSprite({
           alt=""
           draggable={false}
         />
+        {blink && (
+          <img
+            className="agent-world-sprite-blink"
+            src={blink}
+            alt=""
+            draggable={false}
+          />
+        )}
       </span>
       <span className="agent-world-sprite-shadow" />
       <strong>{displayName ?? person.name}</strong>
