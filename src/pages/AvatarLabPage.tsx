@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
-import { spritePathFor } from "@convex/lib/agentAvatar";
 import {
   AVATAR_OPTIONS,
   AgentAvatar,
   DEFAULT_AVATAR,
+  spriteForAvatar,
   type AvatarConfig,
 } from "../components/agent/AgentAvatar";
 import {
@@ -119,13 +119,13 @@ export default function AvatarLabPage() {
       <section className="grid gap-6 md:grid-cols-3">
         <figure className="flex flex-col items-center gap-3 rounded-3xl border border-stone-200 bg-white p-6">
           <img
-            src={spritePathFor(avatar.palette, avatar.face)}
+            src={spriteForAvatar(avatar)}
             alt=""
             className="h-[384px] w-auto"
             draggable={false}
           />
           <figcaption className="text-sm text-stone-600">
-            PNG sprite v2 — palette only, no face/hair/outfit, no motion
+            PNG sprite — gender, palette and expression; blink + breathe via CSS in the world
           </figcaption>
         </figure>
         <figure className="flex flex-col items-center gap-3 rounded-3xl border border-stone-200 bg-white p-6">

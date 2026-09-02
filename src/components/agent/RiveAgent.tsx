@@ -11,8 +11,7 @@ import {
   useViewModelInstanceNumber,
   useViewModelInstanceTrigger,
 } from "@rive-app/react-canvas";
-import { spritePathFor } from "@convex/lib/agentAvatar";
-import { PALETTES, type AvatarConfig } from "./AgentAvatar";
+import { PALETTES, spriteForAvatar, type AvatarConfig } from "./AgentAvatar";
 
 /** Values of the `activity` number input on the Rive `Agent` view model. */
 export const RIVE_ACTIVITY = {
@@ -147,7 +146,7 @@ export function RiveAgent({
   if (failed) {
     return (
       <img
-        src={spritePathFor(avatar.palette, avatar.face)}
+        src={spriteForAvatar(avatar)}
         alt=""
         className={className}
         draggable={false}
