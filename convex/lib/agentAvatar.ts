@@ -53,7 +53,7 @@ export const DEFAULT_AVATAR_GENDER: AvatarGenderName = "female";
  */
 export const SPRITE_V3_FACES: Record<AvatarGenderName, readonly AvatarFaceName[]> = {
   female: ["gentle", "bright", "cool", "curious"],
-  male: ["gentle"],
+  male: ["gentle", "bright"],
 };
 
 /**
