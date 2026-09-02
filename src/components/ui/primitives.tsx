@@ -9,6 +9,28 @@ export function cx(...parts: Array<string | false | null | undefined>): string {
   return parts.filter(Boolean).join(" ");
 }
 
+/* --------------------------------- Icons ---------------------------------- */
+
+export function ChevronDownIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden="true"
+      focusable="false"
+      className={className}
+    >
+      <path
+        d="m4 6 4 4 4-4"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 /* -------------------------------- Button ---------------------------------- */
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "quiet";
@@ -282,8 +304,10 @@ export function Field({
   );
 }
 
-const CONTROL =
-  "w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-raised)] px-4 py-3 text-[15px] shadow-[0_5px_18px_-16px_var(--shadow-ink)] transition-[border-color,box-shadow] placeholder:text-[var(--text-muted)] focus:border-ember-400 focus:outline-none focus-visible:outline-none focus:ring-3 focus:ring-ember-200/30";
+const CONTROL_BASE =
+  "w-full border border-[var(--border)] bg-[var(--bg-raised)] shadow-[0_5px_18px_-16px_var(--shadow-ink)] transition-[border-color,box-shadow] placeholder:text-[var(--text-muted)] focus:border-ember-400 focus:outline-none focus-visible:outline-none focus:ring-3 focus:ring-ember-200/30";
+
+const CONTROL = cx(CONTROL_BASE, "rounded-2xl px-4 py-3 text-[15px]");
 
 export function TextInput(
   props: React.InputHTMLAttributes<HTMLInputElement> & { invalid?: boolean },
@@ -314,15 +338,45 @@ export function TextArea(
   );
 }
 
-export function Select(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
-  const { className, children, ...rest } = props;
+/**
+ * A select with the app's own chevron. The native arrow is hidden and the
+ * icon lives in a wrapper, so it keeps a real inset instead of hugging the
+ * edge, and it follows the control's focus colour. `compact` is the dense
+ * variant for toolbars and filters; the wrapper takes `className`.
+ */
+export function Select({
+  className,
+  children,
+  invalid,
+  compact,
+  ...rest
+}: React.SelectHTMLAttributes<HTMLSelectElement> & {
+  invalid?: boolean;
+  compact?: boolean;
+}) {
   return (
-    <select
-      {...rest}
-      className={cx(CONTROL, "appearance-none pr-9", className)}
-    >
-      {children}
-    </select>
+    <span className={cx("group relative block", className)}>
+      <select
+        {...rest}
+        aria-invalid={invalid || undefined}
+        className={cx(
+          CONTROL_BASE,
+          "cursor-pointer appearance-none",
+          compact
+            ? "rounded-xl py-1.5 pl-3 pr-9 text-[14px]"
+            : "rounded-2xl py-3 pl-4 pr-11 text-[15px]",
+          invalid && "border-[var(--tint-ember-border)]",
+        )}
+      >
+        {children}
+      </select>
+      <ChevronDownIcon
+        className={cx(
+          "pointer-events-none absolute top-1/2 -translate-y-1/2 text-[var(--text-muted)] transition-colors group-focus-within:text-ember-500",
+          compact ? "right-3 h-3.5 w-3.5" : "right-4 h-4 w-4",
+        )}
+      />
+    </span>
   );
 }
 
