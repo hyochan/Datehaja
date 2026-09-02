@@ -159,6 +159,9 @@ export function AgentAvatar({
           "--avatar-primary": palette.primary,
           "--avatar-deep": palette.deep,
           "--avatar-ink": palette.ink,
+          // Stagger the idle animations per agent so a row of avatars never
+          // blinks or breathes in unison.
+          "--avatar-anim-delay": `${(hashName(name || "Datehaja") % 47) / 10}s`,
         } as CSSProperties
       }
     >
@@ -394,13 +397,15 @@ export function AgentAvatar({
 
         {config.face === "gentle" && (
           <>
-            <path
-              d="M59 91c3 3 7 3 10 0m22 0c3 3 7 3 10 0"
-              stroke={palette.ink}
-              strokeWidth="2.7"
-              strokeLinecap="round"
-              fill="none"
-            />
+            <g className="agent-avatar-eyes">
+              <path
+                d="M59 91c3 3 7 3 10 0m22 0c3 3 7 3 10 0"
+                stroke={palette.ink}
+                strokeWidth="2.7"
+                strokeLinecap="round"
+                fill="none"
+              />
+            </g>
             <path
               d="M71 106c6 5 12 5 18 0"
               stroke={palette.deep}
@@ -412,8 +417,10 @@ export function AgentAvatar({
         )}
         {config.face === "bright" && (
           <>
-            <circle cx="64" cy="91" r="3.5" fill={palette.ink} />
-            <circle cx="96" cy="91" r="3.5" fill={palette.ink} />
+            <g className="agent-avatar-eyes">
+              <circle cx="64" cy="91" r="3.5" fill={palette.ink} />
+              <circle cx="96" cy="91" r="3.5" fill={palette.ink} />
+            </g>
             <path
               d="M69 105c7 9 15 9 22 0"
               stroke={palette.deep}
@@ -425,12 +432,14 @@ export function AgentAvatar({
         )}
         {config.face === "cool" && (
           <>
-            <path
-              d="M59 92h10m22 0h10"
-              stroke={palette.ink}
-              strokeWidth="3"
-              strokeLinecap="round"
-            />
+            <g className="agent-avatar-eyes">
+              <path
+                d="M59 92h10m22 0h10"
+                stroke={palette.ink}
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+            </g>
             <path
               d="M73 108h14"
               stroke={palette.deep}
@@ -441,14 +450,16 @@ export function AgentAvatar({
         )}
         {config.face === "curious" && (
           <>
-            <circle cx="64" cy="92" r="3.4" fill={palette.ink} />
-            <path
-              d="M91 91c3 3 7 3 10 0"
-              stroke={palette.ink}
-              strokeWidth="2.7"
-              strokeLinecap="round"
-              fill="none"
-            />
+            <g className="agent-avatar-eyes">
+              <circle cx="64" cy="92" r="3.4" fill={palette.ink} />
+              <path
+                d="M91 91c3 3 7 3 10 0"
+                stroke={palette.ink}
+                strokeWidth="2.7"
+                strokeLinecap="round"
+                fill="none"
+              />
+            </g>
             <path
               d="M73 108c5 3 10 3 15-1"
               stroke={palette.deep}
