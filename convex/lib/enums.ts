@@ -80,82 +80,6 @@ export const moderationStatusValidator = v.union(
   v.literal("suspended"),
 );
 
-export const availabilityStatusValidator = v.union(
-  v.literal("open"),
-  v.literal("held"),
-  v.literal("booked"),
-  v.literal("expired"),
-  v.literal("cancelled"),
-);
-
-/** Date-plan lifecycle. Transitions are enforced in lib/stateMachine.ts. */
-export const dropStatusValidator = v.union(
-  v.literal("draft"),
-  v.literal("matching"),
-  v.literal("researching"),
-  v.literal("inviting"),
-  v.literal("partially_accepted"),
-  v.literal("confirmed"),
-  v.literal("expired_no_match"),
-  v.literal("cancelled"),
-  v.literal("completed"),
-  v.literal("failed"),
-);
-export type DropStatus =
-  | "draft"
-  | "matching"
-  | "researching"
-  | "inviting"
-  | "partially_accepted"
-  | "confirmed"
-  | "expired_no_match"
-  | "cancelled"
-  | "completed"
-  | "failed";
-
-export const participantStateValidator = v.union(
-  v.literal("invited"),
-  v.literal("viewed"),
-  v.literal("accepted"),
-  v.literal("passed"),
-  v.literal("withdrawn"),
-  v.literal("confirmed"),
-  v.literal("expired"),
-  v.literal("cancelled"),
-  v.literal("replaced"),
-);
-export type ParticipantState =
-  | "invited"
-  | "viewed"
-  | "accepted"
-  | "passed"
-  | "withdrawn"
-  | "confirmed"
-  | "expired"
-  | "cancelled"
-  | "replaced";
-
-export const dateOutcomeValidator = v.union(
-  v.literal("went"),
-  v.literal("no_show"),
-  v.literal("left_early"),
-  v.literal("did_not_go"),
-);
-
-export const dateSafetyValidator = v.union(
-  v.literal("safe"),
-  v.literal("uncomfortable"),
-  v.literal("unsafe"),
-  v.literal("prefer_not_to_say"),
-);
-
-export const meetAgainValidator = v.union(
-  v.literal("yes"),
-  v.literal("maybe"),
-  v.literal("no"),
-  v.literal("prefer_not_to_say"),
-);
-
 /** The primary, private reason behind an Agent's independent verdict.
  * These codes are deliberately about fit, never a person's popularity or a
  * protected characteristic. */
@@ -185,37 +109,6 @@ export const agentDecisionCodeValidator = v.union(
   v.literal("insufficient_signal"),
 );
 
-export const profileAccuracyValidator = v.union(
-  v.literal("accurate"),
-  v.literal("mostly_accurate"),
-  v.literal("different"),
-  v.literal("prefer_not_to_say"),
-);
-
-export const respectValidator = v.union(
-  v.literal("yes"),
-  v.literal("mostly"),
-  v.literal("no"),
-  v.literal("prefer_not_to_say"),
-);
-
-export const connectionQualityValidator = v.union(
-  v.literal("easy"),
-  v.literal("mixed"),
-  v.literal("difficult"),
-  v.literal("prefer_not_to_say"),
-);
-
-export const passReasonValidator = v.union(
-  v.literal("timing"),
-  v.literal("location"),
-  v.literal("activity"),
-  v.literal("profile"),
-  v.literal("budget"),
-  v.literal("not_feeling_it"),
-  v.literal("unspecified"),
-);
-
 export const reportCategoryValidator = v.union(
   v.literal("harassment"),
   v.literal("inappropriate_content"),
@@ -235,14 +128,6 @@ export const reportStatusValidator = v.union(
 );
 
 export const emailKindValidator = v.union(
-  v.literal("welcome"),
-  v.literal("invitation"),
-  v.literal("accepted_waiting"),
-  v.literal("confirmed"),
-  v.literal("reminder"),
-  v.literal("updated"),
-  v.literal("cancelled"),
-  v.literal("expired"),
   v.literal("safety"),
   v.literal("concierge_reply"),
   v.literal("agent_debrief"),
@@ -250,10 +135,6 @@ export const emailKindValidator = v.union(
 );
 
 export const aiPurposeValidator = v.union(
-  v.literal("rank_candidates"),
-  v.literal("build_plan"),
-  v.literal("compat_blurb"),
-  v.literal("venue_summary"),
   v.literal("moderation"),
   v.literal("agent_companion"),
   v.literal("agent_date_turn"),
@@ -277,21 +158,7 @@ export const agentQuestionStatusValidator = v.union(
   v.literal("skipped"),
 );
 
-export const confidenceValidator = v.union(
-  v.literal("high"),
-  v.literal("medium"),
-  v.literal("low"),
-);
-
 export const notificationKindValidator = v.union(
-  v.literal("invitation"),
-  v.literal("accepted"),
-  v.literal("confirmed"),
-  v.literal("expired"),
-  v.literal("cancelled"),
-  v.literal("searching"),
-  v.literal("research_done"),
-  v.literal("reminder"),
   v.literal("safety"),
   v.literal("message"),
   v.literal("system"),

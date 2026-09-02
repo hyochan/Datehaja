@@ -247,36 +247,3 @@ export const verifyIntegrations = internalAction({
     return report;
   },
 });
-
-/** Live end-to-end research probe: Firecrawl → OpenAI → Convex venues. */
-export const probeResearch = internalAction({
-  args: {
-    city: v.optional(v.string()),
-    area: v.optional(v.string()),
-  },
-  returns: v.any(),
-  handler: async (ctx, args) => {
-    const { researchDateOptions } = await import("./research");
-    const start = Date.now();
-    const outcome = await researchDateOptions(ctx, {
-      countryCode: "KR",
-      query: {
-        city: args.city ?? "Seoul",
-        area: args.area ?? "Seongsu",
-        whenIso: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
-        timezone: "Asia/Seoul",
-        budgetMin: 25000,
-        budgetMax: 70000,
-        currency: "KRW",
-        interests: ["Films", "Coffee"],
-        dateTypes: ["dinner", "dessert"],
-        vibe: "quiet",
-        dietary: [],
-        accessibility: [],
-        indoorOutdoor: "indoor",
-        desiredDurationMin: 150,
-      },
-    });
-    return { ...outcome, elapsedMs: Date.now() - start };
-  },
-});

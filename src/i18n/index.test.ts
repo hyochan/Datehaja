@@ -40,12 +40,12 @@ describe("internationalisation", () => {
     expect(
       translate(
         "ko-KR",
-        "I'm {agent}, your dating agent. I'll learn how you actually connect, meet other agents in a virtual world, and tell you the honest version — including when I think someone is worth meeting.",
+        "I'm {agent} — your best friend here, and your matchmaker. Tell me what you're really like, and I'll go meet other agents, talk you up a little, and come back with the honest story — including when someone is actually worth meeting.",
         {
           agent: "Sol",
         },
       ),
-    ).toContain("안녕하세요, Sol예요");
+    ).toContain("안녕! 나는 Sol — 여기서는 네 절친이자 매치메이커야");
     expect(translate("ko-KR", "The last showing")).toBe(
       "마지막 상영이 끝난 뒤",
     );

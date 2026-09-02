@@ -35,7 +35,6 @@ export function appUrl(path = "/"): string {
 export const logEmail = internalMutation({
   args: {
     userId: v.optional(v.id("users")),
-    dropId: v.optional(v.id("datePlans")),
     kind: emailKindValidator,
     toAddress: v.string(),
     fromAddress: v.string(),
@@ -57,30 +56,6 @@ export const logEmail = internalMutation({
       error: args.error ? truncate(args.error, 300) : undefined,
       sentAt: Date.now(),
     });
-  },
-});
-
-export const attachThreadToParticipant = internalMutation({
-  args: {
-    dropId: v.id("datePlans"),
-    userId: v.id("users"),
-    messageId: v.string(),
-    threadId: v.string(),
-  },
-  returns: v.null(),
-  handler: async (ctx, args) => {
-    const participant = await ctx.db
-      .query("datePlanParticipants")
-      .withIndex("by_drop_and_user", (q) =>
-        q.eq("dropId", args.dropId).eq("userId", args.userId),
-      )
-      .unique();
-    if (!participant) return null;
-    await ctx.db.patch("datePlanParticipants", participant._id, {
-      emailMessageId: args.messageId,
-      emailThreadId: args.threadId,
-    });
-    return null;
   },
 });
 
@@ -113,19 +88,7 @@ export type SendOutcome = {
   error?: string;
 };
 
-type EmailKind =
-  | "welcome"
-  | "invitation"
-  | "accepted_waiting"
-  | "confirmed"
-  | "reminder"
-  | "updated"
-  | "cancelled"
-  | "expired"
-  | "safety"
-  | "concierge_reply"
-  | "agent_debrief"
-  | "agent_connection";
+type EmailKind = "safety" | "concierge_reply" | "agent_debrief" | "agent_connection";
 
 /** Which preference toggle governs which kind of message. Safety mail always sends. */
 function isAllowed(
@@ -134,25 +97,16 @@ function isAllowed(
     notifyEmail: boolean;
     notifyInvitations: boolean;
     notifyConfirmations: boolean;
-    notifyReminders: boolean;
   } | null,
 ): boolean {
   if (kind === "safety") return true;
   if (!prefs) return true;
   if (!prefs.notifyEmail) return false;
   switch (kind) {
-    case "invitation":
     case "agent_debrief":
       return prefs.notifyInvitations;
-    case "confirmed":
-    case "accepted_waiting":
-    case "updated":
-    case "cancelled":
-    case "expired":
     case "agent_connection":
       return prefs.notifyConfirmations;
-    case "reminder":
-      return prefs.notifyReminders;
     default:
       return true;
   }
@@ -160,13 +114,12 @@ function isAllowed(
 
 /**
  * Send one Concierge email. Never throws — a mail failure must not take down
- * the date plan it was describing.
+ * the agent date it was describing.
  */
 export async function sendConciergeEmail(
   ctx: ActionCtx,
   args: {
     userId: Id<"users">;
-    dropId?: Id<"datePlans">;
     kind: EmailKind;
     content: EmailContent;
     /** Makes retries safe — the same key never sends twice. */
@@ -183,7 +136,6 @@ export async function sendConciergeEmail(
       notifyEmail: boolean;
       notifyInvitations: boolean;
       notifyConfirmations: boolean;
-      notifyReminders: boolean;
     } | null;
   };
 
@@ -193,7 +145,6 @@ export async function sendConciergeEmail(
   if (!recipient.email) {
     await ctx.runMutation(internal.mail.logEmail, {
       userId: args.userId,
-      dropId: args.dropId,
       kind: args.kind,
       toAddress: "(none)",
       fromAddress,
@@ -207,7 +158,6 @@ export async function sendConciergeEmail(
   if (!isAllowed(args.kind, recipient.preferences)) {
     await ctx.runMutation(internal.mail.logEmail, {
       userId: args.userId,
-      dropId: args.dropId,
       kind: args.kind,
       toAddress: recipient.email,
       fromAddress,
@@ -220,7 +170,6 @@ export async function sendConciergeEmail(
   if (!hasAgentMail() || !inboxId) {
     await ctx.runMutation(internal.mail.logEmail, {
       userId: args.userId,
-      dropId: args.dropId,
       kind: args.kind,
       toAddress: recipient.email,
       fromAddress,
@@ -239,13 +188,11 @@ export async function sendConciergeEmail(
       text: args.content.text,
       html: args.content.html,
       labels: args.labels ?? [args.kind],
-      headers: args.dropId ? { "X-Datehaja-Id": args.dropId } : undefined,
       idempotencyKey: args.idempotencyKey,
     });
 
     await ctx.runMutation(internal.mail.logEmail, {
       userId: args.userId,
-      dropId: args.dropId,
       kind: args.kind,
       toAddress: recipient.email,
       fromAddress: inboxId,
@@ -254,15 +201,6 @@ export async function sendConciergeEmail(
       agentMailThreadId: sent.thread_id,
       status: "sent",
     });
-
-    if (args.dropId) {
-      await ctx.runMutation(internal.mail.attachThreadToParticipant, {
-        dropId: args.dropId,
-        userId: args.userId,
-        messageId: sent.message_id,
-        threadId: sent.thread_id,
-      });
-    }
 
     return {
       status: "sent",
@@ -273,7 +211,6 @@ export async function sendConciergeEmail(
     const error = String(e);
     await ctx.runMutation(internal.mail.logEmail, {
       userId: args.userId,
-      dropId: args.dropId,
       kind: args.kind,
       toAddress: recipient.email,
       fromAddress: inboxId,
@@ -317,21 +254,9 @@ export const recordEvent = internalMutation({
       .unique();
     if (existing) return { duplicate: true, eventDocId: existing._id };
 
-    // Associate the event with the user and drop behind the thread, if we know it.
+    // Associate the event with the sender, if we know them.
     let userId: Id<"users"> | undefined;
-    let dropId: Id<"datePlans"> | undefined;
-
-    if (args.threadId) {
-      const participant = await ctx.db
-        .query("datePlanParticipants")
-        .withIndex("by_thread", (q) => q.eq("emailThreadId", args.threadId))
-        .first();
-      if (participant) {
-        userId = participant.userId;
-        dropId = participant.dropId;
-      }
-    }
-    if (!userId && args.fromAddress) {
+    if (args.fromAddress) {
       const address = parseAddress(args.fromAddress);
       const user = await ctx.db
         .query("users")
@@ -351,7 +276,6 @@ export const recordEvent = internalMutation({
       subject: args.subject ? truncate(args.subject, 200) : undefined,
       preview: args.preview ? truncate(args.preview, 300) : undefined,
       userId,
-      dropId,
       signatureVerified: args.signatureVerified,
       processed: false,
       receivedAt: Date.now(),
@@ -385,9 +309,9 @@ export const getEvent = internalQuery({
 });
 
 /**
- * React to inbound mail. Someone replying to a date invitation gets a
- * Concierge reply pointing them back into the app — Datehaja deliberately does
- * not accept "yes" by email, because acting on a date needs a real session.
+ * React to inbound mail. Someone replying to a debrief gets a Concierge reply
+ * pointing them back into the app — Datehaja deliberately does not accept
+ * consent by email, because a yes needs a real authenticated session.
  */
 export const handleInbound = internalAction({
   args: { eventDocId: v.id("agentMailEvents") },
@@ -399,7 +323,6 @@ export const handleInbound = internalAction({
       _id: Id<"agentMailEvents">;
       eventType: string;
       userId?: Id<"users">;
-      dropId?: Id<"datePlans">;
       fromAddress?: string;
     } | null;
 
@@ -413,11 +336,10 @@ export const handleInbound = internalAction({
 
         await sendConciergeEmail(ctx, {
           userId: event.userId,
-          dropId: event.dropId,
           kind: "concierge_reply",
           content: conciergeReply({
             firstName: recipient.firstName,
-            url: appUrl(event.dropId ? `/drop/${event.dropId}` : "/dashboard"),
+            url: appUrl("/dashboard"),
           }),
           idempotencyKey: `concierge-reply-${args.eventDocId}`,
           labels: ["concierge_reply"],
@@ -428,8 +350,7 @@ export const handleInbound = internalAction({
           kind: "message",
           title: "We got your email",
           body: "Datehaja Concierge replied with what you can do from here.",
-          dropId: event.dropId,
-          href: event.dropId ? `/drop/${event.dropId}` : "/dashboard",
+          href: "/dashboard",
         });
       }
 

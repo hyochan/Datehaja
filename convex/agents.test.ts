@@ -148,7 +148,9 @@ describe("periodic Agent learning", () => {
         .first(),
     }));
     expect(result.agent?.name).toBe("Juno");
-    expect(result.message?.content).toMatch(/^I'm Juno, your dating agent\./);
+    expect(result.message?.content).toMatch(
+      /^I'm Juno — your best friend here, and your matchmaker\./,
+    );
   });
 
   test("creates one localized open question and never duplicates it", async () => {

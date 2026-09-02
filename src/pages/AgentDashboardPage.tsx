@@ -575,11 +575,11 @@ export default function AgentDashboardPage() {
                       </div>
                     )}
                     {item.role === "agent" &&
-                    /^I'm .+, your dating agent\. I'll learn how you actually connect,/i.test(
+                    /^I'm .+, your dating agent\. I'll learn how you actually connect,|^I'm .+ — your best friend here, and your matchmaker\./i.test(
                       item.content,
                     )
                       ? t(
-                          "I'm {agent}, your dating agent. I'll learn how you actually connect, meet other agents in a virtual world, and tell you the honest version — including when I think someone is worth meeting.",
+                          "I'm {agent} — your best friend here, and your matchmaker. Tell me what you're really like, and I'll go meet other agents, talk you up a little, and come back with the honest story — including when someone is actually worth meeting.",
                           { agent: agent.name },
                         )
                       : item.content}

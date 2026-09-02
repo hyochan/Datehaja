@@ -1,6 +1,5 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
-import type { GenericId, VId } from "convex/values";
 import { authTables } from "@convex-dev/auth/server";
 import {
   aiPurposeValidator,
@@ -9,44 +8,22 @@ import {
   agentDecisionCodeValidator,
   alcoholValidator,
   atmosphereValidator,
-  availabilityStatusValidator,
-  confidenceValidator,
-  dateOutcomeValidator,
-  dateSafetyValidator,
   dayPreferenceValidator,
-  dropStatusValidator,
   emailKindValidator,
   genderValidator,
   indoorOutdoorValidator,
   moderationStatusValidator,
-  connectionQualityValidator,
-  meetAgainValidator,
   notificationKindValidator,
-  participantStateValidator,
-  passReasonValidator,
   profileStatusValidator,
   photoVisibilityValidator,
   preferenceStrengthValidator,
-  profileAccuracyValidator,
   relationshipIntentValidator,
   reportCategoryValidator,
   reportStatusValidator,
-  respectValidator,
   smokingValidator,
   socialEnergyValidator,
 } from "./lib/enums";
 import { agentAvatarValidator } from "./lib/agentAvatar";
-
-/**
- * Runtime-compatible validator for references created before dateDrops was
- * renamed to datePlans. The cast deliberately keeps new application code
- * typed to datePlans while Convex can continue validating immutable legacy
- * production history. All current writers emit datePlans IDs only.
- */
-const datePlanIdValidator = v.union(
-  v.id("datePlans"),
-  v.id("dateDrops"),
-) as unknown as VId<GenericId<"datePlans">>;
 
 export default defineSchema({
   // ---- auth (users, authAccounts, authSessions, ...) -------------------
@@ -311,6 +288,10 @@ export default defineSchema({
   })
     .index("by_initiator", ["initiatorUserId"])
     .index("by_counterpart", ["counterpartUserId"])
+    .index("by_initiator_and_counterpart", [
+      "initiatorUserId",
+      "counterpartUserId",
+    ])
     .index("by_status", ["status"]),
 
   agentDateTurns: defineTable({
@@ -336,6 +317,7 @@ export default defineSchema({
     createdAt: v.number(),
   })
     .index("by_event", ["event"])
+    .index("by_event_and_created", ["event", "createdAt"])
     .index("by_user", ["userId"])
     .index("by_date", ["agentDateId"]),
 
@@ -351,21 +333,6 @@ export default defineSchema({
     locale: v.string(),
   }).index("by_user", ["userId"]),
 
-  // ---- availability ----------------------------------------------------
-  availability: defineTable({
-    userId: v.id("users"),
-    startMs: v.number(),
-    endMs: v.number(),
-    timezone: v.string(),
-    status: availabilityStatusValidator,
-    heldByDropId: v.optional(datePlanIdValidator),
-    note: v.optional(v.string()),
-  })
-    .index("by_user", ["userId"])
-    .index("by_user_and_start", ["userId", "startMs"])
-    .index("by_status_and_start", ["status", "startMs"])
-    .index("by_drop", ["heldByDropId"]),
-
   // ---- safety ----------------------------------------------------------
   blocks: defineTable({
     blockerUserId: v.id("users"),
@@ -379,7 +346,7 @@ export default defineSchema({
   reports: defineTable({
     reporterUserId: v.id("users"),
     reportedUserId: v.id("users"),
-    dropId: v.optional(datePlanIdValidator),
+    agentDateId: v.optional(v.id("agentDates")),
     category: reportCategoryValidator,
     details: v.string(),
     status: reportStatusValidator,
@@ -390,325 +357,12 @@ export default defineSchema({
     .index("by_reported", ["reportedUserId"])
     .index("by_status", ["status"]),
 
-  /** Optional private safety setup. Never returned to another user. */
-  safetyProfiles: defineTable({
-    userId: v.id("users"),
-    trustedContactName: v.optional(v.string()),
-    trustedContactEmail: v.optional(v.string()),
-    trustedContactConsent: v.boolean(),
-    postDateCheckIn: v.boolean(),
-    updatedAt: v.number(),
-  }).index("by_user", ["userId"]),
-
-  /** A user-triggered copy of a confirmed plan sent to their trusted contact. */
-  safetyPlanShares: defineTable({
-    userId: v.id("users"),
-    dropId: datePlanIdValidator,
-    status: v.union(
-      v.literal("queued"),
-      v.literal("sent"),
-      v.literal("failed"),
-      v.literal("skipped_no_provider"),
-    ),
-    error: v.optional(v.string()),
-    sentAt: v.optional(v.number()),
-    updatedAt: v.number(),
-  })
-    .index("by_user", ["userId"])
-    .index("by_drop_and_user", ["dropId", "userId"]),
-
-  // ---- matching --------------------------------------------------------
-  matchingRuns: defineTable({
-    initiatorUserId: v.id("users"),
-    availabilityId: v.optional(v.id("availability")),
-    dropId: v.optional(datePlanIdValidator),
-    /** "seeking_second" when re-matching after a pass. */
-    intent: v.union(v.literal("new_drop"), v.literal("seeking_second")),
-    stage: v.union(
-      v.literal("hard_filter"),
-      v.literal("scoring"),
-      v.literal("ai_ranking"),
-      v.literal("research"),
-      v.literal("planning"),
-      v.literal("inviting"),
-      v.literal("done"),
-      v.literal("failed"),
-    ),
-    status: v.union(
-      v.literal("running"),
-      v.literal("succeeded"),
-      v.literal("failed"),
-      v.literal("no_candidates"),
-    ),
-    poolSize: v.number(),
-    hardPassCount: v.number(),
-    scoredCount: v.number(),
-    aiRankedCount: v.number(),
-    error: v.optional(v.string()),
-    startedAt: v.number(),
-    finishedAt: v.optional(v.number()),
-  })
-    .index("by_initiator", ["initiatorUserId"])
-    .index("by_drop", ["dropId"])
-    .index("by_status", ["status"]),
-
-  candidateScores: defineTable({
-    runId: v.id("matchingRuns"),
-    /** Lexicographically ordered so a pair is only stored one way. */
-    userAId: v.id("users"),
-    userBId: v.id("users"),
-    deterministicScore: v.number(),
-    signals: v.object({
-      sharedInterests: v.array(v.string()),
-      sharedLanguages: v.array(v.string()),
-      distanceKm: v.number(),
-      sharedAreas: v.optional(v.array(v.string())),
-      areaMatch: v.optional(v.number()),
-      overlapMinutes: v.number(),
-      overlapStartMs: v.number(),
-      overlapEndMs: v.number(),
-      budgetOverlap: v.boolean(),
-      budgetLowPerPerson: v.number(),
-      budgetHighPerPerson: v.number(),
-      sharedDateTypes: v.array(v.string()),
-      styleMatch: v.number(),
-      lifestyleMatch: v.number(),
-      personalityMatch: v.optional(v.number()),
-      tasteMatch: v.optional(v.number()),
-      trustMatch: v.optional(v.number()),
-    }),
-    aiScore: v.optional(v.number()),
-    aiRationale: v.optional(v.string()),
-    aiFriction: v.optional(v.string()),
-    aiSuggestedDateType: v.optional(v.string()),
-    aiRunId: v.optional(v.id("aiRuns")),
-    stage: v.union(
-      v.literal("scored"),
-      v.literal("ai_ranked"),
-      v.literal("selected"),
-      v.literal("rejected"),
-    ),
-    rejectionReason: v.optional(v.string()),
-  })
-    .index("by_run", ["runId"])
-    .index("by_run_and_stage", ["runId", "stage"])
-    .index("by_userA", ["userAId"])
-    .index("by_userB", ["userBId"]),
-
-  // ---- date plans ------------------------------------------------------
-  datePlans: defineTable({
-    status: dropStatusValidator,
-    initiatorUserId: v.id("users"),
-
-    countryCode: v.string(),
-    city: v.string(),
-    area: v.string(),
-    approxLat: v.number(),
-    approxLng: v.number(),
-    timezone: v.string(),
-
-    startMs: v.number(),
-    endMs: v.number(),
-
-    title: v.string(),
-    theme: v.string(),
-    summary: v.string(),
-    whyItFits: v.string(),
-    itinerary: v.array(
-      v.object({
-        order: v.number(),
-        venueId: v.optional(v.id("venues")),
-        venueName: v.string(),
-        category: v.string(),
-        startOffsetMin: v.number(),
-        durationMin: v.number(),
-        address: v.string(),
-        note: v.string(),
-        mapsQuery: v.string(),
-        sourceUrl: v.optional(v.string()),
-        confidence: confidenceValidator,
-      }),
-    ),
-    estimatedDurationMin: v.number(),
-    estimatedCostPerPerson: v.number(),
-    currency: v.string(),
-    meetingInstructions: v.string(),
-
-    researchRunId: v.optional(v.id("researchRuns")),
-    planAiRunId: v.optional(v.id("aiRuns")),
-    matchingRunId: v.optional(v.id("matchingRuns")),
-
-    confirmDeadlineMs: v.number(),
-    candidateAttempts: v.number(),
-    maxCandidateAttempts: v.number(),
-
-    confirmedAt: v.optional(v.number()),
-    cancelledAt: v.optional(v.number()),
-    cancelledByUserId: v.optional(v.id("users")),
-    cancelReason: v.optional(v.string()),
-    expiredAt: v.optional(v.number()),
-    completedAt: v.optional(v.number()),
-    /** Set only when both private post-date answers are an explicit yes. */
-    mutualMeetAgainAt: v.optional(v.number()),
-    failureReason: v.optional(v.string()),
-
-    isDemo: v.boolean(),
-    /** Set once reminders have been queued, so a backlog drains instead of the
-     *  sweep re-picking the same soonest batch every run. */
-    remindersQueuedAt: v.optional(v.number()),
-    updatedAt: v.number(),
-  })
-    .index("by_status", ["status"])
-    .index("by_status_and_deadline", ["status", "confirmDeadlineMs"])
-    .index("by_status_and_start", ["status", "startMs"])
-    .index("by_status_and_end", ["status", "endMs"])
-    .index("by_initiator", ["initiatorUserId"]),
-
-  datePlanParticipants: defineTable({
-    dropId: datePlanIdValidator,
-    userId: v.id("users"),
-    role: v.union(v.literal("initiator"), v.literal("invitee")),
-    state: participantStateValidator,
-
-    /** Personalised, privacy-safe reasoning shown to THIS participant. */
-    privateWhyItFits: v.string(),
-    compatibilityBlurb: v.string(),
-    candidateScoreId: v.optional(v.id("candidateScores")),
-    availabilityId: v.optional(v.id("availability")),
-
-    invitedAt: v.number(),
-    viewedAt: v.optional(v.number()),
-    respondedAt: v.optional(v.number()),
-    /** Set the first time this participant accepts, so a calendar feed can
-     *  preserve a later cancellation without adding declined invitations. */
-    calendarReservedAt: v.optional(v.number()),
-    passReason: v.optional(passReasonValidator),
-    attendanceConfirmed: v.optional(v.boolean()),
-
-    emailMessageId: v.optional(v.string()),
-    emailThreadId: v.optional(v.string()),
-    expiryNotified: v.optional(v.boolean()),
-    reminderSentAt: v.optional(v.number()),
-  })
-    .index("by_drop", ["dropId"])
-    .index("by_user", ["userId"])
-    .index("by_user_and_state", ["userId", "state"])
-    .index("by_drop_and_user", ["dropId", "userId"])
-    .index("by_thread", ["emailThreadId"]),
-
-  /** Private post-date response. It is never shown to the other participant. */
-  dateFeedback: defineTable({
-    dropId: datePlanIdValidator,
-    userId: v.id("users"),
-    /** Counterpart being reviewed. Optional for legacy feedback rows. */
-    reviewedUserId: v.optional(v.id("users")),
-    outcome: dateOutcomeValidator,
-    safety: dateSafetyValidator,
-    meetAgain: meetAgainValidator,
-    profileAccuracy: v.optional(profileAccuracyValidator),
-    respectful: v.optional(respectValidator),
-    connection: v.optional(connectionQualityValidator),
-    venueRating: v.optional(v.number()),
-    note: v.optional(v.string()),
-    followUpRequested: v.boolean(),
-    createdAt: v.number(),
-    updatedAt: v.number(),
-  })
-    .index("by_drop", ["dropId"])
-    .index("by_user", ["userId"])
-    .index("by_reviewed_user", ["reviewedUserId"])
-    .index("by_drop_and_user", ["dropId", "userId"]),
-
-  /** Secret capability URL for a user's read-only iCalendar subscription. */
-  calendarFeeds: defineTable({
-    userId: v.id("users"),
-    token: v.string(),
-    createdAt: v.number(),
-    updatedAt: v.number(),
-  })
-    .index("by_user", ["userId"])
-    .index("by_token", ["token"]),
-
-  // ---- research (Firecrawl) -------------------------------------------
-  researchRuns: defineTable({
-    provider: v.string(),
-    dropId: v.optional(datePlanIdValidator),
-    requestedByUserId: v.optional(v.id("users")),
-    query: v.object({
-      city: v.string(),
-      area: v.string(),
-      whenIso: v.string(),
-      timezone: v.string(),
-      budgetMin: v.number(),
-      budgetMax: v.number(),
-      currency: v.string(),
-      interests: v.array(v.string()),
-      dateTypes: v.array(v.string()),
-      dateIdea: v.optional(v.string()),
-      vibe: v.string(),
-      dietary: v.array(v.string()),
-      accessibility: v.array(v.string()),
-      indoorOutdoor: v.string(),
-      desiredDurationMin: v.number(),
-    }),
-    status: v.union(
-      v.literal("running"),
-      v.literal("succeeded"),
-      v.literal("partial"),
-      v.literal("failed"),
-    ),
-    calls: v.array(
-      v.object({
-        endpoint: v.string(),
-        query: v.string(),
-        httpStatus: v.number(),
-        ms: v.number(),
-        resultCount: v.number(),
-        error: v.optional(v.string()),
-      }),
-    ),
-    venueCount: v.number(),
-    sourceUrls: v.array(v.string()),
-    error: v.optional(v.string()),
-    live: v.boolean(),
-    startedAt: v.number(),
-    finishedAt: v.optional(v.number()),
-  })
-    .index("by_drop", ["dropId"])
-    .index("by_status", ["status"]),
-
-  venues: defineTable({
-    researchRunId: v.id("researchRuns"),
-    name: v.string(),
-    category: v.string(),
-    address: v.string(),
-    district: v.string(),
-    city: v.string(),
-    countryCode: v.string(),
-    sourceUrl: v.string(),
-    officialUrl: v.optional(v.string()),
-    openingHours: v.optional(v.string()),
-    approximatePrice: v.optional(v.string()),
-    priceLevel: v.optional(v.number()),
-    reservationNeeded: v.optional(v.boolean()),
-    /** Verbatim snippet from the crawled page that supports the above. */
-    evidence: v.string(),
-    tags: v.array(v.string()),
-    mapsQuery: v.string(),
-    confidence: confidenceValidator,
-    researchedAt: v.number(),
-  })
-    .index("by_research_run", ["researchRunId"])
-    .index("by_city_and_category", ["city", "category"]),
-
   // ---- AI observability -----------------------------------------------
   aiRuns: defineTable({
     purpose: aiPurposeValidator,
     model: v.string(),
     endpoint: v.string(),
-    dropId: v.optional(datePlanIdValidator),
     userId: v.optional(v.id("users")),
-    matchingRunId: v.optional(v.id("matchingRuns")),
     agentDateId: v.optional(v.id("agentDates")),
     inputSummary: v.string(),
     outputPreview: v.string(),
@@ -719,9 +373,7 @@ export default defineSchema({
     status: v.union(v.literal("succeeded"), v.literal("failed")),
     error: v.optional(v.string()),
   })
-    .index("by_drop", ["dropId"])
     .index("by_purpose", ["purpose"])
-    .index("by_matching_run", ["matchingRunId"])
     .index("by_agent_date", ["agentDateId"]),
 
   // ---- comms -----------------------------------------------------------
@@ -730,7 +382,6 @@ export default defineSchema({
     kind: notificationKindValidator,
     title: v.string(),
     body: v.string(),
-    dropId: v.optional(datePlanIdValidator),
     href: v.optional(v.string()),
     read: v.boolean(),
   })
@@ -739,7 +390,6 @@ export default defineSchema({
 
   emailMessages: defineTable({
     userId: v.optional(v.id("users")),
-    dropId: v.optional(datePlanIdValidator),
     kind: emailKindValidator,
     toAddress: v.string(),
     fromAddress: v.string(),
@@ -756,7 +406,6 @@ export default defineSchema({
     sentAt: v.number(),
   })
     .index("by_user", ["userId"])
-    .index("by_drop", ["dropId"])
     .index("by_thread", ["agentMailThreadId"]),
 
   agentMailEvents: defineTable({
@@ -771,7 +420,6 @@ export default defineSchema({
     subject: v.optional(v.string()),
     preview: v.optional(v.string()),
     userId: v.optional(v.id("users")),
-    dropId: v.optional(datePlanIdValidator),
     signatureVerified: v.boolean(),
     processed: v.boolean(),
     processingError: v.optional(v.string()),
@@ -784,26 +432,14 @@ export default defineSchema({
     .index("by_user", ["userId"])
     .index("by_processed", ["processed"]),
 
-  /** Deliberately constrained pre-date logistics. Not a chat app. */
-  dateMessages: defineTable({
-    dropId: datePlanIdValidator,
-    fromUserId: v.id("users"),
-    presetKey: v.string(),
-    body: v.string(),
-    readByUserIds: v.array(v.id("users")),
-  })
-    .index("by_drop", ["dropId"])
-    .index("by_drop_and_from", ["dropId", "fromUserId"]),
-
   auditEvents: defineTable({
     actorType: v.union(v.literal("user"), v.literal("system")),
     actorUserId: v.optional(v.id("users")),
     action: v.string(),
-    dropId: v.optional(datePlanIdValidator),
+    agentDateId: v.optional(v.id("agentDates")),
     targetUserId: v.optional(v.id("users")),
     detail: v.string(),
   })
-    .index("by_drop", ["dropId"])
     .index("by_actor", ["actorUserId"])
     .index("by_action", ["action"]),
 

@@ -7,12 +7,48 @@ const BRAND = {
   sand: "#fcfaf7",
   ember: "#d4552b",
   wine: "#281820",
-  rose: "#ff9b9f",
   blush: "#fff0ed",
-  sage: "#d9efd9",
+  sage: "#e2f2df",
   muted: "#7a7183",
   border: "#ece4d9",
 };
+
+/** Light chip colours for each Agent avatar palette. */
+const AVATAR_CHIPS: Record<string, { bg: string; fg: string }> = {
+  rose: { bg: "#ffd9dc", fg: "#a63d4e" },
+  violet: { bg: "#e6ddff", fg: "#6b4fa8" },
+  moss: { bg: "#dcedd6", fg: "#4a6b3a" },
+  sky: { bg: "#d8ecfb", fg: "#2f6b96" },
+  sunset: { bg: "#ffe3c9", fg: "#b05c22" },
+  ink: { bg: "#e4e1ea", fg: "#46405a" },
+};
+
+const DEFAULT_OWNER_CHIP = AVATAR_CHIPS.sunset;
+const DEFAULT_COUNTERPART_CHIP = AVATAR_CHIPS.ink;
+
+const VERDICT_STYLES = {
+  encourage: { bg: "#e7f4e4", fg: "#2f6b3a", accent: "#4c9a54" },
+  curious: { bg: "#fff1d6", fg: "#8a6116", accent: "#d9a13b" },
+  pass: { bg: "#efe9f0", fg: "#6d5f75", accent: "#8d7d96" },
+} as const;
+
+function chipFor(
+  palette: string | undefined,
+  fallback: { bg: string; fg: string },
+): { bg: string; fg: string } {
+  return (palette && AVATAR_CHIPS[palette]) || fallback;
+}
+
+/** Mirror of the app's scene detection so the email shows the same world. */
+function sceneEmojiFor(setting: string): string {
+  const value = setting.toLowerCase();
+  if (/film|movie|cinema|screen|director/.test(value)) return "🎬";
+  if (/market|street|stall|night|food/.test(value)) return "🏮";
+  if (/book|library|poem|writing|novel/.test(value)) return "📚";
+  if (/park|garden|walk|river|flower|outdoor/.test(value)) return "🌿";
+  if (/gallery|museum|art|exhibit|painting/.test(value)) return "🖼️";
+  return "☕";
+}
 
 function shell(
   body: string,
@@ -55,13 +91,6 @@ function p(text: string): string {
   return `<p style="margin:0 0 14px 0;font-size:15px;line-height:1.65;color:${BRAND.ink};">${escapeHtml(text)}</p>`;
 }
 
-function detailRow(label: string, value: string): string {
-  return `<tr>
-    <td style="padding:7px 0;font-size:13px;color:${BRAND.muted};width:118px;vertical-align:top;">${escapeHtml(label)}</td>
-    <td style="padding:7px 0;font-size:15px;color:${BRAND.ink};font-weight:500;">${escapeHtml(value)}</td>
-  </tr>`;
-}
-
 export function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
@@ -75,6 +104,13 @@ export type AgentDateEmailReport = {
   setting: string;
   agentName: string;
   counterpartAgentName: string;
+  /** Avatar palettes, so the email carries each Agent's visual identity. */
+  ownerPalette?: string;
+  counterpartPalette?: string;
+  /** Absolute URLs to the hosted per-palette character sprites. */
+  ownerSpriteUrl?: string;
+  counterpartSpriteUrl?: string;
+  worldSourceTitle?: string;
   totalMoments: number;
   summary: string;
   sparks: string[];
@@ -82,486 +118,441 @@ export type AgentDateEmailReport = {
   moments: Array<{
     round: number;
     speakerAgentName: string;
+    /** Whether the owner's own agent spoke this moment. Agent names are
+     *  user-chosen and can collide, so callers should set this from user ids. */
+    isMine?: boolean;
     content: string;
   }>;
 };
 
-function compactEmailText(value: string, maxLength = 170): string {
-  const clean = value.replace(/\s+/g, " ").trim();
-  return clean.length <= maxLength
-    ? clean
-    : `${clean.slice(0, maxLength - 1).trimEnd()}…`;
+/**
+ * Trim for email. Prefers a sentence boundary so a moment never ends
+ * mid-thought, falling back to a word boundary with an ellipsis.
+ */
+function compactEmailText(value: string, maxLength = 240): string {
+  const cleaned = value.replace(/\s+/g, " ").trim();
+  if (cleaned.length <= maxLength) return cleaned;
+  const slice = cleaned.slice(0, maxLength);
+  let lastSentenceEnd = -1;
+  for (const match of slice.matchAll(/[.!?。!?…]/g)) {
+    lastSentenceEnd = match.index;
+  }
+  if (lastSentenceEnd >= maxLength * 0.45) {
+    return slice.slice(0, lastSentenceEnd + 1);
+  }
+  const lastSpace = slice.lastIndexOf(" ");
+  const base = lastSpace > maxLength * 0.6 ? slice.slice(0, lastSpace) : slice;
+  return `${base.trimEnd()}…`;
 }
 
-function agentDateReportCopy(locale?: string) {
+type AgentReportCopy = {
+  letter: string;
+  verdictEncourage: string;
+  verdictCurious: string;
+  verdictPass: string;
+  storyEyebrow: string;
+  scene: string;
+  agents: string;
+  moments: string;
+  inspiredBy: string;
+  summary: string;
+  conversation: string;
+  stageFirst: string;
+  stageMiddle: string;
+  stageLast: string;
+  spark: string;
+  friction: string;
+  noSignal: string;
+};
+
+function agentReportCopy(locale?: string): AgentReportCopy {
   const language = locale?.split("-")[0] ?? "en";
   return (
-    {
-      ko: {
-        eyebrow: "에이전트 데이트 기록",
-        scene: "어디서",
-        agents: "누가",
-        moments: "개의 장면",
-        summary: "데이트 분위기",
-        conversation: "이런 대화를 나눴어요",
-        spark: "마음이 움직인 순간",
-        friction: "조금 걸렸던 부분",
-        privateRead: "내 에이전트의 한마디",
-        noSignal: "아직 또렷한 신호는 없었어요.",
-      },
-      ja: {
-        eyebrow: "エージェントデート記録",
-        scene: "場所",
-        agents: "ふたり",
-        moments: "シーン",
-        summary: "デートの空気",
-        conversation: "こんな話をしました",
-        spark: "心が動いた瞬間",
-        friction: "少し気になったこと",
-        privateRead: "私のエージェントの見立て",
-        noSignal: "まだはっきりしたサインはありませんでした。",
-      },
-      de: {
-        eyebrow: "Agent-Date-Protokoll",
-        scene: "Ort",
-        agents: "Wer",
-        moments: "Momente",
-        summary: "Stimmung",
-        conversation: "Darüber haben sie gesprochen",
-        spark: "Was Nähe geschaffen hat",
-        friction: "Was noch offen blieb",
-        privateRead: "Die Einschätzung deines Agents",
-        noSignal: "Noch kein klares Signal.",
-      },
-      fr: {
-        eyebrow: "Carnet du rendez-vous des Agents",
-        scene: "Lieu",
-        agents: "Qui",
-        moments: "moments",
-        summary: "Ambiance",
-        conversation: "Ce qu'ils se sont raconté",
-        spark: "Ce qui a créé un élan",
-        friction: "Ce qui reste à éclaircir",
-        privateRead: "L'avis de votre Agent",
-        noSignal: "Aucun signal net pour le moment.",
-      },
-      nl: {
-        eyebrow: "Verslag van de Agent-date",
-        scene: "Waar",
-        agents: "Wie",
-        moments: "momenten",
-        summary: "Sfeer",
-        conversation: "Waar ze over praatten",
-        spark: "Wat iets losmaakte",
-        friction: "Wat nog schuurt",
-        privateRead: "De kijk van je Agent",
-        noSignal: "Nog geen duidelijk signaal.",
-      },
-      sv: {
-        eyebrow: "Anteckningar från Agent-dejten",
-        scene: "Var",
-        agents: "Vilka",
-        moments: "ögonblick",
-        summary: "Känslan",
-        conversation: "Det här pratade de om",
-        spark: "Det som väckte något",
-        friction: "Det som fortfarande skaver",
-        privateRead: "Din Agents läsning",
-        noSignal: "Ingen tydlig signal ännu.",
-      },
-    }[language] ?? {
-      eyebrow: "Agent date notes",
+    (
+      {
+        ko: {
+          letter: "내 에이전트가 전하는 말",
+          verdictEncourage: "만나보길 추천해요",
+          verdictCurious: "조금 더 궁금해요",
+          verdictPass: "이번엔 보내줄게요",
+          storyEyebrow: "그날의 데이트 이야기",
+          scene: "어디서",
+          agents: "누가",
+          moments: "개의 장면",
+          inspiredBy: "이 장면의 영감",
+          summary: "그날의 공기",
+          conversation: "이런 대화가 오갔어요",
+          stageFirst: "처음 마주한 순간",
+          stageMiddle: "대화가 깊어질 때",
+          stageLast: "헤어지기 전 마지막 말",
+          spark: "마음이 움직인 순간",
+          friction: "조금 걸렸던 부분",
+          noSignal: "아직 또렷한 신호는 없었어요.",
+        },
+        ja: {
+          letter: "エージェントからあなたへ",
+          verdictEncourage: "会ってみる価値あり",
+          verdictCurious: "もう少し知りたい",
+          verdictPass: "今回は見送り",
+          storyEyebrow: "デートの一部始終",
+          scene: "場所",
+          agents: "ふたり",
+          moments: "シーン",
+          inspiredBy: "この場面のヒント",
+          summary: "その日の空気",
+          conversation: "交わされた言葉",
+          stageFirst: "出会いの瞬間",
+          stageMiddle: "会話が深まる頃",
+          stageLast: "別れ際のひとこと",
+          spark: "心が動いた瞬間",
+          friction: "少し気になったこと",
+          noSignal: "まだはっきりしたサインはありませんでした。",
+        },
+        de: {
+          letter: "Eine Nachricht von deinem Agent",
+          verdictEncourage: "Ein Treffen lohnt sich",
+          verdictCurious: "Noch neugierig",
+          verdictPass: "Diesmal loslassen",
+          storyEyebrow: "So lief das Date",
+          scene: "Ort",
+          agents: "Wer",
+          moments: "Momente",
+          inspiredBy: "Inspiration der Szene",
+          summary: "Die Stimmung",
+          conversation: "Das wurde gesagt",
+          stageFirst: "Der Anfang",
+          stageMiddle: "Als es tiefer ging",
+          stageLast: "Die letzten Worte",
+          spark: "Was Nähe geschaffen hat",
+          friction: "Was noch offen blieb",
+          noSignal: "Noch kein klares Signal.",
+        },
+        fr: {
+          letter: "Un mot de votre Agent",
+          verdictEncourage: "Une rencontre vaut la peine",
+          verdictCurious: "Encore curieux",
+          verdictPass: "On laisse passer",
+          storyEyebrow: "Le rendez-vous, tel qu'il s'est passé",
+          scene: "Lieu",
+          agents: "Qui",
+          moments: "moments",
+          inspiredBy: "Inspiration de la scène",
+          summary: "L'ambiance",
+          conversation: "Ce qui s'est dit",
+          stageFirst: "Les premiers instants",
+          stageMiddle: "Quand ça s'approfondit",
+          stageLast: "Les derniers mots",
+          spark: "Ce qui a créé un élan",
+          friction: "Ce qui reste à éclaircir",
+          noSignal: "Aucun signal net pour le moment.",
+        },
+        nl: {
+          letter: "Een bericht van je Agent",
+          verdictEncourage: "Het waard om te ontmoeten",
+          verdictCurious: "Nog nieuwsgierig",
+          verdictPass: "Deze laten gaan",
+          storyEyebrow: "Zo verliep de date",
+          scene: "Waar",
+          agents: "Wie",
+          moments: "momenten",
+          inspiredBy: "Inspiratie voor de scène",
+          summary: "De sfeer",
+          conversation: "Wat er gezegd werd",
+          stageFirst: "Het begin",
+          stageMiddle: "Toen het dieper ging",
+          stageLast: "De laatste woorden",
+          spark: "Wat iets losmaakte",
+          friction: "Wat nog schuurt",
+          noSignal: "Nog geen duidelijk signaal.",
+        },
+        sv: {
+          letter: "Ett meddelande från din Agent",
+          verdictEncourage: "Värd att träffa",
+          verdictCurious: "Fortfarande nyfiken",
+          verdictPass: "Släpper den här",
+          storyEyebrow: "Så gick dejten",
+          scene: "Var",
+          agents: "Vilka",
+          moments: "ögonblick",
+          inspiredBy: "Scenens inspiration",
+          summary: "Känslan",
+          conversation: "Det som sades",
+          stageFirst: "Början",
+          stageMiddle: "När det djupnade",
+          stageLast: "De sista orden",
+          spark: "Det som väckte något",
+          friction: "Det som fortfarande skaver",
+          noSignal: "Ingen tydlig signal ännu.",
+        },
+      } as Record<string, AgentReportCopy>
+    )[language] ?? {
+      letter: "A note from your Agent",
+      verdictEncourage: "Worth meeting",
+      verdictCurious: "Still curious",
+      verdictPass: "Letting this one go",
+      storyEyebrow: "The date, as it happened",
       scene: "Where",
       agents: "Who",
       moments: "moments",
+      inspiredBy: "Scene inspired by",
       summary: "The atmosphere",
-      conversation: "What they talked about",
+      conversation: "What they said",
+      stageFirst: "How it began",
+      stageMiddle: "As it deepened",
+      stageLast: "The parting words",
       spark: "What created a spark",
       friction: "What still needs care",
-      privateRead: "Your Agent's read",
       noSignal: "No clear signal yet.",
     }
   );
 }
 
-function agentDateReportText(
-  locale: string | undefined,
-  report: AgentDateEmailReport,
-  privateRead: string,
+function stageLabelFor(
+  copy: AgentReportCopy,
+  index: number,
+  total: number,
 ): string {
-  const copy = agentDateReportCopy(locale);
-  const moments = report.moments
-    .map(
-      (moment) =>
-        `${String(moment.round).padStart(2, "0")} · ${moment.speakerAgentName}: ${compactEmailText(moment.content)}`,
-    )
-    .join("\n");
-  return `${copy.eyebrow}
-${copy.scene}: ${report.setting}
-${copy.agents}: ${report.agentName} ↔ ${report.counterpartAgentName}
-${report.totalMoments} ${copy.moments}
-
-${copy.summary}: ${report.summary}
-
-${copy.conversation}
-${moments}
-
-${copy.spark}: ${report.sparks[0] ?? copy.noSignal}
-${copy.friction}: ${report.frictions[0] ?? copy.noSignal}
-${copy.privateRead}: ${privateRead}`;
+  if (index === 0) return copy.stageFirst;
+  if (index === total - 1) return copy.stageLast;
+  return copy.stageMiddle;
 }
 
-function agentDateReportHtml(
-  locale: string | undefined,
-  report: AgentDateEmailReport,
-  privateRead: string,
+function agentInitial(name: string): string {
+  return [...name.trim()][0]?.toUpperCase() ?? "•";
+}
+
+/**
+ * The agent's face, email-safe. Remote sprite image when we have one (with the
+ * palette chip behind it as the blocked-image fallback), initial chip otherwise.
+ */
+function agentFaceHtml(
+  name: string,
+  chip: { bg: string; fg: string },
+  spriteUrl: string | undefined,
+  size: number,
 ): string {
-  const copy = agentDateReportCopy(locale);
-  const moments = report.moments
-    .map(
-      (moment) => `<tr><td style="padding:0 0 12px 0;">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#34242d;border:1px solid #4c3541;border-radius:14px;">
-          <tr>
-            <td style="width:42px;padding:14px 0 14px 14px;vertical-align:top;color:${BRAND.rose};font-size:11px;font-weight:700;letter-spacing:.08em;">${String(moment.round).padStart(2, "0")}</td>
-            <td style="padding:12px 14px 13px 10px;vertical-align:top;">
-              <div style="margin-bottom:4px;color:#ffb2b5;font-size:12px;font-weight:700;">${escapeHtml(moment.speakerAgentName)}</div>
-              <div style="color:#fff8f5;font-size:14px;line-height:1.55;">${escapeHtml(compactEmailText(moment.content))}</div>
-            </td>
-          </tr>
-        </table>
-      </td></tr>`,
-    )
-    .join("");
+  if (spriteUrl) {
+    return `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${chip.bg};overflow:hidden;text-align:center;">
+      <img src="${escapeHtml(spriteUrl)}" alt="${escapeHtml(name)}" width="${size}" height="${size}" style="display:block;width:${size}px;height:${size}px;object-fit:cover;object-position:top center;border:0;" />
+    </div>`;
+  }
+  return `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${chip.bg};color:${chip.fg};font-size:${Math.round(size * 0.45)}px;font-weight:800;line-height:${size}px;text-align:center;">${escapeHtml(agentInitial(name))}</div>`;
+}
 
-  const signalCard = (label: string, value: string, color: string) =>
-    `<td width="50%" style="padding:0 5px 0 0;vertical-align:top;">
-      <div style="min-height:92px;background:${color};border-radius:14px;padding:14px;">
-        <div style="margin-bottom:7px;color:${BRAND.muted};font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;">${escapeHtml(label)}</div>
-        <div style="color:${BRAND.ink};font-size:13px;line-height:1.5;font-weight:600;">${escapeHtml(compactEmailText(value, 120))}</div>
-      </div>
-    </td>`;
+type AgentLetter = {
+  agentName: string;
+  ownerPalette?: string;
+  spriteUrl?: string;
+  /** The agent's own words, first person, unabridged apart from a safety cap. */
+  message: string;
+  verdict?: "encourage" | "curious" | "pass";
+  /** English-only structured reason, e.g. "Strong alignment". */
+  detailLabel?: string;
+  detail?: string;
+  /** "What I'll look for next" — shown after a pass. */
+  nextLabel?: string;
+  nextNote?: string;
+};
 
-  return `<div style="margin:22px 0 20px;background:${BRAND.wine};border-radius:20px;padding:20px;box-shadow:0 16px 34px rgba(40,24,32,.14);">
-    <div style="margin-bottom:14px;color:${BRAND.rose};font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;">${escapeHtml(copy.eyebrow)}</div>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:14px;border-collapse:separate;border-spacing:0;">
-      <tr>
-        <td style="width:62%;padding:14px;background:#fff7f2;border-radius:14px 0 0 14px;vertical-align:top;">
-          <div style="margin-bottom:5px;color:${BRAND.muted};font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;">${escapeHtml(copy.scene)}</div>
-          <div style="color:${BRAND.ink};font-size:14px;line-height:1.45;font-weight:700;">${escapeHtml(compactEmailText(report.setting, 100))}</div>
-        </td>
-        <td style="padding:14px;background:${BRAND.blush};border-left:1px solid #ead8d3;border-radius:0 14px 14px 0;vertical-align:top;">
-          <div style="margin-bottom:5px;color:${BRAND.muted};font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;">${escapeHtml(copy.agents)}</div>
-          <div style="color:${BRAND.ink};font-size:13px;line-height:1.45;font-weight:700;">${escapeHtml(report.agentName)} ↔ ${escapeHtml(report.counterpartAgentName)}</div>
-          <div style="margin-top:5px;color:${BRAND.ember};font-size:11px;font-weight:700;">${report.totalMoments} ${escapeHtml(copy.moments)}</div>
-        </td>
-      </tr>
-    </table>
-    <div style="margin:0 0 18px;padding:0 2px;">
-      <div style="margin-bottom:5px;color:#d9c5ce;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;">${escapeHtml(copy.summary)}</div>
-      <div style="color:#eadce2;font-size:13px;line-height:1.6;">${escapeHtml(compactEmailText(report.summary, 220))}</div>
-    </div>
-    <div style="margin:0 0 10px;color:#d9c5ce;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;">${escapeHtml(copy.conversation)}</div>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${moments}</table>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:4px;"><tr>
-      ${signalCard(copy.spark, report.sparks[0] ?? copy.noSignal, BRAND.sage)}
-      ${signalCard(copy.friction, report.frictions[0] ?? copy.noSignal, BRAND.blush)}
+/**
+ * The Agent speaking directly to its human: avatar, name, a clear verdict
+ * badge, and the full reason in the Agent's own voice. This leads the email —
+ * the agent's read is the thing the owner opened it for.
+ */
+function agentLetterHtml(copy: AgentReportCopy, letter: AgentLetter): string {
+  const style = letter.verdict
+    ? VERDICT_STYLES[letter.verdict]
+    : VERDICT_STYLES.encourage;
+  const chip = chipFor(letter.ownerPalette, DEFAULT_OWNER_CHIP);
+  const badgeLabel = letter.verdict
+    ? {
+        encourage: copy.verdictEncourage,
+        curious: copy.verdictCurious,
+        pass: copy.verdictPass,
+      }[letter.verdict]
+    : null;
+
+  const badge = badgeLabel
+    ? `<span style="display:inline-block;margin-top:5px;background:#ffffff;border:1px solid ${style.accent};color:${style.fg};font-size:12px;font-weight:700;padding:3px 11px;border-radius:999px;">${escapeHtml(badgeLabel)}</span>`
+    : "";
+
+  const detail =
+    letter.detailLabel && letter.detail
+      ? `<div style="margin-top:10px;font-size:12px;font-weight:600;color:${style.fg};">${escapeHtml(letter.detailLabel)} · ${escapeHtml(letter.detail)}</div>`
+      : "";
+
+  const next =
+    letter.nextLabel && letter.nextNote
+      ? `<div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(22,18,27,.09);">
+          <div style="margin-bottom:4px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:${style.fg};">${escapeHtml(letter.nextLabel)}</div>
+          <div style="font-size:13px;line-height:1.6;color:${BRAND.ink};">${escapeHtml(compactEmailText(letter.nextNote, 220))}</div>
+        </div>`
+      : "";
+
+  return `<div style="margin:20px 0 14px;background:${style.bg};border-radius:18px;padding:18px 18px 16px;">
+    <div style="margin-bottom:12px;font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:${style.fg};">${escapeHtml(copy.letter)}</div>
+    <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+      <td style="width:62px;vertical-align:top;">
+        ${agentFaceHtml(letter.agentName, chip, letter.spriteUrl, 52)}
+      </td>
+      <td style="vertical-align:middle;padding-left:8px;">
+        <div style="font-size:17px;font-weight:700;color:${BRAND.ink};">${escapeHtml(letter.agentName)}</div>
+        ${badge}
+      </td>
     </tr></table>
-    <div style="margin-top:10px;background:#fffaf7;border-radius:14px;padding:15px 16px;">
-      <div style="margin-bottom:6px;color:${BRAND.ember};font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">${escapeHtml(copy.privateRead)}</div>
-      <div style="color:${BRAND.ink};font-size:14px;line-height:1.55;font-weight:600;">${escapeHtml(compactEmailText(privateRead, 220))}</div>
+    <div style="margin:10px 0 0 16px;width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:10px solid #ffffff;"></div>
+    <div style="background:#ffffff;border-radius:4px 16px 16px 16px;padding:14px 16px;">
+      <div style="font-size:15px;line-height:1.7;color:${BRAND.ink};">“${escapeHtml(compactEmailText(letter.message, 640))}”</div>
+      ${detail}${next}
     </div>
   </div>`;
 }
 
-export type DropEmailData = {
-  firstName: string;
-  when: string;
-  area: string;
-  city: string;
-  theme: string;
-  costLabel: string;
-  whyItFits: string;
-  matchPreview: string;
-  url: string;
-};
-
-export function welcomeEmail(args: {
-  firstName: string;
-  url: string;
-}): EmailContent {
-  const subject = "You're ready for your first date";
-  const text = `Hi ${args.firstName},
-
-You're set up. From here, Datehaja only needs one thing from you: when you're free.
-
-We'll look for someone compatible in your area, plan a real date at a real place, and send it to you both privately. You say yes or pass. Nobody gets your email address, your phone number, or your exact location — not even your match.
-
-Open Datehaja: ${args.url}
-
-— Datehaja Concierge`;
-
-  return {
-    subject,
-    text,
-    html: shell(
-      h1("You're set up.") +
-        p(
-          `Hi ${args.firstName}, from here Datehaja only needs one thing from you: when you're free.`,
-        ) +
-        p(
-          "We'll look for someone compatible nearby, plan a real date at a real place, and send it to you both privately. You say yes or pass.",
-        ) +
-        p(
-          "Nobody gets your email address, your phone number, or your exact location — not even your match.",
-        ) +
-        `<div style="margin-top:20px;">${button(args.url, "Add your availability")}</div>`,
-      "You're getting this because you created a Datehaja account.",
-    ),
-  };
+/** Tiny inline face used next to an Agent's name in running text. */
+function miniFace(
+  chip: { bg: string; fg: string },
+  spriteUrl: string | undefined,
+): string {
+  if (!spriteUrl) return "";
+  return `<img src="${escapeHtml(spriteUrl)}" alt="" width="18" height="18" style="vertical-align:-4px;margin-right:3px;border-radius:50%;background:${chip.bg};object-fit:cover;object-position:top center;border:0;" />`;
 }
 
-export function invitationEmail(d: DropEmailData): EmailContent {
-  const subject = `Your date plan is ready — ${d.when}, ${d.area}`;
-  const text = `Hi ${d.firstName},
+/**
+ * The date as a story: the scene the Agents met in, the mood, a three-beat
+ * timeline of what was actually said, and what sparked or snagged. Everything
+ * here also exists in the app, so the email never claims more than the replay.
+ */
+function agentDateStoryHtml(
+  copy: AgentReportCopy,
+  report: AgentDateEmailReport,
+): string {
+  const ownerChip = chipFor(report.ownerPalette, DEFAULT_OWNER_CHIP);
+  const counterpartChip = chipFor(
+    report.counterpartPalette,
+    DEFAULT_COUNTERPART_CHIP,
+  );
+  const emoji = sceneEmojiFor(report.setting);
 
-Your date plan is ready.
+  const inspiredBy = report.worldSourceTitle
+    ? `<div style="margin-top:6px;font-size:11px;color:${BRAND.muted};">${escapeHtml(copy.inspiredBy)}: ${escapeHtml(compactEmailText(report.worldSourceTitle, 90))}</div>`
+    : "";
 
-${d.when}
-${d.area}, ${d.city}
-${d.theme}
-About ${d.costLabel} per person
+  const sceneBanner = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;background:#fff7f2;border-radius:14px;">
+    <tr>
+      <td style="width:62px;padding:14px 0 14px 14px;vertical-align:top;">
+        <div style="width:44px;height:44px;border-radius:50%;background:#ffffff;border:1px solid ${BRAND.border};font-size:22px;line-height:44px;text-align:center;">${emoji}</div>
+      </td>
+      <td style="padding:13px 14px 13px 10px;vertical-align:top;">
+        <div style="margin-bottom:3px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:${BRAND.muted};">${escapeHtml(copy.scene)}</div>
+        <div style="font-size:14px;line-height:1.45;font-weight:700;color:${BRAND.ink};">${escapeHtml(compactEmailText(report.setting, 110))}</div>
+        <div style="margin-top:6px;font-size:12px;font-weight:600;color:${BRAND.ember};">${miniFace(ownerChip, report.ownerSpriteUrl)}${escapeHtml(report.agentName)} ↔ ${miniFace(counterpartChip, report.counterpartSpriteUrl)}${escapeHtml(report.counterpartAgentName)} · ${report.totalMoments} ${escapeHtml(copy.moments)}</div>
+        ${inspiredBy}
+      </td>
+    </tr>
+  </table>`;
 
-Why we think this one fits:
-${d.whyItFits}
+  const narration = `<div style="margin:0 2px 16px;">
+    <div style="margin-bottom:4px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:${BRAND.muted};">${escapeHtml(copy.summary)}</div>
+    <div style="font-size:14px;line-height:1.65;color:${BRAND.ink};">${escapeHtml(compactEmailText(report.summary, 300))}</div>
+  </div>`;
 
-Who you'd be meeting:
-${d.matchPreview}
+  const total = report.moments.length;
+  const timeline = report.moments
+    .map((moment, index) => {
+      const isOwner =
+        moment.isMine ?? moment.speakerAgentName === report.agentName;
+      const chip = isOwner ? ownerChip : counterpartChip;
+      const spriteUrl = isOwner
+        ? report.ownerSpriteUrl
+        : report.counterpartSpriteUrl;
+      const bubbleBg = isOwner ? BRAND.blush : "#f7f4f0";
+      return `<tr>
+        <td style="width:40px;vertical-align:top;padding:17px 0 0;">
+          ${agentFaceHtml(moment.speakerAgentName, chip, spriteUrl, 30)}
+        </td>
+        <td style="padding:0 0 14px 8px;vertical-align:top;">
+          <div style="margin-bottom:3px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:${BRAND.muted};">${String(moment.round).padStart(2, "0")} · ${escapeHtml(stageLabelFor(copy, index, total))}</div>
+          <div style="background:${bubbleBg};border-radius:4px 12px 12px 12px;padding:11px 14px;">
+            <div style="margin-bottom:3px;font-size:12px;font-weight:700;color:${chip.fg};">${escapeHtml(moment.speakerAgentName)}</div>
+            <div style="font-size:14px;line-height:1.6;color:${BRAND.ink};">${escapeHtml(compactEmailText(moment.content, 240))}</div>
+          </div>
+        </td>
+      </tr>`;
+    })
+    .join("");
 
-Accept or pass: ${d.url}
+  const signalCard = (
+    emojiMark: string,
+    label: string,
+    value: string,
+    bg: string,
+    fg: string,
+  ) =>
+    `<td width="50%" style="padding:0 5px 0 0;vertical-align:top;">
+      <div style="min-height:88px;background:${bg};border-radius:14px;padding:13px 14px;">
+        <div style="margin-bottom:6px;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${fg};">${emojiMark} ${escapeHtml(label)}</div>
+        <div style="font-size:13px;line-height:1.55;font-weight:600;color:${BRAND.ink};">${escapeHtml(compactEmailText(value, 130))}</div>
+      </div>
+    </td>`;
 
-If you pass, nothing happens to your profile and they never find out it was you.
-
-— Datehaja Concierge`;
-
-  return {
-    subject,
-    text,
-    html: shell(
-      h1("Your date plan is ready.") +
-        `<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin:4px 0 18px 0;border-top:1px solid ${BRAND.border};">
-          ${detailRow("When", d.when)}
-          ${detailRow("Where", `${d.area}, ${d.city}`)}
-          ${detailRow("The plan", d.theme)}
-          ${detailRow("Roughly", `${d.costLabel} per person`)}
-        </table>` +
-        p(d.whyItFits) +
-        `<div style="background:${BRAND.sand};border:1px solid ${BRAND.border};border-radius:12px;padding:14px 16px;margin:0 0 18px 0;">
-           <div style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:${BRAND.muted};font-weight:600;margin-bottom:6px;">Who you'd be meeting</div>
-           <div style="font-size:15px;line-height:1.6;">${escapeHtml(d.matchPreview)}</div>
-         </div>` +
-        `<div style="margin-top:4px;">${button(d.url, "Open your date plan")}</div>` +
-        `<p style="margin:18px 0 0 0;font-size:13px;line-height:1.6;color:${BRAND.muted};">If you pass, nothing happens to your profile and they never find out it was you.</p>`,
-      "You're getting this because you asked Datehaja to find you a date.",
-    ),
-  };
+  return `<div style="margin:0 0 20px;border:1px solid ${BRAND.border};border-radius:18px;padding:18px 18px 14px;background:#ffffff;">
+    <div style="margin-bottom:13px;font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:${BRAND.ember};">${escapeHtml(copy.storyEyebrow)}</div>
+    ${sceneBanner}
+    ${narration}
+    <div style="margin:0 0 9px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:${BRAND.muted};">${escapeHtml(copy.conversation)}</div>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${timeline}</table>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:2px;"><tr>
+      ${signalCard("✨", copy.spark, report.sparks[0] ?? copy.noSignal, BRAND.sage, "#2f6b3a")}
+      ${signalCard("🌱", copy.friction, report.frictions[0] ?? copy.noSignal, BRAND.blush, "#a34f2a")}
+    </tr></table>
+  </div>`;
 }
 
-export function acceptedWaitingEmail(d: DropEmailData): EmailContent {
-  const subject = `You're in — ${d.when}, ${d.area}`;
-  const text = `Hi ${d.firstName},
-
-You're in for ${d.when} in ${d.area}.
-
-We're waiting on the other person. If they pass, we'll look for someone else who fits this same plan — you don't need to do anything.
-
-If we can't find the right person in time, we'll cancel rather than force a bad match, and we'll tell you.
-
-Your date plan: ${d.url}
-
-— Datehaja Concierge`;
-
-  return {
-    subject,
-    text,
-    html: shell(
-      h1("You're in.") +
-        p(`${d.when} · ${d.area}, ${d.city}`) +
-        p(
-          "We're waiting on the other person. If they pass, we'll look for someone else who fits this same plan — you don't need to do anything.",
-        ) +
-        p(
-          "If we can't find the right person in time, we'll cancel rather than force a bad match, and we'll tell you.",
-        ) +
-        `<div style="margin-top:16px;">${button(d.url, "View your date plan")}</div>`,
-      "You're getting this because you accepted a date plan.",
-    ),
-  };
+function agentLetterText(copy: AgentReportCopy, letter: AgentLetter): string {
+  const badgeLabel = letter.verdict
+    ? {
+        encourage: copy.verdictEncourage,
+        curious: copy.verdictCurious,
+        pass: copy.verdictPass,
+      }[letter.verdict]
+    : null;
+  const lines = [
+    `${copy.letter} — ${letter.agentName}${badgeLabel ? ` · ${badgeLabel}` : ""}`,
+    `“${compactEmailText(letter.message, 640)}”`,
+  ];
+  if (letter.detailLabel && letter.detail) {
+    lines.push(`${letter.detailLabel}: ${letter.detail}`);
+  }
+  if (letter.nextLabel && letter.nextNote) {
+    lines.push(`${letter.nextLabel}: ${compactEmailText(letter.nextNote, 220)}`);
+  }
+  return lines.join("\n");
 }
 
-export function confirmedEmail(
-  d: DropEmailData & { venue: string; address: string; instructions: string },
-): EmailContent {
-  const subject = `It's a date — ${d.when}, ${d.area}`;
-  const text = `Hi ${d.firstName},
+function agentDateStoryText(
+  copy: AgentReportCopy,
+  report: AgentDateEmailReport,
+): string {
+  const total = report.moments.length;
+  const timeline = report.moments
+    .map(
+      (moment, index) =>
+        `${moment.round}. ${stageLabelFor(copy, index, total)} · ${moment.speakerAgentName}: “${compactEmailText(moment.content, 200)}”`,
+    )
+    .join("\n");
+  const inspiredBy = report.worldSourceTitle
+    ? `\n${copy.inspiredBy}: ${compactEmailText(report.worldSourceTitle, 90)}`
+    : "";
+  return `${copy.storyEyebrow}
+${sceneEmojiFor(report.setting)} ${copy.scene}: ${report.setting}
+${copy.agents}: ${report.agentName} ↔ ${report.counterpartAgentName} · ${report.totalMoments} ${copy.moments}${inspiredBy}
+${copy.summary}: ${compactEmailText(report.summary, 300)}
 
-It's a date.
+${copy.conversation}
+${timeline}
 
-${d.when}
-${d.venue}
-${d.address}
-${d.theme}
-About ${d.costLabel} per person
-
-${d.instructions}
-
-You're meeting: ${d.matchPreview}
-
-Full details: ${d.url}
-
-You won't need to exchange numbers. If something changes, use the date plan page — there are a few one-tap messages for exactly that.
-
-— Datehaja Concierge`;
-
-  return {
-    subject,
-    text,
-    html: shell(
-      h1("It's a date.") +
-        `<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin:4px 0 18px 0;border-top:1px solid ${BRAND.border};">
-          ${detailRow("When", d.when)}
-          ${detailRow("Where", d.venue)}
-          ${detailRow("Address", d.address)}
-          ${detailRow("The plan", d.theme)}
-          ${detailRow("Roughly", `${d.costLabel} per person`)}
-          ${detailRow("Meeting", d.matchPreview)}
-        </table>` +
-        p(d.instructions) +
-        `<div style="margin-top:4px;">${button(d.url, "See the full plan")}</div>` +
-        `<p style="margin:18px 0 0 0;font-size:13px;line-height:1.6;color:${BRAND.muted};">You won't need to exchange numbers. If something changes, use the date plan page — there are a few one-tap messages for exactly that.</p>`,
-      "You're getting this because your date was confirmed.",
-    ),
-  };
-}
-
-export function reminderEmail(
-  d: DropEmailData & { venue: string; address: string },
-): EmailContent {
-  const subject = `Tomorrow: your date in ${d.area}`;
-  const text = `Hi ${d.firstName},
-
-Quick reminder — your date is coming up.
-
-${d.when}
-${d.venue}
-${d.address}
-
-Details: ${d.url}
-
-If you can't make it, cancel from the date plan page so we can tell them properly.
-
-— Datehaja Concierge`;
-
-  return {
-    subject,
-    text,
-    html: shell(
-      h1("Coming up.") +
-        `<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin:4px 0 18px 0;border-top:1px solid ${BRAND.border};">
-          ${detailRow("When", d.when)}
-          ${detailRow("Where", d.venue)}
-          ${detailRow("Address", d.address)}
-        </table>` +
-        `<div style="margin-top:4px;">${button(d.url, "View details")}</div>` +
-        `<p style="margin:18px 0 0 0;font-size:13px;line-height:1.6;color:${BRAND.muted};">If you can't make it, cancel from the date plan page so we can tell them properly.</p>`,
-      "You're getting this because you have a confirmed date.",
-    ),
-  };
-}
-
-export function expiredEmail(d: DropEmailData): EmailContent {
-  const subject = `We cancelled your ${d.when} date plan`;
-  const text = `Hi ${d.firstName},
-
-We couldn't find the right person for your ${d.when} date in ${d.area}, so we cancelled it rather than force a poor match.
-
-Your availability is still open and we'll keep looking for the next one.
-
-— Datehaja Concierge`;
-
-  return {
-    subject,
-    text,
-    html: shell(
-      h1("We cancelled this one.") +
-        p(
-          `We couldn't find the right person for your ${d.when} date in ${d.area}, so we cancelled it rather than force a poor match.`,
-        ) +
-        p(
-          "Your availability is still open and we'll keep looking for the next one.",
-        ) +
-        `<div style="margin-top:16px;">${button(d.url, "Open Datehaja")}</div>`,
-      "You're getting this because you accepted a date plan that didn't fill.",
-    ),
-  };
-}
-
-export function cancelledEmail(
-  d: DropEmailData & { reason: string },
-): EmailContent {
-  const subject = `Your ${d.when} date was cancelled`;
-  const text = `Hi ${d.firstName},
-
-Your date on ${d.when} in ${d.area} was cancelled.
-
-${d.reason}
-
-Your availability is still open — we'll keep looking.
-
-— Datehaja Concierge`;
-
-  return {
-    subject,
-    text,
-    html: shell(
-      h1("That date was cancelled.") +
-        p(`${d.when} · ${d.area}, ${d.city}`) +
-        p(d.reason) +
-        p("Your availability is still open — we'll keep looking.") +
-        `<div style="margin-top:16px;">${button(d.url, "Open Datehaja")}</div>`,
-      "You're getting this because you were part of a cancelled date plan.",
-    ),
-  };
-}
-
-export function updatedEmail(d: DropEmailData): EmailContent {
-  const subject = `Your ${d.when} date plan changed a little`;
-  const text = `Hi ${d.firstName},
-
-We adjusted your date plan so it works for both of you.
-
-${d.when}
-${d.area}, ${d.city}
-${d.theme}
-
-Have a look: ${d.url}
-
-— Datehaja Concierge`;
-
-  return {
-    subject,
-    text,
-    html: shell(
-      h1("Small change to your date plan.") +
-        p("We adjusted the plan so it works for both of you.") +
-        `<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin:4px 0 18px 0;border-top:1px solid ${BRAND.border};">
-          ${detailRow("When", d.when)}
-          ${detailRow("Where", `${d.area}, ${d.city}`)}
-          ${detailRow("The plan", d.theme)}
-        </table>` +
-        `<div style="margin-top:4px;">${button(d.url, "See what changed")}</div>`,
-      "You're getting this because you're part of this date plan.",
-    ),
-  };
+✨ ${copy.spark}: ${report.sparks[0] ?? copy.noSignal}
+🌱 ${copy.friction}: ${report.frictions[0] ?? copy.noSignal}`;
 }
 
 export function safetyEmail(args: {
@@ -582,61 +573,21 @@ export function safetyEmail(args: {
   };
 }
 
-export function trustedContactPlanEmail(args: {
-  contactName: string;
-  memberFirstName: string;
-  when: string;
-  venue: string;
-  address: string;
-}): EmailContent {
-  const subject = `${args.memberFirstName} shared a safety plan from Datehaja`;
-  const text = `Hi ${args.contactName},
-
-${args.memberFirstName} chose you as their trusted contact and asked Datehaja to share this plan.
-
-When: ${args.when}
-Public venue: ${args.venue}
-Address: ${args.address}
-
-This message does not include the other person's identity or contact details. Datehaja will never ask you for money, a password, or a verification code.
-
-— Datehaja Concierge`;
-
-  return {
-    subject,
-    text,
-    html: shell(
-      h1(`${args.memberFirstName} shared their plan.`) +
-        p(
-          `Hi ${args.contactName}, ${args.memberFirstName} chose you as their trusted contact and asked Datehaja to send this safety note.`,
-        ) +
-        `<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin:4px 0 18px 0;border-top:1px solid ${BRAND.border};">
-          ${detailRow("When", args.when)}
-          ${detailRow("Public venue", args.venue)}
-          ${detailRow("Address", args.address)}
-        </table>` +
-        p(
-          "This message does not include the other person's identity or contact details. Datehaja will never ask you for money, a password, or a verification code.",
-        ),
-      `${args.memberFirstName} asked Datehaja to send this one-time safety plan to you.`,
-    ),
-  };
-}
-
 /** Auto-reply sent when someone writes back to the Concierge inbox. */
 export function conciergeReply(args: {
   firstName: string;
   url: string;
 }): EmailContent {
   return {
-    subject: "Re: your date plan",
+    subject: "Re: your agent's date",
     text: `Hi ${args.firstName},
 
 Thanks for writing in — this reached Datehaja Concierge and we've logged it.
 
 A few things you can do straight away from the app:
-· Accept or pass on a date plan
-· Cancel a date, or tell your match you're running late
+· Read your Agent's latest date report
+· Decide privately whether you want to meet
+· Talk the date over with your Agent
 · Report someone, or block them
 · Pause matching entirely
 
@@ -651,8 +602,9 @@ If this was about safety, use the Report option in the app — it reaches us wit
           "Thanks for writing in — this reached Datehaja Concierge and we've logged it.",
         ) +
         `<ul style="margin:0 0 14px 0;padding-left:18px;font-size:15px;line-height:1.7;color:${BRAND.ink};">
-           <li>Accept or pass on a date plan</li>
-           <li>Cancel a date, or tell your match you're running late</li>
+           <li>Read your Agent's latest date report</li>
+           <li>Decide privately whether you want to meet</li>
+           <li>Talk the date over with your Agent</li>
            <li>Report someone, or block them</li>
            <li>Pause matching entirely</li>
          </ul>` +
@@ -831,13 +783,30 @@ export function agentDebriefEmail(args: {
       "You can change what Datehaja emails you, or pause matching entirely, in Settings.",
   };
 
+  const copy = agentReportCopy(args.locale);
+  const letter: AgentLetter = {
+    agentName: args.agentName,
+    ownerPalette: args.report.ownerPalette,
+    spriteUrl: args.report.ownerSpriteUrl,
+    message: args.reason,
+    verdict: args.verdict,
+    detailLabel: args.decisionLabel ? localized.reason : undefined,
+    detail: args.decisionLabel,
+    nextLabel:
+      args.verdict === "pass" && args.nextSearchNote
+        ? localized.next
+        : undefined,
+    nextNote:
+      args.verdict === "pass" && args.nextSearchNote
+        ? args.nextSearchNote
+        : undefined,
+  };
+
   const text = `${localized.greeting}
 
-${localized.headline}.
-${agentDateReportText(args.locale, args.report, args.reason)}
+${agentLetterText(copy, letter)}
 
-${args.decisionLabel ? `${localized.reason}: ${args.decisionLabel}\n` : ""}
-${args.verdict === "pass" && args.nextSearchNote ? `\n${localized.next}: ${args.nextSearchNote}\n` : ""}
+${agentDateStoryText(copy, args.report)}
 
 ${localized.talkNote}
 ${localized.talk}: ${args.conversationUrl}
@@ -854,13 +823,8 @@ ${localized.privacy}
     html: shell(
       h1(localized.headline) +
         p(localized.greeting) +
-        agentDateReportHtml(args.locale, args.report, args.reason) +
-        (args.decisionLabel
-          ? p(`${localized.reason}: ${args.decisionLabel}`)
-          : "") +
-        (args.verdict === "pass" && args.nextSearchNote
-          ? p(`${localized.next}: ${args.nextSearchNote}`)
-          : "") +
+        agentLetterHtml(copy, letter) +
+        agentDateStoryHtml(copy, args.report) +
         p(localized.talkNote) +
         `<div style="margin-top:20px;">${button(args.conversationUrl, localized.talk)}</div>` +
         `<div style="margin-top:10px;">${secondaryButton(args.url, localized.button)}</div>` +
@@ -957,11 +921,24 @@ export function agentConnectionEmail(args: {
     settings:
       "You can change what Datehaja emails you, or pause matching entirely, in Settings.",
   };
+
+  const copy = agentReportCopy(args.locale);
+  // No verdict badge here: contact opens on two human yeses regardless of the
+  // agent's verdict, and a badge could contradict a cautious reason.
+  const letter: AgentLetter = {
+    agentName: args.report.agentName,
+    ownerPalette: args.report.ownerPalette,
+    spriteUrl: args.report.ownerSpriteUrl,
+    message: args.agentReason,
+  };
+
   const text = `${localized.greeting}
 
 ${localized.headline}
 
-${agentDateReportText(args.locale, args.report, args.agentReason)}
+${agentLetterText(copy, letter)}
+
+${agentDateStoryText(copy, args.report)}
 
 ${localized.button}: ${args.url}
 ${localized.talk}: ${args.conversationUrl}
@@ -975,7 +952,8 @@ ${localized.note}
     html: shell(
       h1(localized.headline) +
         p(localized.greeting) +
-        agentDateReportHtml(args.locale, args.report, args.agentReason) +
+        agentLetterHtml(copy, letter) +
+        agentDateStoryHtml(copy, args.report) +
         `<div style="margin-top:20px;">${button(args.url, localized.button)}</div>` +
         `<div style="margin-top:10px;">${secondaryButton(args.conversationUrl, localized.talk)}</div>` +
         `<p style="margin:18px 0 0;font-size:13px;line-height:1.6;color:${BRAND.muted};">${escapeHtml(localized.note)}</p>`,

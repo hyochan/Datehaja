@@ -4,7 +4,6 @@ import { httpAction } from "./_generated/server";
 import { components, internal } from "./_generated/api";
 import { auth } from "./auth";
 import { parseAddress, verifyWebhookSignature } from "./integrations/agentmail";
-import { buildCalendar } from "./lib/calendar";
 
 const http = httpRouter();
 
@@ -36,37 +35,6 @@ http.route({
       }),
       { status: 200, headers: { "Content-Type": "application/json" } },
     );
-  }),
-});
-
-/* ----------------------- private calendar subscription -------------------- */
-
-http.route({
-  pathPrefix: "/calendar/",
-  method: "GET",
-  handler: httpAction(async (ctx, request) => {
-    const pathname = new URL(request.url).pathname;
-    const file = pathname.slice("/calendar/".length);
-    const token = file.endsWith(".ics") ? file.slice(0, -4) : "";
-    if (!/^[a-f0-9]{64}$/i.test(token)) {
-      return new Response("Calendar not found", { status: 404 });
-    }
-
-    const feed = await ctx.runQuery(internal.calendar.getFeedByToken, {
-      token,
-    });
-    if (!feed) return new Response("Calendar not found", { status: 404 });
-
-    return new Response(buildCalendar(feed.events), {
-      status: 200,
-      headers: {
-        "Content-Type": "text/calendar; charset=utf-8",
-        "Content-Disposition": 'inline; filename="datehaja.ics"',
-        "Cache-Control": "private, no-store, max-age=0",
-        "X-Content-Type-Options": "nosniff",
-        "X-Robots-Tag": "noindex, nofollow",
-      },
-    });
   }),
 });
 

@@ -72,20 +72,6 @@ export async function requirePreferences(
   return prefs;
 }
 
-/** Ownership check for a date plan — the caller must be a participant. */
-export async function requireParticipant(
-  ctx: QueryCtx | MutationCtx,
-  dropId: Id<"datePlans">,
-  userId: Id<"users">,
-): Promise<Doc<"datePlanParticipants">> {
-  const participant = await ctx.db
-    .query("datePlanParticipants")
-    .withIndex("by_drop_and_user", (q) => q.eq("dropId", dropId).eq("userId", userId))
-    .unique();
-  if (!participant) throw new Error("This date plan isn't yours.");
-  return participant;
-}
-
 /** Both directions — a block always applies mutually. */
 export async function isBlockedEitherWay(
   ctx: QueryCtx | MutationCtx,
@@ -109,7 +95,7 @@ export async function recordAudit(
   args: {
     action: string;
     actorUserId?: Id<"users">;
-    dropId?: Id<"datePlans">;
+    agentDateId?: Id<"agentDates">;
     targetUserId?: Id<"users">;
     detail: string;
   },
@@ -118,7 +104,7 @@ export async function recordAudit(
     actorType: args.actorUserId ? "user" : "system",
     actorUserId: args.actorUserId,
     action: args.action,
-    dropId: args.dropId,
+    agentDateId: args.agentDateId,
     targetUserId: args.targetUserId,
     detail: args.detail.slice(0, 500),
   });

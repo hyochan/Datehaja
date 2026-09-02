@@ -12,6 +12,23 @@ import { AgentWorldSprite } from "../components/agent/AgentDateWorld";
 import { AgentLoopPlayer } from "../components/agent/AgentLoopPlayer";
 import { AgentAvatar } from "../components/agent/AgentAvatar";
 
+const JUNO_AVATAR = {
+  palette: "rose",
+  face: "gentle",
+  hair: "wave",
+  outfit: "cardigan",
+  accessory: "star",
+} as const;
+
+const SOL_AVATAR = {
+  palette: "violet",
+  face: "curious",
+  hair: "crop",
+  outfit: "blazer",
+  accessory: "glasses",
+} as const;
+
+
 export default function LandingPage() {
   const { locale, t } = useI18n();
   const track = useMutation(api.growth.track);
@@ -284,13 +301,7 @@ function ProductPeekCard({
             <AgentWorldSprite
               person={{
                 name: "Juno",
-                avatar: {
-                  palette: "rose",
-                  face: "gentle",
-                  hair: "wave",
-                  outfit: "cardigan",
-                  accessory: "star",
-                },
+                avatar: JUNO_AVATAR,
               }}
               position={[27, 72]}
               className="agent-peek-sprite"
@@ -298,13 +309,7 @@ function ProductPeekCard({
             <AgentWorldSprite
               person={{
                 name: "Sol",
-                avatar: {
-                  palette: "violet",
-                  face: "curious",
-                  hair: "crop",
-                  outfit: "blazer",
-                  accessory: "glasses",
-                },
+                avatar: SOL_AVATAR,
               }}
               position={[73, 72]}
               side="b"
@@ -317,11 +322,13 @@ function ProductPeekCard({
             </div>
             <div className="agent-peek-line is-juno">
               <b>Juno</b>
-              <span>{t("Quiet plans can still feel adventurous.")}</span>
+              <span>{t("My friend turns tiny plans into adventures.")}</span>
             </div>
             <div className="agent-peek-line is-sol">
               <b>Sol</b>
-              <span>{t("Only if changing them still feels safe.")}</span>
+              <span>
+                {t("Mine would love that — as long as they feel safe.")}
+              </span>
             </div>
           </div>
         )}
@@ -331,13 +338,7 @@ function ProductPeekCard({
             <div className="agent-peek-chat-head">
               <AgentAvatar
                 name="Juno"
-                avatar={{
-                  palette: "rose",
-                  face: "gentle",
-                  hair: "wave",
-                  outfit: "cardigan",
-                  accessory: "star",
-                }}
+                avatar={JUNO_AVATAR}
               />
               <div>
                 <b>Juno</b>
@@ -346,7 +347,7 @@ function ProductPeekCard({
               <i aria-hidden="true" />
             </div>
             <div className="agent-peek-bubble is-agent">
-              {t("I am Juno, your dating agent.")}
+              {t("I'm back! I have so much to tell you.")}
             </div>
             <div className="agent-peek-bubble is-human">
               {t("So—what did you notice?")}
@@ -401,13 +402,7 @@ function AgentReturnNote({ t }: { t: (key: string) => string }) {
       <header>
         <AgentAvatar
           name="Juno"
-          avatar={{
-            palette: "rose",
-            face: "gentle",
-            hair: "wave",
-            outfit: "cardigan",
-            accessory: "star",
-          }}
+          avatar={JUNO_AVATAR}
         />
         <div>
           <b>Juno</b>
@@ -442,6 +437,37 @@ function AgentReturnNote({ t }: { t: (key: string) => string }) {
 }
 
 function DebriefCard({ t }: { t: (key: string) => string }) {
+  const beats = [
+    {
+      round: "01",
+      stage: t("How it began"),
+      speaker: "Sol",
+      avatar: SOL_AVATAR,
+      line: t(
+        "My friend stays through the end credits, every single time. What's yours like?",
+      ),
+      mine: false,
+    },
+    {
+      round: "03",
+      stage: t("As it deepened"),
+      speaker: "Juno",
+      avatar: JUNO_AVATAR,
+      line: t(
+        "Mine hates small talk — but ask one good question and they light right up.",
+      ),
+      mine: true,
+    },
+    {
+      round: "06",
+      stage: t("The parting words"),
+      speaker: "Sol",
+      avatar: SOL_AVATAR,
+      line: t("Honestly? I think our friends would really like each other."),
+      mine: false,
+    },
+  ];
+
   return (
     <article className="agent-sample-debrief relative z-[1]">
       <div className="agent-debrief-index" aria-hidden="true">
@@ -456,67 +482,56 @@ function DebriefCard({ t }: { t: (key: string) => string }) {
           {t("moments")}
         </span>
       </header>
-      <div className="agent-debrief-verdict">
-        <span aria-hidden="true">↗</span>
-        <div>
-          <small>{t("PRIVATE VERDICT")}</small>
-          <h3>{t("I think you should meet.")}</h3>
-        </div>
+
+      <div className="agent-letter" aria-label={t("Juno's private note")}>
+        <header className="agent-letter-head">
+          <AgentAvatar name="Juno" avatar={JUNO_AVATAR} />
+          <div>
+            <b>Juno</b>
+            <span>{t("back from the date")}</span>
+          </div>
+          <em className="agent-letter-badge">{t("Worth meeting")}</em>
+        </header>
+        <blockquote className="agent-letter-bubble">
+          {t(
+            "You'd like this one. When I said you go quiet when you're worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.",
+          )}
+        </blockquote>
       </div>
-      <blockquote>
-        {t(
-          "The easy banter wasn't the strongest signal. It was how Sol slowed down when your fear of being misunderstood came up.",
-        )}
-      </blockquote>
-      <div className="agent-insight-map" aria-label={t("Agent insight map")}>
-        <div className="agent-insight-map-title">
-          {t("Six moments → one private read")}
+
+      <div className="agent-story">
+        <div className="agent-story-scene">
+          <i aria-hidden="true">🎬</i>
+          <div>
+            <small>{t("The date, as it happened")}</small>
+            <b>{t("The last showing at a small documentary cinema")}</b>
+            <span>
+              Sol ↔ Juno · 6 {t("moments")}
+            </span>
+          </div>
         </div>
-        <svg viewBox="0 0 640 230" aria-hidden="true">
-          <path
-            className="agent-insight-route"
-            d="M76 150 C170 44 242 188 320 105 C397 24 466 186 566 84"
-          />
-          <path
-            className="agent-insight-route is-echo"
-            d="M82 160 C190 202 242 62 324 120 C408 180 478 36 562 94"
-          />
-          {[94, 178, 263, 358, 452, 548].map((cx, index) => (
-            <circle
-              key={cx}
-              className={`agent-insight-moment moment-${index + 1}`}
-              cx={cx}
-              cy={index % 2 === 0 ? 126 : 102}
-              r="5"
-            />
+        <ol className="agent-story-beats">
+          {beats.map((beat) => (
+            <li key={beat.round} className={beat.mine ? "is-mine" : undefined}>
+              <AgentAvatar name={beat.speaker} avatar={beat.avatar} />
+              <div>
+                <small>
+                  {beat.round} · {beat.stage}
+                </small>
+                <p>
+                  <b>{beat.speaker}</b>
+                  {beat.line}
+                </p>
+              </div>
+            </li>
           ))}
-        </svg>
-        <div className="agent-insight-node is-spark">
-          <span>✦</span>
-          <small>{t("SPARK")}</small>
-          <strong>{t("Quiet feels safe to both")}</strong>
-        </div>
-        <AgentWorldSprite
-          person={{
-            name: "Juno",
-            avatar: {
-              palette: "rose",
-              face: "gentle",
-              hair: "wave",
-              outfit: "cardigan",
-              accessory: "star",
-            },
-          }}
-          position={[50, 85]}
-          emote="✦"
-          className="agent-insight-sprite"
-        />
-        <div className="agent-insight-node is-friction">
-          <span>?</span>
-          <small>{t("ASK ABOUT")}</small>
-          <strong>{t("Different social pace")}</strong>
+        </ol>
+        <div className="agent-story-signals">
+          <span className="is-spark">✨ {t("Quiet feels safe to both")}</span>
+          <span className="is-care">🌱 {t("Different social pace")}</span>
         </div>
       </div>
+
       <footer className="agent-debrief-seal">
         <span aria-hidden="true">⌁</span>
         {t("An interpretation, not a score")}
@@ -565,13 +580,7 @@ function AgentEverydayJourney({ t }: { t: (key: string) => string }) {
           <AgentWorldSprite
             person={{
               name: "Juno",
-              avatar: {
-                palette: "rose",
-                face: "gentle",
-                hair: "wave",
-                outfit: "cardigan",
-                accessory: "star",
-              },
+              avatar: JUNO_AVATAR,
             }}
             position={[50, 84]}
           />
@@ -606,13 +615,7 @@ function FinalAgentPair() {
       <AgentWorldSprite
         person={{
           name: "Juno",
-          avatar: {
-            palette: "rose",
-            face: "gentle",
-            hair: "wave",
-            outfit: "cardigan",
-            accessory: "star",
-          },
+          avatar: JUNO_AVATAR,
         }}
         position={[10, 83]}
         className="agent-final-sprite"
@@ -625,13 +628,7 @@ function FinalAgentPair() {
       <AgentWorldSprite
         person={{
           name: "Sol",
-          avatar: {
-            palette: "violet",
-            face: "curious",
-            hair: "crop",
-            outfit: "starlight",
-            accessory: "glasses",
-          },
+          avatar: { ...SOL_AVATAR, outfit: "starlight" },
         }}
         position={[90, 83]}
         side="b"

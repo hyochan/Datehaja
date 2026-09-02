@@ -185,7 +185,7 @@ convex/
   agentDates.ts        eligibility, simulation, verdicts, consent, delivery
   growth.ts            privacy-minimal first-party events
   integrations/        OpenAI, Firecrawl, AgentMail adapters
-  schema.ts            agent, transcript, consent, audit, and legacy tables
+  schema.ts            agent, transcript, consent, and audit tables
 src/pages/
   LandingPage.tsx      agent-dating story and live product visualization
   AgentOnboardingPage.tsx
@@ -197,7 +197,7 @@ tests/e2e/
   full-flow.spec.ts
 ```
 
-Legacy date-planning tables and server modules remain temporarily for migration safety, but old product routes redirect to the agent dashboard. The current product surface is agent dating.
+The legacy date-planning product (availability windows, matching runs, venue research, date plans) has been removed entirely — schema, server modules, and pages. The product surface is agent dating only.
 
 ## Status
 

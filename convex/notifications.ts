@@ -11,7 +11,6 @@ const notificationDoc = v.object({
   kind: notificationKindValidator,
   title: v.string(),
   body: v.string(),
-  dropId: v.optional(v.id("datePlans")),
   href: v.optional(v.string()),
   read: v.boolean(),
 });
@@ -22,7 +21,6 @@ export const create = internalMutation({
     kind: notificationKindValidator,
     title: v.string(),
     body: v.string(),
-    dropId: v.optional(v.id("datePlans")),
     href: v.optional(v.string()),
   },
   returns: v.id("notifications"),
@@ -32,7 +30,6 @@ export const create = internalMutation({
       kind: args.kind,
       title: truncate(args.title, 120),
       body: truncate(args.body, 300),
-      dropId: args.dropId,
       href: args.href,
       read: false,
     });

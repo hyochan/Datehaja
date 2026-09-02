@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import {
   currentUserId,
@@ -55,7 +55,6 @@ export const me = query({
       email: v.union(v.string(), v.null()),
       profile: v.union(v.null(), v.any()),
       preferences: v.union(v.null(), v.any()),
-      hasAvailability: v.boolean(),
       photoUrl: v.union(v.string(), v.null()),
     }),
   ),
@@ -66,19 +65,12 @@ export const me = query({
     const user = await ctx.db.get("users", userId);
     const profile = await getProfileByUser(ctx, userId);
     const preferences = await getPreferencesByUser(ctx, userId);
-    const anyAvailability = profile
-      ? await ctx.db
-          .query("availability")
-          .withIndex("by_user", (q) => q.eq("userId", userId))
-          .first()
-      : null;
 
     return {
       userId,
       email: user?.email ?? null,
       profile: profile ? stripPrivate(profile) : null,
       preferences,
-      hasAvailability: anyAvailability !== null,
       photoUrl: profile?.photoStorageId
         ? await ctx.storage.getUrl(profile.photoStorageId)
         : null,
@@ -577,36 +569,6 @@ export const saveDatePreferences = mutation({
   },
 });
 
-export const completeOnboarding = mutation({
-  args: {},
-  returns: v.null(),
-  handler: async (ctx) => {
-    const userId = await requireUserId(ctx);
-    const profile = await requireProfile(ctx, userId);
-
-    if (profile.interests.length < 3) {
-      throw new Error("Add a few interests before we start matching.");
-    }
-    const hasWindow = await ctx.db
-      .query("availability")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
-      .first();
-    if (!hasWindow) throw new Error("Add at least one time you're free.");
-
-    await ctx.db.patch("profiles", profile._id, {
-      onboardingComplete: true,
-      onboardingStep: 7,
-      updatedAt: Date.now(),
-    });
-    await recordAudit(ctx, {
-      action: "onboarding.completed",
-      actorUserId: userId,
-      detail: profile.city,
-    });
-    return null;
-  },
-});
-
 /* ---------------------------- account controls --------------------------- */
 
 export const setStatus = mutation({
@@ -739,3 +701,49 @@ function clampNumber(n: number, min: number, max: number): number {
   if (!Number.isFinite(n)) return min;
   return Math.max(min, Math.min(max, n));
 }
+
+/**
+ * Keep denormalised ages accurate. Paginated with a persisted cursor so the
+ * sweep covers every profile across runs instead of re-reading the first page
+ * forever once the table outgrows one batch.
+ */
+export const refreshAges = internalMutation({
+  args: { nowMs: v.number() },
+  returns: v.number(),
+  handler: async (ctx, args) => {
+    const JOB = "refreshAges";
+    const saved = await ctx.db
+      .query("jobCursors")
+      .withIndex("by_job", (q) => q.eq("job", JOB))
+      .unique();
+
+    const page = await ctx.db
+      .query("profiles")
+      .paginate({ numItems: 200, cursor: saved?.cursor ?? null });
+
+    let updated = 0;
+    for (const profile of page.page) {
+      const age = ageOn(profile.dobMs, args.nowMs);
+      if (age !== profile.ageYears) {
+        await ctx.db.patch("profiles", profile._id, { ageYears: age });
+        updated += 1;
+      }
+    }
+
+    // Restart from the top once we reach the end.
+    const nextCursor = page.isDone ? null : page.continueCursor;
+    if (saved) {
+      await ctx.db.patch("jobCursors", saved._id, {
+        cursor: nextCursor,
+        updatedAt: args.nowMs,
+      });
+    } else {
+      await ctx.db.insert("jobCursors", {
+        job: JOB,
+        cursor: nextCursor,
+        updatedAt: args.nowMs,
+      });
+    }
+    return updated;
+  },
+});

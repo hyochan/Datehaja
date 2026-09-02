@@ -1,8 +1,12 @@
 /* oxlint-disable react/only-export-components -- the renderer owns its compact avatar contract */
 import { useId, type CSSProperties } from "react";
+import {
+  AVATAR_PALETTES,
+  avatarPaletteForName,
+  spritePathFor,
+} from "@convex/lib/agentAvatar";
 
-export type AvatarPalette =
-  "rose" | "violet" | "moss" | "sky" | "sunset" | "ink";
+export type AvatarPalette = (typeof AVATAR_PALETTES)[number];
 export type AvatarFace = "gentle" | "bright" | "cool" | "curious";
 export type AvatarHair = "wave" | "crop" | "bob" | "bun" | "buzz";
 export type AvatarOutfit = "cardigan" | "blazer" | "hoodie" | "starlight";
@@ -26,21 +30,16 @@ export const DEFAULT_AVATAR: AvatarConfig = {
 };
 
 export const AVATAR_OPTIONS = {
-  palette: ["rose", "violet", "moss", "sky", "sunset", "ink"],
+  palette: AVATAR_PALETTES,
   face: ["gentle", "bright", "cool", "curious"],
   hair: ["wave", "crop", "bob", "bun", "buzz"],
   outfit: ["cardigan", "blazer", "hoodie", "starlight"],
   accessory: ["none", "glasses", "headphones", "star", "scarf"],
 } as const;
 
-export const AVATAR_SPRITES: Record<AvatarPalette, string> = {
-  rose: "/agents/sprite-rose-v1.png",
-  violet: "/agents/sprite-violet-v1.png",
-  moss: "/agents/sprite-moss-v1.png",
-  sky: "/agents/sprite-sky-v1.png",
-  sunset: "/agents/sprite-sunset-v1.png",
-  ink: "/agents/sprite-ink-v1.png",
-};
+export const AVATAR_SPRITES = Object.fromEntries(
+  AVATAR_PALETTES.map((palette) => [palette, spritePathFor(palette)]),
+) as Record<AvatarPalette, string>;
 
 export function spriteForAvatar(avatar: AvatarConfig) {
   return AVATAR_SPRITES[avatar.palette];
@@ -113,9 +112,9 @@ export function avatarForName(
 ): AvatarConfig {
   const hash = hashName(name || "Datehaja");
   return {
-    palette:
-      avatar?.palette ??
-      AVATAR_OPTIONS.palette[hash % AVATAR_OPTIONS.palette.length],
+    // Shared with the email pipeline (convex/lib/agentAvatar.ts) so an agent
+    // shows the same face in the app and in every debrief email.
+    palette: avatarPaletteForName(name, avatar?.palette),
     face:
       avatar?.face ?? AVATAR_OPTIONS.face[hash % AVATAR_OPTIONS.face.length],
     hair:

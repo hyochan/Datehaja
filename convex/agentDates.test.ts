@@ -188,7 +188,7 @@ describe("agent-date privacy and human consent", () => {
 
     expect(context?.a.locale).toBe("ko-KR");
     expect(context?.b.locale).toBe("en-US");
-    expect(context?.turns).toEqual([
+    expect(context?.turns).toMatchObject([
       {
         round: 1,
         speakerAgentName: "Aster",

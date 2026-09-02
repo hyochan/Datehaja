@@ -3,16 +3,10 @@ import {
   internalMutation,
   internalQuery,
   mutation,
-  query,
 } from "./_generated/server";
-import type { MutationCtx } from "./_generated/server";
-import type { Id } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
-import { currentUserId, recordAudit, requireUserId } from "./lib/authz";
-import { deriveDropStatus, isTerminalDrop } from "./lib/stateMachine";
-import { assertDropTransition } from "./lib/stateMachine";
+import { requireUserId } from "./lib/authz";
 import { coarsen } from "./lib/geo";
-import { DAY_MS, HOUR_MS } from "./lib/time";
 import {
   BUDGET_BANDS,
   SUPPORTED_CITIES,
@@ -555,7 +549,7 @@ export const hasReadyWorldFor = internalQuery({
 
 export const seed = internalMutation({
   args: { nowMs: v.number(), force: v.optional(v.boolean()) },
-  returns: v.object({ created: v.number(), windows: v.number() }),
+  returns: v.object({ created: v.number() }),
   handler: async (ctx, args) => {
     void args.force;
 
@@ -686,323 +680,17 @@ export const seed = internalMutation({
       created += 1;
     }
 
-    const windows = await refreshDemoAvailability(ctx, args.nowMs);
-    return { created, windows };
+    return { created };
   },
 });
-
-/**
- * Keep demo personas free most evenings so a judge always finds an overlap.
- * Windows are generous (17:00–23:00 and 13:00–19:00 local) and topped up
- * whenever they run low.
- */
-async function refreshDemoAvailability(
-  ctx: MutationCtx,
-  nowMs: number,
-): Promise<number> {
-  const personas = await ctx.db
-    .query("profiles")
-    .withIndex("by_demo_and_status", (q) =>
-      q.eq("isDemo", true).eq("status", "active"),
-    )
-    .take(100);
-
-  let created = 0;
-  for (const persona of personas) {
-    const upcoming = await ctx.db
-      .query("availability")
-      .withIndex("by_user_and_start", (q) =>
-        q.eq("userId", persona.userId).gte("startMs", nowMs),
-      )
-      .take(30);
-    const open = upcoming.filter((w) => w.status === "open");
-    if (open.length >= 6) continue;
-
-    const taken = new Set(upcoming.map((w) => w.startMs));
-    let remaining = 6 - open.length;
-    for (let dayOffset = 1; dayOffset <= 12; dayOffset++) {
-      if (remaining <= 0) break;
-      const dayStart = startOfLocalDay(
-        nowMs + dayOffset * DAY_MS,
-        persona.timezone,
-      );
-
-      // Evening window most days, plus an afternoon window at weekends.
-      const slots = [
-        { start: dayStart + 17 * HOUR_MS, end: dayStart + 23 * HOUR_MS },
-        { start: dayStart + 13 * HOUR_MS, end: dayStart + 19 * HOUR_MS },
-      ];
-      for (const slot of slots) {
-        if (slot.start <= nowMs) continue;
-        if (taken.has(slot.start)) continue;
-        // Deterministic spread so not everybody is free at once.
-        const bucket = (hashString(persona.userId + dayOffset) % 10) as number;
-        if (bucket > 6) continue;
-        await ctx.db.insert("availability", {
-          userId: persona.userId,
-          startMs: slot.start,
-          endMs: slot.end,
-          timezone: persona.timezone,
-          status: "open",
-        });
-        taken.add(slot.start);
-        created += 1;
-        remaining -= 1;
-        break;
-      }
-    }
-  }
-  return created;
-}
-
-/** Local midnight for a timestamp in a given IANA zone. */
-function startOfLocalDay(ms: number, timeZone: string): number {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  }).formatToParts(new Date(ms));
-  const get = (type: string) =>
-    Number(parts.find((p) => p.type === type)?.value ?? 0);
-  const localMidnightOffset =
-    get("hour") * HOUR_MS + get("minute") * 60_000 + get("second") * 1000;
-  return ms - localMidnightOffset;
-}
-
-function hashString(value: string): number {
-  let hash = 0;
-  for (let i = 0; i < value.length; i++) {
-    hash = (hash * 31 + value.charCodeAt(i)) | 0;
-  }
-  return Math.abs(hash);
-}
 
 /* ------------------------------ demo controls ----------------------------- */
-
-export const status = query({
-  args: {},
-  returns: v.object({
-    personaCount: v.number(),
-    openWindowCount: v.number(),
-    enabledForMe: v.boolean(),
-  }),
-  handler: async (ctx) => {
-    const personas = await ctx.db
-      .query("profiles")
-      .withIndex("by_demo_and_status", (q) =>
-        q.eq("isDemo", true).eq("status", "active"),
-      )
-      .take(100);
-
-    let openWindowCount = 0;
-    for (const persona of personas.slice(0, 20)) {
-      const windows = await ctx.db
-        .query("availability")
-        .withIndex("by_user", (q) => q.eq("userId", persona.userId))
-        .take(20);
-      openWindowCount += windows.filter((w) => w.status === "open").length;
-    }
-
-    const userId = await currentUserId(ctx);
-    let enabledForMe = true;
-    if (userId) {
-      const prefs = await ctx.db
-        .query("preferences")
-        .withIndex("by_user", (q) => q.eq("userId", userId))
-        .unique();
-      enabledForMe = prefs?.allowDemoMatches ?? true;
-    }
-
-    return { personaCount: personas.length, openWindowCount, enabledForMe };
-  },
-});
-
-/**
- * Let a judge play the other side of their own date plan.
- *
- * Only works when the other participant is a demo persona, and only for a
- * date plan the caller is actually in. This is the one place demo personas act.
- */
-export const respondAsPersona = mutation({
-  args: {
-    dropId: v.id("datePlans"),
-    response: v.union(v.literal("accept"), v.literal("pass")),
-  },
-  returns: v.object({ confirmed: v.boolean(), personaName: v.string() }),
-  handler: async (ctx, args) => {
-    const userId = await requireUserId(ctx);
-    const me = await ctx.db
-      .query("datePlanParticipants")
-      .withIndex("by_drop_and_user", (q) =>
-        q.eq("dropId", args.dropId).eq("userId", userId),
-      )
-      .unique();
-    if (!me) throw new Error("That date plan isn't yours.");
-
-    const drop = await ctx.db.get("datePlans", args.dropId);
-    if (!drop) throw new Error("That date plan is gone.");
-    if (isTerminalDrop(drop.status))
-      throw new Error("This date plan is already closed.");
-
-    const participants = await ctx.db
-      .query("datePlanParticipants")
-      .withIndex("by_drop", (q) => q.eq("dropId", args.dropId))
-      .take(10);
-
-    const other = participants.find(
-      (p) =>
-        p.userId !== userId && (p.state === "invited" || p.state === "viewed"),
-    );
-    if (!other)
-      throw new Error("Nobody on this date plan is waiting to respond.");
-
-    const otherProfile = await ctx.db
-      .query("profiles")
-      .withIndex("by_user", (q) => q.eq("userId", other.userId))
-      .unique();
-    if (!otherProfile?.isDemo) {
-      throw new Error(
-        "The other person is a real user — only they can respond.",
-      );
-    }
-
-    const now = Date.now();
-    const personaName = otherProfile.displayName;
-
-    if (args.response === "pass") {
-      await ctx.db.patch("datePlanParticipants", other._id, {
-        state: "passed",
-        respondedAt: now,
-        passReason: "timing",
-      });
-      if (other.availabilityId) {
-        const window = await ctx.db.get("availability", other.availabilityId);
-        if (window && window.heldByDropId === drop._id) {
-          await ctx.db.patch("availability", window._id, {
-            status: "open",
-            heldByDropId: undefined,
-          });
-        }
-      }
-
-      const stillIn = participants.filter(
-        (p) =>
-          p.userId !== other.userId &&
-          (p.state === "accepted" || p.state === "confirmed"),
-      );
-      if (stillIn.length > 0) {
-        if (drop.status !== "partially_accepted") {
-          assertDropTransition(drop.status, "partially_accepted");
-          await ctx.db.patch("datePlans", drop._id, {
-            status: "partially_accepted",
-            updatedAt: now,
-          });
-        }
-        await ctx.db.insert("notifications", {
-          userId: stillIn[0].userId,
-          kind: "searching",
-          title: "Looking for someone else",
-          body: `${personaName} passed on this one. Your evening is still held — we're looking for the right person for the same plan.`,
-          dropId: drop._id,
-          href: `/drop/${drop._id}`,
-          read: false,
-        });
-        if (
-          drop.candidateAttempts < drop.maxCandidateAttempts &&
-          now < drop.confirmDeadlineMs
-        ) {
-          await ctx.scheduler.runAfter(
-            0,
-            internal.matching.runReplacementPipeline,
-            {
-              dropId: drop._id,
-            },
-          );
-        }
-      }
-
-      await recordAudit(ctx, {
-        action: "demo.persona_passed",
-        actorUserId: userId,
-        dropId: drop._id,
-        targetUserId: other.userId,
-        detail: personaName,
-      });
-      return { confirmed: false, personaName };
-    }
-
-    await ctx.db.patch("datePlanParticipants", other._id, {
-      state: "accepted",
-      respondedAt: now,
-    });
-
-    const refreshed = await ctx.db
-      .query("datePlanParticipants")
-      .withIndex("by_drop", (q) => q.eq("dropId", args.dropId))
-      .take(10);
-
-    const nextStatus = deriveDropStatus(drop.status, refreshed);
-    assertDropTransition(drop.status, nextStatus);
-
-    if (nextStatus === "confirmed") {
-      await ctx.db.patch("datePlans", drop._id, {
-        status: "confirmed",
-        confirmedAt: now,
-        updatedAt: now,
-      });
-      for (const p of refreshed) {
-        if (p.state === "accepted") {
-          await ctx.db.patch("datePlanParticipants", p._id, {
-            state: "confirmed",
-          });
-        }
-        if (p.availabilityId) {
-          const window = await ctx.db.get("availability", p.availabilityId);
-          if (window && window.heldByDropId === drop._id) {
-            await ctx.db.patch("availability", window._id, {
-              status: "booked",
-            });
-          }
-        }
-      }
-      await ctx.scheduler.runAfter(0, internal.datePlans.notifyConfirmed, {
-        dropId: drop._id,
-      });
-      await recordAudit(ctx, {
-        action: "demo.persona_accepted",
-        actorUserId: userId,
-        dropId: drop._id,
-        targetUserId: other.userId,
-        detail: `${personaName} — confirmed`,
-      });
-      return { confirmed: true, personaName };
-    }
-
-    await ctx.db.patch("datePlans", drop._id, {
-      status: nextStatus,
-      updatedAt: now,
-    });
-    await recordAudit(ctx, {
-      action: "demo.persona_accepted",
-      actorUserId: userId,
-      dropId: drop._id,
-      targetUserId: other.userId,
-      detail: personaName,
-    });
-    return { confirmed: false, personaName };
-  },
-});
 
 /** Manual reseed, exposed so the demo can be topped up without a deploy. */
 export const reseed = mutation({
   args: {},
-  returns: v.object({ created: v.number(), windows: v.number() }),
-  handler: async (ctx): Promise<{ created: number; windows: number }> => {
+  returns: v.object({ created: v.number() }),
+  handler: async (ctx): Promise<{ created: number }> => {
     await requireUserId(ctx);
     return await ctx.runMutation(internal.demo.seed, { nowMs: Date.now() });
   },
@@ -1011,49 +699,8 @@ export const reseed = mutation({
 /** Used by the deploy script to guarantee the demo world exists. */
 export const ensureSeeded = internalMutation({
   args: {},
-  returns: v.object({ created: v.number(), windows: v.number() }),
-  handler: async (ctx): Promise<{ created: number; windows: number }> => {
+  returns: v.object({ created: v.number() }),
+  handler: async (ctx): Promise<{ created: number }> => {
     return await ctx.runMutation(internal.demo.seed, { nowMs: Date.now() });
-  },
-});
-
-/** Demo personas listing for the Demo Controls screen. */
-export const personas = query({
-  args: {},
-  returns: v.array(v.any()),
-  handler: async (ctx) => {
-    const userId = await currentUserId(ctx);
-    const myProfile = userId
-      ? await ctx.db
-          .query("profiles")
-          .withIndex("by_user", (q) => q.eq("userId", userId))
-          .unique()
-      : null;
-    const profiles = await ctx.db
-      .query("profiles")
-      .withIndex("by_demo_and_status", (q) =>
-        q.eq("isDemo", true).eq("status", "active"),
-      )
-      .take(100);
-
-    const out = [];
-    for (const profile of profiles.filter(
-      (candidate) => !myProfile || candidate.city === myProfile.city,
-    )) {
-      const windows = await ctx.db
-        .query("availability")
-        .withIndex("by_user", (q) => q.eq("userId", profile.userId))
-        .take(20);
-      out.push({
-        userId: profile.userId as Id<"users">,
-        displayName: profile.displayName,
-        age: profile.ageYears,
-        area: profile.neighborhood,
-        occupation: profile.showOccupation ? profile.occupationCategory : null,
-        interests: profile.interests.slice(0, 4),
-        openWindows: windows.filter((w) => w.status === "open").length,
-      });
-    }
-    return out;
   },
 });

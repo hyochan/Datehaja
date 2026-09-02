@@ -4,14 +4,11 @@ import { describe, expect, test } from "vitest";
 import { api, internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import schema from "./schema";
-import { blockKey, hardFilter, type Party } from "./lib/matching";
-import { DAY_MS } from "./lib/time";
 import { verifyWebhookSignature } from "./integrations/agentmail";
 
 const modules = import.meta.glob("./**/*.ts");
 
 const NOW = Date.now();
-const DATE_START = NOW + 3 * DAY_MS;
 
 async function seedPair(t: ReturnType<typeof convexTest>) {
   return await t.run(async (ctx) => {
@@ -49,98 +46,33 @@ async function seedPair(t: ReturnType<typeof convexTest>) {
         isDemo: false,
         updatedAt: NOW,
       });
-      await ctx.db.insert("preferences", {
-        userId,
-        ageMin: 20,
-        ageMax: 50,
-        ageHard: true,
-        maxDistanceKm: 30,
-        distanceHard: true,
-        relationshipIntent: "open",
-        intentHard: false,
-        smoking: "no_preference",
-        smokingHard: false,
-        alcohol: "no_preference",
-        alcoholHard: false,
-        preferredDateTypes: ["coffee"],
-        budgetMinPerPerson: 10000,
-        budgetMaxPerPerson: 90000,
-        currency: "KRW",
-        budgetHard: false,
-        dayPreference: "either",
-        indoorOutdoor: "either",
-        atmosphere: "either",
-        dietary: [],
-        accessibility: [],
-        notifyEmail: false,
-        notifyInvitations: false,
-        notifyConfirmations: false,
-        notifyReminders: false,
-        dropsPaused: false,
-        maxDropsPerWeek: 5,
-        allowDemoMatches: true,
-        updatedAt: NOW,
-      });
-      const availabilityId = await ctx.db.insert("availability", {
-        userId,
-        startMs: DATE_START - 3600_000,
-        endMs: DATE_START + 4 * 3600_000,
-        timezone: "Asia/Seoul",
-        status: "held",
-      });
-      return { userId, availabilityId };
+      return { userId };
     }
 
     const alice = await makeUser("Alice", "woman");
     const bob = await makeUser("Bob", "man");
 
-    const dropId = await ctx.db.insert("datePlans", {
-      status: "inviting",
+    const agentDateId = await ctx.db.insert("agentDates", {
       initiatorUserId: alice.userId,
-      countryCode: "KR",
-      city: "Seoul",
-      area: "Seongsu",
-      approxLat: 37.54,
-      approxLng: 127.06,
-      timezone: "Asia/Seoul",
-      startMs: DATE_START,
-      endMs: DATE_START + 2 * 3600_000,
-      title: "Coffee",
-      theme: "Coffee",
+      counterpartUserId: bob.userId,
+      status: "debrief_ready",
+      setting: "A quiet record bar after dark",
+      compatibilityScore: 70,
       summary: "",
-      whyItFits: "",
-      itinerary: [],
-      estimatedDurationMin: 90,
-      estimatedCostPerPerson: 20000,
-      currency: "KRW",
-      meetingInstructions: "",
-      confirmDeadlineMs: DATE_START - DAY_MS,
-      candidateAttempts: 1,
-      maxCandidateAttempts: 4,
-      isDemo: false,
+      sparks: [],
+      frictions: [],
+      initiatorVerdict: "curious",
+      counterpartVerdict: "curious",
+      initiatorReason: "",
+      counterpartReason: "",
+      initiatorConsent: "pending",
+      counterpartConsent: "pending",
+      isDemoCounterpart: false,
+      createdAt: NOW,
       updatedAt: NOW,
     });
 
-    for (const [person, role] of [
-      [alice, "initiator"],
-      [bob, "invitee"],
-    ] as const) {
-      await ctx.db.insert("datePlanParticipants", {
-        dropId,
-        userId: person.userId,
-        role,
-        state: "invited",
-        privateWhyItFits: "",
-        compatibilityBlurb: "",
-        availabilityId: person.availabilityId,
-        invitedAt: NOW,
-      });
-      await ctx.db.patch("availability", person.availabilityId, {
-        heldByDropId: dropId,
-      });
-    }
-
-    return { alice, bob, dropId };
+    return { alice, bob, agentDateId };
   });
 }
 
@@ -149,22 +81,17 @@ function asUser(t: ReturnType<typeof convexTest>, userId: Id<"users">) {
 }
 
 describe("blocking", () => {
-  test("blocking cancels the shared date plan and frees both evenings", async () => {
+  test("blocking quietly closes the shared agent date", async () => {
     const t = convexTest(schema, modules);
     const s = await seedPair(t);
 
-    await asUser(t, s.alice.userId).mutation(api.safety.blockFromDrop, {
-      dropId: s.dropId,
+    await asUser(t, s.alice.userId).mutation(api.safety.blockFromAgentDate, {
+      agentDateId: s.agentDateId,
     });
 
     await t.run(async (ctx) => {
-      const drop = await ctx.db.get("datePlans", s.dropId);
-      expect(drop?.status).toBe("cancelled");
-      for (const person of [s.alice, s.bob]) {
-        const window = await ctx.db.get("availability", person.availabilityId);
-        expect(window?.status).toBe("open");
-        expect(window?.heldByDropId).toBeUndefined();
-      }
+      const date = await ctx.db.get("agentDates", s.agentDateId);
+      expect(date?.status).toBe("closed");
     });
   });
 
@@ -172,10 +99,13 @@ describe("blocking", () => {
     const t = convexTest(schema, modules);
     const s = await seedPair(t);
 
-    await asUser(t, s.alice.userId).mutation(api.safety.blockFromDrop, {
-      dropId: s.dropId,
+    await asUser(t, s.alice.userId).mutation(api.safety.blockFromAgentDate, {
+      agentDateId: s.agentDateId,
     });
-    const list = await asUser(t, s.alice.userId).query(api.safety.blockedList, {});
+    const list = await asUser(t, s.alice.userId).query(
+      api.safety.blockedList,
+      {},
+    );
     expect(list).toHaveLength(1);
     expect(list[0].displayName).toBe("Bob");
   });
@@ -183,13 +113,14 @@ describe("blocking", () => {
   test("a block applies in both directions", async () => {
     const t = convexTest(schema, modules);
     const s = await seedPair(t);
-    await asUser(t, s.alice.userId).mutation(api.safety.blockFromDrop, {
-      dropId: s.dropId,
+    await asUser(t, s.alice.userId).mutation(api.safety.blockFromAgentDate, {
+      agentDateId: s.agentDateId,
     });
 
-    const aliceSees = await asUser(t, s.alice.userId).query(api.safety.isBlocked, {
-      otherUserId: s.bob.userId,
-    });
+    const aliceSees = await asUser(t, s.alice.userId).query(
+      api.safety.isBlocked,
+      { otherUserId: s.bob.userId },
+    );
     const bobSees = await asUser(t, s.bob.userId).query(api.safety.isBlocked, {
       otherUserId: s.alice.userId,
     });
@@ -200,76 +131,15 @@ describe("blocking", () => {
   test("unblocking removes the block", async () => {
     const t = convexTest(schema, modules);
     const s = await seedPair(t);
-    await asUser(t, s.alice.userId).mutation(api.safety.blockFromDrop, {
-      dropId: s.dropId,
+    await asUser(t, s.alice.userId).mutation(api.safety.blockFromAgentDate, {
+      agentDateId: s.agentDateId,
     });
     await asUser(t, s.alice.userId).mutation(api.safety.unblock, {
       userId: s.bob.userId,
     });
-    expect(await asUser(t, s.alice.userId).query(api.safety.blockedList, {})).toHaveLength(
-      0,
-    );
-  });
-
-  test("blocked users can never be matched again", () => {
-    // The matching engine consumes the same block key the mutation writes.
-    const blocked = new Set([blockKey("alice", "bob")]);
-    const window = { startMs: DATE_START, endMs: DATE_START + 4 * 3600_000 };
-    const make = (userId: string, gender: "woman" | "man"): Party => ({
-      profile: {
-        userId,
-        displayName: userId,
-        ageYears: 30,
-        ageConfirmed18: true,
-        gender,
-        interestedIn: gender === "woman" ? ["man"] : ["woman"],
-        city: "Seoul",
-        countryCode: "KR",
-        neighborhood: "Seongsu",
-        approxLat: 37.54,
-        approxLng: 127.06,
-        timezone: "Asia/Seoul",
-        interests: ["Films"],
-        hobbies: [],
-        languages: ["English"],
-        socialEnergy: "ambivert",
-        firstDateVibe: [],
-        lifestyle: { smokes: false, drinks: "occasional" },
-        status: "active",
-        moderationStatus: "ok",
-        onboardingComplete: true,
-        isDemo: false,
-      },
-      preferences: {
-        ageMin: 20,
-        ageMax: 50,
-        ageHard: true,
-        maxDistanceKm: 30,
-        distanceHard: true,
-        relationshipIntent: "open",
-        intentHard: false,
-        smoking: "no_preference",
-        smokingHard: false,
-        alcohol: "no_preference",
-        alcoholHard: false,
-        preferredDateTypes: ["coffee"],
-        budgetMinPerPerson: 10000,
-        budgetMaxPerPerson: 90000,
-        currency: "KRW",
-        budgetHard: false,
-        indoorOutdoor: "either",
-        atmosphere: "either",
-        dietary: [],
-        accessibility: [],
-        dropsPaused: false,
-        allowDemoMatches: true,
-      },
-      window,
-    });
-
     expect(
-      hardFilter(make("alice", "woman"), make("bob", "man"), { blockedPairs: blocked }),
-    ).toEqual({ ok: false, reason: "blocked" });
+      await asUser(t, s.alice.userId).query(api.safety.blockedList, {}),
+    ).toHaveLength(0);
   });
 });
 
@@ -279,7 +149,7 @@ describe("reporting", () => {
     const s = await seedPair(t);
 
     await asUser(t, s.alice.userId).mutation(api.safety.report, {
-      dropId: s.dropId,
+      agentDateId: s.agentDateId,
       category: "harassment",
       details: "They were abusive.",
       alsoBlock: true,
@@ -301,7 +171,7 @@ describe("reporting", () => {
     const s = await seedPair(t);
 
     await asUser(t, s.alice.userId).mutation(api.safety.report, {
-      dropId: s.dropId,
+      agentDateId: s.agentDateId,
       category: "underage",
       details: "Looks well under 18.",
       alsoBlock: false,
@@ -320,7 +190,7 @@ describe("reporting", () => {
     const t = convexTest(schema, modules);
     const s = await seedPair(t);
     await asUser(t, s.alice.userId).mutation(api.safety.report, {
-      dropId: s.dropId,
+      agentDateId: s.agentDateId,
       category: "no_show",
       details: "Didn't turn up.",
       alsoBlock: false,
@@ -334,7 +204,7 @@ describe("reporting", () => {
     expect(profile?.moderationStatus).toBe("ok");
   });
 
-  test("you cannot report through a date plan you're not in", async () => {
+  test("you cannot report through an agent date you're not in", async () => {
     const t = convexTest(schema, modules);
     const s = await seedPair(t);
     const stranger = await t.run((ctx) =>
@@ -342,7 +212,7 @@ describe("reporting", () => {
     );
     await expect(
       asUser(t, stranger).mutation(api.safety.report, {
-        dropId: s.dropId,
+        agentDateId: s.agentDateId,
         category: "other",
         details: "x",
         alsoBlock: false,
@@ -355,7 +225,10 @@ describe("what the user is told about their own visibility", () => {
   test("myVisibility returns the exact preview a match receives", async () => {
     const t = convexTest(schema, modules);
     const s = await seedPair(t);
-    const visibility = await asUser(t, s.alice.userId).query(api.safety.myVisibility, {});
+    const visibility = await asUser(t, s.alice.userId).query(
+      api.safety.myVisibility,
+      {},
+    );
     expect(visibility?.beforeMatch.displayName).toBe("Alice");
     expect(visibility?.neverShared).toEqual(
       expect.arrayContaining([expect.stringContaining("email")]),
@@ -367,7 +240,12 @@ describe("what the user is told about their own visibility", () => {
 /* --------------------------- AgentMail webhook ---------------------------- */
 
 /** Sign a payload exactly the way Svix does, so the verifier is tested for real. */
-async function signSvix(secret: string, id: string, timestamp: string, body: string) {
+async function signSvix(
+  secret: string,
+  id: string,
+  timestamp: string,
+  body: string,
+) {
   const raw = Uint8Array.from(atob(secret.replace(/^whsec_/, "")), (c) =>
     c.charCodeAt(0),
   );
@@ -394,7 +272,10 @@ const SECRET = `whsec_${btoa(
 )}`;
 
 describe("AgentMail webhook verification", () => {
-  const body = JSON.stringify({ event_type: "message.received", event_id: "evt_1" });
+  const body = JSON.stringify({
+    event_type: "message.received",
+    event_id: "evt_1",
+  });
 
   test("accepts a correctly signed payload", async () => {
     const ts = String(Math.floor(NOW / 1000));
@@ -492,7 +373,7 @@ describe("AgentMail event persistence is idempotent", () => {
       messageId: "<m1@agentmail.to>",
       fromAddress: "someone@example.com",
       toAddress: "concierge@agentmail.to",
-      subject: "Re: your date plan",
+      subject: "Re: your agent's date",
       preview: "hello",
       signatureVerified: true,
       rawPreview: "{}",
@@ -505,30 +386,20 @@ describe("AgentMail event persistence is idempotent", () => {
     expect(second.duplicate).toBe(true);
     expect(second.eventDocId).toEqual(first.eventDocId);
 
-    const events = await t.run((ctx) => ctx.db.query("agentMailEvents").collect());
+    const events = await t.run((ctx) =>
+      ctx.db.query("agentMailEvents").collect(),
+    );
     expect(events).toHaveLength(1);
   });
 
-  test("an inbound event is linked to the participant behind its thread", async () => {
+  test("an inbound event is linked to the sender behind its address", async () => {
     const t = convexTest(schema, modules);
     const s = await seedPair(t);
-    await t.run(async (ctx) => {
-      const participant = await ctx.db
-        .query("datePlanParticipants")
-        .withIndex("by_drop_and_user", (q) =>
-          q.eq("dropId", s.dropId).eq("userId", s.alice.userId),
-        )
-        .unique();
-      await ctx.db.patch("datePlanParticipants", participant!._id, {
-        emailThreadId: "thr_link",
-        emailMessageId: "<m@agentmail.to>",
-      });
-    });
 
     const result = await t.mutation(internal.mail.recordEvent, {
       eventId: "evt_link",
       eventType: "message.received",
-      threadId: "thr_link",
+      fromAddress: "Alice <alice@test.invalid>",
       signatureVerified: true,
       rawPreview: "{}",
     });
@@ -537,6 +408,5 @@ describe("AgentMail event persistence is idempotent", () => {
       ctx.db.get("agentMailEvents", result.eventDocId!),
     );
     expect(event?.userId).toBe(s.alice.userId);
-    expect(event?.dropId).toBe(s.dropId);
   });
 });
