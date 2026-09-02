@@ -232,7 +232,7 @@ type AgentDateDeliveryContext = {
   };
 };
 
-function emailReportFor(
+export function emailReportFor(
   info: AgentDateDeliveryContext,
   owner: "a" | "b",
 ): AgentDateEmailReport {

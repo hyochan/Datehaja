@@ -2,6 +2,7 @@
 import { convexTest } from "convex-test";
 import { describe, expect, test } from "vitest";
 import { api, internal } from "./_generated/api";
+import { emailReportFor } from "./agentDates";
 import type { Id } from "./_generated/dataModel";
 import schema from "./schema";
 
@@ -60,6 +61,8 @@ async function setup(t: ReturnType<typeof convexTest>) {
           hair: "wave",
           outfit: "cardigan",
           accessory: "glasses",
+          // Aster predates the painted bases (no gender); the other agent picked the man.
+          ...(agentName === "Aster" ? {} : { gender: "male" as const }),
         },
         essence:
           "Warm but direct, and more introverted than first impressions suggest.",
@@ -188,6 +191,8 @@ describe("agent-date privacy and human consent", () => {
 
     expect(context?.a.locale).toBe("ko-KR");
     expect(context?.b.locale).toBe("en-US");
+    expect(context?.a.gender).toBeUndefined();
+    expect(context?.b.gender).toBe("male");
     expect(context?.turns).toMatchObject([
       {
         round: 1,
@@ -198,6 +203,29 @@ describe("agent-date privacy and human consent", () => {
     expect(JSON.stringify(context)).not.toContain(
       "Private internal inference that must never leave the backend.",
     );
+  });
+
+  test("ships each side's painted sprite in the debrief email", async () => {
+    const t = convexTest(schema, modules);
+    const s = await setup(t);
+    const context = await t.query(internal.agentDates.deliveryContext, {
+      agentDateId: s.agentDateId,
+    });
+    const previous = process.env.SITE_URL;
+    process.env.SITE_URL = "https://datehaja.com";
+    try {
+      const forAlice = emailReportFor(context!, "a");
+      const forBob = emailReportFor(context!, "b");
+      expect(forAlice.ownerSpriteUrl).toBe(
+        "https://datehaja.com/agents/v3/female-rose-curious.png",
+      );
+      expect(forAlice.counterpartSpriteUrl).toBe(
+        "https://datehaja.com/agents/v3/male-sky-curious.png",
+      );
+      expect(forBob.ownerSpriteUrl).toBe(forAlice.counterpartSpriteUrl);
+    } finally {
+      process.env.SITE_URL = previous;
+    }
   });
 
   test("lets an existing owner persist email locale and matching boundaries", async () => {

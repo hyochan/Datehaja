@@ -33,7 +33,7 @@ export default function AvatarLabPage() {
       {key}
       <select
         className="rounded-lg border border-stone-300 bg-white px-2 py-1 text-sm normal-case text-stone-900"
-        value={avatar[key]}
+        value={avatar[key] ?? ""}
         onChange={(event) =>
           setAvatar((prev) => ({ ...prev, [key]: event.target.value }))
         }
@@ -58,7 +58,7 @@ export default function AvatarLabPage() {
       </header>
 
       <section className="flex flex-wrap gap-4">
-        {(["palette", "face", "hair", "outfit", "accessory"] as const).map(
+        {(["gender", "palette", "face", "hair", "outfit", "accessory"] as const).map(
           (key) => select(key),
         )}
         <label className="flex flex-col gap-1 text-xs uppercase tracking-wide text-stone-500">

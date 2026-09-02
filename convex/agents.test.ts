@@ -108,6 +108,87 @@ describe("periodic Agent learning", () => {
     expect(result.preferences?.allowTranslatedDates).toBe(false);
   });
 
+  test("keeps the chosen sprite base through onboarding and later edits", async () => {
+    const t = convexTest(schema, modules);
+    const owner = await t.run((ctx) =>
+      ctx.db.insert("users", {
+        name: "Rowan",
+        email: "rowan@test.invalid",
+      }),
+    );
+
+    await asUser(t, owner).mutation(api.agents.bootstrap, {
+      displayName: "Rowan",
+      dobMs: Date.UTC(1993, 5, 15),
+      gender: "man",
+      interestedIn: ["woman"],
+      city: "Stockholm",
+      neighborhood: "Södermalm",
+      interests: ["Films", "Coffee", "Art galleries"],
+      personalityTraits: ["Thoughtful", "Curious"],
+      agentName: "Orbit",
+      avatar: {
+        palette: "sky",
+        face: "cool",
+        hair: "crop",
+        outfit: "hoodie",
+        accessory: "none",
+        gender: "male",
+      },
+      essence:
+        "I am quiet at first, then warm and playful once I feel safe with someone.",
+      desiredConnection:
+        "Someone thoughtful who enjoys honest conversation and comfortable silence.",
+      boundaries: ["No pressure"],
+      voice: "warm",
+      autonomy: "suggest",
+      relationshipIntent: "open",
+      preferredPersonalityTraits: ["Thoughtful", "Curious"],
+      personalityPreference: "flexible",
+      preferredStyleTags: [],
+      stylePreference: "no_preference",
+      locale: "en-US",
+      languages: ["English"],
+      matchLocationScope: "city",
+      preferredCountryCodes: ["SE"],
+      preferredCities: ["Stockholm"],
+      preferredAreas: [],
+      allowTranslatedDates: false,
+    });
+
+    const saved = await t.run((ctx) =>
+      ctx.db
+        .query("agentProfiles")
+        .withIndex("by_user", (q) => q.eq("userId", owner))
+        .unique(),
+    );
+    expect(saved?.avatar).toMatchObject({ palette: "sky", face: "cool", gender: "male" });
+
+    await asUser(t, owner).mutation(api.agents.update, {
+      name: "Orbit",
+      avatar: {
+        palette: "sky",
+        face: "cool",
+        hair: "crop",
+        outfit: "hoodie",
+        accessory: "none",
+        gender: "female",
+      },
+      essence: "Quiet at first, playful once a conversation feels safe.",
+      desiredConnection: "Someone curious who can be direct without rushing.",
+      boundaries: ["No pressure"],
+      voice: "warm",
+      autonomy: "suggest",
+    });
+    const edited = await t.run((ctx) =>
+      ctx.db
+        .query("agentProfiles")
+        .withIndex("by_user", (q) => q.eq("userId", owner))
+        .unique(),
+    );
+    expect(edited?.avatar?.gender).toBe("female");
+  });
+
   test("renaming an Agent updates its generated introduction", async () => {
     const t = convexTest(schema, modules);
     const { owner } = await setup(t);
