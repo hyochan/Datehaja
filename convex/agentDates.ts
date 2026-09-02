@@ -192,12 +192,14 @@ const deliveryContextValidator = v.union(
       agentName: v.string(),
       locale: v.string(),
       palette: v.optional(v.string()),
+      face: v.optional(v.string()),
     }),
     b: v.object({
       firstName: v.string(),
       agentName: v.string(),
       locale: v.string(),
       palette: v.optional(v.string()),
+      face: v.optional(v.string()),
     }),
   }),
 );
@@ -210,8 +212,20 @@ type AgentDateDeliveryContext = {
     speakerAgentName: string;
     content: string;
   }>;
-  a: { firstName: string; agentName: string; locale: string; palette?: string };
-  b: { firstName: string; agentName: string; locale: string; palette?: string };
+  a: {
+    firstName: string;
+    agentName: string;
+    locale: string;
+    palette?: string;
+    face?: string;
+  };
+  b: {
+    firstName: string;
+    agentName: string;
+    locale: string;
+    palette?: string;
+    face?: string;
+  };
 };
 
 function emailReportFor(
@@ -241,9 +255,11 @@ function emailReportFor(
     counterpartAgentName: theirs.agentName,
     ownerPalette,
     counterpartPalette,
-    ownerSpriteUrl: hasSiteUrl ? appUrl(spritePathFor(ownerPalette)) : undefined,
+    ownerSpriteUrl: hasSiteUrl
+      ? appUrl(spritePathFor(ownerPalette, mine.face))
+      : undefined,
     counterpartSpriteUrl: hasSiteUrl
-      ? appUrl(spritePathFor(counterpartPalette))
+      ? appUrl(spritePathFor(counterpartPalette, theirs.face))
       : undefined,
     worldSourceTitle: info.date.worldSourceTitle,
     totalMoments: info.turns.length,
@@ -1527,6 +1543,7 @@ export const deliveryContext = internalQuery({
           aProfile.countryCode,
         ),
         palette: aAgent?.avatar?.palette,
+        face: aAgent?.avatar?.face,
       },
       b: {
         firstName: bProfile.displayName.split(/\s+/)[0],
@@ -1537,6 +1554,7 @@ export const deliveryContext = internalQuery({
           bProfile.countryCode,
         ),
         palette: bAgent?.avatar?.palette,
+        face: bAgent?.avatar?.face,
       },
     };
   },

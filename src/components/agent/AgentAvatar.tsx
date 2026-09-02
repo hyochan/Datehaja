@@ -42,7 +42,7 @@ export const AVATAR_SPRITES = Object.fromEntries(
 ) as Record<AvatarPalette, string>;
 
 export function spriteForAvatar(avatar: AvatarConfig) {
-  return AVATAR_SPRITES[avatar.palette];
+  return spritePathFor(avatar.palette, avatar.face);
 }
 
 const PALETTES: Record<

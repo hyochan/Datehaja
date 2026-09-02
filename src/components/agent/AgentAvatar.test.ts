@@ -15,7 +15,7 @@ describe("agent world sprites", () => {
 
     for (const palette of AVATAR_OPTIONS.palette) {
       const source = spriteForAvatar({ ...DEFAULT_AVATAR, palette });
-      expect(source).toBe(`/agents/sprite-${palette}-v1.png`);
+      expect(source).toBe(`/agents/sprite-${palette}-v2.png`);
     }
   });
 

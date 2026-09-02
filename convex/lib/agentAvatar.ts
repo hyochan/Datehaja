@@ -38,9 +38,41 @@ export function avatarPaletteForName(
   return AVATAR_PALETTES[hashAgentName(name) % AVATAR_PALETTES.length];
 }
 
-/** Site-relative path of the hosted character sprite for a palette. */
-export function spritePathFor(palette: AvatarPaletteName): string {
-  return `/agents/sprite-${palette}-v1.png`;
+export const AVATAR_FACES = ["gentle", "bright", "cool", "curious"] as const;
+export type AvatarFaceName = (typeof AVATAR_FACES)[number];
+
+/**
+ * Which face-specific sprites exist on disk, per palette. The base sprite
+ * (`sprite-<palette>-v2.png`) always exists; a face variant is used only when
+ * it is listed here, so adding art is a two-step change: drop the PNG into
+ * public/agents as `sprite-<palette>-<face>-v2.png`, then list it.
+ */
+export const SPRITE_FACE_VARIANTS: Record<
+  AvatarPaletteName,
+  readonly AvatarFaceName[]
+> = {
+  rose: [],
+  violet: [],
+  moss: [],
+  sky: [],
+  sunset: [],
+  ink: [],
+};
+
+/**
+ * Site-relative path of the hosted character sprite. When the owner picked a
+ * face that has its own sprite, the world and the email show that expression;
+ * otherwise the palette's base sprite.
+ */
+export function spritePathFor(
+  palette: AvatarPaletteName,
+  face?: string,
+): string {
+  const variants = SPRITE_FACE_VARIANTS[palette] as readonly string[];
+  if (face && variants.includes(face)) {
+    return `/agents/sprite-${palette}-${face}-v2.png`;
+  }
+  return `/agents/sprite-${palette}-v2.png`;
 }
 
 export const agentAvatarValidator = v.object({
