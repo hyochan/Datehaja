@@ -5,6 +5,7 @@ import {
   AgentAvatar,
   AVATAR_OPTIONS,
   AVATAR_SPRITES,
+  blinkSpriteForAvatar,
   DEFAULT_AVATAR,
   spriteForAvatar,
 } from "./AgentAvatar";
@@ -19,13 +20,21 @@ describe("agent world sprites", () => {
     }
   });
 
-  it("falls back to the base expression when a face has no v3 sprite yet", () => {
-    const source = spriteForAvatar({
-      ...DEFAULT_AVATAR,
-      palette: "sky",
-      face: "curious",
-    });
-    expect(source).toMatch(/^\/agents\/(v3\/female-sky-[a-z]+|sprite-sky-v2)\.png$/);
+  it("shows the chosen gender and expression, and blinks over it", () => {
+    expect(
+      spriteForAvatar({ ...DEFAULT_AVATAR, palette: "sky", face: "curious" }),
+    ).toBe("/agents/v3/female-sky-curious.png");
+    expect(
+      spriteForAvatar({
+        ...DEFAULT_AVATAR,
+        palette: "ink",
+        face: "cool",
+        gender: "male",
+      }),
+    ).toBe("/agents/v3/male-ink-cool.png");
+    expect(
+      blinkSpriteForAvatar({ ...DEFAULT_AVATAR, palette: "moss" }),
+    ).toBe("/agents/v3/female-moss-blink.png");
   });
 
   it("renders each chosen hairstyle and headphone state into the portrait", () => {

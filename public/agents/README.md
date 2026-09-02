@@ -5,7 +5,7 @@ the debrief emails. All resolved through `spritePathFor(palette, face, gender)`
 in `convex/lib/agentAvatar.ts`, which the app (`spriteForAvatar`) and the email
 pipeline share so an agent shows the same face everywhere.
 
-## v3 (current): painted set, `v3/<gender>-<palette>-<face>.png`
+## The set: `v3/<gender>-<palette>-<face>.png`
 
 - One pretty base character per gender (`female`, `male`) generated in
   ChatGPT (the "Datehaja" project, chat "Generate Sprite Image") wearing a
@@ -15,20 +15,21 @@ pipeline share so an agent shows the same face everywhere.
   `curious`) are ChatGPT edits of the base, keyed the same way.
 - `v3/<gender>-<palette>-blink.png` — optional eyes-closed frame layered over
   the sprite for a CSS blink (`.agent-world-sprite-blink`).
-- A gender or expression is only used once it is listed in `SPRITE_V3_FACES`
-  / `SPRITE_V3_BLINK` in `convex/lib/agentAvatar.ts`; anything missing falls
-  back to the gender's first expression, and a gender with no v3 files falls
-  back to the v2 set below. Partial sets are safe.
+- The outfit is two-tone: a reference render per gender (magenta top, cyan
+  bottom) assigns each outfit pixel to the nearer garment, so tops take the
+  palette's primary colour and trousers and shoes take its deep tone.
+- An expression is only used once it is listed in `SPRITE_V3_FACES` /
+  `SPRITE_V3_BLINK` in `convex/lib/agentAvatar.ts`; anything missing falls
+  back to the gender's first expression, so partial sets are safe.
 - Regenerating: ask ChatGPT for the magenta-keyed base (transparent PNG),
-  then run the session `recolor.py` (hue-key magenta → palette primary/deep,
-  fit to 341×512 bottom-aligned). Edits sometimes come back with a painted
-  checkerboard instead of alpha; `debg.py` strips it.
+  then run the session `recolor2.py` (keys magenta/cyan → palette primary and
+  deep, fits to 341×512 bottom-aligned against the base's content box).
+  Expression edits sometimes come back with a painted checkerboard instead of
+  alpha; `debg.py` strips it. `blinkmask.py` trims a blink frame to the pixels
+  that differ from the open-eye frame.
 
-## v2 (fallback): `sprite-<palette>-v2.png`
-
-Pixel-art base sprites per palette, 341×512, kept only as the fallback for
-anything the v3 manifest does not cover. `sprite-<palette>-<face>-v2.png`
-variants are honoured when listed in `SPRITE_FACE_VARIANTS`.
+The earlier pixel-art set (`sprite-<palette>-v2.png`) was removed once the
+painted set covered every gender, palette and expression.
 
 The editable profile portrait remains vector-based (`AgentAvatar.tsx`) so
 hair, expression, outfit and accessory controls stay functional; the world

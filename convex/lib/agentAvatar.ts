@@ -46,32 +46,14 @@ export type AvatarGenderName = (typeof AVATAR_GENDERS)[number];
 export const DEFAULT_AVATAR_GENDER: AvatarGenderName = "female";
 
 /**
- * The painted v3 sprite set: one base character per gender, recoloured into
- * every palette, with a sprite per expression. A gender is listed here only
- * once its files exist under public/agents/v3 as
- * `<gender>-<palette>-<face>.png`; anything missing falls back to the v2 set.
+ * The painted sprite set: one base character per gender, recoloured into every
+ * palette, with a sprite per expression. Files live in public/agents/v3 as
+ * `<gender>-<palette>-<face>.png`. An expression is listed here only once its
+ * art exists; anything missing falls back to the gender's first expression.
  */
 export const SPRITE_V3_FACES: Record<AvatarGenderName, readonly AvatarFaceName[]> = {
   female: ["gentle", "bright", "cool", "curious"],
   male: ["gentle", "bright", "cool", "curious"],
-};
-
-/**
- * Which face-specific sprites exist on disk, per palette. The base sprite
- * (`sprite-<palette>-v2.png`) always exists; a face variant is used only when
- * it is listed here, so adding art is a two-step change: drop the PNG into
- * public/agents as `sprite-<palette>-<face>-v2.png`, then list it.
- */
-export const SPRITE_FACE_VARIANTS: Record<
-  AvatarPaletteName,
-  readonly AvatarFaceName[]
-> = {
-  rose: [],
-  violet: [],
-  moss: [],
-  sky: [],
-  sunset: [],
-  ink: [],
 };
 
 /** Genders that have an eyes-closed frame (`<gender>-<palette>-blink.png`). */
@@ -90,14 +72,13 @@ export function blinkSpritePathFor(
       ? gender
       : DEFAULT_AVATAR_GENDER
   ) as AvatarGenderName;
-  if (!SPRITE_V3_BLINK[who] || SPRITE_V3_FACES[who].length === 0) return null;
+  if (!SPRITE_V3_BLINK[who]) return null;
   return `/agents/v3/${who}-${palette}-blink.png`;
 }
 
 /**
- * Site-relative path of the hosted character sprite. When the owner picked a
- * face that has its own sprite, the world and the email show that expression;
- * otherwise the palette's base sprite.
+ * Site-relative path of the hosted character sprite: the owner's gender and
+ * palette, showing the expression they picked when that art exists.
  */
 export function spritePathFor(
   palette: AvatarPaletteName,
@@ -109,16 +90,9 @@ export function spritePathFor(
       ? gender
       : DEFAULT_AVATAR_GENDER
   ) as AvatarGenderName;
-  const v3 = SPRITE_V3_FACES[who] as readonly string[];
-  if (v3.length > 0) {
-    const expression = face && v3.includes(face) ? face : v3[0];
-    return `/agents/v3/${who}-${palette}-${expression}.png`;
-  }
-  const variants = SPRITE_FACE_VARIANTS[palette] as readonly string[];
-  if (face && variants.includes(face)) {
-    return `/agents/sprite-${palette}-${face}-v2.png`;
-  }
-  return `/agents/sprite-${palette}-v2.png`;
+  const faces = SPRITE_V3_FACES[who] as readonly string[];
+  const expression = face && faces.includes(face) ? face : faces[0];
+  return `/agents/v3/${who}-${palette}-${expression}.png`;
 }
 
 export const agentAvatarValidator = v.object({
