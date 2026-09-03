@@ -13,6 +13,13 @@ import { AgentWorldSprite } from "../components/agent/AgentDateWorld";
 import { AgentLoopPlayer } from "../components/agent/AgentLoopPlayer";
 import { AgentAvatar } from "../components/agent/AgentAvatar";
 
+/** The i18n translate function, including its interpolation values. */
+type Translate = (
+  key: string,
+  values?: Record<string, string | number>,
+) => string;
+
+
 const JUNO_AVATAR = {
   gender: "female",
   palette: "rose",
@@ -288,7 +295,7 @@ function ProductPeekCard({
 }: {
   index: string;
   scene: "meet" | "debrief" | "consent";
-  t: (key: string) => string;
+  t: Translate;
 }) {
   const captions = {
     meet: t("Juno and Sol meet in the date world"),
@@ -335,12 +342,12 @@ function ProductPeekCard({
             </div>
             <div className="agent-peek-line is-juno">
               <b>Juno</b>
-              <span>{t("My friend turns tiny plans into adventures.")}</span>
+              <span>{t("I turn tiny plans into adventures.")}</span>
             </div>
             <div className="agent-peek-line is-sol">
               <b>Sol</b>
               <span>
-                {t("Mine would love that — as long as they feel safe.")}
+                {t("I'd love that — as long as it feels easy.")}
               </span>
             </div>
           </div>
@@ -406,7 +413,7 @@ function ProductPeekCard({
   );
 }
 
-function AgentReturnNote({ t }: { t: (key: string) => string }) {
+function AgentReturnNote({ t }: { t: Translate }) {
   return (
     <article
       className="agent-return-note"
@@ -449,7 +456,7 @@ function AgentReturnNote({ t }: { t: (key: string) => string }) {
   );
 }
 
-function DebriefCard({ t }: { t: (key: string) => string }) {
+function DebriefCard({ t }: { t: Translate }) {
   const beats = [
     {
       round: "01",
@@ -457,7 +464,7 @@ function DebriefCard({ t }: { t: (key: string) => string }) {
       speaker: "Sol",
       avatar: SOL_AVATAR,
       line: t(
-        "My friend stays through the end credits, every single time. What's yours like?",
+        "I stay through the end credits, every single time. Do you?",
       ),
       mine: false,
     },
@@ -467,7 +474,7 @@ function DebriefCard({ t }: { t: (key: string) => string }) {
       speaker: "Juno",
       avatar: JUNO_AVATAR,
       line: t(
-        "Mine hates small talk — but ask one good question and they light right up.",
+        "I hate small talk — but ask me one good question and I light right up.",
       ),
       mine: true,
     },
@@ -476,7 +483,7 @@ function DebriefCard({ t }: { t: (key: string) => string }) {
       stage: t("The parting words"),
       speaker: "Sol",
       avatar: SOL_AVATAR,
-      line: t("Honestly? I think our friends would really like each other."),
+      line: t("Honestly? I think we'd really like each other."),
       mine: false,
     },
   ];
@@ -507,7 +514,7 @@ function DebriefCard({ t }: { t: (key: string) => string }) {
         </header>
         <blockquote className="agent-letter-bubble">
           {t(
-            "You'd like this one. When I said you go quiet when you're worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.",
+            "You'd like this one. When I said I go quiet when I'm worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.",
           )}
         </blockquote>
       </div>
@@ -519,7 +526,7 @@ function DebriefCard({ t }: { t: (key: string) => string }) {
             <small>{t("The date, as it happened")}</small>
             <b>{t("The last showing at a small documentary cinema")}</b>
             <span>
-              Sol ↔ Juno · 6 {t("moments")}
+              Sol ↔ Juno · {t("{count} moments", { count: 6 })}
             </span>
           </div>
         </div>
@@ -554,7 +561,7 @@ function DebriefCard({ t }: { t: (key: string) => string }) {
   );
 }
 
-function AgentEverydayJourney({ t }: { t: (key: string) => string }) {
+function AgentEverydayJourney({ t }: { t: Translate }) {
   const moments = [
     {
       stage: t("BEFORE"),

@@ -14,14 +14,14 @@ not going to work — and you spent an evening and your phone number finding out
 
 Datehaja sends someone else. You create one AI Agent that knows the unpolished
 version of you: how you actually are in a crowded room, what you need after
-one, where your boundaries sit. It is your matchmaker and your stand-in at the
-same time, and it has a face you design.
+one, where your boundaries sit. It is not a matchmaker and not a middleman —
+it is you, out there, with a face you design.
 
 When it finds someone worth exploring, the two Agents meet — not in a chat log,
 but in a small world drawn around a real place Firecrawl pulled off the live web
-that morning. They talk for six turns. Each one is there for its own person:
-bragging about their friend, scouting yours, the way two friends set each other
-up. Neither can see the other's private brief.
+that morning. They talk for six turns — as themselves, in the first person.
+Nobody is being set up and nobody is bragging about a friend: it is simply two
+people meeting. Neither can see the other's private brief.
 
 Then each Agent goes home and writes to its own human, privately, in their own
 language. Not a compatibility score — a letter. What it noticed, what it liked,
@@ -89,8 +89,8 @@ Code: https://github.com/hyochan/Datehaja
 
 > Built Datehaja for the @convex All Gas hackathon.
 >
-> Two AI agents go on a date on their humans' behalf, then each writes home
-> privately about it.
+> Two AI second selves go on a date as the people they stand in for, then each
+> writes home privately about it.
 >
 > @OpenAI runs the conversation → @firecrawl picks the real place it happens in
 > → @agentmail delivers each private letter separately → @convex serves the
