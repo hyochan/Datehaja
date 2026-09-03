@@ -128,6 +128,10 @@
     --tint-ember-border: #f2c3c1;
     --accent-text: #b93e50;
 
+    /* Brand mark: my agent leads, theirs follows. */
+    --brand-mark-lead: #b93e50;
+    --brand-mark-follow: #e96f73;
+
     --tint-sage-bg: #eaf3ea;
     --tint-sage-fg: #4c6f53;
     --tint-sage-border: #b8d1b8;
@@ -162,6 +166,9 @@
     --tint-ember-strong: #ffaaa8;
     --tint-ember-border: #70404c;
     --accent-text: #ff9b9a;
+
+    --brand-mark-lead: #ff9b9a;
+    --brand-mark-follow: #e0716f;
 
     --tint-sage-bg: #213027;
     --tint-sage-fg: #b8d1b8;
@@ -349,11 +356,13 @@ html[lang^="ja"] .hero-title-accent {
   position: relative;
   display: inline-flex;
   align-items: baseline;
-  font-family:
-    "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-weight: 600;
+  /* DM Serif Display, not the body serif: the wordmark is the one place the
+     brand gets a voice of its own. Its high contrast and graceful italic read
+     as warm rather than loud, which a dating name should. */
+  font-family: "DM Serif Display", "Cormorant Garamond", Georgia, serif;
+  font-weight: 400;
   font-style: normal;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.026em;
   line-height: 0.9;
 }
 
@@ -381,24 +390,15 @@ html[lang^="ja"] .hero-title-accent {
   font-style: normal;
 }
 
+/* "haja" is the Korean half of the name — the call to go do it. Colour
+   carries that split now; the old hand-drawn underline read as a smudge at
+   header sizes. */
 .wordmark-haja {
   position: relative;
-  margin-left: -0.015em;
+  margin-left: -0.012em;
+  color: var(--accent-text);
   font-style: italic;
-  letter-spacing: -0.06em;
-}
-
-.wordmark-haja::after {
-  position: absolute;
-  right: -0.08em;
-  bottom: -0.16em;
-  left: 0.08em;
-  height: 0.18em;
-  border-top: 1px solid var(--accent-text);
-  border-radius: 50%;
-  content: "";
-  opacity: 0.7;
-  transform: rotate(-2deg);
+  letter-spacing: -0.022em;
 }
 
 /* -------------------------- product interior -------------------------- */
