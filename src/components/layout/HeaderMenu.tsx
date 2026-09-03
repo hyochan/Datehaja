@@ -10,15 +10,6 @@ import { api } from "@convex/_generated/api";
 import { SUPPORTED_LOCALES, useI18n, type LocaleCode } from "../../i18n";
 
 /**
- * The small-screen header menu.
- *
- * On a phone the header had the wordmark, a flag, a theme button and a link
- * competing for one row, so the flag crowded the brand. Everything secondary
- * now collapses behind one button. The language list and the theme switch are
- * rendered inline here rather than reusing their own popovers, because a
- * popover opening on top of this panel reads as a bug.
- */
-/**
  * The theme lives on the document, and ThemeToggle writes it too. Subscribing
  * to the attribute keeps this panel honest no matter which control changed it;
  * a copy held in local state goes stale the moment the other one is used.
@@ -38,6 +29,15 @@ function readTheme(): "light" | "dark" {
     : "light";
 }
 
+/**
+ * The small-screen header menu.
+ *
+ * On a phone the header had the wordmark, a flag, a theme button and a link
+ * competing for one row, so the flag crowded the brand. Everything secondary
+ * now collapses behind one button. The language list and the theme switch are
+ * rendered inline here rather than reusing their own popovers, because a
+ * popover opening on top of this panel reads as a bug.
+ */
 export function HeaderMenu({
   children,
   className = "",
@@ -91,7 +91,7 @@ export function HeaderMenu({
     <div ref={rootRef} className={`relative ${className}`}>
       <button
         type="button"
-        aria-haspopup="menu"
+        aria-haspopup="dialog"
         aria-expanded={open}
         aria-label={t("Menu")}
         onClick={() => setOpen((value) => !value)}
@@ -109,6 +109,7 @@ export function HeaderMenu({
 
       {open && (
         <div
+          role="group"
           aria-label={t("Menu")}
           className="fixed left-3 right-3 top-[4.6rem] z-50 overflow-hidden rounded-[1.5rem] border border-[var(--border)] bg-[var(--bg-raised)] p-3 shadow-[var(--shadow-lift)]"
         >
