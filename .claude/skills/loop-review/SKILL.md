@@ -115,8 +115,9 @@ after merging:
 bunx convex deploy -y
 ```
 
-Claude cannot run that command; the permission classifier blocks it. Never
-describe the change as fully shipped until the user confirms the backend deploy.
+Ask before running it. The user may tell you to run it yourself, and it works
+when they do; do not deploy the backend on your own initiative. Never describe
+the change as fully shipped until the backend deploy has actually run.
 
 When the diff is frontend-only, say so explicitly and name the paths that
 justify it.
