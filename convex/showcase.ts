@@ -8,7 +8,10 @@ import {
   query,
 } from "./_generated/server";
 import { syntheticAgentName } from "./agentDates";
-import { agentAvatarValidator } from "./lib/agentAvatar";
+import {
+  agentAvatarValidator,
+  defaultAvatarFor,
+} from "./lib/agentAvatar";
 import { hasCompleteMatchingBoundaries } from "./lib/agentMatchingBoundaries";
 
 /**
@@ -108,6 +111,16 @@ export const publicDate = query({
         ]);
         if (turns.length < 6) continue;
 
+        // An Agent whose owner never named one still spoke under a name in the
+        // transcript. Resolve it exactly the way the date did, so the page can
+        // never label a character "Agent" beside its own quoted words — and so
+        // the face derived from that name matches too.
+        const initiatorName =
+          initiatorAgent?.name ?? syntheticAgentName(initiator.userId);
+        const counterpartName =
+          counterpartAgent?.name ??
+          syntheticAgentName(counterpart.userId, initiatorName);
+
         return {
           setting: date.setting,
           worldSourceTitle: date.worldSourceTitle,
@@ -126,14 +139,18 @@ export const publicDate = query({
               isInitiator: turn.speakerUserId === date.initiatorUserId,
             })),
           initiator: {
-            agentName: initiatorAgent?.name ?? "Agent",
-            avatar: initiatorAgent?.avatar ?? null,
+            agentName: initiatorName,
+            avatar:
+              initiatorAgent?.avatar ??
+              defaultAvatarFor(initiatorName, initiator.gender),
             verdict: date.initiatorVerdict,
             reason: date.initiatorReason,
           },
           counterpart: {
-            agentName: counterpartAgent?.name ?? "Agent",
-            avatar: counterpartAgent?.avatar ?? null,
+            agentName: counterpartName,
+            avatar:
+              counterpartAgent?.avatar ??
+              defaultAvatarFor(counterpartName, counterpart.gender),
             verdict: date.counterpartVerdict,
             reason: date.counterpartReason,
           },
@@ -188,12 +205,17 @@ export const preparePersona = internalMutation({
     if (!persona) return null;
 
     const now = Date.now();
+    const agentName = syntheticAgentName(persona.userId, persona.displayName);
     await ctx.db.insert("agentProfiles", {
       userId: persona.userId,
       // An Agent is its own character, never a second copy of its human. Naming
       // it after the persona produced transcripts like "I'm Alex, and my friend
       // Alex runs in the mornings", which reads as a bug to anyone watching.
-      name: syntheticAgentName(persona.userId, persona.displayName),
+      name: agentName,
+      // Mint a face too. Without one the public replay derives a default from
+      // the name alone, which cannot know the persona's gender and rendered a
+      // seeded man as a woman.
+      avatar: defaultAvatarFor(agentName, persona.gender),
       essence: persona.bio,
       desiredConnection:
         "Someone curious who can be direct without rushing, and who is comfortable with quiet.",

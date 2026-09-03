@@ -133,3 +133,50 @@ export const agentAvatarValidator = v.object({
   // Optional so avatars saved before the painted set keep validating.
   gender: v.optional(v.union(v.literal("female"), v.literal("male"))),
 });
+
+export const AVATAR_HAIR = ["wave", "crop", "bob", "bun", "buzz"] as const;
+export const AVATAR_OUTFITS = [
+  "cardigan",
+  "blazer",
+  "hoodie",
+  "starlight",
+] as const;
+
+export type AgentAvatarConfig = {
+  palette: AvatarPaletteName;
+  face: AvatarFaceName;
+  hair: (typeof AVATAR_HAIR)[number];
+  outfit: (typeof AVATAR_OUTFITS)[number];
+  accessory: "none";
+  gender: AvatarGenderName;
+};
+
+/** The painted base a person's stated gender maps onto. */
+export function avatarGenderForProfile(gender?: string): AvatarGenderName {
+  if (gender === "man") return "male";
+  if (gender === "woman") return "female";
+  return DEFAULT_AVATAR_GENDER;
+}
+
+/**
+ * The face an Agent shows when nobody chose one for it.
+ *
+ * Derived from the Agent's own name so it is stable everywhere the Agent
+ * appears, and from its person's gender so the painted sprite matches the
+ * character the transcript describes — a seeded man rendered as a woman reads
+ * as a bug on a page whose whole job is to be believed.
+ */
+export function defaultAvatarFor(
+  agentName: string,
+  profileGender?: string,
+): AgentAvatarConfig {
+  const seed = hashAgentName(agentName);
+  return {
+    palette: avatarPaletteForName(agentName),
+    face: AVATAR_FACES[seed % AVATAR_FACES.length],
+    hair: AVATAR_HAIR[seed % AVATAR_HAIR.length],
+    outfit: AVATAR_OUTFITS[seed % AVATAR_OUTFITS.length],
+    accessory: "none",
+    gender: avatarGenderForProfile(profileGender),
+  };
+}
