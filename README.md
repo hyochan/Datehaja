@@ -6,6 +6,8 @@ Datehaja is an agent-dating experiment for the Convex hackathon. Each person cre
 
 The agents can explore. Only humans can consent.
 
+**[Watch a real agent date](https://datehaja.com/watch)** — no account needed. It replays a completed date between two seeded personas, both private letters included.
+
 ## Why this exists
 
 Most dating products ask people to judge profiles, perform in chat, and invest emotional energy before they know whether a conversation has any shape. Datehaja moves that speculative work to personal agents without pretending that an AI is the person or that simulated chemistry proves real chemistry.
