@@ -142,6 +142,92 @@ describe("public showcase date", () => {
   });
 });
 
+/** One seeded persona, optionally missing the matching boundaries a date needs. */
+async function seedPersona(
+  t: ReturnType<typeof convexTest>,
+  name: string,
+  options: { boundaries: boolean },
+) {
+  return await t.run(async (ctx) => {
+    const userId = await ctx.db.insert("users", {
+      name,
+      email: `${name.toLowerCase()}@demo.test.invalid`,
+    });
+    await ctx.db.insert("profiles", {
+      userId,
+      preferredLocale: "ko-KR",
+      displayName: name,
+      dobMs: NOW - 29 * 365.25 * 24 * 3600_000,
+      ageYears: 29,
+      ageConfirmed18: true,
+      gender: "man",
+      interestedIn: ["woman"],
+      countryCode: "KR",
+      city: "Seoul",
+      neighborhood: "Seongsu",
+      approxLat: 37.54,
+      approxLng: 127.06,
+      timezone: "Asia/Seoul",
+      bio: "Runs in the mornings, watches films at night.",
+      showOccupation: false,
+      interests: ["Films"],
+      hobbies: [],
+      languages: ["Korean"],
+      socialEnergy: "introvert",
+      firstDateVibe: [],
+      lifestyle: { smokes: false, drinks: "occasional" },
+      onboardingStep: 7,
+      onboardingComplete: true,
+      status: "active",
+      moderationStatus: "ok",
+      isDemo: true,
+      updatedAt: NOW,
+    });
+    await ctx.db.insert("preferences", {
+      userId,
+      // An older generation of seeded personas predates these three fields.
+      ...(options.boundaries
+        ? {
+            matchLocationScope: "city" as const,
+            preferredCountryCodes: ["KR"],
+            preferredCities: ["Seoul"],
+            allowTranslatedDates: false,
+          }
+        : {}),
+      ageMin: 25,
+      ageMax: 35,
+      ageHard: true,
+      maxDistanceKm: 15,
+      distanceHard: true,
+      relationshipIntent: "serious",
+      intentHard: false,
+      smoking: "no_preference",
+      smokingHard: false,
+      alcohol: "no_preference",
+      alcoholHard: false,
+      preferredDateTypes: ["coffee"],
+      budgetMinPerPerson: 30000,
+      budgetMaxPerPerson: 70000,
+      currency: "KRW",
+      budgetHard: false,
+      dayPreference: "either",
+      indoorOutdoor: "either",
+      atmosphere: "quiet",
+      dietary: [],
+      accessibility: [],
+      notifyEmail: false,
+      notifyInvitations: false,
+      notifyConfirmations: false,
+      notifyReminders: false,
+      dropsPaused: false,
+      maxDropsPerWeek: 5,
+      allowDemoMatches: true,
+      updatedAt: NOW,
+    });
+    return userId;
+  });
+}
+
 describe("showcase persona preparation", () => {
   test("never names an Agent after the person it represents", async () => {
     const t = convexTest(schema, modules);
@@ -235,5 +321,39 @@ describe("showcase persona preparation", () => {
     // "I'm Alex, and my friend Alex runs in the mornings" is unreadable.
     expect(agentName).not.toBeNull();
     expect(agentName?.toLowerCase()).not.toBe("alex");
+  });
+
+  test("looks past the obsolete personas seeded before matching boundaries", async () => {
+    const t = convexTest(schema, modules);
+    // Production carries a generation of personas from an earlier product that
+    // never got these fields. They sort first, and reading only a fixed first
+    // page declared the entire cast unusable on their strength alone — so there
+    // have to be more of them here than that page ever held.
+    for (let index = 0; index < 25; index += 1) {
+      await seedPersona(t, `Ghost${index}`, { boundaries: false });
+    }
+    const usable = await seedPersona(t, "Ready", { boundaries: true });
+
+    expect(await t.mutation(internal.showcase.preparePersona, {})).toBe(usable);
+  });
+
+  test("returns null only when no persona can start a date", async () => {
+    const t = convexTest(schema, modules);
+    await seedPersona(t, "Ghost1", { boundaries: false });
+
+    expect(await t.mutation(internal.showcase.preparePersona, {})).toBeNull();
+  });
+
+  test("reuses a persona that already has an Agent", async () => {
+    const t = convexTest(schema, modules);
+    const first = await seedPersona(t, "Ready", { boundaries: true });
+    await seedPersona(t, "Spare", { boundaries: true });
+
+    const chosen = await t.mutation(internal.showcase.preparePersona, {});
+    expect(chosen).toBe(first);
+    // A second call must not mint a second Agent for a different persona.
+    expect(await t.mutation(internal.showcase.preparePersona, {})).toBe(first);
+    const agents = await t.run((ctx) => ctx.db.query("agentProfiles").collect());
+    expect(agents).toHaveLength(1);
   });
 });

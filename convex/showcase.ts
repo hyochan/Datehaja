@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import type { Doc } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
 import {
   internalAction,
@@ -153,31 +154,37 @@ export const preparePersona = internalMutation({
   args: {},
   returns: v.union(v.null(), v.id("users")),
   handler: async (ctx) => {
-    const personas = await ctx.db
+    // Only a persona whose search boundaries are complete can start a date, and
+    // the seeded cast spans generations: the oldest personas predate those
+    // fields entirely. Judging a fixed first page would have declared the whole
+    // cast unusable on the strength of its most obsolete members, so this scans
+    // until an eligible persona turns up. The cap is a runaway guard, not a
+    // window — the demo cast is a fixed list an order of magnitude smaller.
+    const personas = ctx.db
       .query("profiles")
       .withIndex("by_demo_and_status", (q) =>
         q.eq("isDemo", true).eq("status", "active"),
-      )
-      .take(20);
+      );
 
-    // Only a persona whose search boundaries are complete can start a date;
-    // the seed leaves some of them partial.
-    const eligible = [];
-    for (const persona of personas) {
+    let firstWithoutAgent: Doc<"profiles"> | null = null;
+    let scanned = 0;
+    for await (const candidate of personas) {
+      if (++scanned > 500) break;
       const preferences = await ctx.db
         .query("preferences")
-        .withIndex("by_user", (q) => q.eq("userId", persona.userId))
+        .withIndex("by_user", (q) => q.eq("userId", candidate.userId))
         .unique();
-      if (!hasCompleteMatchingBoundaries(persona, preferences)) continue;
+      if (!hasCompleteMatchingBoundaries(candidate, preferences)) continue;
       const agent = await ctx.db
         .query("agentProfiles")
-        .withIndex("by_user", (q) => q.eq("userId", persona.userId))
+        .withIndex("by_user", (q) => q.eq("userId", candidate.userId))
         .unique();
-      if (agent?.status === "active") return persona.userId;
-      eligible.push(persona);
+      // Reuse an Agent that already exists before minting another one.
+      if (agent?.status === "active") return candidate.userId;
+      firstWithoutAgent ??= candidate;
     }
 
-    const persona = eligible[0];
+    const persona = firstWithoutAgent;
     if (!persona) return null;
 
     const now = Date.now();
