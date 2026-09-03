@@ -66,4 +66,80 @@ describe("global demo world", () => {
     );
     expect(newYorkDemos.filter((profile) => profile.isDemo)).toHaveLength(4);
   });
+
+
+  test("retires the cast seeded under the product's previous name", async () => {
+    const t = convexTest(schema, modules);
+    const legacy = await t.run(async (ctx) => {
+      const userId = await ctx.db.insert("users", {
+        name: "Narae",
+        // The address the seed used before the product was renamed.
+        email: "narae@demo.datedrop.invalid",
+      });
+      await ctx.db.insert("profiles", {
+        userId,
+        displayName: "Narae",
+        dobMs: NOW - 30 * 365.25 * 24 * 3_600_000,
+        ageYears: 30,
+        ageConfirmed18: true,
+        gender: "woman",
+        interestedIn: ["man"],
+        countryCode: "KR",
+        city: "Seoul",
+        neighborhood: "Yeonnam",
+        approxLat: 37.56,
+        approxLng: 126.92,
+        timezone: "Asia/Seoul",
+        bio: "Seeded before matching boundaries existed.",
+        showOccupation: false,
+        interests: ["Films"],
+        hobbies: [],
+        languages: ["Korean"],
+        socialEnergy: "ambivert",
+        firstDateVibe: [],
+        lifestyle: { smokes: false, drinks: "social" },
+        onboardingStep: 7,
+        onboardingComplete: true,
+        status: "active",
+        moderationStatus: "ok",
+        isDemo: true,
+        updatedAt: NOW,
+      });
+      return userId;
+    });
+
+    const result = await t.mutation(internal.demo.seed, { nowMs: NOW });
+    expect(result.retired).toBe(1);
+
+    const [retired, current] = await t.run(async (ctx) => {
+      const profile = await ctx.db
+        .query("profiles")
+        .withIndex("by_user", (q) => q.eq("userId", legacy))
+        .unique();
+      const user = await ctx.db
+        .query("users")
+        .withIndex("email", (q) =>
+          q.eq("email", "alex@demo.datehaja.invalid"),
+        )
+        .first();
+      const alex = user
+        ? await ctx.db
+            .query("profiles")
+            .withIndex("by_user", (q) => q.eq("userId", user._id))
+            .unique()
+        : null;
+      return [profile, alex];
+    });
+
+    // Paused, not deleted: dates and messages that reference it stay intact.
+    expect(retired?.status).toBe("paused");
+    expect(retired?.isDemo).toBe(true);
+    // The current cast is untouched by the retirement pass.
+    expect(current?.status).toBe("active");
+
+    // Running it again finds nothing left to retire.
+    expect((await t.mutation(internal.demo.seed, { nowMs: NOW })).retired).toBe(
+      0,
+    );
+  });
 });

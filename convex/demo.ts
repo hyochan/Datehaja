@@ -547,15 +547,44 @@ export const hasReadyWorldFor = internalQuery({
   },
 });
 
+const DEMO_EMAIL_DOMAIN = "@demo.datehaja.invalid";
+
+/**
+ * The cast seeded under the product's previous name.
+ *
+ * Those personas were written before matching boundaries existed as fields, so
+ * they can never start or accept a date, and the seed's repair pass does not
+ * reach them — it matches on the current address. Their names are not in the
+ * current cast either, so there is nothing to repair them into. They are
+ * retired rather than deleted: a paused profile leaves the dates and messages
+ * that reference it intact and can be brought back by hand.
+ */
+const RETIRED_DEMO_EMAIL_DOMAIN = "@demo.datedrop.invalid";
+
 export const seed = internalMutation({
   args: { nowMs: v.number(), force: v.optional(v.boolean()) },
-  returns: v.object({ created: v.number() }),
+  returns: v.object({ created: v.number(), retired: v.number() }),
   handler: async (ctx, args) => {
     void args.force;
 
+    let retired = 0;
+    for await (const profile of ctx.db
+      .query("profiles")
+      .withIndex("by_demo_and_status", (q) =>
+        q.eq("isDemo", true).eq("status", "active"),
+      )) {
+      const user = await ctx.db.get("users", profile.userId);
+      if (!user?.email?.endsWith(RETIRED_DEMO_EMAIL_DOMAIN)) continue;
+      await ctx.db.patch("profiles", profile._id, {
+        status: "paused",
+        updatedAt: args.nowMs,
+      });
+      retired += 1;
+    }
+
     let created = 0;
     for (const persona of GLOBAL_PERSONAS) {
-      const email = `${persona.key}@demo.datehaja.invalid`;
+      const email = `${persona.key}${DEMO_EMAIL_DOMAIN}`;
       const cityInfo = findCity(persona.city)!;
       const area = findNeighborhood(persona.city, persona.neighborhood)!;
       const already = await ctx.db
@@ -680,7 +709,7 @@ export const seed = internalMutation({
       created += 1;
     }
 
-    return { created };
+    return { created, retired };
   },
 });
 
@@ -689,8 +718,8 @@ export const seed = internalMutation({
 /** Manual reseed, exposed so the demo can be topped up without a deploy. */
 export const reseed = mutation({
   args: {},
-  returns: v.object({ created: v.number() }),
-  handler: async (ctx): Promise<{ created: number }> => {
+  returns: v.object({ created: v.number(), retired: v.number() }),
+  handler: async (ctx): Promise<{ created: number; retired: number }> => {
     await requireUserId(ctx);
     return await ctx.runMutation(internal.demo.seed, { nowMs: Date.now() });
   },
@@ -699,8 +728,8 @@ export const reseed = mutation({
 /** Used by the deploy script to guarantee the demo world exists. */
 export const ensureSeeded = internalMutation({
   args: {},
-  returns: v.object({ created: v.number() }),
-  handler: async (ctx): Promise<{ created: number }> => {
+  returns: v.object({ created: v.number(), retired: v.number() }),
+  handler: async (ctx): Promise<{ created: number; retired: number }> => {
     return await ctx.runMutation(internal.demo.seed, { nowMs: Date.now() });
   },
 });
