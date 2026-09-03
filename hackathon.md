@@ -78,6 +78,17 @@ clearing legacy rows that the current schema no longer admits: `aiRuns` with a
 still carrying `dropId`. The lesson is that a deployment left behind is not
 neutral; it silently tests a product that no longer exists.
 
+With development back in line the full suite runs. The single-account journey —
+signup, OTP, agent creation, the ideal-person and about-me briefs, an agent
+date, the private debrief and the human decision — passes end to end in two
+minutes. The two-account journey completes in the data too: six stored turns in
+about a minute, independent `encourage` and `curious` verdicts with their own
+private reasoning, and an earlier run recorded with both consents and a
+`connected` status. Its assertion still fails, because it waits to see the
+transcript counter reach six while the page moves to the debrief as the sixth
+turn lands, so the final count is never painted. That is a test watching for a
+frame the product does not render, not a broken flow.
+
 ### 2026-09-01 - real product capture and launch review
 
 Replayed the product with the existing authenticated demo account and captured
