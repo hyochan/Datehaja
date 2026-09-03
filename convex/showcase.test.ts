@@ -125,6 +125,26 @@ describe("public showcase date", () => {
     }
   });
 
+  test("names an unnamed Agent the way the transcript already did", async () => {
+    const t = convexTest(schema, modules);
+    await seedDate(t, { initiator: true, counterpart: true });
+    // Both owners left their Agents unnamed, as a seeded persona normally does.
+    await t.run(async (ctx) => {
+      for await (const agent of ctx.db.query("agentProfiles")) {
+        await ctx.db.delete("agentProfiles", agent._id);
+      }
+    });
+
+    const shown = await t.query(api.showcase.publicDate, {});
+    expect(shown).not.toBeNull();
+    // "Agent" beside the character's own quoted words reads as a broken page.
+    expect(shown?.initiator.agentName).not.toBe("Agent");
+    expect(shown?.counterpart.agentName).not.toBe("Agent");
+    expect(shown?.initiator.agentName).not.toBe(shown?.counterpart.agentName);
+    // The face is derived too, so the character is not left blank.
+    expect(shown?.initiator.avatar).not.toBeNull();
+  });
+
   test("withholds the agents' private per-turn reasoning", async () => {
     const t = convexTest(schema, modules);
     await seedDate(t, { initiator: true, counterpart: true });
@@ -335,6 +355,21 @@ describe("showcase persona preparation", () => {
     const usable = await seedPersona(t, "Ready", { boundaries: true });
 
     expect(await t.mutation(internal.showcase.preparePersona, {})).toBe(usable);
+  });
+
+  test("gives the Agent a face that matches its person", async () => {
+    const t = convexTest(schema, modules);
+    const userId = await seedPersona(t, "Ready", { boundaries: true });
+    await t.mutation(internal.showcase.preparePersona, {});
+
+    const agent = await t.run((ctx) =>
+      ctx.db
+        .query("agentProfiles")
+        .withIndex("by_user", (q) => q.eq("userId", userId))
+        .unique(),
+    );
+    // seedPersona writes gender "man"; the painted set calls that base "male".
+    expect(agent?.avatar?.gender).toBe("male");
   });
 
   test("returns null only when no persona can start a date", async () => {
