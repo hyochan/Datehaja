@@ -356,13 +356,13 @@ html[lang^="ja"] .hero-title-accent {
   position: relative;
   display: inline-flex;
   align-items: baseline;
-  font-family:
-    "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  /* Heavier and tighter than body serif: the wordmark has to hold its own
-     next to the mark at 24px in a header. */
-  font-weight: 700;
+  /* Fraunces, not the body serif: the wordmark is the one place the brand gets
+     a voice of its own, and its soft, slightly wonky serifs carry more warmth
+     at header size than Cormorant's thin strokes did. */
+  font-family: "Fraunces", "Cormorant Garamond", Georgia, serif;
+  font-weight: 900;
   font-style: normal;
-  letter-spacing: -0.052em;
+  letter-spacing: -0.036em;
   line-height: 0.9;
 }
 
@@ -398,7 +398,7 @@ html[lang^="ja"] .hero-title-accent {
   margin-left: -0.012em;
   color: var(--accent-text);
   font-style: italic;
-  letter-spacing: -0.062em;
+  letter-spacing: -0.03em;
 }
 
 /* -------------------------- product interior -------------------------- */

@@ -10,19 +10,14 @@
     <radialGradient id="agentB" cx="35%" cy="28%" r="70%">
       <stop offset="0" stop-color="#cbb8ce"/><stop offset="1" stop-color="#684f6d"/>
     </radialGradient>
-  </defs>
+  <linearGradient id="body" gradientUnits="userSpaceOnUse" x1="6" y1="5" x2="25" y2="26"><stop stop-color="#ff9d6e"/><stop offset=".48" stop-color="#dd5468"/><stop offset="1" stop-color="#93264a"/></linearGradient><linearGradient id="sheen" gradientUnits="userSpaceOnUse" x1="16" y1="6.5" x2="16" y2="16"><stop stop-color="#fff" stop-opacity=".2"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
   <rect width="1200" height="630" fill="#21171d"/>
   <rect width="1200" height="630" fill="url(#warm)"/>
   <g opacity=".12" stroke="#ffc7c1">
     <path d="M0 105h1200M0 210h1200M0 315h1200M0 420h1200M0 525h1200"/>
     <path d="M100 0v630M205 0v630M310 0v630M415 0v630M520 0v630M625 0v630M730 0v630M835 0v630M940 0v630M1045 0v630M1150 0v630"/>
   </g>
-  <g transform="translate(72 52) scale(1.62)">
-    <path fill-rule="evenodd" fill="#ff9b9a" d="M15.86 27C11 23.2 4.9 18.6 4.9 13.15 4.9 9.6 7.55 6.95 10.95 6.95c2.25 0 4.05 1.5 4.47 3.35ZM7.35 13.15a.86.86 0 1 0 1.72 0 .86.86 0 1 0-1.72 0ZM9.95 13.15a.86.86 0 1 0 1.72 0 .86.86 0 1 0-1.72 0ZM12.55 13.15a.86.86 0 1 0 1.72 0 .86.86 0 1 0-1.72 0Z"/>
-    <g transform="translate(32 0) scale(-1 1)">
-      <path fill="#e0716f" d="M15.86 27C11 23.2 4.9 18.6 4.9 13.15 4.9 9.6 7.55 6.95 10.95 6.95c2.25 0 4.05 1.5 4.47 3.35Z"/>
-    </g>
-  </g>
+  <g transform="translate(72 50) scale(1.68)"><path d="M16 26.6C11.2 22.9 5.2 18.4 5.2 13.1 5.2 9.6 7.9 7 11.3 7c2.2 0 4 1.15 4.7 2.9C16.7 8.15 18.5 7 20.7 7 24.1 7 26.8 9.6 26.8 13.1c0 5.3-6 9.8-10.8 13.5Z" fill="url(#body)"/><path d="M16 26.6C11.2 22.9 5.2 18.4 5.2 13.1 5.2 9.6 7.9 7 11.3 7c2.2 0 4 1.15 4.7 2.9C16.7 8.15 18.5 7 20.7 7 24.1 7 26.8 9.6 26.8 13.1c0 5.3-6 9.8-10.8 13.5Z" fill="url(#sheen)"/><path d="M12.95 11h6.1a1.75 1.75 0 0 1 1.75 1.75v2.9a1.75 1.75 0 0 1-1.75 1.75h-2.4l-2.45 2 .26-2h-1.51a1.75 1.75 0 0 1-1.75-1.75v-2.9A1.75 1.75 0 0 1 12.95 11Z" fill="#fff"/><g fill="#c2405c"><circle cx="14.1" cy="14.2" r=".78"/><circle cx="16" cy="14.2" r=".78"/><circle cx="17.9" cy="14.2" r=".78"/></g></g>
   <text x="132" y="91" font-family="Georgia,serif" font-size="42" font-style="italic" font-weight="600" fill="#fff9f6">Datehaja</text>
   <text x="73" y="255" font-family="Georgia,serif" font-size="78" font-weight="600" letter-spacing="-3" fill="#fff9f6">You stay home.</text>
   <text x="73" y="340" font-family="Georgia,serif" font-size="78" font-style="italic" font-weight="600" letter-spacing="-3" fill="#ff9b9a">Your agent dates.</text>
