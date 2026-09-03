@@ -32,6 +32,7 @@ const CommunityGuidelinesPage = lazy(
   () => import("./pages/CommunityGuidelinesPage"),
 );
 const LegalConsentPage = lazy(() => import("./pages/LegalConsentPage"));
+const WatchPage = lazy(() => import("./pages/WatchPage"));
 // Dev-only bench. The import lives inside the DEV branch so a production
 // build drops the chunk instead of publishing it unreachable.
 const labRoute = import.meta.env.DEV
@@ -53,6 +54,7 @@ export default function App() {
       <Unauthenticated>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/watch" element={<WatchPage />} />
           <Route path="/signin" element={<AuthPage mode="signIn" />} />
           <Route path="/signup" element={<AuthPage mode="signUp" />} />
           <Route
@@ -167,6 +169,7 @@ function AuthedRoutes() {
       <Routes>
         <Route path="/legal/accept" element={<LegalConsentPage />} />
         <Route path="/onboarding" element={<AgentOnboardingPage />} />
+        <Route path="/watch" element={<WatchPage />} />
         {labRoute}
         <Route
           path="/"
