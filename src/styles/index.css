@@ -356,13 +356,13 @@ html[lang^="ja"] .hero-title-accent {
   position: relative;
   display: inline-flex;
   align-items: baseline;
-  /* Fraunces, not the body serif: the wordmark is the one place the brand gets
-     a voice of its own, and its soft, slightly wonky serifs carry more warmth
-     at header size than Cormorant's thin strokes did. */
-  font-family: "Fraunces", "Cormorant Garamond", Georgia, serif;
-  font-weight: 900;
+  /* DM Serif Display, not the body serif: the wordmark is the one place the
+     brand gets a voice of its own. Its high contrast and graceful italic read
+     as warm rather than loud, which a dating name should. */
+  font-family: "DM Serif Display", "Cormorant Garamond", Georgia, serif;
+  font-weight: 400;
   font-style: normal;
-  letter-spacing: -0.036em;
+  letter-spacing: -0.026em;
   line-height: 0.9;
 }
 
@@ -398,7 +398,7 @@ html[lang^="ja"] .hero-title-accent {
   margin-left: -0.012em;
   color: var(--accent-text);
   font-style: italic;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.022em;
 }
 
 /* -------------------------- product interior -------------------------- */

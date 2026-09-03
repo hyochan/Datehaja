@@ -168,7 +168,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
           <span>
             <Wordmark className="text-[29px]" />
             <span className="docket-label mt-1.5 block text-[9px] text-sand-400">
-              {t("Your agent goes on the date")}
+              {t("Your dating agent")}
             </span>
           </span>
         </Link>

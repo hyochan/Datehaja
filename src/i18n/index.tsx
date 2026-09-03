@@ -196,6 +196,10 @@ Object.assign(ko, {
   "Agent": "에이전트",
   "Woman": "여성",
   "Man": "남성",
+  "Menu": "메뉴",
+  "Theme": "화면 모드",
+  "Light": "밝게",
+  "Dark": "어둡게",
   None: "없음",
   Glasses: "안경",
   Headphones: "헤드폰",
@@ -238,6 +242,10 @@ Object.assign(ja, {
   "Agent": "エージェント",
   "Woman": "女性",
   "Man": "男性",
+  "Menu": "メニュー",
+  "Theme": "表示モード",
+  "Light": "ライト",
+  "Dark": "ダーク",
   None: "なし",
   Glasses: "メガネ",
   Headphones: "ヘッドホン",
@@ -280,6 +288,10 @@ Object.assign(de, {
   "Agent": "Agent",
   "Woman": "Frau",
   "Man": "Mann",
+  "Menu": "Menü",
+  "Theme": "Darstellung",
+  "Light": "Hell",
+  "Dark": "Dunkel",
   None: "Keins",
   Glasses: "Brille",
   Headphones: "Kopfhörer",
@@ -455,7 +467,7 @@ Object.assign(sv, {
    the source strings; the six translated markets get a human-readable launch
    surface rather than a half-localised navigation shell. */
 Object.assign(ko, {
-  "Your agent goes on the date": "나 대신 나가는 소개팅",
+  "Your dating agent": "나의 데이팅 에이전트",
   "Too busy for another first date?": "소개팅도 데이트도 바쁜 당신에게",
   "Let your Agent": "내 에이전트가",
   "go first.": "먼저 만나봐요.",
@@ -530,7 +542,7 @@ Object.assign(ko, {
 });
 
 Object.assign(ja, {
-  "Your agent goes on the date": "私の代わりにデートへ行きます",
+  "Your dating agent": "あなたのデート・エージェント",
   "Too busy for another first date?": "初デートの時間も惜しいあなたへ",
   "Let your Agent": "あなたのエージェントを",
   "go first.": "先に会わせよう。",
@@ -595,7 +607,7 @@ Object.assign(ja, {
 });
 
 Object.assign(de, {
-  "Your agent goes on the date": "Dein Agent geht zum Date",
+  "Your dating agent": "Dein Dating-Agent",
   "Too busy for another first date?": "Zu beschäftigt fürs nächste erste Date?",
   "Let your Agent": "Lass deinen Agenten",
   "go first.": "zuerst gehen.",
@@ -661,7 +673,7 @@ Object.assign(de, {
 });
 
 Object.assign(fr, {
-  "Your agent goes on the date": "Votre agent va au rendez-vous",
+  "Your dating agent": "Votre agent de rencontre",
   "Too busy for another first date?":
     "Trop occupé pour un autre premier rendez-vous ?",
   "Let your Agent": "Laissez votre agent",
@@ -727,7 +739,7 @@ Object.assign(fr, {
 });
 
 Object.assign(nl, {
-  "Your agent goes on the date": "Jouw agent gaat op date",
+  "Your dating agent": "Jouw datingagent",
   "Too busy for another first date?": "Te druk voor nóg een eerste date?",
   "Let your Agent": "Laat je agent",
   "go first.": "eerst gaan.",
@@ -792,7 +804,7 @@ Object.assign(nl, {
 });
 
 Object.assign(sv, {
-  "Your agent goes on the date": "Din agent går på dejten",
+  "Your dating agent": "Din dejtingagent",
   "Too busy for another first date?": "För upptagen för ännu en första dejt?",
   "Let your Agent": "Låt din agent",
   "go first.": "gå först.",
@@ -2245,6 +2257,10 @@ Object.assign(fr, {
   "Agent": "Agent",
   "Woman": "Femme",
   "Man": "Homme",
+  "Menu": "Menu",
+  "Theme": "Apparence",
+  "Light": "Clair",
+  "Dark": "Sombre",
   None: "Aucun",
   Glasses: "Lunettes",
   Headphones: "Casque",
@@ -2287,6 +2303,10 @@ Object.assign(nl, {
   "Agent": "Agent",
   "Woman": "Vrouw",
   "Man": "Man",
+  "Menu": "Menu",
+  "Theme": "Weergave",
+  "Light": "Licht",
+  "Dark": "Donker",
   None: "Geen",
   Glasses: "Bril",
   Headphones: "Koptelefoon",
@@ -2329,6 +2349,10 @@ Object.assign(sv, {
   "Agent": "Agent",
   "Woman": "Kvinna",
   "Man": "Man",
+  "Menu": "Meny",
+  "Theme": "Utseende",
+  "Light": "Ljust",
+  "Dark": "Mörkt",
   None: "Ingen",
   Glasses: "Glasögon",
   Headphones: "Hörlurar",

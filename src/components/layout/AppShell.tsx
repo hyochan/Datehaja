@@ -6,6 +6,7 @@ import { api } from "@convex/_generated/api";
 import { cx } from "../ui/primitives";
 import { Logo } from "./Logo";
 import { LocaleSwitcher } from "./LocaleSwitcher";
+import { HeaderMenu } from "./HeaderMenu";
 import { Wordmark } from "./Wordmark";
 import { useI18n } from "../../i18n";
 
@@ -33,7 +34,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <span className="leading-none">
               <Wordmark className="text-[24px] sm:text-[29px]" />
               <span className="docket-label mt-1.5 hidden text-[8px] text-muted sm:block sm:text-[9px]">
-                {t("Your agent goes on the date")}
+                {t("Your dating agent")}
               </span>
             </span>
           </Link>
@@ -61,8 +62,10 @@ export function AppShell({ children }: { children: ReactNode }) {
           </nav>
 
           <div className="flex items-center gap-1">
-            <LocaleSwitcher compact />
-            <ThemeToggle />
+            <div className="hidden items-center gap-1 sm:flex">
+              <LocaleSwitcher compact />
+              <ThemeToggle />
+            </div>
             <Link
               to="/notifications"
               aria-label={
@@ -80,6 +83,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               )}
             </Link>
             <SignOutButton />
+            <HeaderMenu className="sm:hidden" />
           </div>
         </div>
       </header>

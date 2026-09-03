@@ -6,6 +6,7 @@ import { Logo } from "../components/layout/Logo";
 import { Wordmark } from "../components/layout/Wordmark";
 import { LocaleSwitcher } from "../components/layout/LocaleSwitcher";
 import { ThemeToggle } from "../components/layout/AppShell";
+import { HeaderMenu } from "../components/layout/HeaderMenu";
 import { LinkButton } from "../components/ui/primitives";
 import { useI18n } from "../i18n";
 import { AgentWorldSprite } from "../components/agent/AgentDateWorld";
@@ -69,7 +70,7 @@ export default function LandingPage() {
             <div className="leading-none">
               <Wordmark className="text-[24px] sm:text-[29px]" />
               <div className="docket-label mt-1.5 hidden text-[8px] text-muted sm:block sm:text-[9px]">
-                {t("Your agent goes on the date")}
+                {t("Your dating agent")}
               </div>
             </div>
           </Link>
@@ -80,14 +81,24 @@ export default function LandingPage() {
             >
               {t("How it works")}
             </Link>
-            <LocaleSwitcher compact />
-            <ThemeToggle />
+            <div className="hidden items-center gap-1 sm:flex sm:gap-2.5">
+              <LocaleSwitcher compact />
+              <ThemeToggle />
+            </div>
             <Link
               to="/signin"
               className="whitespace-nowrap rounded-full border border-[var(--border)] bg-[var(--bg-raised)] px-4 py-2 text-[13px] font-bold shadow-[var(--shadow-soft)] hover:border-[var(--tint-ember-border)] sm:px-5"
             >
               {t("Sign in")}
             </Link>
+            <HeaderMenu className="sm:hidden">
+              <Link
+                to="#how-it-works"
+                className="rounded-2xl px-3 py-2.5 text-[13px] font-bold text-soft hover:bg-[var(--bg-sunken)]"
+              >
+                {t("How it works")}
+              </Link>
+            </HeaderMenu>
           </div>
         </div>
       </header>
