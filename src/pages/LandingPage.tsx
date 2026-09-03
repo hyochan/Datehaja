@@ -120,14 +120,14 @@ export default function LandingPage() {
                 {t("Too busy for another first date?")}
               </div>
               <h1 className="agent-hero-title display-heading mt-6 max-w-3xl text-[clamp(3.8rem,7vw,6.8rem)] leading-[0.9]">
-                {t("Let your Agent")}{" "}
+                {t("My second self")}{" "}
                 <span className="mt-2 block italic text-[var(--accent-text)]">
-                  {t("go first.")}
+                  {t("dates for me.")}
                 </span>
               </h1>
               <p className="mt-8 max-w-xl text-[17px] leading-[1.75] text-soft sm:text-[19px]">
                 {t(
-                  "Your Agent meets first and brings back an honest read. You decide whether to make it real.",
+                  "It goes on the date as you, then comes home with an honest read. You decide whether to make it real.",
                 )}
               </p>
               <div className="mt-9 flex flex-col items-start gap-3 sm:flex-row sm:items-center">

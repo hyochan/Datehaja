@@ -490,10 +490,10 @@ Object.assign(sv, {
 Object.assign(ko, {
   "Your dating agent": "나의 데이팅 에이전트",
   "Too busy for another first date?": "소개팅도 데이트도 바쁜 당신에게",
-  "Let your Agent": "내 에이전트가",
-  "go first.": "먼저 만나봐요.",
-  "Your Agent meets first and brings back an honest read. You decide whether to make it real.":
-    "내 에이전트가 먼저 만나고 솔직한 리포트를 가져와요. 실제 만남은 당신이 결정해요.",
+  "My second self": "내 분신이",
+  "dates for me.": "대신 데이트해요.",
+  "It goes on the date as you, then comes home with an honest read. You decide whether to make it real.":
+    "나로서 데이트하고 돌아와, 솔직한 리포트를 전해요. 실제 만남은 당신이 결정해요.",
   "Create my dating agent": "내 데이트 에이전트 만들기",
   "Watch the agents meet": "에이전트 만남 보기",
   "Your Agent goes first.": "내 에이전트가 먼저 가요.",
@@ -566,10 +566,10 @@ Object.assign(ko, {
 Object.assign(ja, {
   "Your dating agent": "あなたのデート・エージェント",
   "Too busy for another first date?": "初デートの時間も惜しいあなたへ",
-  "Let your Agent": "あなたのエージェントを",
-  "go first.": "先に会わせよう。",
-  "Your Agent meets first and brings back an honest read. You decide whether to make it real.":
-    "エージェントが先に会い、率直なレポートを持ち帰ります。実際に会うかは、あなたが決めます。",
+  "My second self": "私の分身が",
+  "dates for me.": "代わりにデートします。",
+  "It goes on the date as you, then comes home with an honest read. You decide whether to make it real.":
+    "分身があなたとしてデートし、帰ってきて率直なレポートを伝えます。実際に会うかは、あなたが決めます。",
   "Create my dating agent": "デート・エージェントを作る",
   "Watch the agents meet": "エージェントの出会いを見る",
   "Your Agent goes first.": "エージェントが先に会う。",
@@ -632,10 +632,10 @@ Object.assign(ja, {
 Object.assign(de, {
   "Your dating agent": "Dein Dating-Agent",
   "Too busy for another first date?": "Zu beschäftigt fürs nächste erste Date?",
-  "Let your Agent": "Lass deinen Agenten",
-  "go first.": "zuerst gehen.",
-  "Your Agent meets first and brings back an honest read. You decide whether to make it real.":
-    "Dein Agent trifft sich zuerst und bringt eine ehrliche Einschätzung mit. Du entscheidest, ob ihr euch wirklich trefft.",
+  "My second self": "Mein zweites Ich",
+  "dates for me.": "datet für mich.",
+  "It goes on the date as you, then comes home with an honest read. You decide whether to make it real.":
+    "Er geht als du auf das Date und kommt mit einer ehrlichen Einschätzung zurück. Du entscheidest, ob ihr euch wirklich trefft.",
   "Create my dating agent": "Meinen Dating-Agenten erstellen",
   "Watch the agents meet": "Agenten beim Treffen ansehen",
   "Your Agent goes first.": "Dein Agent geht zuerst.",
@@ -700,10 +700,10 @@ Object.assign(fr, {
   "Your dating agent": "Votre agent de rencontre",
   "Too busy for another first date?":
     "Trop occupé pour un autre premier rendez-vous ?",
-  "Let your Agent": "Laissez votre agent",
-  "go first.": "y aller d'abord.",
-  "Your Agent meets first and brings back an honest read. You decide whether to make it real.":
-    "Votre agent fait d'abord connaissance et vous livre un avis sincère. Vous décidez ensuite de vous rencontrer vraiment.",
+  "My second self": "Mon autre moi",
+  "dates for me.": "y va à ma place.",
+  "It goes on the date as you, then comes home with an honest read. You decide whether to make it real.":
+    "Il va au rendez-vous en tant que vous, puis vous livre un avis sincère. Vous décidez ensuite de vous rencontrer vraiment.",
   "Create my dating agent": "Créer mon agent de rencontre",
   "Watch the agents meet": "Voir les agents se rencontrer",
   "Your Agent goes first.": "Votre agent y va d'abord.",
@@ -766,10 +766,10 @@ Object.assign(fr, {
 Object.assign(nl, {
   "Your dating agent": "Jouw datingagent",
   "Too busy for another first date?": "Te druk voor nóg een eerste date?",
-  "Let your Agent": "Laat je agent",
-  "go first.": "eerst gaan.",
-  "Your Agent meets first and brings back an honest read. You decide whether to make it real.":
-    "Je agent ontmoet de ander eerst en komt terug met een eerlijk oordeel. Jij beslist of jullie echt afspreken.",
+  "My second self": "Mijn tweede zelf",
+  "dates for me.": "date voor mij.",
+  "It goes on the date as you, then comes home with an honest read. You decide whether to make it real.":
+    "Hij gaat als jou op date en komt terug met een eerlijk oordeel. Jij beslist of jullie echt afspreken.",
   "Create my dating agent": "Mijn datingagent maken",
   "Watch the agents meet": "Bekijk de ontmoeting",
   "Your Agent goes first.": "Je agent gaat eerst.",
@@ -832,10 +832,10 @@ Object.assign(nl, {
 Object.assign(sv, {
   "Your dating agent": "Din dejtingagent",
   "Too busy for another first date?": "För upptagen för ännu en första dejt?",
-  "Let your Agent": "Låt din agent",
-  "go first.": "gå först.",
-  "Your Agent meets first and brings back an honest read. You decide whether to make it real.":
-    "Din agent träffar den andra först och kommer tillbaka med en ärlig bedömning. Du avgör om ni ska ses på riktigt.",
+  "My second self": "Mitt andra jag",
+  "dates for me.": "dejtar åt mig.",
+  "It goes on the date as you, then comes home with an honest read. You decide whether to make it real.":
+    "Den går på dejten som du och kommer tillbaka med en ärlig bedömning. Du avgör om ni ska ses på riktigt.",
   "Create my dating agent": "Skapa min dejtingagent",
   "Watch the agents meet": "Se agenterna mötas",
   "Your Agent goes first.": "Din agent går först.",
