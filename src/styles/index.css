@@ -1753,6 +1753,9 @@ html[lang^="ja"] .scout-pass-title {
   display: inline-grid;
   width: 5rem;
   flex: 0 0 auto;
+  /* The spark badge sizes itself against this box, so it stays proportional
+     from the 2rem chip avatar up to the onboarding hero. */
+  container-type: inline-size;
   filter: drop-shadow(
     0 1rem 1.2rem color-mix(in oklab, var(--avatar-ink) 16%, transparent)
   );
@@ -1809,19 +1812,22 @@ html[lang^="ja"] .scout-pass-title {
   }
 }
 
+/* Sits in the rounded corner the character never reaches, so it marks the
+   agent without covering their hair or face at any avatar size. */
 .agent-avatar-spark {
   position: absolute;
-  right: -0.08rem;
-  top: 0.32rem;
+  right: 1%;
+  top: 1.5%;
   display: grid;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 21cqw;
+  height: 21cqw;
   place-items: center;
   border: 1px solid color-mix(in oklab, var(--avatar-primary) 45%, white);
   border-radius: 50%;
   background: var(--avatar-glow);
   color: var(--avatar-primary);
-  font-size: 0.62rem;
+  font-size: 10cqw;
+  line-height: 1;
   box-shadow: 0 0.4rem 0.8rem rgb(41 20 31 / 0.12);
 }
 
