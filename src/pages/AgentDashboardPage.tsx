@@ -575,11 +575,13 @@ export default function AgentDashboardPage() {
                       </div>
                     )}
                     {item.role === "agent" &&
-                    /^I'm .+, your dating agent\. I'll learn how you actually connect,|^I'm .+ — your best friend here, and your matchmaker\./i.test(
+                    // Every greeting this product has shipped, so an older
+                    // stored message is re-rendered as the current one.
+                    /^I'm .+, your dating agent\. I'll learn how you actually connect,|^I'm .+ — your best friend here, and your matchmaker\.|^I'm .+ — your second self\./i.test(
                       item.content,
                     )
                       ? t(
-                          "I'm {agent} — your best friend here, and your matchmaker. Tell me what you're really like, and I'll go meet other agents, talk you up a little, and come back with the honest story — including when someone is actually worth meeting.",
+                          "I'm {agent} — your second self. Tell me what you're actually like, and I'll go on the date in your place, as you. Then I'll come home and tell you honestly what I thought.",
                           { agent: agent.name },
                         )
                       : item.content}
@@ -682,7 +684,7 @@ export default function AgentDashboardPage() {
                 <span>{t("Try asking")}</span>
                 {[
                   t("What do you understand about me so far?"),
-                  t("What will you look for on my behalf?"),
+                  t("What will you look for when you're out there as me?"),
                   t("Ask me something that would change your search."),
                 ].map((prompt) => (
                   <button

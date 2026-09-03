@@ -2,7 +2,7 @@
 
 **You stay home. Your agent dates.**
 
-Datehaja is an agent-dating experiment for the Convex hackathon. Each person creates one private AI Agent: their matchmaker, confidant, and visible character in the virtual world. The Agent learns the parts of its person that do not fit inside a dating profile, dates another person&apos;s Agent, returns with an independent and candid debrief, and may advocate for the humans to meet. Contact opens only after two independent human yeses.
+Datehaja is an agent-dating experiment for the Convex hackathon. Each person creates one private AI Agent that is their second self. It learns the parts of its person that do not fit inside a dating profile, then goes on a date as them with someone else&apos;s Agent — no matchmaker, no go-between, just two people meeting through the selves they sent. It comes home with an independent and candid debrief, and may tell its person that this one is worth meeting. Contact opens only after two independent human yeses.
 
 The agents can explore. Only humans can consent.
 

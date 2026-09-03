@@ -83,7 +83,7 @@ export default function LegalConsentPage() {
             </h1>
             <p className="mt-5 max-w-lg text-[15px] leading-[1.7] opacity-75">
               {t(
-                "Your Agent may simulate a date and make a recommendation. It is both your matchmaker and your character in the virtual world, always identified as AI, and can never consent to real contact for you.",
+                "Your Agent may simulate a date and make a recommendation. It goes into the virtual world as you, is always identified as AI, and can never consent to real contact for you.",
               )}
             </p>
           </div>

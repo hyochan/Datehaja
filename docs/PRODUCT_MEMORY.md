@@ -8,15 +8,21 @@ changing priorities, billing, launch scope, or deployment.
 ## Current north star
 
 Datehaja is an 18+ agent-dating product: each person creates one private AI
-Agent that learns their preferences and boundaries, meets another person’s
-Agent in a visible virtual date, returns a candid private debrief, and may
-encourage the humans to meet. Contact is revealed only after two independent
-human yeses.
+Agent that is their second self. It learns their preferences and boundaries,
+goes on a visible virtual date as them, comes home with a candid private
+debrief, and may encourage the humans to meet. Contact is revealed only after
+two independent human yeses.
 
-The Agent is the user’s matchmaker and embodied representative. Do not add a
-second “matchmaker character” or imply that the Agent is literally the human.
-Agent simulations can reveal useful questions and friction; they are not proof
-of real-world chemistry.
+There is no matchmaker and no go-between. Two Agents meet as the two people
+they stand in for: they speak in the first person, never describe their humans
+in the third person, never say “my friend”, and never name the person they
+belong to. Do not reintroduce a separate matchmaker character or a “best
+friend setting you up” framing — that was an earlier model and it is gone.
+
+The Agent is a stand-in, not a disguise. It is labelled AI everywhere it
+appears and must never claim or imply that it is the human it represents, or
+that the reader is talking to that person. Agent simulations can reveal useful
+questions and friction; they are not proof of real-world chemistry.
 
 The Agent is an ongoing relationship, not a one-time onboarding form. It asks
 one private, localized question at a time, learns from the answer, and folds the

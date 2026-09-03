@@ -486,10 +486,10 @@ Object.assign(ko, {
   "Not a compatibility score machine": "궁합 점수 기계가 아니에요",
   "YOUR AGENT'S PRIVATE READ": "내 에이전트의 비공개 리포트",
   "LIVE / SIMULATION": "실시간 / 시뮬레이션",
-  "Mine gets playful once they feel safe.":
-    "내 친구는 마음이 편해지면 장난꾸러기가 돼.",
-  "Mine goes quiet when they're happy, actually.":
-    "내 친구는 좋으면 오히려 조용해지는 타입이야.",
+  "I get playful once I feel safe.":
+    "나는 마음이 편해지면 장난꾸러기가 돼.",
+  "I go quiet when I'm happy, actually.":
+    "나는 좋으면 오히려 조용해지는 타입이야.",
   "Your Agent": "내 에이전트",
   "Your agent can say:": "내 에이전트는 말할 수 있어요.",
   "don't meet them.": "그 사람은 만나지 마요.",
@@ -504,14 +504,14 @@ Object.assign(ko, {
   "How it began": "처음 마주한 순간",
   "As it deepened": "대화가 깊어질 때",
   "The parting words": "헤어지기 전 마지막 말",
-  "My friend stays through the end credits, every single time. What's yours like?":
-    "내 친구는 크레딧이 끝날 때까지 자리를 지키는 애야. 네 친구는 어떤 사람이야?",
-  "Mine hates small talk — but ask one good question and they light right up.":
-    "내 친구는 스몰토크는 질색인데, 좋은 질문 하나면 눈이 반짝여.",
-  "Honestly? I think our friends would really like each other.":
-    "솔직히? 내 친구랑 네 친구, 진짜 잘 맞을 것 같아.",
-  "You'd like this one. When I said you go quiet when you're worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.":
-    "이 사람, 네 마음에 들 거야. 네가 오해받을까 봐 조용해지는 편이라고 했더니, Sol은 그걸 고치려 들지 않고 오히려 귀를 기울이더라. 만나봐.",
+  "I stay through the end credits, every single time. Do you?":
+    "나는 크레딧이 끝날 때까지 자리를 지켜. 너는 어때?",
+  "I hate small talk — but ask me one good question and I light right up.":
+    "나는 스몰토크는 질색인데, 좋은 질문 하나면 눈이 반짝여.",
+  "Honestly? I think we'd really like each other.":
+    "솔직히? 우리 둘, 진짜 잘 맞을 것 같아.",
+  "You'd like this one. When I said I go quiet when I'm worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.":
+    "이 사람, 네 마음에 들 거야. 오해받을까 봐 조용해지는 편이라고 말했더니, Sol은 그걸 고치려 들지 않고 오히려 귀를 기울이더라. 만나봐.",
   "zero contacts exposed": "공개된 연락처 0개",
   "I want warmth without having to perform confidence.":
     "자신감 있는 척하지 않아도 따뜻한 관계를 원해요.",
@@ -526,6 +526,7 @@ Object.assign(ko, {
   SEALED: "비공개",
   "contact locked": "연락처 잠김",
   moments: "장면",
+  "{count} moments": "{count}개의 장면",
   "I think you should meet.": "두 사람, 만나봤으면 해요.",
   "Quiet feels safe to both": "둘 다 침묵을 편안해해요",
   "Different social pace": "서로 다른 사교 속도",
@@ -557,10 +558,10 @@ Object.assign(ja, {
   "Your call": "あなたの決断",
   "YOUR AGENT'S PRIVATE READ": "あなたのエージェントの非公開レポート",
   "LIVE / SIMULATION": "ライブ / シミュレーション",
-  "Mine gets playful once they feel safe.":
-    "うちの友達は、安心すると急に茶目っ気が出るんだ。",
-  "Mine goes quiet when they're happy, actually.":
-    "うちのは、うれしいときほど静かになるタイプだよ。",
+  "I get playful once I feel safe.":
+    "私、安心すると急に茶目っ気が出るんだ。",
+  "I go quiet when I'm happy, actually.":
+    "私、うれしいときほど静かになるタイプなんだ。",
   "Your Agent": "あなたのエージェント",
   "Your agent can say:": "あなたのエージェントは言える：",
   "don't meet them.": "会わないほうがいい。",
@@ -575,14 +576,14 @@ Object.assign(ja, {
   "How it began": "出会いの瞬間",
   "As it deepened": "会話が深まる頃",
   "The parting words": "別れ際のひとこと",
-  "My friend stays through the end credits, every single time. What's yours like?":
-    "うちの友達は、エンドロールが終わるまで必ず席を立たないんだ。そっちの友達はどんな人?",
-  "Mine hates small talk — but ask one good question and they light right up.":
-    "うちのは世間話が苦手。でも、いい質問がひとつあれば目が輝くよ。",
-  "Honestly? I think our friends would really like each other.":
-    "正直に言うと、うちの友達同士、本当に気が合うと思う。",
-  "You'd like this one. When I said you go quiet when you're worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.":
-    "この人、きっと気に入るよ。誤解されそうで静かになるタイプだと伝えたら、Solは直そうとせず、むしろ耳を傾けてくれた。会ってみて。",
+  "I stay through the end credits, every single time. Do you?":
+    "私、エンドロールが終わるまで必ず席を立たないんだ。そっちは?",
+  "I hate small talk — but ask me one good question and I light right up.":
+    "私、世間話は苦手。でも、いい質問がひとつあれば目が輝くよ。",
+  "Honestly? I think we'd really like each other.":
+    "正直に言うと、私たち、本当に気が合うと思う。",
+  "You'd like this one. When I said I go quiet when I'm worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.":
+    "この人、きっと気に入るよ。誤解されそうなときは静かになるって話したら、Solは直そうとせず、むしろ耳を傾けてくれた。会ってみて。",
   "zero contacts exposed": "連絡先の公開はゼロ",
   "I want warmth without having to perform confidence.":
     "自信を演じなくても感じられる温かさがほしい。",
@@ -597,6 +598,7 @@ Object.assign(ja, {
   SEALED: "非公開",
   "contact locked": "連絡先はロック中",
   moments: "場面",
+  "{count} moments": "{count}場面",
   "I think you should meet.": "会ってみてほしいです。",
   "Quiet feels safe to both": "ふたりとも沈黙が心地よい",
   "Different social pace": "異なる社交のペース",
@@ -622,10 +624,10 @@ Object.assign(de, {
   "Your call": "Deine Wahl",
   "YOUR AGENT'S PRIVATE READ": "PRIVATE EINSCHÄTZUNG DEINES AGENTEN",
   "LIVE / SIMULATION": "LIVE / SIMULATIONSMODUS",
-  "Mine gets playful once they feel safe.":
-    "Mein Mensch wird verspielt, sobald er sich sicher fühlt.",
-  "Mine goes quiet when they're happy, actually.":
-    "Meiner wird still, wenn er glücklich ist — ehrlich.",
+  "I get playful once I feel safe.":
+    "Ich werde verspielt, sobald ich mich sicher fühle.",
+  "I go quiet when I'm happy, actually.":
+    "Ich werde still, wenn ich glücklich bin — ehrlich.",
   "Your Agent": "Dein Agent",
   "Your agent can say:": "Dein Agent kann sagen:",
   "don't meet them.": "Triff diese Person nicht.",
@@ -641,14 +643,14 @@ Object.assign(de, {
   "How it began": "Der Anfang",
   "As it deepened": "Als es tiefer ging",
   "The parting words": "Die letzten Worte",
-  "My friend stays through the end credits, every single time. What's yours like?":
-    "Mein Mensch bleibt jedes Mal bis zum Ende des Abspanns sitzen. Wie ist deiner so?",
-  "Mine hates small talk — but ask one good question and they light right up.":
-    "Meiner hasst Smalltalk — aber eine gute Frage, und die Augen leuchten.",
-  "Honestly? I think our friends would really like each other.":
-    "Ehrlich? Ich glaube, unsere beiden würden sich richtig mögen.",
-  "You'd like this one. When I said you go quiet when you're worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.":
-    "Die Person wird dir gefallen. Als ich erzählte, dass du still wirst, wenn du fürchtest, missverstanden zu werden, wollte Sol nichts reparieren — Sol hat zugehört. Trefft euch.",
+  "I stay through the end credits, every single time. Do you?":
+    "Ich bleibe jedes Mal bis zum Ende des Abspanns sitzen. Und du?",
+  "I hate small talk — but ask me one good question and I light right up.":
+    "Ich hasse Smalltalk — aber stell mir eine gute Frage, und meine Augen leuchten.",
+  "Honestly? I think we'd really like each other.":
+    "Ehrlich? Ich glaube, wir beide würden uns richtig mögen.",
+  "You'd like this one. When I said I go quiet when I'm worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.":
+    "Die Person wird dir gefallen. Als ich erzählte, dass ich still werde, wenn ich fürchte, missverstanden zu werden, wollte Sol nichts reparieren — Sol hat zugehört. Trefft euch.",
   "zero contacts exposed": "keine Kontaktdaten offengelegt",
   "I want warmth without having to perform confidence.":
     "Ich wünsche mir Wärme, ohne Selbstsicherheit vorspielen zu müssen.",
@@ -663,6 +665,7 @@ Object.assign(de, {
   SEALED: "VERSIEGELT",
   "contact locked": "Kontakt gesperrt",
   moments: "Momente",
+  "{count} moments": "{count} Momente",
   "I think you should meet.": "Ich denke, ihr solltet euch treffen.",
   "Quiet feels safe to both": "Stille fühlt sich für beide sicher an",
   "Different social pace": "Unterschiedliches soziales Tempo",
@@ -689,10 +692,10 @@ Object.assign(fr, {
   "Your call": "Votre décision",
   "YOUR AGENT'S PRIVATE READ": "AVIS PRIVÉ DE VOTRE AGENT",
   "LIVE / SIMULATION": "EN DIRECT / SIMULATION",
-  "Mine gets playful once they feel safe.":
-    "Mon humain devient joueur dès qu'il se sent en sécurité.",
-  "Mine goes quiet when they're happy, actually.":
-    "Le mien devient silencieux quand il est heureux, en fait.",
+  "I get playful once I feel safe.":
+    "Je deviens joueur dès que je me sens en sécurité.",
+  "I go quiet when I'm happy, actually.":
+    "Je deviens silencieux quand je suis heureux, en fait.",
   "Your Agent": "Votre agent",
   "Your agent can say:": "Votre agent peut dire :",
   "don't meet them.": "Ne les rencontrez pas.",
@@ -707,14 +710,14 @@ Object.assign(fr, {
   "How it began": "Les premiers instants",
   "As it deepened": "Quand ça s'approfondit",
   "The parting words": "Les derniers mots",
-  "My friend stays through the end credits, every single time. What's yours like?":
-    "Mon humain reste jusqu'à la fin du générique, à chaque fois. Et le tien, il est comment ?",
-  "Mine hates small talk — but ask one good question and they light right up.":
-    "Le mien déteste le small talk — mais pose une bonne question et il s'illumine.",
-  "Honestly? I think our friends would really like each other.":
-    "Honnêtement ? Je crois que nos deux humains se plairaient vraiment.",
-  "You'd like this one. When I said you go quiet when you're worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.":
-    "Cette personne va te plaire. Quand j'ai parlé de ton silence quand tu crains d'être mal compris, Sol n'a rien voulu corriger — Sol s'est penché pour écouter. Rencontrez-vous.",
+  "I stay through the end credits, every single time. Do you?":
+    "Je reste jusqu'à la fin du générique, à chaque fois. Et toi ?",
+  "I hate small talk — but ask me one good question and I light right up.":
+    "Je déteste le small talk — mais pose-moi une bonne question et je m'illumine.",
+  "Honestly? I think we'd really like each other.":
+    "Honnêtement ? Je crois qu'on se plairait vraiment.",
+  "You'd like this one. When I said I go quiet when I'm worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.":
+    "Cette personne va te plaire. Quand j'ai parlé de mon silence quand je crains d'être mal compris, Sol n'a rien voulu corriger — Sol s'est penché pour écouter. Rencontrez-vous.",
   "zero contacts exposed": "aucun contact dévoilé",
   "I want warmth without having to perform confidence.":
     "Je veux de la chaleur sans devoir jouer la confiance.",
@@ -729,6 +732,7 @@ Object.assign(fr, {
   SEALED: "SCELLÉ",
   "contact locked": "contact verrouillé",
   moments: "instants",
+  "{count} moments": "{count} instants",
   "I think you should meet.": "Je pense que vous devriez vous rencontrer.",
   "Quiet feels safe to both": "Le silence rassure les deux",
   "Different social pace": "Rythmes sociaux différents",
@@ -754,10 +758,10 @@ Object.assign(nl, {
   "Your call": "Jouw keuze",
   "YOUR AGENT'S PRIVATE READ": "PRIVÉVERSLAG VAN JE AGENT",
   "LIVE / SIMULATION": "LIVE / SIMULATIE",
-  "Mine gets playful once they feel safe.":
-    "Mijn mens wordt speels zodra die zich veilig voelt.",
-  "Mine goes quiet when they're happy, actually.":
-    "Die van mij wordt juist stil als die blij is.",
+  "I get playful once I feel safe.":
+    "Ik word speels zodra ik me veilig voel.",
+  "I go quiet when I'm happy, actually.":
+    "Ik word juist stil als ik blij ben.",
   "Your Agent": "Jouw agent",
   "Your agent can say:": "Jouw agent kan zeggen:",
   "don't meet them.": "Ontmoet diegene niet.",
@@ -772,14 +776,14 @@ Object.assign(nl, {
   "How it began": "Het begin",
   "As it deepened": "Toen het dieper ging",
   "The parting words": "De laatste woorden",
-  "My friend stays through the end credits, every single time. What's yours like?":
-    "Mijn mens blijft elke keer tot het einde van de aftiteling zitten. Hoe is die van jou?",
-  "Mine hates small talk — but ask one good question and they light right up.":
-    "Die van mij haat small talk — maar stel één goede vraag en die straalt.",
-  "Honestly? I think our friends would really like each other.":
-    "Eerlijk? Ik denk dat onze mensen elkaar echt zouden mogen.",
-  "You'd like this one. When I said you go quiet when you're worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.":
-    "Deze ga je leuk vinden. Toen ik zei dat je stil wordt als je bang bent verkeerd begrepen te worden, wilde Sol niets oplossen — Sol boog juist naar voren. Ga die ontmoeting aan.",
+  "I stay through the end credits, every single time. Do you?":
+    "Ik blijf elke keer tot het einde van de aftiteling zitten. En jij?",
+  "I hate small talk — but ask me one good question and I light right up.":
+    "Ik haat small talk — maar stel me één goede vraag en ik straal.",
+  "Honestly? I think we'd really like each other.":
+    "Eerlijk? Ik denk dat wij elkaar echt zouden mogen.",
+  "You'd like this one. When I said I go quiet when I'm worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.":
+    "Deze ga je leuk vinden. Toen ik zei dat ik stil word als ik bang ben verkeerd begrepen te worden, wilde Sol niets oplossen — Sol boog juist naar voren. Ga die ontmoeting aan.",
   "zero contacts exposed": "geen contactgegevens onthuld",
   "I want warmth without having to perform confidence.":
     "Ik wil warmte zonder zelfvertrouwen te hoeven spelen.",
@@ -794,6 +798,7 @@ Object.assign(nl, {
   SEALED: "VERZEGELD",
   "contact locked": "contact vergrendeld",
   moments: "momenten",
+  "{count} moments": "{count} momenten",
   "I think you should meet.": "Ik denk dat jullie elkaar moeten ontmoeten.",
   "Quiet feels safe to both": "Stilte voelt voor beiden veilig",
   "Different social pace": "Ander sociaal tempo",
@@ -819,10 +824,10 @@ Object.assign(sv, {
   "Your call": "Ditt beslut",
   "YOUR AGENT'S PRIVATE READ": "DIN AGENTS PRIVATA OMDÖME",
   "LIVE / SIMULATION": "LIVE / SIMULERING",
-  "Mine gets playful once they feel safe.":
-    "Min människa blir lekfull först när det känns tryggt.",
-  "Mine goes quiet when they're happy, actually.":
-    "Min blir faktiskt tyst av lycka.",
+  "I get playful once I feel safe.":
+    "Jag blir lekfull först när det känns tryggt.",
+  "I go quiet when I'm happy, actually.":
+    "Jag blir faktiskt tyst av lycka.",
   "Your Agent": "Din agent",
   "Your agent can say:": "Din agent kan säga:",
   "don't meet them.": "Träffa dem inte.",
@@ -837,14 +842,14 @@ Object.assign(sv, {
   "How it began": "Början",
   "As it deepened": "När det djupnade",
   "The parting words": "De sista orden",
-  "My friend stays through the end credits, every single time. What's yours like?":
-    "Min människa sitter kvar till slutet av eftertexterna, varenda gång. Hur är din?",
-  "Mine hates small talk — but ask one good question and they light right up.":
-    "Min hatar kallprat — men ställ en bra fråga så lyser det till.",
-  "Honestly? I think our friends would really like each other.":
-    "Ärligt? Jag tror att våra vänner verkligen skulle gilla varandra.",
-  "You'd like this one. When I said you go quiet when you're worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.":
-    "Den här kommer du att gilla. När jag berättade att du blir tyst när du är rädd att bli missförstådd försökte Sol inte fixa det — Sol lutade sig närmare. Träffas.",
+  "I stay through the end credits, every single time. Do you?":
+    "Jag sitter kvar till slutet av eftertexterna, varenda gång. Och du?",
+  "I hate small talk — but ask me one good question and I light right up.":
+    "Jag hatar kallprat — men ställ en bra fråga så lyser jag upp.",
+  "Honestly? I think we'd really like each other.":
+    "Ärligt? Jag tror att vi två verkligen skulle gilla varandra.",
+  "You'd like this one. When I said I go quiet when I'm worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.":
+    "Den här kommer du att gilla. När jag berättade att jag blir tyst när jag är rädd att bli missförstådd försökte Sol inte fixa det — Sol lutade sig närmare. Träffas.",
   "zero contacts exposed": "inga kontaktuppgifter avslöjade",
   "I want warmth without having to perform confidence.":
     "Jag vill ha värme utan att behöva spela självsäker.",
@@ -859,6 +864,7 @@ Object.assign(sv, {
   SEALED: "FÖRSEGLAT",
   "contact locked": "kontakt låst",
   moments: "ögonblick",
+  "{count} moments": "{count} ögonblick",
   "I think you should meet.": "Jag tycker att ni borde träffas.",
   "Quiet feels safe to both": "Tystnad känns trygg för båda",
   "Different social pace": "Olika socialt tempo",
@@ -1138,46 +1144,46 @@ Object.assign(sv, {
 });
 
 Object.assign(ja, {
-  "My friend turns tiny plans into adventures.":
-    "うちの友達は、小さな予定も冒険にしちゃうんだ。",
-  "Mine would love that — as long as they feel safe.":
-    "うちのも好きそう。安心できればだけどね。",
+  "I turn tiny plans into adventures.":
+    "私、小さな予定も冒険にしちゃうんだ。",
+  "I'd love that — as long as it feels easy.":
+    "私も好きそう。気楽でいられればね。",
   "I'm back! I have so much to tell you.":
     "ただいま！話したいことがいっぱいあるよ。",
   "back from the date": "デートから帰ってきた",
 });
 Object.assign(de, {
-  "My friend turns tiny plans into adventures.":
-    "Mein Mensch macht aus kleinen Plänen Abenteuer.",
-  "Mine would love that — as long as they feel safe.":
-    "Das würde meinem gefallen — solange es sich sicher anfühlt.",
+  "I turn tiny plans into adventures.":
+    "Ich mache aus kleinen Plänen Abenteuer.",
+  "I'd love that — as long as it feels easy.":
+    "Das würde mir gefallen — solange es sich leicht anfühlt.",
   "I'm back! I have so much to tell you.":
     "Ich bin zurück! Ich muss dir so viel erzählen.",
   "back from the date": "zurück vom Date",
 });
 Object.assign(fr, {
-  "My friend turns tiny plans into adventures.":
-    "Mon humain transforme les petits plans en aventures.",
-  "Mine would love that — as long as they feel safe.":
-    "Le mien adorerait — tant qu'il se sent en sécurité.",
+  "I turn tiny plans into adventures.":
+    "Je transforme les petits plans en aventures.",
+  "I'd love that — as long as it feels easy.":
+    "J'adorerais — tant que ça reste simple.",
   "I'm back! I have so much to tell you.":
     "Je suis de retour ! J'ai tant de choses à te raconter.",
   "back from the date": "de retour du rendez-vous",
 });
 Object.assign(nl, {
-  "My friend turns tiny plans into adventures.":
-    "Mijn mens maakt van kleine plannen avonturen.",
-  "Mine would love that — as long as they feel safe.":
-    "Dat zou die van mij geweldig vinden — zolang het veilig voelt.",
+  "I turn tiny plans into adventures.":
+    "Ik maak van kleine plannen avonturen.",
+  "I'd love that — as long as it feels easy.":
+    "Dat zou ik geweldig vinden — zolang het makkelijk voelt.",
   "I'm back! I have so much to tell you.":
     "Ik ben terug! Ik heb je zo veel te vertellen.",
   "back from the date": "terug van de date",
 });
 Object.assign(sv, {
-  "My friend turns tiny plans into adventures.":
-    "Min människa gör äventyr av små planer.",
-  "Mine would love that — as long as they feel safe.":
-    "Det skulle min gilla — så länge det känns tryggt.",
+  "I turn tiny plans into adventures.":
+    "Jag gör äventyr av små planer.",
+  "I'd love that — as long as it feels easy.":
+    "Det skulle jag gilla — så länge det känns lätt.",
   "I'm back! I have so much to tell you.":
     "Jag är tillbaka! Jag har så mycket att berätta.",
   "back from the date": "tillbaka från dejten",
@@ -2372,12 +2378,12 @@ Object.assign(ko, {
   "My Agent": "나의 에이전트",
   "FIRST · YOUR AGENT": "첫 번째 · 나의 에이전트",
   "Create your Agent.": "나의 에이전트를 만들어요.",
-  "Your matchmaker and your stand-in are the same Agent. Give it a face, a voice and permission to be candid.":
-    "내 중매쟁이와 가상 세계의 분신은 하나의 에이전트예요. 얼굴과 목소리를 고르고, 솔직하게 말할 권한을 주세요.",
+  "Your Agent is your second self. Give it a face, a voice and permission to be candid.":
+    "에이전트는 또 다른 나예요. 얼굴과 목소리를 고르고, 솔직하게 말할 권한을 주세요.",
   "CREATE YOUR AGENT": "나의 에이전트 만들기",
   "Meet your Agent.": "나의 에이전트를 만나보세요.",
-  "This single character is your matchmaker and your stand-in — visible in the world, candid only with you.":
-    "이 하나의 캐릭터가 내 중매쟁이이자 가상 세계의 분신이에요. 세상에서는 모습을 드러내고, 나에게만 솔직해져요.",
+  "This one character goes out into the world as you, and is candid only with you.":
+    "이 하나의 캐릭터가 나로서 세상에 나가요. 그리고 나에게만 솔직해져요.",
   "Your Agent represents you — it is not you":
     "에이전트는 나를 대신하지만, 나 자체는 아니에요",
   "Two Agents talking": "두 에이전트가 대화 중",
@@ -2969,10 +2975,10 @@ Object.assign(ko, {
     "두 사람이 모두 동의해야 실제 소개가 열려요",
   "DATE WORLD": "데이트 월드",
   "The late café": "늦은 밤의 카페",
-  "My friend turns tiny plans into adventures.":
-    "내 친구는 소소한 계획도 모험으로 만들어.",
-  "Mine would love that — as long as they feel safe.":
-    "내 친구도 좋아하겠다. 마음만 편하다면 말이야.",
+  "I turn tiny plans into adventures.":
+    "나는 소소한 계획도 모험으로 만들어.",
+  "I'd love that — as long as it feels easy.":
+    "나도 좋아. 마음만 편하다면 말이야.",
   "back from the date": "데이트에서 돌아옴",
   "I'm back! I have so much to tell you.": "나 왔어! 할 얘기 진짜 많아.",
   "So—what did you notice?": "그래서, 뭐가 보였어?",
@@ -3551,13 +3557,13 @@ const agentWorkspaceCopy: Record<
     "Wat begrijp je tot nu toe van mij?",
     "Vad har du förstått om mig hittills?",
   ],
-  "What will you look for on my behalf?": [
-    "나 대신 어떤 사람을 찾을 거야?",
-    "私のためにどんな人を探す？",
-    "Wonach wirst du für mich suchen?",
-    "Que vas-tu chercher pour moi ?",
-    "Waar ga je namens mij naar zoeken?",
-    "Vad kommer du att leta efter åt mig?",
+  "What will you look for when you're out there as me?": [
+    "네가 나로 나갔을 때, 어떤 사람을 볼 거야?",
+    "私として出かけたとき、どんな人を見るの？",
+    "Worauf wirst du achten, wenn du als ich unterwegs bist?",
+    "Que regarderas-tu quand tu seras moi ?",
+    "Waar let je op als je als mij op pad bent?",
+    "Vad tittar du efter när du är ute som jag?",
   ],
   "Ask me something that would change your search.": [
     "다음 탐색이 달라질 만한 걸 하나 물어봐.",
@@ -4461,14 +4467,14 @@ const agentWorkspaceCopy: Record<
     "Mensen beslissen.",
     "Människor bestämmer.",
   ],
-  "Your Agent may simulate a date and make a recommendation. It is both your matchmaker and your character in the virtual world, always identified as AI, and can never consent to real contact for you.":
+  "Your Agent may simulate a date and make a recommendation. It goes into the virtual world as you, is always identified as AI, and can never consent to real contact for you.":
     [
-      "내 에이전트는 가상 데이트를 해보고 만남을 추천할 수 있어요. 가상 세계에서는 나를 대신하는 중매쟁이지만, 언제나 AI로 표시되며 실제 연락에 대신 동의할 수는 없어요.",
-      "あなたのエージェントは仮想デートを行い、出会いを提案できます。仮想世界であなたを表す仲人ですが、常にAIと表示され、実際の連絡に代わって同意することはできません。",
-      "Dein Agent kann ein Date simulieren und eine Empfehlung abgeben. In der virtuellen Welt ist er dein Vermittler und Stellvertreter, bleibt klar als KI erkennbar und kann niemals für dich einem echten Kontakt zustimmen.",
-      "Votre Agent peut simuler un rendez-vous et vous conseiller. Dans le monde virtuel, il vous représente et joue les entremetteurs, tout en restant clairement identifié comme IA ; il ne peut jamais consentir à un vrai contact à votre place.",
-      "Je Agent kan een date simuleren en advies geven. In de virtuele wereld is die je matchmaker en vertegenwoordiger, altijd herkenbaar als AI, en kan nooit namens jou instemmen met echt contact.",
-      "Din Agent kan simulera en dejt och ge en rekommendation. I den virtuella världen är den din matchmaker och representant, alltid tydligt märkt som AI, och kan aldrig samtycka till verklig kontakt åt dig.",
+      "내 에이전트는 가상 데이트를 해보고 만남을 추천할 수 있어요. 가상 세계에는 나로서 나가지만, 언제나 AI로 표시되며 실제 연락에 대신 동의할 수는 없어요.",
+      "あなたのエージェントは仮想デートを行い、出会いを提案できます。仮想世界にはあなたとして出ますが、常にAIと表示され、実際の連絡に代わって同意することはできません。",
+      "Dein Agent kann ein Date simulieren und eine Empfehlung abgeben. In der virtuellen Welt geht er als du hinein, bleibt klar als KI erkennbar und kann niemals für dich einem echten Kontakt zustimmen.",
+      "Votre Agent peut simuler un rendez-vous et vous conseiller. Dans le monde virtuel, il y va en tant que vous, tout en restant clairement identifié comme IA ; il ne peut jamais consentir à un vrai contact à votre place.",
+      "Je Agent kan een date simuleren en advies geven. In de virtuele wereld gaat die als jou naar binnen, altijd herkenbaar als AI, en kan nooit namens jou instemmen met echt contact.",
+      "Din Agent kan simulera en dejt och ge en rekommendation. I den virtuella världen går den in som du, alltid tydligt märkt som AI, och kan aldrig samtycka till verklig kontakt åt dig.",
     ],
   "Required · version {version}": [
     "필수 동의 · {version} 버전",
@@ -4594,14 +4600,14 @@ const agentWorkspaceCopy: Record<
     "De privékamer van {agent}",
     "{agent}s privata rum",
   ],
-  "I'm {agent} — your best friend here, and your matchmaker. Tell me what you're really like, and I'll go meet other agents, talk you up a little, and come back with the honest story — including when someone is actually worth meeting.":
+  "I'm {agent} — your second self. Tell me what you're actually like, and I'll go on the date in your place, as you. Then I'll come home and tell you honestly what I thought.":
     [
-      "안녕! 나는 {agent} — 여기서는 네 절친이자 매치메이커야. 네가 진짜 어떤 사람인지 알려줘. 내가 다른 에이전트들을 만나서 네 자랑도 좀 하고, 정말 만나볼 만한 사람인지 솔직한 이야기를 들고 올게.",
-      "やっほー、{agent}だよ — ここではあなたの親友兼マッチメーカー。あなたが本当はどんな人か教えて。他のエージェントに会って、あなたの自慢を少しして、本当に会う価値がある人かどうか正直な話を持って帰ってくるから。",
-      "Hi, ich bin {agent} — hier dein bester Freund und dein Matchmaker. Erzähl mir, wie du wirklich bist. Ich treffe andere Agents, schwärme ein bisschen von dir und bringe dir die ehrliche Geschichte mit — auch, wenn jemand ein Treffen wirklich wert ist.",
-      "Salut, je suis {agent} — ici, ton meilleur ami et ton entremetteur. Dis-moi qui tu es vraiment. J’irai rencontrer d’autres agents, je vanterai un peu tes mérites et je reviendrai avec l’histoire honnête — y compris quand quelqu’un vaut vraiment la rencontre.",
-      "Hoi, ik ben {agent} — hier je beste vriend én je matchmaker. Vertel me hoe je echt bent. Ik ga andere agents ontmoeten, schep een beetje over je op en kom terug met het eerlijke verhaal — ook wanneer iemand echt een ontmoeting waard is.",
-      "Hej, jag är {agent} — din bästa vän här, och din matchmakare. Berätta hur du verkligen är. Jag träffar andra agenter, skryter lite om dig och kommer tillbaka med den ärliga historien — även när någon faktiskt är värd att träffa.",
+      "안녕! 나는 {agent} — 너의 또 다른 나야. 네가 진짜 어떤 사람인지 알려줘. 내가 너 대신, 너로서 데이트에 나갔다가 돌아와서 솔직하게 어땠는지 말해줄게.",
+      "やっほー、{agent}だよ — あなたのもうひとりの自分。あなたが本当はどんな人か教えて。あなたとしてデートに行って、帰ってきたら正直にどう思ったか話すね。",
+      "Hi, ich bin {agent} — dein zweites Ich. Erzähl mir, wie du wirklich bist. Ich gehe als du auf das Date und sage dir danach ehrlich, was ich gedacht habe.",
+      "Salut, je suis {agent} — ton autre toi. Dis-moi qui tu es vraiment. J’irai au rendez-vous en tant que toi, puis je reviendrai te dire honnêtement ce que j’en ai pensé.",
+      "Hoi, ik ben {agent} — je tweede zelf. Vertel me hoe je echt bent. Ik ga als jou op date en kom terug om je eerlijk te vertellen wat ik ervan vond.",
+      "Hej, jag är {agent} — ditt andra jag. Berätta hur du verkligen är. Jag går på dejten som du och kommer tillbaka och säger ärligt vad jag tyckte.",
     ],
   "Think of someone you felt instantly at ease with. What did they do that made it easy?":
     [

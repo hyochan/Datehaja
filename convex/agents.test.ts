@@ -229,9 +229,10 @@ describe("periodic Agent learning", () => {
         .first(),
     }));
     expect(result.agent?.name).toBe("Juno");
-    expect(result.message?.content).toMatch(
-      /^I'm Juno — your best friend here, and your matchmaker\./,
-    );
+    expect(result.message?.content).toMatch(/^I'm Juno — your second self\./);
+    // The Agent goes out as its person, so the greeting never casts it as a
+    // friend or a matchmaker standing between two people.
+    expect(result.message?.content).not.toMatch(/friend|matchmaker/i);
   });
 
   test("creates one localized open question and never duplicates it", async () => {
