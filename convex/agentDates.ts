@@ -23,7 +23,7 @@ import { getScoutAccess } from "./billing";
 import { clean, cleanMultiline, sanitizeModelText } from "./lib/text";
 import { obj, structured, type StructuredResult } from "./integrations/openai";
 import { search } from "./integrations/firecrawl";
-import { appUrl, sendConciergeEmail } from "./mail";
+import { appUrl, emailAssetUrl, sendConciergeEmail } from "./mail";
 import {
   agentConnectionEmail,
   agentDebriefEmail,
@@ -50,7 +50,7 @@ import {
   hasCompleteMatchingBoundaries,
   mutualMatchingBoundaries,
 } from "./lib/agentMatchingBoundaries";
-import { normaliseSupportedLocale } from "./lib/locales";
+import { normaliseSupportedLocale, sharedDateLocale } from "./lib/locales";
 
 type AgentBrief = {
   userId: Id<"users">;
@@ -250,21 +250,18 @@ export function emailReportFor(
     theirs.agentName,
     theirs.palette,
   );
-  // A relative <img src> renders as a broken image in mail clients, so sprites
-  // only ship when the deployment knows its absolute site origin.
-  const hasSiteUrl = Boolean(process.env.SITE_URL);
   return {
     setting: info.date.setting,
     agentName: mine.agentName,
     counterpartAgentName: theirs.agentName,
     ownerPalette,
     counterpartPalette,
-    ownerSpriteUrl: hasSiteUrl
-      ? appUrl(spritePathFor(ownerPalette, mine.face, mine.gender))
-      : undefined,
-    counterpartSpriteUrl: hasSiteUrl
-      ? appUrl(spritePathFor(counterpartPalette, theirs.face, theirs.gender))
-      : undefined,
+    ownerSpriteUrl: emailAssetUrl(
+      spritePathFor(ownerPalette, mine.face, mine.gender),
+    ),
+    counterpartSpriteUrl: emailAssetUrl(
+      spritePathFor(counterpartPalette, theirs.face, theirs.gender),
+    ),
     worldSourceTitle: info.date.worldSourceTitle,
     totalMoments: info.turns.length,
     summary: info.date.summary,
@@ -513,6 +510,8 @@ export const createRequest = internalMutation({
     const candidates: Array<{
       profile: Doc<"profiles">;
       agent: Doc<"agentProfiles"> | null;
+      /** Languages both people listed, used to pick the date's language. */
+      sharedLanguages: string[];
       score: number;
       signals: string[];
     }> = [];
@@ -597,6 +596,7 @@ export const createRequest = internalMutation({
       candidates.push({
         profile: candidate,
         agent: candidateAgent,
+        sharedLanguages: boundaries.sharedLanguages,
         score:
           shared * 12 +
           (candidateAgent ? 8 : 0) -
@@ -632,17 +632,27 @@ export const createRequest = internalMutation({
     if (!selected)
       throw new Error("No agent is free in your city yet. Try again soon.");
 
+    // The date is conducted in one language for both Agents, and the debrief
+    // email is written from the reader's own profile locale. Deriving the date
+    // from the same durable profile locale keeps the two from disagreeing —
+    // a Korean debrief quoting an English transcript reads as broken. The
+    // requester's locale then yields only when the other person cannot read it.
+    const conversationLocale = sharedDateLocale(
+      normaliseSupportedLocale(
+        profile.preferredLocale ?? args.locale,
+        profile.countryCode,
+      ),
+      selected.sharedLanguages,
+    );
+
     const now = Date.now();
     const agentDateId = await ctx.db.insert("agentDates", {
       initiatorUserId: userId,
       counterpartUserId: selected.profile.userId,
       status: "queued",
       paceMode: args.accessMode === "demo" ? "demo" : "natural",
-      locale: normaliseSupportedLocale(
-        args.locale ?? profile.preferredLocale,
-        profile.countryCode,
-      ),
-      setting: localDateCopy(args.locale ?? profile.preferredLocale, {
+      locale: conversationLocale,
+      setting: localDateCopy(conversationLocale, {
         en: "A private virtual world is being prepared.",
         ko: "둘만의 가상 데이트 공간을 준비하고 있어요.",
         ja: "ふたりだけの仮想デート空間を準備しています。",

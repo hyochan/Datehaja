@@ -102,11 +102,42 @@ describe("agent debrief email", () => {
     expect(email.html).toContain("처음 마주한 순간");
     expect(email.html).toContain("헤어지기 전 마지막 말");
     expect(email.html).toContain("이 장면의 영감");
-    // Both agents appear in the pair line, each with their sprite face.
-    expect(email.html).toMatch(/Sol ↔ <img[^>]+sprite-sky-v1\.png[^>]*>Juno/);
+    // Both agents appear in the pair line, in order, each with their own face.
+    expect(email.html).toMatch(
+      /sprite-sunset-v1\.png[\s\S]*Sol[\s\S]*↔[\s\S]*sprite-sky-v1\.png[\s\S]*Juno/,
+    );
     expect(email.html).toContain("이런 대화가 오갔어요");
     // A pass note only appears for a pass verdict.
     expect(email.html).not.toContain("다음에는 이런 사람을 찾아볼게요");
+  });
+
+  it("states the world's source once, not twice", () => {
+    const titled = agentDebriefEmail({
+      ...base,
+      locale: "ko-KR",
+      report: {
+        ...base.report,
+        // What the world builder actually writes: the scene names its source.
+        setting: "“서울 레코드 바 다시 유행”에서 영감을 받은 늦은 밤의 비밀 살롱",
+        worldSourceTitle: "서울 레코드 바 다시 유행",
+      },
+    });
+    expect(titled.html).not.toContain("이 장면의 영감");
+    expect(titled.text).not.toContain("이 장면의 영감");
+    // A scene that does not quote its source still credits it.
+    expect(agentDebriefEmail({ ...base, locale: "ko-KR" }).html).toContain(
+      "이 장면의 영감",
+    );
+  });
+
+  it("joins a scene count the way each language writes numbers", () => {
+    expect(agentDebriefEmail({ ...base, locale: "ko-KR" }).html).toContain(
+      "6개의 장면",
+    );
+    expect(
+      agentDebriefEmail({ ...base, locale: "en-GB", report: englishReport })
+        .html,
+    ).toContain("6 moments");
   });
 
   it("shows what the agent will look for next after a pass", () => {

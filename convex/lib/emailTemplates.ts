@@ -39,17 +39,6 @@ function chipFor(
   return (palette && AVATAR_CHIPS[palette]) || fallback;
 }
 
-/** Mirror of the app's scene detection so the email shows the same world. */
-function sceneEmojiFor(setting: string): string {
-  const value = setting.toLowerCase();
-  if (/film|movie|cinema|screen|director/.test(value)) return "🎬";
-  if (/market|street|stall|night|food/.test(value)) return "🏮";
-  if (/book|library|poem|writing|novel/.test(value)) return "📚";
-  if (/park|garden|walk|river|flower|outdoor/.test(value)) return "🌿";
-  if (/gallery|museum|art|exhibit|painting/.test(value)) return "🖼️";
-  return "☕";
-}
-
 function shell(
   body: string,
   footerNote: string,
@@ -154,6 +143,8 @@ type AgentReportCopy = {
   scene: string;
   agents: string;
   moments: string;
+  /** Korean and Japanese attach a counter straight to the numeral. */
+  countJoin: string;
   inspiredBy: string;
   summary: string;
   conversation: string;
@@ -179,6 +170,7 @@ function agentReportCopy(locale?: string): AgentReportCopy {
           scene: "어디서",
           agents: "누가",
           moments: "개의 장면",
+          countJoin: "",
           inspiredBy: "이 장면의 영감",
           summary: "그날의 공기",
           conversation: "이런 대화가 오갔어요",
@@ -198,6 +190,7 @@ function agentReportCopy(locale?: string): AgentReportCopy {
           scene: "場所",
           agents: "ふたり",
           moments: "シーン",
+          countJoin: "",
           inspiredBy: "この場面のヒント",
           summary: "その日の空気",
           conversation: "交わされた言葉",
@@ -217,6 +210,7 @@ function agentReportCopy(locale?: string): AgentReportCopy {
           scene: "Ort",
           agents: "Wer",
           moments: "Momente",
+          countJoin: " ",
           inspiredBy: "Inspiration der Szene",
           summary: "Die Stimmung",
           conversation: "Das wurde gesagt",
@@ -236,6 +230,7 @@ function agentReportCopy(locale?: string): AgentReportCopy {
           scene: "Lieu",
           agents: "Qui",
           moments: "moments",
+          countJoin: " ",
           inspiredBy: "Inspiration de la scène",
           summary: "L'ambiance",
           conversation: "Ce qui s'est dit",
@@ -255,6 +250,7 @@ function agentReportCopy(locale?: string): AgentReportCopy {
           scene: "Waar",
           agents: "Wie",
           moments: "momenten",
+          countJoin: " ",
           inspiredBy: "Inspiratie voor de scène",
           summary: "De sfeer",
           conversation: "Wat er gezegd werd",
@@ -274,6 +270,7 @@ function agentReportCopy(locale?: string): AgentReportCopy {
           scene: "Var",
           agents: "Vilka",
           moments: "ögonblick",
+          countJoin: " ",
           inspiredBy: "Scenens inspiration",
           summary: "Känslan",
           conversation: "Det som sades",
@@ -294,6 +291,7 @@ function agentReportCopy(locale?: string): AgentReportCopy {
       scene: "Where",
       agents: "Who",
       moments: "moments",
+      countJoin: " ",
       inspiredBy: "Scene inspired by",
       summary: "The atmosphere",
       conversation: "What they said",
@@ -322,8 +320,9 @@ function agentInitial(name: string): string {
 }
 
 /**
- * The agent's face, email-safe. Remote sprite image when we have one (with the
- * palette chip behind it as the blocked-image fallback), initial chip otherwise.
+ * An Agent's face, email-safe. The remote sprite when we have one, sitting on
+ * its palette chip so a client that blocks images still shows the right colour
+ * and initial rather than a torn-paper icon.
  */
 function agentFaceHtml(
   name: string,
@@ -331,12 +330,13 @@ function agentFaceHtml(
   spriteUrl: string | undefined,
   size: number,
 ): string {
-  if (spriteUrl) {
-    return `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${chip.bg};overflow:hidden;text-align:center;">
-      <img src="${escapeHtml(spriteUrl)}" alt="${escapeHtml(name)}" width="${size}" height="${size}" style="display:block;width:${size}px;height:${size}px;object-fit:cover;object-position:top center;border:0;" />
-    </div>`;
+  const chipStyle = `width:${size}px;height:${size}px;border-radius:50%;background:${chip.bg};color:${chip.fg};font-size:${Math.round(size * 0.44)}px;font-weight:700;line-height:${size}px;text-align:center;overflow:hidden;`;
+  if (!spriteUrl) {
+    return `<div style="${chipStyle}">${escapeHtml(agentInitial(name))}</div>`;
   }
-  return `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${chip.bg};color:${chip.fg};font-size:${Math.round(size * 0.45)}px;font-weight:800;line-height:${size}px;text-align:center;">${escapeHtml(agentInitial(name))}</div>`;
+  return `<div style="${chipStyle}">
+    <img src="${escapeHtml(spriteUrl)}" alt="${escapeHtml(name)}" width="${size}" height="${size}" style="display:block;width:${size}px;height:${size}px;object-fit:cover;object-position:top center;border:0;" />
+  </div>`;
 }
 
 type AgentLetter = {
@@ -354,10 +354,34 @@ type AgentLetter = {
   nextNote?: string;
 };
 
+/** A small caps field name, the one repeated ornament a report is allowed. */
+function fieldLabel(text: string): string {
+  return `<div style="font-size:11px;font-weight:700;letter-spacing:.06em;color:${BRAND.muted};">${escapeHtml(text)}</div>`;
+}
+
+/** A titled section, separated by a hairline rather than a coloured card. */
+function section(title: string, body: string, opening = false): string {
+  const rule = opening
+    ? "padding:0;"
+    : `padding:18px 0 0;border-top:1px solid ${BRAND.border};`;
+  return `<div style="margin:0;${rule}">
+    <div style="margin-bottom:9px;font-size:13px;font-weight:700;color:${BRAND.ink};">${escapeHtml(title)}</div>
+    ${body}
+  </div>`;
+}
+
+/** A label and its value on one line, the way a report states a fact. */
+function factRow(label: string, value: string): string {
+  return `<tr>
+    <td style="padding:0 12px 7px 0;vertical-align:top;white-space:nowrap;">${fieldLabel(label)}</td>
+    <td style="padding:0 0 7px 0;vertical-align:top;font-size:13.5px;line-height:1.5;color:${BRAND.ink};">${value}</td>
+  </tr>`;
+}
+
 /**
- * The Agent speaking directly to its human: avatar, name, a clear verdict
- * badge, and the full reason in the Agent's own voice. This leads the email —
- * the agent's read is the thing the owner opened it for.
+ * The Agent's read on the date: who it is, what it concluded, and why, in its
+ * own words. This is what the owner opened the email for, so it comes first
+ * and is stated plainly rather than dressed as a chat message.
  */
 function agentLetterHtml(copy: AgentReportCopy, letter: AgentLetter): string {
   const style = letter.verdict
@@ -372,40 +396,49 @@ function agentLetterHtml(copy: AgentReportCopy, letter: AgentLetter): string {
       }[letter.verdict]
     : null;
 
-  const badge = badgeLabel
-    ? `<span style="display:inline-block;margin-top:5px;background:#ffffff;border:1px solid ${style.accent};color:${style.fg};font-size:12px;font-weight:700;padding:3px 11px;border-radius:999px;">${escapeHtml(badgeLabel)}</span>`
+  const verdictLine = badgeLabel
+    ? `<div style="margin-top:2px;font-size:13px;font-weight:700;color:${style.fg};">${escapeHtml(badgeLabel)}</div>`
     : "";
 
-  const detail =
+  // One table, so both labels share a column and the values line up.
+  const rows = [
     letter.detailLabel && letter.detail
-      ? `<div style="margin-top:10px;font-size:12px;font-weight:600;color:${style.fg};">${escapeHtml(letter.detailLabel)} · ${escapeHtml(letter.detail)}</div>`
-      : "";
-
-  const next =
+      ? factRow(letter.detailLabel, escapeHtml(letter.detail))
+      : "",
     letter.nextLabel && letter.nextNote
-      ? `<div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(22,18,27,.09);">
-          <div style="margin-bottom:4px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:${style.fg};">${escapeHtml(letter.nextLabel)}</div>
-          <div style="font-size:13px;line-height:1.6;color:${BRAND.ink};">${escapeHtml(compactEmailText(letter.nextNote, 220))}</div>
-        </div>`
-      : "";
+      ? factRow(
+          letter.nextLabel,
+          escapeHtml(compactEmailText(letter.nextNote, 220)),
+        )
+      : "",
+  ].join("");
+  const notes = rows
+    ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:14px;">${rows}</table>`
+    : "";
 
-  return `<div style="margin:20px 0 14px;background:${style.bg};border-radius:18px;padding:18px 18px 16px;">
-    <div style="margin-bottom:12px;font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:${style.fg};">${escapeHtml(copy.letter)}</div>
-    <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-      <td style="width:62px;vertical-align:top;">
-        ${agentFaceHtml(letter.agentName, chip, letter.spriteUrl, 52)}
+  const body = `<table role="presentation" cellpadding="0" cellspacing="0" style="margin-bottom:12px;"><tr>
+      <td style="width:52px;vertical-align:middle;">
+        ${agentFaceHtml(letter.agentName, chip, letter.spriteUrl, 44)}
       </td>
-      <td style="vertical-align:middle;padding-left:8px;">
-        <div style="font-size:17px;font-weight:700;color:${BRAND.ink};">${escapeHtml(letter.agentName)}</div>
-        ${badge}
+      <td style="vertical-align:middle;padding-left:12px;">
+        <div style="font-size:16px;font-weight:700;color:${BRAND.ink};">${escapeHtml(letter.agentName)}</div>
+        ${verdictLine}
       </td>
     </tr></table>
-    <div style="margin:10px 0 0 16px;width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:10px solid #ffffff;"></div>
-    <div style="background:#ffffff;border-radius:4px 16px 16px 16px;padding:14px 16px;">
-      <div style="font-size:15px;line-height:1.7;color:${BRAND.ink};">“${escapeHtml(compactEmailText(letter.message, 640))}”</div>
-      ${detail}${next}
-    </div>
-  </div>`;
+    <div style="padding-left:14px;border-left:3px solid ${style.accent};font-size:15px;line-height:1.7;color:${BRAND.ink};">${escapeHtml(compactEmailText(letter.message, 640))}</div>
+    ${notes}`;
+  return `<div style="margin:4px 0 20px;">${section(copy.letter, body, true)}</div>`;
+}
+
+/**
+ * Whether the world's source deserves its own line. The scene is normally
+ * written around the source title, and a report that states one fact twice
+ * reads as padding.
+ */
+function showsSource(report: AgentDateEmailReport): boolean {
+  const title = report.worldSourceTitle?.trim();
+  if (!title) return false;
+  return !report.setting.includes(title.slice(0, 40));
 }
 
 /** Tiny inline face used next to an Agent's name in running text. */
@@ -414,15 +447,16 @@ function miniFace(
   spriteUrl: string | undefined,
 ): string {
   if (!spriteUrl) return "";
-  return `<img src="${escapeHtml(spriteUrl)}" alt="" width="18" height="18" style="vertical-align:-4px;margin-right:3px;border-radius:50%;background:${chip.bg};object-fit:cover;object-position:top center;border:0;" />`;
+  return `<img src="${escapeHtml(spriteUrl)}" alt="" width="18" height="18" style="vertical-align:-4px;margin-right:4px;border-radius:50%;background:${chip.bg};object-fit:cover;object-position:top center;border:0;" />`;
 }
 
 /**
- * The date as a story: the scene the Agents met in, the mood, a three-beat
- * timeline of what was actually said, and what sparked or snagged. Everything
- * here also exists in the app, so the email never claims more than the replay.
+ * The date itself, written as a report: the facts of the meeting, what the
+ * Agent made of the mood, the excerpts that carried the most, and the two
+ * signals worth acting on. Everything here also exists in the app, so the
+ * email never claims more than the replay.
  */
-function agentDateStoryHtml(
+function agentDateReportHtml(
   copy: AgentReportCopy,
   report: AgentDateEmailReport,
 ): string {
@@ -431,81 +465,63 @@ function agentDateStoryHtml(
     report.counterpartPalette,
     DEFAULT_COUNTERPART_CHIP,
   );
-  const emoji = sceneEmojiFor(report.setting);
 
-  const inspiredBy = report.worldSourceTitle
-    ? `<div style="margin-top:6px;font-size:11px;color:${BRAND.muted};">${escapeHtml(copy.inspiredBy)}: ${escapeHtml(compactEmailText(report.worldSourceTitle, 90))}</div>`
-    : "";
-
-  const sceneBanner = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;background:#fff7f2;border-radius:14px;">
-    <tr>
-      <td style="width:62px;padding:14px 0 14px 14px;vertical-align:top;">
-        <div style="width:44px;height:44px;border-radius:50%;background:#ffffff;border:1px solid ${BRAND.border};font-size:22px;line-height:44px;text-align:center;">${emoji}</div>
-      </td>
-      <td style="padding:13px 14px 13px 10px;vertical-align:top;">
-        <div style="margin-bottom:3px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:${BRAND.muted};">${escapeHtml(copy.scene)}</div>
-        <div style="font-size:14px;line-height:1.45;font-weight:700;color:${BRAND.ink};">${escapeHtml(compactEmailText(report.setting, 110))}</div>
-        <div style="margin-top:6px;font-size:12px;font-weight:600;color:${BRAND.ember};">${miniFace(ownerChip, report.ownerSpriteUrl)}${escapeHtml(report.agentName)} ↔ ${miniFace(counterpartChip, report.counterpartSpriteUrl)}${escapeHtml(report.counterpartAgentName)} · ${report.totalMoments} ${escapeHtml(copy.moments)}</div>
-        ${inspiredBy}
-      </td>
-    </tr>
-  </table>`;
-
-  const narration = `<div style="margin:0 2px 16px;">
-    <div style="margin-bottom:4px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:${BRAND.muted};">${escapeHtml(copy.summary)}</div>
-    <div style="font-size:14px;line-height:1.65;color:${BRAND.ink};">${escapeHtml(compactEmailText(report.summary, 300))}</div>
-  </div>`;
+  const moments = `${report.totalMoments}${copy.countJoin}${escapeHtml(copy.moments)}`;
+  const facts = [
+    factRow(
+      copy.agents,
+      `<span style="font-weight:600;">${miniFace(ownerChip, report.ownerSpriteUrl)}${escapeHtml(report.agentName)}</span>` +
+        `<span style="color:${BRAND.muted};"> \u2194 </span>` +
+        `<span style="font-weight:600;">${miniFace(counterpartChip, report.counterpartSpriteUrl)}${escapeHtml(report.counterpartAgentName)}</span>` +
+        `<span style="color:${BRAND.muted};"> &middot; ${moments}</span>`,
+    ),
+    factRow(copy.scene, escapeHtml(compactEmailText(report.setting, 140))),
+    // The scene is usually named after the source, so repeating the title
+    // underneath it just says the same thing twice.
+    showsSource(report)
+      ? factRow(
+          copy.inspiredBy,
+          escapeHtml(compactEmailText(report.worldSourceTitle!, 90)),
+        )
+      : "",
+  ].join("");
 
   const total = report.moments.length;
-  const timeline = report.moments
+  const excerpts = report.moments
     .map((moment, index) => {
       const isOwner =
         moment.isMine ?? moment.speakerAgentName === report.agentName;
-      const chip = isOwner ? ownerChip : counterpartChip;
-      const spriteUrl = isOwner
-        ? report.ownerSpriteUrl
-        : report.counterpartSpriteUrl;
-      const bubbleBg = isOwner ? BRAND.blush : "#f7f4f0";
-      return `<tr>
-        <td style="width:40px;vertical-align:top;padding:17px 0 0;">
-          ${agentFaceHtml(moment.speakerAgentName, chip, spriteUrl, 30)}
-        </td>
-        <td style="padding:0 0 14px 8px;vertical-align:top;">
-          <div style="margin-bottom:3px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:${BRAND.muted};">${String(moment.round).padStart(2, "0")} · ${escapeHtml(stageLabelFor(copy, index, total))}</div>
-          <div style="background:${bubbleBg};border-radius:4px 12px 12px 12px;padding:11px 14px;">
-            <div style="margin-bottom:3px;font-size:12px;font-weight:700;color:${chip.fg};">${escapeHtml(moment.speakerAgentName)}</div>
-            <div style="font-size:14px;line-height:1.6;color:${BRAND.ink};">${escapeHtml(compactEmailText(moment.content, 240))}</div>
-          </div>
-        </td>
-      </tr>`;
+      const accent = isOwner ? BRAND.ember : BRAND.muted;
+      return `<div style="margin-bottom:14px;">
+        <div style="margin-bottom:4px;font-size:11px;font-weight:700;color:${BRAND.muted};">${String(moment.round).padStart(2, "0")} &middot; ${escapeHtml(stageLabelFor(copy, index, total))}</div>
+        <div style="padding-left:12px;border-left:2px solid ${accent};">
+          <div style="margin-bottom:2px;font-size:12.5px;font-weight:700;color:${accent};">${escapeHtml(moment.speakerAgentName)}</div>
+          <div style="font-size:14px;line-height:1.6;color:${BRAND.ink};">${escapeHtml(compactEmailText(moment.content, 240))}</div>
+        </div>
+      </div>`;
     })
     .join("");
 
-  const signalCard = (
-    emojiMark: string,
-    label: string,
-    value: string,
-    bg: string,
-    fg: string,
-  ) =>
-    `<td width="50%" style="padding:0 5px 0 0;vertical-align:top;">
-      <div style="min-height:88px;background:${bg};border-radius:14px;padding:13px 14px;">
-        <div style="margin-bottom:6px;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${fg};">${emojiMark} ${escapeHtml(label)}</div>
-        <div style="font-size:13px;line-height:1.55;font-weight:600;color:${BRAND.ink};">${escapeHtml(compactEmailText(value, 130))}</div>
-      </div>
-    </td>`;
+  const signals = `<table role="presentation" cellpadding="0" cellspacing="0">
+    ${factRow(copy.spark, escapeHtml(compactEmailText(report.sparks[0] ?? copy.noSignal, 150)))}
+    ${factRow(copy.friction, escapeHtml(compactEmailText(report.frictions[0] ?? copy.noSignal, 150)))}
+  </table>`;
 
-  return `<div style="margin:0 0 20px;border:1px solid ${BRAND.border};border-radius:18px;padding:18px 18px 14px;background:#ffffff;">
-    <div style="margin-bottom:13px;font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:${BRAND.ember};">${escapeHtml(copy.storyEyebrow)}</div>
-    ${sceneBanner}
-    ${narration}
-    <div style="margin:0 0 9px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:${BRAND.muted};">${escapeHtml(copy.conversation)}</div>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${timeline}</table>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:2px;"><tr>
-      ${signalCard("✨", copy.spark, report.sparks[0] ?? copy.noSignal, BRAND.sage, "#2f6b3a")}
-      ${signalCard("🌱", copy.friction, report.frictions[0] ?? copy.noSignal, BRAND.blush, "#a34f2a")}
-    </tr></table>
-  </div>`;
+  return (
+    section(
+      copy.storyEyebrow,
+      `<table role="presentation" cellpadding="0" cellspacing="0" width="100%">${facts}</table>`,
+    ) +
+    `<div style="height:18px;"></div>` +
+    section(
+      copy.summary,
+      `<div style="font-size:14px;line-height:1.65;color:${BRAND.ink};">${escapeHtml(compactEmailText(report.summary, 300))}</div>
+       <div style="height:14px;"></div>${signals}`,
+    ) +
+    `<div style="height:18px;"></div>` +
+    section(copy.conversation, excerpts) +
+    `<div style="height:4px;"></div>`
+  );
 }
 
 function agentLetterText(copy: AgentReportCopy, letter: AgentLetter): string {
@@ -518,7 +534,7 @@ function agentLetterText(copy: AgentReportCopy, letter: AgentLetter): string {
     : null;
   const lines = [
     `${copy.letter} — ${letter.agentName}${badgeLabel ? ` · ${badgeLabel}` : ""}`,
-    `“${compactEmailText(letter.message, 640)}”`,
+    compactEmailText(letter.message, 640),
   ];
   if (letter.detailLabel && letter.detail) {
     lines.push(`${letter.detailLabel}: ${letter.detail}`);
@@ -529,30 +545,31 @@ function agentLetterText(copy: AgentReportCopy, letter: AgentLetter): string {
   return lines.join("\n");
 }
 
-function agentDateStoryText(
+function agentDateReportText(
   copy: AgentReportCopy,
   report: AgentDateEmailReport,
 ): string {
   const total = report.moments.length;
-  const timeline = report.moments
+  const excerpts = report.moments
     .map(
       (moment, index) =>
-        `${moment.round}. ${stageLabelFor(copy, index, total)} · ${moment.speakerAgentName}: “${compactEmailText(moment.content, 200)}”`,
+        `${String(moment.round).padStart(2, "0")} ${stageLabelFor(copy, index, total)}\n${moment.speakerAgentName}: ${compactEmailText(moment.content, 200)}`,
     )
-    .join("\n");
-  const inspiredBy = report.worldSourceTitle
-    ? `\n${copy.inspiredBy}: ${compactEmailText(report.worldSourceTitle, 90)}`
+    .join("\n\n");
+  const inspiredBy = showsSource(report)
+    ? `\n${copy.inspiredBy}: ${compactEmailText(report.worldSourceTitle!, 90)}`
     : "";
   return `${copy.storyEyebrow}
-${sceneEmojiFor(report.setting)} ${copy.scene}: ${report.setting}
-${copy.agents}: ${report.agentName} ↔ ${report.counterpartAgentName} · ${report.totalMoments} ${copy.moments}${inspiredBy}
-${copy.summary}: ${compactEmailText(report.summary, 300)}
+${copy.agents}: ${report.agentName} \u2194 ${report.counterpartAgentName} \u00b7 ${report.totalMoments}${copy.countJoin}${copy.moments}
+${copy.scene}: ${compactEmailText(report.setting, 140)}${inspiredBy}
+
+${copy.summary}
+${compactEmailText(report.summary, 300)}
+${copy.spark}: ${report.sparks[0] ?? copy.noSignal}
+${copy.friction}: ${report.frictions[0] ?? copy.noSignal}
 
 ${copy.conversation}
-${timeline}
-
-✨ ${copy.spark}: ${report.sparks[0] ?? copy.noSignal}
-🌱 ${copy.friction}: ${report.frictions[0] ?? copy.noSignal}`;
+${excerpts}`;
 }
 
 export function safetyEmail(args: {
@@ -806,7 +823,7 @@ export function agentDebriefEmail(args: {
 
 ${agentLetterText(copy, letter)}
 
-${agentDateStoryText(copy, args.report)}
+${agentDateReportText(copy, args.report)}
 
 ${localized.talkNote}
 ${localized.talk}: ${args.conversationUrl}
@@ -824,7 +841,7 @@ ${localized.privacy}
       h1(localized.headline) +
         p(localized.greeting) +
         agentLetterHtml(copy, letter) +
-        agentDateStoryHtml(copy, args.report) +
+        agentDateReportHtml(copy, args.report) +
         p(localized.talkNote) +
         `<div style="margin-top:20px;">${button(args.conversationUrl, localized.talk)}</div>` +
         `<div style="margin-top:10px;">${secondaryButton(args.url, localized.button)}</div>` +
@@ -938,7 +955,7 @@ ${localized.headline}
 
 ${agentLetterText(copy, letter)}
 
-${agentDateStoryText(copy, args.report)}
+${agentDateReportText(copy, args.report)}
 
 ${localized.button}: ${args.url}
 ${localized.talk}: ${args.conversationUrl}
@@ -953,7 +970,7 @@ ${localized.note}
       h1(localized.headline) +
         p(localized.greeting) +
         agentLetterHtml(copy, letter) +
-        agentDateStoryHtml(copy, args.report) +
+        agentDateReportHtml(copy, args.report) +
         `<div style="margin-top:20px;">${button(args.url, localized.button)}</div>` +
         `<div style="margin-top:10px;">${secondaryButton(args.conversationUrl, localized.talk)}</div>` +
         `<p style="margin:18px 0 0;font-size:13px;line-height:1.6;color:${BRAND.muted};">${escapeHtml(localized.note)}</p>`,
