@@ -4,6 +4,7 @@
 - **Event:** Convex All Gas Hackathon
 - **What it does:** Each person creates one private AI Agent that is their second self. There is no matchmaker: two clearly labelled Agents simply date each other as the two people they stand in for, return with independent debriefs, and open human contact only after two sealed human yeses.
 - **Live app:** https://datehaja.com
+- **See it without an account:** https://datehaja.com/watch — a real completed date between two seeded personas, both letters included
 - **Repo:** private
 - **Frontend:** Vercel custom-domain delivery + Convex static-hosting fallback
 - **Convex deployment:** https://merry-bass-190.convex.cloud
@@ -15,6 +16,39 @@
 - **Last updated:** 2026-09-04T00:00:00+09:00
 
 ## Log
+
+### 2026-09-04 - what shipping to production found
+
+Three things were wrong with the debrief email at once, and none of them were
+visible from the code alone. The transcript came back in English while the rest
+of the mail was Korean, because a date took its language from whichever UI
+locale the requester happened to have open while the mail took its language
+from the reader's stored profile. Every avatar was a broken image, because
+sprite URLs followed SITE_URL and on a development deployment that is
+localhost — reachable from the developer's browser and from nowhere an inbox
+lives. And the mail itself had accumulated three nested cards, seven uppercase
+eyebrows, chat bubbles with speech tails and an avatar beside every quoted line;
+it is a report, so it now reads as one.
+
+Then the public replay shipped, the backend deployed, and `showcase:ensure`
+answered that no seeded persona was ready to run a date — on a deployment
+holding fifty-four of them. The scan read a fixed first page of demo profiles,
+oldest first, and production still carried fourteen personas seeded under the
+product's previous name, from before matching boundaries existed as fields.
+They can never start a date, they sort first, and they filled the page. The
+scan now iterates until it finds an eligible persona, and the seed retires that
+generation rather than leaving profiles active that nobody can ever match with.
+
+The page then went live labelling one character "Agent" directly beside a
+speech bubble signed "Sol", and drawing a seeded man as a woman. Both came from
+the projection inventing an identity instead of reproducing the one the date
+already used. Names resolve through the same stand-in pool now, and a missing
+avatar falls back to a default derived from the Agent's name and its person's
+gender.
+
+Every one of these was found by looking at the deployed product rather than at
+the diff. The regression tests for the last two fail against the previous
+implementation rather than merely describing the new one.
 
 ### 2026-09-04 - the Agent became a second self, not a matchmaker
 

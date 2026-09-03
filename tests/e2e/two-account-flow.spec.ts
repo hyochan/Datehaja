@@ -216,13 +216,30 @@ test("two real agents date before private mutual contact reveal", async ({
     const datePath = new URL(firstPage.url()).pathname;
     await secondPage.goto(datePath);
 
+    // The matcher chooses the counterpart, and it scores identical profiles
+    // identically. A deployment carrying personas from earlier runs of this
+    // test will therefore pair the first account with one of those rather than
+    // with the account this run just created — the tie breaks on scan order,
+    // which favours the oldest. Check the pairing here, so that shows up in
+    // twenty seconds naming what was expected, instead of three minutes later
+    // as a debrief that was never going to be this pair's.
+    await expect(
+      secondPage.getByRole("heading", {
+        name: `${first.agentName} × ${second.agentName}`,
+      }),
+    ).toBeVisible({ timeout: 20_000 });
+
     for (const page of [firstPage, secondPage]) {
-      await expect(page.getByText(/live transcript.*6\/6 turns/i)).toBeVisible({
-        timeout: 180_000,
-      });
+      // Not the live "6/6 turns" counter: the page swaps to the debrief as the
+      // sixth turn lands, so that frame may never be painted and waiting on it
+      // fails a date that actually completed. The debrief states the same count
+      // and keeps stating it.
       await expect(
         page.getByRole("button", { name: /Introduce us/i }),
-      ).toBeVisible({ timeout: 120_000 });
+      ).toBeVisible({ timeout: 180_000 });
+      await expect(
+        page.locator('[aria-label="6 observed moments"]'),
+      ).toBeVisible({ timeout: 20_000 });
       await expect(page.getByText(/clearly-labelled demo date/i)).toHaveCount(
         0,
       );

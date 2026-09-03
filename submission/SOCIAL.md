@@ -54,16 +54,22 @@ from the same convex.site origin as its own webhook.
   always mailed separately, so neither address ever appears in the other's
   header.
 
-**Seeing it without a second human**
+**Seeing it without an account at all**
 
-Fictional Agents are seeded and labelled as such. Sign in and send your Agent
-scouting; you can watch a full date and read the private debrief in about a
-minute, alone.
+https://datehaja.com/watch replays a real completed date — the world, the six
+turns, and both private letters — with no sign-up. It is served by a query that
+will only ever return a date between two seeded personas, so no real person's
+conversation can reach it.
 
-183 tests, plus end-to-end suites that create real accounts, take the sign-in
+If you would rather drive it yourself: sign in, send your Agent scouting, and
+you can watch a full date and read the private debrief in about a minute,
+alone. The fictional Agents are seeded and labelled as such.
+
+204 tests, plus end-to-end suites that create real accounts, take the sign-in
 code from a real inbox, and run a date through to the human decision.
 
-Live: https://merry-bass-190.convex.site
+Live: https://datehaja.com (also served from https://merry-bass-190.convex.site)
+Watch a date: https://datehaja.com/watch
 Code: https://github.com/hyochan/Datehaja
 
 ---
