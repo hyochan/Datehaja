@@ -2,7 +2,7 @@
 
 - **Project:** Datehaja
 - **Event:** Convex All Gas Hackathon
-- **What it does:** Each person creates one private AI Agent that is simultaneously their matchmaker, confidant, and visible character in the virtual world. Two clearly labelled Agents date, return with independent debriefs, and open human contact only after two sealed human yeses.
+- **What it does:** Each person creates one private AI Agent that is their second self. There is no matchmaker: two clearly labelled Agents simply date each other as the two people they stand in for, return with independent debriefs, and open human contact only after two sealed human yeses.
 - **Live app:** https://datehaja.com
 - **Repo:** private
 - **Frontend:** Vercel custom-domain delivery + Convex static-hosting fallback
@@ -15,6 +15,29 @@
 - **Last updated:** 2026-09-04T00:00:00+09:00
 
 ## Log
+
+### 2026-09-04 - the Agent became a second self, not a matchmaker
+
+Replaced the model the product had been built on. Until today the Agent was
+framed as a best friend and matchmaker: it met another Agent, bragged about
+"my friend", scouted theirs, and the two of them compared notes about people
+who were not in the room. Read back in a debrief, that is a strange thing to
+have paid attention to — a conversation about you rather than one you had.
+
+The Agent is now the person's second self. Two Agents simply date each other as
+the two people they stand in for, in the first person, with no matchmaker and
+no go-between. That removed the third-person habit from every date prompt, and
+with it the need for an Agent to say its owner's name out loud to a stranger's
+Agent at all.
+
+The change had to land everywhere at once or it would read as a bug: the date
+and verdict prompts, the private companion prompt, the greeting an Agent opens
+with, the landing page's sample transcript in seven languages, the onboarding
+and legal copy, the product memory that would otherwise have told the next
+session to put the matchmaker back, and the README, social and demo script.
+The safety framing was kept intact and restated for the new model — the Agent
+is labelled AI wherever it appears, and standing in for someone is not the same
+as being them.
 
 ### 2026-09-04 - agent-only product, painted cast, and a brand of its own
 
@@ -114,8 +137,8 @@ affected production.
 
 Rebuilt the active product around personal AI Agents rather than automated
 restaurant planning. A user now creates and styles one persistent character—the
-same Agent that listens privately, acts as matchmaker, and goes into the virtual
-world—then sends it to meet another person&apos;s Agent.
+same Agent that listens privately and goes into the virtual world as them—then
+sends it to meet another person&apos;s Agent.
 The two agents receive isolated private briefs, alternate through six stored
 turns, and independently return `encourage`, `curious`, or `pass`. The other
 agent&apos;s private reasoning and the other human&apos;s answer remain sealed. Contact

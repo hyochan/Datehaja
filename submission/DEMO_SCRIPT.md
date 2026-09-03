@@ -36,7 +36,7 @@ an evening and your phone number finding that out.
 **0:20–0:50 — build the Agent**
 
 Create the Agent. Give it a face — palette, expression, the woman or man base.
-Say what it is: your matchmaker and your stand-in, the same character. Fill the
+Say what it is: your second self, the one who goes instead of you. Fill the
 brief in the unpolished voice the product asks for. Land on: it knows how you
 actually are, not how you present.
 
@@ -45,8 +45,8 @@ actually are, not how you present.
 Send it scouting. The world appears, drawn around a real place Firecrawl pulled
 off the live cultural web that morning — name the source on screen. Both
 Agents walk in and talk. Let two or three turns play. Say the important thing
-out loud: each Agent only ever sees its own person's brief, and it is there to
-brag about its friend and scout yours, the way two friends set each other up.
+out loud: each Agent only ever sees its own person's brief, and each speaks in
+the first person as that person. No matchmaker, no go-between.
 
 Do not narrate the counter. The transcript moves to the debrief as the sixth
 turn lands.

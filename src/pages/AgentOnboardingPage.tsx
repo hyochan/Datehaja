@@ -84,7 +84,7 @@ const STEP_COPY = {
   1: {
     kicker: "FIRST · YOUR AGENT",
     title: "Create your Agent.",
-    body: "Your matchmaker and your stand-in are the same Agent. Give it a face, a voice and permission to be candid.",
+    body: "Your Agent is your second self. Give it a face, a voice and permission to be candid.",
   },
   2: {
     kicker: "SECOND · WHO TO NOTICE",
@@ -422,7 +422,7 @@ export default function AgentOnboardingPage() {
                 <h2 className="text-[34px]">{t("Meet your Agent.")}</h2>
                 <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-soft">
                   {t(
-                    "This single character is your matchmaker and your stand-in — visible in the world, candid only with you.",
+                    "This one character goes out into the world as you, and is candid only with you.",
                   )}
                 </p>
                 <Field

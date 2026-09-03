@@ -6,7 +6,7 @@ export default function TermsPage() {
     <LegalDocument
       eyebrow="Public record · Agreement"
       title="Terms of Service"
-      summary="The rules for letting your AI Agent explore a possible connection on your behalf—while every real decision stays yours."
+      summary="The rules for sending an AI second self to explore a possible connection—while every real decision stays yours."
       motif="§"
     >
       <LegalSection number="01" title="What Datehaja is">
@@ -16,8 +16,8 @@ export default function TermsPage() {
           <a href={`mailto:${LEGAL_CONTACT_EMAIL}`}>{LEGAL_CONTACT_EMAIL}</a>.
         </p>
         <p>
-          The service lets one explicitly identified AI Agent act as your
-          matchmaker and virtual character. It learns from your private
+          The service lets one explicitly identified AI Agent go into a
+          simulated date as you. It learns from your private
           instructions, conducts simulated conversations with other
           people&apos;s Agents, and gives you a private debrief. It may
           recommend an introduction, but it is not you, does not literally feel

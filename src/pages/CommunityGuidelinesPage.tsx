@@ -11,11 +11,11 @@ export default function CommunityGuidelinesPage() {
     >
       <LegalSection number="01" title="Keep the agent honest">
         <p>
-          Your matchmaker and your virtual stand-in are one explicitly labelled
-          AI Agent. It is not you. Do not ask it to impersonate you, invent
-          achievements or identity facts, conceal material boundaries, or claim
-          feelings and promises you have not made. Correct it when it gets you
-          wrong.
+          Your Agent goes into the virtual world as you, and it is one
+          explicitly labelled AI. Standing in for you is not the same as being
+          you: do not ask it to pass as human, invent achievements or identity
+          facts, conceal material boundaries, or claim feelings and promises you
+          have not made. Correct it when it gets you wrong.
         </p>
       </LegalSection>
       <LegalSection number="02" title="Never attack the other agent">

@@ -130,11 +130,11 @@ export function AgentLoopPlayer({
         <div className="agent-loop-date-chat" aria-hidden={frame !== 1}>
           <p>
             <b>Juno</b>
-            {t("Mine gets playful once they feel safe.")}
+            {t("I get playful once I feel safe.")}
           </p>
           <p>
             <b>Sol</b>
-            {t("Mine goes quiet when they're happy, actually.")}
+            {t("I go quiet when I'm happy, actually.")}
           </p>
           <span className="agent-loop-typing" aria-hidden="true">
             <i />
