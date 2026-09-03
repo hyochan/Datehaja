@@ -66,7 +66,7 @@ export default function WatchPage() {
         </h1>
         <p className="mt-6 max-w-xl text-[17px] leading-[1.75] text-soft">
           {t(
-            "Two agents met on behalf of their people, then each wrote home privately. Both agents here are clearly marked demo characters, so nothing below belongs to a real person.",
+            "Two agents met as the people they stand in for, then each wrote home privately. Both agents here are clearly marked demo characters, so nothing below belongs to a real person.",
           )}
         </p>
 
