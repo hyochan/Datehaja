@@ -12,9 +12,82 @@
 - **Auth:** Convex Auth
 - **AI models:** gpt-5-nano for active Agent chat/dates, with gpt-5.6-luna as the first quality fallback and the proven default for heavier legacy extraction
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-09-01T14:25:00+09:00
+- **Last updated:** 2026-09-04T00:00:00+09:00
 
 ## Log
+
+### 2026-09-04 - agent-only product, painted cast, and a brand of its own
+
+Cut the product down to the agent loop and deleted the concierge past rather
+than leaving it dormant. Twelve legacy tables went with it — availability, date
+plans and participants, feedback, messages, matching runs, candidate scores,
+research runs, venues, calendar feeds, safety plan shares and safety profiles —
+along with their functions, tests and two pages. Production data for those
+tables was cleared. The i18n packs lost 457 keys that nothing referenced any
+more. The suite is 183 tests now rather than 254 because the removed surface
+took its own tests with it, not because coverage was dropped.
+
+Rewrote the debrief and connection emails so the Agent speaks rather than a
+report renders. Each mail opens with the Agent's own letter beside its avatar
+and a verdict badge, then retells the date as a three-beat story with the two
+agents' sprites against the world Firecrawl chose. The AI prompts were rewritten
+in the same pass: the Agent is a best friend bragging about "my friend" and
+scouting the other one, the way teenagers set friends up, not a neutral
+evaluator. Both are wired through one delivery context so the app, the emails
+and the world always show the same face.
+
+Replaced the pixel field sprites with a painted cast. One base character per
+gender was generated with a magenta-keyed outfit, then recoloured
+programmatically into all six palettes so every palette shares one face, with
+four expressions and an eyes-only blink frame layered over any of them. A
+two-tone reference render splits each outfit into top and bottom. The avatar
+contract gained an optional gender that flows from the editor through the
+delivery context into the emails; sixty sprites replace the twelve pixel ones,
+and the old set was deleted once the new one covered every combination.
+
+Gave the product a mark of its own. The old symbol was a heart inside two
+brackets inside two rings, which said nothing this product does not share with
+every dating app. It is now the Korean finger heart — a gesture someone makes,
+which is the proposition — traced from a flat silhouette with an OpenCV contour
+trace and carrying a warm gradient. The wordmark moved off the body serif onto
+DM Serif Display, and on phones the header's secondary controls collapse behind
+one menu so the flag stops crowding the brand.
+
+Added the agent workflow this log now runs under. `/loop-review` and its
+dependencies were ported from another repository and adapted: the reviewer is
+the code-review skill rather than a bot this repo does not have, the gates are
+this repo's typecheck, lint and tests because there is no CI, and the merge gate
+is the Convex backend, since merging publishes the frontend on its own while the
+backend does not follow. Reviewing this work through that loop found seven real
+bugs across three rounds, including two theme controls that each cached their
+own copy of the document attribute, so changing the theme in one left the other
+acting on a value that was no longer true.
+
+Convex production was redeployed and verified: 86 functions, the avatar
+validator accepting the new field, every integration reporting healthy, and all
+sixty sprite URLs the mail pipeline can build resolving on the live domain.
+
+Running the end-to-end suite that AgentMail's first-week recipient cap had
+gated exposed a gap the unit tests could not see: production had been brought
+forward while the development deployment still carried the deleted concierge
+surface — 154 functions against production's 86, and an avatar validator that
+rejected the new field the client now sends. Onboarding failed against it while
+passing against production. Development was brought back in line, which meant
+clearing legacy rows that the current schema no longer admits: `aiRuns` with a
+`build_plan` purpose, and `auditEvents`, `emailMessages` and `notifications`
+still carrying `dropId`. The lesson is that a deployment left behind is not
+neutral; it silently tests a product that no longer exists.
+
+With development back in line the full suite runs. The single-account journey —
+signup, OTP, agent creation, the ideal-person and about-me briefs, an agent
+date, the private debrief and the human decision — passes end to end in two
+minutes. The two-account journey completes in the data too: six stored turns in
+about a minute, independent `encourage` and `curious` verdicts with their own
+private reasoning, and an earlier run recorded with both consents and a
+`connected` status. Its assertion still fails, because it waits to see the
+transcript counter reach six while the page moves to the debrief as the sixth
+turn lands, so the final count is never painted. That is a test watching for a
+frame the product does not render, not a broken flow.
 
 ### 2026-09-01 - real product capture and launch review
 
