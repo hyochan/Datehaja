@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import { SUPPORTED_LOCALES, useI18n, type LocaleCode } from "../../i18n";
@@ -12,6 +18,26 @@ import { SUPPORTED_LOCALES, useI18n, type LocaleCode } from "../../i18n";
  * rendered inline here rather than reusing their own popovers, because a
  * popover opening on top of this panel reads as a bug.
  */
+/**
+ * The theme lives on the document, and ThemeToggle writes it too. Subscribing
+ * to the attribute keeps this panel honest no matter which control changed it;
+ * a copy held in local state goes stale the moment the other one is used.
+ */
+function subscribeTheme(onChange: () => void) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"],
+  });
+  return () => observer.disconnect();
+}
+
+function readTheme(): "light" | "dark" {
+  return document.documentElement.getAttribute("data-theme") === "dark"
+    ? "dark"
+    : "light";
+}
+
 export function HeaderMenu({
   children,
   className = "",
@@ -23,13 +49,7 @@ export function HeaderMenu({
   const me = useQuery(api.profiles.me);
   const persistPreferredLocale = useMutation(api.profiles.setPreferredLocale);
   const [open, setOpen] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">(() =>
-    typeof document === "undefined"
-      ? "light"
-      : ((document.documentElement.getAttribute("data-theme") as
-          | "light"
-          | "dark") ?? "light"),
-  );
+  const theme = useSyncExternalStore(subscribeTheme, readTheme, () => "light");
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -49,7 +69,6 @@ export function HeaderMenu({
   }, [open]);
 
   function chooseTheme(next: "light" | "dark") {
-    setTheme(next);
     document.documentElement.setAttribute("data-theme", next);
     try {
       localStorage.setItem("datehaja-theme", next);
@@ -90,7 +109,7 @@ export function HeaderMenu({
 
       {open && (
         <div
-          role="menu"
+          aria-label={t("Menu")}
           className="fixed left-3 right-3 top-[4.6rem] z-50 overflow-hidden rounded-[1.5rem] border border-[var(--border)] bg-[var(--bg-raised)] p-3 shadow-[var(--shadow-lift)]"
         >
           {children && (

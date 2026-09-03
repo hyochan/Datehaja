@@ -77,7 +77,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-1 sm:gap-2.5">
             <Link
               to="#how-it-works"
-              className="hidden rounded-full px-3 py-2 text-[12px] font-bold text-soft hover:bg-[var(--bg-sunken)] md:inline-flex"
+              className="hidden rounded-full px-3 py-2 text-[12px] font-bold text-soft hover:bg-[var(--bg-sunken)] sm:inline-flex"
             >
               {t("How it works")}
             </Link>
