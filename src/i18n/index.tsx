@@ -455,7 +455,7 @@ Object.assign(sv, {
    the source strings; the six translated markets get a human-readable launch
    surface rather than a half-localised navigation shell. */
 Object.assign(ko, {
-  "Your dating agent": "나의 데이팅 에이전트",
+  "Your agent goes on the date": "나 대신 나가는 소개팅",
   "Too busy for another first date?": "소개팅도 데이트도 바쁜 당신에게",
   "Let your Agent": "내 에이전트가",
   "go first.": "먼저 만나봐요.",
@@ -530,7 +530,7 @@ Object.assign(ko, {
 });
 
 Object.assign(ja, {
-  "Your dating agent": "あなたのデート・エージェント",
+  "Your agent goes on the date": "私の代わりにデートへ行きます",
   "Too busy for another first date?": "初デートの時間も惜しいあなたへ",
   "Let your Agent": "あなたのエージェントを",
   "go first.": "先に会わせよう。",
@@ -595,7 +595,7 @@ Object.assign(ja, {
 });
 
 Object.assign(de, {
-  "Your dating agent": "Dein Dating-Agent",
+  "Your agent goes on the date": "Dein Agent geht zum Date",
   "Too busy for another first date?": "Zu beschäftigt fürs nächste erste Date?",
   "Let your Agent": "Lass deinen Agenten",
   "go first.": "zuerst gehen.",
@@ -661,7 +661,7 @@ Object.assign(de, {
 });
 
 Object.assign(fr, {
-  "Your dating agent": "Votre agent de rencontre",
+  "Your agent goes on the date": "Votre agent va au rendez-vous",
   "Too busy for another first date?":
     "Trop occupé pour un autre premier rendez-vous ?",
   "Let your Agent": "Laissez votre agent",
@@ -727,7 +727,7 @@ Object.assign(fr, {
 });
 
 Object.assign(nl, {
-  "Your dating agent": "Jouw datingagent",
+  "Your agent goes on the date": "Jouw agent gaat op date",
   "Too busy for another first date?": "Te druk voor nóg een eerste date?",
   "Let your Agent": "Laat je agent",
   "go first.": "eerst gaan.",
@@ -792,7 +792,7 @@ Object.assign(nl, {
 });
 
 Object.assign(sv, {
-  "Your dating agent": "Din dejtingagent",
+  "Your agent goes on the date": "Din agent går på dejten",
   "Too busy for another first date?": "För upptagen för ännu en första dejt?",
   "Let your Agent": "Låt din agent",
   "go first.": "gå först.",

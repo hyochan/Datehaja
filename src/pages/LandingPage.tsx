@@ -69,7 +69,7 @@ export default function LandingPage() {
             <div className="leading-none">
               <Wordmark className="text-[24px] sm:text-[29px]" />
               <div className="docket-label mt-1.5 hidden text-[8px] text-muted sm:block sm:text-[9px]">
-                {t("Your dating agent")}
+                {t("Your agent goes on the date")}
               </div>
             </div>
           </Link>

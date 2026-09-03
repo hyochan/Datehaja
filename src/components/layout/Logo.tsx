@@ -1,4 +1,19 @@
-/** Two open availability windows meeting in one date spark. */
+/**
+ * Two agents, one heart.
+ *
+ * The heart is split down a seam: my agent on the left, theirs on the right.
+ * The three dots sit in my half because that is the side doing the talking —
+ * the agent goes to the date in my place and comes back with what it heard.
+ * At favicon sizes the seam and the dots fall away and it still reads as a
+ * heart, which is the fallback the mark is designed to degrade to.
+ */
+const LEFT_HALF =
+  "M15.86 27C11 23.2 4.9 18.6 4.9 13.15 4.9 9.6 7.55 6.95 10.95 6.95c2.25 0 4.05 1.5 4.47 3.35Z";
+const CONVERSATION_DOTS =
+  "M7.35 13.15a.86.86 0 1 0 1.72 0 .86.86 0 1 0-1.72 0Z" +
+  "M9.95 13.15a.86.86 0 1 0 1.72 0 .86.86 0 1 0-1.72 0Z" +
+  "M12.55 13.15a.86.86 0 1 0 1.72 0 .86.86 0 1 0-1.72 0Z";
+
 export function Logo({ className }: { className?: string }) {
   return (
     <svg
@@ -8,41 +23,14 @@ export function Logo({ className }: { className?: string }) {
       role="img"
       aria-label="Datehaja"
     >
-      <circle
-        cx="16"
-        cy="16"
-        r="15"
-        className="fill-[var(--tint-ember-bg)] stroke-[var(--tint-ember-border)]"
-        strokeWidth="0.8"
-      />
-      <circle
-        cx="16"
-        cy="16"
-        r="12.2"
-        className="stroke-[var(--accent-text)]"
-        strokeWidth="0.55"
-        opacity="0.2"
-      />
       <path
-        d="M14 8.3h-1.7a5.8 5.8 0 0 0-5.8 5.8v3.8a5.8 5.8 0 0 0 5.8 5.8H14"
-        stroke="currentColor"
-        className="text-ember-400"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        fillRule="evenodd"
+        d={`${LEFT_HALF}${CONVERSATION_DOTS}`}
+        className="fill-[var(--brand-mark-lead)]"
       />
-      <path
-        d="M18 8.3h1.7a5.8 5.8 0 0 1 5.8 5.8v3.8a5.8 5.8 0 0 1-5.8 5.8H18"
-        stroke="currentColor"
-        className="text-ember-300"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M16 19.2c-2.55-1.5-3.6-2.85-3.6-4.15 0-1.15.85-2.05 2.05-2.05.7 0 1.25.3 1.55.85.35-.55.9-.85 1.6-.85 1.2 0 2.05.9 2.05 2.05 0 1.3-1.05 2.65-3.65 4.15Z"
-        className="fill-ember-400"
-      />
+      <g transform="translate(32 0) scale(-1 1)">
+        <path d={LEFT_HALF} className="fill-[var(--brand-mark-follow)]" />
+      </g>
     </svg>
   );
 }

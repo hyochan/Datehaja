@@ -1,6 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 64 64">
   <rect width="64" height="64" rx="18" fill="#fff0ee"/>
-  <path d="M28 16.6h-3.4A11.6 11.6 0 0 0 13 28.2v7.6a11.6 11.6 0 0 0 11.6 11.6H28" fill="none" stroke="#b93e50" stroke-width="4.7" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M36 16.6h3.4A11.6 11.6 0 0 1 51 28.2v7.6a11.6 11.6 0 0 1-11.6 11.6H36" fill="none" stroke="#e27067" stroke-width="4.7" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M32 38.4c-5.1-3-7.2-5.7-7.2-8.3 0-2.3 1.7-4.1 4.1-4.1 1.4 0 2.5.6 3.1 1.7.7-1.1 1.8-1.7 3.2-1.7 2.4 0 4.1 1.8 4.1 4.1 0 2.6-2.1 5.3-7.3 8.3Z" fill="#c74f5f"/>
+  <g transform="translate(32 32.6) scale(1.54) translate(-16 -16.98)">
+    <path fill-rule="evenodd" fill="#b93e50" d="M15.86 27C11 23.2 4.9 18.6 4.9 13.15 4.9 9.6 7.55 6.95 10.95 6.95c2.25 0 4.05 1.5 4.47 3.35ZM7.35 13.15a.86.86 0 1 0 1.72 0 .86.86 0 1 0-1.72 0ZM9.95 13.15a.86.86 0 1 0 1.72 0 .86.86 0 1 0-1.72 0ZM12.55 13.15a.86.86 0 1 0 1.72 0 .86.86 0 1 0-1.72 0Z"/>
+    <g transform="translate(32 0) scale(-1 1)">
+      <path fill="#e96f73" d="M15.86 27C11 23.2 4.9 18.6 4.9 13.15 4.9 9.6 7.55 6.95 10.95 6.95c2.25 0 4.05 1.5 4.47 3.35Z"/>
+    </g>
+  </g>
 </svg>

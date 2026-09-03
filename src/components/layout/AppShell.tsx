@@ -33,7 +33,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <span className="leading-none">
               <Wordmark className="text-[24px] sm:text-[29px]" />
               <span className="docket-label mt-1.5 hidden text-[8px] text-muted sm:block sm:text-[9px]">
-                {t("Your dating agent")}
+                {t("Your agent goes on the date")}
               </span>
             </span>
           </Link>
