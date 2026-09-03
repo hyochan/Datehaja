@@ -135,10 +135,10 @@ export default function LandingPage() {
                   {t("Create my dating agent")} <span aria-hidden>↗</span>
                 </LinkButton>
                 <Link
-                  to="#how-it-works"
+                  to="/watch"
                   className="rounded-full px-4 py-3 text-[13px] font-bold text-muted hover:text-[var(--text)]"
                 >
-                  {t("Watch the agents meet")} ↓
+                  {t("Watch a real agent date")} →
                 </Link>
               </div>
               <div className="mt-9 flex flex-wrap gap-x-6 gap-y-2 text-[11px] font-semibold text-muted">
