@@ -6,46 +6,64 @@ Drafts only — nothing here has been posted. Post from your own accounts.
 
 ## Submission description (for vibeapps.dev)
 
-**Datehaja — Tell us what you want to do. Find someone who wants to do it too.**
+**Datehaja — let your Agent go first.**
 
-Dating apps are extraordinarily good at generating matches and extraordinarily
-bad at generating dates. You swipe, you match, you text for four days, and then
-nobody wants to be the one who asks "so where should we go?" — and to get that
-far you handed your phone number to a stranger.
+The problem with dating apps is not matching. It is the first date. You match,
+you text for four days, you meet, and within ten minutes you both know it is
+not going to work — and you spent an evening and your phone number finding out.
 
-Datehaja inverts it. It starts with the date you actually want — a film, a
-walk, an exhibition, live music, or anything else — and the time you can go.
+Datehaja sends someone else. You create one AI Agent that knows the unpolished
+version of you: how you actually are in a crowded room, what you need after
+one, where your boundaries sit. It is your matchmaker and your stand-in at the
+same time, and it has a face you design.
 
-Then it runs hard compatibility filters in plain TypeScript, scores the
-survivors deterministically, has OpenAI rank the shortlist and explain the
-pairing, sends Firecrawl to research real venues on the live web around the
-midpoint between you, composes a specific date from what it found, and has
-Datehaja Concierge invite you both privately by email from its own AgentMail
-inbox. You each accept or pass. When both say yes, both screens say _It's a
-date_ — live, no refresh.
+When it finds someone worth exploring, the two Agents meet — not in a chat log,
+but in a small world drawn around a real place Firecrawl pulled off the live web
+that morning. They talk for six turns. Each one is there for its own person:
+bragging about their friend, scouting yours, the way two friends set each other
+up. Neither can see the other's private brief.
 
-If one person passes, the other's evening stays held while Datehaja looks for
-someone else who fits the same plan. If nobody suitable turns up before the
-cutoff, it cancels honestly rather than forcing a poor match.
+Then each Agent goes home and writes to its own human, privately, in their own
+language. Not a compatibility score — a letter. What it noticed, what it liked,
+where it hesitated, and whether it thinks you should meet. The other person
+never sees your Agent's letter, and you never see theirs.
 
-You can complete an entire date without your match ever having your email, your
-number, or anything more precise than your neighbourhood.
+Contact opens only after both humans say yes, independently, without knowing
+what the other decided. Until then neither of you has the other's email.
 
-The same private plan can reserve, finalize, or cancel one calendar event; a
-trusted contact can receive only the public meeting details; and each person can
-leave an optional private safety check-in after the date.
+**Why this is a Convex app, not an app with a database**
 
-Convex is the whole backend: schema and indexes, queries as live subscriptions,
-transactional mutations, actions for every external call, HTTP actions serving
-both the AgentMail webhook and the React app itself via
-`@convex-dev/static-hosting`, crons for the 24-hour cutoff, and the scheduler as
-the workflow engine. Every date plan carries its own provenance — the pages
-Firecrawl crawled, the quote from each, and every model run — visible in the app.
+Convex is the whole backend and the whole delivery. Schema and indexes,
+queries as live subscriptions so both people watch the date unfold without a
+refresh, transactional mutations so a consent can never land half-applied,
+actions for every external call, HTTP actions serving both the AgentMail
+webhook and the React app itself through `@convex-dev/static-hosting`, crons,
+the scheduler as the workflow engine that walks a date through its six turns,
+file storage, pagination, and Convex Auth. The app you are looking at is served
+from the same convex.site origin as its own webhook.
 
-199 tests. Seeded with 14 clearly-marked fictional personas so a judge can see
-the whole loop in 60 seconds without recruiting a second human.
+**The sponsors are load-bearing, not decorative**
 
-Live: https://datehaja.com
+- **OpenAI** runs the dates. Each turn is generated for one Agent from only
+  that Agent's private brief, and each verdict is written to its own human in
+  their own language.
+- **Firecrawl** decides where the date happens. It reads the live cultural web
+  and the world is drawn around what it found, with the source kept and shown.
+- **AgentMail** is what makes the privacy promise real. It carries the
+  sign-in code and the debrief letters, and the two people on one date are
+  always mailed separately, so neither address ever appears in the other's
+  header.
+
+**Seeing it without a second human**
+
+Fictional Agents are seeded and labelled as such. Sign in and send your Agent
+scouting; you can watch a full date and read the private debrief in about a
+minute, alone.
+
+183 tests, plus end-to-end suites that create real accounts, take the sign-in
+code from a real inbox, and run a date through to the human decision.
+
+Live: https://merry-bass-190.convex.site
 Code: https://github.com/hyochan/Datehaja
 
 ---
@@ -54,110 +72,100 @@ Code: https://github.com/hyochan/Datehaja
 
 ### Option A — the inversion
 
-> Dating apps ask you who you like.
+> Dating apps make you go on the first date.
 >
-> Datehaja asks what you actually want to do with someone new.
+> Datehaja sends your AI instead.
 >
-> A film, a walk, an exhibition — bring the idea. It finds someone compatible
-> who wants to join, researches the real place, and privately invites you both.
+> It meets the other person's AI, they talk in a world built around a real
+> place, and yours comes home and tells you honestly whether you should meet.
+>
+> Neither of you has the other's contact until you both say yes.
 >
 > Built for @convex All Gas 👇
 >
-> https://datehaja.com
+> https://merry-bass-190.convex.site
 
 ### Option B — the technical thread opener
 
 > Built Datehaja for the @convex All Gas hackathon.
 >
-> It's a dating app that starts with the activity, not a wall of profiles.
+> Two AI agents go on a date on their humans' behalf, then each writes home
+> privately about it.
 >
-> Hard filters in TypeScript → @OpenAI ranks + explains → @firecrawl
-> researches real venues live → @agentmail invites both people privately →
-> both screens say "It's a date" with no refresh.
+> @OpenAI runs the conversation → @firecrawl picks the real place it happens in
+> → @agentmail delivers each private letter separately → @convex serves the
+> whole thing, app included, from convex.site.
 >
 > 🧵
 
 **Thread continuation:**
 
-> 2/ The model never filters. Age, distance, mutual interest, real availability
-> overlap, blocks, safety state — all plain TypeScript. A pair that fails those
-> rules is never shown to the model, and no model score can resurrect it.
+> 2/ Each Agent only ever sees its own person's brief. The other human's
+> answers, and the other Agent's private reasoning, are never in its context.
+> The isolation is enforced in the query that builds the prompt, not in the
+> prompt itself.
 
-> 3/ Firecrawl isn't a restaurant database here. It searches the live web
-> around the midpoint between two people, filtered by what they both said
-> they'd enjoy. Every venue keeps its source URL and a verbatim quote from the
-> page. You can open any date plan and read them.
+> 3/ Firecrawl isn't a venue database here. It reads the live cultural web that
+> morning and the date world is drawn around what it found — a cinema, a
+> market, a gallery. The source URL travels with the date and is shown in the
+> debrief.
 
-> 4/ AgentMail is what makes the privacy promise real instead of aspirational.
-> Every email comes from Datehaja's own Concierge inbox. Two people on the same
-> date are always mailed separately, so neither can see the other's address in
-> a header.
+> 4/ AgentMail makes the privacy claim real rather than aspirational. Both
+> people on one date are mailed separately from the Agent's own inbox, so
+> neither address is ever in the other's header. The same inbox carries the
+> sign-in code.
 
-> 5/ Convex is the entire backend — including serving the frontend, from the
-> same convex.site origin as the webhook. Accepting a date reads both
-> participants, derives the next state, patches the drop, books two calendars
-> and writes an audit event, atomically. There's no state where one person is
-> confirmed and the other isn't.
+> 5/ Convex is the backend and the delivery. Live queries mean both people
+> watch the date unfold with no refresh; the scheduler walks it through six
+> turns; a consent is one transaction, so there is no state where one person
+> is connected and the other is not. The frontend is served from the same
+> convex.site origin as the webhook.
 
-> 6/ And if your match passes, Datehaja doesn't cancel on you. Your evening
-> stays held while it looks for someone else who fits the same plan.
+> 6/ Contact opens only when both humans say yes, independently, without
+> knowing what the other chose. If one passes, the other is told kindly and
+> nobody's address moves.
 >
-> Live: https://datehaja.com
+> Live: https://merry-bass-190.convex.site
 > Code: https://github.com/hyochan/Datehaja
 
 ---
 
 ## LinkedIn
 
-> **Tell us what you want to do. Find someone who wants to do it too.**
+> I spent this hackathon on the part of dating nobody enjoys: the first date
+> you already know is not going to work.
 >
-> Dating apps are good at creating matches and bad at creating dates.
+> Datehaja sends an AI Agent in your place. You build one Agent that knows the
+> unpolished version of you. It meets another person's Agent in a world drawn
+> around a real place, they talk for six turns, and then each Agent writes
+> privately to its own human — what it noticed, where it hesitated, and whether
+> it thinks you should meet.
 >
-> Datehaja asks for one real date idea and a time. Then it:
+> Contact opens only after both people say yes, independently. Until then
+> neither of you has the other's email.
 >
-> - finds someone compatible who is actually free
-> - researches a real public venue with Firecrawl
-> - uses OpenAI to compose a plan from that evidence
-> - sends two separate private invitations through AgentMail
-> - updates both screens live through Convex when they say yes
+> Built on Convex, which is the entire backend and also serves the app itself.
+> OpenAI runs the dates, Firecrawl chooses where they happen from the live web,
+> and AgentMail delivers each private letter separately.
 >
-> One acceptance reserves the evening. Two finalize the calendar event. If the
-> other person passes, Datehaja keeps looking instead of cancelling on the
-> person who said yes.
->
-> No swiping. No chat audition. No exchange of phone numbers or email addresses.
-> Afterward, each person can leave a private safety check-in that the other
-> person never sees.
->
-> Built for the Convex All Gas Hackathon with @Convex, @OpenAI, Firecrawl, and
-> AgentMail.
->
-> Live: https://datehaja.com
-> Code: https://github.com/hyochan/Datehaja
->
-> #Convex #OpenAI #Firecrawl #AgentMail #BuildInPublic
+> https://merry-bass-190.convex.site
 
 ---
 
 ## Screenshots to capture
 
-1. **Landing hero** — dark mode, the headline and the availability docket.
-2. **Connected concierge flow** — both availability slips, research, two
-   private replies, and the final date ticket visible in one sequence.
-3. **Availability** — one window added, showing "Times are local to Seoul".
-4. **Matching progress** — mid-run, with two steps ticked.
-5. **A private date invitation** — plan, cost, match preview, Accept/Pass.
-6. **"How we built this" expanded** — the crawled source URLs and the verbatim
-   evidence quotes. This is the most convincing single screenshot in the app.
-7. **It's a date** — the confirmed banner with the itinerary and address.
-8. **Two windows side by side** — one just accepted, the other flipping to
-   confirmed on its own.
-9. **Privacy page** — the user's own real preview, plus the "never shared" list.
-10. **Demo controls** — the persona list and the They accept / They pass buttons.
+Re-capture after the finger-heart brand landed; the older frames show the
+previous mark.
+
+1. The landing hero — "Let your Agent go first."
+2. The Agent editor with a face being chosen.
+3. The date world mid-conversation, both sprites and a speech bubble.
+4. The private debrief letter, with the Agent's verdict badge.
+5. The sealed decision — one side answered, the other still hidden.
+6. The mutual yes and the revealed contact.
 
 ## Tagging
 
-Verified 2026-08-28 against the sponsors' current official profiles:
-**[@convex](https://x.com/convex) · [@OpenAI](https://x.com/OpenAI) ·
-[@firecrawl](https://x.com/firecrawl) ·
-[@agentmail](https://x.com/agentmail)**.
+@convex @OpenAI @firecrawl @agentmail — the hackathon cohosts and partners.
+Use the live convex.site URL, since that is the deployment the submission
+names.
