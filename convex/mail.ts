@@ -32,6 +32,46 @@ export function appUrl(path = "/"): string {
   return `${base}${path}`;
 }
 
+/** Where the site is served from when nothing else says otherwise. */
+const PUBLIC_ASSET_ORIGIN = "https://datehaja.com";
+
+/**
+ * True when a mail client somewhere else on the internet could actually fetch
+ * this origin. A development `SITE_URL` is `http://localhost:5173`, which is
+ * reachable from the developer's browser and from nowhere an inbox lives.
+ */
+function reachableFromAnInbox(origin: string | undefined): boolean {
+  if (!origin) return false;
+  try {
+    const url = new URL(origin);
+    if (url.protocol !== "https:") return false;
+    const host = url.hostname.toLowerCase();
+    return (
+      host !== "localhost" &&
+      !host.endsWith(".local") &&
+      !host.endsWith(".localhost") &&
+      !/^(127\.|0\.0\.0\.0$|\[?::1\]?$)/.test(host)
+    );
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * An absolute URL for an image an email links to.
+ *
+ * Emails outlive the deployment that sent them and are read on machines that
+ * cannot see a developer's laptop, so image sources never follow `SITE_URL`
+ * blindly — a localhost sprite renders as a broken image in every inbox.
+ * `EMAIL_ASSET_ORIGIN` overrides both for a staging host that serves its own.
+ */
+export function emailAssetUrl(path: string): string {
+  const override = process.env.EMAIL_ASSET_ORIGIN?.replace(/\/$/, "");
+  if (override) return `${override}${path}`;
+  const site = process.env.SITE_URL?.replace(/\/$/, "");
+  return `${reachableFromAnInbox(site) ? site : PUBLIC_ASSET_ORIGIN}${path}`;
+}
+
 export const logEmail = internalMutation({
   args: {
     userId: v.optional(v.id("users")),

@@ -228,6 +228,35 @@ describe("agent-date privacy and human consent", () => {
     }
   });
 
+  test("never points a debrief sprite at a host an inbox cannot reach", async () => {
+    const t = convexTest(schema, modules);
+    const s = await setup(t);
+    const context = await t.query(internal.agentDates.deliveryContext, {
+      agentDateId: s.agentDateId,
+    });
+    const previousSite = process.env.SITE_URL;
+    const previousAssets = process.env.EMAIL_ASSET_ORIGIN;
+    // What a development deployment actually carries.
+    process.env.SITE_URL = "http://localhost:5173";
+    delete process.env.EMAIL_ASSET_ORIGIN;
+    try {
+      const report = emailReportFor(context!, "a");
+      expect(report.ownerSpriteUrl).toBe(
+        "https://datehaja.com/agents/v3/female-rose-curious.png",
+      );
+      expect(report.counterpartSpriteUrl).not.toContain("localhost");
+
+      process.env.EMAIL_ASSET_ORIGIN = "https://staging.example.com";
+      expect(emailReportFor(context!, "a").ownerSpriteUrl).toBe(
+        "https://staging.example.com/agents/v3/female-rose-curious.png",
+      );
+    } finally {
+      process.env.SITE_URL = previousSite;
+      if (previousAssets === undefined) delete process.env.EMAIL_ASSET_ORIGIN;
+      else process.env.EMAIL_ASSET_ORIGIN = previousAssets;
+    }
+  });
+
   test("lets an existing owner persist email locale and matching boundaries", async () => {
     const t = convexTest(schema, modules);
     const s = await setup(t);
