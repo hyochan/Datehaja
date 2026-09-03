@@ -32,10 +32,14 @@ const CommunityGuidelinesPage = lazy(
   () => import("./pages/CommunityGuidelinesPage"),
 );
 const LegalConsentPage = lazy(() => import("./pages/LegalConsentPage"));
-const AvatarLabPage = lazy(() => import("./pages/AvatarLabPage"));
-const labRoute = import.meta.env.DEV ? (
-  <Route path="/lab/avatar" element={<AvatarLabPage />} />
-) : null;
+// Dev-only bench. The import lives inside the DEV branch so a production
+// build drops the chunk instead of publishing it unreachable.
+const labRoute = import.meta.env.DEV
+  ? (() => {
+      const AvatarLabPage = lazy(() => import("./pages/AvatarLabPage"));
+      return <Route path="/lab/avatar" element={<AvatarLabPage />} />;
+    })()
+  : null;
 
 export default function App() {
   return (

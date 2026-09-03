@@ -15,7 +15,7 @@ Export → For Runtime) is gated behind a paid Rive plan on this workspace, so
 
 | Surface | Today | With Rive |
 | --- | --- | --- |
-| Date world (`AgentWorldSprite`) | PNG `sprite-<palette>-v2.png` (+ optional `-<face>`) | `<RiveAgent>` driven by the inputs below |
+| Date world (`AgentWorldSprite`) | painted PNG `v3/<gender>-<palette>-<face>.png` | `<RiveAgent>` driven by the inputs below |
 | Dashboard hero / landing loop | PNG sprite | `<RiveAgent>` |
 | Lists, chips, tiny avatars | SVG `AgentAvatar` (blink + breathe) | unchanged (cheap) |
 | Debrief / connection emails | PNG sprite | unchanged — render PNG stills from the Rive file |
@@ -82,8 +82,8 @@ Skin tones stay literal (`#efc8b5`, `#e6b9a8`, buzz `#d9ad9d`).
 ## Exports
 
 - `public/agents/agent.riv` — Export → For Runtime (needs the paid plan).
-- Six PNG stills at 341 × 512 for email: `sprite-<palette>-v2.png` — optional
-  once the Rive look is adopted; today the emails use the painted v2 sprites.
+- PNG stills at 341 × 512 for email — optional once the Rive look is adopted;
+  today the emails use the painted set in `public/agents/v3/`.
 
 ## Definition of done
 
