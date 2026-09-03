@@ -118,11 +118,38 @@ For a visible change, attach a before/after image: send it to the user with
 `SendUserFile` and reference it in the PR body. Do not commit one-off preview
 media into the repo.
 
+## 6. Label the PR
+
+Every PR gets at least one label. Read the available set first, never guess a
+name:
+
+```bash
+gh label list --limit 50
+gh pr edit $PR_NUMBER --add-label "<label>"
+```
+
+Pick from what the change actually is:
+
+| change | label |
+| --- | --- |
+| fixes broken or wrong behavior, visual defects included | `bug` |
+| adds a capability or improves an existing one | `enhancement` |
+| README, docs, or comments only | `documentation` |
+| blocks or degrades assistive tech | `accessibility` |
+
+Add a second label only when it is genuinely both. If nothing fits, create one
+that matches this repo's commit scopes rather than forcing a wrong label, and
+say in your report that you created it:
+
+```bash
+gh label create <name> --description "<what it marks>" --color <hex>
+```
+
 Vercel builds a preview for every branch and posts it as a PR check. Record the
 preview URL in your report so the user can review the rendered change. The
 preview is behind Vercel SSO, so the user opens it, not Claude.
 
-## 6. Stop at the PR
+## 7. Stop at the PR
 
 Opening the PR ends this command. Do not merge, and do not deploy: the user
 reviews the PR first. Production deploys are `main` merging (frontend, via

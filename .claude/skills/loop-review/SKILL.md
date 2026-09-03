@@ -66,6 +66,8 @@ Follow `.claude/commands/commit.md`:
 - Push the branch and open an English PR against `main`.
 - Attach evidence for anything visible: a before/after image via `SendUserFile`
   and in the PR body, plus the measurement that proves the fix.
+- Label the PR. Every PR carries at least one label from `gh label list`; the
+  command's table maps the change to it. An unlabelled PR is not done.
 
 Record the PR number and the exact head SHA. Every push invalidates all prior
 clean review coverage.
