@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useSyncExternalStore, type ReactNode } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useQuery } from "convex/react";
 import { useAuthActions } from "@convex-dev/auth/react";
@@ -9,6 +9,12 @@ import { LocaleSwitcher } from "./LocaleSwitcher";
 import { HeaderMenu } from "./HeaderMenu";
 import { Wordmark } from "./Wordmark";
 import { useI18n } from "../../i18n";
+import {
+  readServerTheme,
+  readTheme,
+  setTheme,
+  subscribeTheme,
+} from "../../lib/theme";
 
 const NAV = [
   { to: "/dashboard", label: "My agent", icon: HomeIcon },
@@ -140,29 +146,11 @@ function SignOutButton() {
 
 export function ThemeToggle() {
   const { t } = useI18n();
-  const [theme, setTheme] = useState<"light" | "dark">(() => {
-    if (typeof document === "undefined") return "light";
-    return (
-      (document.documentElement.getAttribute("data-theme") as
-        "light" | "dark") ?? "light"
-    );
-  });
-
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-  }, [theme]);
-
-  // Only a deliberate toggle is persisted. Writing on mount would freeze
-  // whatever the system happened to be on a user's first visit, and they would
-  // never follow their OS setting again.
-  function choose(next: "light" | "dark") {
-    setTheme(next);
-    try {
-      localStorage.setItem("datehaja-theme", next);
-    } catch {
-      /* private mode — the choice just won't persist */
-    }
-  }
+  const theme = useSyncExternalStore(
+    subscribeTheme,
+    readTheme,
+    readServerTheme,
+  );
 
   return (
     <button
@@ -170,7 +158,7 @@ export function ThemeToggle() {
       aria-label={
         theme === "dark" ? t("Switch to light mode") : t("Switch to dark mode")
       }
-      onClick={() => choose(theme === "dark" ? "light" : "dark")}
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       className="rounded-full border border-transparent p-2.5 text-muted transition-colors hover:border-[var(--border)] hover:bg-[var(--bg-raised)] hover:text-[var(--text)]"
     >
       {theme === "dark" ? <SunIcon /> : <MoonIcon />}

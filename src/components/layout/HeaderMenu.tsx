@@ -8,26 +8,13 @@ import {
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import { SUPPORTED_LOCALES, useI18n, type LocaleCode } from "../../i18n";
-
-/**
- * The theme lives on the document, and ThemeToggle writes it too. Subscribing
- * to the attribute keeps this panel honest no matter which control changed it;
- * a copy held in local state goes stale the moment the other one is used.
- */
-function subscribeTheme(onChange: () => void) {
-  const observer = new MutationObserver(onChange);
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["data-theme"],
-  });
-  return () => observer.disconnect();
-}
-
-function readTheme(): "light" | "dark" {
-  return document.documentElement.getAttribute("data-theme") === "dark"
-    ? "dark"
-    : "light";
-}
+import {
+  readServerTheme,
+  readTheme,
+  setTheme,
+  subscribeTheme,
+  type Theme,
+} from "../../lib/theme";
 
 /**
  * The small-screen header menu.
@@ -49,7 +36,11 @@ export function HeaderMenu({
   const me = useQuery(api.profiles.me);
   const persistPreferredLocale = useMutation(api.profiles.setPreferredLocale);
   const [open, setOpen] = useState(false);
-  const theme = useSyncExternalStore(subscribeTheme, readTheme, () => "light");
+  const theme = useSyncExternalStore(
+    subscribeTheme,
+    readTheme,
+    readServerTheme,
+  );
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -67,15 +58,6 @@ export function HeaderMenu({
       document.removeEventListener("keydown", closeOnEscape);
     };
   }, [open]);
-
-  function chooseTheme(next: "light" | "dark") {
-    document.documentElement.setAttribute("data-theme", next);
-    try {
-      localStorage.setItem("datehaja-theme", next);
-    } catch {
-      /* private mode — the choice just won't persist */
-    }
-  }
 
   function chooseLocale(next: LocaleCode) {
     setLocale(next);
@@ -123,11 +105,11 @@ export function HeaderMenu({
             {t("Theme")}
           </span>
           <div className="mb-3 grid grid-cols-2 gap-1.5">
-            {(["light", "dark"] as const).map((mode) => (
+            {(["light", "dark"] as const satisfies readonly Theme[]).map((mode) => (
               <button
                 key={mode}
                 type="button"
-                onClick={() => chooseTheme(mode)}
+                onClick={() => setTheme(mode)}
                 aria-pressed={theme === mode}
                 className={`rounded-2xl border px-3 py-2.5 text-[13px] font-bold transition ${
                   theme === mode
