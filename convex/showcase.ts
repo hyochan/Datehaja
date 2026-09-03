@@ -6,6 +6,7 @@ import {
   internalQuery,
   query,
 } from "./_generated/server";
+import { syntheticAgentName } from "./agentDates";
 import { agentAvatarValidator } from "./lib/agentAvatar";
 import { hasCompleteMatchingBoundaries } from "./lib/agentMatchingBoundaries";
 
@@ -182,7 +183,10 @@ export const preparePersona = internalMutation({
     const now = Date.now();
     await ctx.db.insert("agentProfiles", {
       userId: persona.userId,
-      name: persona.displayName.split(/\s+/)[0],
+      // An Agent is its own character, never a second copy of its human. Naming
+      // it after the persona produced transcripts like "I'm Alex, and my friend
+      // Alex runs in the mornings", which reads as a bug to anyone watching.
+      name: syntheticAgentName(persona.userId, persona.displayName),
       essence: persona.bio,
       desiredConnection:
         "Someone curious who can be direct without rushing, and who is comfortable with quiet.",

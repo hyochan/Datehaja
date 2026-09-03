@@ -716,25 +716,46 @@ export const runContext = internalQuery({
   },
 });
 
+const SYNTHETIC_AGENT_NAMES = ["Juno", "Sol", "Miro", "Lumi", "Ari", "Noa"];
+
+/**
+ * A stable stand-in name for an Agent whose owner never named one.
+ *
+ * The pool is deliberately free of human first names: an Agent is its own
+ * character, and a transcript where the Agent and the person it represents
+ * answer to the same name is unreadable. `excludedName` keeps the two Agents
+ * in one date apart.
+ */
+export function syntheticAgentName(
+  userId: Id<"users">,
+  excludedName?: string,
+): string {
+  const seed = String(userId)
+    .split("")
+    .reduce((sum, character) => sum + character.charCodeAt(0), 0);
+  const firstChoice =
+    SYNTHETIC_AGENT_NAMES[seed % SYNTHETIC_AGENT_NAMES.length] ?? "Juno";
+  if (!excludedName) return firstChoice;
+  const taken = excludedName.trim().toLowerCase();
+  if (firstChoice.toLowerCase() !== taken) return firstChoice;
+  return (
+    SYNTHETIC_AGENT_NAMES.find((name) => name.toLowerCase() !== taken) ?? "Sol"
+  );
+}
+
 function syntheticAgent(
   profile: Doc<"profiles">,
   excludedName?: string,
 ): AgentBrief {
   const ownerName = profile.displayName.split(/\s+/)[0];
-  const names = ["Juno", "Sol", "Miro", "Lumi", "Ari", "Noa"];
-  const seed = String(profile.userId)
-    .split("")
-    .reduce((sum, character) => sum + character.charCodeAt(0), 0);
-  const firstChoice = names[seed % names.length] ?? "Juno";
-  const agentName =
-    profile.isDemo && firstChoice.toLowerCase() === excludedName?.toLowerCase()
-      ? (names.find(
-          (name) => name.toLowerCase() !== excludedName.toLowerCase(),
-        ) ?? "Sol")
-      : firstChoice;
   return {
     userId: profile.userId,
-    agentName,
+    agentName: syntheticAgentName(
+      profile.userId,
+      // Outside the demo world two owners may legitimately pick the same
+      // name; only the seeded cast is deduplicated for us.
+      profile.isDemo ? excludedName : undefined,
+    ),
     ownerName,
     essence: profile.bio,
     desiredConnection: `A connection that fits ${profile.firstDateVibe.join(", ") || "a genuine conversation"}.`,

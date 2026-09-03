@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 import { convexTest } from "convex-test";
 import { describe, expect, test } from "vitest";
-import { api } from "./_generated/api";
+import { api, internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import schema from "./schema";
 
@@ -139,5 +139,101 @@ describe("public showcase date", () => {
 
     // No withIdentity: an anonymous visitor is the whole point of this route.
     expect(await t.query(api.showcase.publicDate, {})).not.toBeNull();
+  });
+});
+
+describe("showcase persona preparation", () => {
+  test("never names an Agent after the person it represents", async () => {
+    const t = convexTest(schema, modules);
+
+    await t.run(async (ctx) => {
+      const userId = await ctx.db.insert("users", {
+        name: "Alex",
+        email: "alex@test.invalid",
+      });
+      await ctx.db.insert("profiles", {
+        userId,
+        preferredLocale: "ko-KR",
+        displayName: "Alex",
+        dobMs: NOW - 29 * 365.25 * 24 * 3600_000,
+        ageYears: 29,
+        ageConfirmed18: true,
+        gender: "man",
+        interestedIn: ["woman"],
+        countryCode: "KR",
+        city: "Seoul",
+        neighborhood: "Seongsu",
+        approxLat: 37.54,
+        approxLng: 127.06,
+        timezone: "Asia/Seoul",
+        bio: "Runs in the mornings, watches films at night.",
+        showOccupation: false,
+        interests: ["Films"],
+        hobbies: [],
+        languages: ["Korean"],
+        socialEnergy: "introvert",
+        firstDateVibe: [],
+        lifestyle: { smokes: false, drinks: "occasional" },
+        onboardingStep: 7,
+        onboardingComplete: true,
+        status: "active",
+        moderationStatus: "ok",
+        isDemo: true,
+        updatedAt: NOW,
+      });
+      await ctx.db.insert("preferences", {
+        userId,
+        matchLocationScope: "city",
+        preferredCountryCodes: ["KR"],
+        preferredCities: ["Seoul"],
+        allowTranslatedDates: false,
+        ageMin: 25,
+        ageMax: 35,
+        ageHard: true,
+        maxDistanceKm: 15,
+        distanceHard: true,
+        relationshipIntent: "serious",
+        intentHard: false,
+        smoking: "no_preference",
+        smokingHard: false,
+        alcohol: "no_preference",
+        alcoholHard: false,
+        preferredDateTypes: ["coffee"],
+        budgetMinPerPerson: 30000,
+        budgetMaxPerPerson: 70000,
+        currency: "KRW",
+        budgetHard: false,
+        dayPreference: "either",
+        indoorOutdoor: "either",
+        atmosphere: "quiet",
+        dietary: [],
+        accessibility: [],
+        notifyEmail: false,
+        notifyInvitations: false,
+        notifyConfirmations: false,
+        notifyReminders: false,
+        dropsPaused: false,
+        maxDropsPerWeek: 5,
+        allowDemoMatches: true,
+        updatedAt: NOW,
+      });
+    });
+
+    const userId = await t.mutation(internal.showcase.preparePersona, {});
+    expect(userId).not.toBeNull();
+
+    const agentName = await t.run(async (ctx) => {
+      const agent = await ctx.db
+        .query("agentProfiles")
+        .withIndex("by_user", (q) =>
+          q.eq("userId", userId as Id<"users">),
+        )
+        .unique();
+      return agent?.name ?? null;
+    });
+
+    // "I'm Alex, and my friend Alex runs in the mornings" is unreadable.
+    expect(agentName).not.toBeNull();
+    expect(agentName?.toLowerCase()).not.toBe("alex");
   });
 });
