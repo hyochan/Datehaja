@@ -1,138 +1,80 @@
 # Datehaja — 3-minute demo script
 
-Completed deliverable: **`submission/Datehaja-demo.mp4`** — 2:39, 1920×1080,
-H.264 video with AAC English narration.
+The existing cut, `submission/Datehaja-demo.mp4` (2:39), records the concierge
+product that this repository no longer contains: availability windows,
+deterministic venue matching, calendar bookings, trusted-contact sharing and
+post-date feedback were all removed when the product became agent-only. It
+also predates the finger-heart brand. **It must be re-recorded before
+submission**; shipping it would show judges an app that does not exist.
 
-Live app: https://datehaja.com
-
-The finished cut is a concise visual story built from the production E2E run:
-availability, deterministic matching, OpenAI ranking, Firecrawl evidence,
-separate AgentMail invitations, private answers, Convex realtime confirmation,
-calendar state, trusted-contact sharing, and private post-date feedback.
-
-The live-capture rundown below is retained as the operator script if the
-submission portal asks for an unedited browser walkthrough.
+Live app for the recording: https://merry-bass-190.convex.site — this is the
+deployment the submission names, and it is served by Convex itself.
 
 ## Before recording
 
-- Deploy the current `main` build and confirm the redesigned landing is live.
-- Use **English (US)** and dark mode for the recording.
-- Create the account with an email address that can receive mail. Do not use a
-  `.test` address; the AgentMail invitation will not be deliverable.
-- Keep two browser windows signed into the same account on `/dashboard`.
-  Window B stays untouched until the realtime reveal.
-- Keep the real invitation email open in a third tab.
-- Prepare one availability window in Seoul, where the demo personas are seeded.
+- Confirm `main` is deployed to convex.site and the finger-heart mark is on the
+  landing page.
+- English (US), dark mode.
+- Sign in with an address that can receive mail; the code arrives from
+  AgentMail. Do not use a `.test` address.
+- Keep the sign-in email open in a second tab — the debrief letter arrives in
+  the same inbox and is worth showing.
+- One browser window is enough. The seeded fictional Agents mean the whole loop
+  runs without a second human.
 
----
+## The story, in the order it should be told
 
-## 0:00–0:18 · Start with the date, not a profile
+Lead with the human problem, not the machinery. A judge should understand what
+this is for in the first fifteen seconds, and only then see how it is built.
 
-**On screen:** redesigned landing hero.
+**0:00–0:20 — the problem**
 
-> Dating apps start with a wall of people. Datehaja starts with something more
-> natural: what do you actually want to do with someone new?
+Landing hero: *Let your Agent go first.* Say the thing plainly: the worst part
+of dating apps is the first date you already know will not work, and you spend
+an evening and your phone number finding that out.
 
-Click **Read the two-minute brief**. Let the connected concierge flow settle on
-screen: two availability slips, research, two locked answers, one date ticket.
+**0:20–0:50 — build the Agent**
 
-> A film, a walk, an exhibition — bring the idea, and Datehaja finds the person.
+Create the Agent. Give it a face — palette, expression, the woman or man base.
+Say what it is: your matchmaker and your stand-in, the same character. Fill the
+brief in the unpolished voice the product asks for. Land on: it knows how you
+actually are, not how you present.
 
-## 0:18–0:38 · The activity is the anchor
+**0:50–1:35 — the date**
 
-**On screen:** availability editor.
+Send it scouting. The world appears, drawn around a real place Firecrawl pulled
+off the live cultural web that morning — name the source on screen. Both
+Agents walk in and talk. Let two or three turns play. Say the important thing
+out loud: each Agent only ever sees its own person's brief, and it is there to
+brag about its friend and scout yours, the way two friends set each other up.
 
-> I choose Saturday, six to ten-thirty, and say what I want: an indie film.
-> The film can be the whole date. Datehaja never adds dinner just to make the
-> itinerary look busier.
+Do not narrate the counter. The transcript moves to the debrief as the sixth
+turn lands.
 
-Add the idea, return to the dashboard, and click **Find someone to go with**.
+**1:35–2:15 — the letter**
 
-## 0:38–1:05 · Convex is doing the work
+The private debrief. This is the emotional centre of the product and should get
+the most screen time. Read a line of the Agent's letter aloud. Point out that
+it is a letter, not a score, and that the other person will never see it. Cut
+to the same letter arriving by email from the Agent's own AgentMail inbox.
 
-**On screen:** the matching progress card advancing.
+**2:15–2:45 — the sealed decision**
 
-> These are real Convex document updates, not a timed spinner. Hard filters in
-> TypeScript enforce age, mutual interest, distance, safety state and a real
-> calendar overlap. Then a deterministic score explains what fits. OpenAI ranks
-> only the survivors—it cannot overrule a rule.
+Answer yes. Show that the other side is still hidden — you decided without
+knowing what they chose. Then the mutual yes, and contact opening for the first
+time. Say it: until this moment neither person had the other's email.
 
-Keep Window B visible but untouched.
+**2:45–3:00 — how it is built**
 
-## 1:05–1:32 · A researched plan, not a profile
+One breath, over the app: Convex is the backend and serves this app from
+convex.site; OpenAI runs the dates; Firecrawl chooses where they happen;
+AgentMail carries every private letter separately. End on the live URL.
 
-**On screen:** open the date plan, then expand **How we built this**.
+## What to avoid
 
-> The date plan arrives with a time, a real public venue, a route and a budget.
-> Firecrawl researched the live web around our midpoint. Here are the source
-> pages, the supporting quotes and when they were checked. OpenAI composed the
-> plan only from that evidence. If something is uncertain, the app says so.
-
-Briefly show model name, latency and token evidence—do not dwell on raw logs.
-
-## 1:32–1:50 · AgentMail keeps both people private
-
-**On screen:** the real invitation email from Datehaja Concierge.
-
-> AgentMail gives Datehaja its own inbox. We receive separate private
-> invitations, so neither person sees the other's email address—not in the app,
-> sender field or CC list. A reply goes back to Datehaja, not to the match.
-
-## 1:50–2:12 · Both answer privately
-
-**On screen:** Window A, then Demo controls.
-
-> I accept. The other person still cannot see my answer.
-
-Click **Accept this date**, open **Demo controls**, then click
-**They accept** for the clearly labelled fictional persona.
-
-> The seeded persona lets a judge drive the second side without recruiting
-> another person.
-
-## 2:12–2:30 · The realtime reveal
-
-**On screen:** point to untouched Window B as it changes to **It's a date**.
-
-> I have not refreshed or navigated this window. Convex queries are live
-> subscriptions, so the same transactional state appears immediately on both
-> screens.
-
-## 2:30–2:50 · The plan leaves the app safely
-
-**On screen:** confirmed date plan, then its calendar and trusted-contact actions.
-
-> One acceptance reserves the evening; two finalize the same calendar event;
-> a cancellation releases it. I can also send only my name, the time and this
-> public venue to a trusted contact. The match's identity never leaves Datehaja.
-
-Briefly reveal the private post-date check-in heading without filling it in.
-
-> After the date, each person can respond privately. Safety answers never go
-> to the match.
-
-## 2:50–2:58 · Close
-
-**On screen:** return to the landing hero or final date ticket.
-
-> Tell Datehaja what you want to do. It finds someone who wants to do it too.
-
----
-
-## Recording checklist
-
-- Final duration is under 3:00, including title and end frames.
-- Cursor is visible; no password manager, email address or secret is exposed.
-- The AgentMail message is genuinely delivered before recording begins.
-- Window B visibly remains untouched until the realtime reveal.
-- The expanded provenance panel contains real Firecrawl and OpenAI evidence.
-- The calendar event visibly says **Finalized** after both accept.
-- The trusted-contact email shown contains no match identity or contact detail.
-- Export at 1080p, H.264, with readable browser zoom and clear voice audio.
-
-## Optional alternate ending
-
-If there is room, use **They pass** instead of **They accept** and show that the
-accepted person's evening remains held while replacement search begins. Record
-that as a separate short clip; do not risk pushing the main submission over
-three minutes.
+- Do not open with architecture. The criteria reward everyday utility; the
+  stack is the closing argument, not the opening one.
+- Do not show the dev-only avatar lab at `/lab/avatar`; it is not part of the
+  product.
+- Do not use a real person's contact details anywhere on screen. The seeded
+  Agents are fictional and labelled; keep it that way.
