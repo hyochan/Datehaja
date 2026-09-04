@@ -1,4 +1,9 @@
 /* oxlint-disable react/set-state-in-effect -- hydrate a migration form once */
+import {
+  anonymousVisitorId,
+  firstTimeThisSession,
+  isAutomatedBrowser,
+} from "../lib/growthView";
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { useNavigate } from "react-router-dom";
@@ -115,6 +120,7 @@ export default function AgentOnboardingPage() {
   const bootstrap = useMutation(api.agents.bootstrap);
   const navigate = useNavigate();
   const { locale, t } = useI18n();
+  const track = useMutation(api.growth.track);
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const suggested = useMemo(
     () => suggestCity(locale.split("-")[1], timezone),
@@ -166,6 +172,23 @@ export default function AgentOnboardingPage() {
     useState<Strength>("no_preference");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Reaching this page is the step before agent_created, which only fires once
+  // the whole brief is sealed. Recording it is what lets a review distinguish
+  // a CTA nobody presses from a form everybody abandons.
+  useEffect(() => {
+    try {
+      if (isAutomatedBrowser()) return;
+      if (!firstTimeThisSession("datehaja-onboarding-start")) return;
+      void track({
+        anonymousId: anonymousVisitorId(),
+        event: "agent_onboarding_started",
+        locale,
+      }).catch(() => undefined);
+    } catch {
+      // Analytics must never block the product, including in strict privacy mode.
+    }
+  }, [locale, track]);
 
   useEffect(() => {
     if (hydrated || me === undefined) return;

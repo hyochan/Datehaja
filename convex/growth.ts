@@ -9,7 +9,10 @@ import { clean } from "./lib/text";
  */
 export const track = mutation({
   args: {
-    event: v.literal("agent_landing_viewed"),
+    event: v.union(
+      v.literal("agent_landing_viewed"),
+      v.literal("agent_onboarding_started"),
+    ),
     anonymousId: v.string(),
     locale: v.optional(v.string()),
     source: v.optional(v.string()),
@@ -72,6 +75,10 @@ export const trackMember = mutation({
 /** Every event the product emits, funnel order first, ancillary signals after. */
 const FUNNEL_EVENTS = [
   "agent_landing_viewed",
+  // Between the two: agent_created only fires when a thirteen-field brief is
+  // sealed, so without this a zero cannot say whether nobody started or
+  // everybody abandoned.
+  "agent_onboarding_started",
   "agent_created",
   "agent_message_sent",
   "agent_date_requested",
@@ -89,7 +96,7 @@ const FUNNEL_EVENTS = [
   "scout_checkout_started",
 ] as const;
 
-/** Per-event row cap. 16 events × 1000 stays under Convex's 16,384-document
+/** Per-event row cap. 17 events × 1000 stays under Convex's 16,384-document
  *  per-transaction read limit; once an event's window outgrows this, move
  *  counting to @convex-dev/aggregate. */
 const SNAPSHOT_ROWS_PER_EVENT = 1000;

@@ -1,3 +1,8 @@
+import {
+  anonymousVisitorId,
+  firstTimeThisSession,
+  isAutomatedBrowser,
+} from "../lib/growthView";
 import { useEffect } from "react";
 import { useMutation } from "convex/react";
 import { Link } from "react-router-dom";
@@ -45,12 +50,9 @@ export default function LandingPage() {
 
   useEffect(() => {
     try {
-      const key = "datehaja-agent-landing-view";
-      if (sessionStorage.getItem(key)) return;
-      sessionStorage.setItem(key, "1");
-      const anonymousId =
-        localStorage.getItem("datehaja-anonymous-id") ?? crypto.randomUUID();
-      localStorage.setItem("datehaja-anonymous-id", anonymousId);
+      if (isAutomatedBrowser()) return;
+      if (!firstTimeThisSession("datehaja-agent-landing-view")) return;
+      const anonymousId = anonymousVisitorId();
       const params = new URLSearchParams(window.location.search);
       void track({
         anonymousId,

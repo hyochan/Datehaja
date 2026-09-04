@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 import { convexTest } from "convex-test";
 import { describe, expect, test } from "vitest";
-import { api } from "./_generated/api";
+import { api, internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import schema from "./schema";
 
@@ -35,6 +35,36 @@ describe("privacy-minimal growth analytics", () => {
     });
     expect(events[0]?.userId).toBeUndefined();
     expect(events[0]?.agentDateId).toBeUndefined();
+  });
+
+  test("counts the step between landing and a sealed brief", async () => {
+    const t = convexTest(schema, modules);
+
+    await t.mutation(api.growth.track, {
+      event: "agent_landing_viewed",
+      anonymousId: ANONYMOUS_ID,
+      locale: "ko-KR",
+    });
+    await t.mutation(api.growth.track, {
+      event: "agent_onboarding_started",
+      anonymousId: ANONYMOUS_ID,
+      locale: "ko-KR",
+    });
+
+    const snapshot = await t.query(internal.growth.funnelSnapshot, {
+      sinceMs: 0,
+    });
+    // agent_created only fires once the whole brief is sealed. Without this
+    // stage a zero there cannot say whether nobody started or everybody left.
+    expect(snapshot.funnel.agent_onboarding_started.uniqueActors).toBe(1);
+    expect(snapshot.funnel.agent_created.uniqueActors).toBe(0);
+    // The same anonymous id links the two, and carries nothing else.
+    const events = await t.run((ctx) => ctx.db.query("growthEvents").collect());
+    expect(events.map((event) => event.anonymousId)).toEqual([
+      ANONYMOUS_ID,
+      ANONYMOUS_ID,
+    ]);
+    expect(events.every((event) => event.userId === undefined)).toBe(true);
   });
 
   test("drops malformed identifiers and limits repeat writes", async () => {
