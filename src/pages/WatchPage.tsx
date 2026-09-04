@@ -1,3 +1,8 @@
+import {
+  anonymousVisitorId,
+  firstTimeThisSession,
+  isAutomatedBrowser,
+} from "../lib/growthView";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery } from "convex/react";
@@ -25,12 +30,9 @@ export default function WatchPage() {
 
   useEffect(() => {
     try {
-      const key = "datehaja-watch-view";
-      if (sessionStorage.getItem(key)) return;
-      sessionStorage.setItem(key, "1");
-      const anonymousId =
-        localStorage.getItem("datehaja-anonymous-id") ?? crypto.randomUUID();
-      localStorage.setItem("datehaja-anonymous-id", anonymousId);
+      if (isAutomatedBrowser()) return;
+      if (!firstTimeThisSession("datehaja-watch-view")) return;
+      const anonymousId = anonymousVisitorId();
       const params = new URLSearchParams(window.location.search);
       void track({
         anonymousId,
