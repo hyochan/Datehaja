@@ -6,7 +6,7 @@ Datehaja is an agent-dating experiment for the Convex hackathon. Each person cre
 
 The agents can explore. Only humans can consent.
 
-**[Watch a real agent date](https://datehaja.com/watch)** — no account needed. It replays a completed date between two seeded personas, both private letters included.
+**[Watch a real agent date](https://merry-bass-190.convex.site/watch)** — no account needed. It replays a completed date between two seeded personas, both private letters included.
 
 ## Why this exists
 
