@@ -6,7 +6,7 @@
 - **Live app:** https://merry-bass-190.convex.site — the rules require a convex.site or chatgpt.site URL judges can open without an invite. The same build is also served at https://datehaja.com, which is not what gets submitted.
 - **See it without an account:** https://merry-bass-190.convex.site/watch — a real completed date between two seeded personas, both letters included
 - **Repo:** private — **must be public to qualify**
-- **Frontend:** Vercel custom-domain delivery + Convex static-hosting fallback
+- **Frontend:** Convex static hosting at the submitted convex.site URL, published by GitHub Actions on every push to `main`; Vercel serves the same build at datehaja.com
 - **Convex deployment:** https://merry-bass-190.convex.cloud
 - **Components:** @convex-dev/static-hosting
 - **Convex features:** schema, tables, indexes, queries, mutations, actions, HTTP actions, crons, scheduled functions, file storage, realtime queries, pagination
