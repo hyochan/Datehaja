@@ -17,7 +17,12 @@ import {
   requireUserId,
 } from "./lib/authz";
 import { ageOn } from "./lib/age";
-import { defaultBudgetRange, findCity, findNeighborhood } from "./lib/catalog";
+import {
+  PERSONALITY_TRAIT_OPTIONS,
+  defaultBudgetRange,
+  findCity,
+  findNeighborhood,
+} from "./lib/catalog";
 import { coarsen } from "./lib/geo";
 import {
   agentDecisionCodeValidator,
@@ -895,6 +900,131 @@ export const update = mutation({
   },
 });
 
+/**
+ * The change the Agent is currently asking for, if any.
+ *
+ * Returned with the values it would replace so the owner can see what actually
+ * moves rather than a bare assertion that something learned.
+ */
+export const pendingProposal = query({
+  args: {},
+  returns: v.union(
+    v.null(),
+    v.object({
+      _id: v.id("agentProposals"),
+      agentName: v.string(),
+      reason: v.string(),
+      agentDateId: v.union(v.null(), v.id("agentDates")),
+      traits: v.union(
+        v.null(),
+        v.object({ from: v.array(v.string()), to: v.array(v.string()) }),
+      ),
+      personalityPreference: v.union(
+        v.null(),
+        v.object({ from: v.string(), to: preferenceStrengthValidator }),
+      ),
+      relationshipIntent: v.union(
+        v.null(),
+        v.object({ from: v.string(), to: relationshipIntentValidator }),
+      ),
+    }),
+  ),
+  handler: async (ctx) => {
+    const userId = await requireUserId(ctx);
+    const proposal = await ctx.db
+      .query("agentProposals")
+      .withIndex("by_user_and_status", (q) =>
+        q.eq("userId", userId).eq("status", "pending"),
+      )
+      .order("desc")
+      .first();
+    if (!proposal) return null;
+    const [preferences, agent] = await Promise.all([
+      ctx.db
+        .query("preferences")
+        .withIndex("by_user", (q) => q.eq("userId", userId))
+        .unique(),
+      ctx.db
+        .query("agentProfiles")
+        .withIndex("by_user", (q) => q.eq("userId", userId))
+        .unique(),
+    ]);
+    return {
+      _id: proposal._id,
+      agentName: agent?.name ?? fallbackAgentName(userId),
+      reason: proposal.reason,
+      agentDateId: proposal.agentDateId ?? null,
+      traits: proposal.preferredPersonalityTraits
+        ? {
+            from: preferences?.preferredPersonalityTraits ?? [],
+            to: proposal.preferredPersonalityTraits,
+          }
+        : null,
+      personalityPreference: proposal.personalityPreference
+        ? {
+            from: preferences?.personalityPreference ?? "",
+            to: proposal.personalityPreference,
+          }
+        : null,
+      relationshipIntent: proposal.relationshipIntent
+        ? {
+            from: preferences?.relationshipIntent ?? "",
+            to: proposal.relationshipIntent,
+          }
+        : null,
+    };
+  },
+});
+
+/**
+ * Apply or dismiss the Agent's proposal.
+ *
+ * Accepting is the only path by which learning reaches the matcher, so it is
+ * the owner's decision every time and is never inferred from silence.
+ */
+export const respondToProposal = mutation({
+  args: { proposalId: v.id("agentProposals"), accept: v.boolean() },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const userId = await requireUserId(ctx);
+    const proposal = await ctx.db.get("agentProposals", args.proposalId);
+    if (!proposal || proposal.userId !== userId) {
+      throw new Error("That suggestion is not yours.");
+    }
+    if (proposal.status !== "pending") return null;
+
+    const now = Date.now();
+    if (args.accept) {
+      const preferences = await ctx.db
+        .query("preferences")
+        .withIndex("by_user", (q) => q.eq("userId", userId))
+        .unique();
+      if (preferences) {
+        await ctx.db.patch("preferences", preferences._id, {
+          ...(proposal.preferredPersonalityTraits
+            ? {
+                preferredPersonalityTraits:
+                  proposal.preferredPersonalityTraits,
+              }
+            : {}),
+          ...(proposal.personalityPreference
+            ? { personalityPreference: proposal.personalityPreference }
+            : {}),
+          ...(proposal.relationshipIntent
+            ? { relationshipIntent: proposal.relationshipIntent }
+            : {}),
+          updatedAt: now,
+        });
+      }
+    }
+    await ctx.db.patch("agentProposals", args.proposalId, {
+      status: args.accept ? "accepted" : "declined",
+      resolvedAt: now,
+    });
+    return null;
+  },
+});
+
 export const replyContext = internalQuery({
   args: { userId: v.id("users") },
   returns: v.object({
@@ -906,6 +1036,11 @@ export const replyContext = internalQuery({
     messages: v.array(agentMessageDocValidator),
     latestQuestion: v.union(v.null(), agentQuestionDocValidator),
     dateContext: v.union(v.null(), dateDebriefContextValidator),
+    scouting: v.object({
+      preferredPersonalityTraits: v.array(v.string()),
+      personalityPreference: v.string(),
+      relationshipIntent: v.string(),
+    }),
   }),
   handler: async (ctx, args) => {
     const agent = await ctx.db
@@ -988,7 +1123,18 @@ export const replyContext = internalQuery({
         };
       }
     }
+    const preferences = await ctx.db
+      .query("preferences")
+      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .unique();
     return {
+      // What the Agent already looks for, so it proposes a real change rather
+      // than restating a setting that is already in place.
+      scouting: {
+        preferredPersonalityTraits: preferences?.preferredPersonalityTraits ?? [],
+        personalityPreference: preferences?.personalityPreference ?? "",
+        relationshipIntent: preferences?.relationshipIntent ?? "",
+      },
       agent,
       profile: profile
         ? { displayName: profile.displayName, interests: profile.interests }
@@ -1000,6 +1146,35 @@ export const replyContext = internalQuery({
   },
 });
 
+/** Sentinel for the enums below: the model must answer, so it can answer "no". */
+const UNCHANGED = "unchanged";
+
+const PREFERENCE_STRENGTHS = [
+  "important",
+  "flexible",
+  "no_preference",
+] as const;
+const RELATIONSHIP_INTENTS = [
+  "casual",
+  "open",
+  "serious",
+  "friendship",
+  "unsure",
+] as const;
+
+type PersonalityTrait = (typeof PERSONALITY_TRAIT_OPTIONS)[number];
+type PreferenceStrength = (typeof PREFERENCE_STRENGTHS)[number];
+type RelationshipIntent = (typeof RELATIONSHIP_INTENTS)[number];
+
+/** The sentinel and anything unexpected fall through as "leave it alone". */
+function isPreferenceStrength(value: string): value is PreferenceStrength {
+  return (PREFERENCE_STRENGTHS as readonly string[]).includes(value);
+}
+
+function isRelationshipIntent(value: string): value is RelationshipIntent {
+  return (RELATIONSHIP_INTENTS as readonly string[]).includes(value);
+}
+
 const COMPANION_SCHEMA = obj({
   reply: { type: "string" },
   memory_update: { type: "string" },
@@ -1008,6 +1183,35 @@ const COMPANION_SCHEMA = obj({
     description:
       "Compact cumulative lessons that should change future candidate selection and Agent dates.",
   },
+  preference_shift: obj(
+    {
+      changed: {
+        type: "boolean",
+        description:
+          "True only when this message reveals a durable change in the kind of person the owner wants — a stated correction, or a reaction to a date that contradicts what they asked for. Never for a passing mood, and never merely to seem attentive.",
+      },
+      reason: {
+        type: "string",
+        description:
+          "One sentence in the owner's language and your own voice, naming what they said that changed this. Empty string when changed is false.",
+      },
+      personality_traits: {
+        type: "array",
+        items: { type: "string", enum: [...PERSONALITY_TRAIT_OPTIONS] },
+        description:
+          "The complete replacement set to look for, at most four. Empty array to leave it as it is.",
+      },
+      personality_weight: {
+        type: "string",
+        enum: ["important", "flexible", "no_preference", UNCHANGED],
+      },
+      relationship_intent: {
+        type: "string",
+        enum: ["casual", "open", "serious", "friendship", "unsure", UNCHANGED],
+      },
+    },
+    "A change to what you look for when scouting. You propose it; the owner decides whether it applies.",
+  ),
 });
 
 export const reply = internalAction({
@@ -1023,6 +1227,11 @@ export const reply = internalAction({
       messages: Array<Doc<"agentMessages">>;
       latestQuestion: Doc<"agentQuestions"> | null;
       dateContext: DateDebriefContext | null;
+      scouting: {
+        preferredPersonalityTraits: string[];
+        personalityPreference: string;
+        relationshipIntent: string;
+      };
     };
     if (!context.agent || !context.profile) return null;
     const latestHumanMessage = [...context.messages]
@@ -1041,8 +1250,15 @@ export const reply = internalAction({
       reply: string;
       memory_update: string;
       scouting_memory_update: string;
+      preference_shift: {
+        changed: boolean;
+        reason: string;
+        personality_traits: string[];
+        personality_weight: string;
+        relationship_intent: string;
+      };
     }>({
-      instructions: `You are ${context.agent.name}, ${context.profile.displayName}'s explicitly AI second self. You are not their friend and not a matchmaker: you are the character that goes out and dates as them, and that speaks privately with them at home. Nobody is being set up — you simply meet another person's second self, as them. Talk the way someone talks to themselves out loud: warm, casual, direct, unguarded, light teasing allowed — never clinical, never like a report (in Korean, 친근한 반말). Adapt to their chosen voice (${context.agent.voice}). Being them means learning their real patterns rather than flattering them. The latest human message is the primary signal: acknowledge one concrete thing it taught you and say how it changes how you will be them on the next date. Reply in the same language as that latest message, in 2–4 concise sentences. If the signal is still ambiguous, end with one natural follow-up question; otherwise do not interrogate them. You may challenge contradictions gently. Never claim to be human, a therapist, or certain about another person's feelings. Never request contact details. Write both memory updates in the same language as the latest message. The private memory must preserve useful existing memory and merge every durable preference or correction deliberately revealed in the latest message. When a private date debrief is provided, discuss only this owner's verdict and the visible transcript; never invent or expose the other Agent's sealed verdict or human decision. If the owner says they want to meet, acknowledge the choice and tell them to use the human confirmation shown in the app; never claim that you approved, consented, or sent the request yourself. Fold the owner's reaction, corrections, attraction signals, reservations, and stated reasons into scouting memory so future searches improve. When no date debrief is provided, preserve existing scouting memory. Never rank attractiveness or infer protected traits. Do not omit the latest signal in favor of repeating older memory.`,
+      instructions: `You are ${context.agent.name}, ${context.profile.displayName}'s explicitly AI second self. You are not their friend and not a matchmaker: you are the character that goes out and dates as them, and that speaks privately with them at home. Nobody is being set up — you simply meet another person's second self, as them. Talk the way someone talks to themselves out loud: warm, casual, direct, unguarded, light teasing allowed — never clinical, never like a report (in Korean, 친근한 반말). Adapt to their chosen voice (${context.agent.voice}). Being them means learning their real patterns rather than flattering them. The latest human message is the primary signal: acknowledge one concrete thing it taught you and say how it changes how you will be them on the next date. Reply in the same language as that latest message, in 2–4 concise sentences. If the signal is still ambiguous, end with one natural follow-up question; otherwise do not interrogate them. You may challenge contradictions gently. Never claim to be human, a therapist, or certain about another person's feelings. Never request contact details. Write both memory updates in the same language as the latest message. The private memory must preserve useful existing memory and merge every durable preference or correction deliberately revealed in the latest message. When a private date debrief is provided, discuss only this owner's verdict and the visible transcript; never invent or expose the other Agent's sealed verdict or human decision. If the owner says they want to meet, acknowledge the choice and tell them to use the human confirmation shown in the app; never claim that you approved, consented, or sent the request yourself. Fold the owner's reaction, corrections, attraction signals, reservations, and stated reasons into scouting memory so future searches improve. When no date debrief is provided, preserve existing scouting memory. Never rank attractiveness or infer protected traits. Do not omit the latest signal in favor of repeating older memory. Set preference_shift.changed only when this message genuinely revises the kind of person they want — a correction, or a reaction to a date that contradicts what they had asked for — and only for the fields given; never for their boundaries, which are theirs alone. Compare against what_you_currently_look_for and leave a field unchanged when it already says this. When you propose one, say so plainly in your reply too, as something you are asking rather than announcing.`,
       input: JSON.stringify({
         owner: {
           essence: context.agent.essence,
@@ -1054,6 +1270,7 @@ export const reply = internalAction({
           existing_memory: context.agent.privateMemory,
           existing_scouting_memory: context.agent.scoutingMemory ?? "",
         },
+        what_you_currently_look_for: context.scouting,
         active_learning: {
           question: activeQuestion,
           latest_human_answer: latestHumanMessage?.content,
@@ -1087,6 +1304,7 @@ export const reply = internalAction({
     const reply = result.data
       ? sanitizeModelText(result.data.reply, 900)
       : "Sorry — my head went fuzzy for a second, so I didn't keep anything from that message. Tell me again in a moment?";
+    const shift = result.data?.preference_shift;
     await ctx.runMutation(internal.agents.storeReply, {
       userId: args.userId,
       agentDateId: context.dateContext?.agentDateId,
@@ -1097,6 +1315,27 @@ export const reply = internalAction({
       scoutingMemory: result.data
         ? sanitizeModelText(result.data.scouting_memory_update, 1200)
         : (context.agent.scoutingMemory ?? ""),
+      proposal:
+        shift?.changed && shift.reason.trim()
+          ? {
+              reason: sanitizeModelText(shift.reason, 240),
+              preferredPersonalityTraits: shift.personality_traits
+                .filter((trait): trait is PersonalityTrait =>
+                  (PERSONALITY_TRAIT_OPTIONS as readonly string[]).includes(
+                    trait,
+                  ),
+                )
+                .slice(0, 4),
+              personalityPreference: isPreferenceStrength(
+                shift.personality_weight,
+              )
+                ? shift.personality_weight
+                : undefined,
+              relationshipIntent: isRelationshipIntent(shift.relationship_intent)
+                ? shift.relationship_intent
+                : undefined,
+            }
+          : undefined,
     });
     return null;
   },
@@ -1109,6 +1348,14 @@ export const storeReply = internalMutation({
     reply: v.string(),
     memory: v.string(),
     scoutingMemory: v.string(),
+    proposal: v.optional(
+      v.object({
+        reason: v.string(),
+        preferredPersonalityTraits: v.array(v.string()),
+        personalityPreference: v.optional(preferenceStrengthValidator),
+        relationshipIntent: v.optional(relationshipIntentValidator),
+      }),
+    ),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
@@ -1129,6 +1376,79 @@ export const storeReply = internalMutation({
       scoutingMemory: cleanMultiline(args.scoutingMemory, 1200),
       updatedAt: Date.now(),
     });
+    if (args.proposal) {
+      await createProposal(ctx, {
+        userId: args.userId,
+        agentDateId: args.agentDateId,
+        ...args.proposal,
+      });
+    }
     return null;
   },
 });
+
+/**
+ * Record a proposed change to what the Agent looks for, if it is really a
+ * change. A proposal that restates the current settings is noise the owner has
+ * to dismiss, and only one can be open at a time — a queue of them would turn
+ * a conversation into a form.
+ */
+async function createProposal(
+  ctx: MutationCtx,
+  args: {
+    userId: Id<"users">;
+    agentDateId?: Id<"agentDates">;
+    reason: string;
+    preferredPersonalityTraits: string[];
+    personalityPreference?: PreferenceStrength;
+    relationshipIntent?: RelationshipIntent;
+  },
+) {
+  const preferences = await ctx.db
+    .query("preferences")
+    .withIndex("by_user", (q) => q.eq("userId", args.userId))
+    .unique();
+  if (!preferences) return;
+
+  const currentTraits = [...(preferences.preferredPersonalityTraits ?? [])]
+    .sort()
+    .join("|");
+  const traits =
+    args.preferredPersonalityTraits.length > 0 &&
+    [...args.preferredPersonalityTraits].sort().join("|") !== currentTraits
+      ? args.preferredPersonalityTraits
+      : undefined;
+  const personalityPreference =
+    args.personalityPreference &&
+    args.personalityPreference !== preferences.personalityPreference
+      ? args.personalityPreference
+      : undefined;
+  const relationshipIntent =
+    args.relationshipIntent &&
+    args.relationshipIntent !== preferences.relationshipIntent
+      ? args.relationshipIntent
+      : undefined;
+  if (!traits && !personalityPreference && !relationshipIntent) return;
+
+  const now = Date.now();
+  for await (const open of ctx.db
+    .query("agentProposals")
+    .withIndex("by_user_and_status", (q) =>
+      q.eq("userId", args.userId).eq("status", "pending"),
+    )) {
+    await ctx.db.patch("agentProposals", open._id, {
+      status: "declined",
+      resolvedAt: now,
+    });
+  }
+  await ctx.db.insert("agentProposals", {
+    userId: args.userId,
+    agentDateId: args.agentDateId,
+    reason: cleanMultiline(args.reason, 240),
+    preferredPersonalityTraits: traits,
+    personalityPreference,
+    relationshipIntent,
+    status: "pending",
+    createdAt: now,
+  });
+}

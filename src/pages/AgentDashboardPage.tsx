@@ -47,6 +47,20 @@ type DateDiscussion = {
   };
 };
 
+const INTENT_LABELS: Record<string, string> = {
+  casual: "Something casual",
+  open: "Open to anything",
+  serious: "Something serious",
+  friendship: "Friendship first",
+  unsure: "Still working it out",
+};
+
+const STRENGTH_LABELS: Record<string, string> = {
+  no_preference: "No preference",
+  flexible: "Flexible",
+  important: "Important",
+};
+
 function looksLikeMeetIntent(content: string) {
   const normalized = content.trim().toLocaleLowerCase();
   return [
@@ -71,6 +85,8 @@ export default function AgentDashboardPage() {
   const ensureQuestion = useMutation(api.agents.ensureQuestion);
   const answerQuestion = useMutation(api.agents.answerQuestion);
   const skipQuestion = useMutation(api.agents.skipQuestion);
+  const proposal = useQuery(api.agents.pendingProposal);
+  const respondToProposal = useMutation(api.agents.respondToProposal);
   const requestDate = useAction(api.agentDates.request);
   const readScoutAccess = useAction(api.billing.status);
   const navigate = useNavigate();
@@ -88,6 +104,9 @@ export default function AgentDashboardPage() {
   const [message, setMessage] = useState("");
   const [questionAnswer, setQuestionAnswer] = useState("");
   const [sending, setSending] = useState(false);
+  const [decidingProposal, setDecidingProposal] = useState<
+    "accept" | "decline" | null
+  >(null);
   const [answering, setAnswering] = useState(false);
   const [consenting, setConsenting] = useState(false);
   const [consentError, setConsentError] = useState<string | null>(null);
@@ -217,6 +236,16 @@ export default function AgentDashboardPage() {
       setError(readableError(reason));
     } finally {
       setAnswering(false);
+    }
+  }
+
+  async function decideProposal(accept: boolean) {
+    if (!proposal || decidingProposal) return;
+    setDecidingProposal(accept ? "accept" : "decline");
+    try {
+      await respondToProposal({ proposalId: proposal._id, accept });
+    } finally {
+      setDecidingProposal(null);
     }
   }
 
@@ -654,6 +683,114 @@ export default function AgentDashboardPage() {
                     {consentError}
                   </p>
                 )}
+              </div>
+            )}
+            {proposal && (
+              <div className="agent-consent-confirmation">
+                <div className="flex items-start gap-3">
+                  <AgentAvatar
+                    name={proposal.agentName}
+                    avatar={agent.avatar}
+                    className="agent-avatar-note"
+                  />
+                  <div className="min-w-0">
+                    <div className="docket-label text-[var(--accent-text)]">
+                      {t("What I'd look for next")}
+                    </div>
+                    <h3 className="mt-2 text-[22px] leading-tight">
+                      {t("Should I change who I look for?")}
+                    </h3>
+                    <p className="mt-2 text-[13px] leading-relaxed">
+                      “{proposal.reason}”
+                    </p>
+                    <dl className="agent-proposal-change">
+                      {proposal.traits && (
+                        <div>
+                          <dt>{t("Personality I look for")}</dt>
+                          <dd>
+                            <s>
+                              {proposal.traits.from.length > 0
+                                ? proposal.traits.from
+                                    .map((trait) => t(trait))
+                                    .join(", ")
+                                : t("No preference")}
+                            </s>{" "}
+                            <b>
+                              {proposal.traits.to
+                                .map((trait) => t(trait))
+                                .join(", ")}
+                            </b>
+                          </dd>
+                        </div>
+                      )}
+                      {proposal.personalityPreference && (
+                        <div>
+                          <dt>{t("How much it matters")}</dt>
+                          <dd>
+                            <s>
+                              {t(
+                                STRENGTH_LABELS[
+                                  proposal.personalityPreference.from
+                                ] ?? "No preference",
+                              )}
+                            </s>{" "}
+                            <b>
+                              {t(
+                                STRENGTH_LABELS[
+                                  proposal.personalityPreference.to
+                                ] ?? "No preference",
+                              )}
+                            </b>
+                          </dd>
+                        </div>
+                      )}
+                      {proposal.relationshipIntent && (
+                        <div>
+                          <dt>{t("What I am looking for")}</dt>
+                          <dd>
+                            <s>
+                              {t(
+                                INTENT_LABELS[
+                                  proposal.relationshipIntent.from
+                                ] ?? "Still working it out",
+                              )}
+                            </s>{" "}
+                            <b>
+                              {t(
+                                INTENT_LABELS[proposal.relationshipIntent.to] ??
+                                  "Still working it out",
+                              )}
+                            </b>
+                          </dd>
+                        </div>
+                      )}
+                    </dl>
+                    <p className="mt-3 text-[12px] leading-relaxed text-soft">
+                      {t(
+                        "Nothing changes until you say so. Your age, distance, language and budget stay exactly where you set them.",
+                      )}
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+                  <Button
+                    size="sm"
+                    loading={decidingProposal === "accept"}
+                    disabled={decidingProposal !== null}
+                    onClick={() => void decideProposal(true)}
+                  >
+                    {t("Yes, look for that →")}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    loading={decidingProposal === "decline"}
+                    disabled={decidingProposal !== null}
+                    onClick={() => void decideProposal(false)}
+                  >
+                    {t("Leave it as it is")}
+                  </Button>
+                </div>
               </div>
             )}
             {discussion?.mine.consent === "yes" && (
