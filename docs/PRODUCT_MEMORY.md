@@ -52,6 +52,15 @@ private personal memory and compact scouting memory for future candidate
 selection. Analytics may record the internal date ID and that a discussion
 occurred, never the conversation text.
 
+Every verdict leaves a lesson, not only a pass. A date that went well is the
+strongest evidence of what this person actually wants, and learning only from
+refusals threw that away — after an encourage the Agent records what worked and
+is worth seeking again, after a curious what it still needs to find out, after
+a pass what to look for differently. Scouting memory keeps the six most recent
+lessons; a repeated lesson moves to the end rather than taking a second slot.
+The seeded persona on the other side of a demo date still learns nothing, since
+there is no owner there to learn for.
+
 Agent matching boundaries are explicit and mutual. Every real participant must
 choose at least one supported search location and one date language before
 entering the pool. A pair is eligible only when each person’s country, city and,

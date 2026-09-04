@@ -602,4 +602,88 @@ describe("agent-date privacy and human consent", () => {
     expect(bobView?.date).not.toHaveProperty("initiatorDecisionCode");
     expect(bobView?.counterpart).not.toHaveProperty("decisionCode");
   });
+
+
+  test("learns from a date that went well, not only from a pass", async () => {
+    const t = convexTest(schema, modules);
+    const s = await setup(t);
+
+    await t.mutation(internal.agentDates.finish, {
+      agentDateId: s.agentDateId,
+      aVerdict: "encourage",
+      bVerdict: "curious",
+      aReason: "Meet this one.",
+      bReason: "Worth one more conversation.",
+      aDecisionCode: "strong_alignment",
+      bDecisionCode: "worth_exploring",
+      aNextSearchNote: "Look again for someone who names the awkward thing first.",
+      bNextSearchNote: "Find out earlier how they handle a changed plan.",
+      score: 82,
+      summary: "Easy company.",
+      sparks: ["Comfortable silence"],
+      frictions: ["Different pace"],
+      demoConsent: "pending",
+    });
+
+    const memories = await t.run(async (ctx) => {
+      const read = async (userId: typeof s.alice) =>
+        (
+          await ctx.db
+            .query("agentProfiles")
+            .withIndex("by_user", (q) => q.eq("userId", userId))
+            .unique()
+        )?.scoutingMemory ?? "";
+      return { alice: await read(s.alice), bob: await read(s.bob) };
+    });
+
+    // An encourage is the strongest evidence of what this person wants, and it
+    // used to leave nothing behind at all.
+    expect(memories.alice).toContain("names the awkward thing first");
+    expect(memories.bob).toContain("how they handle a changed plan");
+  });
+
+  test("keeps the six most recent lessons and never repeats one", async () => {
+    const t = convexTest(schema, modules);
+    const s = await setup(t);
+
+    for (let round = 1; round <= 8; round += 1) {
+      await t.mutation(internal.agentDates.finish, {
+        agentDateId: s.agentDateId,
+        aVerdict: "curious",
+        bVerdict: "curious",
+        aReason: "Still curious.",
+        bReason: "Still curious.",
+        aDecisionCode: "worth_exploring",
+        bDecisionCode: "worth_exploring",
+        // Round 8 repeats round 7 verbatim, as a model easily would.
+        aNextSearchNote: `Lesson ${round === 8 ? 7 : round}`,
+        bNextSearchNote: "Unchanged",
+        score: 60,
+        summary: "",
+        sparks: [],
+        frictions: [],
+        demoConsent: "pending",
+      });
+    }
+
+    const lines = await t.run(async (ctx) =>
+      (
+        (
+          await ctx.db
+            .query("agentProfiles")
+            .withIndex("by_user", (q) => q.eq("userId", s.alice))
+            .unique()
+        )?.scoutingMemory ?? ""
+      )
+        .split("\n")
+        .filter(Boolean),
+    );
+
+    expect(lines).toHaveLength(6);
+    expect(lines.at(-1)).toContain("Lesson 7");
+    // The window holds the newest six, so the first rounds have rolled off.
+    expect(lines.join("\n")).not.toContain("Lesson 1");
+    // A repeat moves to the end rather than occupying two slots.
+    expect(lines.filter((line) => line.includes("Lesson 7"))).toHaveLength(1);
+  });
 });
