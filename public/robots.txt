@@ -1,0 +1,22 @@
+# Datehaja
+#
+# The public pages are worth indexing. Every signed-in route returns the same
+# empty shell to a crawler, so letting them be indexed would publish a dozen
+# identical pages and nothing useful; they are excluded rather than allowed.
+# Nothing here protects private data — authorization does that.
+
+User-agent: *
+Allow: /
+Disallow: /signin
+Disallow: /signup
+Disallow: /onboarding
+Disallow: /dashboard
+Disallow: /membership
+Disallow: /settings
+Disallow: /profile
+Disallow: /preferences
+Disallow: /notifications
+Disallow: /agent-date/
+Disallow: /legal/
+
+Sitemap: https://datehaja.com/sitemap.xml
