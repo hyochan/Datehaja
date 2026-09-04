@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { expect, test, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 
@@ -195,6 +196,23 @@ test("two real agents date before private mutual contact reveal", async ({
       "I am playful once I feel safe, need quiet after crowded places, and appreciate people who are candid without being harsh.",
   };
 
+  // Earlier runs leave accounts behind that are identical to the pair about to
+  // be created — same city, interests and traits — and the matcher reads a
+  // bounded page of active profiles per city and scores identical profiles
+  // identically, breaking ties toward the oldest. Without this the new first
+  // account dates a previous run's second account, and this run's second
+  // account is left looking at a date it is not in.
+  execFileSync(
+    "npx",
+    [
+      "convex",
+      "run",
+      "testSupport:retirePriorTestAccounts",
+      JSON.stringify({ keepEmails: [first.email, second.email] }),
+    ],
+    { stdio: "inherit" },
+  );
+
   const contextOptions = {
     baseURL: baseURL ?? "http://127.0.0.1:4173",
     timezoneId: "Europe/Stockholm",
@@ -216,18 +234,16 @@ test("two real agents date before private mutual contact reveal", async ({
     const datePath = new URL(firstPage.url()).pathname;
     await secondPage.goto(datePath);
 
-    // The matcher chooses the counterpart, and it scores identical profiles
-    // identically. A deployment carrying personas from earlier runs of this
-    // test will therefore pair the first account with one of those rather than
-    // with the account this run just created — the tie breaks on scan order,
-    // which favours the oldest. Check the pairing here, so that shows up in
-    // twenty seconds naming what was expected, instead of three minutes later
-    // as a debrief that was never going to be this pair's.
-    await expect(
-      secondPage.getByRole("heading", {
-        name: `${first.agentName} × ${second.agentName}`,
-      }),
-    ).toBeVisible({ timeout: 20_000 });
+    // Confirm the two accounts were paired with each other before waiting on a
+    // debrief. Each side reads its own Agent first, so the heading is mirrored.
+    for (const [page, mine, theirs] of [
+      [firstPage, first.agentName, second.agentName],
+      [secondPage, second.agentName, first.agentName],
+    ] as const) {
+      await expect(
+        page.getByRole("heading", { name: `${mine} × ${theirs}` }),
+      ).toBeVisible({ timeout: 20_000 });
+    }
 
     for (const page of [firstPage, secondPage]) {
       // Not the live "6/6 turns" counter: the page swaps to the debrief as the

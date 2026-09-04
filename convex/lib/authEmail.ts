@@ -5,12 +5,23 @@ const OTP_MODULUS = 100_000_000;
 const UINT32_RANGE = 0x1_0000_0000;
 const UNBIASED_LIMIT = Math.floor(UINT32_RANGE / OTP_MODULUS) * OTP_MODULUS;
 
+/**
+ * True for the plus-tagged aliases the end-to-end suites sign up with.
+ *
+ * Deliberately narrower than `isDevelopmentOtpEmail`: it never matches a real
+ * inbox that merely happens to be configured for a fixed development code, so
+ * a caller can act on these addresses without touching anyone's own account.
+ */
+export function isEndToEndTestAlias(identifier: string): boolean {
+  return DEV_TEST_ALIAS.test(identifier.trim().toLowerCase());
+}
+
 export function isDevelopmentOtpEmail(
   identifier: string,
   configuredEmails: string,
 ): boolean {
   const normalizedEmail = identifier.trim().toLowerCase();
-  if (DEV_TEST_ALIAS.test(normalizedEmail)) return true;
+  if (isEndToEndTestAlias(normalizedEmail)) return true;
   return configuredEmails
     .split(",")
     .some((email) => email.trim().toLowerCase() === normalizedEmail);

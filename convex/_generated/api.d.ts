@@ -45,6 +45,7 @@ import type * as profiles from "../profiles.js";
 import type * as safety from "../safety.js";
 import type * as setup from "../setup.js";
 import type * as showcase from "../showcase.js";
+import type * as testSupport from "../testSupport.js";
 
 import type {
   ApiFromModules,
@@ -90,6 +91,7 @@ declare const fullApi: ApiFromModules<{
   safety: typeof safety;
   setup: typeof setup;
   showcase: typeof showcase;
+  testSupport: typeof testSupport;
 }>;
 
 /**
