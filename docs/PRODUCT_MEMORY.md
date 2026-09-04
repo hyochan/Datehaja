@@ -32,6 +32,18 @@ rotation is deterministic and free. Only an answer invokes the low-cost
 companion model. Answers and distilled memory stay private and never enter
 analytics payloads or another Agent’s brief.
 
+What the Agent learns has to be able to reach the matcher, or it is not
+learning the owner can feel. The matcher reads structured taste, so a shifted
+ideal changes nothing until it lands in `preferences`. It lands there only
+through an explicit yes: the Agent proposes the change, states what it would
+replace and why, and the owner accepts or declines. Never write an owner’s
+stated preferences from a model inference alone — an Agent that quietly
+rewrites them is deciding for the person it represents. Proposals are limited
+to taste: personality traits, how much they weigh, and relationship intent.
+Boundaries — age, distance, location, language, budget, smoking and alcohol —
+are the owner’s to set and are never proposed. One proposal is open at a time;
+a queue of them turns a conversation into a form.
+
 Every completed Agent date remains discussable with the owner’s Agent. Messages
 opened from a private debrief are linked to that Agent date, so the Agent can
 explain or be challenged on its own verdict without seeing the other side’s

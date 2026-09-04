@@ -202,6 +202,40 @@ export default defineSchema({
     createdAt: v.number(),
   }).index("by_user_and_created", ["userId", "createdAt"]),
 
+  /**
+   * A change to what the Agent looks for, proposed by the Agent and decided by
+   * its owner.
+   *
+   * Learning that only changes how the Agent talks is not learning the owner
+   * can feel: the matcher reads structured taste, so a shifted ideal has to
+   * reach these fields to change who the Agent actually meets. It reaches them
+   * only through an explicit yes — an Agent that quietly rewrote its owner's
+   * stated preferences would be deciding for them.
+   *
+   * Deliberately limited to taste. Boundaries — age, distance, location,
+   * language, budget, smoking and alcohol — are the owner's to set and are
+   * never proposed here.
+   */
+  agentProposals: defineTable({
+    userId: v.id("users"),
+    /** The date whose debrief prompted this, when one did. */
+    agentDateId: v.optional(v.id("agentDates")),
+    /** Why, in the Agent's voice and the owner's language. */
+    reason: v.string(),
+    preferredPersonalityTraits: v.optional(v.array(v.string())),
+    personalityPreference: v.optional(preferenceStrengthValidator),
+    relationshipIntent: v.optional(relationshipIntentValidator),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("accepted"),
+      v.literal("declined"),
+    ),
+    createdAt: v.number(),
+    resolvedAt: v.optional(v.number()),
+  })
+    .index("by_user_and_status", ["userId", "status"])
+    .index("by_user_and_created", ["userId", "createdAt"]),
+
   /** Private, periodic prompts through which an Agent learns its owner. */
   agentQuestions: defineTable({
     userId: v.id("users"),

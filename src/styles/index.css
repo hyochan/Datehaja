@@ -4572,6 +4572,40 @@ html[lang^="ja"] .agent-debrief-title {
   box-shadow: 0 1.4rem 2.8rem -2.4rem var(--shadow-ink);
 }
 
+/* What the Agent is asking to change, with the value it would replace. */
+.agent-proposal-change {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+}
+
+.agent-proposal-change > div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.agent-proposal-change dt {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.agent-proposal-change dd {
+  margin: 0;
+  font-size: 0.83rem;
+  line-height: 1.5;
+}
+
+.agent-proposal-change s {
+  color: var(--text-muted);
+  text-decoration-thickness: 1px;
+}
+
+.agent-proposal-change b {
+  color: var(--accent-text);
+}
+
 .agent-consent-confirmation::after {
   position: absolute;
   right: -1.5rem;
