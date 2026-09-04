@@ -548,6 +548,8 @@ Object.assign(ko, {
   "contact locked": "연락처 잠김",
   moments: "장면",
   "{count} moments": "{count}개의 장면",
+  "my second self dates for me.": "내 분신이 대신 데이트해요.",
+  "Create one AI second self. It goes on the date as you, meets someone else's, and writes home privately. Contact opens only when both people say yes.": "AI 분신을 하나 만들어요. 나로서 데이트에 나가 다른 사람의 분신을 만나고, 돌아와 나에게만 이야기해요. 연락처는 두 사람이 모두 좋다고 할 때만 열려요.",
   "What I'd look for next": "다음엔 이런 사람을 볼까 해",
   "Should I change who I look for?": "내가 찾는 사람, 바꿔볼까?",
   "Personality I look for": "내가 보는 성향",
@@ -628,6 +630,8 @@ Object.assign(ja, {
   "contact locked": "連絡先はロック中",
   moments: "場面",
   "{count} moments": "{count}場面",
+  "my second self dates for me.": "私の分身が代わりにデートします。",
+  "Create one AI second self. It goes on the date as you, meets someone else's, and writes home privately. Contact opens only when both people say yes.": "AIの分身をひとつ作ります。あなたとしてデートに出かけ、別の誰かの分身と会い、帰ってあなただけに話します。連絡先は二人とも「はい」と答えたときだけ開きます。",
   "What I'd look for next": "次はこんな人を探そうかな",
   "Should I change who I look for?": "探す相手、変えてみようか？",
   "Personality I look for": "探している性格",
@@ -703,6 +707,8 @@ Object.assign(de, {
   "contact locked": "Kontakt gesperrt",
   moments: "Momente",
   "{count} moments": "{count} Momente",
+  "my second self dates for me.": "mein zweites Ich datet für mich.",
+  "Create one AI second self. It goes on the date as you, meets someone else's, and writes home privately. Contact opens only when both people say yes.": "Erstelle ein zweites Ich aus KI. Es geht als du auf das Date, trifft das zweite Ich eines anderen und berichtet dir danach privat. Kontakt entsteht nur, wenn beide zustimmen.",
   "What I'd look for next": "Wonach ich als Nächstes suchen würde",
   "Should I change who I look for?": "Soll ich ändern, nach wem ich suche?",
   "Personality I look for": "Persönlichkeit, auf die ich achte",
@@ -778,6 +784,8 @@ Object.assign(fr, {
   "contact locked": "contact verrouillé",
   moments: "instants",
   "{count} moments": "{count} instants",
+  "my second self dates for me.": "mon autre moi y va à ma place.",
+  "Create one AI second self. It goes on the date as you, meets someone else's, and writes home privately. Contact opens only when both people say yes.": "Créez un autre vous, en IA. Il va au rendez-vous à votre place, rencontre celui de quelqu’un d’autre, puis vous en parle en privé. Les coordonnées ne s’ouvrent que si les deux disent oui.",
   "What I'd look for next": "Ce que je chercherais ensuite",
   "Should I change who I look for?": "Je change qui je cherche ?",
   "Personality I look for": "Le tempérament que je cherche",
@@ -852,6 +860,8 @@ Object.assign(nl, {
   "contact locked": "contact vergrendeld",
   moments: "momenten",
   "{count} moments": "{count} momenten",
+  "my second self dates for me.": "mijn tweede zelf datet voor mij.",
+  "Create one AI second self. It goes on the date as you, meets someone else's, and writes home privately. Contact opens only when both people say yes.": "Maak één AI-tweede-zelf. Het gaat als jou op date, ontmoet dat van iemand anders en vertelt het jou daarna privé. Contact opent alleen als beiden ja zeggen.",
   "What I'd look for next": "Waar ik hierna naar zou zoeken",
   "Should I change who I look for?": "Zal ik veranderen naar wie ik zoek?",
   "Personality I look for": "Het karakter waar ik op let",
@@ -926,6 +936,8 @@ Object.assign(sv, {
   "contact locked": "kontakt låst",
   moments: "ögonblick",
   "{count} moments": "{count} ögonblick",
+  "my second self dates for me.": "mitt andra jag dejtar åt mig.",
+  "Create one AI second self. It goes on the date as you, meets someone else's, and writes home privately. Contact opens only when both people say yes.": "Skapa ett andra jag av AI. Det går på dejten som du, möter någon annans och berättar sedan för dig i enrum. Kontakt öppnas bara när båda säger ja.",
   "What I'd look for next": "Vad jag skulle leta efter härnäst",
   "Should I change who I look for?": "Ska jag ändra vem jag letar efter?",
   "Personality I look for": "Personligheten jag letar efter",
@@ -6442,10 +6454,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.lang = locale;
-    const title = `Datehaja — ${translate(locale, "Your agent dates.")}`;
+    const title = `Datehaja — ${translate(locale, "my second self dates for me.")}`;
     const description = translate(
       locale,
-      "One AI learns the unpolished you, meets other agents in a private virtual world, then comes back and tells you what it really thinks.",
+      "Create one AI second self. It goes on the date as you, meets someone else's, and writes home privately. Contact opens only when both people say yes.",
     );
     document.title = title;
     document

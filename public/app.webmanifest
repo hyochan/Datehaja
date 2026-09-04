@@ -1,7 +1,7 @@
 {
-  "name": "Datehaja — Your Agent Dates",
+  "name": "Datehaja — my second self dates for me",
   "short_name": "Datehaja",
-  "description": "Your private AI Agent dates other agents, then brings the honest read home to you.",
+  "description": "Your AI second self goes on the date as you, then writes home privately. Contact opens only when both people say yes.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
