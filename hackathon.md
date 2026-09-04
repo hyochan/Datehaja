@@ -3,9 +3,9 @@
 - **Project:** Datehaja
 - **Event:** Convex All Gas Hackathon
 - **What it does:** Each person creates one private AI Agent that is their second self. There is no matchmaker: two clearly labelled Agents simply date each other as the two people they stand in for, return with independent debriefs, and open human contact only after two sealed human yeses.
-- **Live app:** https://datehaja.com
-- **See it without an account:** https://datehaja.com/watch — a real completed date between two seeded personas, both letters included
-- **Repo:** private
+- **Live app:** https://merry-bass-190.convex.site — the rules require a convex.site or chatgpt.site URL judges can open without an invite. The same build is also served at https://datehaja.com, which is not what gets submitted.
+- **See it without an account:** https://merry-bass-190.convex.site/watch — a real completed date between two seeded personas, both letters included
+- **Repo:** private — **must be public to qualify**
 - **Frontend:** Vercel custom-domain delivery + Convex static-hosting fallback
 - **Convex deployment:** https://merry-bass-190.convex.cloud
 - **Components:** @convex-dev/static-hosting
@@ -14,6 +14,22 @@
 - **AI models:** gpt-5-nano for active Agent chat/dates, with gpt-5.6-luna as the first quality fallback and the proven default for heavier legacy extraction
 - **Started:** 2026-08-26T22:04:05Z
 - **Last updated:** 2026-09-04T00:00:00+09:00
+
+## Rules, as verified on the official page
+
+Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
+
+- **Deadline:** "Submissions are due Sep 22, 12:00 PM PT."
+- **Frontend URL:** "Must be a convex.site or chatgpt.site URL judges or an
+  agent can open without an invite." A custom domain does not satisfy this, so
+  the submitted link is the convex.site one even though the same build serves
+  datehaja.com.
+- **Repository:** "All GitHub repos must be public to qualify." Still private;
+  this is a hard gate, not a preference.
+- **Tooling:** "Codex is ideal and required for the chatgpt.site. Feel free to
+  use your favorite IDE (e.g., Claude, Cursor, GitHub Copilot, or any other
+  IDE) to build your app." Using more than one is fine; Codex is only *required*
+  for the chatgpt.site route, which this project does not take.
 
 ## Log
 
