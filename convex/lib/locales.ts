@@ -86,3 +86,49 @@ export function sharedDateLocale(
   }
   return preferred;
 }
+
+const LANGUAGE_NAME: Record<string, string> = {
+  en: "English",
+  ko: "Korean",
+  ja: "Japanese",
+  de: "German",
+  fr: "French",
+  nl: "Dutch",
+  sv: "Swedish",
+};
+
+/** The language a supported locale is written in, as a prompt names it. */
+export function languageNameForLocale(locale?: string): string {
+  return LANGUAGE_NAME[normaliseSupportedLocale(locale).split("-")[0]] ?? "English";
+}
+
+/**
+ * How a prompt asks for its output language.
+ *
+ * Naming the language was not enough. Every prompt followed it with a register
+ * hint that quoted Korean for every language — "write in English (in Korean,
+ * 친근한 반말)" — and a model reading that took the last cue it saw: every
+ * verdict on an English account came back in Korean. The hint now exists only
+ * in the language it applies to, so the directive never mentions a second one.
+ */
+export function languageDirective(locale?: string): string {
+  const language = languageNameForLocale(locale);
+  if (language === "Korean") {
+    return "Korean, in 친근한 반말 — the casual register close friends use";
+  }
+  return `${language}, in the casual register two people use once they are at ease`;
+}
+
+/** A first-turn greeting example in the date's own language, and only that one. */
+export function greetingExample(locale: string | undefined, name: string): string {
+  return languageNameForLocale(locale) === "Korean"
+    ? `"안녕, 나는 ${name}야"`
+    : `"I'm ${name}"`;
+}
+
+/** The first-person pronouns to insist on, in the date's own language only. */
+export function firstPersonRule(locale?: string): string {
+  return languageNameForLocale(locale) === "Korean"
+    ? 'Speak in the first person throughout — "나", "내가" — and never say "내 친구" or "네 친구".'
+    : 'Speak in the first person throughout — "I" — and never say "my friend" or "your friend".';
+}

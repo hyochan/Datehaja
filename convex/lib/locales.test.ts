@@ -1,6 +1,10 @@
 import { describe, expect, test } from "vitest";
 import {
+  firstPersonRule,
+  greetingExample,
+  languageDirective,
   languageForLocale,
+  languageNameForLocale,
   normaliseSupportedLocale,
   sharedDateLocale,
 } from "./locales";
@@ -41,5 +45,32 @@ describe("normaliseSupportedLocale", () => {
     expect(normaliseSupportedLocale(undefined, "KR")).toBe("ko-KR");
     expect(normaliseSupportedLocale("zz-ZZ", "JP")).toBe("ja-JP");
     expect(normaliseSupportedLocale(undefined, undefined)).toBe("en-US");
+  });
+});
+
+describe("languageDirective", () => {
+  // Every verdict on an English account came back in Korean because the
+  // directive quoted a Korean register hint after naming English. A directive
+  // may name exactly one language.
+  test("never mentions a second language", () => {
+    for (const locale of ["en-US", "en-GB", "ja-JP", "de-DE", "fr-FR", "nl-NL", "sv-SE"]) {
+      const directive = languageDirective(locale);
+      expect(directive).toContain(languageNameForLocale(locale));
+      expect(directive).not.toMatch(/[가-힣]/);
+      expect(greetingExample(locale, "Juno")).not.toMatch(/[가-힣]/);
+      expect(firstPersonRule(locale)).not.toMatch(/[가-힣]/);
+    }
+  });
+
+  test("asks for 반말 only when the date is in Korean", () => {
+    expect(languageDirective("ko-KR")).toContain("Korean");
+    expect(languageDirective("ko-KR")).toContain("반말");
+    expect(greetingExample("ko-KR", "Sol")).toBe('"안녕, 나는 Sol야"');
+    expect(firstPersonRule("ko-KR")).toContain("내 친구");
+  });
+
+  test("falls back to English for an unknown or missing locale", () => {
+    expect(languageDirective(undefined)).toMatch(/^English/);
+    expect(languageDirective("zz-ZZ")).toMatch(/^English/);
   });
 });
