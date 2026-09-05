@@ -43,6 +43,7 @@ function shell(
   body: string,
   footerNote: string,
   settingsNote = "You can change what Datehaja emails you, or pause matching entirely, in Settings.",
+  hero = "",
 ): string {
   return `<!doctype html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -50,10 +51,13 @@ function shell(
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BRAND.sand};padding:32px 16px;">
     <tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border:1px solid ${BRAND.border};border-radius:18px;overflow:hidden;">
-        <tr><td style="padding:28px 32px 8px 32px;">
+        ${
+          hero ||
+          `<tr><td style="padding:28px 32px 8px 32px;">
           <div style="font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:${BRAND.muted};font-weight:600;">Datehaja</div>
-        </td></tr>
-        <tr><td style="padding:8px 32px 28px 32px;">${body}</td></tr>
+        </td></tr>`
+        }
+        <tr><td style="padding:${hero ? "24px" : "8px"} 32px 28px 32px;">${body}</td></tr>
       </table>
       <div style="max-width:520px;margin:18px auto 0;font-size:12px;line-height:1.6;color:${BRAND.muted};text-align:left;">
         ${footerNote}<br>
@@ -425,7 +429,8 @@ function agentLetterHtml(copy: AgentReportCopy, letter: AgentLetter): string {
         ${verdictLine}
       </td>
     </tr></table>
-    <div style="padding-left:14px;border-left:3px solid ${style.accent};font-size:15px;line-height:1.7;color:${BRAND.ink};">${escapeHtml(compactEmailText(letter.message, 640))}</div>
+    <div style="font-family:Georgia,'Times New Roman',serif;font-size:17px;line-height:1.72;color:${BRAND.ink};">${escapeHtml(compactEmailText(letter.message, 900))}</div>
+    <div style="margin-top:10px;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:15px;color:${style.fg};">&mdash; ${escapeHtml(letter.agentName)}</div>
     ${notes}`;
   return `<div style="margin:4px 0 20px;">${section(copy.letter, body, true)}</div>`;
 }
@@ -439,6 +444,49 @@ function showsSource(report: AgentDateEmailReport): boolean {
   const title = report.worldSourceTitle?.trim();
   if (!title) return false;
   return !report.setting.includes(title.slice(0, 40));
+}
+
+/**
+ * The two Agents standing where they met, on the product's own dark ground.
+ * This is what the owner opened the email for — not a label, the scene. Falls
+ * back to initial chips when a sprite is unavailable, never to an empty band.
+ */
+function worldBandHtml(
+  copy: AgentReportCopy,
+  report: AgentDateEmailReport,
+): string {
+  const ownerChip = chipFor(report.ownerPalette, DEFAULT_OWNER_CHIP);
+  const counterpartChip = chipFor(
+    report.counterpartPalette,
+    DEFAULT_COUNTERPART_CHIP,
+  );
+  const figure = (
+    name: string,
+    chip: { bg: string; fg: string },
+    spriteUrl: string | undefined,
+  ) =>
+    spriteUrl
+      ? `<img src="${escapeHtml(spriteUrl)}" alt="${escapeHtml(name)}" width="72" height="104" style="display:block;width:72px;height:104px;object-fit:contain;object-position:bottom center;border:0;" />`
+      : agentFaceHtml(name, chip, undefined, 56);
+  return `<tr><td style="padding:0;background:#21171d;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#21171d;">
+      <tr><td style="padding:22px 32px 0;">
+        <div style="font-family:Georgia,serif;font-style:italic;font-size:22px;font-weight:600;color:#fff9f6;">Datehaja</div>
+      </td></tr>
+      <tr><td align="center" style="padding:14px 32px 0;">
+        <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+          <td style="vertical-align:bottom;padding:0 10px;">${figure(report.agentName, ownerChip, report.ownerSpriteUrl)}</td>
+          <td style="vertical-align:middle;padding:0 4px 30px;color:#ff9b9a;font-size:18px;letter-spacing:4px;">&middot;&middot;&middot;</td>
+          <td style="vertical-align:bottom;padding:0 10px;">${figure(report.counterpartAgentName, counterpartChip, report.counterpartSpriteUrl)}</td>
+        </tr></table>
+        <div style="margin:-14px auto 0;width:240px;height:22px;border-radius:50%;background:#3d2530;"></div>
+      </td></tr>
+      <tr><td align="center" style="padding:14px 32px 24px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#b798a3;">${escapeHtml(copy.scene)}</div>
+        <div style="margin-top:6px;font-size:14px;line-height:1.5;color:#f3e4e6;">${escapeHtml(compactEmailText(report.setting, 110))}</div>
+      </td></tr>
+    </table>
+  </td></tr>`;
 }
 
 /** Tiny inline face used next to an Agent's name in running text. */
@@ -534,7 +582,8 @@ function agentLetterText(copy: AgentReportCopy, letter: AgentLetter): string {
     : null;
   const lines = [
     `${copy.letter} — ${letter.agentName}${badgeLabel ? ` · ${badgeLabel}` : ""}`,
-    compactEmailText(letter.message, 640),
+    compactEmailText(letter.message, 900),
+    `— ${letter.agentName}`,
   ];
   if (letter.detailLabel && letter.detail) {
     lines.push(`${letter.detailLabel}: ${letter.detail}`);
@@ -655,7 +704,7 @@ export function agentDebriefEmail(args: {
           : args.verdict === "pass"
             ? `${args.agentName}: 이번 만남은 보내주는 게 좋겠어요`
             : `${args.agentName}: 한 번 더 알아보고 싶어요`,
-      greeting: `${args.firstName}님, ${args.agentName}와 ${args.counterpartAgentName}가 가상 데이트를 마치고 돌아왔어요.`,
+      greeting: `${args.firstName}, 나 왔어. ${args.counterpartAgentName} 만나고 돌아왔어.`,
       reason: "가장 크게 본 이유",
       next: "다음에는 이런 사람을 찾아볼게요",
       read: "대화와 리포트를 읽고 나서, 만나볼지 나만의 답을 남겨주세요",
@@ -677,7 +726,7 @@ export function agentDebriefEmail(args: {
           : args.verdict === "pass"
             ? `${args.agentName}は、今回は見送るのがよいと思っています`
             : `${args.agentName}は、もう少し知りたいと思っています`,
-      greeting: `${args.firstName}さん、${args.agentName}と${args.counterpartAgentName}がバーチャルデートから戻りました。`,
+      greeting: `${args.firstName}さん、ただいま。${args.counterpartAgentName}に会ってきたよ。`,
       reason: "最も重要な理由",
       next: "次に探すポイント",
       read: "会話とレポートを読み、非公開で決めてください",
@@ -698,7 +747,7 @@ export function agentDebriefEmail(args: {
           : args.verdict === "pass"
             ? `${args.agentName} würde dieses Date loslassen`
             : `${args.agentName} ist neugierig zurückgekehrt`,
-      greeting: `Hallo ${args.firstName}, ${args.agentName} und ${args.counterpartAgentName} sind von ihrem virtuellen Date zurück.`,
+      greeting: `Hallo ${args.firstName} — ich bin zurück von meinem Date mit ${args.counterpartAgentName}.`,
       reason: "Wichtigster Grund",
       next: "Wonach ich als Nächstes suche",
       read: "Lies das Gespräch und entscheide vertraulich",
@@ -720,7 +769,7 @@ export function agentDebriefEmail(args: {
           : args.verdict === "pass"
             ? `${args.agentName} laisserait passer cette rencontre`
             : `${args.agentName} revient avec curiosité`,
-      greeting: `Bonjour ${args.firstName}, ${args.agentName} et ${args.counterpartAgentName} sont revenus de leur rendez-vous virtuel.`,
+      greeting: `Salut ${args.firstName} — je reviens de mon rendez-vous avec ${args.counterpartAgentName}.`,
       reason: "Raison principale",
       next: "Ce que je chercherai ensuite",
       read: "Lisez la conversation et décidez en privé",
@@ -742,7 +791,7 @@ export function agentDebriefEmail(args: {
           : args.verdict === "pass"
             ? `${args.agentName} zou deze ontmoeting laten gaan`
             : `${args.agentName} kwam nieuwsgierig terug`,
-      greeting: `Hoi ${args.firstName}, ${args.agentName} en ${args.counterpartAgentName} zijn terug van hun virtuele date.`,
+      greeting: `Hoi ${args.firstName} — ik ben terug van mijn date met ${args.counterpartAgentName}.`,
       reason: "Belangrijkste reden",
       next: "Waar ik hierna naar zoek",
       read: "Lees het gesprek en beslis in alle rust",
@@ -764,7 +813,7 @@ export function agentDebriefEmail(args: {
           : args.verdict === "pass"
             ? `${args.agentName} skulle släppa den här kontakten`
             : `${args.agentName} kom tillbaka nyfiken`,
-      greeting: `Hej ${args.firstName}, ${args.agentName} och ${args.counterpartAgentName} är tillbaka från sin virtuella dejt.`,
+      greeting: `Hej ${args.firstName} — jag är tillbaka från min dejt med ${args.counterpartAgentName}.`,
       reason: "Viktigaste skälet",
       next: "Vad jag letar efter nästa gång",
       read: "Läs samtalet och bestäm privat",
@@ -785,7 +834,7 @@ export function agentDebriefEmail(args: {
         : args.verdict === "pass"
           ? `${args.agentName} would let this one go`
           : `${args.agentName} came back curious`,
-    greeting: `Hi ${args.firstName}, ${args.agentName} and ${args.counterpartAgentName} are back from their virtual date.`,
+    greeting: `Hi ${args.firstName} — I'm back from my date with ${args.counterpartAgentName}.`,
     reason: "Primary reason",
     next: "What I'll look for next",
     read: "Read the transcript and decide privately",
@@ -835,19 +884,22 @@ ${localized.privacy}
 — Datehaja`;
 
   return {
-    subject: localized.subject,
+    // The Agent's own headline is the subject: what it concluded, in its
+    // voice, before the mail is even opened.
+    subject: localized.headline,
     text,
     html: shell(
       h1(localized.headline) +
         p(localized.greeting) +
         agentLetterHtml(copy, letter) +
+        `<div style="margin:2px 0 26px;">${button(args.conversationUrl, localized.talk)}</div>` +
         agentDateReportHtml(copy, args.report) +
         p(localized.talkNote) +
-        `<div style="margin-top:20px;">${button(args.conversationUrl, localized.talk)}</div>` +
-        `<div style="margin-top:10px;">${secondaryButton(args.url, localized.button)}</div>` +
+        `<div style="margin-top:14px;">${secondaryButton(args.url, localized.button)}</div>` +
         `<p style="margin:18px 0 0;font-size:13px;line-height:1.6;color:${BRAND.muted};">${escapeHtml(localized.privacy)}</p>`,
       localized.footer,
       localized.settings,
+      worldBandHtml(copy, args.report),
     ),
   };
 }

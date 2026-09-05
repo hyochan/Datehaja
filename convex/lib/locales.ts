@@ -132,3 +132,22 @@ export function firstPersonRule(locale?: string): string {
     ? 'Speak in the first person throughout — "나", "내가" — and never say "내 친구" or "네 친구".'
     : 'Speak in the first person throughout — "I" — and never say "my friend" or "your friend".';
 }
+
+/**
+ * What to say about introducing yourself, given which turn this is.
+ *
+ * The prompt used to ask for an introduction on "your first turn only", but
+ * an economy model given every turn the same instruction kept greeting Sol
+ * afresh on turn three — and the debrief email quotes those turns. A later
+ * turn now gets the opposite instruction, not a caveat on the same one.
+ */
+export function introductionRule(
+  round: number,
+  locale: string | undefined,
+  name: string,
+): string {
+  if (round <= 1) {
+    return `This is your first turn: greet casually and introduce yourself by your own name (for example ${greetingExample(locale, name)}), then get to the point.`;
+  }
+  return "You already introduced yourself earlier in this conversation. Do not greet again and do not introduce yourself again — pick up exactly where the last message left off.";
+}
