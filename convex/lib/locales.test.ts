@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import {
   firstPersonRule,
   greetingExample,
+  introductionRule,
   languageDirective,
   languageForLocale,
   languageNameForLocale,
@@ -72,5 +73,20 @@ describe("languageDirective", () => {
   test("falls back to English for an unknown or missing locale", () => {
     expect(languageDirective(undefined)).toMatch(/^English/);
     expect(languageDirective("zz-ZZ")).toMatch(/^English/);
+  });
+});
+
+describe("introductionRule", () => {
+  test("asks for an introduction on the first turn only", () => {
+    expect(introductionRule(1, "en-US", "Juno")).toContain('"I\'m Juno"');
+    expect(introductionRule(1, "ko-KR", "Sol")).toContain("안녕, 나는 Sol야");
+  });
+
+  test("forbids greeting again on every later turn", () => {
+    for (const round of [2, 3, 6]) {
+      const rule = introductionRule(round, "en-US", "Juno");
+      expect(rule).toContain("Do not greet again");
+      expect(rule).not.toContain("I'm Juno");
+    }
   });
 });

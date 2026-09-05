@@ -59,9 +59,11 @@ describe("agent debrief email", () => {
   it("keeps the Korean debrief entirely user-facing and localized", () => {
     const email = agentDebriefEmail({ ...base, locale: "ko-KR" });
 
-    expect(email.subject).toContain("비공개 데이트 리포트");
-    expect(email.text).toContain("Mina님");
-    expect(email.text).toContain("가상 데이트");
+    // The subject is the Agent's own headline now, not a system notice.
+    expect(email.subject).toBe("Sol: 한 번 더 알아보고 싶어요");
+    // The Agent speaks first, in its own voice, in the reader's language.
+    expect(email.text).toContain("Mina, 나 왔어. Juno 만나고 돌아왔어.");
+    expect(email.text).toContain("그날의 데이트 이야기");
     expect(email.text).not.toContain("Your agent is back");
     expect(email.html).toContain("나만의 비공개 리포트 보기");
     expect(email.html).toContain("늦은 저녁, 조용한 레코드 바");
@@ -161,7 +163,7 @@ describe("agent debrief email", () => {
       report: englishReport,
     });
 
-    expect(email.subject).toBe("Your agent is back — a private debrief");
+    expect(email.subject).toBe("Sol came back curious");
     expect(email.text).toContain("Hi Mina");
     expect(email.text).not.toMatch(/[가-힣]/);
     expect(email.html).toContain("Open my private debrief");
@@ -225,5 +227,48 @@ describe("agent connection email", () => {
     expect(english.html).toContain("The date, as it happened");
     expect(english.html).toContain("What they said");
     expect(english.text).not.toMatch(/[가-힣]/);
+  });
+});
+
+describe("the debrief as a letter", () => {
+  it("speaks one language at a time", () => {
+    const english = agentDebriefEmail({ ...base, locale: "en-US", reason: "The pace felt right.", report: englishReport });
+    expect(english.html).not.toMatch(/[가-힣]/);
+    expect(english.text).not.toMatch(/[가-힣]/);
+    expect(english.subject).not.toMatch(/[가-힣]/);
+
+    const korean = agentDebriefEmail({ ...base, locale: "ko-KR" });
+    for (const label of ["Primary reason", "What they said", "The atmosphere", "A note from your Agent", "moments"]) {
+      expect(korean.html).not.toContain(label);
+    }
+  });
+
+  it("puts the Agent's own headline in the subject", () => {
+    const email = agentDebriefEmail({ ...base, locale: "en-US", report: englishReport });
+    expect(email.subject).toBe("Sol came back curious");
+    expect(agentDebriefEmail({ ...base, locale: "ko-KR" }).subject).toBe(
+      "Sol: 한 번 더 알아보고 싶어요",
+    );
+  });
+
+  it("is signed by the Agent and opens with both of them in the world", () => {
+    const email = agentDebriefEmail({ ...base, locale: "en-US", report: englishReport });
+    expect(email.html).toContain("&mdash; Sol");
+    expect(email.text).toContain("— Sol");
+    // The band precedes the headline and carries both faces and the scene.
+    const band = email.html.indexOf("sprite-sunset-v1.png");
+    expect(band).toBeGreaterThan(-1);
+    expect(band).toBeLessThan(email.html.indexOf("Sol came back curious"));
+    expect(email.html.indexOf("sprite-sky-v1.png")).toBeLessThan(email.html.indexOf("Sol came back curious"));
+    expect(email.html).toContain("A quiet record bar after dark");
+  });
+
+  it("asks to talk it over right under the letter, before the report", () => {
+    const email = agentDebriefEmail({ ...base, locale: "en-US", report: englishReport });
+    const letter = email.html.indexOf("&mdash; Sol");
+    const talk = email.html.indexOf("Talk this date over with Sol");
+    const report = email.html.indexOf("The date, as it happened");
+    expect(letter).toBeLessThan(talk);
+    expect(talk).toBeLessThan(report);
   });
 });

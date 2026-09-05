@@ -41,7 +41,7 @@ export const provisionAgentMail = internalAction({
     try {
       const inbox = await createInbox({
         username,
-        displayName: "Datehaja Concierge",
+        displayName: "Datehaja",
         clientId: "datehaja-concierge-v1",
       });
       inboxId = inbox.inbox_id;

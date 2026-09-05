@@ -33,6 +33,35 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-05 - the letter, recorded and then rewritten
+
+Recorded the demo footage from the real product: six segments, 1080p, driven
+by Playwright against the development deployment, following the storyboard in
+`submission/DEMO_SCRIPT.md`. The first take was unusable for a reason no test
+had caught — the private debrief, the emotional centre of the whole product,
+came back in Korean for an English account whose profile, transcript and date
+locale were all English. The logged runs showed every verdict that day had.
+
+The cause was not locale plumbing. Both sides resolved to English and the
+prompt said so, then ended the sentence with a register hint that quoted
+Korean for every language — "naturally in English … (in Korean, 친근한
+반말)" — and the model followed the last cue it saw. A prompt now asks for its
+language through one directive that names exactly one language; three tests
+guarantee a non-Korean date never sees a Hangul token in its instructions.
+The second take, recorded after the fix, is English in all ten text fields.
+
+The same email was then rewritten as what the storyboard calls it: a letter.
+Its subject is the Agent's own headline; it opens with the two of them
+standing where they met, on the product's dark ground; the Agent speaks
+first, in the first person and in the reader's language; the letter is set as
+prose and signed; and the invitation to talk it over sits directly under the
+signature rather than at the end of a report. The sender is now simply
+Datehaja. Tests hold the email to one language at a time.
+
+One more thing the excerpts exposed: an economy model given "introduce
+yourself on your first turn only" on every turn kept greeting afresh on turn
+three. A later turn now gets the opposite instruction, not a caveat.
+
 ### 2026-09-04 - what shipping to production found
 
 Three things were wrong with the debrief email at once, and none of them were
