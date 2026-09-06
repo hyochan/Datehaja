@@ -1,6 +1,17 @@
 # Submission assets
 
-Drafts only — nothing here has been posted. Post from your own accounts.
+**Status: nothing here has been posted yet.** Update this line when it goes out.
+
+Everything below is copy to post from your own accounts. The submission form is
+at https://vibeapps.dev/judging/convex-all-gas-hackathon-openai/submit.
+
+Two conventions hold across every link that leaves this project:
+
+- **Lead with `/watch`, not the front page.** A stranger's first screen should
+  be a finished agent date, not a sign-up form. The front page is where they go
+  after they already want one.
+- **Tag every outbound link**, so the funnel can tell channels apart instead of
+  reading `(direct)`: `?utm_source=x|linkedin|hn&utm_campaign=allgas`.
 
 ---
 
@@ -42,33 +53,42 @@ the scheduler as the workflow engine that walks a date through its six turns,
 file storage, pagination, and Convex Auth. The app you are looking at is served
 from the same convex.site origin as its own webhook.
 
+The scheduler is the part worth pausing on. A date is not a six-call animation
+held open by one request: each turn is written to Convex before the next is
+scheduled, so either person can close the tab mid-date, come back, and find it
+still running.
+
 **The sponsors are load-bearing, not decorative**
 
 - **OpenAI** runs the dates. Each turn is generated for one Agent from only
   that Agent's private brief, and each verdict is written to its own human in
-  their own language.
+  their own language. The isolation is enforced in the query that builds the
+  prompt, not in the prompt itself.
 - **Firecrawl** decides where the date happens. It reads the live cultural web
-  and the world is drawn around what it found, with the source kept and shown.
+  and the world is drawn around what it found — a cinema, a market, a gallery
+  — with the source kept and shown in the debrief.
 - **AgentMail** is what makes the privacy promise real. It carries the
-  sign-in code and the debrief letters, and the two people on one date are
+  sign-in code and the two private letters, and the two people on one date are
   always mailed separately, so neither address ever appears in the other's
   header.
 
 **Seeing it without an account at all**
 
-https://merry-bass-190.convex.site/watch replays a real completed date — the world, the six
-turns, and both private letters — with no sign-up. It is served by a query that
-will only ever return a date between two seeded personas, so no real person's
-conversation can reach it.
+https://merry-bass-190.convex.site/watch replays a real completed date — the
+world, the six turns, and both private letters — with no sign-up. It is served
+by a query that will only ever return a date between two seeded personas, so no
+real person's conversation can reach it.
 
 If you would rather drive it yourself: sign in, send your Agent scouting, and
-you can watch a full date and read the private debrief in about a minute,
-alone. The fictional Agents are seeded and labelled as such.
+you can watch a full date and read the private letter in about a minute, alone.
+The fictional Agents are seeded and labelled as such.
 
-218 tests, plus end-to-end suites that create real accounts, take the sign-in
-code from a real inbox, and run a date through to the human decision.
+Over two hundred unit and Convex tests, plus end-to-end suites that create real
+accounts, take the sign-in code from a real inbox, and run a date through to the
+human decision. The demo film is recorded by one of those suites against the
+running product, so it cannot quietly describe an app that no longer exists.
 
-Live: https://merry-bass-190.convex.site (also served at https://datehaja.com)
+Live: https://merry-bass-190.convex.site
 Watch a date: https://merry-bass-190.convex.site/watch
 Code: https://github.com/hyochan/Datehaja
 
@@ -83,13 +103,14 @@ Code: https://github.com/hyochan/Datehaja
 > Datehaja sends your AI instead.
 >
 > It meets the other person's AI, they talk in a world built around a real
-> place, and yours comes home and tells you honestly whether you should meet.
+> place, and yours comes home and writes you a letter about whether you should
+> meet.
 >
 > Neither of you has the other's contact until you both say yes.
 >
-> Built for @convex All Gas 👇
+> Watch one, no account needed 👇
 >
-> https://merry-bass-190.convex.site
+> https://merry-bass-190.convex.site/watch?utm_source=x&utm_campaign=allgas
 
 ### Option B — the technical thread opener
 
@@ -122,16 +143,17 @@ Code: https://github.com/hyochan/Datehaja
 > sign-in code.
 
 > 5/ Convex is the backend and the delivery. Live queries mean both people
-> watch the date unfold with no refresh; the scheduler walks it through six
-> turns; a consent is one transaction, so there is no state where one person
-> is connected and the other is not. The frontend is served from the same
-> convex.site origin as the webhook.
+> watch the date unfold with no refresh. The scheduler is the workflow engine:
+> each turn is written before the next is scheduled, so you can close the tab
+> mid-date and come back to it still running. A consent is one transaction, so
+> there is no state where one person is connected and the other is not. The
+> frontend is served from the same convex.site origin as the webhook.
 
 > 6/ Contact opens only when both humans say yes, independently, without
 > knowing what the other chose. If one passes, the other is told kindly and
 > nobody's address moves.
 >
-> Live: https://merry-bass-190.convex.site
+> Watch a real one: https://merry-bass-190.convex.site/watch?utm_source=x&utm_campaign=allgas
 > Code: https://github.com/hyochan/Datehaja
 
 ---
@@ -145,7 +167,7 @@ Code: https://github.com/hyochan/Datehaja
 > unpolished version of you. It meets another person's Agent in a world drawn
 > around a real place, they talk for six turns, and then each Agent writes
 > privately to its own human — what it noticed, where it hesitated, and whether
-> it thinks you should meet.
+> it thinks you should meet. A letter, not a compatibility score.
 >
 > Contact opens only after both people say yes, independently. Until then
 > neither of you has the other's email.
@@ -154,19 +176,20 @@ Code: https://github.com/hyochan/Datehaja
 > OpenAI runs the dates, Firecrawl chooses where they happen from the live web,
 > and AgentMail delivers each private letter separately.
 >
-> https://merry-bass-190.convex.site
+> You can watch a real agent date without an account:
+> https://merry-bass-190.convex.site/watch?utm_source=linkedin&utm_campaign=allgas
 
 ---
 
 ## Screenshots to capture
 
-Re-capture after the finger-heart brand landed; the older frames show the
-previous mark.
+Capture these from the current build — the earlier frames predate the
+finger-heart mark and the letter rewrite.
 
 1. The landing hero — "Let your Agent go first."
 2. The Agent editor with a face being chosen.
 3. The date world mid-conversation, both sprites and a speech bubble.
-4. The private debrief letter, with the Agent's verdict badge.
+4. The private letter, with the Agent's verdict badge.
 5. The sealed decision — one side answered, the other still hidden.
 6. The mutual yes and the revealed contact.
 
@@ -174,4 +197,5 @@ previous mark.
 
 @convex @OpenAI @firecrawl @agentmail — the hackathon cohosts and partners.
 Use the live convex.site URL, since that is the deployment the submission
-names.
+names, and point the link at `/watch` unless the post is specifically about
+signing up.
