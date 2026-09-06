@@ -17,7 +17,7 @@ bunx convex run demo:reseed '{}'      # the labelled fictional Agents
 bunx convex run showcase:ensure '{}'  # the completed date /watch replays
 
 # 3. record, then cut
-DATEHAJA_DEMO_RECORD=1 bun run demo:record
+bun run demo:record
 bun run demo:build         # → submission/Datehaja-demo.mp4
 ```
 
@@ -30,8 +30,7 @@ it — the sign-in code then arrives in the real AgentMail inbox rather than
 through the development path:
 
 ```bash
-E2E_BASE_URL=https://merry-bass-190.convex.site \
-DATEHAJA_DEMO_RECORD=1 bun run demo:record
+E2E_BASE_URL=https://merry-bass-190.convex.site bun run demo:record
 ```
 
 ## How the timing works

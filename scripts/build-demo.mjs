@@ -57,7 +57,7 @@ if (spawnSync("ffmpeg", ["-version"], { stdio: "ignore" }).status !== 0) {
 
 if (!existsSync(MARKS)) {
   die(
-    `No recording found at ${MARKS}.\n  Record one first:  DATEHAJA_DEMO_RECORD=1 bun run demo:record`,
+    `No recording found at ${MARKS}.\n  Record one first:  bun run demo:record`,
   );
 }
 
@@ -192,7 +192,15 @@ const probe = spawnSync(
   ],
   { encoding: "utf8" },
 );
-const seconds = Number.parseFloat(probe.stdout ?? "0");
+if (probe.error || probe.status !== 0) {
+  die(`ffprobe could not read ${OUTPUT}, so the three-minute limit is unverified.`);
+}
+const seconds = Number.parseFloat(probe.stdout ?? "");
+if (!Number.isFinite(seconds) || seconds <= 0) {
+  die(
+    `ffprobe reported no usable duration for ${OUTPUT} (${JSON.stringify(probe.stdout)}), so the three-minute limit is unverified.`,
+  );
+}
 
 console.log(`\n  ${OUTPUT}`);
 console.log(

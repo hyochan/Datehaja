@@ -17,7 +17,7 @@ import { dirname } from "node:path";
  * the same length whatever the models did that day, and DEMO_CAPTIONS.srt
  * lines up without being retimed by hand.
  *
- *   DATEHAJA_DEMO_RECORD=1 bun run demo:record
+ *   bun run demo:record   (sets DATEHAJA_DEMO_RECORD=1 for the guard below)
  *   bun run demo:build
  */
 
