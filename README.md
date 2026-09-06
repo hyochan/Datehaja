@@ -203,4 +203,4 @@ The legacy date-planning product (availability windows, matching runs, venue res
 
 ## Status
 
-This is a pre-commercial hackathon beta on the `feat/agent-dating` branch. It is not yet a claim of production-grade identity or real-world safety. The repository should remain private until the submission rules allow publication.
+This is a pre-commercial hackathon beta. It is not yet a claim of production-grade identity or real-world safety. The repository is public because the All Gas rules require every submitted repository to be, so read what is here as a submission artifact rather than a finished service.

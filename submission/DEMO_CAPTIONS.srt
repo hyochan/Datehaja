@@ -1,39 +1,99 @@
 1
-00:00:00,000 --> 00:00:13,566
-Dating apps ask who you like, then make you swipe and chat for days. Datehaja asks one smaller question: when are you free? Give us one evening, and we return a researched date plan with someone who can actually make it.
+00:00:00,000 --> 00:00:06,500
+The worst part of a dating app is not the matching. It is the first date you already know will not work.
 
 2
-00:00:13,566 --> 00:00:28,408
-This is the whole input: Monday, six to ten thirty, interpreted in Seoul time, not the browser's timezone. Datehaja looks for genuine overlap before it ever considers chemistry, so the date begins with two people who can both be there.
+00:00:06,500 --> 00:00:13,000
+You spend an evening, and your phone number, finding that out.
 
 3
-00:00:28,408 --> 00:00:48,075
-These are real Convex document updates, not a timed spinner. Hard TypeScript rules enforce age, mutual intent, distance, safety state and a real calendar overlap. A deterministic score explains the fit. OpenAI only ranks survivors, and Firecrawl researches real public venues from the live web.
+00:00:13,000 --> 00:00:20,000
+Datehaja sends someone else. You stay home. Your Agent goes first.
 
 4
-00:00:48,075 --> 00:01:04,175
-The plan arrives with a time, two real places, a walking handoff and a budget. Every stop carries the source page Firecrawl found. OpenAI composes only from that evidence. In today's production run, this full plan arrived in about thirty six seconds.
+00:00:20,000 --> 00:00:26,500
+You build one Agent. It is not a matchmaker and not a go-between. It is your second self.
 
 5
-00:01:04,175 --> 00:01:18,642
-AgentMail gives the product its own concierge identity. The two invitations are sent separately, so neither person sees the other's address in the app, sender field or C C list. Replies return to Datehaja, not to the match.
+00:00:26,500 --> 00:00:33,000
+Give it a face. Then tell it the things that do not fit inside a dating profile.
 
 6
-00:01:18,642 --> 00:01:31,675
-I accept. My evening is now reserved, but nothing is confirmed and the other person cannot see my answer. If they pass, Datehaja keeps my acceptance alive and searches for a replacement instead of cancelling on me.
+00:00:33,000 --> 00:00:40,000
+Who you hope it notices. And the version of you that your close friends already know.
 
 7
-00:01:31,675 --> 00:01:45,416
-The fictional demo persona accepts from the control panel. A second window stays untouched. Without a refresh or navigation, its live Convex query changes from waiting to It's a date. The transaction is the animation.
+00:00:40,000 --> 00:00:45,500
+The Agent keeps a private room, and it remembers what you correct in there.
 
 8
-00:01:45,416 --> 00:02:04,216
-The calendar subscription follows Convex state. One acceptance creates a tentative reservation. Two acceptances finalize the same event. A withdrawal, cancellation or unsuccessful replacement marks it cancelled, without creating duplicates. It works with Google Calendar and any webcal client.
+00:00:45,500 --> 00:00:50,000
+None of it ever reaches the other person's Agent.
 
 9
-00:02:04,216 --> 00:02:22,282
-Safety is an action, not a claim. A trusted contact can receive my first name, confirmed time and public venue, but never the match's identity. After the date, each person can respond privately. Datehaja plainly says it does not verify identity and plans public places only.
+00:00:50,000 --> 00:00:57,000
+Now send it out. Two Agents meet as the two people they stand in for.
 
 10
-00:02:22,282 --> 00:02:39,149
-Datehaja starts with what you actually want to do. Convex keeps the whole journey transactional and realtime. OpenAI ranks and composes. Firecrawl brings current evidence. AgentMail keeps both people private. Bring the idea; we find someone who wants to join.
+00:00:57,000 --> 00:01:04,000
+Nobody is being set up. They speak in the first person, as themselves.
+
+11
+00:01:04,000 --> 00:01:11,000
+The world is drawn around a real place Firecrawl found on the live cultural web this morning.
+
+12
+00:01:11,000 --> 00:01:18,000
+The source stays attached to the date, so you can check where it came from.
+
+13
+00:01:18,000 --> 00:01:26,000
+Six turns. Each one is written to Convex before the next is scheduled.
+
+14
+00:01:26,000 --> 00:01:35,000
+So either person can close the tab and come back. The date is still running.
+
+15
+00:01:35,000 --> 00:01:42,000
+Then each Agent goes home and writes to its own human, privately.
+
+16
+00:01:42,000 --> 00:01:50,000
+Not a compatibility score. A letter.
+
+17
+00:01:50,000 --> 00:01:58,000
+What it noticed, where it hesitated, and whether it thinks the two of you should meet.
+
+18
+00:01:58,000 --> 00:02:07,000
+Written in your language. You will never see theirs, and they will never see yours.
+
+19
+00:02:07,000 --> 00:02:15,000
+The same letter arrives by mail, sent separately from the Agent's own AgentMail inbox.
+
+20
+00:02:15,000 --> 00:02:22,000
+Now you answer. You do not know what they answered.
+
+21
+00:02:22,000 --> 00:02:29,000
+Your consent is one transaction. It can never land half applied.
+
+22
+00:02:29,000 --> 00:02:37,000
+Two independent yeses, and contact opens for the first time.
+
+23
+00:02:37,000 --> 00:02:45,000
+Until this moment, neither person had the other's email address.
+
+24
+00:02:45,000 --> 00:02:50,000
+Convex is the whole backend, and it serves this app itself from convex.site.
+
+25
+00:02:50,000 --> 00:02:55,000
+Watch a real agent date, with no account: merry-bass-190.convex.site/watch
