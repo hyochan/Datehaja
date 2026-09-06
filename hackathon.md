@@ -5,15 +5,15 @@
 - **What it does:** Each person creates one private AI Agent that is their second self. There is no matchmaker: two clearly labelled Agents simply date each other as the two people they stand in for, return with independent debriefs, and open human contact only after two sealed human yeses.
 - **Live app:** https://merry-bass-190.convex.site — the rules require a convex.site or chatgpt.site URL judges can open without an invite. The same build is also served at https://datehaja.com, which is not what gets submitted.
 - **See it without an account:** https://merry-bass-190.convex.site/watch — a real completed date between two seeded personas, both letters included
-- **Repo:** private — **must be public to qualify**
-- **Frontend:** Convex static hosting at the submitted convex.site URL, published by GitHub Actions on every push to `main`; Vercel serves the same build at datehaja.com
+- **Repo:** https://github.com/hyochan/Datehaja
+- **Frontend:** Convex static hosting
 - **Convex deployment:** https://merry-bass-190.convex.cloud
 - **Components:** @convex-dev/static-hosting
 - **Convex features:** schema, tables, indexes, queries, mutations, actions, HTTP actions, crons, scheduled functions, file storage, realtime queries, pagination
 - **Auth:** Convex Auth
 - **AI models:** gpt-5-nano for active Agent chat/dates, with gpt-5.6-luna as the first quality fallback and the proven default for heavier legacy extraction
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-09-04T00:00:00+09:00
+- **Last updated:** 2026-09-06T15:48:52Z
 
 ## Rules, as verified on the official page
 
@@ -24,14 +24,50 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
   agent can open without an invite." A custom domain does not satisfy this, so
   the submitted link is the convex.site one even though the same build serves
   datehaja.com.
-- **Repository:** "All GitHub repos must be public to qualify." Still private;
-  this is a hard gate, not a preference.
+- **Repository:** "All GitHub repos must be public to qualify." Public since
+  2026-09-06. It was private until then, which would have been a hard gate
+  rather than a preference.
 - **Tooling:** "Codex is ideal and required for the chatgpt.site. Feel free to
   use your favorite IDE (e.g., Claude, Cursor, GitHub Copilot, or any other
   IDE) to build your app." Using more than one is fine; Codex is only *required*
   for the chatgpt.site route, which this project does not take.
 
 ## Log
+
+### 2026-09-06 - the film had drifted, and nothing could have noticed
+
+The demo the submission would have carried records a product this repository
+no longer contains. `Datehaja-demo.mp4` was last written on 2026-08-29, before
+the concierge surface was deleted; its captions open with "when are you free",
+then describe deterministic venue matching, a walking handoff and a calendar
+booking. None of those exist. Every check in the repository passed the whole
+time, because nothing in the repository knew the film existed.
+
+That is the actual defect: the film was made by hand, so it could go stale
+silently. It is recorded by a spec now. `tests/e2e/demo-recording.spec.ts`
+drives the same flow — signup, Agent creation, a private message, a live
+six-turn date, the private letter, the sealed decision — through the same
+selectors the end-to-end suite already proves, so the app cannot move without
+a test failing first.
+
+The storyboard became data. `submission/demo-beats.json` names six beats and
+the seconds each one gets; the spec marks where each beat begins and ends in
+the raw capture, and `scripts/build-demo.mjs` trims those spans and
+time-scales each to its target. Two things follow. The film is 2:55 whatever
+the models did that day — a slow date is compressed rather than allowed to run
+long, and the build refuses to ship anything over the three-minute limit
+rather than leaving it to be noticed later. And the captions can be written
+once against the storyboard instead of being retimed after every take, which
+is what made them drift from the product in the first place. Everything
+between beats — signing in, waiting on a page — is cut, so it costs the film
+nothing.
+
+The repository is public as of today. The history was scanned for credentials
+before publishing and carries none; `.env` has never been tracked, only
+`.env.example`. The commits keep their AI co-author trailers, which the rules
+explicitly permit — "feel free to use your favorite IDE" — and rewriting
+ninety-five commits to hide a permitted tool would have been risk without a
+reason.
 
 ### 2026-09-05 - the letter, recorded and then rewritten
 
