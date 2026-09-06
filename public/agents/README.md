@@ -32,7 +32,8 @@ bun run avatars:render
 
 This uses the installed Playwright browser (Chrome on macOS, Chromium
 elsewhere; override with `PLAYWRIGHT_CHANNEL`). It finishes rendering the
-whole set in a temporary directory before replacing the current assets.
+whole set in a temporary directory beside the destination PNGs before
+replacing the current assets. This keeps file renames on the same filesystem.
 
 The email delivery context contains gender, palette and expression, so each
 snapshot uses a base look: women's waves or men's crop, cardigan, no accessory.

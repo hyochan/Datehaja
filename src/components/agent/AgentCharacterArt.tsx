@@ -33,7 +33,8 @@ export function AgentCharacterArt({
   const cool = config.face === "cool";
   const bright = config.face === "bright";
   const curious = config.face === "curious";
-  const eyeShape = cool ? "M86 115q12-5 25-1-11 11-25 1Z" : "M86 115q11-12 25-1-12 12-25 1Z";
+  const lidCurve = cool ? "M86 115q12-5 25-1" : "M86 115q11-12 25-1";
+  const eyeShape = `${lidCurve}${cool ? "-11 11-25 1Z" : "-12 12-25 1Z"}`;
 
   return (
     <svg
@@ -225,7 +226,7 @@ export function AgentCharacterArt({
                   <ellipse cx={curious ? 101 : 100} cy="114" rx="2.2" ry="3.4" fill="#282229" />
                   <circle cx={side ? 102 : 98.5} cy="112.5" r="1.4" fill="#fff" />
                   </g>
-                  <path d={cool ? "M86 115q12-5 25-1" : "M86 115q11-12 25-1"} fill="none" stroke={hairColor} strokeWidth={woman ? "2.2" : "1.9"} strokeLinecap="round" />
+                  <path d={lidCurve} fill="none" stroke={hairColor} strokeWidth={woman ? "2.2" : "1.9"} strokeLinecap="round" />
                   <path d="M89 118q10 6 19 0" fill="none" stroke="#ad7666" strokeOpacity=".55" strokeWidth=".9" />
                   {woman && <path d="m86 115-3-3" stroke={hairColor} strokeWidth="1.5" strokeLinecap="round" />}
                 </g>

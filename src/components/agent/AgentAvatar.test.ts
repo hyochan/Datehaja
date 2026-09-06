@@ -32,6 +32,7 @@ describe("editable agent portraits", () => {
       }),
     );
     expect(headphones).toContain('data-avatar-accessory="headphones"');
-    expect(headphones).toContain('height="29"');
+    expect(headphones).toContain('data-character-accessory="headphones"');
+    expect(headphones).toContain('data-character-layer="accessory"');
   });
 });

@@ -3,21 +3,24 @@
  * Requires Playwright's Chromium (or Chrome on macOS), no image service.
  */
 import { mkdir, rename, rm, mkdtemp } from "node:fs/promises";
-import { tmpdir } from "node:os";
 import { resolve, join } from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { chromium } from "@playwright/test";
+import { chromium, type Browser } from "@playwright/test";
 import { AgentCharacterArt } from "../src/components/agent/AgentCharacterArt";
 import { PALETTES } from "../src/components/agent/AgentAvatar";
 import { AVATAR_PALETTES, AVATAR_GENDERS, AVATAR_FACES, spritePathFor } from "../convex/lib/agentAvatar";
 
 const root = resolve(import.meta.dir, "..");
-const staging = await mkdtemp(join(tmpdir(), "datehaja-email-art-"));
-const browser = await chromium.launch({
-  channel: process.env.PLAYWRIGHT_CHANNEL ?? (process.platform === "darwin" ? "chrome" : undefined),
-});
+const destination = resolve(root, "public/agents/v3");
+await mkdir(destination, { recursive: true });
+// Staging beside the final files keeps every rename on the same filesystem.
+const staging = await mkdtemp(join(destination, ".render-"));
+let browser: Browser | undefined;
 try {
+  browser = await chromium.launch({
+    channel: process.env.PLAYWRIGHT_CHANNEL ?? (process.platform === "darwin" ? "chrome" : undefined),
+  });
   const page = await browser.newPage({ viewport: { width: 341, height: 512 }, deviceScaleFactor: 1, reducedMotion: "reduce" });
   const outputs: string[] = [];
   for (const gender of AVATAR_GENDERS) {
@@ -33,11 +36,12 @@ try {
     }
   }
   // Render every variant successfully before replacing any current assets.
-  const destination = resolve(root, "public/agents/v3");
-  await mkdir(destination, { recursive: true });
   for (const name of outputs) await rename(join(staging, name), join(destination, name));
   console.log(`Rendered ${outputs.length} email sprites (341 × 512, transparent).`);
 } finally {
-  await browser.close();
-  await rm(staging, { recursive: true, force: true });
+  try {
+    await browser?.close();
+  } finally {
+    await rm(staging, { recursive: true, force: true });
+  }
 }
