@@ -1,37 +1,40 @@
-# Agent world sprites
+# Agent artwork
 
-Full-body field sprites for the agent-dating world, the dashboard hero and
-the debrief emails. All resolved through `spritePathFor(palette, face, gender)`
-in `convex/lib/agentAvatar.ts`, which the app (`spriteForAvatar`) and the email
-pipeline share so an agent shows the same face everywhere.
+## Editable characters
 
-## The set: `v3/<gender>-<palette>-<face>.png`
+`src/components/agent/AgentCharacterArt.tsx` draws the portrait and transparent
+full figure from the same SVG parts. `AgentAvatar` frames the portrait;
+`AgentCharacter` renders the figure in the world and editor. Both support two
+genders, five hairstyles, four expressions, four outfits, five accessories and
+six palettes. Skin and hair have independent colors.
 
-- One pretty base character per gender (`female`, `male`) generated in
-  ChatGPT (the "Datehaja" project, chat "Generate Sprite Image") wearing a
-  flat magenta `#FF00FF` outfit, then recoloured programmatically into every
-  palette (`rose`, `violet`, `moss`, `sky`, `sunset`, `ink`) so all palettes
-  share the exact same face. Expressions (`gentle`, `bright`, `cool`,
-  `curious`) are ChatGPT edits of the base, keyed the same way.
-- `v3/<gender>-<palette>-blink.png` — optional eyes-closed frame layered over
-  the sprite for a CSS blink (`.agent-world-sprite-blink`).
-- The outfit is two-tone: a reference render per gender (magenta top, cyan
-  bottom) assigns each outfit pixel to the nearer garment, so tops take the
-  palette's primary colour and trousers and shoes take its deep tone.
-- An expression is only used once it is listed in `SPRITE_V3_FACES` /
-  `SPRITE_V3_BLINK` in `convex/lib/agentAvatar.ts`; anything missing falls
-  back to the gender's first expression, so partial sets are safe.
-- Regenerating: ask ChatGPT for the magenta-keyed base (transparent PNG),
-  then run the session `recolor2.py` (keys magenta/cyan → palette primary and
-  deep, fits to 341×512 bottom-aligned against the base's content box).
-  Expression edits sometimes come back with a painted checkerboard instead of
-  alpha; `debg.py` strips it. `blinkmask.py` trims a blink frame to the pixels
-  that differ from the open-eye frame.
+The eye layer clips the iris, pupil and catchlights to the selected eyelid.
+CSS animates that layer directly, so mirroring the world figure also mirrors
+its blink. Reduced-motion preferences stop idle and blink animations. No
+remote images or generation API are needed to customize a character.
 
-The earlier pixel-art set (`sprite-<palette>-v2.png`) was removed once the
-painted set covered every gender, palette and expression.
+Run `bun run dev` and open `/lab/avatar` to compare looks at portrait, chip,
+full-figure and world sizes. The Settings section renders the production
+editor with its own preview for checking narrow cards. The studio is excluded
+from production builds. Browser regressions are covered in
+`tests/e2e/avatar-customization.spec.ts`.
 
-The editable profile portrait remains vector-based (`AgentAvatar.tsx`) so
-hair, expression, outfit and accessory controls stay functional; the world
-sprite is the agent's painted field form and follows gender, palette and
-expression.
+## Email snapshots: `v3/<gender>-<palette>-<face>.png`
+
+Emails need static images. The 48 transparent 341 × 512 PNGs are rendered
+from the current vector art, preserving the existing URLs for already-sent
+emails. `spritePathFor` in `convex/lib/agentAvatar.ts` remains the path contract.
+Regenerate after an artwork or palette change:
+
+```sh
+bun run avatars:render
+```
+
+This uses the installed Playwright browser (Chrome on macOS, Chromium
+elsewhere; override with `PLAYWRIGHT_CHANNEL`). It finishes rendering the
+whole set in a temporary directory before replacing the current assets.
+
+The email delivery context contains gender, palette and expression, so each
+snapshot uses a base look: women's waves or men's crop, cardigan, no accessory.
+The app supports the full saved configuration. The unused painted blink
+frames and old recoloring pipeline have been removed.

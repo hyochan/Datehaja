@@ -2,9 +2,8 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import {
   avatarForName,
-  blinkSpriteForAvatar,
+  AgentCharacter,
   idleDelayForName,
-  spriteForAvatar,
   type AvatarConfig,
 } from "./AgentAvatar";
 import { useI18n } from "../../i18n";
@@ -446,7 +445,6 @@ export function AgentWorldSprite({
 }) {
   const { t } = useI18n();
   const avatar = avatarForName(person.name, person.avatar);
-  const blink = blinkSpriteForAvatar(avatar);
   return (
     <span
       className={`agent-world-sprite palette-${avatar.palette} hair-${avatar.hair} outfit-${avatar.outfit} ${speaking ? "is-speaking" : ""} ${className}`}
@@ -459,6 +457,7 @@ export function AgentWorldSprite({
               }
             : {}),
           "--sprite-idle-delay": `${idleDelayForName(person.name)}s`,
+          "--avatar-anim-delay": `${idleDelayForName(person.name)}s`,
         } as CSSProperties
       }
       role="img"
@@ -471,20 +470,11 @@ export function AgentWorldSprite({
     >
       {emote && <i className="agent-world-emote">{emote}</i>}
       <span className="agent-world-sprite-art-frame" aria-hidden="true">
-        <img
+        <AgentCharacter
+          name={person.name}
+          avatar={avatar}
           className="agent-world-sprite-art"
-          src={spriteForAvatar(avatar)}
-          alt=""
-          draggable={false}
         />
-        {blink && (
-          <img
-            className="agent-world-sprite-blink"
-            src={blink}
-            alt=""
-            draggable={false}
-          />
-        )}
       </span>
       <span className="agent-world-sprite-shadow" />
       <strong>{displayName ?? person.name}</strong>

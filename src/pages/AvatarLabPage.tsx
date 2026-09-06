@@ -1,152 +1,89 @@
-import { useCallback, useState } from "react";
-import {
-  AVATAR_OPTIONS,
-  AgentAvatar,
-  DEFAULT_AVATAR,
-  spriteForAvatar,
-  type AvatarConfig,
-} from "../components/agent/AgentAvatar";
-import { Button, Select } from "../components/ui/primitives";
-import {
-  RIVE_ACTIVITY,
-  RIVE_VERDICT,
-  RiveAgent,
-  type RiveActivity,
-  type RiveAgentTriggers,
-  type RiveVerdict,
-} from "../components/agent/RiveAgent";
+import { useState } from "react";
+import "./AvatarLabPage.css";
+import { useI18n } from "../i18n";
+import { AgentAvatar, AgentCharacter, DEFAULT_AVATAR, type AvatarConfig } from "../components/agent/AgentAvatar";
+import { AgentAvatarEditor } from "../components/agent/AgentAvatarEditor";
+import { AgentHomeWorld } from "../components/agent/AgentDateWorld";
 
-/**
- * Dev-only comparison bench: the static v2 PNG sprite, the SVG avatar and the
- * rigged Rive agent side by side, driven by the same editor controls.
- * Mounted at /lab/avatar in development builds only.
- */
-const LAB_LABEL =
-  "flex flex-col gap-1 text-xs uppercase tracking-wide text-[var(--text-muted)]";
+const LOOKS: { name: string; avatar: AvatarConfig }[] = [
+  { name: "Juno", avatar: { ...DEFAULT_AVATAR, accessory: "star" } },
+  { name: "Iris", avatar: { ...DEFAULT_AVATAR, palette: "violet", hair: "bob", face: "bright", outfit: "starlight" } },
+  { name: "Sage", avatar: { ...DEFAULT_AVATAR, palette: "moss", hair: "bun", face: "curious", outfit: "hoodie" } },
+  { name: "Sol", avatar: { ...DEFAULT_AVATAR, gender: "male", palette: "ink", hair: "wave", outfit: "blazer", face: "gentle" } },
+  { name: "Theo", avatar: { ...DEFAULT_AVATAR, gender: "male", palette: "sky", hair: "crop", face: "bright", accessory: "glasses" } },
+  { name: "Leo", avatar: { ...DEFAULT_AVATAR, gender: "male", palette: "sunset", hair: "buzz", outfit: "hoodie", face: "cool", accessory: "headphones" } },
+];
 
+/** Dev-only art direction bench. Uses the real editor and world renderer. */
 export default function AvatarLabPage() {
-  const [avatar, setAvatar] = useState<AvatarConfig>(DEFAULT_AVATAR);
-  const [activity, setActivity] = useState<RiveActivity>("idle");
-  const [verdict, setVerdict] = useState<RiveVerdict>("none");
-  const [speaking, setSpeaking] = useState(false);
-  const [triggers, setTriggers] = useState<RiveAgentTriggers | null>(null);
-  const onReady = useCallback((t: RiveAgentTriggers) => setTriggers(t), []);
-
-  const select = <K extends keyof AvatarConfig>(key: K) => (
-    <label key={key} className={LAB_LABEL}>
-      {key}
-      <Select
-        compact
-        className="normal-case"
-        value={avatar[key] ?? ""}
-        onChange={(event) =>
-          setAvatar((prev) => ({ ...prev, [key]: event.target.value }))
-        }
-      >
-        {AVATAR_OPTIONS[key].map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </Select>
-    </label>
-  );
+  const { t } = useI18n();
+  const [avatar, setAvatar] = useState<AvatarConfig>(LOOKS[0].avatar);
+  const [name, setName] = useState("Juno");
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-6xl flex-col gap-8 bg-[var(--bg)] px-6 py-10 text-[var(--text)]">
-      <header>
-        <h1 className="font-serif text-3xl">Avatar lab</h1>
-        <p className="text-sm text-[var(--text-muted)]">
-          PNG sprite (static) · SVG avatar (CSS idle) · Rive agent (rigged,
-          data-bound). Same editor values drive all three.
-        </p>
+    <main className="avatar-lab">
+      <header className="avatar-lab-header">
+        <div>
+          <span className="docket-label">{t("DATEHAJA · CHARACTER STUDIO")}</span>
+          <h1>{t("A little more you.")}</h1>
+          <p>{t("One character. Every little detail, yours.")}</p>
+        </div>
+        <a href="/" className="avatar-choice">{t("Back to Datehaja ↗")}</a>
       </header>
 
-      <section className="flex flex-wrap gap-4">
-        {(["gender", "palette", "face", "hair", "outfit", "accessory"] as const).map(
-          (key) => select(key),
-        )}
-        <label className={LAB_LABEL}>
-          activity
-          <Select
-            compact
-            className="normal-case"
-            value={activity}
-            onChange={(event) => setActivity(event.target.value as RiveActivity)}
-          >
-            {Object.keys(RIVE_ACTIVITY).map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </Select>
-        </label>
-        <label className={LAB_LABEL}>
-          verdict
-          <Select
-            compact
-            className="normal-case"
-            value={verdict}
-            onChange={(event) => setVerdict(event.target.value as RiveVerdict)}
-          >
-            {Object.keys(RIVE_VERDICT).map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </Select>
-        </label>
-        <div className="flex items-end gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            aria-pressed={speaking}
-            onClick={() => setSpeaking((value) => !value)}
-          >
-            speaking: {speaking ? "on" : "off"}
-          </Button>
-          <Button size="sm" disabled={!triggers} onClick={() => triggers?.wave()}>
-            wave
-          </Button>
-          <Button size="sm" disabled={!triggers} onClick={() => triggers?.arrive()}>
-            arrive
-          </Button>
+      <section className="avatar-lab-looks" aria-label={t("Character looks")}>
+        {LOOKS.map((look) => (
+          <button key={look.name} type="button" className="avatar-lab-look"
+            aria-label={t("Try {agent}'s look", { agent: look.name })}
+            aria-pressed={Object.entries(look.avatar).every(([key, value]) => avatar[key as keyof AvatarConfig] === value)}
+            onClick={() => { setAvatar(look.avatar); setName(look.name); }}>
+            <AgentAvatar name={look.name} avatar={look.avatar} />
+            <strong>{look.name}</strong>
+          </button>
+        ))}
+      </section>
+
+      <section className="avatar-lab-workspace">
+        <div className="avatar-lab-preview">
+          <div className="avatar-lab-portrait">
+            <span className="docket-label">{t("MY OTHER SELF")}</span>
+            <AgentAvatar name={name} avatar={avatar} label={t("Preview of {agent}", { agent: name })} />
+            <h2>{name}</h2>
+            <div className="avatar-lab-sizes" aria-label={t("Small avatar previews")}>
+              {[24, 40, 64].map((size) => (
+                <span key={size} style={{ width: size }}>
+                  <AgentAvatar name={name} avatar={avatar} />
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="avatar-lab-figure">
+            <AgentCharacter name={name} avatar={avatar} />
+            <span className="docket-label">{t("READY FOR A FIRST DATE")}</span>
+          </div>
+        </div>
+        <div className="avatar-lab-editor">
+          <span className="docket-label">{t("MAKE IT YOURS")}</span>
+          <h2>{t("The details make the character.")}</h2>
+          <AgentAvatarEditor name={name} value={avatar} onChange={setAvatar} showPreview={false} />
         </div>
       </section>
 
-      <section className="grid gap-6 md:grid-cols-3">
-        <figure className="flex flex-col items-center gap-3 rounded-3xl border border-[var(--border)] bg-[var(--bg-raised)] p-6">
-          <img
-            src={spriteForAvatar(avatar)}
-            alt=""
-            className="h-[384px] w-auto"
-            draggable={false}
-          />
-          <figcaption className="text-sm text-[var(--text-muted)]">
-            PNG sprite — gender, palette and expression; blink + breathe via CSS in the world
-          </figcaption>
-        </figure>
-        <figure className="flex flex-col items-center gap-3 rounded-3xl border border-[var(--border)] bg-[var(--bg-raised)] p-6">
-          <AgentAvatar name="Juno" avatar={avatar} className="h-[256px] w-[224px]" />
-          <figcaption className="text-sm text-[var(--text-muted)]">
-            SVG avatar — full editor, CSS breathe + blink only
-          </figcaption>
-        </figure>
-        <figure className="flex flex-col items-center gap-3 rounded-3xl border border-[var(--border)] bg-[var(--bg-raised)] p-6">
-          <RiveAgent
-            avatar={avatar}
-            activity={activity}
-            speaking={speaking}
-            verdict={verdict}
-            onReady={onReady}
-            className="h-[384px] w-[256px]"
-          />
-          <figcaption className="text-sm text-[var(--text-muted)]">
-            Rive agent — full editor + idle/arrive/read/think/wander/wrap-up,
-            wave, speaking, verdict
-          </figcaption>
-        </figure>
+      <section className="avatar-lab-in-world">
+        <div>
+          <span className="docket-label">{t("AT HOME IN THE WORLD")}</span>
+          <h2>{t("Same look. A life of their own.")}</h2>
+          <p>{t("Hair, expression, outfit and accessories carry through to the date.")}</p>
+        </div>
+        <AgentHomeWorld person={{ name, avatar }} />
       </section>
+
+      <details className="avatar-lab-settings">
+        <summary>{t("Settings")}</summary>
+        <div className="avatar-lab-settings-editor">
+          <AgentAvatarEditor name={name} value={avatar} onChange={setAvatar} />
+        </div>
+      </details>
     </main>
   );
 }

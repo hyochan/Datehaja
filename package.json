@@ -23,7 +23,8 @@
     "env:push": "node scripts/push-env.mjs",
     "env:push:prod": "node scripts/push-env.mjs --prod",
     "verify:prod": "convex run --prod setup:verifyIntegrations \"{}\"",
-    "provision:agentmail": "convex run --prod setup:provisionAgentMail '{\"webhookUrl\":\"https://merry-bass-190.convex.site/webhooks/agentmail\"}'"
+    "provision:agentmail": "convex run --prod setup:provisionAgentMail '{\"webhookUrl\":\"https://merry-bass-190.convex.site/webhooks/agentmail\"}'",
+    "avatars:render": "bun --tsconfig-override tsconfig.app.json scripts/render-agent-sprites.tsx"
   },
   "dependencies": {
     "@auth/core": "0.41.1",

@@ -1,20 +1,12 @@
 import {
   AgentAvatar,
+  AgentCharacter,
+  PALETTES,
   AVATAR_OPTIONS,
   type AvatarConfig,
-  type AvatarPalette,
 } from "./AgentAvatar";
 import type { CSSProperties, ReactNode } from "react";
 import { useI18n } from "../../i18n";
-
-const PALETTE_COLORS: Record<AvatarPalette, string> = {
-  rose: "#d94f68",
-  violet: "#8665c8",
-  moss: "#5c8b6a",
-  sky: "#4e91b6",
-  sunset: "#df7b4f",
-  ink: "#444751",
-};
 
 const LABELS = {
   gender: {
@@ -72,12 +64,15 @@ export function AgentAvatarEditor({
     >
       {showPreview && (
         <div className="avatar-editor-preview">
-          <AgentAvatar
-            name={name}
-            avatar={value}
-            className="agent-avatar-editor-hero"
-            label={t("Preview of {agent}", { agent: name || t("my agent") })}
-          />
+          <div className="avatar-editor-character-preview">
+            <AgentAvatar
+              name={name}
+              avatar={value}
+              className="agent-avatar-editor-hero"
+              label={t("Preview of {agent}", { agent: name || t("my agent") })}
+            />
+            <AgentCharacter name={name} avatar={value} className="avatar-editor-full-figure" />
+          </div>
           <span className="docket-label">{t("MY OTHER SELF")}</span>
           <strong>{name || t("Name pending")}</strong>
         </div>
@@ -103,7 +98,7 @@ export function AgentAvatarEditor({
               className="avatar-swatch"
               aria-label={t(`${option} palette`)}
               aria-pressed={value.palette === option}
-              style={{ "--swatch": PALETTE_COLORS[option] } as CSSProperties}
+              style={{ "--swatch": PALETTES[option].primary } as CSSProperties}
               onClick={() => set("palette", option)}
             >
               <span />

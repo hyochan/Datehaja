@@ -2,27 +2,31 @@
 
 Goal: one rigged character in Rive that mirrors the avatar editor exactly
 (palette, face, hair, outfit, accessory) and reacts to the live agent-date
-state, replacing the static PNG field sprite wherever motion matters.
+state. The production app currently uses the shared editable SVG figure.
 
 Status (2026-09-02): the rig is BUILT in the Rive file "Datehaja Agent"
 (file id 2550307, project 1514853, https://editor.rive.app/file/untitled/2550307)
 entirely through the Rive MCP server. Exporting `.riv` (Publish → To .riv,
 Export → For Runtime) is gated behind a paid Rive plan on this workspace, so
 `public/agents/agent.riv` does not exist yet. The app side is ready:
-`src/components/agent/RiveAgent.tsx` + the dev-only bench at `/lab/avatar`.
+`src/components/agent/RiveAgent.tsx` remains an experimental adapter. The
+current `/lab/avatar` bench verifies the production SVG character and editor.
+The rig described below predates the new character art and needs reauthoring
+before adoption; it is not the production renderer.
 
 ## Where it plugs in
 
 | Surface | Today | With Rive |
 | --- | --- | --- |
-| Date world (`AgentWorldSprite`) | painted PNG `v3/<gender>-<palette>-<face>.png` | `<RiveAgent>` driven by the inputs below |
-| Dashboard hero / landing loop | PNG sprite | `<RiveAgent>` |
+| Date world (`AgentWorldSprite`) | editable SVG `AgentCharacter` | `<RiveAgent>` driven by the inputs below |
+| Dashboard hero / landing loop | editable SVG `AgentCharacter` | `<RiveAgent>` |
 | Lists, chips, tiny avatars | SVG `AgentAvatar` (blink + breathe) | unchanged (cheap) |
-| Debrief / connection emails | PNG sprite | unchanged — render PNG stills from the Rive file |
+| Debrief / connection emails | PNG snapshots of the SVG | render equivalent PNG stills if adopting the rig |
 
 Runtime: `@rive-app/react-canvas` (installed). `RiveAgent` lazy-loads
 `/agents/agent.riv`, binds the view model automatically (`autoBind`) and
-falls back to `spritePathFor(palette, face)` when the file fails to load.
+falls back to `AgentCharacter`, preserving every editor option, when the file
+fails to load.
 `prefers-reduced-motion` disables autoplay (frame 0 of `idle`).
 
 ## Artboard
@@ -83,7 +87,8 @@ Skin tones stay literal (`#efc8b5`, `#e6b9a8`, buzz `#d9ad9d`).
 
 - `public/agents/agent.riv` — Export → For Runtime (needs the paid plan).
 - PNG stills at 341 × 512 for email — optional once the Rive look is adopted;
-  today the emails use the painted set in `public/agents/v3/`.
+  today `bun run avatars:render` generates the email set in `public/agents/v3/`
+  from the shared SVG renderer.
 
 ## Definition of done
 

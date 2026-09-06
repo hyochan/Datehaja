@@ -11,7 +11,7 @@ import {
   useViewModelInstanceNumber,
   useViewModelInstanceTrigger,
 } from "@rive-app/react-canvas";
-import { PALETTES, spriteForAvatar, type AvatarConfig } from "./AgentAvatar";
+import { PALETTES, AgentCharacter, type AvatarConfig } from "./AgentAvatar";
 
 /** Values of the `activity` number input on the Rive `Agent` view model. */
 export const RIVE_ACTIVITY = {
@@ -49,7 +49,7 @@ function hexToRgb(hex: string): [number, number, number] {
  * The rigged Rive agent. Mirrors the avatar editor (palette, face, hair,
  * outfit, accessory) through data binding and reacts to the live date state
  * through `activity`, `speaking`, `verdict` and the `wave` / `arrive`
- * triggers. Falls back to the static PNG sprite when the `.riv` cannot load.
+ * triggers. Falls back to the editable vector figure when the `.riv` cannot load.
  */
 export function RiveAgent({
   avatar,
@@ -145,12 +145,7 @@ export function RiveAgent({
 
   if (failed) {
     return (
-      <img
-        src={spriteForAvatar(avatar)}
-        alt=""
-        className={className}
-        draggable={false}
-      />
+      <AgentCharacter name="Agent" avatar={avatar} className={className} />
     );
   }
   return <RiveComponent className={className} />;
