@@ -15,5 +15,8 @@ export default defineConfig({
     environment: "edge-runtime",
     server: { deps: { inline: ["convex-test"] } },
     include: ["convex/**/*.test.ts", "src/**/*.test.ts"],
+    // `edge-runtime` reports the host machine's OS language, which decided
+    // which language the components under test rendered in. See the file.
+    setupFiles: ["./src/test/setup.ts"],
   },
 });
