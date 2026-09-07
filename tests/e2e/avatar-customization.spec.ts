@@ -152,6 +152,8 @@ test("large portraits respond to the pointer and settle on exit", async ({ page 
 
   await page.emulateMedia({ reducedMotion: "reduce" });
   await portrait.hover({ position: { x: bounds!.width - 8, y: bounds!.height / 2 } });
+  await expect(portrait.locator(".character-look")).not.toHaveCount(0);
+  await expect(portrait.locator(".character-pupil")).toHaveCount(2);
   const transforms = await portrait.locator(".character-look, .character-pupil").evaluateAll((elements) => elements.map((element) => getComputedStyle(element).transform));
   expect(transforms.every((transform) => transform === "none")).toBe(true);
 });
