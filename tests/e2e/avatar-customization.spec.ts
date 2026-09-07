@@ -73,7 +73,7 @@ test("mobile controls fit and reduced motion stops portrait and world blinks", a
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect(page.locator(".avatar-lab-editor")).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
-  const animations = await page.locator(".agent-avatar-eyes").evaluateAll((eyes) => eyes.map((eye) => getComputedStyle(eye).animationName));
+  const animations = await page.locator(".agent-avatar-eyes, .character-head, .character-torso, .character-back-hair, .character-arm, .character-leg, .character-mouth").evaluateAll((eyes) => eyes.map((eye) => getComputedStyle(eye).animationName));
   expect(animations.length).toBeGreaterThan(0);
   expect(animations.every((animation) => animation === "none")).toBe(true);
 
@@ -131,11 +131,27 @@ test("iris, pupil and highlights are clipped to the selected eyelid", async ({ p
     const eyes = svg.querySelectorAll('.agent-avatar-eyes > g');
     return Array.from(eyes, (eye) => {
       const iris = eye.querySelector("ellipse");
-      const reference = iris?.parentElement?.getAttribute("clip-path")?.match(/^url\(#(.+)\)$/)?.[1];
+      const reference = iris?.closest("[clip-path]")?.getAttribute("clip-path")?.match(/^url\(#(.+)\)$/)?.[1];
       const path = reference ? document.getElementById(reference)?.querySelector("path")?.getAttribute("d") : undefined;
       const white = eye.querySelector('path[fill="#fff9ef"]')?.getAttribute("d");
       return { clipped: Boolean(path) && path === white, irisCount: iris?.parentElement?.querySelectorAll("ellipse, circle").length };
     });
   });
   expect(result).toEqual([{ clipped: true, irisCount: 3 }, { clipped: true, irisCount: 3 }]);
+});
+
+test("large portraits respond to the pointer and settle on exit", async ({ page }) => {
+  const portrait = page.locator(".avatar-lab-portrait > .agent-avatar");
+  const bounds = await portrait.boundingBox();
+  expect(bounds).not.toBeNull();
+  await portrait.hover({ position: { x: bounds!.width - 8, y: bounds!.height / 2 } });
+  const look = await portrait.evaluate((element) => parseFloat((element as HTMLElement).style.getPropertyValue("--look-x")));
+  expect(look).toBeGreaterThan(1);
+  await page.mouse.move(0, 0);
+  expect(await portrait.evaluate((element) => (element as HTMLElement).style.getPropertyValue("--look-x"))).toBe("");
+
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await portrait.hover({ position: { x: bounds!.width - 8, y: bounds!.height / 2 } });
+  const transforms = await portrait.locator(".character-look, .character-pupil").evaluateAll((elements) => elements.map((element) => getComputedStyle(element).transform));
+  expect(transforms.every((transform) => transform === "none")).toBe(true);
 });

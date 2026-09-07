@@ -1,9 +1,8 @@
 /* oxlint-disable react/only-export-components -- theme selection is tested beside the visual it controls */
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import {
   avatarForName,
   AgentCharacter,
-  idleDelayForName,
   type AvatarConfig,
 } from "./AgentAvatar";
 import { useI18n } from "../../i18n";
@@ -426,6 +425,8 @@ export function AgentDateWorld({
   );
 }
 
+const TRAVEL_MS = 780;
+
 export function AgentWorldSprite({
   person,
   position,
@@ -445,9 +446,25 @@ export function AgentWorldSprite({
 }) {
   const { t } = useI18n();
   const avatar = avatarForName(person.name, person.avatar);
+  const [walking, setWalking] = useState(false);
+  const x = position?.[0];
+  const y = position?.[1];
+  const previous = useRef<string | undefined>(undefined);
+  useEffect(() => {
+    const next = x === undefined || y === undefined ? undefined : `${x},${y}`;
+    const changed = previous.current !== undefined && next !== undefined && previous.current !== next;
+    previous.current = next;
+    if (!changed) {
+      setWalking(false);
+      return;
+    }
+    setWalking(true);
+    const timer = window.setTimeout(() => setWalking(false), TRAVEL_MS);
+    return () => window.clearTimeout(timer);
+  }, [x, y]);
   return (
     <span
-      className={`agent-world-sprite palette-${avatar.palette} hair-${avatar.hair} outfit-${avatar.outfit} ${speaking ? "is-speaking" : ""} ${className}`}
+      className={`agent-world-sprite palette-${avatar.palette} hair-${avatar.hair} outfit-${avatar.outfit} ${speaking ? "is-speaking" : ""} ${walking ? "is-walking" : ""} ${className}`}
       style={
         {
           ...(position
@@ -456,8 +473,7 @@ export function AgentWorldSprite({
                 "--sprite-y": `${position[1]}%`,
               }
             : {}),
-          "--sprite-idle-delay": `${idleDelayForName(person.name)}s`,
-          "--avatar-anim-delay": `${idleDelayForName(person.name)}s`,
+          "--sprite-travel-duration": `${TRAVEL_MS}ms`,
         } as CSSProperties
       }
       role="img"

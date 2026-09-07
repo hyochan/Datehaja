@@ -1,5 +1,5 @@
 /* oxlint-disable react/only-export-components -- the renderer owns its compact avatar contract */
-import type { CSSProperties } from "react";
+import type { CSSProperties, PointerEvent } from "react";
 import { AgentCharacterArt } from "./AgentCharacterArt";
 import {
   AVATAR_GENDERS,
@@ -133,6 +133,24 @@ export function avatarForName(
   };
 }
 
+function lookAtPointer(event: PointerEvent<HTMLSpanElement>) {
+  if (event.pointerType === "touch") return;
+  const element = event.currentTarget;
+  const box = element.getBoundingClientRect();
+  if (box.width < 100 || box.height === 0) return;
+  const x = Math.max(-1, Math.min(1, (event.clientX - box.left) / box.width * 2 - 1));
+  const y = Math.max(-1, Math.min(1, (event.clientY - box.top) / box.height * 2 - 1));
+  element.style.setProperty("--look-x", `${x * 2.5}px`);
+  element.style.setProperty("--look-y", `${y * 1.5}px`);
+  element.style.setProperty("--look-tilt", `${x * 1.8}deg`);
+}
+
+function resetLook(event: PointerEvent<HTMLSpanElement>) {
+  for (const property of ["--look-x", "--look-y", "--look-tilt"]) {
+    event.currentTarget.style.removeProperty(property);
+  }
+}
+
 export function AgentAvatar({
   name,
   avatar,
@@ -153,6 +171,8 @@ export function AgentAvatar({
       role={label ? "img" : undefined}
       aria-label={label}
       aria-hidden={label ? undefined : true}
+      onPointerMove={lookAtPointer}
+      onPointerLeave={resetLook}
       data-avatar-gender={config.gender}
       data-avatar-hair={config.hair}
       data-avatar-accessory={config.accessory}
@@ -163,13 +183,10 @@ export function AgentAvatar({
           "--avatar-primary": palette.primary,
           "--avatar-deep": palette.deep,
           "--avatar-ink": palette.ink,
-          // Stagger the idle animations per agent so a row of avatars never
-          // blinks or breathes in unison.
-          "--avatar-anim-delay": `${(hashName(name || "Datehaja") % 47) / 10}s`,
         } as CSSProperties
       }
     >
-      <AgentCharacterArt config={config} colors={palette} />
+      <AgentCharacterArt config={config} colors={palette} motionDelay={idleDelayForName(name)} />
       <span className="agent-avatar-spark" aria-hidden>
         ✦
       </span>
@@ -193,6 +210,7 @@ export function AgentCharacter({
       config={config}
       colors={PALETTES[config.palette]}
       fullBody
+      motionDelay={idleDelayForName(name)}
       className={className}
     />
   );
