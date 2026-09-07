@@ -1767,47 +1767,46 @@ html[lang^="ja"] .scout-pass-title {
   width: 100%;
   height: auto;
   overflow: visible;
-  transform-origin: 50% 82%;
-  animation: agent-avatar-breathe 4.6s ease-in-out infinite;
-  animation-delay: var(--avatar-anim-delay, 0s);
 }
 
-/* Staggered blinks stay inside the face, including in mirrored world figures. */
-.agent-avatar-eyes {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: agent-avatar-blink 5.2s ease-in-out infinite;
-  animation-delay: var(--avatar-anim-delay, 0s);
+/* Head and clothing move around their shared neck anchor. */
+.agent-character-art { --character-delay: 0s; }
+.pixel-character image { image-rendering: pixelated; }
+.character-head {
+  transform-origin: 160px 228px;
+  animation: character-attention 7.4s ease-in-out infinite;
+  animation-delay: var(--character-delay);
 }
-
-@keyframes agent-avatar-breathe {
-  0%,
-  100% {
-    transform: translateY(0) scale(1);
-  }
-  50% {
-    transform: translateY(0.8px) scale(1.006);
-  }
+.character-look {
+  transform-origin: 160px 228px;
+  transform: translate(var(--look-x, 0px), var(--look-y, 0px)) rotate(var(--look-tilt, 0deg));
+  transition: transform 380ms ease-out;
 }
-
-@keyframes agent-avatar-blink {
-  0%,
-  92.5%,
-  97.5%,
-  100% {
-    transform: scaleY(1);
-  }
-  94.5%,
-  95.5% {
-    transform: scaleY(0.12);
-  }
+.pixel-standing {
+  transform-origin: 160px 630px;
+  animation: character-breath 4.8s ease-in-out infinite;
+  animation-delay: var(--character-delay);
 }
-
+.pixel-blink {
+  animation: pixel-blink 5.7s steps(1, end) infinite;
+  animation-delay: var(--character-delay);
+}
+@keyframes character-attention {
+  0%, 100% { transform: rotate(-.5deg); }
+  35% { transform: rotate(.7deg) translateY(-.5px); }
+  64% { transform: rotate(.2deg); }
+}
+@keyframes character-breath {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.002); }
+}
+@keyframes pixel-blink {
+  0%, 88%, 92%, 100% { opacity: 0; }
+  90% { opacity: 1; }
+}
 @media (prefers-reduced-motion: reduce) {
-  .agent-avatar svg,
-  .agent-avatar-eyes {
-    animation: none;
-  }
+  .character-head, .pixel-standing, .pixel-blink { animation: none; }
+  .character-look { transform: none; transition: none; }
 }
 
 /* Sits in the rounded corner the character never reaches, so it marks the
@@ -1817,14 +1816,14 @@ html[lang^="ja"] .scout-pass-title {
   right: 1%;
   top: 1.5%;
   display: grid;
-  width: 21cqw;
-  height: 21cqw;
+  width: 16cqw;
+  height: 16cqw;
   place-items: center;
   border: 1px solid color-mix(in oklab, var(--avatar-primary) 45%, white);
   border-radius: 50%;
   background: var(--avatar-glow);
   color: var(--avatar-primary);
-  font-size: 10cqw;
+  font-size: 8cqw;
   line-height: 1;
   box-shadow: 0 0.4rem 0.8rem rgb(41 20 31 / 0.12);
 }
@@ -1832,7 +1831,6 @@ html[lang^="ja"] .scout-pass-title {
 .agent-avatar-onboarding {
   width: 9.4rem;
   margin-left: -0.5rem;
-  animation: agent-hover 5s ease-in-out infinite;
 }
 
 .agent-avatar-command {
@@ -1841,11 +1839,6 @@ html[lang^="ja"] .scout-pass-title {
 
 .agent-avatar-stage {
   width: 7.4rem;
-  animation: agent-hover 4.6s ease-in-out infinite;
-}
-
-.agent-avatar-stage-b {
-  animation-delay: -2.1s;
 }
 
 .agent-avatar-flow {
@@ -1871,7 +1864,6 @@ html[lang^="ja"] .scout-pass-title {
 
 .agent-avatar-waiting {
   width: 5.8rem;
-  animation: agent-hover 4.6s ease-in-out infinite;
 }
 
 .agent-mystery-avatar {
@@ -6038,8 +6030,8 @@ html[lang^="ja"] .agent-debrief-title {
   color: #fff;
   transform: translate(-50%, -76%);
   transition:
-    top 780ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    left 780ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    top var(--sprite-travel-duration, 780ms) cubic-bezier(0.2, 0.8, 0.2, 1),
+    left var(--sprite-travel-duration, 780ms) cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .agent-world-sprite.palette-violet {
@@ -6072,9 +6064,7 @@ html[lang^="ja"] .agent-debrief-title {
   place-items: end center;
   filter: drop-shadow(0 0.7rem 0.45rem rgb(10 8 12 / 30%));
   transform-origin: 50% 92%;
-  animation: agent-sprite-idle 3.8s ease-in-out infinite;
-  animation-delay: var(--sprite-idle-delay, 0s);
-  will-change: transform;
+  /* Individual joints provide the motion; keep the feet grounded. */
 }
 
 .agent-world-sprite-art {
@@ -6119,16 +6109,35 @@ html[lang^="ja"] .agent-debrief-title {
   box-shadow: 0 0.3rem 0.8rem rgb(11 8 12 / 25%);
 }
 
-.agent-world-sprite.is-speaking .agent-world-sprite-art-frame {
-  animation: agent-sprite-talk 860ms ease-in-out infinite;
+.agent-world-sprite {
+  --look-x: 1.5px;
+  --look-tilt: -1deg;
 }
-
-.agent-world-sprite.is-walking .agent-world-sprite-art-frame {
-  animation: agent-sprite-walk 380ms steps(2, end) 2;
+.agent-world-sprite.is-speaking .character-head {
+  animation: character-speak-nod 2.8s ease-in-out infinite;
 }
-
-.agent-world-sprite.is-walking .agent-world-sprite-shadow {
-  animation: agent-shadow-walk 380ms steps(2, end) 2;
+.agent-world-sprite.is-walking .pixel-standing { visibility: hidden; }
+.agent-world-sprite.is-walking .pixel-walking { visibility: visible; }
+.pixel-leg-left { transform-origin: 139px 443px; }
+.pixel-leg-right { transform-origin: 182px 443px; }
+.agent-world-sprite.is-walking .pixel-leg {
+  animation: pixel-step 390ms ease-in-out infinite alternate;
+}
+.agent-world-sprite.is-walking .pixel-leg-right { animation-direction: alternate-reverse; }
+@keyframes pixel-step {
+  from { transform: rotate(-2.4deg) translateY(-1px); }
+  to { transform: rotate(2.4deg) translateY(1px); }
+}
+@keyframes character-speak-nod {
+  0%, 100% { transform: rotate(-.6deg); }
+  25% { transform: rotate(1deg) translateY(1px); }
+  52% { transform: rotate(-.4deg); }
+  76% { transform: rotate(.3deg) translateY(.5px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .agent-world-sprite.is-walking .pixel-standing { visibility: visible; }
+  .agent-world-sprite.is-walking .pixel-walking { visibility: hidden; }
+  .agent-world-sprite.is-walking .pixel-leg { animation: none; }
 }
 
 .agent-world-sprite:hover .agent-world-sprite-art-frame {
@@ -6832,52 +6841,6 @@ html[lang^="ja"] .agent-debrief-title {
   color: var(--tint-sage-fg);
 }
 
-@keyframes agent-sprite-idle {
-  0%,
-  100% {
-    transform: rotate(0deg) scaleY(1);
-  }
-  38% {
-    transform: rotate(0.14deg) scaleY(0.998);
-  }
-  72% {
-    transform: rotate(-0.1deg) scaleY(1.002);
-  }
-}
-
-@keyframes agent-sprite-talk {
-  0%,
-  100% {
-    transform: rotate(0deg) scaleX(1) scaleY(1);
-  }
-  32% {
-    transform: rotate(0.45deg) scaleX(1.004) scaleY(0.996);
-  }
-  68% {
-    transform: rotate(-0.32deg) scaleX(0.998) scaleY(1.003);
-  }
-}
-
-@keyframes agent-sprite-walk {
-  0%,
-  100% {
-    transform: rotate(-0.7deg) scaleX(0.996) scaleY(1.004);
-  }
-  50% {
-    transform: rotate(0.7deg) scaleX(1.004) scaleY(0.996);
-  }
-}
-
-@keyframes agent-shadow-walk {
-  0%,
-  100% {
-    transform: scaleX(0.82);
-  }
-  50% {
-    transform: scaleX(0.9);
-  }
-}
-
 @keyframes agent-emote-in {
   from {
     opacity: 0;
@@ -7123,6 +7086,9 @@ html[lang^="ja"] .agent-debrief-title {
   }
   .agent-world-sprite {
     transition: none;
+  }
+  .agent-world-sprite.is-speaking .character-head {
+    animation: none;
   }
 }
 
