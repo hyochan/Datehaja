@@ -32,7 +32,9 @@ describe("editable agent portraits", () => {
     expect(readdirSync(directory).sort()).toEqual([...expected.keys()].sort());
     for (const [name, height] of expected) {
       const png = readFileSync(new URL(name, directory));
-      expect(png.subarray(1, 4).toString(), name).toBe("PNG");
+      expect(png.subarray(0, 8), name).toEqual(
+        Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+      );
       expect(png[25], `${name} must preserve transparency`).toBe(6);
       if (height) {
         expect(png.readUInt32BE(16), name).toBe(320);

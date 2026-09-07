@@ -101,6 +101,73 @@ test("every palette recolors clothing while keeping the original face pixels", a
   expect(new Set(rendered.map((frame) => JSON.stringify(frame.face))).size).toBe(1);
 });
 
+test("heads fit the shoulders and stay connected to every outfit", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const editor = page.locator(".avatar-lab-editor");
+  await editor.getByRole("button", { name: "None", exact: true }).click();
+  for (const gender of ["Woman", "Man"]) {
+    await editor.getByRole("button", { name: gender, exact: true }).click();
+    // Expression atlases can have different jaw contours. Cross every male
+    // expression with every outfit, including Bright + Blazer.
+    for (const face of gender === "Man" ? ["Gentle", "Bright", "Cool", "Curious"] : ["Gentle"]) {
+      await editor.getByRole("button", { name: face, exact: true }).click();
+      for (const hair of ["Wave", "Crop", "Bob", "Bun", "Buzz"]) {
+        await editor.getByRole("button", { name: hair, exact: true }).click();
+        for (const outfit of ["Cardigan", "Blazer", "Hoodie", "Starlight"]) {
+          await editor.getByRole("button", { name: outfit, exact: true }).click();
+          const result = await page.locator(".avatar-lab-figure > svg").evaluate(async (svg) => {
+            const visibleWidth = async (node: SVGImageElement) => {
+              const image = new Image(); image.src = node.getAttribute("href")!; await image.decode();
+              const canvas = document.createElement("canvas"); canvas.width = image.width; canvas.height = image.height;
+              const context = canvas.getContext("2d")!; context.drawImage(image, 0, 0);
+              const pixels = context.getImageData(0, 0, image.width, image.height).data;
+              let left = image.width, right = 0;
+              for (let i = 0; i < pixels.length; i += 4) if (pixels[i + 3]) {
+                left = Math.min(left, i / 4 % image.width); right = Math.max(right, i / 4 % image.width);
+              }
+              const matrix = node.getCTM()!;
+              return (right - left + 1) * Math.hypot(matrix.a, matrix.b);
+            };
+            const head = await visibleWidth(svg.querySelector('[data-character-layer="head"] > image')!);
+            const body = await visibleWidth(svg.querySelector('.pixel-standing > image')!);
+            const clone = svg.cloneNode(true) as SVGSVGElement;
+            clone.setAttribute("viewBox", "0 0 320 660");
+            clone.setAttribute("width", "320"); clone.setAttribute("height", "660");
+            for (const node of clone.querySelectorAll("image")) {
+              const blob = await (await fetch(node.getAttribute("href")!)).blob();
+              const data = await new Promise<string>((resolve) => {
+                const reader = new FileReader(); reader.onload = () => resolve(reader.result as string); reader.readAsDataURL(blob);
+              });
+              node.setAttribute("href", data);
+            }
+            const neckPixels = async (removedLayer: string) => {
+              const layer = clone.cloneNode(true) as SVGSVGElement;
+              layer.querySelectorAll(`[data-character-layer="${removedLayer}"]`).forEach((node) => node.remove());
+              const image = new Image();
+              image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(new XMLSerializer().serializeToString(layer))}`;
+              await image.decode();
+              const canvas = document.createElement("canvas"); canvas.width = 320; canvas.height = 660;
+              const context = canvas.getContext("2d")!; context.drawImage(image, 0, 0);
+              return context.getImageData(151, 216, 18, 38).data;
+            };
+            // Require real overlap between the head and the body's neck. Sampling
+            // just the assembled body would also pass when the head floats above it.
+            const headPixels = await neckPixels("outfit"), bodyPixels = await neckPixels("head");
+            let neckOverlap = 0;
+            for (let i = 3; i < headPixels.length; i += 4) {
+              if (headPixels[i] > 240 && bodyPixels[i] > 240) neckOverlap++;
+            }
+            return { ratio: head / body, neckOverlap };
+          });
+          const look = `${gender} / ${face} / ${hair} / ${outfit}`;
+          expect(result.ratio, `${look}: head overwhelms the shoulders`).toBeLessThan(1.14);
+          expect(result.neckOverlap, `${look}: head does not join the body's neck`).toBeGreaterThan(72);
+        }
+      }
+    }
+  }
+});
+
 test("mobile controls fit and reduced motion stops portrait and world blinks", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: "reduce" });

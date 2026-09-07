@@ -13,6 +13,14 @@ A grayscale clothing mask maps blue fabric to the selected palette. Skin,
 hair, cream fabric and trousers retain their original pixels. Accessories
 are separate transparent images; choosing `none` removes all of them.
 
+The assembled head and its wearables use 76% of the packed size, with the
+neck seated at y=230 over the body's existing neck. The head shifts slightly
+left to align its three-quarter neck rather than its face center. This keeps the
+head in proportion to the shoulders and leaves the neckline visible. Both
+views start at y=36; portraits include the shoulders and upper torso.
+The male head atlas ends at the jaw, so the body's neck connects directly
+to the face without a second skin stub or a horizontal seam above the collar.
+
 Only the two eye regions receive the matching closed-eye illustration during
 a blink, keeping the selected mouth and hair. Large portraits follow the
 pointer; heads nod while speaking. Date-world movement animates the legs independently around fixed thigh anchors

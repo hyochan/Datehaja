@@ -12,6 +12,10 @@ inputs to `scripts/pack-pixel-avatars.mjs`.
 
 - `female-heads.png`, `male-heads.png`: five columns (wave, crop, bob, bun,
   buzz), five rows (gentle, bright, cool, curious, closed eyes).
+  The male atlas has a targeted image-generation edit that removes the neck
+  below each jaw. Its original faces and hairstyles remain the reference;
+  the body supplies the visible neck, avoiding two stacked skin silhouettes.
+  `man_heads_jaw_cleanup` in `prompts.json` records that edit.
 - `female-bodies.png`, `male-bodies.png`: four columns (cardigan, blazer,
   hoodie, starlight), three rows. The importer uses only the standing row. The two
   attempted walking rows repeat the same leading foot and are retained only

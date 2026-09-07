@@ -25,7 +25,7 @@ export function AgentCharacterArt({ config, colors, fullBody = false, className 
     <image href={`${ASSETS}/${body}-${pose}-dye.png`} width="320" height="660" filter={paint("dye")} />
   </>;
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox={fullBody ? "0 0 320 660" : "0 0 320 400"}
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox={fullBody ? "0 36 320 624" : "0 36 320 400"}
       className={`agent-character-art pixel-character ${className}`.trim()} focusable="false" aria-hidden="true"
       style={{ "--character-delay": `${-motionDelay}s` } as CSSProperties}
       data-character-gender={gender} data-character-hair={config.hair}
@@ -35,7 +35,7 @@ export function AgentCharacterArt({ config, colors, fullBody = false, className 
         <linearGradient id={`${id}-back`} x2=".9" y2="1"><stop stopColor={colors.glow} /><stop offset="1" stopColor={colors.background} /></linearGradient>
         <radialGradient id={`${id}-halo`}><stop stopColor="#fffdf8" stopOpacity=".8" /><stop offset="1" stopColor="#fffdf8" stopOpacity="0" /></radialGradient>
         <radialGradient id={`${id}-ground`}><stop stopColor="#51465e" stopOpacity=".18" /><stop offset="1" stopColor="#51465e" stopOpacity="0" /></radialGradient>
-        <clipPath id={`${id}-frame`}><rect x="8" y="8" width="304" height="384" rx="76" /></clipPath>
+        <clipPath id={`${id}-frame`}><rect x="8" y="44" width="304" height="384" rx="76" /></clipPath>
         <clipPath id={`${id}-eyes`}>
           <ellipse cx="127" cy="160" rx="20" ry="14" />
           <ellipse cx="184" cy="153" rx="22" ry="14" />
@@ -50,9 +50,9 @@ export function AgentCharacterArt({ config, colors, fullBody = false, className 
         </filter>
       </defs>
       {!fullBody && <g data-character-layer="backdrop">
-        <rect x="8" y="8" width="304" height="384" rx="76" fill={paint("back")} />
+        <rect x="8" y="44" width="304" height="384" rx="76" fill={paint("back")} />
         <ellipse cx="150" cy="171" rx="125" ry="148" fill={paint("halo")} />
-        <rect x="13" y="13" width="294" height="374" rx="72" stroke="white" strokeOpacity=".7" fill="none" />
+        <rect x="13" y="49" width="294" height="374" rx="72" stroke="white" strokeOpacity=".7" fill="none" />
       </g>}
       <g clipPath={fullBody ? undefined : paint("frame")}>
         {fullBody && <ellipse cx="160" cy="635" rx="75" ry="10" fill={paint("ground")} />}
@@ -71,6 +71,9 @@ export function AgentCharacterArt({ config, colors, fullBody = false, className 
         {config.accessory === "scarf" && <g data-character-layer="accessory">
           <image href={`${ASSETS}/accessory-scarf.png`} x="108" y="213" width="105" height="133" />
         </g>}
+        {/* Align the three-quarter jaw with the body's neck, and scale
+            wearables with the head so their anchors stay together. */}
+        <g transform={`translate(${gender === "male" ? 152 : 154} 230) scale(.76) translate(-160 -228)`}>
         <g className="character-look"><g className="character-head">
           <g data-character-layer="head">
             <image href={`${ASSETS}/${head}.png`} width="320" height="280" />
@@ -84,6 +87,7 @@ export function AgentCharacterArt({ config, colors, fullBody = false, className 
             {config.accessory === "star" && <image href={`${ASSETS}/accessory-star.png`} x="209" y="114" width="34" height="26" />}
           </g>}
         </g></g>
+        </g>
       </g>
     </svg>
   );
