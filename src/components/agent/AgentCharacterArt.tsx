@@ -51,7 +51,7 @@ export function AgentCharacterArt({ config, colors, fullBody = false, className 
       </defs>
       {!fullBody && <g data-character-layer="backdrop">
         <rect x="8" y="44" width="304" height="384" rx="76" fill={paint("back")} />
-        <ellipse cx="150" cy="171" rx="125" ry="148" fill={paint("halo")} />
+        <ellipse cx="150" cy="207" rx="125" ry="148" fill={paint("halo")} />
         <rect x="13" y="49" width="294" height="374" rx="72" stroke="white" strokeOpacity=".7" fill="none" />
       </g>}
       <g clipPath={fullBody ? undefined : paint("frame")}>

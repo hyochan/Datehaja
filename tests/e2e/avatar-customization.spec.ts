@@ -107,9 +107,9 @@ test("heads fit the shoulders and stay connected to every outfit", async ({ page
   await editor.getByRole("button", { name: "None", exact: true }).click();
   for (const gender of ["Woman", "Man"]) {
     await editor.getByRole("button", { name: gender, exact: true }).click();
-    // Expression atlases can have different jaw contours. Cross every male
-    // expression with every outfit, including Bright + Blazer.
-    for (const face of gender === "Man" ? ["Gentle", "Bright", "Cool", "Curious"] : ["Gentle"]) {
+    // Expression atlases can have different jaw contours. Cross every
+    // expression with every outfit for both genders.
+    for (const face of ["Gentle", "Bright", "Cool", "Curious"]) {
       await editor.getByRole("button", { name: face, exact: true }).click();
       for (const hair of ["Wave", "Crop", "Bob", "Bun", "Buzz"]) {
         await editor.getByRole("button", { name: hair, exact: true }).click();
