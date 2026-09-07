@@ -2,7 +2,7 @@
  * Run: bun run avatars:render
  * Requires Playwright's Chromium (or Chrome on macOS), no image service.
  */
-import { mkdir, rename, rm, mkdtemp } from "node:fs/promises";
+import { mkdir, rename, rm, mkdtemp, readFile } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -16,6 +16,18 @@ const destination = resolve(root, "public/agents/v3");
 await mkdir(destination, { recursive: true });
 // Staging beside the final files keeps every rename on the same filesystem.
 const staging = await mkdtemp(join(destination, ".render-"));
+const images = new Map<string, string>();
+async function embedImages(svg: string) {
+  for (const [attribute, path] of svg.matchAll(/href="(\/agents\/pixel-v1\/[^"/]+\.png)"/g)) {
+    let data = images.get(path);
+    if (!data) {
+      data = `data:image/png;base64,${(await readFile(join(root, "public", path))).toString("base64")}`;
+      images.set(path, data);
+    }
+    svg = svg.replaceAll(attribute, `href="${data}"`);
+  }
+  return svg;
+}
 let browser: Browser | undefined;
 try {
   browser = await chromium.launch({
@@ -27,8 +39,15 @@ try {
     for (const palette of AVATAR_PALETTES) {
       for (const face of AVATAR_FACES) {
         const config = { gender, palette, face, hair: gender === "female" ? "wave" as const : "crop" as const, outfit: "cardigan" as const, accessory: "none" as const };
-        const svg = renderToStaticMarkup(createElement(AgentCharacterArt, { config, colors: PALETTES[palette], fullBody: true }));
-        await page.setContent(`<html><head><style>html,body{margin:0;background:transparent}svg{display:block;width:341px;height:512px}</style></head><body>${svg}</body></html>`);
+        const svg = await embedImages(renderToStaticMarkup(createElement(AgentCharacterArt, { config, colors: PALETTES[palette], fullBody: true })));
+        await page.setContent(`<html><head><style>html,body{margin:0;background:transparent}svg{display:block;width:341px;height:512px}image{image-rendering:pixelated}</style></head><body>${svg}</body></html>`);
+        await page.locator("svg image").evaluateAll(async (nodes) => {
+          await Promise.all(nodes.map((node) => {
+            const image = new Image();
+            image.src = node.getAttribute("href")!;
+            return image.decode();
+          }));
+        });
         const name = spritePathFor(palette, face, gender).split("/").pop()!;
         await page.screenshot({ path: join(staging, name), omitBackground: true });
         outputs.push(name);

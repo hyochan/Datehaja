@@ -1769,80 +1769,44 @@ html[lang^="ja"] .scout-pass-title {
   overflow: visible;
 }
 
-/* The frame stays still. Each part moves around its anatomical pivot. */
-.agent-character-art {
-  --character-delay: 0s;
-}
+/* Head and clothing move around their shared neck anchor. */
+.agent-character-art { --character-delay: 0s; }
+.pixel-character image { image-rendering: pixelated; }
 .character-head {
-  transform-origin: 160px 219px;
+  transform-origin: 160px 228px;
   animation: character-attention 7.4s ease-in-out infinite;
   animation-delay: var(--character-delay);
 }
 .character-look {
-  transform-origin: 160px 219px;
+  transform-origin: 160px 228px;
   transform: translate(var(--look-x, 0px), var(--look-y, 0px)) rotate(var(--look-tilt, 0deg));
   transition: transform 380ms ease-out;
 }
-.character-torso {
-  transform-origin: 160px 438px;
+.pixel-standing {
+  transform-origin: 160px 630px;
   animation: character-breath 4.8s ease-in-out infinite;
   animation-delay: var(--character-delay);
 }
-.character-back-hair {
-  transform-origin: 160px 80px;
-  animation: character-hair-settle 7.4s ease-in-out infinite;
-  animation-delay: var(--character-delay);
-}
-.character-arm-left { transform-origin: 103px 256px; }
-.character-arm-right { transform-origin: 216px 256px; }
-.character-arm {
-  animation: character-hand-rest 6.6s ease-in-out infinite;
-  animation-delay: var(--character-delay);
-}
-.character-arm-right { animation-direction: reverse; }
-.character-pupil {
-  transform: translate(var(--look-x, 0px), var(--look-y, 0px));
-  transition: transform 260ms ease-out;
-}
-.character-pupil[data-eye-reflection="right"] {
-  transform: translate(calc(-1 * var(--look-x, 0px)), var(--look-y, 0px));
-}
-.agent-avatar-eyes {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: agent-avatar-blink 5.7s ease-in-out infinite;
+.pixel-blink {
+  animation: pixel-blink 5.7s steps(1, end) infinite;
   animation-delay: var(--character-delay);
 }
 @keyframes character-attention {
-  0%, 100% { transform: rotate(-.7deg) translateY(0); }
-  35% { transform: rotate(1deg) translateY(-.6px); }
-  64% { transform: rotate(.3deg) translateY(.3px); }
+  0%, 100% { transform: rotate(-.5deg); }
+  35% { transform: rotate(.7deg) translateY(-.5px); }
+  64% { transform: rotate(.2deg); }
 }
 @keyframes character-breath {
   0%, 100% { transform: scaleY(1); }
-  50% { transform: scaleY(1.006); }
+  50% { transform: scaleY(1.002); }
 }
-@keyframes character-hair-settle {
-  0%, 100% { transform: rotate(.25deg); }
-  42% { transform: rotate(-.45deg); }
-  74% { transform: rotate(.15deg); }
-}
-@keyframes character-hand-rest {
-  0%, 100% { transform: rotate(-.4deg); }
-  50% { transform: rotate(.7deg); }
-}
-@keyframes agent-avatar-blink {
-  0%, 88%, 93%, 100% { transform: scaleY(1); }
-  90%, 91% { transform: scaleY(.06); }
+@keyframes pixel-blink {
+  0%, 88%, 92%, 100% { opacity: 0; }
+  90% { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .character-head, .character-torso, .character-back-hair, .character-arm,
-  .agent-avatar-eyes { animation: none; }
-  .character-look, .character-pupil,
-  .character-pupil[data-eye-reflection="right"] {
-    transform: none;
-    transition: none;
-  }
+  .character-head, .pixel-standing, .pixel-blink { animation: none; }
+  .character-look { transform: none; transition: none; }
 }
 
 /* Sits in the rounded corner the character never reaches, so it marks the
@@ -6152,40 +6116,28 @@ html[lang^="ja"] .agent-debrief-title {
 .agent-world-sprite.is-speaking .character-head {
   animation: character-speak-nod 2.8s ease-in-out infinite;
 }
-.agent-world-sprite.is-speaking .character-arm-right {
-  animation: character-explain 3.8s ease-in-out infinite;
+.agent-world-sprite.is-walking .pixel-standing { visibility: hidden; }
+.agent-world-sprite.is-walking .pixel-walking { visibility: visible; }
+.pixel-leg-left { transform-origin: 139px 443px; }
+.pixel-leg-right { transform-origin: 182px 443px; }
+.agent-world-sprite.is-walking .pixel-leg {
+  animation: pixel-step 390ms ease-in-out infinite alternate;
 }
-.agent-world-sprite.is-speaking .character-mouth {
-  transform-origin: 162px 187px;
-  animation: character-speech 740ms ease-in-out infinite;
+.agent-world-sprite.is-walking .pixel-leg-right { animation-direction: alternate-reverse; }
+@keyframes pixel-step {
+  from { transform: rotate(-2.4deg) translateY(-1px); }
+  to { transform: rotate(2.4deg) translateY(1px); }
 }
-.character-leg-left { transform-origin: 136px 454px; }
-.character-leg-right { transform-origin: 191px 454px; }
-.agent-world-sprite.is-walking .character-leg {
-  animation: character-step 390ms ease-in-out infinite alternate;
-}
-.agent-world-sprite.is-walking .character-leg-right { animation-direction: alternate-reverse; }
-.agent-world-sprite.is-walking .character-arm { animation: character-step 390ms ease-in-out infinite alternate-reverse; }
-.agent-world-sprite.is-walking .character-arm-right { animation-direction: alternate; }
 @keyframes character-speak-nod {
-  0%, 100% { transform: rotate(-1deg); }
-  25% { transform: rotate(1.6deg) translateY(1px); }
-  52% { transform: rotate(-.6deg); }
-  76% { transform: rotate(.4deg) translateY(.5px); }
+  0%, 100% { transform: rotate(-.6deg); }
+  25% { transform: rotate(1deg) translateY(1px); }
+  52% { transform: rotate(-.4deg); }
+  76% { transform: rotate(.3deg) translateY(.5px); }
 }
-@keyframes character-explain {
-  0%, 100% { transform: rotate(-1deg); }
-  35% { transform: rotate(-8deg); }
-  65% { transform: rotate(-6deg); }
-}
-@keyframes character-speech {
-  0%, 100% { transform: scaleY(1); }
-  30% { transform: scaleY(1.12); }
-  60% { transform: scaleY(.95); }
-}
-@keyframes character-step {
-  from { transform: rotate(-3deg); }
-  to { transform: rotate(3deg); }
+@media (prefers-reduced-motion: reduce) {
+  .agent-world-sprite.is-walking .pixel-standing { visibility: visible; }
+  .agent-world-sprite.is-walking .pixel-walking { visibility: hidden; }
+  .agent-world-sprite.is-walking .pixel-leg { animation: none; }
 }
 
 .agent-world-sprite:hover .agent-world-sprite-art-frame {
@@ -7135,11 +7087,7 @@ html[lang^="ja"] .agent-debrief-title {
   .agent-world-sprite {
     transition: none;
   }
-  .agent-world-sprite.is-speaking .character-head,
-  .agent-world-sprite.is-speaking .character-arm-right,
-  .agent-world-sprite.is-speaking .character-mouth,
-  .agent-world-sprite.is-walking .character-leg,
-  .agent-world-sprite.is-walking .character-arm {
+  .agent-world-sprite.is-speaking .character-head {
     animation: none;
   }
 }
