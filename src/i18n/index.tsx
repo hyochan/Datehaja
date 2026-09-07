@@ -6349,7 +6349,114 @@ const settingsCopy: Record<
     ],
 };
 
-for (const copy of [agentWorkspaceCopy, settingsCopy]) {
+const avatarStudioCopy: Record<string, readonly [string, string, string, string, string, string]> = {
+  "DATEHAJA · CHARACTER STUDIO": [
+    "DATEHAJA · 아바타 스튜디오",
+    "DATEHAJA · アバタースタジオ",
+    "DATEHAJA · AVATAR-STUDIO",
+    "DATEHAJA · STUDIO D’AVATARS",
+    "DATEHAJA · AVATARSTUDIO",
+    "DATEHAJA · AVATARSTUDIO"
+  ],
+  "A little more you.": [
+    "조금 더, 나답게.",
+    "もっと、自分らしく。",
+    "Ein bisschen mehr du.",
+    "Un peu plus vous.",
+    "Een beetje meer jij.",
+    "Lite mer du."
+  ],
+  "One character. Every little detail, yours.": [
+    "작은 디테일까지, 나만의 아바타.",
+    "細部まで、あなただけのアバター。",
+    "Ein Avatar. Jedes Detail gehört dir.",
+    "Un avatar. Chaque détail vous appartient.",
+    "Eén avatar. Elk detail van jou.",
+    "En avatar. Varje detalj är din."
+  ],
+  "Back to Datehaja ↗": [
+    "Datehaja로 돌아가기 ↗",
+    "Datehajaに戻る ↗",
+    "Zurück zu Datehaja ↗",
+    "Retour à Datehaja ↗",
+    "Terug naar Datehaja ↗",
+    "Tillbaka till Datehaja ↗"
+  ],
+  "Character looks": [
+    "아바타 스타일",
+    "アバタースタイル",
+    "Avatar-Stile",
+    "Styles d’avatar",
+    "Avatarstijlen",
+    "Avatarstilar"
+  ],
+  "Try {agent}'s look": [
+    "{agent} 스타일 적용",
+    "{agent}のスタイルを試す",
+    "{agent}s Stil ausprobieren",
+    "Essayer le style de {agent}",
+    "Probeer de stijl van {agent}",
+    "Prova {agent}s stil"
+  ],
+  "Small avatar previews": [
+    "작은 아바타 미리보기",
+    "小さなアバターのプレビュー",
+    "Kleine Avatar-Vorschau",
+    "Aperçus des petits avatars",
+    "Kleine avatarvoorbeelden",
+    "Små avatarförhandsvisningar"
+  ],
+  "READY FOR A FIRST DATE": [
+    "첫 데이트 준비 완료",
+    "初デートの準備完了",
+    "BEREIT FÜRS ERSTE DATE",
+    "PRÊT POUR UN PREMIER RENDEZ-VOUS",
+    "KLAAR VOOR EEN EERSTE DATE",
+    "REDO FÖR EN FÖRSTA DEJT"
+  ],
+  "MAKE IT YOURS": [
+    "나만의 스타일로",
+    "自分らしく",
+    "MACH IHN ZU DEINEM",
+    "À VOTRE IMAGE",
+    "MAAK HET VAN JOU",
+    "GÖR DEN TILL DIN"
+  ],
+  "The details make the character.": [
+    "디테일로 완성하는 나의 아바타.",
+    "細部が個性をつくる。",
+    "Die Details machen den Avatar.",
+    "Les détails font le personnage.",
+    "De details maken het personage.",
+    "Detaljerna skapar karaktären."
+  ],
+  "AT HOME IN THE WORLD": [
+    "아바타가 머무는 공간",
+    "アバターのいる世界",
+    "ZU HAUSE IN DER WELT",
+    "CHEZ SOI DANS LE MONDE",
+    "THUIS IN DE WERELD",
+    "HEMMA I VÄRLDEN"
+  ],
+  "Same look. A life of their own.": [
+    "내가 꾸민 모습 그대로, 살아 움직여요.",
+    "その姿のまま、生き生きと。",
+    "Derselbe Stil. Ein eigenes Leben.",
+    "Le même style. Sa propre vie.",
+    "Dezelfde stijl. Een eigen leven.",
+    "Samma stil. Ett eget liv."
+  ],
+  "Hair, expression, outfit and accessories carry through to the date.": [
+    "헤어, 표정, 의상, 액세서리가 데이트에도 그대로 반영돼요.",
+    "髪型、表情、服、アクセサリーがデートにもそのまま反映されます。",
+    "Frisur, Ausdruck, Outfit und Accessoires bleiben beim Date erhalten.",
+    "Coiffure, expression, tenue et accessoires restent les mêmes pendant le rendez-vous.",
+    "Kapsel, uitdrukking, outfit en accessoires blijven tijdens de date hetzelfde.",
+    "Frisyr, uttryck, kläder och accessoarer följer med på dejten."
+  ]
+};
+
+for (const copy of [agentWorkspaceCopy, settingsCopy, avatarStudioCopy]) {
   for (const [message, values] of Object.entries(copy)) {
     ko[message] = values[0];
     ja[message] = values[1];

@@ -1,11 +1,12 @@
 # Product capture library
 
-The six numbered `.png` stills are written by the demo recording run
+The six numbered `.png` stills below are generated outputs, not committed
+source assets. They are written by the demo recording run
 (`bun run demo:record`), from the same pass that records the film. That is
 deliberate: a screenshot taken by hand drifts away from the product exactly the
 way the old demo film did, and nobody notices until a judge is looking at it.
 
-## Current set
+## Generated outputs
 
 | file | moment |
 | --- | --- |
@@ -19,10 +20,9 @@ way the old demo film did, and nobody notices until a judge is looking at it.
 They are 1920×1080, English, and taken against clearly labelled fictional
 Agents, so they carry no real contact details or private human profile data.
 
-## Superseded
+## Source of truth
 
-The `.jpg` files here were captured by hand on 2026-09-01. They predate the
-finger-heart mark and the rewrite of the debrief into a letter, so they show
-screens the product no longer has. Delete them once a recording run has written
-the numbered set above. The landing page does not use them — it serves its own
-copies from `public/product-tour/`.
+Superseded hand-captured JPGs have been removed. The landing page uses live
+components rather than copies of those screenshots. Run the recording command
+to produce the current numbered set; do not substitute old captures for a
+recording that has not been run.

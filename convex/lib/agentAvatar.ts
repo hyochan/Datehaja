@@ -46,7 +46,7 @@ export type AvatarGenderName = (typeof AVATAR_GENDERS)[number];
 export const DEFAULT_AVATAR_GENDER: AvatarGenderName = "female";
 
 /**
- * The painted sprite set: one base character per gender, recoloured into every
+ * Email PNGs rendered from the editable SVG: one base look per gender and
  * palette, with a sprite per expression. Files live in public/agents/v3 as
  * `<gender>-<palette>-<face>.png`. An expression is listed here only once its
  * art exists; anything missing falls back to the gender's first expression.
@@ -55,26 +55,6 @@ export const SPRITE_V3_FACES: Record<AvatarGenderName, readonly AvatarFaceName[]
   female: ["gentle", "bright", "cool", "curious"],
   male: ["gentle", "bright", "cool", "curious"],
 };
-
-/** Genders that have an eyes-closed frame (`<gender>-<palette>-blink.png`). */
-export const SPRITE_V3_BLINK: Record<AvatarGenderName, boolean> = {
-  female: true,
-  male: true,
-};
-
-/** The eyes-closed frame layered over the sprite for a blink, if drawn. */
-export function blinkSpritePathFor(
-  palette: AvatarPaletteName,
-  gender?: string,
-): string | null {
-  const who = (
-    gender && (AVATAR_GENDERS as readonly string[]).includes(gender)
-      ? gender
-      : DEFAULT_AVATAR_GENDER
-  ) as AvatarGenderName;
-  if (!SPRITE_V3_BLINK[who]) return null;
-  return `/agents/v3/${who}-${palette}-blink.png`;
-}
 
 /**
  * Site-relative path of the hosted character sprite: the owner's gender and

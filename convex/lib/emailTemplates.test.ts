@@ -13,8 +13,8 @@ const base = {
     counterpartAgentName: "Juno",
     ownerPalette: "sunset",
     counterpartPalette: "sky",
-    ownerSpriteUrl: "https://datehaja.com/agents/sprite-sunset-v1.png",
-    counterpartSpriteUrl: "https://datehaja.com/agents/sprite-sky-v1.png",
+    ownerSpriteUrl: "https://datehaja.com/agents/v3/male-sunset-gentle.png",
+    counterpartSpriteUrl: "https://datehaja.com/agents/v3/female-sky-gentle.png",
     worldSourceTitle: "서울 레코드 바 다시 유행",
     totalMoments: 6,
     summary: "음악과 여행 얘기에서 긴장이 풀렸고, 침묵도 편안했어요.",
@@ -83,10 +83,10 @@ describe("agent debrief email", () => {
     // The agent speaks with its own face: the hosted sprite renders in the
     // letter and next to each spoken moment.
     expect(email.html).toContain(
-      "https://datehaja.com/agents/sprite-sunset-v1.png",
+      "https://datehaja.com/agents/v3/male-sunset-gentle.png",
     );
     expect(email.html).toContain(
-      "https://datehaja.com/agents/sprite-sky-v1.png",
+      "https://datehaja.com/agents/v3/female-sky-gentle.png",
     );
     // The letter renders before the story of the date.
     expect(email.html.indexOf("내 에이전트가 전하는 말")).toBeLessThan(
@@ -106,7 +106,7 @@ describe("agent debrief email", () => {
     expect(email.html).toContain("이 장면의 영감");
     // Both agents appear in the pair line, in order, each with their own face.
     expect(email.html).toMatch(
-      /sprite-sunset-v1\.png[\s\S]*Sol[\s\S]*↔[\s\S]*sprite-sky-v1\.png[\s\S]*Juno/,
+      /male-sunset-gentle\.png[\s\S]*Sol[\s\S]*↔[\s\S]*female-sky-gentle\.png[\s\S]*Juno/,
     );
     expect(email.html).toContain("이런 대화가 오갔어요");
     // A pass note only appears for a pass verdict.
@@ -256,10 +256,10 @@ describe("the debrief as a letter", () => {
     expect(email.html).toContain("&mdash; Sol");
     expect(email.text).toContain("— Sol");
     // The band precedes the headline and carries both faces and the scene.
-    const band = email.html.indexOf("sprite-sunset-v1.png");
+    const band = email.html.indexOf("v3/male-sunset-gentle.png");
     expect(band).toBeGreaterThan(-1);
     expect(band).toBeLessThan(email.html.indexOf("Sol came back curious"));
-    expect(email.html.indexOf("sprite-sky-v1.png")).toBeLessThan(email.html.indexOf("Sol came back curious"));
+    expect(email.html.indexOf("v3/female-sky-gentle.png")).toBeLessThan(email.html.indexOf("Sol came back curious"));
     expect(email.html).toContain("A quiet record bar after dark");
   });
 

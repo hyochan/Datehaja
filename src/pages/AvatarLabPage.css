@@ -1,0 +1,96 @@
+/* Character studio: the development bench uses production character parts. */
+.avatar-lab {
+  max-width: 1180px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: 48px 32px 64px;
+  color: var(--text);
+}
+.avatar-lab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+.avatar-lab h1 {
+  margin: 12px 0 8px;
+  font: 500 clamp(36px, 5vw, 56px)/1.08 var(--font-display);
+  letter-spacing: -.04em;
+}
+.avatar-lab h2 {
+  font: 500 25px/1.25 var(--font-display);
+  letter-spacing: -.025em;
+}
+.avatar-lab p { color: var(--text-muted); font-size: 14px; }
+.avatar-lab-looks {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 16px;
+  margin: 32px 0;
+}
+.avatar-lab-look {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 16px 12px 12px;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: var(--bg-raised);
+  cursor: pointer;
+  color: var(--text);
+}
+.avatar-lab-look[aria-pressed="true"] {
+  border-color: var(--accent-text);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent-text) 12%, transparent);
+}
+.avatar-lab-look .agent-avatar { width: 88px; max-width: 100%; }
+.avatar-lab-look strong { font-size: 12px; }
+.avatar-lab-workspace {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 32px;
+  background: var(--bg-raised);
+}
+.avatar-lab-preview {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  gap: 20px;
+  padding: 36px 20px;
+  background: radial-gradient(ellipse at 40% 30%, var(--bg-raised), var(--bg-sunken));
+}
+.avatar-lab-portrait, .avatar-lab-figure { display: grid; justify-items: center; gap: 18px; }
+.avatar-lab-portrait > .agent-avatar { width: 200px; max-width: 100%; }
+.avatar-lab-portrait h2 { margin: 0; }
+.avatar-lab-figure > svg { height: 390px; width: 100%; }
+.avatar-lab-figure .docket-label { font-size: 8px; text-align: center; }
+.avatar-lab-sizes { display: flex; align-items: center; gap: 14px; }
+.avatar-lab-sizes .agent-avatar { width: 100%; }
+.avatar-lab-editor { padding: 32px; border-left: 1px solid var(--border); }
+.avatar-lab-editor h2 { margin: 10px 0 26px; }
+.avatar-lab-editor .avatar-choice-row { gap: 10px; }
+.avatar-lab-in-world {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 32px;
+  margin-top: 32px;
+}
+.avatar-lab-in-world .agent-home-world { min-height: 260px; }
+@media (max-width: 760px) {
+  .avatar-lab { padding: 28px 16px 40px; }
+  .avatar-lab-header { align-items: flex-start; }
+  .avatar-lab-header > a { white-space: nowrap; font-size: 10px; }
+  .avatar-lab-looks { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .avatar-lab-workspace, .avatar-lab-in-world { grid-template-columns: 1fr; }
+  .avatar-lab-editor { padding: 24px; border-left: 0; border-top: 1px solid var(--border); }
+  .avatar-lab-preview { padding: 24px 16px; }
+  .avatar-lab-portrait > .agent-avatar { width: 164px; }
+  .avatar-lab-figure > svg { height: 350px; }
+}
+
+.avatar-lab-settings { margin-top: 32px; }
+.avatar-lab-settings summary { cursor: pointer; margin-bottom: 16px; }
+.avatar-lab-settings-editor { width: 710px; max-width: 100%; }
