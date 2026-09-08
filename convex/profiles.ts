@@ -1,3 +1,5 @@
+import { refreshAfterPreferencesChange } from "./scouting";
+import { supersedeAgentProposals } from "./lib/agentLearning";
 import { v } from "convex/values";
 import { internalMutation, mutation, query } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
@@ -454,6 +456,7 @@ export const saveDatingPreferences = mutation({
       .unique();
     if (!prefs) throw new Error("Finish the basics first.");
 
+    await supersedeAgentProposals(ctx, userId);
     const ageMin = Math.round(clampNumber(args.ageMin, MIN_AGE, MAX_AGE));
     const ageMax = Math.round(clampNumber(args.ageMax, MIN_AGE, MAX_AGE));
     if (ageMax < ageMin) throw new Error("Age range is upside down.");
@@ -504,6 +507,7 @@ export const saveDatingPreferences = mutation({
       onboardingStep: Math.max(profile.onboardingStep, 4),
       updatedAt: Date.now(),
     });
+    await refreshAfterPreferencesChange(ctx, userId);
     return null;
   },
 });

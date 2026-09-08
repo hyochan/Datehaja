@@ -65,6 +65,12 @@ export type StructuredRequest = {
   schema: Record<string, unknown>;
   /** Task-local cheapest-capable models, tried before the global fallback. */
   preferredModels?: string[];
+  /** Critical checks may require a specific model instead of the economy ladder. */
+  fallbackToDefaultModels?: boolean;
+  /** Bound a single request; timeout fails this operation instead of retrying blindly. */
+  requestTimeoutMs?: number;
+  /** Shared wall-clock deadline across retries and related verification calls. */
+  deadlineMs?: number;
   maxOutputTokens?: number;
   reasoningEffort?: "none" | "low" | "medium" | "high";
   verbosity?: "low" | "medium" | "high";
@@ -105,16 +111,21 @@ export async function structured<T>(
   let lastError = "Unknown error";
   let requestId: string | undefined;
 
-  for (const model of modelCandidates(req.preferredModels)) {
+  const models = req.fallbackToDefaultModels === false
+    ? [...new Set((req.preferredModels ?? []).map(model => model.trim()).filter(Boolean))]
+    : modelCandidates(req.preferredModels);
+  for (const model of models) {
     for (let attempt = 0; attempt < 2; attempt++) {
       const body = {
         model,
         instructions: req.instructions,
         input: req.input,
         max_output_tokens: req.maxOutputTokens ?? 2000,
-        reasoning: { effort: req.reasoningEffort ?? "low" },
+        // The final economy fallback is not a reasoning model. Sending GPT-5
+        // controls to it turns a recoverable model failure into a 400.
+        ...(!model.startsWith("gpt-4.") ? { reasoning: { effort: req.reasoningEffort ?? "low" } } : {}),
         text: {
-          verbosity: req.verbosity ?? "low",
+          ...(!model.startsWith("gpt-4.") ? { verbosity: req.verbosity ?? "low" } : {}),
           format: {
             type: "json_schema",
             name: req.schemaName,
@@ -125,9 +136,13 @@ export async function structured<T>(
       };
 
       let res: Response;
+      const remainingMs = Math.min(req.requestTimeoutMs ?? Infinity, req.deadlineMs === undefined ? Infinity : req.deadlineMs - Date.now());
+      if (remainingMs <= 0) return fail("Model operation deadline exceeded.", model, started, requestId);
+      const signal = Number.isFinite(remainingMs) ? AbortSignal.timeout(Math.max(1, Math.ceil(remainingMs))) : undefined;
       try {
         res = await fetch(`${OPENAI_BASE}/responses`, {
           method: "POST",
+          ...(signal ? { signal } : {}),
           headers: {
             Authorization: `Bearer ${apiKey}`,
             "Content-Type": "application/json",
@@ -135,6 +150,7 @@ export async function structured<T>(
           body: JSON.stringify(body),
         });
       } catch (e) {
+        if (signal?.aborted) return fail("Model request timed out.", model, started, requestId);
         lastError = `Network error: ${String(e)}`;
         continue;
       }
@@ -162,7 +178,7 @@ export async function structured<T>(
         }
         if (res.status === 429 && res.headers.get("retry-after")) {
           await sleep(
-            Math.min(4000, Number(res.headers.get("retry-after")) * 1000),
+            Math.max(0, Math.min(4000, Number(res.headers.get("retry-after")) * 1000, (req.deadlineMs ?? Infinity) - Date.now())),
           );
           continue; // retry same model
         }
@@ -171,7 +187,7 @@ export async function structured<T>(
         // roomier allowances, so drop down the ladder instead of giving up.
         if (res.status === 429) break;
         if (res.status >= 500) {
-          await sleep(700);
+          await sleep(Math.max(0, Math.min(700, (req.deadlineMs ?? Infinity) - Date.now())));
           continue;
         }
         return fail(lastError, model, started, requestId);

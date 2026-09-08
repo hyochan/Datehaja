@@ -1,6 +1,21 @@
-/** Datehaja Concierge email templates. Plain text and HTML, one source of truth. */
+import { activityCopy, type DateActivity } from "./dateActivity";
+/** Private letters from each person's AI Agent. */
+import type { DateReflection, SceneKind } from "./dateStory";
 
 export type EmailContent = { subject: string; text: string; html: string };
+
+function letterExperienceCopy(locale?: string) {
+  const copies: Record<string, { replay: string; demo: string; private: string }> = {
+    en: { replay: "Replay the conversation", demo: "AI SIMULATION · FICTIONAL DEMO PARTNER", private: "AI SIMULATION · A LETTER ONLY FOR YOU" },
+    ko: { replay: "대화 다시 보기", demo: "AI 시뮬레이션 · 가상의 데모 상대", private: "AI 시뮬레이션 · 나에게만 온 편지" },
+    ja: { replay: "会話を振り返る", demo: "AIシミュレーション · 架空の相手", private: "AIシミュレーション · あなただけへの手紙" },
+    de: { replay: "Das Gespräch ansehen", demo: "KI-SIMULATION · FIKTIVE DEMOPERSON", private: "KI-SIMULATION · NUR FÜR DICH" },
+    fr: { replay: "Revoir la conversation", demo: "SIMULATION IA · PARTENAIRE FICTIF", private: "SIMULATION IA · UNE LETTRE POUR VOUS" },
+    nl: { replay: "Bekijk het gesprek", demo: "AI-SIMULATIE · FICTIEVE DEMOPARTNER", private: "AI-SIMULATIE · EEN BRIEF VOOR JOU" },
+    sv: { replay: "Se samtalet", demo: "AI-SIMULERING · FIKTIV DEMOPARTNER", private: "AI-SIMULERING · ETT BREV BARA TILL DIG" },
+  };
+  return copies[locale?.split("-")[0] ?? "en"] ?? copies.en;
+}
 
 const BRAND = {
   ink: "#16121b",
@@ -24,7 +39,6 @@ const AVATAR_CHIPS: Record<string, { bg: string; fg: string }> = {
 };
 
 const DEFAULT_OWNER_CHIP = AVATAR_CHIPS.sunset;
-const DEFAULT_COUNTERPART_CHIP = AVATAR_CHIPS.ink;
 
 const VERDICT_STYLES = {
   encourage: { bg: "#e7f4e4", fg: "#2f6b3a", accent: "#4c9a54" },
@@ -47,7 +61,7 @@ function shell(
 ): string {
   return `<!doctype html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:${BRAND.sand};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${BRAND.ink};">
+<body style="margin:0;padding:0;background:${BRAND.sand};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${BRAND.ink};word-break:keep-all;overflow-wrap:break-word;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BRAND.sand};padding:32px 16px;">
     <tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border:1px solid ${BRAND.border};border-radius:18px;overflow:hidden;">
@@ -84,6 +98,11 @@ function p(text: string): string {
   return `<p style="margin:0 0 14px 0;font-size:15px;line-height:1.65;color:${BRAND.ink};">${escapeHtml(text)}</p>`;
 }
 
+/** Preserve the verified letter's paragraph breaks instead of flattening it. */
+function letterParagraphs(text: string): string[] {
+  return text.trim().split(/\n\s*\n/).map((part) => part.replace(/\s+/g, " ").trim()).filter(Boolean);
+}
+
 export function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
@@ -95,6 +114,10 @@ export function escapeHtml(value: string): string {
 
 export type AgentDateEmailReport = {
   setting: string;
+  sceneKind?: SceneKind;
+  sceneImageUrl?: string;
+  reflection?: DateReflection;
+  isDemo?: boolean;
   agentName: string;
   counterpartAgentName: string;
   /** Avatar palettes, so the email carries each Agent's visual identity. */
@@ -104,6 +127,8 @@ export type AgentDateEmailReport = {
   ownerSpriteUrl?: string;
   counterpartSpriteUrl?: string;
   worldSourceTitle?: string;
+  worldSourceUrl?: string;
+  activityJournal?: DateActivity;
   totalMoments: number;
   summary: string;
   sparks: string[];
@@ -309,16 +334,6 @@ function agentReportCopy(locale?: string): AgentReportCopy {
   );
 }
 
-function stageLabelFor(
-  copy: AgentReportCopy,
-  index: number,
-  total: number,
-): string {
-  if (index === 0) return copy.stageFirst;
-  if (index === total - 1) return copy.stageLast;
-  return copy.stageMiddle;
-}
-
 function agentInitial(name: string): string {
   return [...name.trim()][0]?.toUpperCase() ?? "•";
 }
@@ -356,6 +371,8 @@ type AgentLetter = {
   /** "What I'll look for next" — shown after a pass. */
   nextLabel?: string;
   nextNote?: string;
+  /** The private debrief reads as a letter; connection notices keep their card. */
+  personal?: boolean;
 };
 
 /** A small caps field name, the one repeated ornament a report is allowed. */
@@ -364,16 +381,6 @@ function fieldLabel(text: string): string {
 }
 
 /** A titled section, separated by a hairline rather than a coloured card. */
-function section(title: string, body: string, opening = false): string {
-  const rule = opening
-    ? "padding:0;"
-    : `padding:18px 0 0;border-top:1px solid ${BRAND.border};`;
-  return `<div style="margin:0;${rule}">
-    <div style="margin-bottom:9px;font-size:13px;font-weight:700;color:${BRAND.ink};">${escapeHtml(title)}</div>
-    ${body}
-  </div>`;
-}
-
 /** A label and its value on one line, the way a report states a fact. */
 function factRow(label: string, value: string): string {
   return `<tr>
@@ -384,8 +391,7 @@ function factRow(label: string, value: string): string {
 
 /**
  * The Agent's read on the date: who it is, what it concluded, and why, in its
- * own words. This is what the owner opened the email for, so it comes first
- * and is stated plainly rather than dressed as a chat message.
+ * own words, following the saved exchange that gave the letter meaning.
  */
 function agentLetterHtml(copy: AgentReportCopy, letter: AgentLetter): string {
   const style = letter.verdict
@@ -420,6 +426,14 @@ function agentLetterHtml(copy: AgentReportCopy, letter: AgentLetter): string {
     ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:14px;">${rows}</table>`
     : "";
 
+  const paragraphs = letterParagraphs(letter.message).map((paragraph) =>
+    `<p style="margin:0 0 14px;font-size:16px;line-height:1.8;color:${BRAND.ink};">${escapeHtml(paragraph)}</p>`,
+  ).join("");
+  if (letter.personal) {
+    return `<div style="margin:0 0 26px;">${paragraphs}
+      <div style="font-size:13px;color:${BRAND.muted};">&mdash; ${escapeHtml(letter.agentName)}${badgeLabel ? ` · ${escapeHtml(badgeLabel)}` : ""}</div>${notes}</div>`;
+  }
+
   const body = `<table role="presentation" cellpadding="0" cellspacing="0" style="margin-bottom:12px;"><tr>
       <td style="width:52px;vertical-align:middle;">
         ${agentFaceHtml(letter.agentName, chip, letter.spriteUrl, 44)}
@@ -429,21 +443,10 @@ function agentLetterHtml(copy: AgentReportCopy, letter: AgentLetter): string {
         ${verdictLine}
       </td>
     </tr></table>
-    <div style="font-family:Georgia,'Times New Roman',serif;font-size:17px;line-height:1.72;color:${BRAND.ink};">${escapeHtml(compactEmailText(letter.message, 900))}</div>
+    <div style="font-family:Georgia,'Times New Roman',serif;">${paragraphs}</div>
     <div style="margin-top:10px;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:15px;color:${style.fg};">&mdash; ${escapeHtml(letter.agentName)}</div>
     ${notes}`;
-  return `<div style="margin:4px 0 20px;">${section(copy.letter, body, true)}</div>`;
-}
-
-/**
- * Whether the world's source deserves its own line. The scene is normally
- * written around the source title, and a report that states one fact twice
- * reads as padding.
- */
-function showsSource(report: AgentDateEmailReport): boolean {
-  const title = report.worldSourceTitle?.trim();
-  if (!title) return false;
-  return !report.setting.includes(title.slice(0, 40));
+  return `<div style="margin:4px 0 20px;">${body}</div>`;
 }
 
 /**
@@ -451,42 +454,25 @@ function showsSource(report: AgentDateEmailReport): boolean {
  * This is what the owner opened the email for — not a label, the scene. Falls
  * back to initial chips when a sprite is unavailable, never to an empty band.
  */
-function worldBandHtml(
-  copy: AgentReportCopy,
-  report: AgentDateEmailReport,
-): string {
-  const ownerChip = chipFor(report.ownerPalette, DEFAULT_OWNER_CHIP);
-  const counterpartChip = chipFor(
-    report.counterpartPalette,
-    DEFAULT_COUNTERPART_CHIP,
-  );
-  const figure = (
-    name: string,
-    chip: { bg: string; fg: string },
-    spriteUrl: string | undefined,
-  ) =>
-    spriteUrl
-      ? `<img src="${escapeHtml(spriteUrl)}" alt="${escapeHtml(name)}" width="72" height="104" style="display:block;width:72px;height:104px;object-fit:contain;object-position:bottom center;border:0;" />`
-      : agentFaceHtml(name, chip, undefined, 56);
-  return `<tr><td style="padding:0;background:#21171d;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#21171d;">
-      <tr><td style="padding:22px 32px 0;">
-        <div style="font-family:Georgia,serif;font-style:italic;font-size:22px;font-weight:600;color:#fff9f6;">Datehaja</div>
-      </td></tr>
-      <tr><td align="center" style="padding:14px 32px 0;">
-        <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-          <td style="vertical-align:bottom;padding:0 10px;">${figure(report.agentName, ownerChip, report.ownerSpriteUrl)}</td>
-          <td style="vertical-align:middle;padding:0 4px 30px;color:#ff9b9a;font-size:18px;letter-spacing:4px;">&middot;&middot;&middot;</td>
-          <td style="vertical-align:bottom;padding:0 10px;">${figure(report.counterpartAgentName, counterpartChip, report.counterpartSpriteUrl)}</td>
-        </tr></table>
-        <div style="margin:-14px auto 0;width:240px;height:22px;border-radius:50%;background:#3d2530;"></div>
-      </td></tr>
-      <tr><td align="center" style="padding:14px 32px 24px;">
-        <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#b798a3;">${escapeHtml(copy.scene)}</div>
-        <div style="margin-top:6px;font-size:14px;line-height:1.5;color:#f3e4e6;">${escapeHtml(compactEmailText(report.setting, 110))}</div>
-      </td></tr>
-    </table>
-  </td></tr>`;
+function worldBandHtml(copy: AgentReportCopy, report: AgentDateEmailReport, includeBrand = true, labels = activityCopy()): string {
+  const picture = report.sceneImageUrl;
+  const figure = (name: string, sprite: string | undefined, palette: string | undefined) => sprite
+    ? `<img src="${escapeHtml(sprite)}" alt="${escapeHtml(name)}" width="68" height="102" style="display:block;width:68px;height:102px;object-fit:contain;border:0;" />`
+    : agentFaceHtml(name, chipFor(palette, DEFAULT_OWNER_CHIP), undefined, 48);
+  return `${includeBrand ? `<tr><td style="padding:20px 28px;background:#fcfaf7;">
+      <table role="presentation" width="100%"><tr><td style="font-family:Georgia,serif;font-style:italic;font-size:24px;">Datehaja</td><td align="right" style="font-size:10px;letter-spacing:.12em;color:${BRAND.muted};">${escapeHtml(copy.letter)}</td></tr></table>
+    </td></tr>` : ""}
+    ${picture ? `<tr><td style="background:#344a5b;"><img src="${escapeHtml(picture)}" alt="${escapeHtml(report.setting)}" width="520" style="display:block;width:100%;max-width:520px;height:auto;border:0;" /></td></tr>` : ""}
+    <tr><td style="background:#f1ece3;text-align:center;">
+      <table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin:0 auto;"><tr>
+        <td style="padding:8px 32px 4px;">${figure(report.agentName, report.ownerSpriteUrl, report.ownerPalette)}<div style="font-size:11px;color:${BRAND.muted};padding-top:4px;">${escapeHtml(report.agentName)}</div></td>
+        <td style="padding:8px 32px 4px;">${figure(report.counterpartAgentName, report.counterpartSpriteUrl, report.counterpartPalette)}<div style="font-size:11px;color:${BRAND.muted};padding-top:4px;">${escapeHtml(report.counterpartAgentName)}</div></td>
+      </tr></table>
+    </td></tr>
+    <tr><td style="padding:12px 28px;background:#f1ece3;font-size:12px;color:#5d5752;">
+      <b>${escapeHtml(report.setting)}</b><span style="float:right;">${report.totalMoments} ${escapeHtml(labels.lines)}</span>
+      <div style="margin-top:7px;font-size:10px;line-height:1.5;">${escapeHtml(labels.illustration)}</div>
+    </td></tr>`;
 }
 
 /** Tiny inline face used next to an Agent's name in running text. */
@@ -499,77 +485,41 @@ function miniFace(
 }
 
 /**
- * The date itself, written as a report: the facts of the meeting, what the
- * Agent made of the mood, the excerpts that carried the most, and the two
- * signals worth acting on. Everything here also exists in the app, so the
- * email never claims more than the replay.
+ * One adjacent exchange from the saved transcript, with no repeated summary.
  */
-function agentDateReportHtml(
-  copy: AgentReportCopy,
-  report: AgentDateEmailReport,
-): string {
-  const ownerChip = chipFor(report.ownerPalette, DEFAULT_OWNER_CHIP);
-  const counterpartChip = chipFor(
-    report.counterpartPalette,
-    DEFAULT_COUNTERPART_CHIP,
-  );
+function activityJournalHtml(report: AgentDateEmailReport, labels: ReturnType<typeof activityCopy>, recordUrl?: string): string {
+  const journal = report.activityJournal;
+  if (!journal) return "";
+  return `<div style="margin:0 0 24px;"><h2 style="font-size:20px;line-height:1.4;margin:0 0 12px;">${escapeHtml(labels.heading)}</h2>
+    <p style="font-size:14px;line-height:1.8;margin:0 0 22px;">${escapeHtml(journal.overview)}</p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="table-layout:fixed;">${journal.events.slice(0, 4).map((e, i) => `<tr>
+      <td style="padding:22px 0 26px;vertical-align:top;border-bottom:1px ${e.kind === "proposal" ? "dashed" : "solid"} #e7dfd3;">
+        <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+          <td width="32" style="width:32px;vertical-align:middle;"><span style="display:block;width:32px;line-height:32px;text-align:center;border-radius:16px;background:#f1ece3;font-family:monospace;font-size:12px;color:${BRAND.muted};">${String(i + 1).padStart(2, "0")}</span></td>
+          <td style="padding-left:14px;vertical-align:middle;font-size:11px;color:${e.kind === "proposal" ? "#896419" : "#58736a"};">${escapeHtml(labels[e.kind])}</td>
+        </tr></table>
+        <h3 style="font-size:16px;line-height:1.5;margin:14px 0 10px;">${escapeHtml(e.title)}</h3>
+        <p style="font-size:14px;line-height:1.85;margin:0 0 18px;">${escapeHtml(e.detail)}</p>
+        ${recordUrl ? `<a href="${escapeHtml(recordUrl.split("#")[0])}#turn-${e.rounds[0]}" style="display:inline-block;padding:12px 16px;border:1px solid #d9d0c3;border-radius:10px;background:#fcfaf7;font-size:12px;line-height:20px;text-decoration:none;color:${BRAND.ink};">${escapeHtml(labels.read)}&nbsp; ↗</a>` : ""}
+        <div style="margin-top:12px;font-size:11px;line-height:1.6;color:${BRAND.muted};">${e.rounds.map(r => String(r).padStart(2, "0")).join(" · ")}</div>
+      </td></tr>`).join("")}</table></div>`;
+}
 
-  const moments = `${report.totalMoments}${copy.countJoin}${escapeHtml(copy.moments)}`;
-  const facts = [
-    factRow(
-      copy.agents,
-      `<span style="font-weight:600;">${miniFace(ownerChip, report.ownerSpriteUrl)}${escapeHtml(report.agentName)}</span>` +
-        `<span style="color:${BRAND.muted};"> \u2194 </span>` +
-        `<span style="font-weight:600;">${miniFace(counterpartChip, report.counterpartSpriteUrl)}${escapeHtml(report.counterpartAgentName)}</span>` +
-        `<span style="color:${BRAND.muted};"> &middot; ${moments}</span>`,
-    ),
-    factRow(copy.scene, escapeHtml(compactEmailText(report.setting, 140))),
-    // The scene is usually named after the source, so repeating the title
-    // underneath it just says the same thing twice.
-    showsSource(report)
-      ? factRow(
-          copy.inspiredBy,
-          escapeHtml(compactEmailText(report.worldSourceTitle!, 90)),
-        )
-      : "",
-  ].join("");
-
-  const total = report.moments.length;
-  const excerpts = report.moments
-    .map((moment, index) => {
-      const isOwner =
-        moment.isMine ?? moment.speakerAgentName === report.agentName;
-      const accent = isOwner ? BRAND.ember : BRAND.muted;
-      return `<div style="margin-bottom:14px;">
-        <div style="margin-bottom:4px;font-size:11px;font-weight:700;color:${BRAND.muted};">${String(moment.round).padStart(2, "0")} &middot; ${escapeHtml(stageLabelFor(copy, index, total))}</div>
-        <div style="padding-left:12px;border-left:2px solid ${accent};">
-          <div style="margin-bottom:2px;font-size:12.5px;font-weight:700;color:${accent};">${escapeHtml(moment.speakerAgentName)}</div>
-          <div style="font-size:14px;line-height:1.6;color:${BRAND.ink};">${escapeHtml(compactEmailText(moment.content, 240))}</div>
-        </div>
-      </div>`;
-    })
-    .join("");
-
-  const signals = `<table role="presentation" cellpadding="0" cellspacing="0">
-    ${factRow(copy.spark, escapeHtml(compactEmailText(report.sparks[0] ?? copy.noSignal, 150)))}
-    ${factRow(copy.friction, escapeHtml(compactEmailText(report.frictions[0] ?? copy.noSignal, 150)))}
-  </table>`;
-
-  return (
-    section(
-      copy.storyEyebrow,
-      `<table role="presentation" cellpadding="0" cellspacing="0" width="100%">${facts}</table>`,
-    ) +
-    `<div style="height:18px;"></div>` +
-    section(
-      copy.summary,
-      `<div style="font-size:14px;line-height:1.65;color:${BRAND.ink};">${escapeHtml(compactEmailText(report.summary, 300))}</div>
-       <div style="height:14px;"></div>${signals}`,
-    ) +
-    `<div style="height:18px;"></div>` +
-    section(copy.conversation, excerpts) +
-    `<div style="height:4px;"></div>`
-  );
+function agentDateReportHtml(_copy: AgentReportCopy, report: AgentDateEmailReport, labels = activityCopy()): string {
+  const excerpts = report.moments.slice(0, 4).map((moment) => {
+    const mine = moment.isMine ?? moment.speakerAgentName === report.agentName;
+    return `<tr><td style="padding:0 0 12px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+        <td width="28" valign="top">${miniFace(chipFor(mine ? report.ownerPalette : report.counterpartPalette, DEFAULT_OWNER_CHIP), mine ? report.ownerSpriteUrl : report.counterpartSpriteUrl)}</td>
+        <td><div style="font-size:11px;color:${BRAND.muted};margin-bottom:5px;">${String(moment.round).padStart(2, "0")} · ${escapeHtml(moment.speakerAgentName)}</div>
+        <div style="background:${mine ? "#f2eee7" : "#eaf0ea"};border-radius:3px 16px 16px 16px;padding:13px 16px;font-size:14px;line-height:1.6;">${escapeHtml(moment.content)}</div></td>
+      </tr></table>
+    </td></tr>`;
+  }).join("");
+  return `<div style="margin:0 0 24px;">
+    <div style="font-size:11px;letter-spacing:.06em;color:${BRAND.muted};margin-bottom:13px;">${escapeHtml(labels.excerpt)} · ${report.moments.slice(0, 4).length} / ${report.totalMoments}<div style="margin-top:6px;font-size:10px;letter-spacing:0;">${escapeHtml(labels.excerptNote)}</div></div>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${excerpts}</table>
+  </div>`;
 }
 
 function agentLetterText(copy: AgentReportCopy, letter: AgentLetter): string {
@@ -582,7 +532,7 @@ function agentLetterText(copy: AgentReportCopy, letter: AgentLetter): string {
     : null;
   const lines = [
     `${copy.letter} — ${letter.agentName}${badgeLabel ? ` · ${badgeLabel}` : ""}`,
-    compactEmailText(letter.message, 900),
+    letterParagraphs(letter.message).join("\n\n"),
     `— ${letter.agentName}`,
   ];
   if (letter.detailLabel && letter.detail) {
@@ -594,31 +544,8 @@ function agentLetterText(copy: AgentReportCopy, letter: AgentLetter): string {
   return lines.join("\n");
 }
 
-function agentDateReportText(
-  copy: AgentReportCopy,
-  report: AgentDateEmailReport,
-): string {
-  const total = report.moments.length;
-  const excerpts = report.moments
-    .map(
-      (moment, index) =>
-        `${String(moment.round).padStart(2, "0")} ${stageLabelFor(copy, index, total)}\n${moment.speakerAgentName}: ${compactEmailText(moment.content, 200)}`,
-    )
-    .join("\n\n");
-  const inspiredBy = showsSource(report)
-    ? `\n${copy.inspiredBy}: ${compactEmailText(report.worldSourceTitle!, 90)}`
-    : "";
-  return `${copy.storyEyebrow}
-${copy.agents}: ${report.agentName} \u2194 ${report.counterpartAgentName} \u00b7 ${report.totalMoments}${copy.countJoin}${copy.moments}
-${copy.scene}: ${compactEmailText(report.setting, 140)}${inspiredBy}
-
-${copy.summary}
-${compactEmailText(report.summary, 300)}
-${copy.spark}: ${report.sparks[0] ?? copy.noSignal}
-${copy.friction}: ${report.frictions[0] ?? copy.noSignal}
-
-${copy.conversation}
-${excerpts}`;
+function agentDateReportText(copy: AgentReportCopy, report: AgentDateEmailReport, labels = activityCopy()): string {
+  return `${report.setting} · ${report.totalMoments} ${labels.lines}\n\n${copy.conversation}\n${report.moments.slice(0, 4).map((moment) => `${moment.speakerAgentName}: ${moment.content}`).join("\n\n")}`;
 }
 
 export function safetyEmail(args: {
@@ -693,6 +620,10 @@ export function agentDebriefEmail(args: {
   report: AgentDateEmailReport;
   url: string;
   conversationUrl: string;
+  /** Explicit preview delivery: explain the fictional setup and omit live actions. */
+  previewNote?: string;
+  /** A tested HTTPS preview record; never a local id on the production app. */
+  previewUrl?: string;
 }): EmailContent {
   const language = args.locale?.split("-")[0] ?? "en";
   const localized = {
@@ -709,7 +640,7 @@ export function agentDebriefEmail(args: {
       next: "다음에는 이런 사람을 찾아볼게요",
       read: "대화와 리포트를 읽고 나서, 만나볼지 나만의 답을 남겨주세요",
       button: "나만의 비공개 리포트 보기",
-      talk: `${args.agentName} 에이전트와 이 데이트 더 이야기하기`,
+      talk: `${args.agentName}에게 내 생각 말하기`,
       talkNote:
         "궁금한 점이나 마음에 걸리는 부분을 내 에이전트에게 말해보세요. 대화 끝에 만나고 싶다면 내가 직접 최종 승인할 수 있어요.",
       privacy:
@@ -856,8 +787,8 @@ export function agentDebriefEmail(args: {
     spriteUrl: args.report.ownerSpriteUrl,
     message: args.reason,
     verdict: args.verdict,
-    detailLabel: args.decisionLabel ? localized.reason : undefined,
-    detail: args.decisionLabel,
+    personal: true,
+
     nextLabel:
       args.verdict === "pass" && args.nextSearchNote
         ? localized.next
@@ -868,38 +799,36 @@ export function agentDebriefEmail(args: {
         : undefined,
   };
 
-  const text = `${localized.greeting}
-
-${agentLetterText(copy, letter)}
-
-${agentDateReportText(copy, args.report)}
-
-${localized.talkNote}
-${localized.talk}: ${args.conversationUrl}
-
-${localized.read}: ${args.url}
-
-${localized.privacy}
-
-— Datehaja`;
-
+  const reflection = args.report.reflection;
+  const headline = reflection?.headline ?? localized.headline;
+  const subject = reflection ? `${args.agentName} · ${headline}` : `${localized.headline} · ${args.report.setting}`;
+  const extra = letterExperienceCopy(args.locale);
+  const statusNote = args.previewNote ?? (args.report.isDemo ? extra.demo : extra.private);
+  const question = reflection?.question;
+  const labels = activityCopy(args.locale);
+  const recordUrl = args.previewNote ? (args.previewUrl?.startsWith("https://") ? args.previewUrl : undefined) : `${args.url.split("#")[0]}#activity`;
+  const recordAction = recordUrl ? `<div style="margin:22px 0 28px;">${button(recordUrl, labels.full + " →")}</div>` : "";
+  const journalText = args.report.activityJournal ? `${labels.heading}\n${args.report.activityJournal.overview}\n\n${args.report.activityJournal.events.map((e, i) => `${i + 1}. [${labels[e.kind]}] ${e.title}\n${e.detail} (${e.rounds.join(", ")})`).join("\n\n")}` : "";
+  const textActions = args.previewNote ? "" : `\n${localized.talk}: ${args.conversationUrl}\n${extra.replay}: ${args.url}`;
+  const text = `${statusNote}\n\n${localized.greeting}\n\n${headline}\n\n${agentLetterText(copy, letter)}\n\n${journalText}\n\n${recordUrl ? `${labels.full}: ${recordUrl}` : ""}\n\n${agentDateReportText(copy, args.report, labels)}\n\n${question ?? ""}${textActions}\n\n${localized.privacy}\n— Datehaja`;
   return {
-    // The Agent's own headline is the subject: what it concluded, in its
-    // voice, before the mail is even opened.
-    subject: localized.headline,
+    subject,
     text,
     html: shell(
-      h1(localized.headline) +
-        p(localized.greeting) +
-        agentLetterHtml(copy, letter) +
-        `<div style="margin:2px 0 26px;">${button(args.conversationUrl, localized.talk)}</div>` +
-        agentDateReportHtml(copy, args.report) +
-        p(localized.talkNote) +
-        `<div style="margin-top:14px;">${secondaryButton(args.url, localized.button)}</div>` +
-        `<p style="margin:18px 0 0;font-size:13px;line-height:1.6;color:${BRAND.muted};">${escapeHtml(localized.privacy)}</p>`,
+      `<div style="font-size:10px;letter-spacing:.09em;color:${BRAND.muted};margin-bottom:12px;">${escapeHtml(statusNote)}</div>` +
+      h1(headline) +
+      p(localized.greeting) +
+      agentLetterHtml(copy, letter) +
+      `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 26px;border-radius:12px;overflow:hidden;">${worldBandHtml(copy, args.report, false, labels)}</table>` +
+      activityJournalHtml(args.report, labels, recordUrl) +
+      recordAction +
+      agentDateReportHtml(copy, args.report, labels) +
+      (question ? `<p style="font-size:17px;line-height:1.55;margin:22px 0 14px;font-weight:600;">${escapeHtml(question)}</p>` : "") +
+      (args.previewNote ? "" : `<div>${button(args.conversationUrl, localized.talk)}</div>` +
+      `<p style="margin:17px 0 0;font-size:13px;"><a style="color:${BRAND.muted};text-decoration:underline;" href="${escapeHtml(args.url)}">${escapeHtml(extra.replay)} ↗</a></p>`) +
+      `<p style="margin:22px 0 0;font-size:11px;line-height:1.6;color:${BRAND.muted};">${escapeHtml(localized.privacy)}</p>`,
       localized.footer,
-      localized.settings,
-      worldBandHtml(copy, args.report),
+      `<a href="${escapeHtml(new URL("/settings", args.url).href)}" style="color:${BRAND.muted};">${escapeHtml(localized.settings)}</a>`,
     ),
   };
 }
@@ -1007,8 +936,6 @@ ${localized.headline}
 
 ${agentLetterText(copy, letter)}
 
-${agentDateReportText(copy, args.report)}
-
 ${localized.button}: ${args.url}
 ${localized.talk}: ${args.conversationUrl}
 
@@ -1022,7 +949,6 @@ ${localized.note}
       h1(localized.headline) +
         p(localized.greeting) +
         agentLetterHtml(copy, letter) +
-        agentDateReportHtml(copy, args.report) +
         `<div style="margin-top:20px;">${button(args.url, localized.button)}</div>` +
         `<div style="margin-top:10px;">${secondaryButton(args.conversationUrl, localized.talk)}</div>` +
         `<p style="margin:18px 0 0;font-size:13px;line-height:1.6;color:${BRAND.muted};">${escapeHtml(localized.note)}</p>`,

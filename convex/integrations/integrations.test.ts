@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { modelCandidates, structured } from "./openai";
 import { search, scrape } from "./firecrawl";
-import { deleteWebhook, parseAddress, safeIdempotencyKey } from "./agentmail";
+import { deleteWebhook, parseAddress, safeIdempotencyKey, sendMessage, prepareInlineMail, type InlineMailImage } from "./agentmail";
 
 const originalFetch = globalThis.fetch;
 const originalEnv = { ...process.env };
@@ -255,6 +255,25 @@ describe("OpenAI structured output", () => {
   });
 });
 
+describe("non-reasoning model fallback", () => {
+  it("omits unsupported GPT-5 controls when a truncated response falls back to GPT-4.1", async () => {
+    const bodies: Record<string, any>[] = [];
+    mockFetch((_url, init) => {
+      const body = JSON.parse(String(init?.body));
+      bodies.push(body);
+      return body.model === "gpt-4.1-mini"
+        ? json({ status: "completed", output: [{ type: "message", content: [{ type: "output_text", text: '{"ok":true}' }] }] })
+        : json({ status: "incomplete", incomplete_details: { reason: "max_output_tokens" } });
+    });
+    const result = await structured({ instructions: "x", input: "y", schemaName: "s", schema: {}, preferredModels: ["gpt-5.6-luna", "gpt-4.1-mini"] });
+    expect(result.ok).toBe(true);
+    expect(bodies[0].reasoning).toBeDefined();
+    expect(bodies[1].reasoning).toBeUndefined();
+    expect(bodies[1].text.verbosity).toBeUndefined();
+    expect(bodies[1].text.format.strict).toBe(true);
+  });
+});
+
 /* -------------------------------- Firecrawl -------------------------------- */
 
 describe("Firecrawl normalisation", () => {
@@ -349,6 +368,47 @@ describe("Firecrawl normalisation", () => {
 /* ------------------------------- AgentMail --------------------------------- */
 
 describe("AgentMail helpers", () => {
+  it("sends inline images to exactly the requested recipient with a retry-safe key", async () => {
+    process.env.AGENTMAIL_API_KEY = "am-test";
+    mockFetch((url, init) => {
+      expect(url).toContain("/inboxes/preview%40agentmail.to/messages/send");
+      expect(new Headers(init?.headers).get("Idempotency-Key")).toBe("preview-hyo-hyo.dev");
+      const body = JSON.parse(String(init?.body));
+      expect(body.to).toEqual(["hyo@hyo.dev"]);
+      expect(body.attachments).toEqual([{ filename: "scene.png", content_type: "image/png", content_disposition: "inline", content_id: expect.stringMatching(/^[a-f0-9]{64}@images\.datehaja\.com$/), content: "aW1hZ2U=" }]);
+      expect(body.html).toBe(`<img src="cid:${body.attachments[0].content_id}">`);
+      return new Response(JSON.stringify({ message_id: "message-1", thread_id: "thread-1" }));
+    });
+    await expect(sendMessage({ inboxId: "preview@agentmail.to", to: "hyo@hyo.dev", subject: "Preview", text: "Preview", html: '<img src="cid:scene">', idempotencyKey: "preview-hyo@hyo.dev", attachments: [{ filename: "scene.png", content_type: "image/png", content_disposition: "inline", content_id: "scene", content: "aW1hZ2U=" }] })).resolves.toEqual({ message_id: "message-1", thread_id: "thread-1" });
+  });
+
+  const inlineImage: InlineMailImage = { filename: "scene.png", content_type: "image/png", content_disposition: "inline", content_id: "scene", content: "aW1hZ2U=" };
+
+  it("keeps repeated image references and prefix-like IDs distinct across stable retries", async () => {
+    const attachments = [inlineImage, { ...inlineImage, content_id: "scene-small", content: "c21hbGw=" }];
+    const html = '<img src="cid:scene"><img src="cid:scene-small"><img src="cid:scene">';
+    const result = await prepareInlineMail(html, attachments);
+    const ids = result.attachments.map(a => a.content_id);
+    expect(ids[0]).not.toBe(ids[1]);
+    expect(result.html).toBe(`<img src="cid:${ids[0]}"><img src="cid:${ids[1]}"><img src="cid:${ids[0]}">`);
+    expect(await prepareInlineMail(html, attachments)).toEqual(result);
+    expect(await prepareInlineMail(result.html, result.attachments)).toEqual(result);
+  });
+
+  it("accepts bracketed MIME IDs and percent-encoded CID URLs without double wrapping", async () => {
+    const result = await prepareInlineMail('<img src="cid:scene%40datehaja.com">', [{ ...inlineImage, content_id: "<scene@datehaja.com>" }]);
+    expect(result.html).toBe('<img src="cid:scene@datehaja.com">');
+    expect(result.attachments[0].content_id).toBe("scene@datehaja.com");
+  });
+
+  it("blocks a dangling or ambiguous CID before contacting the mail provider", async () => {
+    const fetch = vi.fn();
+    vi.stubGlobal("fetch", fetch);
+    await expect(sendMessage({ inboxId: "test@agentmail.to", to: "hyo@hyo.dev", subject: "Test", text: "Test", html: '<img src="cid:missing">' })).rejects.toThrow("no matching attachment");
+    await expect(prepareInlineMail('<img src="cid:scene">', [inlineImage, inlineImage])).rejects.toThrow("unique");
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
   it("pulls a bare address out of a display-name header", () => {
     expect(parseAddress("Jane Doe <jane@example.com>")).toBe(
       "jane@example.com",

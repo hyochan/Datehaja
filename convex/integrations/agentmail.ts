@@ -109,17 +109,60 @@ export async function listInboxes(): Promise<{
 
 export type SendResult = { message_id: string; thread_id: string };
 
+/** The HTML reference and MIME Content-ID must identify the same body part. */
+export type InlineMailImage = {
+  filename: string;
+  content_type: string;
+  content_disposition: "inline";
+  content_id: string;
+  content: string;
+};
+
+/** RFC 2392 requires addr-spec Content-IDs, not bare aliases like `scene`.
+ * Rewrite aliases and HTML together; fail before sending dangling references.
+ * Content-derived IDs keep the payload stable when the same send is retried. */
+export async function prepareInlineMail(
+  html: string,
+  attachments: InlineMailImage[] = [],
+): Promise<{ html: string; attachments: InlineMailImage[] }> {
+  const ids = new Map<string, string>();
+  const images: InlineMailImage[] = [];
+  for (const attachment of attachments) {
+    const alias = attachment.content_id.replace(/^<|>$/g, "");
+    if (!alias || /[\s<>"']/.test(alias) || ids.has(alias)) {
+      throw new Error("Inline image Content-IDs must be nonempty and unique.");
+    }
+    const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(
+      `${attachment.content_type}\n${alias}\n${attachment.content}`,
+    ));
+    const hash = Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
+    const id = /^[A-Za-z0-9._+-]+@[A-Za-z0-9.-]+$/.test(alias)
+      ? alias : `${hash}@images.datehaja.com`;
+    ids.set(alias, id);
+    images.push({ ...attachment, content_id: id });
+  }
+  const rewritten = html.replace(/\bcid:([^\s"'<>]+)/g, (_match, reference: string) => {
+    const alias = decodeURIComponent(reference);
+    const id = ids.get(alias);
+    if (!id) throw new Error("An inline image in the email has no matching attachment.");
+    return `cid:${id}`;
+  });
+  return { html: rewritten, attachments: images };
+}
+
 export async function sendMessage(args: {
   inboxId: string;
   to: string;
   subject: string;
   text: string;
   html: string;
+  attachments?: InlineMailImage[];
   labels?: string[];
   headers?: Record<string, string>;
   /** Retry-safe: the same key returns the original send instead of a duplicate. */
   idempotencyKey?: string;
 }): Promise<SendResult> {
+  const inline = await prepareInlineMail(args.html, args.attachments);
   return am<SendResult>(`/inboxes/${pathId(args.inboxId)}/messages/send`, {
     method: "POST",
     idempotencyKey: args.idempotencyKey
@@ -129,7 +172,8 @@ export async function sendMessage(args: {
       to: [args.to],
       subject: args.subject,
       text: args.text,
-      html: args.html,
+      html: inline.html,
+      ...(inline.attachments.length ? { attachments: inline.attachments } : {}),
       ...(args.labels ? { labels: args.labels } : {}),
       ...(args.headers ? { headers: args.headers } : {}),
     }),

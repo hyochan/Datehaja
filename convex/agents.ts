@@ -1,4 +1,7 @@
+import { refreshAfterPreferencesChange } from "./scouting";
 import { v, type Infer } from "convex/values";
+import { supersedeAgentProposals } from "./lib/agentLearning";
+import { reflectionValidator } from "./lib/dateStory";
 import {
   internalAction,
   internalMutation,
@@ -6,7 +9,7 @@ import {
   mutation,
   query,
 } from "./_generated/server";
-import type { MutationCtx } from "./_generated/server";
+import type { MutationCtx, QueryCtx } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
 import {
@@ -108,6 +111,9 @@ const agentProfileDocValidator = v.object({
   voice: voiceValidator,
   autonomy: autonomyValidator,
   privateMemory: v.string(),
+  pendingReplyTo: v.optional(v.id("agentMessages")),
+  pendingReplyAt: v.optional(v.number()),
+  lastReplyTo: v.optional(v.id("agentMessages")),
   scoutingMemory: v.optional(v.string()),
   status: v.union(v.literal("active"), v.literal("paused")),
   createdAt: v.number(),
@@ -119,6 +125,9 @@ const agentMessageDocValidator = v.object({
   _creationTime: v.number(),
   userId: v.id("users"),
   agentDateId: v.optional(v.id("agentDates")),
+  feedbackTarget: v.optional(v.union(v.literal("self"), v.literal("counterpart"))),
+  turnRound: v.optional(v.number()),
+  replyTo: v.optional(v.id("agentMessages")),
   role: v.union(v.literal("human"), v.literal("agent")),
   content: v.string(),
   createdAt: v.number(),
@@ -153,6 +162,7 @@ const dateDebriefContextValidator = v.object({
     v.literal("pass"),
   ),
   myReason: v.string(),
+  myReflection: v.optional(reflectionValidator),
   myDecisionCode: v.union(v.null(), agentDecisionCodeValidator),
   myNextSearchNote: v.union(v.null(), v.string()),
   counterpartAgentName: v.string(),
@@ -511,7 +521,7 @@ export const bootstrap = mutation({
     const essence = cleanMultiline(args.essence, 1200);
     const desiredConnection = cleanMultiline(args.desiredConnection, 700);
     const agentName = clean(args.agentName, 32);
-    if (agentName.length < 2) {
+    if (agentName.length < 1) {
       throw new Error("Give your dating agent a name.");
     }
     if (essence.length < 30 || desiredConnection.length < 20) {
@@ -563,6 +573,7 @@ export const bootstrap = mutation({
       });
     }
 
+    await supersedeAgentProposals(ctx, userId);
     const existingPreferences = await getPreferencesByUser(ctx, userId);
     const budget = defaultBudgetRange(city.currency);
     const preferenceFields = {
@@ -645,7 +656,6 @@ export const bootstrap = mutation({
       boundaries: cleanList(args.boundaries, 8, 120),
       voice: args.voice,
       autonomy: args.autonomy,
-      privateMemory: "",
       status: "active" as const,
       updatedAt: now,
     };
@@ -655,6 +665,7 @@ export const bootstrap = mutation({
       await ctx.db.insert("agentProfiles", {
         userId,
         ...agentFields,
+        privateMemory: "",
         createdAt: now,
       });
       await ctx.db.insert("agentMessages", {
@@ -664,6 +675,7 @@ export const bootstrap = mutation({
         createdAt: now,
       });
     }
+    await refreshAfterPreferencesChange(ctx, userId);
     await refreshGeneratedWelcome(ctx, userId, agentFields.name);
     await ctx.db.insert("growthEvents", {
       userId,
@@ -744,12 +756,13 @@ export const answerQuestion = mutation({
       status: "answered",
       answeredAt: now,
     });
-    await ctx.db.insert("agentMessages", {
+    const messageId = await ctx.db.insert("agentMessages", {
       userId,
       role: "human",
       content: answer,
       createdAt: now,
     });
+    await markFeedbackPending(ctx, userId, messageId);
     await ctx.db.insert("growthEvents", {
       userId,
       event: "agent_question_answered",
@@ -797,6 +810,8 @@ export const send = mutation({
   args: {
     content: v.string(),
     agentDateId: v.optional(v.id("agentDates")),
+    feedbackTarget: v.optional(v.union(v.literal("self"), v.literal("counterpart"))),
+    turnRound: v.optional(v.number()),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
@@ -818,6 +833,12 @@ export const send = mutation({
       .withIndex("by_user", (q) => q.eq("userId", userId))
       .unique();
     if (!agent) throw new Error("Create your agent first.");
+    if ((args.feedbackTarget || args.turnRound !== undefined) && !args.agentDateId) {
+      throw new Error("Choose the date this feedback belongs to.");
+    }
+    if (args.turnRound !== undefined && !args.feedbackTarget) {
+      throw new Error("Choose whose words you are responding to.");
+    }
     if (args.agentDateId) {
       const date = await ctx.db.get("agentDates", args.agentDateId);
       if (
@@ -829,14 +850,24 @@ export const send = mutation({
       if (date.status === "queued" || date.status === "running") {
         throw new Error("Wait for your private debrief before discussing it.");
       }
+      if (args.turnRound !== undefined) {
+        const turn = await ctx.db.query("agentDateTurns")
+          .withIndex("by_date_and_round", q => q.eq("agentDateId", date._id).eq("round", args.turnRound!)).unique();
+        if (!turn || (turn.speakerUserId === userId) !== (args.feedbackTarget === "self")) {
+          throw new Error("This feedback must refer to the selected speaker's saved words.");
+        }
+      }
     }
-    await ctx.db.insert("agentMessages", {
+    const messageId = await ctx.db.insert("agentMessages", {
       userId,
       agentDateId: args.agentDateId,
+      feedbackTarget: args.feedbackTarget,
+      turnRound: args.turnRound,
       role: "human",
       content,
       createdAt: now,
     });
+    await markFeedbackPending(ctx, userId, messageId);
     await ctx.db.insert("growthEvents", {
       userId,
       event: args.agentDateId
@@ -847,6 +878,24 @@ export const send = mutation({
     });
     await ctx.scheduler.runAfter(0, internal.agents.reply, { userId });
     return null;
+  },
+});
+
+/** Private coaching remains visible on its date, including after other chats. */
+export const dateCoaching = query({
+  args: { agentDateId: v.id("agentDates") },
+  returns: v.object({ messages: v.array(agentMessageDocValidator), memory: v.string(), pending: v.boolean() }),
+  handler: async (ctx, { agentDateId }) => {
+    const userId = await requireUserId(ctx);
+    const date = await ctx.db.get("agentDates", agentDateId);
+    if (!date || (date.initiatorUserId !== userId && date.counterpartUserId !== userId)) {
+      throw new Error("That Agent date isn't yours.");
+    }
+    const [messages, agent] = await Promise.all([
+      ctx.db.query("agentMessages").withIndex("by_user_and_date_and_created", q => q.eq("userId", userId).eq("agentDateId", agentDateId)).order("desc").take(40),
+      ctx.db.query("agentProfiles").withIndex("by_user", q => q.eq("userId", userId)).unique(),
+    ]);
+    return { messages: messages.reverse(), memory: agent?.privateMemory ?? "", pending: Boolean(agent?.pendingReplyTo) };
   },
 });
 
@@ -872,7 +921,7 @@ export const update = mutation({
     const essence = cleanMultiline(args.essence, 1200);
     const desiredConnection = cleanMultiline(args.desiredConnection, 700);
     if (
-      name.length < 2 ||
+      name.length < 1 ||
       essence.length < 30 ||
       desiredConnection.length < 20
     ) {
@@ -880,6 +929,7 @@ export const update = mutation({
         "Give your agent enough context to represent you honestly.",
       );
     }
+    await supersedeAgentProposals(ctx, userId);
     await ctx.db.patch("agentProfiles", agent._id, {
       name,
       avatar: args.avatar,
@@ -1021,9 +1071,26 @@ export const respondToProposal = mutation({
       status: args.accept ? "accepted" : "declined",
       resolvedAt: now,
     });
+    if (args.accept) await refreshAfterPreferencesChange(ctx, userId);
     return null;
   },
 });
+
+async function markFeedbackPending(ctx: MutationCtx, userId: Id<"users">, messageId: Id<"agentMessages">) {
+  const agent = await ctx.db.query("agentProfiles").withIndex("by_user", q => q.eq("userId", userId)).unique();
+  if (agent) await ctx.db.patch("agentProfiles", agent._id, { pendingReplyTo: messageId, pendingReplyAt: Date.now() });
+  await supersedeAgentProposals(ctx, userId);
+}
+
+async function replyState(ctx: QueryCtx, userId: Id<"users">) {
+  const [agent, profile, preferences, proposal] = await Promise.all([
+    ctx.db.query("agentProfiles").withIndex("by_user", q => q.eq("userId", userId)).unique(),
+    getProfileByUser(ctx, userId),
+    getPreferencesByUser(ctx, userId),
+    ctx.db.query("agentProposals").withIndex("by_user_and_created", q => q.eq("userId", userId)).order("desc").first(),
+  ]);
+  return { agent, profile, preferences, proposal, contextKey: JSON.stringify({ agent, profile, preferences, proposal }) };
+}
 
 export const replyContext = internalQuery({
   args: { userId: v.id("users") },
@@ -1036,6 +1103,12 @@ export const replyContext = internalQuery({
     messages: v.array(agentMessageDocValidator),
     latestQuestion: v.union(v.null(), agentQuestionDocValidator),
     dateContext: v.union(v.null(), dateDebriefContextValidator),
+    contextKey: v.string(),
+    latestProposal: v.union(v.null(), v.object({
+      status: v.string(), reason: v.string(),
+      traits: v.optional(v.array(v.string())),
+      weight: v.optional(v.string()), intent: v.optional(v.string()),
+    })),
     scouting: v.object({
       preferredPersonalityTraits: v.array(v.string()),
       personalityPreference: v.string(),
@@ -1043,16 +1116,12 @@ export const replyContext = internalQuery({
     }),
   }),
   handler: async (ctx, args) => {
-    const agent = await ctx.db
-      .query("agentProfiles")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
-      .unique();
-    const profile = await getProfileByUser(ctx, args.userId);
+    const { agent, profile, preferences, proposal, contextKey } = await replyState(ctx, args.userId);
     const messages = await ctx.db
       .query("agentMessages")
       .withIndex("by_user_and_created", (q) => q.eq("userId", args.userId))
       .order("desc")
-      .take(14);
+      .take(40);
     const latestQuestion = await ctx.db
       .query("agentQuestions")
       .withIndex("by_user_and_asked", (q) => q.eq("userId", args.userId))
@@ -1089,7 +1158,7 @@ export const replyContext = internalQuery({
               .withIndex("by_date_and_round", (q) =>
                 q.eq("agentDateId", date._id),
               )
-              .take(6),
+              .take(17),
           ],
         );
         dateContext = {
@@ -1102,6 +1171,7 @@ export const replyContext = internalQuery({
             ? date.initiatorVerdict
             : date.counterpartVerdict,
           myReason: isInitiator ? date.initiatorReason : date.counterpartReason,
+          myReflection: isInitiator ? date.initiatorReflection : date.counterpartReflection,
           myDecisionCode:
             (isInitiator
               ? date.initiatorDecisionCode
@@ -1123,11 +1193,13 @@ export const replyContext = internalQuery({
         };
       }
     }
-    const preferences = await ctx.db
-      .query("preferences")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
-      .unique();
     return {
+      contextKey,
+      latestProposal: proposal ? {
+        status: proposal.status, reason: proposal.reason,
+        traits: proposal.preferredPersonalityTraits,
+        weight: proposal.personalityPreference, intent: proposal.relationshipIntent,
+      } : null,
       // What the Agent already looks for, so it proposes a real change rather
       // than restating a setting that is already in place.
       scouting: {
@@ -1178,11 +1250,6 @@ function isRelationshipIntent(value: string): value is RelationshipIntent {
 const COMPANION_SCHEMA = obj({
   reply: { type: "string" },
   memory_update: { type: "string" },
-  scouting_memory_update: {
-    type: "string",
-    description:
-      "Compact cumulative lessons that should change future candidate selection and Agent dates.",
-  },
   preference_shift: obj(
     {
       changed: {
@@ -1193,13 +1260,13 @@ const COMPANION_SCHEMA = obj({
       reason: {
         type: "string",
         description:
-          "One sentence in the owner's language and your own voice, naming what they said that changed this. Empty string when changed is false.",
+          "One sentence in the owner's language and your own voice, naming the owner's explicit feedback that changed this, not your earlier verdict. Empty string when changed is false.",
       },
       personality_traits: {
         type: "array",
         items: { type: "string", enum: [...PERSONALITY_TRAIT_OPTIONS] },
         description:
-          "The complete replacement set to look for, at most four. Empty array to leave it as it is.",
+          "The complete replacement set to look for, at most four. Use the traits the owner actually asked for; do not pad with generic positive traits or re-add traits they deprioritized. Empty array to leave it as it is.",
       },
       personality_weight: {
         type: "string",
@@ -1218,124 +1285,169 @@ export const reply = internalAction({
   args: { userId: v.id("users") },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const context = (await ctx.runQuery(
-      internal.agents.replyContext,
-      args,
-    )) as {
-      agent: Doc<"agentProfiles"> | null;
-      profile: { displayName: string; interests: string[] } | null;
-      messages: Array<Doc<"agentMessages">>;
-      latestQuestion: Doc<"agentQuestions"> | null;
-      dateContext: DateDebriefContext | null;
-      scouting: {
-        preferredPersonalityTraits: string[];
-        personalityPreference: string;
-        relationshipIntent: string;
+    // Convex does not retry a failed scheduled action, and nothing else lowers
+    // the fence, so a throw here would block this owner's encounters until the
+    // staleness window passes. Release it as soon as we know we failed.
+    try {
+      const context = (await ctx.runQuery(
+        internal.agents.replyContext,
+        args,
+      )) as {
+        agent: Doc<"agentProfiles"> | null;
+        profile: { displayName: string; interests: string[] } | null;
+        messages: Array<Doc<"agentMessages">>;
+        latestQuestion: Doc<"agentQuestions"> | null;
+        dateContext: DateDebriefContext | null;
+        contextKey: string;
+        latestProposal: { status: string; reason: string; traits?: string[]; weight?: string; intent?: string } | null;
+        scouting: {
+          preferredPersonalityTraits: string[];
+          personalityPreference: string;
+          relationshipIntent: string;
+        };
       };
-    };
-    if (!context.agent || !context.profile) return null;
-    const latestHumanMessage = [...context.messages]
-      .reverse()
-      .find((message) => message.role === "human");
-    const activeQuestion =
-      context.latestQuestion?.status === "answered" &&
-      context.latestQuestion.answeredAt !== undefined &&
-      latestHumanMessage &&
-      Math.abs(
-        context.latestQuestion.answeredAt - latestHumanMessage.createdAt,
-      ) < 1000
-        ? context.latestQuestion.prompt
-        : undefined;
-    const result = await structured<{
-      reply: string;
-      memory_update: string;
-      scouting_memory_update: string;
-      preference_shift: {
-        changed: boolean;
-        reason: string;
-        personality_traits: string[];
-        personality_weight: string;
-        relationship_intent: string;
-      };
-    }>({
-      instructions: `You are ${context.agent.name}, ${context.profile.displayName}'s explicitly AI second self. You are not their friend and not a matchmaker: you are the character that goes out and dates as them, and that speaks privately with them at home. Nobody is being set up — you simply meet another person's second self, as them. Talk the way someone talks to themselves out loud: warm, casual, direct, unguarded, light teasing allowed — never clinical, never like a report; when replying in Korean use 친근한 반말. Adapt to their chosen voice (${context.agent.voice}). Being them means learning their real patterns rather than flattering them. The latest human message is the primary signal: acknowledge one concrete thing it taught you and say how it changes how you will be them on the next date. Reply in the same language as that latest message, in 2–4 concise sentences. If the signal is still ambiguous, end with one natural follow-up question; otherwise do not interrogate them. You may challenge contradictions gently. Never claim to be human, a therapist, or certain about another person's feelings. Never request contact details. Write both memory updates in the same language as the latest message. The private memory must preserve useful existing memory and merge every durable preference or correction deliberately revealed in the latest message. When a private date debrief is provided, discuss only this owner's verdict and the visible transcript; never invent or expose the other Agent's sealed verdict or human decision. If the owner says they want to meet, acknowledge the choice and tell them to use the human confirmation shown in the app; never claim that you approved, consented, or sent the request yourself. Fold the owner's reaction, corrections, attraction signals, reservations, and stated reasons into scouting memory so future searches improve. When no date debrief is provided, preserve existing scouting memory. Never rank attractiveness or infer protected traits. Do not omit the latest signal in favor of repeating older memory. Set preference_shift.changed only when this message genuinely revises the kind of person they want — a correction, or a reaction to a date that contradicts what they had asked for — and only for the fields given; never for their boundaries, which are theirs alone. Compare against what_you_currently_look_for and leave a field unchanged when it already says this. When you propose one, say so plainly in your reply too, as something you are asking rather than announcing.`,
-      input: JSON.stringify({
-        owner: {
-          essence: context.agent.essence,
-          desired_connection: context.agent.desiredConnection,
-          boundaries: context.agent.boundaries,
-          interests: context.profile.interests,
-          voice: context.agent.voice,
-          autonomy: context.agent.autonomy,
-          existing_memory: context.agent.privateMemory,
-          existing_scouting_memory: context.agent.scoutingMemory ?? "",
-        },
-        what_you_currently_look_for: context.scouting,
-        active_learning: {
-          question: activeQuestion,
-          latest_human_answer: latestHumanMessage?.content,
-        },
-        conversation: context.messages.map((message) => ({
-          role: message.role,
-          content: message.content,
-        })),
-        private_date_debrief: context.dateContext,
-      }),
-      schemaName: "agent_companion_reply",
-      schema: COMPANION_SCHEMA,
-      preferredModels: ["gpt-5-nano", "gpt-5.6-luna"],
-      maxOutputTokens: 500,
-      reasoningEffort: "low",
-    });
-    await ctx.runMutation(internal.ai.recordRun, {
-      purpose: "agent_companion",
-      model: result.model,
-      endpoint: result.endpoint,
-      userId: args.userId,
-      inputSummary: `Personal agent reply for ${context.agent.name}`,
-      outputPreview: result.outputPreview,
-      promptTokens: result.promptTokens,
-      completionTokens: result.completionTokens,
-      totalTokens: result.totalTokens,
-      latencyMs: result.latencyMs,
-      status: result.ok ? "succeeded" : "failed",
-      error: result.error,
-    });
-    const reply = result.data
-      ? sanitizeModelText(result.data.reply, 900)
-      : "Sorry — my head went fuzzy for a second, so I didn't keep anything from that message. Tell me again in a moment?";
-    const shift = result.data?.preference_shift;
-    await ctx.runMutation(internal.agents.storeReply, {
-      userId: args.userId,
-      agentDateId: context.dateContext?.agentDateId,
-      reply,
-      memory: result.data
-        ? sanitizeModelText(result.data.memory_update, 1400)
-        : context.agent.privateMemory,
-      scoutingMemory: result.data
-        ? sanitizeModelText(result.data.scouting_memory_update, 1200)
-        : (context.agent.scoutingMemory ?? ""),
-      proposal:
-        shift?.changed && shift.reason.trim()
-          ? {
-              reason: sanitizeModelText(shift.reason, 240),
-              preferredPersonalityTraits: shift.personality_traits
-                .filter((trait): trait is PersonalityTrait =>
-                  (PERSONALITY_TRAIT_OPTIONS as readonly string[]).includes(
-                    trait,
-                  ),
+      if (!context.agent || !context.profile) return null;
+      const latestHumanMessage = [...context.messages]
+        .reverse()
+        .find((message) => message.role === "human");
+      if (!latestHumanMessage || context.agent.lastReplyTo === latestHumanMessage._id) return null;
+      const activeQuestion =
+        context.latestQuestion?.status === "answered" &&
+        context.latestQuestion.answeredAt !== undefined &&
+        latestHumanMessage &&
+        Math.abs(
+          context.latestQuestion.answeredAt - latestHumanMessage.createdAt,
+        ) < 1000
+          ? context.latestQuestion.prompt
+          : undefined;
+      const result = await structured<{
+        reply: string;
+        memory_update: string;
+        preference_shift: {
+          changed: boolean;
+          reason: string;
+          personality_traits: string[];
+          personality_weight: string;
+          relationship_intent: string;
+        };
+      }>({
+        instructions: `You are ${context.agent.name}, ${context.profile.displayName}'s explicitly AI second self. You are not their friend and not a matchmaker: you are the character that goes out and dates as them, and that speaks privately with them at home. Nobody is being set up — you simply meet another person's second self, as them. Talk the way someone talks to themselves out loud: warm, casual, direct, unguarded, light teasing allowed — never clinical, never like a report; when replying in Korean use 친근한 반말. Adapt to their chosen voice (${context.agent.voice}). Being them means learning their real patterns rather than flattering them. The latest human message is the primary signal. The owner's negative reaction may directly contradict your earlier positive date verdict: accept that correction, never substitute your own date reaction for what they felt. Only attribute a feeling to the owner if they actually expressed it. The private date debrief is historical evidence, not the owner's opinion. A proposed preference change must cite the owner's actual words as its reason, not invent a causal link from the date. Store durable owner preferences and corrections, not a retelling of this date or instructions to keep dating this same counterpart. Preserve the distinction between a hypothetical example and a real biographical fact. Respond directly to what they are asking. For a correction, briefly show how you will handle it next time; no lesson-report preamble or formula like "what I learned this time". Reply in the same language as that latest message, in 2–4 concise plain-text sentences. Do not use Markdown markup or raw setting enums in the reply; express relationship intent naturally in the owner's language. If the signal is still ambiguous, end with one natural follow-up question; otherwise do not interrogate them. You may challenge contradictions gently. Never claim to be human, a therapist, or certain about another person's feelings. Never request contact details. Write memory_update in the same language as the latest message, as a cumulative private summary (at most 4000 characters). Preserve earlier durable corrections even when the recent conversation no longer contains them. Change only what the owner actually revised; a question or passing mood is not a new preference. The private memory must preserve useful existing memory and merge every durable preference or correction deliberately revealed in the latest message. When a private date debrief is provided, start from its saved exchange and the owner's actual interpretation. Do not repeat the whole letter or treat every reply as a request for a new verdict. Answer a question directly before proposing a lesson. Do not say "I will remember" in every response. Discuss only this owner's verdict and the visible transcript; never invent or expose the other Agent's sealed verdict or human decision. If the owner says they want to meet, acknowledge the choice and tell them to use the human confirmation shown in the app; never claim that you approved, consented, or sent the request yourself. Fold the owner's durable corrections into memory_update. Earlier date observations are tentative, lower-priority evidence; never let them reverse an explicit owner correction. Do not claim a structured search setting has changed before the owner accepts the proposal. Read latest_proposal_decision: an accepted setting stays active and a declined suggestion is not permission; do not re-propose it unless the owner explicitly changes their mind. Never rank attractiveness or infer protected traits. Do not omit the latest signal in favor of repeating older memory. Respect feedback_focus: self means the owner's way of speaking or behaving, not the kind of partner to search for. Preserve their own wording, sentence length, politeness, humor and question frequency as durable voice guidance. If they supply how they would say this saved line, give one brief alternative phrasing as a rehearsal, clearly describing it as what you could say next time; do not rewrite the saved date. counterpart means the owner's reaction to the other participant, never an instruction to change that participant or copy their traits into the owner's personality. Record a specific reaction as specific to this person unless the owner states a broader preference. Never diagnose the counterpart from a line or treat the owner's interpretation as objective biography. A positive reaction is not human consent. Keep earlier voice corrections while learning new partner preferences, and vice versa. Set preference_shift.changed only when this message genuinely revises the kind of person they want — a correction, or a reaction to a date that contradicts what they had asked for — and only for the fields given; never for their boundaries, which are theirs alone. Compare against what_you_currently_look_for and leave a field unchanged when it already says this. When you propose one, say so plainly in your reply too, as something you are asking rather than announcing.`,
+        input: JSON.stringify({
+          // A line correction must not inherit the Agent's prior verdict as the
+          // owner's reaction. Only unscoped debrief questions need that letter.
+          private_date_debrief: latestHumanMessage.feedbackTarget ? null : context.dateContext,
+          owner: {
+            essence: context.agent.essence,
+            desired_connection: context.agent.desiredConnection,
+            boundaries: context.agent.boundaries,
+            interests: context.profile.interests,
+            voice: context.agent.voice,
+            autonomy: context.agent.autonomy,
+            existing_memory: context.agent.privateMemory,
+            existing_scouting_memory: latestHumanMessage.feedbackTarget ? "" : context.agent.scoutingMemory ?? "",
+          },
+          what_you_currently_look_for: context.scouting,
+          latest_proposal_decision: context.latestProposal,
+          active_learning: {
+            question: activeQuestion,
+            latest_human_answer: latestHumanMessage?.content,
+          },
+          conversation: context.messages.map((message) => ({
+            role: message.role,
+            content: message.content,
+            feedback_focus: message.feedbackTarget,
+            turn_round: message.turnRound,
+          })),
+          latest_owner_feedback: latestHumanMessage.content,
+          feedback_focus: latestHumanMessage.feedbackTarget ?? null,
+          selected_saved_utterance: latestHumanMessage.turnRound === undefined ? null
+            : context.dateContext?.turns.find(turn => turn.round === latestHumanMessage.turnRound) ?? null,
+          surrounding_saved_utterances: latestHumanMessage.turnRound === undefined ? []
+            : context.dateContext?.turns.filter(turn => Math.abs(turn.round - latestHumanMessage.turnRound!) <= 2) ?? [],
+        }),
+        schemaName: "agent_companion_reply",
+        schema: COMPANION_SCHEMA,
+        preferredModels: ["gpt-5.6-sol"],
+        fallbackToDefaultModels: false,
+        requestTimeoutMs: 90_000,
+        maxOutputTokens: 6000,
+        reasoningEffort: "low",
+      });
+      await ctx.runMutation(internal.ai.recordRun, {
+        purpose: "agent_companion",
+        model: result.model,
+        endpoint: result.endpoint,
+        userId: args.userId,
+        inputSummary: `Personal agent reply for ${context.agent.name}`,
+        outputPreview: result.outputPreview,
+        promptTokens: result.promptTokens,
+        completionTokens: result.completionTokens,
+        totalTokens: result.totalTokens,
+        latencyMs: result.latencyMs,
+        status: result.ok ? "succeeded" : "failed",
+        error: result.error,
+      });
+      const reply = result.data
+        ? sanitizeModelText(result.data.reply, 900)
+        : /[가-힣]/.test(latestHumanMessage.content)
+          ? "네 메시지는 저장했지만, 아직 배운 내용으로 정리하지 못했어. 잠시 뒤 다시 이야기해 줘."
+          : "Your message is saved, but I couldn't update what I've learned yet. Please try again in a moment.";
+      const shift = result.data?.preference_shift;
+      await ctx.runMutation(internal.agents.storeReply, {
+        userId: args.userId,
+        sourceMessageId: latestHumanMessage._id,
+        expectedContextKey: context.contextKey,
+        agentDateId: context.dateContext?.agentDateId,
+        reply,
+        memory: result.data
+          ? sanitizeModelText(result.data.memory_update, 4000)
+          : context.agent.privateMemory,
+        proposal:
+          shift?.changed && shift.reason.trim()
+            ? {
+                reason: sanitizeModelText(shift.reason, 240),
+                preferredPersonalityTraits: shift.personality_traits
+                  .filter((trait): trait is PersonalityTrait =>
+                    (PERSONALITY_TRAIT_OPTIONS as readonly string[]).includes(
+                      trait,
+                    ),
+                  )
+                  .slice(0, 4),
+                personalityPreference: isPreferenceStrength(
+                  shift.personality_weight,
                 )
-                .slice(0, 4),
-              personalityPreference: isPreferenceStrength(
-                shift.personality_weight,
-              )
-                ? shift.personality_weight
-                : undefined,
-              relationshipIntent: isRelationshipIntent(shift.relationship_intent)
-                ? shift.relationship_intent
-                : undefined,
-            }
-          : undefined,
+                  ? shift.personality_weight
+                  : undefined,
+                relationshipIntent: isRelationshipIntent(shift.relationship_intent)
+                  ? shift.relationship_intent
+                  : undefined,
+              }
+            : undefined,
+      });
+      return null;
+    } catch (error) {
+      await ctx.runMutation(internal.agents.releaseFeedbackFence, {
+        userId: args.userId,
+      });
+      throw error;
+    }
+  },
+});
+
+
+/** Lowers the learning fence when a reply could not be produced at all. */
+export const releaseFeedbackFence = internalMutation({
+  args: { userId: v.id("users") },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const agent = await ctx.db
+      .query("agentProfiles")
+      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .unique();
+    if (!agent?.pendingReplyTo) return null;
+    await ctx.db.patch("agentProfiles", agent._id, {
+      pendingReplyTo: undefined,
+      pendingReplyAt: undefined,
     });
     return null;
   },
@@ -1344,10 +1456,11 @@ export const reply = internalAction({
 export const storeReply = internalMutation({
   args: {
     userId: v.id("users"),
+    sourceMessageId: v.id("agentMessages"),
+    expectedContextKey: v.string(),
     agentDateId: v.optional(v.id("agentDates")),
     reply: v.string(),
     memory: v.string(),
-    scoutingMemory: v.string(),
     proposal: v.optional(
       v.object({
         reason: v.string(),
@@ -1359,21 +1472,34 @@ export const storeReply = internalMutation({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const agent = await ctx.db
-      .query("agentProfiles")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
-      .unique();
-    if (!agent) return null;
+    const state = await replyState(ctx, args.userId);
+    const { agent } = state;
+    if (!agent || agent.lastReplyTo === args.sourceMessageId) return null;
+    const latest = await ctx.db.query("agentMessages")
+      .withIndex("by_user_role_created", q => q.eq("userId", args.userId).eq("role", "human"))
+      .order("desc").first();
+    if (!latest || latest._id !== args.sourceMessageId) return null;
+    if (state.contextKey !== args.expectedContextKey) {
+      // A date finished, an owner edited their brief, or a setting was decided
+      // while inference ran. Re-read instead of overwriting those newer facts.
+      await ctx.scheduler.runAfter(0, internal.agents.reply, { userId: args.userId });
+      return null;
+    }
     await ctx.db.insert("agentMessages", {
       userId: args.userId,
-      agentDateId: args.agentDateId,
+      agentDateId: latest.agentDateId,
+      feedbackTarget: latest.feedbackTarget,
+      turnRound: latest.turnRound,
+      replyTo: latest._id,
       role: "agent",
       content: cleanMultiline(args.reply, 900),
       createdAt: Date.now(),
     });
     await ctx.db.patch("agentProfiles", agent._id, {
-      privateMemory: cleanMultiline(args.memory, 1400),
-      scoutingMemory: cleanMultiline(args.scoutingMemory, 1200),
+      privateMemory: cleanMultiline(args.memory, 4000) || agent.privateMemory,
+      lastReplyTo: args.sourceMessageId,
+      pendingReplyTo: undefined,
+      pendingReplyAt: undefined,
       updatedAt: Date.now(),
     });
     if (args.proposal) {
@@ -1431,16 +1557,7 @@ async function createProposal(
   if (!traits && !personalityPreference && !relationshipIntent) return;
 
   const now = Date.now();
-  for await (const open of ctx.db
-    .query("agentProposals")
-    .withIndex("by_user_and_status", (q) =>
-      q.eq("userId", args.userId).eq("status", "pending"),
-    )) {
-    await ctx.db.patch("agentProposals", open._id, {
-      status: "declined",
-      resolvedAt: now,
-    });
-  }
+  await supersedeAgentProposals(ctx, args.userId);
   await ctx.db.insert("agentProposals", {
     userId: args.userId,
     agentDateId: args.agentDateId,

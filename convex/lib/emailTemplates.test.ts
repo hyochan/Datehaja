@@ -55,220 +55,124 @@ const englishReport = {
   })),
 };
 
-describe("agent debrief email", () => {
-  it("keeps the Korean debrief entirely user-facing and localized", () => {
+describe("a short, grounded letter", () => {
+  it("opens with the owner's letter, then shows its saved exchange without reprinting a summary", () => {
     const email = agentDebriefEmail({ ...base, locale: "ko-KR" });
-
-    // The subject is the Agent's own headline now, not a system notice.
-    expect(email.subject).toBe("Sol: 한 번 더 알아보고 싶어요");
-    // The Agent speaks first, in its own voice, in the reader's language.
-    expect(email.text).toContain("Mina, 나 왔어. Juno 만나고 돌아왔어.");
-    expect(email.text).toContain("그날의 데이트 이야기");
-    expect(email.text).not.toContain("Your agent is back");
-    expect(email.html).toContain("나만의 비공개 리포트 보기");
-    expect(email.html).toContain("늦은 저녁, 조용한 레코드 바");
-    expect(email.html).toContain("마음이 움직인 순간");
-    expect(email.html).toContain("Sol 에이전트와 이 데이트 더 이야기하기");
-    expect(email.html).toContain(base.conversationUrl);
-    expect(email.text).toContain(base.conversationUrl);
-    expect(email.html).not.toContain("pause matching entirely");
-  });
-
-  it("leads with the agent's letter — its verdict and full reason", () => {
-    const email = agentDebriefEmail({ ...base, locale: "ko-KR" });
-
-    expect(email.html).toContain("내 에이전트가 전하는 말");
-    expect(email.html).toContain("조금 더 궁금해요");
     expect(email.html).toContain(base.reason);
-    // The agent speaks with its own face: the hosted sprite renders in the
-    // letter and next to each spoken moment.
-    expect(email.html).toContain(
-      "https://datehaja.com/agents/v3/male-sunset-gentle.png",
-    );
-    expect(email.html).toContain(
-      "https://datehaja.com/agents/v3/female-sky-gentle.png",
-    );
-    // The letter renders before the story of the date.
-    expect(email.html.indexOf("내 에이전트가 전하는 말")).toBeLessThan(
-      email.html.indexOf("그날의 데이트 이야기"),
-    );
-    expect(email.text.indexOf("내 에이전트가 전하는 말")).toBeLessThan(
-      email.text.indexOf("그날의 데이트 이야기"),
-    );
-  });
-
-  it("tells the date as a story: scene, stages, and both agents", () => {
-    const email = agentDebriefEmail({ ...base, locale: "ko-KR" });
-
-    expect(email.html).toContain("그날의 데이트 이야기");
-    expect(email.html).toContain("처음 마주한 순간");
-    expect(email.html).toContain("헤어지기 전 마지막 말");
-    expect(email.html).toContain("이 장면의 영감");
-    // Both agents appear in the pair line, in order, each with their own face.
-    expect(email.html).toMatch(
-      /male-sunset-gentle\.png[\s\S]*Sol[\s\S]*↔[\s\S]*female-sky-gentle\.png[\s\S]*Juno/,
-    );
-    expect(email.html).toContain("이런 대화가 오갔어요");
-    // A pass note only appears for a pass verdict.
-    expect(email.html).not.toContain("다음에는 이런 사람을 찾아볼게요");
-  });
-
-  it("states the world's source once, not twice", () => {
-    const titled = agentDebriefEmail({
-      ...base,
-      locale: "ko-KR",
-      report: {
-        ...base.report,
-        // What the world builder actually writes: the scene names its source.
-        setting: "“서울 레코드 바 다시 유행”에서 영감을 받은 늦은 밤의 비밀 살롱",
-        worldSourceTitle: "서울 레코드 바 다시 유행",
-      },
-    });
-    expect(titled.html).not.toContain("이 장면의 영감");
-    expect(titled.text).not.toContain("이 장면의 영감");
-    // A scene that does not quote its source still credits it.
-    expect(agentDebriefEmail({ ...base, locale: "ko-KR" }).html).toContain(
-      "이 장면의 영감",
-    );
-  });
-
-  it("joins a scene count the way each language writes numbers", () => {
-    expect(agentDebriefEmail({ ...base, locale: "ko-KR" }).html).toContain(
-      "6개의 장면",
-    );
-    expect(
-      agentDebriefEmail({ ...base, locale: "en-GB", report: englishReport })
-        .html,
-    ).toContain("6 moments");
-  });
-
-  it("shows what the agent will look for next after a pass", () => {
-    const email = agentDebriefEmail({
-      ...base,
-      locale: "ko-KR",
-      verdict: "pass",
-      nextSearchNote: "침묵을 편안해하는 사람을 먼저 찾아볼게요.",
-    });
-    expect(email.html).toContain("이번엔 보내줄게요");
-    expect(email.html).toContain("다음에는 이런 사람을 찾아볼게요");
-    expect(email.html).toContain("침묵을 편안해하는 사람을 먼저 찾아볼게요.");
-    expect(email.text).toContain("다음에는 이런 사람을 찾아볼게요");
-  });
-
-  it("retains English for English-region locales", () => {
-    const email = agentDebriefEmail({
-      ...base,
-      locale: "en-GB",
-      reason: "The pace and emotional ease felt aligned.",
-      report: englishReport,
-    });
-
-    expect(email.subject).toBe("Sol came back curious");
-    expect(email.text).toContain("Hi Mina");
-    expect(email.text).not.toMatch(/[가-힣]/);
-    expect(email.html).toContain("Open my private debrief");
-    expect(email.html).toContain("A note from your Agent");
-    expect(email.html).toContain("Still curious");
-    expect(email.html).toContain("The date, as it happened");
-  });
-
-  it("never cuts a moment mid-sentence", () => {
-    const longSentence =
-      "They talked about the films that shaped them and why quiet endings stay longer than loud ones. " +
-      "Then they compared the strange comfort of a familiar cafe at closing time, the way the music drops a little, " +
-      "the chairs go up one by one, and neither of them hurried to leave before the lights came on.";
-    const email = agentDebriefEmail({
-      ...base,
-      locale: "en-GB",
-      report: {
-        ...englishReport,
-        moments: [
-          { round: 1, speakerAgentName: "Sol", content: longSentence },
-        ],
-      },
-    });
-    // The trimmed quote ends at a sentence boundary, not with a dangling cut.
-    expect(email.html).toContain(
-      "why quiet endings stay longer than loud ones.",
-    );
-    expect(email.html).not.toContain("and neither of them hurried");
-  });
-});
-
-describe("agent connection email", () => {
-  it("localizes a mutual connection to each recipient", () => {
-    const korean = agentConnectionEmail({
-      locale: "ko-KR",
-      firstName: "민아",
-      counterpartFirstName: "Eli",
-      agentReason: base.reason,
-      report: base.report,
-      url: base.url,
-      conversationUrl: base.conversationUrl,
-    });
-    const english = agentConnectionEmail({
-      locale: "en-US",
-      firstName: "Eli",
-      counterpartFirstName: "Mina",
-      agentReason: "The conversation felt warm and unhurried.",
-      report: englishReport,
-      url: base.url,
-      conversationUrl: base.conversationUrl,
-    });
-
-    expect(korean.subject).toBe("두 사람이 모두 만나고 싶다고 답했어요");
-    expect(korean.html).toContain("연결 확인하기");
-    expect(korean.html).toContain("그날의 공기");
-    expect(korean.html).toContain("내 에이전트가 전하는 말");
-    expect(korean.html).toContain("Sol 에이전트와 이 만남 이야기하기");
-    expect(korean.html).toContain(base.conversationUrl);
-    expect(korean.text).not.toContain("Two humans said yes");
-    expect(english.subject).toBe("Two humans said yes");
-    expect(english.html).toContain("The date, as it happened");
-    expect(english.html).toContain("What they said");
-    expect(english.text).not.toMatch(/[가-힣]/);
-  });
-});
-
-describe("the debrief as a letter", () => {
-  it("speaks one language at a time", () => {
-    const english = agentDebriefEmail({ ...base, locale: "en-US", reason: "The pace felt right.", report: englishReport });
-    expect(english.html).not.toMatch(/[가-힣]/);
-    expect(english.text).not.toMatch(/[가-힣]/);
-    expect(english.subject).not.toMatch(/[가-힣]/);
-
-    const korean = agentDebriefEmail({ ...base, locale: "ko-KR" });
-    for (const label of ["Primary reason", "What they said", "The atmosphere", "A note from your Agent", "moments"]) {
-      expect(korean.html).not.toContain(label);
-    }
-  });
-
-  it("puts the Agent's own headline in the subject", () => {
-    const email = agentDebriefEmail({ ...base, locale: "en-US", report: englishReport });
-    expect(email.subject).toBe("Sol came back curious");
-    expect(agentDebriefEmail({ ...base, locale: "ko-KR" }).subject).toBe(
-      "Sol: 한 번 더 알아보고 싶어요",
-    );
-  });
-
-  it("is signed by the Agent and opens with both of them in the world", () => {
-    const email = agentDebriefEmail({ ...base, locale: "en-US", report: englishReport });
+    expect(email.html).toContain(base.report.moments[0].content);
+    expect(email.html).toContain(base.report.moments[1].content);
+    expect(email.html).toContain(base.report.moments[2].content);
+    expect(email.html).not.toContain(base.report.summary);
+    expect(email.html).not.toContain(base.report.sparks[0]);
+    expect(email.html).not.toContain(base.report.frictions[0]);
+    expect(email.html.indexOf(base.reason)).toBeLessThan(email.html.indexOf(base.report.moments[0].content));
     expect(email.html).toContain("&mdash; Sol");
     expect(email.text).toContain("— Sol");
-    // The band precedes the headline and carries both faces and the scene.
-    const band = email.html.indexOf("v3/male-sunset-gentle.png");
-    expect(band).toBeGreaterThan(-1);
-    expect(band).toBeLessThan(email.html.indexOf("Sol came back curious"));
-    expect(email.html.indexOf("v3/female-sky-gentle.png")).toBeLessThan(email.html.indexOf("Sol came back curious"));
-    expect(email.html).toContain("A quiet record bar after dark");
   });
 
-  it("asks to talk it over right under the letter, before the report", () => {
-    const email = agentDebriefEmail({ ...base, locale: "en-US", report: englishReport });
-    const letter = email.html.indexOf("&mdash; Sol");
-    const talk = email.html.indexOf("Talk this date over with Sol");
-    const report = email.html.indexOf("The date, as it happened");
-    expect(letter).toBeLessThan(talk);
-    expect(talk).toBeLessThan(report);
+  it("puts the actual moment in the subject and asks for interpretation", () => {
+    const reflection = { headline: "끝까지 남아 있던 두 자리", anchorRound: 4, question: "기다려준 그 답이 너에게도 편하게 느껴져?" };
+    const email = agentDebriefEmail({ ...base, locale: "ko-KR", report: { ...base.report, reflection } });
+    expect(email.subject).toBe(`Sol · ${reflection.headline}`);
+    expect(email.html).toContain(reflection.question);
+    expect(email.text).toContain(reflection.question);
+    expect(email.html).toContain(base.conversationUrl);
+    expect(email.html).toContain(base.url);
+    expect(email.html).toContain("대화 다시 보기");
+    expect(email.html).toContain("나 대신 동의할 수는 없어요");
+  });
+
+  it("keeps a distinct setting in legacy subjects too", () => {
+    const first = agentDebriefEmail({ ...base, locale: "en-US", report: englishReport });
+    const second = agentDebriefEmail({ ...base, locale: "en-US", report: { ...englishReport, setting: "The last showing" } });
+    expect(first.subject).not.toBe(second.subject);
+  });
+
+  it("links to its own activity record, not an unrelated cultural article", () => {
+    const email = agentDebriefEmail({ ...base, locale: "ko-KR", report: { ...base.report, sceneImageUrl: "https://datehaja.com/scenes/cafe.png", worldSourceUrl: "https://example.com/culture" } });
+    expect(email.html).toContain('<img src="https://datehaja.com/scenes/cafe.png"');
+    expect(email.html).not.toContain("서울 레코드 바 다시 유행");
+    expect(email.html).not.toContain('href="https://example.com/culture"');
+    expect(email.html).toContain('href="https://datehaja.com/agent-date/test#activity"');
+    expect(email.html).toContain(base.report.ownerSpriteUrl);
+    expect(email.html).toContain(base.report.counterpartSpriteUrl);
+    expect(email.html).toContain("6 마디의 대화");
+    expect(email.html).not.toContain("6개의 장면");
+  });
+
+  it("labels fictional previews and links to delivery settings", () => {
+    const email = agentDebriefEmail({ ...base, locale: "ko-KR", report: { ...base.report, isDemo: true } });
+    expect(email.html).toContain("가상의 데모 상대");
+    expect(email.html).toContain('href="https://datehaja.com/settings"');
+  });
+
+  it("preserves the verified paragraphs and omits local date actions in an explicit preview", () => {
+    const paragraphs = ["엽서에 써준 그 농담이 계속 생각나.", "너는 이런 장난 어때?"];
+    const previewNote = "Hyo님께 보내는 테스트 · 가상 인물 서아의 편지";
+    const email = agentDebriefEmail({ ...base, locale: "ko-KR", reason: paragraphs.join("\n\n"), previewNote });
+    expect(email.text).toContain(paragraphs.join("\n\n"));
+    expect(email.html).toContain(`${paragraphs[0]}</p><p`);
+    expect(email.html).toContain(previewNote);
+    expect(email.html).not.toContain(base.conversationUrl);
+    expect(email.html).not.toContain(base.url);
+    expect(email.text).not.toContain(base.url);
+    expect(email.text).not.toContain(base.conversationUrl);
+  });
+
+  it("keeps Korean and English mail in the recipient's language", () => {
+    const english = agentDebriefEmail({ ...base, locale: "en-GB", reason: "I wanted to stay through the credits. Juno waited instead of choosing for me.", report: englishReport });
+    expect(english.html).not.toMatch(/[가-힣]/);
+    expect(english.text).not.toMatch(/[가-힣]/);
+    const korean = agentDebriefEmail({ ...base, locale: "ko-KR" });
+    for (const label of ["Primary reason", "What they said", "The atmosphere", "A note from your Agent", "moments"]) expect(korean.html).not.toContain(label);
+  });
+
+  it("does not treat generated titles, questions or dialogue as HTML", () => {
+    const attack = '<img src=x onerror="alert(1)">';
+    const email = agentDebriefEmail({ ...base, reason: attack, report: { ...base.report, reflection: { headline: attack, question: attack, anchorRound: 2 }, moments: [{ round: 2, speakerAgentName: attack, content: attack }], worldSourceUrl: "javascript:alert(1)" } });
+    expect(email.html).not.toContain(attack);
+    expect(email.html).not.toContain('href="javascript:');
+    expect(email.html).toContain("&lt;img");
+  });
+
+  it("keeps a pass honest and retains its future search lesson", () => {
+    const email = agentDebriefEmail({ ...base, locale: "ko-KR", verdict: "pass", nextSearchNote: "다음에는 약속을 구체적으로 답하는지 볼게." });
+    expect(email.html).toContain("이번엔 보내줄게요");
+    expect(email.text).toContain("다음에는 약속을 구체적으로 답하는지 볼게.");
+  });
+});
+
+describe("a connection notice", () => {
+  it("announces the human decision without sending the whole debrief again", () => {
+    const email = agentConnectionEmail({ locale: "ko-KR", firstName: "민아", counterpartFirstName: "Eli", agentReason: base.reason, report: base.report, url: base.url, conversationUrl: base.conversationUrl });
+    expect(email.subject).toBe("두 사람이 모두 만나고 싶다고 답했어요");
+    expect(email.html).toContain("연결 확인하기");
+    expect(email.html).toContain(base.conversationUrl);
+    expect(email.html).not.toContain(base.report.summary);
+    expect(email.html).not.toContain(base.report.moments[0].content);
+    expect(email.text).not.toContain("Two humans said yes");
+  });
+});
+
+describe("activity record links", () => {
+  const journal = { overview: "둘은 영화 결말을 이야기하고 카페에 가자고 제안했어요.", events: [
+    { kind: "proposal" as const, title: "카페에서 이어갈 이야기", detail: "카페에는 아직 가지 않았어요.", sceneKind: "cafe" as const, rounds: [4, 5] },
+  ] };
+  it("shows a proposed activity with its evidence link and a usable preview CTA", () => {
+    const previewUrl = "https://adorable-boar-359.convex.site/preview/date-letter";
+    const email = agentDebriefEmail({ ...base, locale: "ko-KR", previewNote: "가상 인물의 테스트 편지", previewUrl, report: { ...base.report, activityJournal: journal } });
+    expect(email.html).toContain("제안한 일 · 아직 진행 전");
+    expect(email.html).toContain(journal.events[0].detail);
+    expect(email.html).toContain(`href="${previewUrl}#turn-4"`);
+    expect(email.html).toContain(`href="${previewUrl}"`);
+    expect(email.text).toContain(previewUrl);
+    expect(email.html).not.toContain(base.conversationUrl);
+  });
+  it("does not send a loopback or unsafe preview link", () => {
+    for (const previewUrl of ["http://127.0.0.1:4174/preview/date-letter", "javascript:alert(1)"]) {
+      const email = agentDebriefEmail({ ...base, previewNote: "Fictional preview", previewUrl, report: { ...base.report, activityJournal: journal } });
+      expect(email.html).not.toContain(`href="${previewUrl}`);
+      expect(email.text).not.toContain(previewUrl);
+    }
   });
 });

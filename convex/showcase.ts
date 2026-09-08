@@ -1,4 +1,6 @@
 import { v } from "convex/values";
+import { reflectionValidator, sceneKindValidator } from "./lib/dateStory";
+import { dateActivityValidator } from "./lib/dateActivity";
 import type { Doc } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
 import {
@@ -31,7 +33,11 @@ import { hasCompleteMatchingBoundaries } from "./lib/agentMatchingBoundaries";
 const nullableAvatarValidator = v.union(v.null(), agentAvatarValidator);
 
 const showcaseValidator = v.object({
+  locale: v.optional(v.string()),
   setting: v.string(),
+  sceneKind: v.optional(sceneKindValidator),
+  sceneSituation: v.optional(v.string()),
+  activityJournal: v.optional(dateActivityValidator),
   worldSourceTitle: v.optional(v.string()),
   worldSourceUrl: v.optional(v.string()),
   summary: v.string(),
@@ -51,12 +57,16 @@ const showcaseValidator = v.object({
     avatar: nullableAvatarValidator,
     verdict: v.string(),
     reason: v.string(),
+    reflection: v.optional(reflectionValidator),
+    nextSearchNote: v.optional(v.string()),
   }),
   counterpart: v.object({
     agentName: v.string(),
     avatar: nullableAvatarValidator,
     verdict: v.string(),
     reason: v.string(),
+    reflection: v.optional(reflectionValidator),
+    nextSearchNote: v.optional(v.string()),
   }),
 });
 
@@ -97,7 +107,7 @@ export const publicDate = query({
             .withIndex("by_date_and_round", (q) =>
               q.eq("agentDateId", date._id),
             )
-            .take(7),
+            .take(17),
           ctx.db
             .query("agentProfiles")
             .withIndex("by_user", (q) => q.eq("userId", date.initiatorUserId))
@@ -122,7 +132,11 @@ export const publicDate = query({
           syntheticAgentName(counterpart.userId, initiatorName);
 
         return {
+          locale: date.locale,
           setting: date.setting,
+          sceneKind: date.sceneKind,
+          sceneSituation: date.sceneSituation,
+          activityJournal: date.activityJournal,
           worldSourceTitle: date.worldSourceTitle,
           worldSourceUrl: date.worldSourceUrl,
           summary: date.summary,
@@ -145,6 +159,8 @@ export const publicDate = query({
               defaultAvatarFor(initiatorName, initiator.gender),
             verdict: date.initiatorVerdict,
             reason: date.initiatorReason,
+            reflection: date.initiatorReflection,
+            nextSearchNote: date.initiatorNextSearchNote,
           },
           counterpart: {
             agentName: counterpartName,
@@ -153,6 +169,8 @@ export const publicDate = query({
               defaultAvatarFor(counterpartName, counterpart.gender),
             verdict: date.counterpartVerdict,
             reason: date.counterpartReason,
+            reflection: date.counterpartReflection,
+            nextSearchNote: date.counterpartNextSearchNote,
           },
         };
       }
@@ -237,11 +255,11 @@ export const preparePersona = internalMutation({
  * the CLI once per deployment rather than on a cron or on a visitor's request.
  */
 export const ensure = internalAction({
-  args: {},
+  args: { refresh: v.optional(v.boolean()) },
   returns: v.string(),
-  handler: async (ctx): Promise<string> => {
+  handler: async (ctx, args): Promise<string> => {
     const existing = await ctx.runQuery(internal.showcase.existing, {});
-    if (existing) return "A public showcase date already exists.";
+    if (existing && !args.refresh) return "A public showcase date already exists.";
 
     const personaId = await ctx.runMutation(
       internal.showcase.preparePersona,
@@ -251,16 +269,11 @@ export const ensure = internalAction({
 
     const agentDateId = await ctx.runMutation(
       internal.agentDates.createRequest,
-      { userId: personaId, accessMode: "demo", locale: "en-US" },
+      { userId: personaId, accessMode: "demo", locale: "en-US", demoOnly: true },
     );
-    // The matcher picks the counterpart, so the pairing is not guaranteed to be
-    // persona-to-persona. Say so plainly rather than leaving the operator to
-    // wonder why the public page is still empty a minute later.
     return (
-      `Started showcase date ${agentDateId}; it takes about a minute. ` +
-      `Re-run showcase:existing afterwards — it stays false if the matcher ` +
-      `paired the persona with a real account, which the public query refuses ` +
-      `to serve by design.`
+      `Started showcase date ${agentDateId} between fictional personas; ` +
+      `the generated conversation and independent verdicts take about a minute.`
     );
   },
 });
