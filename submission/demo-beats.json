@@ -1,13 +1,43 @@
 {
-  "comment": "The storyboard, as data. The recording spec marks where each beat starts and ends in the raw capture; the build script trims that span and time-scales it to exactly targetSeconds, so DEMO_CAPTIONS.srt lines up no matter how long the real run took.",
+  "comment": "Actual product footage: two independent development accounts opt into real search. No verdict is forced. Waiting and model latency between beats are cut; each recorded span is retimed to its target duration.",
   "width": 1920,
   "height": 1080,
   "beats": [
-    { "id": "problem",  "label": "The problem",         "targetSeconds": 20 },
-    { "id": "agent",    "label": "Build the Agent",     "targetSeconds": 30 },
-    { "id": "date",     "label": "The date",            "targetSeconds": 45 },
-    { "id": "letter",   "label": "The letter",          "targetSeconds": 40 },
-    { "id": "decision", "label": "The sealed decision", "targetSeconds": 30 },
-    { "id": "stack",    "label": "How it is built",     "targetSeconds": 10 }
+    {
+      "id": "problem",
+      "label": "Your Agent goes first",
+      "targetSeconds": 12,
+      "maxRawSeconds": 4
+    },
+    {
+      "id": "agent",
+      "label": "A face and a private brief",
+      "targetSeconds": 28
+    },
+    {
+      "id": "search",
+      "label": "Start once, keep looking",
+      "targetSeconds": 25
+    },
+    {
+      "id": "date",
+      "label": "An actual conversation",
+      "targetSeconds": 36
+    },
+    {
+      "id": "letter",
+      "label": "A moment and a lesson",
+      "targetSeconds": 30
+    },
+    {
+      "id": "decision",
+      "label": "Keep the real outcome",
+      "targetSeconds": 24
+    },
+    {
+      "id": "stack",
+      "label": "A public replay",
+      "targetSeconds": 20
+    }
   ]
 }

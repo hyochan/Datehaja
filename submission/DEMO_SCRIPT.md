@@ -1,113 +1,76 @@
-# Datehaja — the submission demo
+# Datehaja submission film
 
-The film is recorded from the running product, not assembled by hand. That is
-deliberate: the previous cut was made by hand against the concierge product
-this repository no longer contains, and because nothing tied it to the code it
-went stale silently while every check stayed green. A recording that is driven
-by the same selectors the end-to-end suite uses cannot drift away from the app
-without a test noticing first.
+The new core learning comparison is documented in [LEARNING_DEMO.md](LEARNING_DEMO.md).
+The film below is the earlier search/intro cut and must not be mistaken for footage
+of the new feedback → subsequent-date proof.
+
+The current story is an ongoing search: start once, meet when another searching
+Agent fits both owners' boundaries, learn from the actual conversation, and
+continue when it does not earn an introduction. A private introduction letter
+requires two independent Agent recommendations. Contact still requires two
+independent human yeses.
+
+The recording uses two disposable development accounts, each controlled through
+its own signed-in browser. They use the real search, not seeded demo matches.
+Their email preferences are disabled. The recording verifies that both owners
+see the same encounter before capturing its dialogue. It never overrides a
+verdict to obtain a more convenient ending, and pauses both searches afterwards.
+
+## Record and build
+
+Use the development deployment `adorable-boar-359` and the local Vite app.
+The recorder intentionally refuses a production URL. Production deployment,
+public video hosting and posting the submission remain separate launch steps.
 
 ```bash
-# 1. the app under test (development deployment, compressed demo pacing)
-bunx convex dev            # in one terminal
-
-# 2. pre-flight: the deployment needs a cast to date and a finished date to
-#    replay, or the film ends on an empty room
-bunx convex run demo:reseed '{}'      # the labelled fictional Agents
-bunx convex run showcase:ensure '{}'  # the completed date /watch replays
-
-# 3. record, then cut
+bunx convex dev --once --typecheck enable --tail-logs disable
+# Only needed if the fictional public replay is missing or stale.
+# Generates a new encounter; does not send email or force a recommendation.
+bunx convex run showcase:ensure '{"refresh":true}'
+# Wait for its recorded dialogue and notes to appear at /watch.
 bun run demo:record
-bun run demo:build         # → submission/Datehaja-demo.mp4
+bun run demo:build
 ```
 
-The recording needs `ffmpeg` on PATH for the cut, and the closing beat asserts
-that `/watch` actually holds a date, so a missed pre-flight fails the run
-rather than shipping an empty final shot.
+Do not run another test that starts a search in the same city during recording:
+that test account may correctly become the counterpart before the intended
+second owner starts. The recorder rejects a different pairing. A failed take
+must be investigated before another run; never edit a verdict or transcript.
 
-To record against the deployment the submission names instead, point the run at
-it — the sign-in code then arrives in the real AgentMail inbox rather than
-through the development path:
+## The cut
 
-```bash
-E2E_BASE_URL=https://merry-bass-190.convex.site bun run demo:record
-```
-
-## How the timing works
-
-`submission/demo-beats.json` is the storyboard as data: six beats and the exact
-number of seconds each one gets in the finished film. The recording spec marks
-where each beat begins and ends in the raw capture; `scripts/build-demo.mjs`
-trims those spans and time-scales each one to its target.
-
-Two things follow from that. The film is the same length whatever the models
-did that day — a slow date is sped up rather than allowed to run long. And
-`DEMO_CAPTIONS.srt` can be written once against the storyboard instead of being
-retimed after every take. Everything between beats — signing in, waiting for a
-page — is cut entirely, so it costs the film nothing.
-
-| beat | window | what it has to land |
+| Beat | Window | What the viewer sees |
 | --- | --- | --- |
-| `problem` | 0:00–0:20 | the human problem, before any machinery |
-| `agent` | 0:20–0:50 | a face, a private brief, the private room |
-| `date` | 0:50–1:35 | two Agents meeting as themselves, in a real place |
-| `letter` | 1:35–2:15 | the private debrief — the emotional centre |
-| `decision` | 2:15–2:45 | a sealed answer, then two yeses and contact |
-| `stack` | 2:45–2:55 | how it is built, ending on the public replay |
+| `problem` | 0:00–0:12 | Your Agent does the looking; the human decides |
+| `agent` | 0:12–0:40 | A face, a private brief, and a correction in the private room |
+| `search` | 0:40–1:05 | An actual empty pool, check times, and an ongoing search |
+| `date` | 1:05–1:41 | A generated conversation between the two test owners' Agents |
+| `letter` | 1:41–2:11 | A selected real exchange, the owner's note, and its limits |
+| `decision` | 2:11–2:35 | The actual outcome: continued searching, or independent human consent |
+| `stack` | 2:35–2:55 | Public replay with fictional people, independent reflections and the outcome |
 
-Total 2:55. The rules require under three minutes, and the build fails rather
-than shipping something longer.
+A non-match ending is valid and desirable to show when that is what happened.
+The film calls the private encounter record a note; it does not claim that
+unmatched encounters generate email. In the recommendation branch, each test
+owner separately clicks consent. No production contact is shown.
 
-Captions are burned in by default, because a judge may well watch this muted.
-`bun run demo:build --no-burn` leaves the footage clean and the `.srt` as a
-sidecar for a voice-over take.
+`demo-beats.json` specifies the durations. The Playwright recording writes
+actual spans to `.scratch/demo/marks.json`. The builder cuts those spans
+and retimes each to the storyboard; unrecorded setup and model waits are cut.
+New encounters start with twelve turns and can extend once to sixteen for a specific uncertainty; earlier six/ten-turn records remain readable. The film keeps
+that generated outcome and never forces an introduction. The total is 2:55, with a checked ceiling below three minutes. Captions are
+burned into the footage by default; this version has no narration audio.
 
-## The story, in the order it should be told
+The current screenshots are captured during the same run as the film:
+`01-landing-hero`, `02-agent-editor`, `03-ongoing-search`, `04-date-world`,
+`05-private-notes`, and `06-next-step`. Older stills remain historical and should
+not be used to describe the current experience.
 
-Lead with the human problem, not the machinery. A judge should understand what
-this is for in the first fifteen seconds, and only then see how it is built.
+## Before submitting
 
-**0:00–0:20 — the problem.** The landing hero. Say it plainly: the worst part
-of dating apps is the first date you already know will not work, and you spend
-an evening and your phone number finding that out.
-
-**0:20–0:50 — build the Agent.** Give it a face — palette, expression, the
-woman or man base. Say what it is: your second self, the one who goes instead
-of you. Fill the brief in the unpolished voice the product asks for. Land on:
-it knows how you actually are, not how you present. Then the private room, and
-the fact that nothing said in it reaches anyone else's Agent.
-
-**0:50–1:35 — the date.** The world appears, drawn around a real place
-Firecrawl pulled off the live cultural web that morning — name the source on
-screen. Both Agents walk in and talk. Say the important thing out loud: each
-Agent only ever sees its own person's brief, and each speaks in the first
-person as that person. No matchmaker, no go-between.
-
-Do not narrate the counter. The transcript moves to the debrief as the sixth
-turn lands.
-
-**1:35–2:15 — the letter.** The private debrief, and the most screen time of
-any beat. Read a line of the Agent's letter aloud. Point out that it is a
-letter, not a score, and that the other person will never see it. The same
-letter arrives by mail from the Agent's own AgentMail inbox.
-
-**2:15–2:45 — the sealed decision.** Answer yes. Show that the other side is
-still hidden — you decided without knowing what they chose. Then the mutual
-yes, and contact opening for the first time. Say it: until this moment neither
-person had the other's email.
-
-**2:45–2:55 — how it is built.** One breath: Convex is the backend and serves
-this app from convex.site; OpenAI runs the dates; Firecrawl chooses where they
-happen; AgentMail carries every private letter separately. End on the public
-replay at `/watch`, which is where a judge can go without an account.
-
-## What to avoid
-
-- Do not open with architecture. The criteria reward everyday utility; the
-  stack is the closing argument, not the opening one.
-- Do not show the dev-only avatar lab at `/lab/avatar`; it is not part of the
-  product.
-- Do not use a real person's contact details anywhere on screen. The seeded
-  Agents are fictional and labelled; keep it that way.
-- Do not hand-edit `Datehaja-demo.mp4`. Change the storyboard or the spec and
-  record again, so the film and the product stay tied together.
+Review the final encoded video, including the captioned opening, the actual
+outcome and the closing shot. Deploy the verified code and refresh the public
+fictional replay in the approved production deployment. Confirm its language
+and that /watch works without login. Upload the final film to a publicly
+accessible video host, verify that link signed out, then complete the required
+social/submission steps. Do not declare these complete from passing tests.

@@ -1,99 +1,75 @@
 1
-00:00:00,000 --> 00:00:06,500
-The worst part of a dating app is not the matching. It is the first date you already know will not work.
+00:00:00,000 --> 00:00:06,000
+What if your dating Agent could do the looking while you got on with your life?
 
 2
-00:00:06,500 --> 00:00:13,000
-You spend an evening, and your phone number, finding that out.
+00:00:06,000 --> 00:00:12,000
+It meets other Agents first. You decide whom to meet in person.
 
 3
-00:00:13,000 --> 00:00:20,000
-Datehaja sends someone else. You stay home. Your Agent goes first.
+00:00:12,000 --> 00:00:21,000
+Give your Agent a face, and a brief that sounds like the real you.
 
 4
-00:00:20,000 --> 00:00:26,500
-You build one Agent. It is not a matchmaker and not a go-between. It is your second self.
+00:00:21,000 --> 00:00:30,000
+Who you hope it notices. What people tend to misunderstand about you.
 
 5
-00:00:26,500 --> 00:00:33,000
-Give it a face. Then tell it the things that do not fit inside a dating profile.
+00:00:30,000 --> 00:00:40,000
+Your private conversation teaches your Agent. The other Agent never receives that conversation.
 
 6
-00:00:33,000 --> 00:00:40,000
-Who you hope it notices. And the version of you that your close friends already know.
+00:00:40,000 --> 00:00:48,000
+Start searching once. The search keeps running after you close the tab.
 
 7
-00:00:40,000 --> 00:00:45,500
-The Agent keeps a private room, and it remembers what you correct in there.
+00:00:48,000 --> 00:00:56,000
+Nobody available inside both people's boundaries? It keeps checking. No manufactured match.
 
 8
-00:00:45,500 --> 00:00:50,000
-None of it ever reaches the other person's Agent.
+00:00:56,000 --> 00:01:05,000
+You can see when it checked, and pause. Routine progress stays here, out of your inbox.
 
 9
-00:00:50,000 --> 00:00:57,000
-Now send it out. Two Agents meet as the two people they stand in for.
+00:01:05,000 --> 00:01:14,000
+A second independent test owner starts searching. Their Agents can now actually meet.
 
 10
-00:00:57,000 --> 00:01:04,000
-Nobody is being set up. They speak in the first person, as themselves.
+00:01:14,000 --> 00:01:23,000
+Each Agent sees its own brief and the shared conversation. They choose, react, and sometimes disagree.
 
 11
-00:01:04,000 --> 00:01:11,000
-The world is drawn around a real place Firecrawl found on the live cultural web this morning.
+00:01:23,000 --> 00:01:32,000
+This dialogue is generated, not a script. The verdict is not chosen for this recording.
 
 12
-00:01:11,000 --> 00:01:18,000
-The source stays attached to the date, so you can check where it came from.
+00:01:32,000 --> 00:01:41,000
+Convex saves each turn before scheduling the next. Leave and return: the encounter persists.
 
 13
-00:01:18,000 --> 00:01:26,000
-Six turns. Each one is written to Convex before the next is scheduled.
+00:01:41,000 --> 00:01:51,000
+A real exchange becomes a keepsake. A short private note explains what your Agent took from it.
 
 14
-00:01:26,000 --> 00:01:35,000
-So either person can close the tab and come back. The date is still running.
+00:01:51,000 --> 00:02:01,000
+Polite conversation alone is not enough. Each Agent decides independently whether to recommend an introduction.
 
 15
-00:01:35,000 --> 00:01:42,000
-Then each Agent goes home and writes to its own human, privately.
+00:02:01,000 --> 00:02:11,000
+Only two recommendations earn an introduction letter. Unmatched encounters stay in the app.
 
 16
-00:01:42,000 --> 00:01:50,000
-Not a compatibility score. A letter.
+00:02:11,000 --> 00:02:23,000
+Every completed conversation leaves a lesson for the next search. A non-match means keep looking.
 
 17
-00:01:50,000 --> 00:01:58,000
-What it noticed, where it hesitated, and whether it thinks the two of you should meet.
+00:02:23,000 --> 00:02:35,000
+An AI recommendation is never consent. Contact opens only after both humans independently say yes.
 
 18
-00:01:58,000 --> 00:02:07,000
-Written in your language. You will never see theirs, and they will never see yours.
+00:02:35,000 --> 00:02:45,000
+Convex runs the search, durable dialogue, and private decisions. OpenAI powers the Agents; AgentMail delivers introductions.
 
 19
-00:02:07,000 --> 00:02:15,000
-The same letter arrives by mail, sent separately from the Agent's own AgentMail inbox.
-
-20
-00:02:15,000 --> 00:02:22,000
-Now you answer. You do not know what they answered.
-
-21
-00:02:22,000 --> 00:02:29,000
-Your consent is one transaction. It can never land half applied.
-
-22
-00:02:29,000 --> 00:02:37,000
-Two independent yeses, and contact opens for the first time.
-
-23
-00:02:37,000 --> 00:02:45,000
-Until this moment, neither person had the other's email address.
-
-24
-00:02:45,000 --> 00:02:50,000
-Convex is the whole backend, and it serves this app itself from convex.site.
-
-25
-00:02:50,000 --> 00:02:55,000
-Watch a real agent date, with no account: merry-bass-190.convex.site/watch
+00:02:45,000 --> 00:02:55,000
+The public replay shows fictional people and the actual generated outcome. Try it without an account: /watch.
