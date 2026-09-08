@@ -1,3 +1,5 @@
+import { coachingCopy } from "./coachingCopy";
+import { scoutingCopy } from "./scoutingCopy";
 /* oxlint-disable react/only-export-components */
 import {
   createContext,
@@ -163,6 +165,7 @@ const de: TranslationPack = {
   "{count} hours left": "noch {count} Stunden",
   "{count} min left": "noch {count} Min.",
 };
+
 
 Object.assign(ko, {
   "Preview of {agent}": "{agent} 미리보기",
@@ -566,7 +569,7 @@ Object.assign(ko, {
     "어쩌면 내 에이전트는 내가 누구를 만나야 할지 알지도 몰라요.",
   "Teach it who you are. Send it out. Keep the final decision human.":
     "나를 알려주고, 대신 보내고, 마지막 결정은 내가 해요.",
-  "Create my agent": "내 에이전트 만들기",
+  "Create my agent": "내 데이트 에이전트 만들기",
   "AI proxies, human consent": "AI 프록시, 사람의 동의",
   "My agent": "내 에이전트",
   Human: "사람",
@@ -3596,12 +3599,12 @@ const agentWorkspaceCopy: Record<
     "Utforskar agentvärlden",
   ],
   "Watch the date unfold moment by moment": [
-    "여섯 장면을 실시간으로 지켜봐요",
-    "6つの場面をリアルタイムで見る",
+    "대화가 이어지는 모습을 실시간으로 지켜봐요",
+    "会話が進む様子をリアルタイムで見る",
     "Das Date Moment für Moment verfolgen",
-    "Suivez les six moments en direct",
-    "Bekijk de zes momenten live",
-    "Följ de sex ögonblicken live",
+    "Suivez la conversation en direct",
+    "Volg het gesprek live",
+    "Följ samtalet live",
   ],
   "Returns with a case": [
     "솔직한 판단과 함께 귀환",
@@ -4161,6 +4164,12 @@ const agentWorkspaceCopy: Record<
     "Niet voor mij",
     "Inte för mig",
   ],
+  "Review recovered from the saved conversation": ["저장된 대화로 회고를 다시 확인했어요", "保存された会話から振り返りを再確認しました", "Rückblick anhand des Gesprächs wiederhergestellt", "Bilan récupéré à partir de la conversation", "Terugblik hersteld uit het gesprek", "Reflektion återställd från samtalet"],
+  "Your Agent's private note": ["내 에이전트의 비공개 편지", "エージェントからの非公開メモ", "Die private Notiz deines Agenten", "La note privée de votre Agent", "De privénotitie van je Agent", "Din agents privata anteckning"],
+  "Only the review was updated. Your conversation, feedback and meeting decisions stay as they were.": ["회고만 다시 작성했어요. 지난 대화와 피드백, 만남 결정은 그대로예요.", "振り返りのみ更新しました。過去の会話、フィードバック、会うかどうかの決定は変わりません。", "Nur der Rückblick wurde aktualisiert. Gespräch, Feedback und Entscheidungen bleiben unverändert.", "Seul le bilan a été mis à jour. Conversation, retours et décisions restent inchangés.", "Alleen de terugblik is bijgewerkt. Gesprek, feedback en beslissingen blijven gelijk.", "Bara reflektionen uppdaterades. Samtal, feedback och beslut är oförändrade."],
+  "Checking the saved conversation again": ["저장된 대화를 다시 돌아보고 있어요", "保存された会話を再確認しています", "Das gespeicherte Gespräch wird erneut geprüft", "Nouvelle vérification de la conversation", "Het opgeslagen gesprek wordt opnieuw bekeken", "Det sparade samtalet granskas igen"],
+  "Your Agent is rewriting and checking its private note. The original conversation stays unchanged.": ["에이전트가 편지를 다시 작성하고 내용을 확인하고 있어요. 원래 대화는 그대로 남아요.", "エージェントがメモを書き直して確認しています。元の会話は変わりません。", "Dein Agent überarbeitet und prüft seine Notiz. Das ursprüngliche Gespräch bleibt erhalten.", "Votre Agent réécrit et vérifie sa note. La conversation originale est conservée.", "Je Agent herschrijft en controleert de notitie. Het oorspronkelijke gesprek blijft behouden.", "Din agent skriver om och granskar sin anteckning. Originalsamtalet bevaras."],
+  "Recheck this date's review": ["이 데이트의 회고 다시 확인하기", "このデートの振り返りを再確認", "Diesen Rückblick erneut prüfen", "Revérifier ce bilan", "Deze terugblik opnieuw controleren", "Granska denna reflektion igen"],
   "This world went quiet.": [
     "데이트 월드가 조용해졌어요.",
     "デートワールドが静かになりました。",
@@ -6456,7 +6465,24 @@ const avatarStudioCopy: Record<string, readonly [string, string, string, string,
   ]
 };
 
-for (const copy of [agentWorkspaceCopy, settingsCopy, avatarStudioCopy]) {
+const dateLetterCopy: Record<string, readonly string[]> = {
+  "Here's how I'd say it:": ["나라면 이렇게 말할 것 같아:", "私ならこう言うと思う：", "Ich würde es so sagen:", "Moi, je le dirais comme ça :", "Ik zou het zo zeggen:", "Jag skulle säga så här:"],
+  "I liked this about them:": ["상대의 이런 점은 좋았어:", "相手のここがよかった：", "Das mochte ich an der Person:", "J'ai aimé ça chez cette personne :", "Dit vond ik leuk aan die persoon:", "Det här gillade jag hos personen:"],
+  "Next time, look for someone who…": ["다음엔 이런 사람을 찾아줘…", "次はこんな人を探して…", "Such nächstes Mal jemanden, der …", "La prochaine fois, cherche quelqu'un qui…", "Zoek de volgende keer iemand die…", "Leta nästa gång efter någon som…"],
+  "Keep my replies short and natural.": ["내 말은 짧고 자연스럽게 해줘.", "私の返事は短く自然にして。", "Halte meine Antworten kurz und natürlich.", "Garde mes réponses courtes et naturelles.", "Houd mijn antwoorden kort en natuurlijk.", "Håll mina svar korta och naturliga."],
+  "Look for someone who is curious about me too.": ["나한테도 궁금한 게 있는 사람을 찾아줘.", "私にも興味を持ってくれる人を探して。", "Such jemanden, der auch auf mich neugierig ist.", "Cherche quelqu'un qui s'intéresse aussi à moi.", "Zoek iemand die ook nieuwsgierig naar mij is.", "Leta efter någon som också är nyfiken på mig."],
+  "What have you learned about me?": ["지금까지 나에 대해 뭘 알게 됐어?", "今まで私について何がわかった？", "Was hast du bisher über mich gelernt?", "Qu'as-tu appris sur moi jusqu'ici ?", "Wat heb je tot nu toe over mij geleerd?", "Vad har du lärt dig om mig hittills?"],
+  "Tell me how you'd say it, who you'd like to meet, or what felt right…": ["나라면 어떻게 말할지, 어떤 사람이 좋은지, 뭐가 좋았는지 들려줘…", "自分ならどう話すか、どんな人がいいか、何がよかったか教えて…", "Sag mir, wie du es sagen würdest, wen du treffen möchtest oder was dir gefiel…", "Dis-moi comment tu le dirais, qui tu aimerais rencontrer ou ce qui t'a plu…", "Vertel hoe jij het zou zeggen, wie je wilt ontmoeten of wat goed voelde…", "Berätta hur du skulle säga det, vem du vill träffa eller vad som kändes bra…"],
+  "One saved conversation. Two independent reads. Your decision.": ["하나의 대화 기록. 각자의 독립적인 회고. 결정은 당신에게.", "ひとつの会話記録。それぞれの振り返り。決めるのはあなた。", "Ein gespeichertes Gespräch. Zwei unabhängige Einschätzungen. Deine Entscheidung.", "Une conversation enregistrée. Deux avis indépendants. Votre décision.", "Eén bewaard gesprek. Twee onafhankelijke inzichten. Jouw beslissing.", "Ett sparat samtal. Två oberoende bedömningar. Ditt beslut."],
+  "The moment I brought back": ["내가 가져온 한 장면", "持ち帰ったひと場面", "Der Moment, den ich mitbrachte", "Le moment que j'ai rapporté", "Het moment dat ik meebracht", "Ögonblicket jag tog med hem"],
+  "Two saved lines. Read the response for yourself.": ["저장된 대화 두 마디. 상대의 답을 직접 읽어봐요.", "保存したふたつの言葉。返事を自分で読んでみて。", "Zwei gespeicherte Zeilen. Lies die Antwort selbst.", "Deux répliques sauvegardées. Lisez la réponse vous-même.", "Twee bewaarde zinnen. Lees zelf het antwoord.", "Två sparade repliker. Läs svaret själv."],
+  "Tell {agent} how you read it": ["{agent}에게 내 생각 들려주기", "{agent}に自分の受け取り方を話す", "Sag {agent}, wie du es liest", "Dites à {agent} comment vous le voyez", "Vertel {agent} hoe jij het leest", "Berätta för {agent} hur du tolkar det"],
+  "Read the whole conversation": ["대화 전체 읽기", "会話をすべて読む", "Das ganze Gespräch lesen", "Lire toute la conversation", "Lees het hele gesprek", "Läs hela samtalet"],
+  "Here's how that moment felt to me:": ["나는 그 장면을 이렇게 느꼈어:", "あの場面を私はこう感じた：", "So fühlte sich dieser Moment für mich an:", "Voici comment j'ai ressenti ce moment :", "Zo voelde dat moment voor mij:", "Så här kändes det ögonblicket för mig:"],
+  "the agents are writing separate private notes…": ["각자의 비공개 편지를 쓰고 있어요…", "それぞれに非公開の手紙を書いています…", "Die Agents schreiben getrennte private Notizen…", "Les Agents écrivent chacun leur lettre privée…", "De Agents schrijven elk een privébrief…", "Agenterna skriver var sitt privat brev…"],
+};
+
+for (const copy of [agentWorkspaceCopy, settingsCopy, avatarStudioCopy, dateLetterCopy, scoutingCopy, coachingCopy]) {
   for (const [message, values] of Object.entries(copy)) {
     ko[message] = values[0];
     ja[message] = values[1];
@@ -6533,7 +6559,13 @@ function initialLocale(): LocaleCode {
 
 type I18nValue = {
   locale: LocaleCode;
-  setLocale: (locale: LocaleCode) => void;
+  /**
+   * `persist: false` switches the current view only. The fictional preview
+   * pages are written in one language and force it on arrival; remembering
+   * that choice would switch the whole product for a visitor who only
+   * followed a link from their own locale.
+   */
+  setLocale: (locale: LocaleCode, options?: { persist?: boolean }) => void;
   t: (message: string, values?: Record<string, string | number>) => string;
 };
 
@@ -6542,16 +6574,21 @@ const I18nContext = createContext<I18nValue | null>(null);
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<LocaleCode>(initialLocale);
 
-  const setLocale = useCallback((next: LocaleCode) => {
-    runtimeLocale = next;
-    document.documentElement.lang = next;
-    try {
-      window.localStorage.setItem(STORAGE_KEY, next);
-    } catch {
-      // The selection still works for the current page.
-    }
-    setLocaleState(next);
-  }, []);
+  const setLocale = useCallback(
+    (next: LocaleCode, options?: { persist?: boolean }) => {
+      runtimeLocale = next;
+      document.documentElement.lang = next;
+      if (options?.persist !== false) {
+        try {
+          window.localStorage.setItem(STORAGE_KEY, next);
+        } catch {
+          // The selection still works for the current page.
+        }
+      }
+      setLocaleState(next);
+    },
+    [],
+  );
 
   const t = useCallback(
     (message: string, values?: Record<string, string | number>) =>

@@ -16,6 +16,7 @@ import { LinkButton } from "../components/ui/primitives";
 import { useI18n } from "../i18n";
 import { AgentWorldSprite } from "../components/agent/AgentDateWorld";
 import { AgentLoopPlayer } from "../components/agent/AgentLoopPlayer";
+import { AgentLearningLoop } from "../components/agent/AgentLearningLoop";
 import { AgentAvatar } from "../components/agent/AgentAvatar";
 
 /** The i18n translate function, including its interpolation values. */
@@ -158,20 +159,7 @@ export default function LandingPage() {
           className="agent-journey-section border-y border-[var(--border)] bg-[var(--bg-sunken)] py-16 sm:py-24"
         >
           <div className="mx-auto max-w-[80rem] px-5 sm:px-8">
-            <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <div className="docket-label text-[var(--accent-text)]">
-                  {t("How it works")}
-                </div>
-                <h2 className="display-heading mt-3 max-w-2xl text-[clamp(2.4rem,5vw,4.4rem)] leading-[0.94]">
-                  {t("Your Agent goes first.")}
-                </h2>
-              </div>
-              <span className="docket-label text-muted">
-                {t("Two Agents talking")} · {t("zero contacts exposed")}
-              </span>
-            </div>
-            <AgentLoopPlayer t={t} />
+            <AgentLearningLoop />
           </div>
         </section>
 
@@ -195,7 +183,7 @@ export default function LandingPage() {
               </h2>
               <p className="agent-debrief-intro mt-6 max-w-lg text-soft">
                 {t(
-                  "Six moments. Two independent reads. One honest recommendation.",
+                  "One saved conversation. Two independent reads. Your decision.",
                 )}
               </p>
               <AgentReturnNote t={t} />
@@ -265,7 +253,7 @@ export default function LandingPage() {
               )}
             </p>
             <LinkButton to="/signup" size="lg" className="relative z-[1] mt-8">
-              {t("Create my agent")} →
+              {t("Create my dating agent")} →
             </LinkButton>
           </div>
         </section>

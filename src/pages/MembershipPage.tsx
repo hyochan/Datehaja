@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useAction, useMutation, useQuery } from "convex/react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { api } from "@convex/_generated/api";
 import type { AvatarConfig } from "../components/agent/AgentAvatar";
 import { AgentHomeWorld } from "../components/agent/AgentDateWorld";
@@ -18,6 +18,7 @@ export default function MembershipPage() {
   const { t } = useI18n();
   const mine = useQuery(api.agents.mine);
   const readStatus = useAction(api.billing.status);
+  const beginSearch = useAction(api.scouting.start);
   const createCheckout = useAction(api.billing.createCheckout);
   const createPortal = useAction(api.billing.createPortal);
   const trackMember = useMutation(api.growth.trackMember);
@@ -27,13 +28,14 @@ export default function MembershipPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const trackedView = useRef(false);
+  const [retry, setRetry] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
     const refresh = async () => {
       try {
         const next = await readStatus({});
-        if (!cancelled) setAccess(next);
+        if (!cancelled) { setAccess(next); setError(null); }
       } catch (reason) {
         if (!cancelled) setError(readableError(reason));
       }
@@ -51,7 +53,7 @@ export default function MembershipPage() {
       window.clearInterval(timer);
       window.clearTimeout(timeout);
     };
-  }, [readStatus, searchParams]);
+  }, [readStatus, searchParams, retry]);
 
   useEffect(() => {
     if (!access || trackedView.current) return;
@@ -61,7 +63,16 @@ export default function MembershipPage() {
     });
   }, [access, trackMember]);
 
-  if (mine === undefined || mine === null || access === null) {
+  if (mine === null) return <Navigate to="/onboarding" replace />;
+
+  if (access === null && error) {
+    return <Card className="mx-auto my-12 max-w-lg p-8">
+      <p role="alert" className="mb-5">{error}</p>
+      <Button onClick={() => { setError(null); setRetry(value => value + 1); }}>{t("Try again")}</Button>
+    </Card>;
+  }
+
+  if (mine === undefined || access === null) {
     return (
       <div className="flex min-h-[64vh] items-center justify-center">
         <Spinner />
@@ -70,6 +81,20 @@ export default function MembershipPage() {
   }
 
   const agent = mine.agent as { name: string; avatar?: AvatarConfig };
+
+  async function startSearching() {
+    if (busy) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await beginSearch({});
+      navigate("/dashboard");
+    } catch (reason) {
+      setError(readableError(reason));
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function checkout() {
     if (busy) return;
@@ -177,7 +202,7 @@ export default function MembershipPage() {
               </li>
               <li>
                 <span>02</span>{" "}
-                {t("A live six-moment agent date you can watch")}
+                {t("A live Agent conversation you can watch")}
               </li>
               <li>
                 <span>03</span>{" "}
@@ -199,7 +224,8 @@ export default function MembershipPage() {
                 <Button
                   fullWidth
                   size="lg"
-                  onClick={() => navigate("/dashboard")}
+                  loading={busy}
+                  onClick={() => void startSearching()}
                 >
                   {t("Send my Agent scouting →")}
                 </Button>
@@ -250,7 +276,7 @@ export default function MembershipPage() {
           </div>
           <p>
             {t(
-              "If no compatible Agent is available, your Agent simply comes home. Safety reports and blocking are always free.",
+              "If no compatible Agent is available, the search continues. Check its progress here whenever you visit.",
             )}
           </p>
           <Link

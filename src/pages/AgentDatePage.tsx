@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useMutation, useQuery } from "convex/react";
+import { useEffect, useMemo, useState } from "react";
+import { useMutation, useQueries, type RequestForQueries } from "convex/react";
 import { Link, useParams } from "react-router-dom";
 import { api } from "@convex/_generated/api";
 import {
@@ -15,8 +15,14 @@ import {
   AgentAvatar,
   type AvatarConfig,
 } from "../components/agent/AgentAvatar";
+import { DateActivityJournal } from "../components/agent/DateActivityJournal";
+import { DateTranscript } from "../components/agent/DateTranscript";
+import { CoachedDateTranscript } from "../components/agent/CoachedDateTranscript";
+import type { Id } from "@convex/_generated/dataModel";
+import { activityCopy, type DateActivity } from "@convex/lib/dateActivity";
 import { AgentDateWorld } from "../components/agent/AgentDateWorld";
 import { useI18n } from "../i18n";
+import { type DateReflection, type SceneKind } from "@convex/lib/dateStory";
 
 type Verdict = "pending" | "encourage" | "curious" | "pass";
 type AgentDecisionCode =
@@ -46,6 +52,11 @@ type DateView = {
       | "closed"
       | "failed";
     setting: string;
+    sceneKind?: SceneKind;
+    sceneSituation?: string;
+    activityJournal?: DateActivity;
+    introductionReady: boolean;
+    isSearchEncounter?: boolean;
     worldSourceTitle?: string;
     worldSourceUrl?: string;
     summary: string;
@@ -53,6 +64,9 @@ type DateView = {
     frictions: string[];
     scoutSignals: string[];
     failureReason?: string;
+    canRetryReview: boolean;
+    reviewRetrying: boolean;
+    reviewRecoveredAt?: number;
     paceMode: "demo" | "natural";
     activity?: AgentDateActivity;
     nextTurnAt?: number;
@@ -70,6 +84,7 @@ type DateView = {
     avatar: AvatarConfig | null;
     verdict: Verdict;
     reason: string;
+    reflection?: DateReflection;
     decisionCode: AgentDecisionCode | null;
     nextSearchNote: string | null;
     consent: "pending" | "yes" | "no";
@@ -183,14 +198,27 @@ function localizeScoutSignal(
 
 export default function AgentDatePage() {
   const { agentDateId } = useParams();
-  const result = useQuery(
-    api.agentDates.get,
-    agentDateId ? { agentDateId: agentDateId as never } : "skip",
-  ) as DateView | null | undefined;
+  const queries = useMemo((): RequestForQueries => {
+    if (!agentDateId) return {};
+    return { record: { query: api.agentDates.get, args: { agentDateId: agentDateId as Id<"agentDates"> } } };
+  }, [agentDateId]);
+  const { record } = useQueries(queries);
+  const result = record instanceof Error ? null : record as DateView | null | undefined;
   const consent = useMutation(api.agentDates.consent);
+  const retryReview = useMutation(api.agentDates.retryReview);
+  const [retryBusy, setRetryBusy] = useState(false);
   const { locale, t } = useI18n();
   const [busy, setBusy] = useState<"yes" | "no" | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [seek, setSeek] = useState<{ round: number; request: number }>();
+  async function recheckReview() {
+    if (!result) return;
+    setRetryBusy(true); setError(null);
+    try { await retryReview({ agentDateId: result.date._id as Id<"agentDates"> }); }
+    catch (e) { setError(readableError(e)); }
+    finally { setRetryBusy(false); }
+  }
+  const copy = activityCopy(locale);
   const [now, setNow] = useState(0);
 
   useEffect(() => {
@@ -231,7 +259,7 @@ export default function AgentDatePage() {
   const { date, mine, counterpart, turns } = result;
   const inProgress = date.status === "queued" || date.status === "running";
   const canDecide =
-    date.status === "debrief_ready" && mine.consent === "pending";
+    date.status === "debrief_ready" && date.introductionReady && mine.consent === "pending";
   const verdict =
     mine.verdict === "pending" ? null : VERDICT_COPY[mine.verdict];
   const activity = date.activity
@@ -307,22 +335,9 @@ export default function AgentDatePage() {
         </div>
       </header>
 
-      {date.worldSourceTitle && (
-        <a
-          className="agent-world-source mt-4 flex items-center justify-between gap-4 rounded-2xl border border-[var(--border)] bg-[var(--bg-raised)] px-4 py-3 text-[12px] transition-colors hover:border-[var(--tint-ember-border)]"
-          href={date.worldSourceUrl}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <span>
-            <b className="mr-2 text-[var(--accent-text)]">
-              {t("World spark")}
-            </b>
-            {date.worldSourceTitle}
-          </span>
-          <span aria-hidden>↗</span>
-        </a>
-      )}
+      <nav className="date-record-nav" aria-label={copy.full}>
+        <a href="#activity">{copy.heading} ↓</a><a href="#conversation">{t("Read the whole conversation")} ↓</a>
+      </nav>
 
       <div
         className="agent-date-live-capture mt-4"
@@ -330,6 +345,11 @@ export default function AgentDatePage() {
       >
         <AgentDateWorld
           setting={date.setting}
+          activityJournal={date.activityJournal}
+          sceneSituation={date.sceneSituation}
+          key={seek?.request ?? date._id}
+          initialRound={seek?.round}
+          sceneKind={date.sceneKind}
           sourceTitle={date.worldSourceTitle}
           status={date.status}
           mine={{ name: mine.agentName, avatar: mine.avatar }}
@@ -342,141 +362,34 @@ export default function AgentDatePage() {
         />
       </div>
 
-      <section
-        className="agent-scout-journey"
-        aria-label={t("Agent scouting journey")}
-      >
-        {[
-          ["01", t("Left home"), true],
-          ["02", t("Found a promising Agent"), true],
-          ["03", t("Shared six moments"), turns.length >= 6],
-          ["04", t("Brought the truth home"), !inProgress],
-        ].map(([number, label, done], index) => (
-          <div className={done ? "is-done" : ""} key={String(number)}>
-            <span>{done ? "✓" : number}</span>
-            <strong>{label}</strong>
-            {index < 3 && <i aria-hidden />}
-          </div>
-        ))}
-      </section>
+      <DateActivityJournal journal={date.activityJournal} totalLines={turns.length}
+        onReplay={round => { setSeek({ round, request: Date.now() }); document.querySelector(".agent-date-live-capture")?.scrollIntoView({ behavior: "smooth", block: "start" }); }} />
 
       {date.scoutSignals.length > 0 && (
-        <Card className="agent-crossed-paths mt-7 p-5 sm:p-6">
-          <div>
+        <details className="agent-crossed-paths mt-7 rounded-3xl border border-[var(--border)] bg-[var(--bg-raised)] p-5 sm:p-6">
+          <summary className="cursor-pointer">
             <div className="docket-label text-[var(--accent-text)]">
               {t("Why their paths crossed")}
             </div>
             <p>
               {t("Explainable signals only. No secret compatibility score.")}
             </p>
-          </div>
+          </summary>
           <ul>
             {date.scoutSignals.map((signal) => (
               <li key={signal}>{localizeScoutSignal(signal, t)}</li>
             ))}
           </ul>
-        </Card>
+        </details>
       )}
 
       <section className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <Card className="overflow-hidden">
-          <div className="flex items-center justify-between border-b border-[var(--border)] px-5 py-4 sm:px-7">
-            <div>
-              <div className="docket-label text-muted">
-                {t("The virtual date")}
-              </div>
-              <div className="mt-1 text-[13px] font-bold">
-                {t("live transcript · {count}/6 turns", {
-                  count: turns.length,
-                })}
-              </div>
-            </div>
-            {inProgress && (
-              <Tag tone="ember">
-                {date.paceMode === "demo" ? t("demo time") : t("live")} ·{" "}
-                {activity}
-              </Tag>
-            )}
-          </div>
-          <div className="agent-transcript min-h-[28rem] space-y-5 p-5 sm:p-7">
-            {turns.length === 0 && (
-              <div className="flex min-h-[20rem] flex-col items-center justify-center text-center">
-                <AgentAvatar
-                  name={mine.agentName}
-                  avatar={mine.avatar}
-                  className="agent-avatar-waiting"
-                />
-                <p className="mt-5 text-[15px] font-bold">
-                  {t("The world is opening.")}
-                </p>
-                <p className="mt-2 max-w-sm text-[13px] leading-relaxed text-muted">
-                  {t(
-                    "A live cultural spark is becoming a place where two AI Agents can talk.",
-                  )}
-                </p>
-              </div>
-            )}
-            {displayTurns.map((turn) => {
-              const ownSide = turn.isMine;
-              const speakerName = ownSide
-                ? mine.agentName
-                : counterpart.agentName;
-              return (
-                <article
-                  key={turn._id}
-                  className={cx(
-                    "agent-turn max-w-[90%]",
-                    !ownSide && "ml-auto",
-                  )}
-                >
-                  <div
-                    className={cx(
-                      "mb-2 flex items-center gap-2",
-                      !ownSide && "justify-end",
-                    )}
-                  >
-                    {ownSide && (
-                      <AgentAvatar
-                        name={mine.agentName}
-                        avatar={mine.avatar}
-                        className="agent-avatar-turn"
-                      />
-                    )}
-                    <span className="docket-label text-[var(--accent-text)]">
-                      0{turn.round}
-                    </span>
-                    <b className="text-[12px]">{speakerName}</b>
-                    {!ownSide && (
-                      <AgentAvatar
-                        name={counterpart.agentName}
-                        avatar={counterpart.avatar}
-                        className="agent-avatar-turn"
-                      />
-                    )}
-                  </div>
-                  <p
-                    className={cx(
-                      "rounded-[1.5rem] border px-5 py-4 text-[15px] leading-[1.72]",
-                      ownSide
-                        ? "rounded-bl-md border-[var(--border)] bg-[var(--bg-raised)]"
-                        : "rounded-br-md border-[var(--tint-ember-border)] bg-[var(--tint-ember-bg)]",
-                    )}
-                  >
-                    {turn.content}
-                  </p>
-                </article>
-              );
-            })}
-            {inProgress && turns.length > 0 && (
-              <div className="flex items-center gap-2 pt-2 text-[12px] text-muted">
-                <Spinner className="h-3.5 w-3.5" />
-                {turns.length >= 6
-                  ? t("the agents are comparing private notes…")
-                  : `${activity}${wait ? ` · ${wait}` : ""}`}
-              </div>
-            )}
-          </div>
-        </Card>
+        <div className="space-y-5">
+          {inProgress ? <DateTranscript turns={displayTurns} mine={{ name: mine.agentName, avatar: mine.avatar }} counterpart={{ name: counterpart.agentName, avatar: counterpart.avatar }} />
+            : <CoachedDateTranscript agentDateId={date._id as Id<"agentDates">} turns={displayTurns} mine={{ name: mine.agentName, avatar: mine.avatar }} counterpart={{ name: counterpart.agentName, avatar: counterpart.avatar }} />}
+          {inProgress && <p className="flex items-center gap-2 text-sm"><Spinner className="h-3.5 w-3.5" />{liveActivity}</p>}
+
+        </div>
 
         <div className="space-y-5">
           <Card className="p-6 sm:p-7">
@@ -504,26 +417,18 @@ export default function AgentDatePage() {
                       {t(verdict.title)}
                     </h2>
                   </div>
-                  <div
-                    className="agent-score"
-                    aria-label={t("{count} observed moments", {
-                      count: turns.length,
-                    })}
-                  >
-                    <strong>{turns.length}</strong>
-                    <span>{t("moments")}</span>
-                  </div>
+                  <AgentAvatar name={mine.agentName} avatar={mine.avatar} className="agent-avatar-pair" />
                 </div>
-                <p className="mt-5 text-[15px] leading-[1.72] text-soft">
-                  “{mine.reason}”
-                </p>
+                <p className="agent-return-letter mt-5 text-[17px] leading-[1.8] text-soft">{mine.reason}</p>
+                <p className="mt-3 font-[var(--font-display)] italic text-[var(--accent-text)]">— {mine.agentName}</p>
+                {mine.reflection?.question && <p className="mt-5 border-t border-[var(--border)] pt-5 text-[18px] leading-relaxed">{mine.reflection.question}</p>}
                 {mine.decisionCode && (
-                  <div className="mt-5 rounded-2xl border border-[var(--border)] bg-[var(--bg-sunken)] p-4">
-                    <div className="docket-label text-[var(--accent-text)]">
+                  <details className="mt-5 rounded-2xl border border-[var(--border)] bg-[var(--bg-sunken)] p-4">
+                    <summary className="docket-label cursor-pointer text-[var(--accent-text)]">
                       {mine.verdict === "pass"
                         ? t("Why I passed")
                         : t("Primary signal")}
-                    </div>
+                    </summary>
                     <p className="mt-2 text-[14px] font-bold">
                       {t(DECISION_REASON_COPY[mine.decisionCode])}
                     </p>
@@ -537,7 +442,7 @@ export default function AgentDatePage() {
                         </p>
                       </div>
                     )}
-                  </div>
+                  </details>
                 )}
                 <p className="mt-4 border-t border-[var(--border)] pt-4 text-[11px] leading-relaxed text-muted">
                   {t(
@@ -585,11 +490,9 @@ export default function AgentDatePage() {
             )}
           </Card>
 
-          {!inProgress && (
-            <Card className="p-6 sm:p-7">
-              <div className="docket-label text-muted">
-                {t("What the agents noticed")}
-              </div>
+          {!inProgress && !date.activityJournal && Boolean(date.summary || date.sparks.length || date.frictions.length) && (
+            <details className="rounded-3xl border border-[var(--border)] p-6 sm:p-7">
+              <summary className="cursor-pointer text-[12px] font-bold text-muted">{t("What the agents noticed")}</summary>
               <p className="mt-3 text-[14px] leading-[1.7] text-soft">
                 {date.summary}
               </p>
@@ -603,12 +506,12 @@ export default function AgentDatePage() {
                 values={date.frictions}
                 tone="warn"
               />
-            </Card>
+            </details>
           )}
         </div>
       </section>
 
-      {!inProgress && date.status !== "failed" && (
+      {!inProgress && date.status !== "failed" && date.introductionReady && (
         <section className="agent-human-gate mt-7 overflow-hidden rounded-[2rem] border border-[var(--border-strong)] bg-[var(--bg-raised)]">
           <div className="grid lg:grid-cols-[0.82fr_1.18fr]">
             <div className="border-b border-[var(--border)] p-6 sm:p-8 lg:border-b-0 lg:border-r">
@@ -745,13 +648,33 @@ export default function AgentDatePage() {
         </section>
       )}
 
+      {!inProgress && date.isSearchEncounter && !date.introductionReady && date.status !== "failed" && (
+        <Card className="mt-7 p-7">
+          <div className="docket-label text-[var(--accent-text)]">{t("The search continues")}</div>
+          <h2 className="mt-3 text-[28px]">{t("A conversation, not a match.")}</h2>
+          <p className="mt-3 text-[14px] text-soft">{t("This encounter stays in your Agent's memory. It will keep looking; there is no introduction to approve here.")}</p>
+          <LinkButton to="/dashboard" variant="secondary" className="mt-5">{t("Check the search")}</LinkButton>
+        </Card>
+      )}
+      {date.reviewRecoveredAt && (
+        <Card className="mt-7 p-7">
+          <div className="docket-label">{t("Review recovered from the saved conversation")}</div>
+          <h2 className="mt-3 text-[28px]">{mine.reflection?.headline ?? t("Your Agent's private note")}</h2>
+          <p className="mt-4 whitespace-pre-line text-soft">{mine.reason}</p>
+          <p className="mt-5 text-[13px] text-muted">{t("Only the review was updated. Your conversation, feedback and meeting decisions stay as they were.")}</p>
+          {date.canRetryReview && <Button className="mt-5" variant="secondary" disabled={retryBusy} onClick={recheckReview}>{t("Recheck this date's review")}</Button>}
+          {error && <p role="alert" className="mt-4 text-[var(--accent-text)]">{error}</p>}
+        </Card>
+      )}
       {date.status === "failed" && (
         <Card className="mt-7 p-7">
-          <h2 className="text-[28px]">{t("This world went quiet.")}</h2>
+          <h2 className="text-[28px]">{t(date.reviewRetrying ? "Checking the saved conversation again" : "This world went quiet.")}</h2>
           <p className="mt-2 text-soft">
-            {date.failureReason ??
+            {date.reviewRetrying ? t("Your Agent is rewriting and checking its private note. The original conversation stays unchanged.") : date.failureReason ??
               t("Your agent couldn't finish this date. No contact was shared.")}
           </p>
+          {date.canRetryReview && <Button className="mt-5" variant="secondary" disabled={retryBusy} onClick={recheckReview}>{t("Recheck this date's review")}</Button>}
+          {error && <p role="alert" className="mt-4 text-[var(--accent-text)]">{error}</p>}
         </Card>
       )}
 

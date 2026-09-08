@@ -66,7 +66,7 @@ test.skip(
 
 test.use({ timezoneId: "America/New_York" });
 
-test("account to private agent debrief and human consent", async ({ page }) => {
+test("account to private agent debrief and human consent", async ({ page }, testInfo) => {
   test.setTimeout(240_000);
   await page.addInitScript(() => {
     window.localStorage.setItem("datehaja-locale", "en-US");
@@ -181,6 +181,7 @@ test("account to private agent debrief and human consent", async ({ page }) => {
   await page.getByRole("button", { name: /Send my Agent scouting/i }).click();
 
   await expect(page).toHaveURL(/\/dashboard/, { timeout: 20_000 });
+  await expect(page.getByRole("button", { name: "Pause search", exact: true })).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Juno", exact: true }),
   ).toBeVisible();
@@ -191,6 +192,16 @@ test("account to private agent debrief and human consent", async ({ page }) => {
   await expect(
     page.getByRole("img", { name: "Juno, your dating agent" }),
   ).toBeVisible();
+
+  // Browser verification should not fill a real mailbox with demo letters.
+  if (process.env.DATEHAJA_E2E_SEND_EMAIL !== "1") {
+    await page.goto("/settings");
+    const mailSwitch = page.getByRole("switch", { name: /Email me at all/i });
+    await expect(mailSwitch).toHaveAttribute("aria-checked", "true");
+    await mailSwitch.click();
+    await expect(mailSwitch).toHaveAttribute("aria-checked", "false");
+    await page.goto("/dashboard");
+  }
 
   await page
     .getByLabel("Message Juno")
@@ -206,14 +217,14 @@ test("account to private agent debrief and human consent", async ({ page }) => {
       .last(),
   ).toBeVisible({ timeout: 60_000 });
 
-  await page.getByRole("button", { name: /Send Juno scouting/i }).click();
+  await page.getByRole("button", { name: /Try a clearly labelled demo encounter/i }).click();
   await expect(page).toHaveURL(/\/agent-date\//, { timeout: 20_000 });
   await expect(
     page.getByText(/explicitly AI.*private simulation/i),
   ).toBeVisible();
-  await expect(page.getByText(/live transcript.*6\/6 turns/i)).toBeVisible({
-    timeout: 180_000,
-  });
+  await expect(
+    page.locator(".date-record-transcript header span"),
+  ).toHaveText(/^(?:[2-9]|[1-9]\d+) saved lines$/, { timeout: 180_000 });
   await expect(
     page.getByRole("button", { name: /replay the date/i }),
   ).toBeVisible();
@@ -233,9 +244,29 @@ test("account to private agent debrief and human consent", async ({ page }) => {
   );
   await expect(page.getByText(/not a compatibility score/i)).toBeVisible();
 
+  const letterScreenshot = testInfo.outputPath("private-letter.png");
+  await page.screenshot({ path: letterScreenshot, fullPage: true });
+  await testInfo.attach("private-letter", { path: letterScreenshot, contentType: "image/png" });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  const mobileScreenshot = testInfo.outputPath("private-letter-mobile.png");
+  await page.screenshot({ path: mobileScreenshot, fullPage: true });
+  await testInfo.attach("private-letter-mobile", { path: mobileScreenshot, contentType: "image/png" });
+  await testInfo.attach("date-url", { body: page.url(), contentType: "text/plain" });
+
   await page.getByRole("button", { name: /Introduce us/i }).click();
   await expect(page.getByText(/Two humans said yes/i)).toBeVisible({
     timeout: 20_000,
   });
   await expect(page.getByText(/no real contact exists/i)).toBeVisible();
+  await page.goto("/dashboard");
+  await expect(page.getByText("Still looking. No match to rush.")).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByText("Conversations completed: 0")).toBeVisible();
+  await expect(page.getByRole("group", { name: "Your Agent's world" })).toBeVisible();
+  await expect(page.getByText(/Last checked/)).toBeVisible();
+  const searchScreenshot = testInfo.outputPath("search-waiting-mobile.png");
+  await page.screenshot({ path: searchScreenshot, fullPage: true });
+  await testInfo.attach("search-waiting-mobile", { path: searchScreenshot, contentType: "image/png" });
+  await page.getByRole("button", { name: "Pause search", exact: true }).click();
+  await expect(page.getByText("Your search is paused.")).toBeVisible();
 });

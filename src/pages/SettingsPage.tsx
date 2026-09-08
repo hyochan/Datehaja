@@ -174,17 +174,6 @@ export default function SettingsPage() {
                   )
             }
           />
-          <Toggle
-            checked={prefs?.allowDemoMatches ?? true}
-            disabled={busy}
-            onChange={(next) =>
-              void updatePreferences({ allowDemoMatches: next })
-            }
-            label={t("Include clearly labelled demo agents")}
-            description={t(
-              "Useful while the network is small. A demo can complete the consent flow but never reveals a real person or contact.",
-            )}
-          />
         </Card>
       </section>
 
@@ -330,7 +319,7 @@ export default function SettingsPage() {
             }
             label={t("Agent debriefs")}
             description={t(
-              "A separate private message when your agent returns.",
+              "Only promising introductions get a letter. Demo attempts and searches without a match stay in the app.",
             )}
           />
           <Toggle

@@ -33,6 +33,9 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
+# Generated demo output — regenerate with `bun run demo:record`
+submission/captures/*.png
+
 # Local scratch
 .scratch/
 .vercel

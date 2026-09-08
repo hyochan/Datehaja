@@ -1,0 +1,177 @@
+{
+  "setting": "빗소리가 들리는 창가 자리",
+  "sceneKind": "cafe",
+  "situation": "빗소리가 들리는 가상 카페. 함께 음악 한 곡을 고르는 상황에서 시작한 별도의 대화 실험이에요.",
+  "mine": {
+    "name": "리오",
+    "avatar": {
+      "accessory": "none",
+      "face": "curious",
+      "gender": "male",
+      "hair": "wave",
+      "outfit": "cardigan",
+      "palette": "moss"
+    }
+  },
+  "counterpart": {
+    "name": "나루",
+    "avatar": {
+      "accessory": "none",
+      "face": "curious",
+      "gender": "female",
+      "hair": "wave",
+      "outfit": "cardigan",
+      "palette": "violet"
+    }
+  },
+  "turns": [
+    {
+      "_id": "coaching-preview-1",
+      "round": 1,
+      "isMine": false,
+      "speakerAgentName": "나루",
+      "content": "나루예요. 빗소리가 꽤 커서, 다음 곡은 잔잔한 분위기로 한 칸 채워볼까요?"
+    },
+    {
+      "_id": "coaching-preview-2",
+      "round": 2,
+      "isMine": true,
+      "speakerAgentName": "리오",
+      "content": "너무 잔잔하면 빗소리에 질 것 같아요. 박자는 조금 있는 곡으로 골라봐요."
+    },
+    {
+      "_id": "coaching-preview-3",
+      "round": 3,
+      "isMine": false,
+      "speakerAgentName": "나루",
+      "content": "맞아요, 졸러 온 건 아니니까요. 박자는 있되 시끄럽진 않은 쪽으로 넣을게요."
+    },
+    {
+      "_id": "coaching-preview-4",
+      "round": 4,
+      "isMine": true,
+      "speakerAgentName": "리오",
+      "content": "제목은 보지 말고 첫 10초만 들어봐요. 분위기 맞혔는지는 그다음에 판정하죠."
+    },
+    {
+      "_id": "coaching-preview-5",
+      "round": 5,
+      "isMine": false,
+      "speakerAgentName": "나루",
+      "content": "재생 눌렀어요. 딱 10초 듣고, 둘 중 한 명이라도 고개 끄덕이면 합격으로 하죠."
+    },
+    {
+      "_id": "coaching-preview-6",
+      "round": 6,
+      "isMine": true,
+      "speakerAgentName": "리오",
+      "content": "저는 벌써 끄덕였어요. 이 정도면 10초 채우기도 전에 합격이네요."
+    },
+    {
+      "_id": "coaching-preview-7",
+      "round": 7,
+      "isMine": false,
+      "speakerAgentName": "나루",
+      "content": "저도 베이스 들어오는 순간 끄덕였어요. 제목 공개해도 되겠네요."
+    },
+    {
+      "_id": "coaching-preview-8",
+      "round": 8,
+      "isMine": true,
+      "speakerAgentName": "리오",
+      "content": "제목 열어보세요. 분위기랑 전혀 안 맞으면 그건 그것대로 웃기겠네요."
+    },
+    {
+      "_id": "coaching-preview-9",
+      "round": 9,
+      "isMine": false,
+      "speakerAgentName": "나루",
+      "content": "제목 열었어요. 하필 ‘햇빛’이 들어가네요. 빗소리 앞에서 제법 뻔뻔한 선곡인데요."
+    },
+    {
+      "_id": "coaching-preview-10",
+      "round": 10,
+      "isMine": true,
+      "speakerAgentName": "리오",
+      "content": "오늘만큼은 제목이 곡한테 졌네요. 그래도 베이스가 살렸으니 큐에는 남겨두죠."
+    },
+    {
+      "_id": "coaching-preview-11",
+      "round": 11,
+      "isMine": false,
+      "speakerAgentName": "나루",
+      "content": "큐에 그대로 뒀어요. 후렴 들어올 때 커피 한 모금씩 마시죠, 제목의 뻔뻔함은 잠깐 잊고요."
+    },
+    {
+      "_id": "coaching-preview-12",
+      "round": 12,
+      "isMine": true,
+      "speakerAgentName": "리오",
+      "content": "후렴 왔네요, 저는 지금 마실게요. 선곡에 타이밍까지 붙으니 생각보다 제법 잘 놀고 있네요."
+    }
+  ],
+  "journal": {
+    "overview": "나루와 리오는 빗소리를 들으며 박자는 있지만 시끄럽지 않은 곡을 재생해 둘 다 고개를 끄덕였고, ‘햇빛’이 들어간 제목을 확인한 뒤 곡을 큐에 남겼습니다. 후렴에 커피를 마시자는 제안에 리오는 지금 마시겠다고 답하며 생각보다 잘 놀고 있다고 말했지만, 실제로 커피를 마셨는지는 확인되지 않았습니다.",
+    "events": [
+      {
+        "kind": "conversation",
+        "title": "선곡 분위기 정하기",
+        "detail": "나루가 자신을 소개하고 잔잔한 곡을 제안하자, 리오는 박자가 조금 있는 곡을 골라보자고 했습니다. 나루는 박자가 있으면서 시끄럽지 않은 곡을 넣겠다고 답했습니다.",
+        "sceneKind": "cafe",
+        "rounds": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "kind": "activity",
+        "title": "제목 없이 곡 듣기",
+        "detail": "리오의 제안에 따라 나루가 제목을 보지 않고 곡을 재생했습니다. 리오는 10초가 되기 전에, 나루는 베이스가 들어오는 순간 고개를 끄덕였습니다.",
+        "sceneKind": "cafe",
+        "rounds": [
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "kind": "activity",
+        "title": "곡 제목 확인과 큐 유지",
+        "detail": "나루가 제목을 열어 ‘햇빛’이 들어간 것을 확인했고, 두 사람은 빗소리와 대비되는 제목을 이야기했습니다. 리오는 베이스가 곡을 살렸다며 큐에 남기자고 했고, 나루가 그대로 두었습니다.",
+        "sceneKind": "cafe",
+        "rounds": [
+          8,
+          9,
+          10,
+          11
+        ]
+      },
+      {
+        "kind": "proposal",
+        "title": "후렴에 커피 마시기",
+        "detail": "나루는 후렴이 나오면 커피를 한 모금씩 마시자고 제안했습니다. 리오는 후렴이 왔다며 지금 마시겠다고 답하고 선곡에 타이밍까지 더해 잘 놀고 있다고 말했지만, 실제로 마셨다는 완료 발언은 없었습니다.",
+        "sceneKind": "cafe",
+        "rounds": [
+          11,
+          12
+        ]
+      }
+    ]
+  },
+  "corrections": [
+    {
+      "title": "나답지 않은 말 고치기",
+      "content": "처음 만난 사람에게는 존댓말로 짧게 말해. 한두 문장이면 충분하고 매번 질문으로 끝내지 마."
+    },
+    {
+      "title": "원하는 느낌을 더 구체적으로",
+      "content": "너무 딱딱해지진 마. 존댓말과 짧은 답은 유지하되 장난이 오면 가볍게 받아줘. 같은 농담을 계속 늘리지는 말고."
+    },
+    {
+      "title": "상대에 대한 내 생각도",
+      "content": "장난을 받아준 건 좋았어. 짧은 대답을 관심 없다는 뜻으로 단정하지 않았으면 해. 가볍게 알아가고 싶은 건 그대로야."
+    }
+  ]
+}
