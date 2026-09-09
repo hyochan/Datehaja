@@ -11,6 +11,10 @@ import {
 } from "@convex/lib/catalog";
 import {
   SUPPORTED_LOCALES,
+  agentWorkspaceCopy,
+  avatarStudioCopy,
+  dateLetterCopy,
+  settingsCopy,
   chooseLocale,
   missingCoreTranslations,
   translate,
@@ -200,6 +204,31 @@ describe("internationalisation", () => {
   // The scan above only sees literal t("…") calls, so keys the app builds at
   // runtime stay invisible to it. The avatar editor asks for `${option} palette`,
   // which is how four of the six were nearly dropped as unused copy.
+  // The seven shared tables are merged last-wins, so a key defined twice
+  // silently takes the other table's copy with no diff on the table that owns
+  // it. That is how four chips changed language mid-row.
+  it("defines every shared key in exactly one table", () => {
+    const tables = {
+      agentWorkspaceCopy,
+      settingsCopy,
+      avatarStudioCopy,
+      dateLetterCopy,
+      scoutingCopy,
+      coachingCopy,
+      productCopy,
+    };
+    const owners = new Map<string, string[]>();
+    for (const [name, table] of Object.entries(tables)) {
+      for (const key of Object.keys(table)) {
+        owners.set(key, [...(owners.get(key) ?? []), name]);
+      }
+    }
+    const shadowed = [...owners]
+      .filter(([, names]) => names.length > 1)
+      .map(([key, names]) => `${key} defined in ${names.join(" and ")}`);
+    expect(shadowed).toEqual([]);
+  });
+
   it("translates every key the app builds at runtime", () => {
     const asked = AVATAR_PALETTES.map((palette) => `${palette} palette`);
     // some(), not every(): one locale missing the row is the failure to catch,

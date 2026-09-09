@@ -26,7 +26,7 @@ test("staged Korean agent date reads naturally from dashboard to debrief", async
   await expect(
     page.getByRole("heading", { name: "Sol", exact: true }),
   ).toBeVisible();
-  await expect(page.getByText("나만의 데이팅 에이전트")).toBeVisible();
+  await expect(page.getByText("나만의 데이트 에이전트")).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Sol의 데이트 리포트가 도착했어요." }),
   ).toBeVisible();

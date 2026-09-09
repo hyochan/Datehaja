@@ -114,18 +114,18 @@ const fr: LoopCopy = {
 
 const nl: LoopCopy = {
   title: "Eén keer gemaakt,", titleAccent: "en met elk gesprek meer jou.",
-  intro: "Je dating-Agent zoekt mensen, gaat op virtuele dates en komt terug met een verhaal. Vertel wat goed voelde, wat niet, en wat hij de volgende keer moet proberen.",
+  intro: "Je datingagent zoekt mensen, gaat op virtuele dates en komt terug met een verhaal. Vertel wat goed voelde, wat niet, en wat hij de volgende keer moet proberen.",
   steps: [
-    { title: "Mijn dating-Agent maken", body: "Vertel hoe je praat en wie je zou willen ontmoeten. Stuur hem er dan op uit." },
-    { title: "Hem op date laten gaan", body: "Hij zoekt iemand die past en leert die persoon kennen via hun dating-Agent." },
-    { title: "Horen hoe het ging", body: "Zie wat ze deden en zeiden, en hoor het eerlijke oordeel van je dating-Agent." },
+    { title: "Mijn datingagent maken", body: "Vertel hoe je praat en wie je zou willen ontmoeten. Stuur hem er dan op uit." },
+    { title: "Hem op date laten gaan", body: "Hij zoekt iemand die past en leert die persoon kennen via hun datingagent." },
+    { title: "Horen hoe het ging", body: "Zie wat ze deden en zeiden, en hoor het eerlijke oordeel van je datingagent." },
     { title: "Zeggen wat jij ervan vindt", body: "Stuur zijn stem bij, benoem wat je goed vond, of vraag om iemand anders." },
   ],
-  loop: "Wat je hem vertelt gaat mee naar de volgende date. Blijf praten, en blijf je dating-Agent vormen.",
+  loop: "Wat je hem vertelt gaat mee naar de volgende date. Blijf praten, en blijf je datingagent vormen.",
   exampleLabel: "Een beetje feedback doet veel", exampleTitle: "“Dit lijkt al meer op mij.”", chooseExample: "Een voorbeeld van feedback bekijken",
   youSay: "Jij zegt", yourAgent: "Jouw AI-Agent", carriesForward: "Wat hij meeneemt naar de volgende date", exampleNote: "Voorbeelden van hoe feedback kan doorwerken. Wijzigingen in zoekinstellingen bevestigen we met jou.",
   waiting: "Heeft hij nog niemand gevonden, dan blijft hij zoeken. Kom langs wanneer je wilt.", consent: "Elkaar echt ontmoeten is altijd de keuze van allebei.",
-  talk: "Met mijn dating-Agent praten", create: "Mijn dating-Agent maken", technical: "Benieuwd wat er achter de schermen gebeurt?", proof: "Echte voor-en-na-verslagen bekijken · Koreaanse demo",
+  talk: "Met mijn datingagent praten", create: "Mijn datingagent maken", technical: "Benieuwd wat er achter de schermen gebeurt?", proof: "Echte voor-en-na-verslagen bekijken · Koreaanse demo",
   examples: [
     { label: "Klink meer als ik", feedback: "Zo’n heel verhaal zou ik niet houden. Hou het korter en eindig niet elke reactie met een vraag.", memory: "Korte, natuurlijke reacties. Laat ruimte voor de ander.", nextLabel: "Zo zou het de volgende keer kunnen", next: "“Ik ook. Ik neem liever de tijd.”" },
     { label: "Verander waar ik naar zoek", feedback: "Ik hou van iemand die ook nieuwsgierig naar mij is. Zoek iemand die terugvraagt.", memory: "Let op wederzijdse nieuwsgierigheid, niet alleen op een makkelijk gesprek.", nextLabel: "Waar je bij de volgende ontmoeting op let", next: "Pakt de ander een antwoord op en wil meer weten? Gaat de nieuwsgierigheid beide kanten op?" },

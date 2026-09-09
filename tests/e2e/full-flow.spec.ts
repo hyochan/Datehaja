@@ -111,9 +111,9 @@ test("account to private agent debrief and human consent", async ({ page }, test
 
   await expect(page).toHaveURL(/\/onboarding/);
   await expect(
-    page.getByRole("heading", { name: /Meet your Agent/i }),
+    page.getByRole("heading", { name: /Meet your Dating Agent/i }),
   ).toBeVisible();
-  await page.getByLabel("Name your Agent").fill("Juno");
+  await page.getByLabel("Name your Dating Agent").fill("Juno");
   const skyPalette = page.getByRole("button", { name: "sky palette" });
   await skyPalette.click();
   await expect(skyPalette).toHaveAttribute("aria-pressed", "true");
@@ -171,7 +171,7 @@ test("account to private agent debrief and human consent", async ({ page }, test
     .fill(
       "I look outgoing at first, but I need quiet after crowded rooms. I value curious people who do not perform confidence.",
     );
-  await expect(page.getByText("Ready to create your Agent")).toBeVisible();
+  await expect(page.getByText("Ready to create your Dating Agent")).toBeVisible();
   await expect(finishOnboarding).toBeEnabled();
   await finishOnboarding.click();
 
@@ -262,7 +262,7 @@ test("account to private agent debrief and human consent", async ({ page }, test
   await page.goto("/dashboard");
   await expect(page.getByText("Still looking. No match to rush.")).toBeVisible({ timeout: 20_000 });
   await expect(page.getByText("Conversations completed: 0")).toBeVisible();
-  await expect(page.getByRole("group", { name: "Your Agent's world" })).toBeVisible();
+  await expect(page.getByRole("group", { name: "Your Dating Agent's world" })).toBeVisible();
   await expect(page.getByText(/Last checked/)).toBeVisible();
   const searchScreenshot = testInfo.outputPath("search-waiting-mobile.png");
   await page.screenshot({ path: searchScreenshot, fullPage: true });

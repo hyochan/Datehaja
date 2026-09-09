@@ -904,10 +904,17 @@ export default function AgentDashboardPage() {
         <div>
           {/* Always mounted, so the card being inserted is announced rather
               than appearing silently after the answer is sent. */}
-          <div role="status" ref={ackRef} tabIndex={-1} className="outline-none">
+          <div role="status">
             {!openQuestion && justAnswered && (
               <Card className="agent-question-sent mb-5 p-5">
-                <div className="flex items-start gap-3">
+                {/* Focus target sits inside the live region, not on it:
+                    focusing the region itself makes a screen reader read the
+                    focused element instead of the pending announcement. */}
+                <div
+                  ref={ackRef}
+                  tabIndex={-1}
+                  className="flex items-start gap-3 outline-none"
+                >
                   <span className="agent-question-sent-mark" aria-hidden="true">
                     ✓
                   </span>

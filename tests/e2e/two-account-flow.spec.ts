@@ -102,7 +102,7 @@ async function createAccountAndAgent(page: Page, persona: Persona) {
   await page
     .getByRole("button", { name: `${persona.palette} palette` })
     .click();
-  await page.getByLabel("Name your Agent").fill(persona.agentName);
+  await page.getByLabel("Name your Dating Agent").fill(persona.agentName);
   await page
     .getByRole("button", {
       name: new RegExp(`Tell ${persona.agentName} who to find`, "i"),
