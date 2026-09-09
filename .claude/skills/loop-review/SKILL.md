@@ -1,6 +1,6 @@
 ---
 name: loop-review
-description: Run Datehaja's full change-to-merge loop from a fresh main — semantic branch, implement and verify, review-self until stable, commit and open a PR with its Vercel preview, poll review and checks every five minutes, fix findings, and merge only when the exact head is clean. Deploying stays a separate, user-approved step. Use when the user invokes /loop-review or asks for the recurring self-review, PR, review-until-clean, then merge workflow.
+description: Run Datehaja's full change-to-merge loop from a fresh main — semantic branch, implement and verify, review-self until stable, commit and open a PR with its Vercel preview, poll review and checks every five minutes, fix findings, and merge only when the exact head is clean. Merging is what deploys, so the merge gate is the deploy gate. Use when the user invokes /loop-review or asks for the recurring self-review, PR, review-until-clean, then merge workflow.
 ---
 
 # Loop review

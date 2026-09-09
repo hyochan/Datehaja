@@ -129,4 +129,4 @@ attempts, stop scheduling and hand back with a summary of what is disputed.
 ## Stop at clean
 
 This command ends when the PR is clean. Merging belongs to `loop-review`, and
-deploying belongs to the user.
+merging is what deploys — there is no separate deploy step to hand over.
