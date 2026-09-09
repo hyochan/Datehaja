@@ -196,8 +196,11 @@ describe("internationalisation", () => {
   // which is how four of these were nearly dropped as unused copy.
   it("translates every key the app builds at runtime", () => {
     const asked = AVATAR_PALETTES.map((palette) => `${palette} palette`);
-    const untranslated = asked.filter((message) =>
-      TRANSLATED_LOCALES.every((locale) => translate(locale, message) === message),
+    // some(), not every(): one locale missing the row is the failure to catch,
+    // and these six keys have no proper-noun rendering that equals the source.
+    const untranslated = asked.flatMap((message) =>
+      TRANSLATED_LOCALES.filter((locale) => translate(locale, message) === message)
+        .map((locale) => `${locale}: ${message}`),
     );
     expect(untranslated).toEqual([]);
   });
