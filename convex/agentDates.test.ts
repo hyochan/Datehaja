@@ -1107,6 +1107,22 @@ describe("a durable search, with no manufactured matches", () => {
     }
   });
 
+  test("resuming a paused search also releases a dead encounter for the counterpart", async () => {
+    const t = convexTest(schema, modules); const s = await paired(t);
+    await t.run(ctx => ctx.db.patch("agentDates", s.dateId, { status: "running", nextTurnAt: NOW, updatedAt: NOW }));
+    const bobSession = (await readSearch(t, s.bob))!;
+    await t.run(ctx => ctx.db.patch("agentSearches", bobSession._id, { status: "paused" }));
+
+    vi.mocked(Date.now).mockReturnValue(NOW + 16 * 60_000);
+    await t.mutation(internal.scouting.begin, { userId: s.bob, accessMode: "demo" });
+
+    // Freeing only the owner who pressed start would leave the row running and
+    // the counterpart waiting on a date nobody will finish.
+    expect((await t.run(ctx => ctx.db.get("agentDates", s.dateId)))?.status).toBe("failed");
+    expect((await readSearch(t, s.carol))?.status).toBe("searching");
+    expect((await readSearch(t, s.bob))?.status).toBe("searching");
+  });
+
   test("a reply that never lands stops blocking the search once it goes stale", async () => {
     const t = convexTest(schema, modules); const s = await setup(t);
     await begin(t, s.bob); await begin(t, s.carol);

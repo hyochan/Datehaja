@@ -662,6 +662,9 @@ export default function AgentDatePage() {
           <h2 className="mt-3 text-[28px]">{mine.reflection?.headline ?? t("Your Agent's private note")}</h2>
           <p className="mt-4 whitespace-pre-line text-soft">{mine.reason}</p>
           <p className="mt-5 text-[13px] text-muted">{t("Only the review was updated. Your conversation, feedback and meeting decisions stay as they were.")}</p>
+          {/* A re-check no longer rewrites the shared status, so this record keeps
+              its own state and needs to say the check is running on its own. */}
+          {date.reviewRetrying && <p className="mt-5 text-[14px] text-soft">{t("Your Agent is rewriting and checking its private note. The original conversation stays unchanged.")}</p>}
           {date.canRetryReview && <Button className="mt-5" variant="secondary" disabled={retryBusy} onClick={recheckReview}>{t("Recheck this date's review")}</Button>}
           {error && <p role="alert" className="mt-4 text-[var(--accent-text)]">{error}</p>}
         </Card>

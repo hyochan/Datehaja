@@ -412,3 +412,24 @@ test('a stale positive verdict cannot introduce people whose goals changed durin
   expect(await t.run(ctx => ctx.db.query('notifications').collect())).toHaveLength(0);
   expect(await t.run(ctx => ctx.db.query('emailMessages').collect())).toHaveLength(0);
 });
+
+test('a failed reply never lowers the fence a newer message raised', async () => {
+  const t = createBackend();
+  const userId = await person(t, 'Mina');
+  const agent = (await t.run(ctx => ctx.db.query('agentProfiles').withIndex('by_user', q => q.eq('userId', userId)).unique()))!;
+  const [first, second] = await t.run(async ctx => [
+    await ctx.db.insert('agentMessages', { userId, role: 'human', content: 'Speak more like me.', createdAt: 1 }),
+    await ctx.db.insert('agentMessages', { userId, role: 'human', content: 'Actually, keep it shorter.', createdAt: 2 }),
+  ]);
+
+  // The second message is the one being learned when the first attempt dies.
+  await t.run(ctx => ctx.db.patch('agentProfiles', agent._id, { pendingReplyTo: second, pendingReplyAt: 2 }));
+  await t.mutation(internal.agents.releaseFeedbackFence, { userId, sourceMessageId: first });
+  expect((await t.run(ctx => ctx.db.get('agentProfiles', agent._id)))?.pendingReplyTo).toBe(second);
+
+  // Its own failure does lower it.
+  await t.mutation(internal.agents.releaseFeedbackFence, { userId, sourceMessageId: second });
+  const cleared = await t.run(ctx => ctx.db.get('agentProfiles', agent._id));
+  expect(cleared?.pendingReplyTo).toBeUndefined();
+  expect(cleared?.pendingReplyAt).toBeUndefined();
+});

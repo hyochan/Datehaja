@@ -82,6 +82,13 @@ export const begin = internalMutation({
     }
     if (session?.currentDateId && session.status === "paused") {
       const current = await ctx.db.get("agentDates", session.currentDateId);
+      // Resuming past a dead encounter would free this owner but leave the row
+      // running and the counterpart waiting on a date nobody will finish.
+      if (current && isAbandonedEncounter(current, Date.now())) {
+        await releaseAbandonedEncounter(ctx, current);
+        // The row cannot disappear inside this transaction; only its fields move.
+        session = (await byUser(ctx, args.userId))!;
+      }
       const resumeStatus = current && ["queued", "running"].includes(current.status) && !isAbandonedEncounter(current, Date.now()) ? "talking" : current?.status === "debrief_ready" && current.initiatorVerdict === "encourage" && current.counterpartVerdict === "encourage" ? "match_ready" : null;
       if (resumeStatus) {
         await ctx.db.patch("agentSearches", session._id, { status: resumeStatus, revision: session.revision + 1, nextCheckAt: undefined, updatedAt: Date.now() });

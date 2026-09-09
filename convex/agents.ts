@@ -1288,6 +1288,7 @@ export const reply = internalAction({
     // Convex does not retry a failed scheduled action, and nothing else lowers
     // the fence, so a throw here would block this owner's encounters until the
     // staleness window passes. Release it as soon as we know we failed.
+    let fencedMessageId: Id<"agentMessages"> | undefined;
     try {
       const context = (await ctx.runQuery(
         internal.agents.replyContext,
@@ -1311,6 +1312,7 @@ export const reply = internalAction({
         .reverse()
         .find((message) => message.role === "human");
       if (!latestHumanMessage || context.agent.lastReplyTo === latestHumanMessage._id) return null;
+      fencedMessageId = latestHumanMessage._id;
       const activeQuestion =
         context.latestQuestion?.status === "answered" &&
         context.latestQuestion.answeredAt !== undefined &&
@@ -1426,9 +1428,14 @@ export const reply = internalAction({
       });
       return null;
     } catch (error) {
-      await ctx.runMutation(internal.agents.releaseFeedbackFence, {
-        userId: args.userId,
-      });
+      // Without an identified message the fence stays up and the staleness
+      // window is what releases it.
+      if (fencedMessageId) {
+        await ctx.runMutation(internal.agents.releaseFeedbackFence, {
+          userId: args.userId,
+          sourceMessageId: fencedMessageId,
+        });
+      }
       throw error;
     }
   },
@@ -1437,14 +1444,17 @@ export const reply = internalAction({
 
 /** Lowers the learning fence when a reply could not be produced at all. */
 export const releaseFeedbackFence = internalMutation({
-  args: { userId: v.id("users") },
+  args: { userId: v.id("users"), sourceMessageId: v.id("agentMessages") },
   returns: v.null(),
   handler: async (ctx, args) => {
     const agent = await ctx.db
       .query("agentProfiles")
       .withIndex("by_user", (q) => q.eq("userId", args.userId))
       .unique();
-    if (!agent?.pendingReplyTo) return null;
+    // A newer message may have raised its own fence while this attempt ran.
+    // Lowering that one would send a brief into an encounter before the reply
+    // it is still waiting for lands.
+    if (agent?.pendingReplyTo !== args.sourceMessageId) return null;
     await ctx.db.patch("agentProfiles", agent._id, {
       pendingReplyTo: undefined,
       pendingReplyAt: undefined,
