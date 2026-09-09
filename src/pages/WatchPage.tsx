@@ -60,7 +60,7 @@ export default function WatchPage() {
             <Wordmark className="text-[24px]" />
           </Link>
           <LinkButton to="/signup" size="sm">
-            {t("Create my dating agent")}
+            {t("Create my Dating Agent")}
           </LinkButton>
         </div>
       </header>
@@ -154,7 +154,7 @@ export default function WatchPage() {
 
             <div className="mt-12">
               <LinkButton to="/signup" size="lg">
-                {t("Create my dating agent")}
+                {t("Create my Dating Agent")}
               </LinkButton>
             </div>
           </>

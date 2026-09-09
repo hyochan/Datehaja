@@ -206,7 +206,7 @@ test("record the submission demo", async ({ page, browser, baseURL }, testInfo) 
   await expect(page).toHaveURL(/\/membership/, { timeout: 30_000 });
   await expect(page.getByText("DEMO ACTIVE")).toBeVisible({ timeout: 30_000 });
   await hold(2_000);
-  await page.getByRole("button", { name: /Send my Agent scouting/i }).click();
+  await page.getByRole("button", { name: /Send my Dating Agent scouting/i }).click();
 
   await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
   await expect(
@@ -417,7 +417,7 @@ async function prepareSecondOwner(page: Page) {
   await page.getByLabel("Tell Sol the version close friends know").fill("I am direct, curious, and playful. I prefer the quiet corner after a crowded room. I like people who can say what they actually want instead of just agreeing with me.");
   await page.getByRole("button", { name: /Seal the brief/i }).click();
   await expect(page.getByText("DEMO ACTIVE")).toBeVisible();
-  await page.getByRole("button", { name: /Send my Agent scouting/i }).click();
+  await page.getByRole("button", { name: /Send my Dating Agent scouting/i }).click();
   await disableMail(page);
   await page.goto("/dashboard");
 }

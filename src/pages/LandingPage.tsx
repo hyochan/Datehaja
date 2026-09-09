@@ -135,7 +135,7 @@ export default function LandingPage() {
               </p>
               <div className="mt-9 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
                 <LinkButton to="/signup" size="lg">
-                  {t("Create my dating agent")} <span aria-hidden>↗</span>
+                  {t("Create my Dating Agent")} <span aria-hidden>↗</span>
                 </LinkButton>
                 <Link
                   to="/watch"
@@ -253,7 +253,7 @@ export default function LandingPage() {
               )}
             </p>
             <LinkButton to="/signup" size="lg" className="relative z-[1] mt-8">
-              {t("Create my dating agent")} →
+              {t("Create my Dating Agent")} →
             </LinkButton>
           </div>
         </section>

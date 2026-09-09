@@ -486,7 +486,7 @@ Object.assign(ko, {
   "dates for me.": "대신 데이트해요.",
   "It goes on the date as you, then comes home with an honest read. You decide whether to make it real.":
     "나로서 데이트하고 돌아와, 솔직한 리포트를 전해요. 실제 만남은 당신이 결정해요.",
-  "Create my dating agent": "내 데이트 에이전트 만들기",
+  "Create my Dating Agent": "내 데이트 에이전트 만들기",
   "Watch the agents meet": "에이전트 만남 보기",
   "Your Dating Agent goes first.": "내 데이트 에이전트가 먼저 가요.",
   Brief: "브리프",
@@ -558,7 +558,7 @@ Object.assign(ja, {
   "dates for me.": "代わりにデートします。",
   "It goes on the date as you, then comes home with an honest read. You decide whether to make it real.":
     "分身があなたとしてデートし、帰ってきて率直なレポートを伝えます。実際に会うかは、あなたが決めます。",
-  "Create my dating agent": "デートエージェントを作る",
+  "Create my Dating Agent": "デートエージェントを作る",
   "Watch the agents meet": "エージェントの出会いを見る",
   "Your Dating Agent goes first.": "デートエージェントが先に会う。",
   Brief: "ブリーフ",
@@ -630,7 +630,7 @@ Object.assign(de, {
   "dates for me.": "datet für mich.",
   "It goes on the date as you, then comes home with an honest read. You decide whether to make it real.":
     "Er geht als du auf das Date und kommt mit einer ehrlichen Einschätzung zurück. Du entscheidest, ob ihr euch wirklich trefft.",
-  "Create my dating agent": "Meinen Dating-Agenten erstellen",
+  "Create my Dating Agent": "Meinen Dating-Agenten erstellen",
   "Watch the agents meet": "Agenten beim Treffen ansehen",
   "Your Dating Agent goes first.": "Dein Dating-Agent geht zuerst.",
   Brief: "Briefing",
@@ -704,7 +704,7 @@ Object.assign(fr, {
   "dates for me.": "y va à ma place.",
   "It goes on the date as you, then comes home with an honest read. You decide whether to make it real.":
     "Il va au rendez-vous en tant que vous, puis vous livre un avis sincère. Vous décidez ensuite de vous rencontrer vraiment.",
-  "Create my dating agent": "Créer mon agent de rencontre",
+  "Create my Dating Agent": "Créer mon Agent de rencontre",
   "Watch the agents meet": "Voir les agents se rencontrer",
   "Your Dating Agent goes first.": "Votre Agent de rencontre y va d'abord.",
   Brief: "Brief",
@@ -776,7 +776,7 @@ Object.assign(nl, {
   "dates for me.": "date voor mij.",
   "It goes on the date as you, then comes home with an honest read. You decide whether to make it real.":
     "Hij gaat als jou op date en komt terug met een eerlijk oordeel. Jij beslist of jullie echt afspreken.",
-  "Create my dating agent": "Mijn datingagent maken",
+  "Create my Dating Agent": "Mijn datingagent maken",
   "Watch the agents meet": "Bekijk de ontmoeting",
   "Your Dating Agent goes first.": "Je datingagent gaat eerst.",
   Brief: "Briefing",
@@ -848,7 +848,7 @@ Object.assign(sv, {
   "dates for me.": "dejtar åt mig.",
   "It goes on the date as you, then comes home with an honest read. You decide whether to make it real.":
     "Den går på dejten som du och kommer tillbaka med en ärlig bedömning. Du avgör om ni ska ses på riktigt.",
-  "Create my dating agent": "Skapa min dejtingagent",
+  "Create my Dating Agent": "Skapa min dejtingagent",
   "Watch the agents meet": "Se agenterna mötas",
   "Your Dating Agent goes first.": "Din dejtingagent går först.",
   Brief: "Brief",
@@ -2482,7 +2482,7 @@ Object.assign(ja, {
   "What should you carry into the next search?": "次の探索に何を反映すべき？",
   "Here's what your debrief got wrong:": "このレポートが違っていた点：",
   "I think I want to meet them.": "この人に会ってみたい。",
-  "Your decision, not your Dating Agent's": "Agentではなく、あなたの決定",
+  "Your decision, not your Dating Agent's": "デートエージェントではなく、あなたの決定",
   "Shall I send your introduction request to {person}?":
     "{person}さんに紹介リクエストを送りますか？",
   "Your message helps {agent} understand you, but only the button below counts as consent. Your answer stays sealed unless both people say yes.":
@@ -2837,7 +2837,7 @@ export const agentWorkspaceCopy: Record<
     "Je datingagent is terug",
     "Din dejtingagent är tillbaka",
   ],
-  "Your private agent": [
+  "Your private Dating Agent": [
     "나만의 데이트 에이전트",
     "あなただけのデートエージェント",
     "Dein privater Dating-Agent",

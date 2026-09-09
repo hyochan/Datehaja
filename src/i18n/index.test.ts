@@ -207,6 +207,10 @@ describe("internationalisation", () => {
   // The seven shared tables are merged last-wins, so a key defined twice
   // silently takes the other table's copy with no diff on the table that owns
   // it. That is how four chips changed language mid-row.
+  //
+  // Known hole: this compares the tables only to each other. 21 keys are also
+  // defined directly in the ko/ja/de/… packs, where the merge below overrides
+  // them, and 33 of those cells disagree with what actually renders.
   it("defines every shared key in exactly one table", () => {
     const tables = {
       agentWorkspaceCopy,

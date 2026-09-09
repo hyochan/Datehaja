@@ -390,7 +390,7 @@ export default function AgentDashboardPage() {
             />
             <div>
               <div className="docket-label text-[var(--accent-text)]">
-                {t("Your private agent")}
+                {t("Your private Dating Agent")}
               </div>
               <h1 className="agent-identity-name mt-1">{agent.name}</h1>
             </div>

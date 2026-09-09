@@ -178,7 +178,7 @@ test("account to private agent debrief and human consent", async ({ page }, test
   await expect(page).toHaveURL(/\/membership/, { timeout: 20_000 });
   await expect(page.getByText("Your brief is complete")).toBeVisible();
   await expect(page.getByText("DEMO ACTIVE")).toBeVisible({ timeout: 20_000 });
-  await page.getByRole("button", { name: /Send my Agent scouting/i }).click();
+  await page.getByRole("button", { name: /Send my Dating Agent scouting/i }).click();
 
   await expect(page).toHaveURL(/\/dashboard/, { timeout: 20_000 });
   await expect(page.getByRole("button", { name: "Pause search", exact: true })).toBeVisible();

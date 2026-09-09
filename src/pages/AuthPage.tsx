@@ -179,7 +179,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
             <span className="mr-2" aria-hidden>
               ♥
             </span>
-            {t("Your private Agent")}
+            {t("Your private Dating Agent")}
           </div>
           <h2 className="mt-5 text-[clamp(3rem,5vw,5.1rem)] leading-[0.97] tracking-[-0.04em]">
             {t("Let your better listener go first.")}
@@ -252,7 +252,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
                   </div>
                   <h2 className="mt-2 text-[23px] leading-tight">
                     {signingUp
-                      ? t("Wake your first agent.")
+                      ? t("Wake your first Dating Agent.")
                       : t("Open your private agent dates.")}
                   </h2>
                 </div>
