@@ -162,12 +162,9 @@ describe("internationalisation", () => {
     }
   });
 
-  // The tables above only prove themselves. This reads the source, so copy
-  // added straight to the Korean pack — quoted or as a bare identifier, which
-  // is how eleven keys stayed hidden — cannot slip past again.
-  // The pack guards only see keys the pack defines. This one starts from the
-  // call sites, so a t("…") added in a component with no row anywhere — which
-  // is how twenty strings shipped in English to every locale — is caught.
+  // Starts from the call sites rather than the pack, so a t("…") with no row
+  // anywhere is caught. It sees string literals only: a key passed as a
+  // variable, like the identity chip's t(option.label), still needs a reader.
   it("translates every string the app asks for", () => {
     const PROPER_NOUNS = new Set(["Agent", "Scout Pass", "Datehaja"]);
     const files: string[] = [];
@@ -193,6 +190,9 @@ describe("internationalisation", () => {
     expect(untranslated).toEqual([]);
   });
 
+  // Reads the pack source, so copy added straight to the Korean pack — quoted
+  // or as a bare identifier, which is how eleven keys stayed hidden — cannot
+  // slip past again.
   it("has no Korean-only copy anywhere in the pack source", () => {
     const src = readFileSync("src/i18n/index.tsx", "utf8");
     const keys = new Set<string>();
