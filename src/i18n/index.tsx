@@ -359,7 +359,6 @@ Object.assign(fr, {
   "Safety Center": "Centre de sécurité",
   "AUG / SEOUL": "AOÛT / SÉOUL",
   person: "personne",
-  Pass: "Passer",
   "Datehaja home": "Accueil Datehaja",
   "New client / 01": "Nouveau client / 01",
   "Client return / 01": "Retour client / 01",
@@ -408,7 +407,6 @@ Object.assign(nl, {
   "Safety Center": "Veiligheidscentrum",
   "AUG / SEOUL": "AUG / SEOUL",
   person: "persoon",
-  Pass: "Overslaan",
   "Datehaja home": "Datehaja-home",
   "New client / 01": "Nieuwe klant / 01",
   "Client return / 01": "Terugkerende klant / 01",
@@ -457,7 +455,6 @@ Object.assign(sv, {
   "Safety Center": "Säkerhetscenter",
   "AUG / SEOUL": "AUG / SEOUL",
   person: "person",
-  Pass: "Avstå",
   "Datehaja home": "Datehaja hem",
   "New client / 01": "Ny kund / 01",
   "Client return / 01": "Återkommande kund / 01",
@@ -499,7 +496,6 @@ Object.assign(ko, {
     "나는 마음이 편해지면 장난꾸러기가 돼.",
   "I go quiet when I'm happy, actually.":
     "나는 좋으면 오히려 조용해지는 타입이야.",
-  "Your Dating Agent": "내 데이트 에이전트",
   "Your Dating Agent can say:": "내 데이트 에이전트는 말할 수 있어요.",
   "don't meet them.": "그 사람은 만나지 마요.",
   "An interpretation, not a score": "점수가 아닌 해석",
@@ -521,7 +517,6 @@ Object.assign(ko, {
     "이 사람, 네 마음에 들 거야. 오해받을까 봐 조용해지는 편이라고 말했더니, Sol은 그걸 고치려 들지 않고 오히려 귀를 기울이더라. 만나봐.",
   "I want warmth without having to perform confidence.":
     "자신감 있는 척하지 않아도 따뜻한 관계를 원해요.",
-  "private memory": "비공개 기억",
   "virtual world": "가상 세계",
   "PRIVATE / FOR YOU": "비공개 / 나만 보기",
   "I noticed a real spark.": "분명한 설렘이 있었어요.",
@@ -529,9 +524,7 @@ Object.assign(ko, {
   YOU: "나",
   YES: "동의",
   THEM: "상대",
-  SEALED: "비공개",
   "contact locked": "연락처 잠김",
-  moments: "장면",
   "{count} moments": "{count}개의 장면",
   "my second self dates for me.": "내 분신이 대신 데이트해요.",
   "Create one AI second self. It goes on the date as you, meets someone else's, and writes home privately. Contact opens only when both people say yes.": "AI 분신을 하나 만들어요. 나로서 데이트에 나가 다른 사람의 분신을 만나고, 돌아와 나에게만 이야기해요. 연락처는 두 사람이 모두 좋다고 할 때만 열려요.",
@@ -543,10 +536,8 @@ Object.assign(ko, {
   "Nothing changes until you say so. Your age, distance, language and budget stay exactly where you set them.": "네가 그러라고 해야 바뀌어. 나이, 거리, 언어, 예산은 네가 정한 그대로야.",
   "Yes, look for that →": "응, 그렇게 찾아줘 →",
   "Leave it as it is": "지금 그대로 둬",
-  "I think you should meet.": "두 사람, 만나봤으면 해요.",
   "Quiet feels safe to both": "둘 다 침묵을 편안해해요",
   "Different social pace": "서로 다른 사교 속도",
-  "My Dating Agent": "내 데이트 에이전트",
   Human: "사람",
   Settings: "설정",
 });
@@ -571,7 +562,6 @@ Object.assign(ja, {
     "私、安心すると急に茶目っ気が出るんだ。",
   "I go quiet when I'm happy, actually.":
     "私、うれしいときほど静かになるタイプなんだ。",
-  "Your Dating Agent": "あなたのデートエージェント",
   "Your Dating Agent can say:": "あなたのデートエージェントは言える：",
   "don't meet them.": "会わないほうがいい。",
   "An interpretation, not a score": "点数ではなく、ひとつの解釈",
@@ -593,7 +583,6 @@ Object.assign(ja, {
     "この人、きっと気に入るよ。誤解されそうなときは静かになるって話したら、Solは直そうとせず、むしろ耳を傾けてくれた。会ってみて。",
   "I want warmth without having to perform confidence.":
     "自信を演じなくても感じられる温かさがほしい。",
-  "private memory": "非公開メモリー",
   "virtual world": "仮想世界",
   "PRIVATE / FOR YOU": "非公開 / あなただけ",
   "I noticed a real spark.": "確かなときめきを感じました。",
@@ -601,9 +590,7 @@ Object.assign(ja, {
   YOU: "あなた",
   YES: "はい",
   THEM: "相手",
-  SEALED: "非公開",
   "contact locked": "連絡先はロック中",
-  moments: "場面",
   "{count} moments": "{count}場面",
   "my second self dates for me.": "私の分身が代わりにデートします。",
   "Create one AI second self. It goes on the date as you, meets someone else's, and writes home privately. Contact opens only when both people say yes.": "AIの分身をひとつ作ります。あなたとしてデートに出かけ、別の誰かの分身と会い、帰ってあなただけに話します。連絡先は二人とも「はい」と答えたときだけ開きます。",
@@ -615,10 +602,8 @@ Object.assign(ja, {
   "Nothing changes until you say so. Your age, distance, language and budget stay exactly where you set them.": "あなたが言うまで何も変わりません。年齢、距離、言語、予算はあなたが決めたままです。",
   "Yes, look for that →": "うん、そう探して →",
   "Leave it as it is": "今のままで",
-  "I think you should meet.": "会ってみてほしいです。",
   "Quiet feels safe to both": "ふたりとも沈黙が心地よい",
   "Different social pace": "異なる社交のペース",
-  "My Dating Agent": "マイ・デートエージェント",
   Human: "本人",
   Settings: "設定",
 });
@@ -643,7 +628,6 @@ Object.assign(de, {
     "Ich werde verspielt, sobald ich mich sicher fühle.",
   "I go quiet when I'm happy, actually.":
     "Ich werde still, wenn ich glücklich bin — ehrlich.",
-  "Your Dating Agent": "Dein Dating-Agent",
   "Your Dating Agent can say:": "Dein Dating-Agent kann sagen:",
   "don't meet them.": "Triff diese Person nicht.",
   "An interpretation, not a score": "Eine Einordnung, keine Punktzahl",
@@ -666,7 +650,6 @@ Object.assign(de, {
     "Die Person wird dir gefallen. Als ich erzählte, dass ich still werde, wenn ich fürchte, missverstanden zu werden, wollte Sol nichts reparieren — Sol hat zugehört. Trefft euch.",
   "I want warmth without having to perform confidence.":
     "Ich wünsche mir Wärme, ohne Selbstsicherheit vorspielen zu müssen.",
-  "private memory": "private Erinnerung",
   "virtual world": "virtuelle Welt",
   "PRIVATE / FOR YOU": "PRIVAT / NUR FÜR DICH",
   "I noticed a real spark.": "Da war ein echter Funke.",
@@ -674,9 +657,7 @@ Object.assign(de, {
   YOU: "DU",
   YES: "JA",
   THEM: "GEGENÜBER",
-  SEALED: "VERSIEGELT",
   "contact locked": "Kontakt gesperrt",
-  moments: "Momente",
   "{count} moments": "{count} Momente",
   "my second self dates for me.": "mein zweites Ich datet für mich.",
   "Create one AI second self. It goes on the date as you, meets someone else's, and writes home privately. Contact opens only when both people say yes.": "Erstelle ein zweites Ich aus KI. Es geht als du auf das Date, trifft das zweite Ich eines anderen und berichtet dir danach privat. Kontakt entsteht nur, wenn beide zustimmen.",
@@ -688,10 +669,8 @@ Object.assign(de, {
   "Nothing changes until you say so. Your age, distance, language and budget stay exactly where you set them.": "Nichts ändert sich, bis du es sagst. Alter, Entfernung, Sprache und Budget bleiben genau so, wie du sie gesetzt hast.",
   "Yes, look for that →": "Ja, such danach →",
   "Leave it as it is": "Lass es, wie es ist",
-  "I think you should meet.": "Ich denke, ihr solltet euch treffen.",
   "Quiet feels safe to both": "Stille fühlt sich für beide sicher an",
   "Different social pace": "Unterschiedliches soziales Tempo",
-  "My Dating Agent": "Mein Dating-Agent",
   Human: "Mensch",
   Settings: "Einstellungen",
 });
@@ -717,7 +696,6 @@ Object.assign(fr, {
     "Je deviens joueur dès que je me sens en sécurité.",
   "I go quiet when I'm happy, actually.":
     "Je deviens silencieux quand je suis heureux, en fait.",
-  "Your Dating Agent": "Votre Agent de rencontre",
   "Your Dating Agent can say:": "Votre Agent de rencontre peut dire :",
   "don't meet them.": "Ne les rencontrez pas.",
   "An interpretation, not a score": "Une interprétation, pas une note",
@@ -739,7 +717,6 @@ Object.assign(fr, {
     "Cette personne va te plaire. Quand j'ai parlé de mon silence quand je crains d'être mal compris, Sol n'a rien voulu corriger — Sol s'est penché pour écouter. Rencontrez-vous.",
   "I want warmth without having to perform confidence.":
     "Je veux de la chaleur sans devoir jouer la confiance.",
-  "private memory": "mémoire privée",
   "virtual world": "monde virtuel",
   "PRIVATE / FOR YOU": "PRIVÉ / POUR VOUS",
   "I noticed a real spark.": "J'ai senti une vraie étincelle.",
@@ -747,9 +724,7 @@ Object.assign(fr, {
   YOU: "VOUS",
   YES: "OUI",
   THEM: "L'AUTRE",
-  SEALED: "SCELLÉ",
   "contact locked": "contact verrouillé",
-  moments: "instants",
   "{count} moments": "{count} instants",
   "my second self dates for me.": "mon autre moi y va à ma place.",
   "Create one AI second self. It goes on the date as you, meets someone else's, and writes home privately. Contact opens only when both people say yes.": "Créez un autre vous, en IA. Il va au rendez-vous à votre place, rencontre celui de quelqu’un d’autre, puis vous en parle en privé. Les coordonnées ne s’ouvrent que si les deux disent oui.",
@@ -761,10 +736,8 @@ Object.assign(fr, {
   "Nothing changes until you say so. Your age, distance, language and budget stay exactly where you set them.": "Rien ne change tant que tu ne le dis pas. Âge, distance, langue et budget restent exactement comme tu les as réglés.",
   "Yes, look for that →": "Oui, cherche ça →",
   "Leave it as it is": "Laisse comme c’est",
-  "I think you should meet.": "Je pense que vous devriez vous rencontrer.",
   "Quiet feels safe to both": "Le silence rassure les deux",
   "Different social pace": "Rythmes sociaux différents",
-  "My Dating Agent": "Mon Agent de rencontre",
   Human: "Humain",
   Settings: "Réglages",
 });
@@ -789,7 +762,6 @@ Object.assign(nl, {
     "Ik word speels zodra ik me veilig voel.",
   "I go quiet when I'm happy, actually.":
     "Ik word juist stil als ik blij ben.",
-  "Your Dating Agent": "Jouw datingagent",
   "Your Dating Agent can say:": "Jouw datingagent kan zeggen:",
   "don't meet them.": "Ontmoet diegene niet.",
   "An interpretation, not a score": "Een interpretatie, geen score",
@@ -811,7 +783,6 @@ Object.assign(nl, {
     "Deze ga je leuk vinden. Toen ik zei dat ik stil word als ik bang ben verkeerd begrepen te worden, wilde Sol niets oplossen — Sol boog juist naar voren. Ga die ontmoeting aan.",
   "I want warmth without having to perform confidence.":
     "Ik wil warmte zonder zelfvertrouwen te hoeven spelen.",
-  "private memory": "privéherinnering",
   "virtual world": "virtuele wereld",
   "PRIVATE / FOR YOU": "PRIVÉ / VOOR JOU",
   "I noticed a real spark.": "Ik voelde een echte vonk.",
@@ -819,9 +790,7 @@ Object.assign(nl, {
   YOU: "JIJ",
   YES: "JA",
   THEM: "DE ANDER",
-  SEALED: "VERZEGELD",
   "contact locked": "contact vergrendeld",
-  moments: "momenten",
   "{count} moments": "{count} momenten",
   "my second self dates for me.": "mijn tweede zelf datet voor mij.",
   "Create one AI second self. It goes on the date as you, meets someone else's, and writes home privately. Contact opens only when both people say yes.": "Maak één AI-tweede-zelf. Het gaat als jou op date, ontmoet dat van iemand anders en vertelt het jou daarna privé. Contact opent alleen als beiden ja zeggen.",
@@ -833,10 +802,8 @@ Object.assign(nl, {
   "Nothing changes until you say so. Your age, distance, language and budget stay exactly where you set them.": "Er verandert niets tot jij het zegt. Leeftijd, afstand, taal en budget blijven precies zoals jij ze hebt gezet.",
   "Yes, look for that →": "Ja, zoek daarnaar →",
   "Leave it as it is": "Laat het zoals het is",
-  "I think you should meet.": "Ik denk dat jullie elkaar moeten ontmoeten.",
   "Quiet feels safe to both": "Stilte voelt voor beiden veilig",
   "Different social pace": "Ander sociaal tempo",
-  "My Dating Agent": "Mijn datingagent",
   Human: "Mens",
   Settings: "Instellingen",
 });
@@ -861,7 +828,6 @@ Object.assign(sv, {
     "Jag blir lekfull först när det känns tryggt.",
   "I go quiet when I'm happy, actually.":
     "Jag blir faktiskt tyst av lycka.",
-  "Your Dating Agent": "Din dejtingagent",
   "Your Dating Agent can say:": "Din dejtingagent kan säga:",
   "don't meet them.": "Träffa dem inte.",
   "An interpretation, not a score": "En tolkning, inte ett betyg",
@@ -883,7 +849,6 @@ Object.assign(sv, {
     "Den här kommer du att gilla. När jag berättade att jag blir tyst när jag är rädd att bli missförstådd försökte Sol inte fixa det — Sol lutade sig närmare. Träffas.",
   "I want warmth without having to perform confidence.":
     "Jag vill ha värme utan att behöva spela självsäker.",
-  "private memory": "privat minne",
   "virtual world": "virtuell värld",
   "PRIVATE / FOR YOU": "PRIVAT / FÖR DIG",
   "I noticed a real spark.": "Jag såg en äkta gnista.",
@@ -891,9 +856,7 @@ Object.assign(sv, {
   YOU: "DU",
   YES: "JA",
   THEM: "DEN ANDRA",
-  SEALED: "FÖRSEGLAT",
   "contact locked": "kontakt låst",
-  moments: "ögonblick",
   "{count} moments": "{count} ögonblick",
   "my second self dates for me.": "mitt andra jag dejtar åt mig.",
   "Create one AI second self. It goes on the date as you, meets someone else's, and writes home privately. Contact opens only when both people say yes.": "Skapa ett andra jag av AI. Det går på dejten som du, möter någon annans och berättar sedan för dig i enrum. Kontakt öppnas bara när båda säger ja.",
@@ -905,10 +868,8 @@ Object.assign(sv, {
   "Nothing changes until you say so. Your age, distance, language and budget stay exactly where you set them.": "Inget ändras förrän du säger till. Ålder, avstånd, språk och budget står kvar precis som du satte dem.",
   "Yes, look for that →": "Ja, leta efter det →",
   "Leave it as it is": "Låt det vara",
-  "I think you should meet.": "Jag tycker att ni borde träffas.",
   "Quiet feels safe to both": "Tystnad känns trygg för båda",
   "Different social pace": "Olika socialt tempo",
-  "My Dating Agent": "Min dejtingagent",
   Human: "Person",
   Settings: "Inställningar",
 });
@@ -1083,10 +1044,6 @@ Object.assign(ko, {
   Interests: "관심사",
   Budget: "예산",
   Back: "뒤로",
-  "We'll never match you outside this.":
-    "이 조건을 벗어나서는 매칭하지 않습니다.",
-  "We'll prefer this, but won't rule someone out for it.":
-    "우선 반영하지만 이것만으로 제외하지는 않습니다.",
 });
 Object.assign(ja, {
   Brief: "ガイド",
@@ -1101,9 +1058,6 @@ Object.assign(ja, {
   Interests: "興味",
   Budget: "予算",
   Back: "戻る",
-  "We'll never match you outside this.": "この条件外ではマッチしません。",
-  "We'll prefer this, but won't rule someone out for it.":
-    "優先しますが、この条件だけで除外はしません。",
 });
 Object.assign(de, {
   Brief: "Briefing",
@@ -1118,9 +1072,6 @@ Object.assign(de, {
   Interests: "Interessen",
   Budget: "Budget",
   Back: "Zurück",
-  "We'll never match you outside this.": "Außerhalb davon matchen wir nie.",
-  "We'll prefer this, but won't rule someone out for it.":
-    "Wir bevorzugen es, schließen aber niemanden allein deshalb aus.",
 });
 Object.assign(fr, {
   Brief: "Brief",
@@ -1135,10 +1086,6 @@ Object.assign(fr, {
   Interests: "Centres d'intérêt",
   Budget: "Budget",
   Back: "Retour",
-  "We'll never match you outside this.":
-    "Nous ne vous proposerons jamais de match hors de ce critère.",
-  "We'll prefer this, but won't rule someone out for it.":
-    "Nous le privilégierons sans exclure quelqu'un pour ce seul motif.",
 });
 Object.assign(nl, {
   Brief: "Brief",
@@ -1153,10 +1100,6 @@ Object.assign(nl, {
   Interests: "Interesses",
   Budget: "Budget",
   Back: "Terug",
-  "We'll never match you outside this.":
-    "We matchen je nooit buiten dit criterium.",
-  "We'll prefer this, but won't rule someone out for it.":
-    "We geven hier voorkeur aan, maar sluiten niemand er alleen om uit.",
 });
 Object.assign(sv, {
   Brief: "Guide",
@@ -1171,9 +1114,6 @@ Object.assign(sv, {
   Interests: "Intressen",
   Budget: "Budget",
   Back: "Tillbaka",
-  "We'll never match you outside this.": "Vi matchar dig aldrig utanför detta.",
-  "We'll prefer this, but won't rule someone out for it.":
-    "Vi föredrar detta men utesluter inte någon enbart därför.",
 });
 
 Object.assign(ja, {
@@ -1682,61 +1622,31 @@ Object.assign(sv, {
 });
 
 Object.assign(ko, {
-  "I agree to the": "다음 문서에 동의합니다:",
-  "Terms of Service": "이용약관",
-  and: "및",
-  "Community Guidelines": "커뮤니티 가이드라인",
-  "Privacy Notice": "개인정보 처리방침",
   Terms: "약관",
   Community: "커뮤니티",
 });
 
 Object.assign(ja, {
-  "I agree to the": "次に同意します：",
-  "Terms of Service": "利用規約",
-  and: "および",
-  "Community Guidelines": "コミュニティガイドライン",
-  "Privacy Notice": "プライバシー通知",
   Terms: "利用規約",
   Community: "コミュニティ",
 });
 
 Object.assign(de, {
-  "I agree to the": "Ich stimme zu:",
-  "Terms of Service": "Nutzungsbedingungen",
-  and: "und",
-  "Community Guidelines": "Community-Richtlinien",
-  "Privacy Notice": "Datenschutzhinweis",
   Terms: "Bedingungen",
   Community: "Gemeinschaft",
 });
 
 Object.assign(fr, {
-  "I agree to the": "J’accepte les",
-  "Terms of Service": "Conditions d’utilisation",
-  and: "et",
-  "Community Guidelines": "Règles de la communauté",
-  "Privacy Notice": "Avis de confidentialité",
   Terms: "Conditions",
   Community: "Communauté",
 });
 
 Object.assign(nl, {
-  "I agree to the": "Ik ga akkoord met de",
-  "Terms of Service": "Gebruiksvoorwaarden",
-  and: "en",
-  "Community Guidelines": "Communityrichtlijnen",
-  "Privacy Notice": "Privacyverklaring",
   Terms: "Voorwaarden",
   Community: "Gemeenschap",
 });
 
 Object.assign(sv, {
-  "I agree to the": "Jag godkänner",
-  "Terms of Service": "Användarvillkor",
-  and: "och",
-  "Community Guidelines": "Communityregler",
-  "Privacy Notice": "Integritetsmeddelande",
   Terms: "Villkor",
   Community: "Gemenskap",
 });
@@ -2214,12 +2124,6 @@ Object.assign(sv, {
 /* Agent scout funnel — Korean launch copy. Other locales safely retain the
    English source until the human copy pass for each market is complete. */
 Object.assign(ko, {
-  Thoughtful: "사려 깊은",
-  Playful: "유쾌한",
-  Direct: "솔직한",
-  Calm: "차분한",
-  Sporty: "활동적인",
-  Minimal: "미니멀한",
   Important: "중요해요",
   Flexible: "유연해요",
   "Scout Pass": "Scout Pass",
@@ -2646,7 +2550,6 @@ Object.assign(ko, {
     "나도 좋아. 마음만 편하다면 말이야.",
   "back from the date": "데이트에서 돌아옴",
   "I'm back! I have so much to tell you.": "나 왔어! 할 얘기 진짜 많아.",
-  "Now meet as yourselves.": "이제 진짜 서로를 만나세요.",
 });
 
 /* Restored strings emitted by convex/ and localized client-side. */

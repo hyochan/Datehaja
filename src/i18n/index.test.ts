@@ -204,13 +204,10 @@ describe("internationalisation", () => {
   // The scan above only sees literal t("…") calls, so keys the app builds at
   // runtime stay invisible to it. The avatar editor asks for `${option} palette`,
   // which is how four of the six were nearly dropped as unused copy.
-  // The seven shared tables are merged last-wins, so a key defined twice
-  // silently takes the other table's copy with no diff on the table that owns
-  // it. That is how four chips changed language mid-row.
-  //
-  // Known hole: this compares the tables only to each other. 21 keys are also
-  // defined directly in the ko/ja/de/… packs, where the merge below overrides
-  // them, and 33 of those cells disagree with what actually renders.
+  // The seven shared tables are merged last-wins over the raw packs, so a key
+  // defined twice silently takes the other definition's copy with no diff on
+  // the one that looks like it owns the phrase. That is how four chips changed
+  // language mid-row, and how 33 pack cells came to disagree with what renders.
   it("defines every shared key in exactly one table", () => {
     const tables = {
       agentWorkspaceCopy,
@@ -230,6 +227,36 @@ describe("internationalisation", () => {
     const shadowed = [...owners]
       .filter(([, names]) => names.length > 1)
       .map(([key, names]) => `${key} defined in ${names.join(" and ")}`);
+    expect(shadowed).toEqual([]);
+  });
+
+  // The check above compares the tables to each other. This one covers the
+  // other direction: a phrase written straight into a locale pack that a table
+  // then overrides, leaving dead source that contradicts the live copy.
+  it("never defines a table key directly in a locale pack as well", () => {
+    const src = readFileSync("src/i18n/index.tsx", "utf8");
+    const tableKeys = new Set(
+      [
+        agentWorkspaceCopy,
+        settingsCopy,
+        avatarStudioCopy,
+        dateLetterCopy,
+        scoutingCopy,
+        coachingCopy,
+        productCopy,
+      ].flatMap((table) => Object.keys(table)),
+    );
+    const shadowed: string[] = [];
+    for (const block of src.matchAll(
+      /Object\.assign\((ko|ja|de|fr|nl|sv), \{([\s\S]*?)\n\}\);/g,
+    )) {
+      for (const entry of block[2].matchAll(
+        /^  (?:"((?:[^"\\]|\\.)+)"|([A-Za-z_$][\w$]*)):\s*"/gm,
+      )) {
+        const key = entry[1] ?? entry[2];
+        if (tableKeys.has(key)) shadowed.push(`${block[1]} pack redefines ${key}`);
+      }
+    }
     expect(shadowed).toEqual([]);
   });
 
