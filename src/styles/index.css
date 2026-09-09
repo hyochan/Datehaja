@@ -7315,7 +7315,10 @@ button.agent-search-place { cursor:pointer; }
 }
 .agent-date-state.is-ready { color: var(--accent-text); }
 .agent-date-state.is-quiet { color: var(--text-muted); }
-.agent-date-state.is-live { color: #6fcf97; }
+/* A single green cannot clear 4.5:1 on both grounds: #6fcf97 measures 1.82:1
+   on the light background and 9.17:1 on the dark one. */
+.agent-date-state.is-live { color: #27794f; }
+html[data-theme="dark"] .agent-date-state.is-live { color: #6fcf97; }
 .agent-date-state.is-live .agent-date-state-dot { animation: agent-date-pulse 1.8s ease-in-out infinite; }
 @keyframes agent-date-pulse {
   0%, 100% { opacity: 1; transform: scale(1); }

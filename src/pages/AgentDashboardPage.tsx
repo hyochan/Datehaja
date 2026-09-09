@@ -132,10 +132,18 @@ export default function AgentDashboardPage() {
   const endRef = useRef<HTMLDivElement>(null);
   const chatScrollRef = useRef<HTMLDivElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
+  const ackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (mine === null) navigate("/onboarding", { replace: true });
   }, [mine, navigate]);
+  const openQuestionId =
+    (mine?.openQuestion as { _id?: string } | null | undefined)?._id ?? null;
+  // Answering unmounts the card holding the submit button, so focus would fall
+  // to the document. Move it to the acknowledgement the announcement describes.
+  useEffect(() => {
+    if (!openQuestionId && justAnswered) ackRef.current?.focus();
+  }, [openQuestionId, justAnswered]);
   useEffect(() => {
     const chat = chatScrollRef.current;
     if (chat) chat.scrollTop = chat.scrollHeight;
@@ -285,6 +293,9 @@ export default function AgentDashboardPage() {
     setError(null);
     try {
       await skipQuestion({ questionId: openQuestion._id });
+      // Otherwise the acknowledgement for an earlier question reappears once
+      // this one clears, claiming an answer was sent for a question just skipped.
+      setJustAnswered(null);
       setQuestionAnswer("");
     } catch (reason) {
       setError(readableError(reason));
@@ -893,7 +904,7 @@ export default function AgentDashboardPage() {
         <div>
           {/* Always mounted, so the card being inserted is announced rather
               than appearing silently after the answer is sent. */}
-          <div role="status">
+          <div role="status" ref={ackRef} tabIndex={-1} className="outline-none">
             {!openQuestion && justAnswered && (
               <Card className="agent-question-sent mb-5 p-5">
                 <div className="flex items-start gap-3">

@@ -179,8 +179,14 @@ describe("internationalisation", () => {
     walk("src");
     const asked = new Set<string>();
     for (const file of files) {
-      for (const m of readFileSync(file, "utf8").matchAll(/\bt\(\s*"((?:[^"\\]|\\.)+)"/g)) {
-        asked.add(m[1]);
+      // Both call shapes: t("…"), and translate(locale, "…") where the key is
+      // the second argument. Missing the latter is how the page title and meta
+      // description were deleted as unused — their only callers are the ones
+      // inside this module.
+      for (const m of readFileSync(file, "utf8").matchAll(
+        /\bt\(\s*"((?:[^"\\]|\\.)+)"|\btranslate\(\s*[A-Za-z_$][\w$]*\s*,\s*\n?\s*"((?:[^"\\]|\\.)+)"/g,
+      )) {
+        asked.add(m[1] ?? m[2]);
       }
     }
     const untranslated = [...asked]
@@ -193,7 +199,7 @@ describe("internationalisation", () => {
 
   // The scan above only sees literal t("…") calls, so keys the app builds at
   // runtime stay invisible to it. The avatar editor asks for `${option} palette`,
-  // which is how four of these were nearly dropped as unused copy.
+  // which is how four of the six were nearly dropped as unused copy.
   it("translates every key the app builds at runtime", () => {
     const asked = AVATAR_PALETTES.map((palette) => `${palette} palette`);
     // some(), not every(): one locale missing the row is the failure to catch,

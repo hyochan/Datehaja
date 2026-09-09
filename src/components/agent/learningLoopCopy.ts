@@ -10,7 +10,7 @@ const en: LoopCopy = {
   title: "Create your Dating Agent.", titleAccent: "Make it more you, one conversation at a time.",
   intro: "Your Dating Agent finds people, goes on virtual dates, and comes back with a story. Tell it what felt right, what didn't, and what to try next.",
   steps: [
-    { title: "Create my dating Agent", body: "Share how you talk and who you'd like to meet. Then send your Dating Agent out." },
+    { title: "Create my Dating Agent", body: "Share how you talk and who you'd like to meet. Then send your Dating Agent out." },
     { title: "Let it go on dates", body: "It looks for someone who fits and gets to know them through their Dating Agent." },
     { title: "Hear how it went", body: "See what they did and said, and hear your Dating Agent's honest take." },
     { title: "Tell it what you think", body: "Correct its voice, point out what you liked, or ask it to look for someone different." },
@@ -19,7 +19,7 @@ const en: LoopCopy = {
   exampleLabel: "A little feedback goes a long way", exampleTitle: "“That's more like me.”", chooseExample: "Explore a feedback example",
   youSay: "You say", yourAgent: "Your AI Agent", carriesForward: "What it takes into the next date", exampleNote: "Illustrative examples of how feedback can carry forward. Changes to search settings are confirmed with you.",
   waiting: "If it hasn't found someone, it keeps looking. Check in whenever you like.", consent: "Meeting in real life is always a choice for both people.",
-  talk: "Talk with my Dating Agent", create: "Create my dating Agent", technical: "Curious about what happens behind the scenes?", proof: "See real before-and-after records · Korean demo",
+  talk: "Talk with my Dating Agent", create: "Create my Dating Agent", technical: "Curious about what happens behind the scenes?", proof: "See real before-and-after records · Korean demo",
   examples: [
     { label: "Make it sound like me", feedback: "I wouldn't give a speech like that. Keep it shorter, and don't end every reply with a question.", memory: "Short, natural replies. Leave room for the other person.", nextLabel: "A way to say it next time", next: "“Same here. I'd rather take our time.”" },
     { label: "Change what I look for", feedback: "I like someone who's curious about me too. Look for someone who asks questions back.", memory: "Notice mutual curiosity, not just an easy conversation.", nextLabel: "What to notice in the next encounter", next: "Do they pick up on an answer and want to know more? Does the curiosity go both ways?" },
@@ -95,7 +95,7 @@ const fr: LoopCopy = {
   title: "Créé une fois,", titleAccent: "de plus en plus vous, conversation après conversation.",
   intro: "Votre Agent de rencontre cherche des personnes, fait des rendez-vous virtuels et revient avec une histoire. Dites-lui ce qui vous a plu, ce qui ne vous ressemblait pas, et ce qu’il faut essayer ensuite.",
   steps: [
-    { title: "Créer mon Agent de rencontre", body: "Expliquez votre façon de parler et qui vous aimeriez rencontrer. Puis laissez votre Agent de rencontre partir." },
+    { title: "Créer mon Agent de rencontre", body: "Expliquez votre façon de parler et qui vous aimeriez rencontrer. Puis laissez-le partir." },
     { title: "Le laisser aller à des rendez-vous", body: "Il cherche quelqu’un qui vous correspond et fait connaissance via l’Agent de rencontre de cette personne." },
     { title: "Écouter comment ça s’est passé", body: "Voyez ce qu’ils ont fait et dit, et écoutez l’avis sincère de votre Agent de rencontre." },
     { title: "Lui dire ce que vous en pensez", body: "Corrigez son ton, signalez ce qui vous a plu, ou demandez-lui de chercher quelqu’un d’autre." },
@@ -116,7 +116,7 @@ const nl: LoopCopy = {
   title: "Eén keer gemaakt,", titleAccent: "en met elk gesprek meer jou.",
   intro: "Je dating-Agent zoekt mensen, gaat op virtuele dates en komt terug met een verhaal. Vertel wat goed voelde, wat niet, en wat hij de volgende keer moet proberen.",
   steps: [
-    { title: "Mijn dating-Agent maken", body: "Vertel hoe je praat en wie je zou willen ontmoeten. Stuur je dating-Agent er dan op uit." },
+    { title: "Mijn dating-Agent maken", body: "Vertel hoe je praat en wie je zou willen ontmoeten. Stuur hem er dan op uit." },
     { title: "Hem op date laten gaan", body: "Hij zoekt iemand die past en leert die persoon kennen via hun dating-Agent." },
     { title: "Horen hoe het ging", body: "Zie wat ze deden en zeiden, en hoor het eerlijke oordeel van je dating-Agent." },
     { title: "Zeggen wat jij ervan vindt", body: "Stuur zijn stem bij, benoem wat je goed vond, of vraag om iemand anders." },
@@ -137,7 +137,7 @@ const sv: LoopCopy = {
   title: "Skapad en gång,", titleAccent: "och mer som du för varje samtal.",
   intro: "Din dejtingagent letar upp människor, går på virtuella dejter och kommer tillbaka med en berättelse. Berätta vad som kändes rätt, vad som inte gjorde det, och vad den ska prova härnäst.",
   steps: [
-    { title: "Skapa min dejtingagent", body: "Berätta hur du pratar och vem du vill träffa. Skicka sedan ut din dejtingagent." },
+    { title: "Skapa min dejtingagent", body: "Berätta hur du pratar och vem du vill träffa. Skicka sedan ut den." },
     { title: "Låt den gå på dejter", body: "Den letar efter någon som passar och lär känna personen genom hens dejtingagent." },
     { title: "Hör hur det gick", body: "Se vad de gjorde och sa, och hör din dejtingagents ärliga intryck." },
     { title: "Säg vad du tycker", body: "Rätta till hur den låter, säg vad du gillade eller be den leta efter någon annan." },
