@@ -197,4 +197,5 @@ export const productCopy: Record<string, readonly string[]> = {
   "No new agent date can begin. Your conversations and past debriefs remain.": ["새 에이전트 데이트는 시작되지 않아요. 지금까지의 대화와 회고는 그대로 남아요.", "新しいエージェントデートは始まりません。これまでの会話とレポートはそのまま残ります。", "Es kann kein neues Agenten-Date beginnen. Deine Gespräche und bisherigen Berichte bleiben erhalten.", "Aucun nouveau rendez-vous d’Agents ne peut commencer. Vos conversations et comptes rendus passés sont conservés.", "Er kan geen nieuwe agent-date beginnen. Je gesprekken en eerdere verslagen blijven bewaard.", "Ingen ny agentdejt kan börja. Dina samtal och tidigare rapporter finns kvar."],
   "Unblocked.": ["차단을 해제했어요.", "ブロックを解除しました。", "Blockierung aufgehoben.", "Blocage levé.", "Blokkering opgeheven.", "Blockeringen är hävd."],
   "Unblock": ["차단 해제", "ブロックを解除", "Blockierung aufheben", "Débloquer", "Deblokkeren", "Häv blockering"],
+  "Another identity": ["그 외 정체성", "その他の性自認", "Andere Identität", "Autre identité", "Andere identiteit", "Annan identitet"],
 };

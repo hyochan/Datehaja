@@ -146,7 +146,7 @@ const sv: LoopCopy = {
   exampleLabel: "Lite feedback räcker långt", exampleTitle: "”Så där låter det mer som jag.”", chooseExample: "Se ett exempel på feedback",
   youSay: "Du säger", yourAgent: "Din AI-agent", carriesForward: "Det den tar med till nästa dejt", exampleNote: "Exempel på hur feedback kan följa med. Ändringar i sökinställningarna görs först när du har bekräftat dem.",
   waiting: "Har den inte hittat någon fortsätter den leta. Titta in när du vill.", consent: "Att ses på riktigt är alltid bådas val.",
-  talk: "Prata med min agent", create: "Skapa min dejtingagent", technical: "Nyfiken på vad som händer bakom kulisserna?", proof: "Se riktiga före-och-efter-anteckningar · koreansk demo",
+  talk: "Prata med min agent", create: "Skapa min dejtingagent", technical: "Nyfiken på vad som händer bakom kulisserna?", proof: "Se sparade dejter före och efter feedback · koreansk demo",
   examples: [
     { label: "Låt mer som jag", feedback: "Jag skulle inte hålla ett sådant tal. Håll det kortare, och avsluta inte varje svar med en fråga.", memory: "Korta, naturliga svar. Lämna plats åt den andra.", nextLabel: "Så skulle det kunna sägas nästa gång", next: "”Samma här. Jag tar hellre det lugnt.”" },
     { label: "Ändra vad jag söker", feedback: "Jag gillar någon som är nyfiken på mig också. Leta efter någon som frågar tillbaka.", memory: "Lägg märke till ömsesidig nyfikenhet, inte bara ett lättsamt samtal.", nextLabel: "Vad den ska lägga märke till vid nästa möte", next: "Tar personen fasta på ett svar och vill veta mer? Går nyfikenheten åt båda håll?" },
