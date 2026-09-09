@@ -152,7 +152,7 @@ describe("internationalisation", () => {
   ] as const;
 
   it("gives every shared copy table one entry per translated locale", () => {
-    for (const [name, table] of Object.entries({ coachingCopy, productCopy, scoutingCopy })) {
+    for (const [name, table] of Object.entries({ coachingCopy, dateLetterCopy, productCopy, scoutingCopy })) {
       for (const [message, values] of Object.entries(table)) {
         expect(
           { table: name, message, count: values.length },
@@ -230,6 +230,28 @@ describe("internationalisation", () => {
     expect(shadowed).toEqual([]);
   });
 
+  // Neither check above looks inside a single pack. "Brief" was defined twice in
+  // every one of them, and the later definition — 안내, ガイド, "Guide" — won,
+  // so the loop player's first frame said "notice" instead of naming the brief.
+  it("never defines the same key twice within one locale pack", () => {
+    const src = readFileSync("src/i18n/index.tsx", "utf8");
+    const seen = new Map<string, number>();
+    for (const block of src.matchAll(
+      /Object\.assign\((ko|ja|de|fr|nl|sv), \{([\s\S]*?)\n\}\);/g,
+    )) {
+      for (const entry of block[2].matchAll(
+        /^  (?:"((?:[^"\\]|\\.)+)"|([A-Za-z_$][\w$]*)):\s*"/gm,
+      )) {
+        const id = `${block[1]}\u0000${entry[1] ?? entry[2]}`;
+        seen.set(id, (seen.get(id) ?? 0) + 1);
+      }
+    }
+    const repeated = [...seen]
+      .filter(([, count]) => count > 1)
+      .map(([id, count]) => `${id.replace("\u0000", " pack defines ")} ${count} times`);
+    expect(repeated).toEqual([]);
+  });
+
   // The check above compares the tables to each other. This one covers the
   // other direction: a phrase written straight into a locale pack that a table
   // then overrides, leaving dead source that contradicts the live copy.
@@ -274,8 +296,10 @@ describe("internationalisation", () => {
       "nl-NL": /datingagent/i,
       "sv-SE": /dejtingagent/i,
     };
-    // Locales that carry the subject implicitly rather than naming it. Each is a
-    // sentence where naming the agent again would be unnatural, not a gap.
+    // Korean and Japanese drop the subject here, and in each case the card
+    // heading or field label directly above already names the agent. Nine
+    // entries, all pro-drop: an entry for a language that does not drop
+    // subjects would be hiding a gap, not recording an idiom.
     const IMPLIED_SUBJECT = new Set([
       "ko-KR\u0000My Dating Agent may meet other agents",
       "ja-JP\u0000My Dating Agent may meet other agents",
@@ -286,9 +310,6 @@ describe("internationalisation", () => {
       "ko-KR\u0000Your Dating Agent meets other searching Agents, learns from each conversation, and keeps going when it isn't right. You'll hear from us when there's someone to introduce.",
       "ja-JP\u0000Your Dating Agent meets other searching Agents, learns from each conversation, and keeps going when it isn't right. You'll hear from us when there's someone to introduce.",
       "ja-JP\u0000Your Dating Agent only considers someone when both location settings include each other and both people share a language—or both allow translation.",
-      "fr-FR\u0000Tell your Dating Agent how you talk, or write your version of this line. Your guidance carries into future dates.",
-      "nl-NL\u0000Tell your Dating Agent how you talk, or write your version of this line. Your guidance carries into future dates.",
-      "sv-SE\u0000Tell your Dating Agent how you talk, or write your version of this line. Your guidance carries into future dates.",
     ]);
     const tables = [
       agentWorkspaceCopy,

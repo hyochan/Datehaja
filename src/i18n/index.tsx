@@ -198,8 +198,6 @@ Object.assign(ko, {
   Starlight: "별빛",
   "Little detail": "포인트",
   "Agent": "에이전트",
-  "Woman": "여성",
-  "Man": "남성",
   "Loading the date…": "데이트를 불러오는 중…",
   "No date is ready to show yet. Please check back shortly.": "아직 보여드릴 데이트가 없습니다. 잠시 후 다시 확인해 주세요.",
   "Watch a real agent date": "실제 에이전트 데이트 보기",
@@ -247,8 +245,6 @@ Object.assign(ja, {
   Starlight: "スターライト",
   "Little detail": "アクセント",
   "Agent": "エージェント",
-  "Woman": "女性",
-  "Man": "男性",
   "Loading the date…": "デートを読み込み中…",
   "No date is ready to show yet. Please check back shortly.": "お見せできるデートがまだありません。しばらくしてからご確認ください。",
   "Watch a real agent date": "実際のエージェントデートを見る",
@@ -296,8 +292,6 @@ Object.assign(de, {
   Starlight: "Sternenlicht",
   "Little detail": "Detail",
   "Agent": "Agent",
-  "Woman": "Frau",
-  "Man": "Mann",
   "Loading the date…": "Date wird geladen…",
   "No date is ready to show yet. Please check back shortly.": "Es ist noch kein Date zu sehen. Bitte schau gleich noch einmal vorbei.",
   "Watch a real agent date": "Ein echtes Agent-Date ansehen",
@@ -539,7 +533,6 @@ Object.assign(ko, {
   "Quiet feels safe to both": "둘 다 침묵을 편안해해요",
   "Different social pace": "서로 다른 사교 속도",
   Human: "사람",
-  Settings: "설정",
 });
 
 Object.assign(ja, {
@@ -605,7 +598,6 @@ Object.assign(ja, {
   "Quiet feels safe to both": "ふたりとも沈黙が心地よい",
   "Different social pace": "異なる社交のペース",
   Human: "本人",
-  Settings: "設定",
 });
 
 Object.assign(de, {
@@ -672,7 +664,6 @@ Object.assign(de, {
   "Quiet feels safe to both": "Stille fühlt sich für beide sicher an",
   "Different social pace": "Unterschiedliches soziales Tempo",
   Human: "Mensch",
-  Settings: "Einstellungen",
 });
 
 Object.assign(fr, {
@@ -739,7 +730,6 @@ Object.assign(fr, {
   "Quiet feels safe to both": "Le silence rassure les deux",
   "Different social pace": "Rythmes sociaux différents",
   Human: "Humain",
-  Settings: "Réglages",
 });
 
 Object.assign(nl, {
@@ -805,7 +795,6 @@ Object.assign(nl, {
   "Quiet feels safe to both": "Stilte voelt voor beiden veilig",
   "Different social pace": "Ander sociaal tempo",
   Human: "Mens",
-  Settings: "Instellingen",
 });
 
 Object.assign(sv, {
@@ -871,7 +860,6 @@ Object.assign(sv, {
   "Quiet feels safe to both": "Tystnad känns trygg för båda",
   "Different social pace": "Olika socialt tempo",
   Human: "Person",
-  Settings: "Inställningar",
 });
 
 Object.assign(ko, {
@@ -1032,7 +1020,6 @@ Object.assign(sv, {
 });
 
 Object.assign(ko, {
-  Brief: "안내",
   "About you": "나에 대해",
   "What should we call you?": "어떻게 불러드릴까요?",
   "Date of birth": "생년월일",
@@ -1046,7 +1033,6 @@ Object.assign(ko, {
   Back: "뒤로",
 });
 Object.assign(ja, {
-  Brief: "ガイド",
   "About you": "あなたについて",
   "What should we call you?": "何とお呼びすればよいですか？",
   "Date of birth": "生年月日",
@@ -1060,7 +1046,6 @@ Object.assign(ja, {
   Back: "戻る",
 });
 Object.assign(de, {
-  Brief: "Briefing",
   "About you": "Über dich",
   "What should we call you?": "Wie sollen wir dich nennen?",
   "Date of birth": "Geburtsdatum",
@@ -1074,13 +1059,10 @@ Object.assign(de, {
   Back: "Zurück",
 });
 Object.assign(fr, {
-  Brief: "Brief",
   "About you": "À propos de vous",
   "What should we call you?": "Comment devons-nous vous appeler ?",
   "Date of birth": "Date de naissance",
   "You are": "Vous êtes",
-  Woman: "Femme",
-  Man: "Homme",
   "Non-binary": "Non binaire",
   "Age range": "Tranche d'âge",
   Interests: "Centres d'intérêt",
@@ -1088,13 +1070,10 @@ Object.assign(fr, {
   Back: "Retour",
 });
 Object.assign(nl, {
-  Brief: "Brief",
   "About you": "Over jou",
   "What should we call you?": "Hoe mogen we je noemen?",
   "Date of birth": "Geboortedatum",
   "You are": "Jij bent",
-  Woman: "Vrouw",
-  Man: "Man",
   "Non-binary": "Non-binair",
   "Age range": "Leeftijdsbereik",
   Interests: "Interesses",
@@ -1102,13 +1081,10 @@ Object.assign(nl, {
   Back: "Terug",
 });
 Object.assign(sv, {
-  Brief: "Guide",
   "About you": "Om dig",
   "What should we call you?": "Vad ska vi kalla dig?",
   "Date of birth": "Födelsedatum",
   "You are": "Du är",
-  Woman: "Kvinna",
-  Man: "Man",
   "Non-binary": "Ickebinär",
   "Age range": "Åldersintervall",
   Interests: "Intressen",
@@ -1677,8 +1653,6 @@ Object.assign(ko, {
   "Personality you tend to connect with": "마음이 잘 통하는 성격",
   "Personality preference strength": "성격 선호 중요도",
   "No preference": "상관없음",
-  Flexible: "유연하게",
-  Important: "중요해요",
   "Preferred personality": "선호하는 성격",
   "Style you tend to notice": "눈길이 가는 스타일",
   "Style preference strength": "스타일 선호 중요도",
@@ -5116,7 +5090,7 @@ export const settingsCopy: Record<
     "내 데이트 에이전트의 데이트",
     "デートエージェントのデート",
     "Mein Dating-Agent darf daten",
-    "Autoriser mon Agent de rencontre à dater",
+    "Autoriser mon Agent de rencontre à sortir avec quelqu’un",
     "Mijn datingagent laten daten",
     "Låt min dejtingagent dejta",
   ],
