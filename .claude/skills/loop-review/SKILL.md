@@ -95,29 +95,30 @@ Clean means all of these hold for the same head SHA:
 - the PR is mergeable and contains every required update from `main`;
 - the worktree is clean and the final diff has been reread.
 
-## 6. Gate the backend before merging
+## 6. Check the deploy ordering before merging
 
-The frontend deploys itself from `main`, and the Convex backend does not. A
-merge that lands a frontend expecting a backend that is not deployed yet breaks
-production between the two steps.
+Merging `main` runs `.github/workflows/deploy.yml`, whose `Deploy backend +
+convex.site` job pushes the Convex backend and publishes the static site
+together, then verifies `merry-bass-190.convex.site` serves that exact bundle.
+The backend is not a manual step.
 
-Require an explicit hand-back **before** merging when the diff touches any of:
+Vercel rebuilds `datehaja.com` in parallel and independently, so that host can
+serve a new frontend for a few minutes before the backend job lands.
 
-- `convex/schema.ts`, or any validator an existing client already calls;
-- `convex/**` function signatures, argument validators, or return shapes;
-- anything that changes what the deployed frontend sends to the backend.
+So check whether that window is safe. It is safe when every backend change is
+additive: new functions, arguments that are only ever optional, optional schema
+fields, new tables and indexes, and no new value projected to an existing
+client. Nothing that already works breaks; only the new surfaces error until
+the deploy job finishes.
 
-For those, stop after the PR is clean, state plainly that merging will publish a
-frontend ahead of the backend, and name the exact command the user must run
-after merging:
+Require an explicit hand-back **before** merging when the diff is not additive
+in that sense — a removed or renamed function, a newly required argument, a
+narrowed return shape, or a changed value an existing client already reads.
+State plainly what the deployed frontend would send that the backend could not
+answer, and let the user decide the ordering.
 
-```bash
-bunx convex deploy -y
-```
-
-Ask before running it. The user may tell you to run it yourself, and it works
-when they do; do not deploy the backend on your own initiative. Never describe
-the change as fully shipped until the backend deploy has actually run.
+Never describe the change as shipped until the deploy job has actually run and
+the served bundle has been checked.
 
 When the diff is frontend-only, say so explicitly and name the paths that
 justify it.

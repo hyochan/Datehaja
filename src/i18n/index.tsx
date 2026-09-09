@@ -2544,7 +2544,6 @@ Object.assign(ko, {
   Flexible: "유연해요",
   "Doesn't matter": "상관없어요",
   "What are you open to?": "어떤 관계에 열려 있나요?",
-  "Open to seeing what develops": "자연스럽게 알아가기",
   "A serious relationship": "진지한 관계",
   "Something casual": "가벼운 만남",
   "Friendship first": "친구부터 시작",
@@ -2583,7 +2582,6 @@ Object.assign(ko, {
   "Your brief is complete": "브리프가 완성됐어요",
   "Brief sealed": "브리프 완료",
   "Agent scouts": "에이전트 탐색",
-  "You decide": "내가 결정",
   "Home base": "홈 베이스",
   "Now send your Agent into the world.":
     "이제 내 에이전트를 세상으로 내보내요.",

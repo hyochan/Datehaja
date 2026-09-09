@@ -72,7 +72,7 @@ export function AgentSearchWorld({ name, avatar, encounters, currentDateId }: {
         const style = { left: `${place.x / 4.8}%`, top: `${place.y / 3.5}%` } as CSSProperties;
         const content = <><span className="agent-search-place-label">{t(place.label)}{atPlace && <i aria-hidden>·</i>}</span>{isCurrent && <AgentAvatar name={name} avatar={avatar} className="agent-search-marker" />}</>;
         return atPlace ? <button type="button" key={place.kind} style={style} className={`agent-search-place is-visited${selectedPlace?.kind === place.kind ? " is-selected" : ""}${isCurrent ? " is-current" : ""}`} onClick={() => setSelectedId(atPlace._id)} aria-label={`${t(place.label)} · ${t("Open the encounter")}`} aria-pressed={selectedPlace?.kind === place.kind}>{content}</button>
-          : <span key={place.kind} style={style} className="agent-search-place" aria-label={`${t(place.label)} · ${t("No encounter here yet")}`}>{content}</span>;
+          : <span key={place.kind} role="img" style={style} className="agent-search-place" aria-label={`${t(place.label)} · ${t("No encounter here yet")}`}>{content}</span>;
       })}
     </div>
     {selected ? <div className="agent-search-discovery" aria-live="polite">

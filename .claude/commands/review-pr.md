@@ -12,10 +12,13 @@ branch (`gh pr view --json number`).
 ## Repo facts
 
 - Repository: `hyochan/Datehaja`.
-- Checks on a PR: the Vercel preview deployment. There is no CI workflow, so
-  the local gates below are the only proof the code is sound.
-- There is no external review bot. The reviewer is the `code-review` skill, run
-  against the exact head.
+- Checks on a PR: the `Verify + Deploy` workflow
+  (`.github/workflows/deploy.yml`), whose `Typecheck + lint + test + build` job
+  runs the same gates as below on every pull request, plus the Vercel preview
+  deployment. Run the local gates too: they are faster and cover the same
+  ground, but CI is the record for the exact head.
+- CodeRabbit reviews pull requests, but skips any diff over 100 files. When it
+  skips, the reviewer is the `code-review` skill, run against the exact head.
 - Local gates: `bun run typecheck`, `bun run lint`, `bun run test`.
 
 ## Response rules

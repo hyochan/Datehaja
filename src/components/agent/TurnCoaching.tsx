@@ -20,7 +20,7 @@ export function TurnCoaching({ turn, coaching, agentName }: { turn: TranscriptLi
   const target = turn.isMine ? "self" : "counterpart";
   const messages = coaching.messages?.filter(m => m.turnRound === turn.round && m.feedbackTarget === target) ?? [];
   return <details className="turn-coaching">
-    <summary>{t(turn.isMine ? "Make this more like me" : "How I felt about this")}{messages.length > 0 && <span aria-label={t("Saved feedback")}> · {messages.filter(m => m.role === "human").length}</span>}</summary>
+    <summary>{t(turn.isMine ? "Make this more like me" : "How I felt about this")}{messages.length > 0 && <span> · <span className="sr-only">{t("Saved feedback")} </span>{messages.filter(m => m.role === "human").length}</span>}</summary>
     <div className="turn-coaching-panel">
       <h3>{t(turn.isMine ? "How would you say it?" : "What stood out about their reply?")}</h3>
       <div className="turn-coaching-hint">{t(turn.isMine
