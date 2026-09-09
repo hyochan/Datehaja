@@ -148,7 +148,7 @@ test("account to private agent debrief and human consent", async ({ page }, test
 
   await expect(
     page.getByRole("heading", {
-      name: /What should your agent know about you/i,
+      name: /What should your Dating Agent know about you/i,
     }),
   ).toBeVisible();
   const finishOnboarding = page.getByRole("button", {

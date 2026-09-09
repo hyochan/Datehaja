@@ -260,6 +260,60 @@ describe("internationalisation", () => {
     expect(shadowed).toEqual([]);
   });
 
+  // A translation that says "Agent" where the key says "Dating Agent" is not
+  // untranslated, so the check above passes it. That is how "Wake your first
+  // Dating Agent." kept six values reading plain "Agent", and how the Korean and
+  // Japanese coaching copy went on calling it 분신 / 分身 — the word this repo
+  // reserves for "second self" — while the other four locales were renamed.
+  it("names the product consistently wherever the key does", () => {
+    const TERM: Record<string, RegExp> = {
+      "ko-KR": /데이트 에이전트/,
+      "ja-JP": /デートエージェント/,
+      "de-DE": /Dating-Agent/i,
+      "fr-FR": /Agent de rencontre/i,
+      "nl-NL": /datingagent/i,
+      "sv-SE": /dejtingagent/i,
+    };
+    // Locales that carry the subject implicitly rather than naming it. Each is a
+    // sentence where naming the agent again would be unnatural, not a gap.
+    const IMPLIED_SUBJECT = new Set([
+      "ko-KR\u0000My Dating Agent may meet other agents",
+      "ja-JP\u0000My Dating Agent may meet other agents",
+      "ko-KR\u0000Your Dating Agent looks for people whose relationship goals fit yours.",
+      "ja-JP\u0000Your Dating Agent looks for people whose relationship goals fit yours.",
+      "ko-KR\u0000Not quite you? Open the feedback under any line to shape your Dating Agent's voice or share how you felt about the other person.",
+      "ja-JP\u0000Not quite you? Open the feedback under any line to shape your Dating Agent's voice or share how you felt about the other person.",
+      "ko-KR\u0000Your Dating Agent meets other searching Agents, learns from each conversation, and keeps going when it isn't right. You'll hear from us when there's someone to introduce.",
+      "ja-JP\u0000Your Dating Agent meets other searching Agents, learns from each conversation, and keeps going when it isn't right. You'll hear from us when there's someone to introduce.",
+      "ja-JP\u0000Your Dating Agent only considers someone when both location settings include each other and both people share a language—or both allow translation.",
+      "fr-FR\u0000Tell your Dating Agent how you talk, or write your version of this line. Your guidance carries into future dates.",
+      "nl-NL\u0000Tell your Dating Agent how you talk, or write your version of this line. Your guidance carries into future dates.",
+      "sv-SE\u0000Tell your Dating Agent how you talk, or write your version of this line. Your guidance carries into future dates.",
+    ]);
+    const tables = [
+      agentWorkspaceCopy,
+      settingsCopy,
+      avatarStudioCopy,
+      dateLetterCopy,
+      scoutingCopy,
+      coachingCopy,
+      productCopy,
+    ];
+    const keys = new Set(
+      tables.flatMap((table) => Object.keys(table)).filter((key) => /Dating Agent/i.test(key)),
+    );
+    const wrong: string[] = [];
+    for (const key of keys) {
+      for (const [locale, term] of Object.entries(TERM)) {
+        const value = translate(locale as (typeof TRANSLATED_LOCALES)[number], key);
+        if (value === key || term.test(value)) continue;
+        if (IMPLIED_SUBJECT.has(`${locale}\u0000${key}`)) continue;
+        wrong.push(`${locale}: ${key}`);
+      }
+    }
+    expect(wrong).toEqual([]);
+  });
+
   it("translates every key the app builds at runtime", () => {
     const asked = AVATAR_PALETTES.map((palette) => `${palette} palette`);
     // some(), not every(): one locale missing the row is the failure to catch,

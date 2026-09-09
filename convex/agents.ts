@@ -522,7 +522,7 @@ export const bootstrap = mutation({
     const desiredConnection = cleanMultiline(args.desiredConnection, 700);
     const agentName = clean(args.agentName, 32);
     if (agentName.length < 1) {
-      throw new Error("Give your dating agent a name.");
+      throw new Error("Give your Dating Agent a name.");
     }
     if (essence.length < 30 || desiredConnection.length < 20) {
       throw new Error("Give your Dating Agent a little more to understand.");

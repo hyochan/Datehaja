@@ -179,7 +179,7 @@ test("record the submission demo", async ({ page, browser, baseURL }, testInfo) 
 
   await expect(
     page.getByRole("heading", {
-      name: /What should your agent know about you/i,
+      name: /What should your Dating Agent know about you/i,
     }),
   ).toBeVisible();
   await page.getByLabel("What should we call you?").fill("Juno");
