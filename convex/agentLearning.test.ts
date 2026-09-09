@@ -413,7 +413,7 @@ test('a stale positive verdict cannot introduce people whose goals changed durin
   expect(await t.run(ctx => ctx.db.query('emailMessages').collect())).toHaveLength(0);
 });
 
-test('a failed reply never lowers the fence a newer message raised', async () => {
+test('the fence is only ever lowered by the attempt that raised it', async () => {
   const t = createBackend();
   const userId = await person(t, 'Mina');
   const agent = (await t.run(ctx => ctx.db.query('agentProfiles').withIndex('by_user', q => q.eq('userId', userId)).unique()))!;
@@ -432,4 +432,23 @@ test('a failed reply never lowers the fence a newer message raised', async () =>
   const cleared = await t.run(ctx => ctx.db.get('agentProfiles', agent._id));
   expect(cleared?.pendingReplyTo).toBeUndefined();
   expect(cleared?.pendingReplyAt).toBeUndefined();
+});
+
+test('a reply that throws lowers its own fence instead of stranding its owner', async () => {
+  const t = createBackend();
+  const userId = await person(t, 'Mina');
+  const source = await feedback(t, userId, 'Please keep it short.');
+  const agent = (await t.run(ctx => ctx.db.query('agentProfiles').withIndex('by_user', q => q.eq('userId', userId)).unique()))!;
+  expect(agent.pendingReplyTo).toBe(source.sourceMessageId);
+
+  // A 200 with a body that is not JSON throws out of the model helper rather
+  // than returning a failure it can answer with. Convex never retries a dead
+  // scheduled action, so the fence has to come down here.
+  vi.stubEnv('OPENAI_API_KEY', 'test-only');
+  vi.stubGlobal('fetch', vi.fn(async () => new Response('<html>gateway</html>', { status: 200, headers: { 'content-type': 'text/html' } })));
+  await expect(t.action(internal.agents.reply, { userId })).rejects.toThrow();
+
+  const after = (await t.run(ctx => ctx.db.get('agentProfiles', agent._id)))!;
+  expect(after.pendingReplyTo).toBeUndefined();
+  expect(after.pendingReplyAt).toBeUndefined();
 });
