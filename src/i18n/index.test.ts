@@ -109,10 +109,10 @@ describe("internationalisation", () => {
     const settingsMessages = [
       "Private control room",
       "Agent settings",
-      "Let my agent date",
-      "My agent may meet other agents",
+      "Let my Dating Agent date",
+      "My Dating Agent may meet other agents",
       "Private instructions",
-      "How my agent represents me",
+      "How my Dating Agent represents me",
       "What arrives by email",
       "Agent debriefs",
       "Mutual introductions",

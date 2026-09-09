@@ -234,18 +234,14 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
               </div>
               <h1 className="mt-3 max-w-2xl text-[clamp(2.55rem,5vw,4.5rem)] leading-[1.02] tracking-[-0.035em]">
                 {signingUp
-                  ? t("Create the account behind your agent.")
-                  : t("Come back to your agent.")}
+                  ? t("Create the account behind your Dating Agent.")
+                  : t("Come back to your Dating Agent.")}
               </h1>
               <p className="mt-4 max-w-2xl text-[15.5px] leading-[1.75] text-soft">
                 {t(
                   "Signing in protects your private agent brief, keeps both verdicts separate, and lets us reveal contact only when two humans independently say yes.",
                 )}
               </p>
-            </div>
-
-            <div className="auth-agent-preview mb-6">
-              <AgentLoopPlayer t={t} compact />
             </div>
 
             <div className="soft-section px-5 py-6 sm:px-7 sm:py-7">
@@ -460,6 +456,10 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
                   {t("Community Guidelines")}
                 </Link>
               </p>
+            </div>
+
+            <div className="auth-agent-preview mb-6">
+              <AgentLoopPlayer t={t} compact />
             </div>
           </div>
         </div>

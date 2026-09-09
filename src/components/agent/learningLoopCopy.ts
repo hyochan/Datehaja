@@ -7,19 +7,19 @@ type LoopCopy = {
 };
 
 const en: LoopCopy = {
-  title: "Create your Agent.", titleAccent: "Make it more you, one conversation at a time.",
-  intro: "Your Agent finds people, goes on virtual dates, and comes back with a story. Tell it what felt right, what didn't, and what to try next.",
+  title: "Create your Dating Agent.", titleAccent: "Make it more you, one conversation at a time.",
+  intro: "Your Dating Agent finds people, goes on virtual dates, and comes back with a story. Tell it what felt right, what didn't, and what to try next.",
   steps: [
-    { title: "Create my dating Agent", body: "Share how you talk and who you'd like to meet. Then send your Agent out." },
+    { title: "Create my dating Agent", body: "Share how you talk and who you'd like to meet. Then send your Dating Agent out." },
     { title: "Let it go on dates", body: "It looks for someone who fits and gets to know them through their Agent." },
-    { title: "Hear how it went", body: "See what they did and said, and hear your Agent's honest take." },
+    { title: "Hear how it went", body: "See what they did and said, and hear your Dating Agent's honest take." },
     { title: "Tell it what you think", body: "Correct its voice, point out what you liked, or ask it to look for someone different." },
   ],
-  loop: "What you tell it comes along on the next date. Keep talking, and keep shaping your Agent.",
+  loop: "What you tell it comes along on the next date. Keep talking, and keep shaping your Dating Agent.",
   exampleLabel: "A little feedback goes a long way", exampleTitle: "“That's more like me.”", chooseExample: "Explore a feedback example",
   youSay: "You say", yourAgent: "Your AI Agent", carriesForward: "What it takes into the next date", exampleNote: "Illustrative examples of how feedback can carry forward. Changes to search settings are confirmed with you.",
   waiting: "If it hasn't found someone, it keeps looking. Check in whenever you like.", consent: "Meeting in real life is always a choice for both people.",
-  talk: "Talk with my Agent", create: "Create my dating Agent", technical: "Curious about what happens behind the scenes?", proof: "See real before-and-after records · Korean demo",
+  talk: "Talk with my Dating Agent", create: "Create my dating Agent", technical: "Curious about what happens behind the scenes?", proof: "See real before-and-after records · Korean demo",
   examples: [
     { label: "Make it sound like me", feedback: "I wouldn't give a speech like that. Keep it shorter, and don't end every reply with a question.", memory: "Short, natural replies. Leave room for the other person.", nextLabel: "A way to say it next time", next: "“Same here. I'd rather take our time.”" },
     { label: "Change what I look for", feedback: "I like someone who's curious about me too. Look for someone who asks questions back.", memory: "Notice mutual curiosity, not just an easy conversation.", nextLabel: "What to notice in the next encounter", next: "Do they pick up on an answer and want to know more? Does the curiosity go both ways?" },

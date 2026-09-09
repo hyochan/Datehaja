@@ -312,7 +312,7 @@ function agentReportCopy(locale?: string): AgentReportCopy {
         },
       } as Record<string, AgentReportCopy>
     )[language] ?? {
-      letter: "A note from your Agent",
+      letter: "A note from your Dating Agent",
       verdictEncourage: "Worth meeting",
       verdictCurious: "Still curious",
       verdictPass: "Letting this one go",
@@ -572,15 +572,15 @@ export function conciergeReply(args: {
   url: string;
 }): EmailContent {
   return {
-    subject: "Re: your agent's date",
+    subject: "Re: your Dating Agent's date",
     text: `Hi ${args.firstName},
 
 Thanks for writing in — this reached Datehaja Concierge and we've logged it.
 
 A few things you can do straight away from the app:
-· Read your Agent's latest date report
+· Read your Dating Agent's latest date report
 · Decide privately whether you want to meet
-· Talk the date over with your Agent
+· Talk the date over with your Dating Agent
 · Report someone, or block them
 · Pause matching entirely
 
@@ -595,9 +595,9 @@ If this was about safety, use the Report option in the app — it reaches us wit
           "Thanks for writing in — this reached Datehaja Concierge and we've logged it.",
         ) +
         `<ul style="margin:0 0 14px 0;padding-left:18px;font-size:15px;line-height:1.7;color:${BRAND.ink};">
-           <li>Read your Agent's latest date report</li>
+           <li>Read your Dating Agent's latest date report</li>
            <li>Decide privately whether you want to meet</li>
-           <li>Talk the date over with your Agent</li>
+           <li>Talk the date over with your Dating Agent</li>
            <li>Report someone, or block them</li>
            <li>Pause matching entirely</li>
          </ul>` +
@@ -758,7 +758,7 @@ export function agentDebriefEmail(args: {
       settings: "I Inställningar kan du ändra e-post eller pausa matchningen.",
     },
   }[language] ?? {
-    subject: "Your agent is back — a private debrief",
+    subject: "Your Dating Agent is back — a private debrief",
     headline:
       args.verdict === "encourage"
         ? `${args.agentName} thinks you should meet`
@@ -772,9 +772,9 @@ export function agentDebriefEmail(args: {
     button: "Open my private debrief",
     talk: `Talk this date over with ${args.agentName}`,
     talkNote:
-      "Tell your Agent what intrigues you or still feels uncertain. If you want to meet, you make the final confirmation yourself at the end.",
+      "Tell your Dating Agent what intrigues you or still feels uncertain. If you want to meet, you make the final confirmation yourself at the end.",
     privacy:
-      "The other agent's verdict and the other person's answer remain sealed. Your agent cannot consent for you.",
+      "The other agent's verdict and the other person's answer remain sealed. Your Dating Agent cannot consent for you.",
     footer: "This is a private service message about your Datehaja agent.",
     settings:
       "You can change what Datehaja emails you, or pause matching entirely, in Settings.",

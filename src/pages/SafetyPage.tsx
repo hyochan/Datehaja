@@ -55,7 +55,7 @@ export default function SafetyPage() {
         />
         <Card className="divide-y divide-[var(--border)]">
           <Item
-            title={t("Your Agent goes first.")}
+            title={t("Your Dating Agent goes first.")}
             body={t(
               "The first date happens between two Agents in a simulated world while both humans stay home. Nobody meets anyone until two people independently say yes.",
             )}
@@ -75,7 +75,7 @@ export default function SafetyPage() {
           <Item
             title={t("You can stop instantly")}
             body={t(
-              "One switch in Settings pauses your Agent immediately, so no new date can reach you. Nothing is deleted.",
+              "One switch in Settings pauses your Dating Agent immediately, so no new date can reach you. Nothing is deleted.",
             )}
           />
           <Item

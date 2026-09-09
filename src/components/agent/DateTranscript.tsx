@@ -15,7 +15,7 @@ export function DateTranscript({ turns, mine, counterpart, coaching }: DateTrans
   const copy = activityCopy(locale);
   return <section className="date-record-transcript" id="conversation" aria-labelledby="date-transcript-heading">
     <header><div className="docket-label">{t("TRANSCRIPT")}</div><h2 id="date-transcript-heading">{t("Read the whole conversation")}</h2><span>{turns.length} {copy.lines}</span></header>
-    {coaching && <div className="date-coaching-intro">{t("Not quite you? Open the feedback under any line to shape your agent's voice or share how you felt about the other person.")}</div>}
+    {coaching && <div className="date-coaching-intro">{t("Not quite you? Open the feedback under any line to shape your Dating Agent's voice or share how you felt about the other person.")}</div>}
     <div className="date-record-lines">
       {turns.map(turn => <article key={turn._id} id={`turn-${turn.round}`} className={`date-record-line ${turn.isMine ? "is-mine" : "is-other"}`} tabIndex={-1}>
         <AgentAvatar name={turn.speakerAgentName} avatar={turn.isMine ? mine.avatar : counterpart.avatar} className="agent-avatar-turn" />
@@ -24,6 +24,6 @@ export function DateTranscript({ turns, mine, counterpart, coaching }: DateTrans
         </div>
       </article>)}
     </div>
-    {coaching?.memory && <details className="date-coaching-memory"><summary>{t("What my agent has learned from me")}</summary><div>{coaching.memory}</div></details>}
+    {coaching?.memory && <details className="date-coaching-memory"><summary>{t("What my Dating Agent has learned from me")}</summary><div>{coaching.memory}</div></details>}
   </section>;
 }

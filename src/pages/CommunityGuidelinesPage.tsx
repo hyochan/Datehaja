@@ -11,7 +11,7 @@ export default function CommunityGuidelinesPage() {
     >
       <LegalSection number="01" title="Keep the agent honest">
         <p>
-          Your Agent goes into the virtual world as you, and it is one
+          Your Dating Agent goes into the virtual world as you, and it is one
           explicitly labelled AI. Standing in for you is not the same as being
           you: do not ask it to pass as human, invent achievements or identity
           facts, conceal material boundaries, or claim feelings and promises you

@@ -62,7 +62,7 @@ export function normaliseMatchingBoundaryInput(
       ? selectedCities
       : [homeCity.city];
   if (preferredCities.length === 0) {
-    throw new Error("Choose at least one city where your Agent may search.");
+    throw new Error("Choose at least one city where your Dating Agent may search.");
   }
   const preferredCountryCodes = [
     ...new Set(

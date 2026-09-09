@@ -441,7 +441,7 @@ export const request = action({
     if (!identity || !userId) throw new Error("Not signed in.");
     const access = await getScoutAccess(ctx, identity.tokenIdentifier);
     if (!access.allowed) {
-      throw new Error("A Scout Pass is required before your agent can search.");
+      throw new Error("A Scout Pass is required before your Dating Agent can search.");
     }
     if (access.mode !== "subscription") {
       const demoWorldReady: boolean = await ctx.runQuery(
@@ -492,19 +492,19 @@ export async function createDateRequest(ctx: MutationCtx, args: {
       .withIndex("by_user", (q) => q.eq("userId", userId))
       .unique();
     if (!agent || agent.status !== "active")
-      throw new Error("Wake your agent first.");
+      throw new Error("Wake your Dating Agent first.");
     if (isLearningFeedback(agent, Date.now())) {
       // The background scout simply waits. Someone who pressed the button is
       // owed the real reason rather than "no agent is free in your city".
-      if (!args.searchId) throw new Error("Your agent is still reading your last message. Try again in a moment.");
+      if (!args.searchId) throw new Error("Your Dating Agent is still reading your last message. Try again in a moment.");
       return null;
     }
     if (preferences?.dropsPaused) {
-      throw new Error("Your agent is paused in Settings.");
+      throw new Error("Your Dating Agent is paused in Settings.");
     }
     if (!hasCompleteMatchingBoundaries(profile, preferences)) {
       throw new Error(
-        "Finish choosing where and in which languages your agent may search.",
+        "Finish choosing where and in which languages your Dating Agent may search.",
       );
     }
     const rate = args.searchId ? { ok: true } : await checkRateLimit(
@@ -515,7 +515,7 @@ export async function createDateRequest(ctx: MutationCtx, args: {
       Date.now(),
     );
     if (!rate.ok)
-      throw new Error("Your agent needs time to reflect before another date.");
+      throw new Error("Your Dating Agent needs time to reflect before another date.");
 
     const recentA = await ctx.db
       .query("agentDates")
@@ -1782,7 +1782,7 @@ export const finish = internalMutation({
             de: "Jemand, den du kennenlernen könntest", fr: "Quelqu’un à vous présenter", nl: "Iemand om aan je voor te stellen", sv: "Någon att presentera för dig",
           }),
           body: localDateCopy(locale, {
-            en: "Your Agent found a promising conversation. Read its private letter, then decide for yourself.",
+            en: "Your Dating Agent found a promising conversation. Read its private letter, then decide for yourself.",
             ko: "에이전트가 대화를 나누고 소개하고 싶은 상대를 찾았어요. 편지를 읽고 직접 결정해 주세요.",
             ja: "エージェントが紹介したい相手を見つけました。手紙を読んで、自分で決めてください。",
             de: "Dein Agent hat jemanden kennengelernt. Lies den privaten Brief und entscheide selbst.",
@@ -2217,7 +2217,7 @@ export const consent = mutation({
       throw new Error("Wait for both agents to finish their debriefs.");
     }
     if (args.decision === "yes" && date.isSearchEncounter && (date.initiatorVerdict !== "encourage" || date.counterpartVerdict !== "encourage")) {
-      throw new Error("Your agent is still searching. This encounter did not become an introduction.");
+      throw new Error("Your Dating Agent is still searching. This encounter did not become an introduction.");
     }
     if (args.decision === "yes" && date.isSearchEncounter && date.status !== "connected") {
       const [aPreferences, bPreferences] = await Promise.all([

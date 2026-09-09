@@ -17,7 +17,7 @@ import {
 } from "../../lib/theme";
 
 const NAV = [
-  { to: "/dashboard", label: "My agent", icon: HomeIcon },
+  { to: "/dashboard", label: "My Dating Agent", icon: HomeIcon },
   { to: "/profile", label: "Human", icon: PersonIcon },
   { to: "/settings", label: "Settings", icon: SettingsIcon },
 ];

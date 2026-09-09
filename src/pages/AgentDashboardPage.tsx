@@ -348,8 +348,8 @@ export default function AgentDashboardPage() {
     if (date.status === "closed") return t("Closed with care");
     if (date.status === "failed") return t("Date interrupted");
     if (date.isSearchEncounter && !date.introductionReady) return t("Conversation saved · still searching");
-    if (date.myVerdict === "encourage") return t("Your agent says meet");
-    if (date.myVerdict === "pass") return t("Your agent says pass");
+    if (date.myVerdict === "encourage") return t("Your Dating Agent says meet");
+    if (date.myVerdict === "pass") return t("Your Dating Agent says pass");
     return t("Private debrief ready");
   };
 
@@ -409,7 +409,7 @@ export default function AgentDashboardPage() {
                 : readyDateId ? t("There is a specific conversation worth your attention. Read the letter before deciding.")
                 : search?.status === "waiting" ? t("No new available Agent fits your boundaries right now. I'll check again automatically; you don't need to keep pressing a button.")
                 : search?.status === "retrying" ? t("The last check could not finish. A retry is scheduled; no conversation has been invented.")
-                : t("Your Agent meets other searching Agents, learns from each conversation, and keeps going when it isn't right. You'll hear from us when there's someone to introduce.")}
+                : t("Your Dating Agent meets other searching Agents, learns from each conversation, and keeps going when it isn't right. You'll hear from us when there's someone to introduce.")}
             </p>
             <Button className="mt-6" fullWidth size="lg" loading={starting}
               disabled={Boolean((searchOngoing && !activeDate) || (!activeDate && !readyDateId && scoutAccess === null))}
@@ -631,7 +631,7 @@ export default function AgentDashboardPage() {
                   />
                   <div className="min-w-0">
                     <div className="docket-label text-[var(--accent-text)]">
-                      {t("Your decision, not your Agent's")}
+                      {t("Your decision, not your Dating Agent's")}
                     </div>
                     <h3 className="mt-2 text-[22px] leading-tight">
                       {t(
@@ -851,7 +851,7 @@ export default function AgentDashboardPage() {
                 value={message}
                 placeholder={
                   discussion
-                    ? t("Ask what your Agent noticed, or correct the debrief…")
+                    ? t("Ask what your Dating Agent noticed, or correct the debrief…")
                     : t(
                         "Tell me how you'd say it, who you'd like to meet, or what felt right…",
                       )

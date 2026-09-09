@@ -52,7 +52,7 @@ export function AgentSearchWorld({ name, avatar, encounters, currentDateId }: {
   const selected = real.find(item => item._id === selectedId) ?? real.find(item => item._id === currentDateId) ?? real[0];
   const current = real.find(item => item._id === currentDateId && ["running", "queued"].includes(item.status));
   const selectedPlace = PLACES.find(place => place.kind === selected?.sceneKind);
-  return <div className="agent-search-world" role="group" aria-label={t("Your Agent's world")}>
+  return <div className="agent-search-world" role="group" aria-label={t("Your Dating Agent's world")}>
     <div className="agent-search-world-heading"><span>{t("AGENT WORLD")}</span><small>{t("A little world. Real discoveries.")}</small></div>
     <div className="agent-search-map">
       <svg viewBox="0 0 480 350" fill="none" aria-hidden="true">

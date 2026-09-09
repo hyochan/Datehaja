@@ -22,6 +22,7 @@ import {
   DEFAULT_AVATAR,
   type AvatarConfig,
 } from "../components/agent/AgentAvatar";
+import { useAuthActions } from "@convex-dev/auth/react";
 import { Logo } from "../components/layout/Logo";
 import { LocaleSwitcher } from "../components/layout/LocaleSwitcher";
 import { Wordmark } from "../components/layout/Wordmark";
@@ -88,8 +89,8 @@ const STYLES = ["Polished", "Casual", "Artistic", "Sporty", "Minimal"];
 const STEP_COPY = {
   1: {
     kicker: "FIRST · YOUR AGENT",
-    title: "Create your Agent.",
-    body: "Your Agent is your second self. Give it a face, a voice and permission to be candid.",
+    title: "Create your Dating Agent.",
+    body: "Your Dating Agent is your second self. Give it a face, a voice and permission to be candid.",
   },
   2: {
     kicker: "SECOND · WHO TO NOTICE",
@@ -120,6 +121,7 @@ export default function AgentOnboardingPage() {
   const bootstrap = useMutation(api.agents.bootstrap);
   const navigate = useNavigate();
   const { locale, t } = useI18n();
+  const { signOut } = useAuthActions();
   const track = useMutation(api.growth.track);
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const suggested = useMemo(
@@ -241,7 +243,7 @@ export default function AgentOnboardingPage() {
 
   const city =
     SUPPORTED_CITIES.find((option) => option.key === cityKey) ?? suggested;
-  const agentDisplayName = agentName.trim() || t("Your Agent");
+  const agentDisplayName = agentName.trim() || t("Your Dating Agent");
   const existingAge = (me?.profile as { ageYears?: number } | null | undefined)
     ?.ageYears;
   const idealPersonProgress = getIdealPersonProgress(
@@ -374,11 +376,20 @@ export default function AgentOnboardingPage() {
             <span className="leading-none">
               <Wordmark className="text-[24px] sm:text-[28px]" />
               <span className="docket-label mt-1.5 hidden text-[8px] text-muted sm:block sm:text-[9px]">
-                {t("Your agent dates first")}
+                {t("Your Dating Agent dates first")}
               </span>
             </span>
           </a>
-          <LocaleSwitcher compact />
+          <div className="flex items-center gap-2">
+            <LocaleSwitcher compact />
+            <button
+              type="button"
+              onClick={() => void signOut()}
+              className="rounded-full border border-[var(--border)] px-3 py-2 text-[12px] font-semibold text-muted transition-colors hover:bg-[var(--bg-raised)] hover:text-[var(--text)]"
+            >
+              {t("Sign out")}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -427,7 +438,7 @@ export default function AgentOnboardingPage() {
                 <span>{number < step ? "✓" : `0${number}`}</span>
                 {t(
                   number === 1
-                    ? "My Agent"
+                    ? "My Dating Agent"
                     : number === 2
                       ? "Ideal person"
                       : "About me",
@@ -442,16 +453,16 @@ export default function AgentOnboardingPage() {
                 <div className="docket-label mb-2 text-[var(--accent-text)]">
                   {t("CREATE YOUR AGENT")}
                 </div>
-                <h2 className="text-[34px]">{t("Meet your Agent.")}</h2>
+                <h2 className="text-[34px]">{t("Meet your Dating Agent.")}</h2>
                 <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-soft">
                   {t(
                     "This one character goes out into the world as you, and is candid only with you.",
                   )}
                 </p>
                 <Field
-                  label={t("Name your Agent")}
+                  label={t("Name your Dating Agent")}
                   hint={t(
-                    "This is how your Agent introduces itself. You can change it anytime.",
+                    "This is how your Dating Agent introduces itself. You can change it anytime.",
                   )}
                   htmlFor="agent-name"
                 >
@@ -637,7 +648,7 @@ export default function AgentOnboardingPage() {
                   onChange={setStylePreference}
                   t={t}
                 />
-                <Field label={t("What are you open to?")} hint={t(relationshipIntent === "serious" ? "Serious relationships are matched with people seeking the same." : "Your Agent looks for people whose relationship goals fit yours.")}>
+                <Field label={t("What are you open to?")} hint={t(relationshipIntent === "serious" ? "Serious relationships are matched with people seeking the same." : "Your Dating Agent looks for people whose relationship goals fit yours.")}>
                   <Select
                     value={relationshipIntent}
                     onChange={(event) =>
@@ -679,7 +690,7 @@ export default function AgentOnboardingPage() {
                   {t("THE PERSON BEHIND {agent}", { agent: agentDisplayName })}
                 </div>
                 <h2 className="text-[34px]">
-                  {t("What should your agent know about you?")}
+                  {t("What should your Dating Agent know about you?")}
                 </h2>
                 <div className="mt-6 grid gap-x-5 sm:grid-cols-2">
                   <Field
@@ -988,7 +999,7 @@ export default function AgentOnboardingPage() {
                 </Field>
                 <Notice
                   tone="info"
-                  title={t("Your Agent represents you — it is not you")}
+                  title={t("Your Dating Agent represents you — it is not you")}
                 >
                   {t(
                     "Other agents always see an AI identity. Contact unlocks only after both humans independently say yes.",
@@ -1029,7 +1040,7 @@ export default function AgentOnboardingPage() {
                     <i aria-hidden="true">
                       {idealPersonProgress.hasAudience ? "✓" : "○"}
                     </i>
-                    {t("Choose who your Agent may meet")}
+                    {t("Choose who your Dating Agent may meet")}
                   </span>
                   <span
                     data-complete={idealPersonProgress.hasEnoughDescription}
@@ -1063,7 +1074,7 @@ export default function AgentOnboardingPage() {
                   </span>
                   <strong>
                     {aboutMeProgress.isReady
-                      ? t("Ready to create your Agent")
+                      ? t("Ready to create your Dating Agent")
                       : t("Complete these to continue")}
                   </strong>
                 </div>

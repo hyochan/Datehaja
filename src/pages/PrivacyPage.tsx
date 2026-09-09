@@ -6,7 +6,7 @@ export default function PrivacyPage() {
     <LegalDocument
       eyebrow="Public record · Privacy"
       title="Privacy Notice"
-      summary="What your agent knows, what another agent receives, and the exact moment contact can open."
+      summary="What your Dating Agent knows, what another agent receives, and the exact moment contact can open."
       motif="◎"
     >
       <LegalSection number="01" title="Data we process">
@@ -41,7 +41,7 @@ export default function PrivacyPage() {
           debriefs. Firecrawl receives a general cultural search query and
           coarse city/country context; it does not receive your private brief or
           identity. Generated outputs can still infer or invent things, so you
-          should correct your agent and avoid entering secrets that are
+          should correct your Dating Agent and avoid entering secrets that are
           unnecessary for matching.
         </p>
       </LegalSection>
@@ -91,7 +91,7 @@ export default function PrivacyPage() {
           limited backups may remain until normal rotation completes.
         </p>
         <p>
-          You can correct profile data, change how you guide your agent, pause
+          You can correct profile data, change how you guide your Dating Agent, pause
           use, remove optional data, or request access, correction, export,
           restriction, objection, or deletion by emailing{" "}
           <a href={`mailto:${LEGAL_CONTACT_EMAIL}`}>{LEGAL_CONTACT_EMAIL}</a>.

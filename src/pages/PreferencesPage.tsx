@@ -263,11 +263,11 @@ export default function PreferencesPage() {
         <Card className="p-5 sm:p-7">
           <Notice tone="info" title={t("Two-way boundaries")}>
             {t(
-              "Your Agent only considers someone when both location settings include each other and both people share a language—or both allow translation.",
+              "Your Dating Agent only considers someone when both location settings include each other and both people share a language—or both allow translation.",
             )}
           </Notice>
           <Field
-            label={t("Where may your Agent look?")}
+            label={t("Where may your Dating Agent look?")}
             hint={t("We match realistic meeting locations, not nationality.")}
           >
             <SegmentedControl
@@ -473,7 +473,7 @@ export default function PreferencesPage() {
             )}
           </Field>
 
-          <Field label={t("What you're looking for")} hint={t(p.relationshipIntent === "serious" ? "Serious relationships are matched with people seeking the same." : "Your Agent looks for people whose relationship goals fit yours.")}>
+          <Field label={t("What you're looking for")} hint={t(p.relationshipIntent === "serious" ? "Serious relationships are matched with people seeking the same." : "Your Dating Agent looks for people whose relationship goals fit yours.")}>
             <ChipRadio
               options={[
                 { key: "casual" as const, label: t("Something casual") },

@@ -165,7 +165,7 @@ export default function ProfilePage() {
   return (
     <div className="product-page mx-auto max-w-3xl space-y-10 pb-8">
       <PageIntro
-        eyebrow="The human behind your agent"
+        eyebrow="The human behind your Dating Agent"
         title="Your human profile"
         description={`${profile.displayName} · ${profile.ageYears} · ${profile.neighborhood}, ${profile.city}`}
         motif={profile.displayName.slice(0, 1).toUpperCase()}
@@ -261,7 +261,7 @@ export default function ProfilePage() {
       </section>
 
       <section>
-        <SectionHeading eyebrow="What your agent can represent" title="About you" />
+        <SectionHeading eyebrow="What your Dating Agent can represent" title="About you" />
         <Card className="p-5">
           {error && (
             <div className="mb-5">

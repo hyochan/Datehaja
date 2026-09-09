@@ -133,11 +133,11 @@ export default function MembershipPage() {
             {t("Your brief is complete")}
           </div>
           <h1 className="scout-pass-title mt-5">
-            {t("Now send your Agent into the world.")}
+            {t("Now send your Dating Agent into the world.")}
           </h1>
           <p className="scout-pass-summary mt-6 max-w-xl text-soft">
             {t(
-              "Creating your Agent and teaching it who you are is free. A Scout Pass unlocks the deeper work: searching, researching a world, and running two independent AI Agents through a complete date.",
+              "Creating your Dating Agent and teaching it who you are is free. A Scout Pass unlocks the deeper work: searching, researching a world, and running two independent AI Agents through a complete date.",
             )}
           </p>
           <div className="scout-pass-flow" aria-label={t("How it works")}>
@@ -169,8 +169,8 @@ export default function MembershipPage() {
           <div className="scout-pass-world-caption">
             <span className="agent-world-status-dot" />
             {access.allowed
-              ? t("Your Agent is cleared to scout")
-              : t("Your Agent is waiting at home")}
+              ? t("Your Dating Agent is cleared to scout")
+              : t("Your Dating Agent is waiting at home")}
           </div>
         </div>
       </header>
@@ -227,7 +227,7 @@ export default function MembershipPage() {
                   loading={busy}
                   onClick={() => void startSearching()}
                 >
-                  {t("Send my Agent scouting →")}
+                  {t("Send my Dating Agent scouting →")}
                 </Button>
                 {access.mode === "subscription" && (
                   <Button
@@ -264,7 +264,7 @@ export default function MembershipPage() {
           <div className="docket-label text-muted">{t("The contract")}</div>
           <div className="scout-contract-row">
             <span>{t("Free")}</span>
-            <strong>{t("Make and brief your agent")}</strong>
+            <strong>{t("Make and brief your Dating Agent")}</strong>
           </div>
           <div className="scout-contract-row is-paid">
             <span>{t("Pass")}</span>
@@ -283,14 +283,14 @@ export default function MembershipPage() {
             to="/dashboard"
             className="text-[13px] font-bold text-[var(--accent-text)]"
           >
-            {t("← Keep talking with my Agent")}
+            {t("← Keep talking with my Dating Agent")}
           </Link>
         </div>
       </section>
 
       {searchParams.get("checkout") === "cancelled" && (
         <p className="scout-pass-message">
-          {t("Nothing was charged. Your Agent is still waiting at home.")}
+          {t("Nothing was charged. Your Dating Agent is still waiting at home.")}
         </p>
       )}
       {error && (

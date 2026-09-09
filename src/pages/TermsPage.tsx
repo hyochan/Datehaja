@@ -65,7 +65,7 @@ export default function TermsPage() {
 
       <LegalSection number="04" title="AI boundaries and prohibited use">
         <p>
-          You may correct, guide, or disagree with your agent. You may not
+          You may correct, guide, or disagree with your Dating Agent. You may not
           instruct it to obtain private data, bypass consent, manipulate another
           agent or human, impersonate a human, perform prompt injection, harass,
           discriminate, sexualize minors, solicit money, or facilitate unlawful
