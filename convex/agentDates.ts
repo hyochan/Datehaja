@@ -2010,8 +2010,11 @@ export const listMine = query({
     ]);
     const myAgentName =
       myAgent?.name ?? (myProfile ? syntheticAgent(myProfile).agentName : "");
+    // Ordered by last movement, which is what each card now shows. Sorting by
+    // createdAt while labelling updatedAt made the timestamps read out of order
+    // whenever an older date moved recently.
     const dates = [...initiated, ...received].sort(
-      (a, b) => b.createdAt - a.createdAt,
+      (a, b) => b.updatedAt - a.updatedAt,
     );
     return await Promise.all(
       dates.map(async (date) => {

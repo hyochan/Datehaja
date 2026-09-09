@@ -221,7 +221,7 @@ export const productCopy: Record<string, readonly string[]> = {
   "Quiet and slow": ["조용하고 느긋하게", "静かでゆっくり", "Ruhig und langsam", "Calme et tranquille", "Rustig en langzaam", "Lugnt och långsamt"],
   "Lively and social": ["활기차고 북적하게", "にぎやかで社交的", "Lebhaft und gesellig", "Animé et sociable", "Levendig en sociaal", "Livligt och socialt"],
   "Somewhere to talk": ["이야기하기 좋은 곳", "話しやすい場所", "Ein Ort zum Reden", "Un endroit pour parler", "Een plek om te praten", "Någonstans att prata"],
-  "Somewhere to do": ["뭔가 함께 할 수 있는 곳", "何かをする場所", "Ein Ort zum Machen", "Un endroit pour faire", "Een plek om iets te doen", "Någonstans att göra"],
+  "Somewhere to do": ["뭔가 함께 할 수 있는 곳", "何かをする場所", "Ein Ort, um etwas zu tun", "Un endroit pour faire quelque chose", "Een plek om iets te doen", "Någonstans att göra något"],
   "Late night": ["늦은 밤", "夜遅く", "Spät am Abend", "Tard le soir", "Laat op de avond", "Sent på kvällen"],
   "Daytime": ["낮 시간", "昼間", "Tagsüber", "En journée", "Overdag", "Dagtid"],
   "Short and easy": ["짧고 가볍게", "短く気軽に", "Kurz und locker", "Court et simple", "Kort en makkelijk", "Kort och enkelt"],

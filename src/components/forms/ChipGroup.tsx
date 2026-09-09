@@ -26,6 +26,7 @@ export function ChipGroup({
   max?: number;
   ariaLabel?: string;
 }) {
+  const { t } = useI18n();
   const normalised = options.map((option) =>
     typeof option === "string"
       ? { key: option, label: option, emoji: undefined }
@@ -53,7 +54,7 @@ export function ChipGroup({
             onClick={() => toggle(option.key)}
           >
             {option.emoji && <span aria-hidden>{option.emoji}</span>}
-            {option.label}
+            {t(option.label)}
           </Chip>
         );
       })}
@@ -73,6 +74,7 @@ export function ChipRadio<T extends string>({
   onChange: (next: T) => void;
   ariaLabel?: string;
 }) {
+  const { t } = useI18n();
   return (
     <div role="group" aria-label={ariaLabel} className="flex flex-wrap gap-2">
       {options.map((option) => (
@@ -82,7 +84,7 @@ export function ChipRadio<T extends string>({
           onClick={() => onChange(option.key)}
         >
           {option.emoji && <span aria-hidden>{option.emoji}</span>}
-          {option.label}
+          {t(option.label)}
         </Chip>
       ))}
     </div>

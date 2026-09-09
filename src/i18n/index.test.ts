@@ -10,6 +10,7 @@ import {
   STYLE_TAG_OPTIONS,
 } from "@convex/lib/catalog";
 import {
+  PACKS,
   SUPPORTED_LOCALES,
   agentWorkspaceCopy,
   avatarStudioCopy,
@@ -237,7 +238,7 @@ describe("internationalisation", () => {
     const src = readFileSync("src/i18n/index.tsx", "utf8");
     const seen = new Map<string, number>();
     for (const block of src.matchAll(
-      /Object\.assign\((ko|ja|de|fr|nl|sv), \{([\s\S]*?)\n\}\);/g,
+      /(?:Object\.assign\(|const )(ko|ja|de|fr|nl|sv)(?:, |: TranslationPack = )\{([\s\S]*?)\n\}[;)]/g,
     )) {
       for (const entry of block[2].matchAll(
         /^  (?:"((?:[^"\\]|\\.)+)"|([A-Za-z_$][\w$]*)):\s*"/gm,
@@ -270,7 +271,7 @@ describe("internationalisation", () => {
     );
     const shadowed: string[] = [];
     for (const block of src.matchAll(
-      /Object\.assign\((ko|ja|de|fr|nl|sv), \{([\s\S]*?)\n\}\);/g,
+      /(?:Object\.assign\(|const )(ko|ja|de|fr|nl|sv)(?:, |: TranslationPack = )\{([\s\S]*?)\n\}[;)]/g,
     )) {
       for (const entry of block[2].matchAll(
         /^  (?:"((?:[^"\\]|\\.)+)"|([A-Za-z_$][\w$]*)):\s*"/gm,
@@ -311,17 +312,13 @@ describe("internationalisation", () => {
       "ja-JP\u0000Your Dating Agent meets other searching Agents, learns from each conversation, and keeps going when it isn't right. You'll hear from us when there's someone to introduce.",
       "ja-JP\u0000Your Dating Agent only considers someone when both location settings include each other and both people share a language—or both allow translation.",
     ]);
-    const tables = [
-      agentWorkspaceCopy,
-      settingsCopy,
-      avatarStudioCopy,
-      dateLetterCopy,
-      scoutingCopy,
-      coachingCopy,
-      productCopy,
-    ];
+    // Walk the merged packs, not the tables: 42 keys naming the product live
+    // directly in a pack, and a rename that stops halfway there is exactly the
+    // defect this guard exists for.
     const keys = new Set(
-      tables.flatMap((table) => Object.keys(table)).filter((key) => /Dating Agent/i.test(key)),
+      Object.values(PACKS)
+        .flatMap((pack) => Object.keys(pack ?? {}))
+        .filter((key) => /Dating Agent/i.test(key)),
     );
     const wrong: string[] = [];
     for (const key of keys) {

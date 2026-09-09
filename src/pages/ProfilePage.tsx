@@ -320,10 +320,10 @@ export default function ProfilePage() {
               value={occupation}
               onChange={(e) => setOccupation(e.target.value)}
             >
-              <option value="">Prefer not to say</option>
+              <option value="">{t("Prefer not to say")}</option>
               {OCCUPATION_CATEGORIES.map((option) => (
                 <option key={option} value={option}>
-                  {option}
+                  {t(option)}
                 </option>
               ))}
             </Select>
