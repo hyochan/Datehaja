@@ -1,4 +1,5 @@
 import { coachingCopy } from "./coachingCopy";
+import { productCopy } from "./productCopy";
 import { scoutingCopy } from "./scoutingCopy";
 /* oxlint-disable react/only-export-components */
 import {
@@ -504,10 +505,6 @@ Object.assign(ko, {
   "Agent date": "에이전트 데이트",
   "Private read": "비공개 리포트",
   "Your call": "내 결정",
-  "AI is always identified": "AI임을 항상 표시",
-  "Private briefs stay private": "개인 브리프는 비공개",
-  "Humans control contact": "연락처는 사람이 결정",
-  "Not a compatibility score machine": "궁합 점수 기계가 아니에요",
   "YOUR AGENT'S PRIVATE READ": "내 에이전트의 비공개 리포트",
   "LIVE / SIMULATION": "실시간 / 시뮬레이션",
   "I get playful once I feel safe.":
@@ -564,13 +561,7 @@ Object.assign(ko, {
   "I think you should meet.": "두 사람, 만나봤으면 해요.",
   "Quiet feels safe to both": "둘 다 침묵을 편안해해요",
   "Different social pace": "서로 다른 사교 속도",
-  "Let your better listener go first": "더 잘 듣는 에이전트를 먼저 보내요",
-  "Maybe your agent already knows who you should meet.":
-    "어쩌면 내 에이전트는 내가 누구를 만나야 할지 알지도 몰라요.",
-  "Teach it who you are. Send it out. Keep the final decision human.":
-    "나를 알려주고, 대신 보내고, 마지막 결정은 내가 해요.",
   "Create my agent": "내 데이트 에이전트 만들기",
-  "AI proxies, human consent": "AI 프록시, 사람의 동의",
   "My agent": "내 에이전트",
   Human: "사람",
   Settings: "설정",
@@ -2477,171 +2468,22 @@ Object.assign(sv, {
 /* Agent scout funnel — Korean launch copy. Other locales safely retain the
    English source until the human copy pass for each market is complete. */
 Object.assign(ko, {
-  "Your agent dates first": "내 에이전트가 먼저 데이트해요",
-  "Your private Agent": "나만의 에이전트",
-  "MY AGENT": "나의 에이전트",
-  "My Agent": "나의 에이전트",
-  "FIRST · YOUR AGENT": "첫 번째 · 나의 에이전트",
-  "Create your Agent.": "나의 에이전트를 만들어요.",
-  "Your Agent is your second self. Give it a face, a voice and permission to be candid.":
-    "에이전트는 또 다른 나예요. 얼굴과 목소리를 고르고, 솔직하게 말할 권한을 주세요.",
-  "CREATE YOUR AGENT": "나의 에이전트 만들기",
-  "Meet your Agent.": "나의 에이전트를 만나보세요.",
-  "This one character goes out into the world as you, and is candid only with you.":
-    "이 하나의 캐릭터가 나로서 세상에 나가요. 그리고 나에게만 솔직해져요.",
-  "Your Agent represents you — it is not you":
-    "에이전트는 나를 대신하지만, 나 자체는 아니에요",
-  "Two Agents talking": "두 에이전트가 대화 중",
-  "Change how your Agent sounds, what it protects, and when it may date. Your private memory is never shown here as a public profile.":
-    "에이전트의 말투와 지킬 것, 데이트 허용 시점을 바꿔요. 비공개 기억은 공개 프로필로 보이지 않아요.",
-  "SECOND · WHO TO NOTICE": "두 번째 · 누구를 알아볼지",
-  "Tell it who is worth coming home for.":
-    "누구라면 설레서 돌아올지 알려주세요.",
-  "Describe the person, not a shopping list. Mark what matters, what is flexible, and what truly does not matter.":
-    "조건표 대신 함께 있을 때의 느낌을 말해주세요. 중요한 것, 유연한 것, 정말 상관없는 것을 나눠요.",
-  "THIRD · THE REAL YOU": "세 번째 · 진짜 나",
-  "Give it something honest to represent.":
-    "솔직한 나를 대신할 수 있게 해주세요.",
-  "Your private brief is richer than the card another person may eventually see. Exact location and contact details stay sealed.":
-    "개인 브리프는 상대가 나중에 볼 카드보다 더 깊어요. 정확한 위치와 연락처는 계속 잠겨 있어요.",
-  "Ideal person": "원하는 사람",
-  "About me": "나에 대해",
-  "When convinced, should it push you?":
-    "확신이 들면 나를 적극적으로 설득할까요?",
-  "Tell {agent} who to find →": "{agent}에게 이상형 알려주기 →",
-  "BRIEF {agent}": "{agent}에게 브리프하기",
-  "Who do you hope it notices?": "어떤 사람을 알아봐 주면 좋겠어요?",
-  "It may meet agents representing": "만나도 좋은 상대",
-  "Choose at least one.": "한 명 이상 골라주세요.",
-  "What kind of person should it come home excited about?":
-    "어떤 사람이라면 신나서 돌아와 이야기할까요?",
-  "Write the feeling and dynamic you want, not a résumé.":
-    "스펙 대신 원하는 관계의 느낌을 적어주세요.",
-  "{count} more characters": "{count}자 더 적어주세요",
-  "Enough to continue ✓": "충분해요 ✓",
-  "{count} / 20 minimum": "최소 20자 중 {count}자",
-  "Before you continue": "다음으로 가기 전에",
-  "Ready for the next step": "다음 단계로 갈 준비가 됐어요",
-  "Choose who your Agent may meet": "에이전트가 만날 상대 고르기",
-  "Describe the connection ({count}/20)": "원하는 관계 설명 ({count}/20)",
-  "Personality signals to notice": "눈여겨볼 성격 신호",
   Thoughtful: "사려 깊은",
   Playful: "유쾌한",
   Direct: "솔직한",
   Calm: "차분한",
-  Affectionate: "다정한",
-  "How much should personality fit matter?": "성격 궁합이 얼마나 중요한가요?",
-  "Style or presence you tend to notice": "자연스럽게 눈이 가는 스타일",
-  "Optional — people are never scored on appearance.":
-    "선택 사항 · 외모를 점수로 평가하지 않아요.",
-  Polished: "단정한",
-  Casual: "편안한",
-  Artistic: "개성 있는",
   Sporty: "활동적인",
   Minimal: "미니멀한",
-  "How much should style matter?": "스타일이 얼마나 중요한가요?",
   Important: "중요해요",
   Flexible: "유연해요",
-  "Doesn't matter": "상관없어요",
-  "What are you open to?": "어떤 관계에 열려 있나요?",
-  "A serious relationship": "진지한 관계",
-  "Something casual": "가벼운 만남",
-  "Friendship first": "친구부터 시작",
-  "Not sure yet": "아직 모르겠어요",
-  "Now tell it about me →": "이제 나를 알려주기 →",
-  "THE PERSON BEHIND {agent}": "{agent} 뒤에 있는 사람",
-  "What should your agent know about you?":
-    "에이전트가 나에 대해 무엇을 알아야 할까요?",
-  "At least 2 characters.": "두 글자 이상 입력해주세요.",
-  "Age already verified ✓": "나이 확인 완료 ✓",
-  "Choose a date · adults aged 18 to 100 only.":
-    "날짜를 골라주세요 · 만 18~100세만 이용할 수 있어요.",
-  "Age {age} ✓": "만 {age}세 ✓",
-  "Enter a valid date for an adult aged 18 to 100.":
-    "만 18~100세에 해당하는 올바른 날짜를 입력해주세요.",
-  "{count} selected · choose 3 to 8.": "{count}개 선택 · 3~8개 골라주세요.",
-  "{count} selected · choose at least two.":
-    "{count}개 선택 · 두 개 이상 골라주세요.",
-  "{count} / 30 minimum": "최소 30자 중 {count}자",
-  "Ready to create your Agent": "에이전트를 만들 준비가 됐어요",
-  "Complete these to continue": "다음 조건을 완료해주세요",
-  "Your name (2+ characters)": "내 이름 (2자 이상)",
-  "Adult birth date": "성인 생년월일",
-  "Interests ({count}/3)": "관심사 ({count}/3)",
-  "Personality ({count}/2)": "성격 ({count}/2)",
-  "About you ({count}/30)": "나에 대한 설명 ({count}/30)",
-  "Tell {agent} the version close friends know":
-    "친한 친구가 아는 나를 {agent}에게 알려주세요",
-  "How would close friends describe you?":
-    "친한 친구는 나를 어떻게 표현할까요?",
-  "Contradictions and odd habits are more useful than a polished bio.":
-    "꾸민 소개보다 모순과 엉뚱한 습관이 더 유용해요.",
-  "Other agents always see an AI identity. Contact unlocks only after both humans independently say yes.":
-    "다른 에이전트는 항상 AI 신분만 봅니다. 두 사람이 각자 동의해야 연락처가 열려요.",
-  "Seal the brief and see the pass →": "브리프를 봉인하고 패스 보기 →",
-  "Your brief is complete": "브리프가 완성됐어요",
-  "Brief sealed": "브리프 완료",
-  "Agent scouts": "에이전트 탐색",
-  "Home base": "홈 베이스",
-  "Now send your Agent into the world.":
-    "이제 내 에이전트를 세상으로 내보내요.",
-  "Creating your Agent and teaching it who you are is free. A Scout Pass unlocks the deeper work: searching, researching a world, and running two independent AI Agents through a complete date.":
-    "내 에이전트를 만들고 서로를 알아가는 과정은 무료예요. Scout Pass는 후보 탐색, 가상 세계 조사, 두 AI 에이전트의 데이트를 시작합니다.",
-  "Your Agent is cleared to scout": "내 에이전트, 탐색 준비 완료",
-  "Your Agent is waiting at home": "내 에이전트가 집에서 기다리는 중",
   "Scout Pass": "Scout Pass",
-  "From search to a private debrief.": "탐색부터 비공개 리포트까지.",
-  "DEMO ACTIVE": "데모 패스 사용 중",
-  ACTIVE: "사용 중",
-  "PAYMENTS IN REVIEW": "결제 심사 중",
-  "Candidate search inside your city and boundaries":
-    "내 도시와 경계 안에서 후보 찾기",
-  "A live six-moment agent date you can watch":
-    "직접 볼 수 있는 6장면 에이전트 데이트",
-  "Private debrief with sparks and honest friction":
-    "설렘과 마찰을 담은 비공개 리포트",
-  "Contact reveal only after two human yeses":
-    "두 사람 모두 동의한 뒤에만 연락처 공개",
-  "The pass covers scouting work — never another person's consent, a guaranteed match, or access to private data.":
-    "패스는 탐색 작업을 위한 것이며, 상대의 동의나 매칭 보장, 비공개 정보를 사는 것이 아닙니다.",
-  "Send my Agent scouting →": "내 에이전트 탐색 보내기 →",
-  "Manage billing": "결제 관리",
-  "Start Scout Pass →": "Scout Pass 시작 →",
-  "Scout Pass payments are in merchant review. This build cannot take payment.":
-    "Scout Pass 결제는 가맹점 심사 중이에요. 이 빌드에서는 결제되지 않습니다.",
-  "The contract": "우리의 약속",
-  Free: "무료",
-  "Make and brief your agent": "에이전트 만들고 브리프하기",
-  "Tell it to go find someone": "짝을 찾아오라고 보내기",
-  "Always yours": "항상 내 몫",
-  "The final yes or no": "마지막 만남 결정",
-  "If no compatible Agent is available, your Agent simply comes home. Safety reports and blocking are always free.":
-    "맞는 후보가 없으면 내 에이전트는 그대로 돌아옵니다. 신고와 차단은 항상 무료예요.",
-  "← Keep talking with my Agent": "← 내 에이전트와 계속 대화하기",
-  "Nothing was charged. Your Agent is still waiting at home.":
-    "결제되지 않았어요. 내 에이전트는 아직 집에서 기다리고 있어요.",
 });
 
 Object.assign(ko, {
-  "Create the account behind your agent.": "내 에이전트의 공간을 열어요.",
-  "Come back to your agent.": "내 에이전트에게 돌아가요.",
-  "Signing in protects your private agent brief, keeps both verdicts separate, and lets us reveal contact only when two humans independently say yes.":
-    "로그인하면 브리프와 판단은 비공개로 지켜지고, 두 사람이 모두 동의할 때만 연락처가 열려요.",
-  "Wake your first agent.": "첫 에이전트를 깨워요.",
-  "Open your private agent dates.": "내 에이전트의 데이트를 열어요.",
-  "Teach one AI the unpolished you. It meets other agents, comes back with an honest read, and asks before any real contact opens.":
-    "꾸미지 않은 나를 알려주세요. 에이전트가 먼저 만나고, 솔직한 리포트를 가져와요.",
   "Continue with Google": "Google로 계속",
   "Continue with Apple": "Apple로 계속",
   "or use email": "또는 이메일",
   "No password to remember.": "기억할 비밀번호가 없어요.",
-  "Development account — no email will be sent.":
-    "개발 테스트 계정이에요. 이메일은 보내지 않아요.",
-  "Development sign-in": "개발 테스트 로그인",
-  "No email was sent. The test code {code} is already filled in.":
-    "이메일을 보내지 않았어요. 테스트 코드 {code}을 미리 입력해 두었어요.",
-  "Development code ready.": "개발 테스트 코드가 준비됐어요.",
-  "Use development code": "개발 테스트 코드 사용",
   "Check your inbox": "받은편지함을 확인하세요",
   "We sent an 8-digit code to {email}. It expires in 10 minutes.":
     "{email}로 8자리 코드를 보냈어요. 10분 후 만료됩니다.",
@@ -3062,72 +2904,13 @@ Object.assign(sv, {
 /* Named-agent identity and the live product tour. The public tour is rendered
    in the selected locale instead of baking one language into screenshots. */
 Object.assign(ko, {
-  "Name your Agent": "에이전트의 이름을 지어주세요",
-  "This is how your Agent introduces itself. You can change it anytime.":
-    "다른 에이전트에게 자신을 소개할 이름이에요. 언제든 바꿀 수 있어요.",
-  "e.g. Juno": "예: 주노",
-  "Name and style my Agent": "내 에이전트의 이름과 모습",
-  "Other Agents meet this name—not your account name. Change it anytime.":
-    "상대 에이전트는 계정 이름이 아니라 이 이름으로 만나요. 언제든 바꿀 수 있어요.",
-  "Save name and look": "이름과 모습 저장",
-  "See the whole story": "한눈에 보는 실제 흐름",
-  "Juno and Sol meet in the date world": "주노와 솔이 데이트 월드에서 만나요",
-  "Juno returns with an honest private read":
-    "주노가 솔직한 비공개 소감을 가지고 돌아와요",
-  "Only two human yeses open the introduction":
-    "두 사람이 모두 동의해야 실제 소개가 열려요",
-  "DATE WORLD": "데이트 월드",
-  "The late café": "늦은 밤의 카페",
   "I turn tiny plans into adventures.":
     "나는 소소한 계획도 모험으로 만들어.",
   "I'd love that — as long as it feels easy.":
     "나도 좋아. 마음만 편하다면 말이야.",
   "back from the date": "데이트에서 돌아옴",
   "I'm back! I have so much to tell you.": "나 왔어! 할 얘기 진짜 많아.",
-  "So—what did you notice?": "그래서, 뭐가 보였어?",
-  "MY HONEST READ": "나의 솔직한 판단",
-  "There was a spark. Meet once.": "설렘이 있었어요. 한 번 만나봐요.",
-  "Ask about pace, not chemistry.": "호감보다 서로의 속도를 물어보세요.",
-  "TWO HUMANS SAID YES": "두 사람 모두 만나고 싶어 해요",
   "Now meet as yourselves.": "이제 진짜 서로를 만나세요.",
-  "Seoul · film · quiet cafés": "서울 · 영화 · 조용한 카페",
-  "Introduction opened": "서로의 소개가 열렸어요",
-  "Start with Juno's note": "주노의 메모로 대화를 시작해요",
-  "Juno's private note": "주노의 비공개 메모",
-  PRIVATE: "비공개",
-  "There was a spark. I would meet once.":
-    "설렘이 있었어요. 나는 한 번 만나볼 것 같아요.",
-  "Three moments Juno noticed": "주노가 발견한 세 장면",
-  "Easy laugh": "편안한 웃음",
-  "Comfortable pause": "어색하지 않은 침묵",
-  "Different pace": "서로 다른 속도",
-  "Juno's call": "주노의 제안",
-  "Meet once": "한 번 만나보기",
-  "While you get on with your day": "당신이 일상을 보내는 동안",
-  "Four quiet jobs. One Agent who knows you.":
-    "네 가지 일을, 나를 아는 에이전트 하나가.",
-  "No new dashboard to learn": "새로 배울 복잡한 화면은 없어요",
-  "What your Agent handles": "에이전트가 맡는 일",
-  "JUNO IS OUT": "주노가 탐색 중",
-  "PRIVATE EMAIL": "비공개 이메일",
-  "Juno is back.": "주노가 돌아왔어요.",
-  "Your date report is ready": "데이트 리포트가 도착했어요",
-  BEFORE: "평소에는",
-  "Listens and remembers": "듣고 기억해요",
-  "Your conversations shape who Juno looks for.":
-    "나눈 대화가 주노의 다음 탐색을 더 정확하게 만들어요.",
-  SCOUTING: "찾는 동안",
-  "Finds a fresh place and spark": "지금 어울리는 장소와 화제를 찾아요",
-  "Current public place and culture data—not stale suggestions.":
-    "오래된 추천 목록이 아니라 지금의 장소와 문화 정보를 살펴봐요.",
-  DURING: "데이트 중",
-  "Keeps the date room live": "데이트 현장을 실시간으로 보여줘요",
-  "Drop in anytime and watch the conversation unfold.":
-    "언제든 들어와 두 에이전트의 대화를 지켜볼 수 있어요.",
-  AFTER: "돌아온 뒤",
-  "Brings the result home": "결과를 나에게만 가져와요",
-  "A private report appears in the app and arrives by email.":
-    "비공개 리포트가 앱에 나타나고 이메일로도 도착해요.",
 });
 
 /* Restored strings emitted by convex/ and localized client-side. */
@@ -6480,7 +6263,7 @@ const dateLetterCopy: Record<string, readonly string[]> = {
   "the agents are writing separate private notes…": ["각자의 비공개 편지를 쓰고 있어요…", "それぞれに非公開の手紙を書いています…", "Die Agents schreiben getrennte private Notizen…", "Les Agents écrivent chacun leur lettre privée…", "De Agents schrijven elk een privébrief…", "Agenterna skriver var sitt privat brev…"],
 };
 
-for (const copy of [agentWorkspaceCopy, settingsCopy, avatarStudioCopy, dateLetterCopy, scoutingCopy, coachingCopy]) {
+for (const copy of [agentWorkspaceCopy, settingsCopy, avatarStudioCopy, dateLetterCopy, scoutingCopy, coachingCopy, productCopy]) {
   for (const [message, values] of Object.entries(copy)) {
     ko[message] = values[0];
     ja[message] = values[1];
