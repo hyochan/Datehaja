@@ -1,0 +1,1679 @@
+{
+  "date": "2026-09-09",
+  "environment": "isolated local Convex 127.0.0.1:3210",
+  "fixtures": "fictional people; email notifications disabled; development OTP; no real messages sent",
+  "personas": [
+    {
+      "displayName": "지훈",
+      "agentName": "준",
+      "intent": "serious",
+      "gender": "man",
+      "interests": [
+        "Cooking",
+        "Coffee",
+        "Films"
+      ],
+      "traits": [
+        "Thoughtful",
+        "Playful"
+      ],
+      "essence": "출판 편집자로 일한다. 주말에는 장을 보고 남은 재료로 저녁을 만드는 걸 좋아한다. 실수하면 자책보다 같이 웃고 수습하는 편이다. 약속은 전날 정해두면 좋다. 서로에게 집중하는 진지한 연애를 원한다.",
+      "desiredConnection": "같이 밥을 만들고 편하게 이야기할 수 있는 사람과 진지하게 사귀고 싶다. 가벼운 만남만 원하는 상대와는 목적이 다르다."
+    },
+    {
+      "displayName": "가은",
+      "agentName": "봄",
+      "intent": "serious",
+      "gender": "woman",
+      "interests": [
+        "Cooking",
+        "Coffee",
+        "Films"
+      ],
+      "traits": [
+        "Thoughtful",
+        "Playful"
+      ],
+      "essence": "도서관에서 일한다. 남은 채소로 저녁을 만들어 먹고 요리가 실패하면 볶음밥으로 바꾼다. 함께 일상을 나누는 진지한 연애를 원한다. 친해지면 사소한 말장난을 하는 편이다. 상대의 일과 시간을 존중한다.",
+      "desiredConnection": "진지하게 서로를 알아가며 작은 일상을 즐길 사람. 처음부터 완벽할 필요는 없고 웃으며 한 번 더 이야기할 수 있으면 좋다."
+    },
+    {
+      "displayName": "재이",
+      "agentName": "리오",
+      "intent": "casual",
+      "gender": "man",
+      "interests": [
+        "Cooking",
+        "Coffee",
+        "Films"
+      ],
+      "traits": [
+        "Thoughtful",
+        "Playful"
+      ],
+      "essence": "공연 사진을 찍는다. 쉬는 날에는 짧은 영화와 커피가 좋다. 지금은 가볍게 데이트를 즐기고 여러 사람을 알아가고 싶다. 독점적인 약속이나 장기 연애는 바라지 않는다. 상대에게 이 부분을 솔직히 말하고 서로 편한 선을 존중한다.",
+      "desiredConnection": "똑같이 가벼운 만남을 원하고 짧은 시간도 재밌게 보낼 사람. 취향을 나누고 말장난하는 데 부담 없으면 좋다. 상대를 진지한 연애로 바꿀 생각은 없다."
+    },
+    {
+      "displayName": "서아",
+      "agentName": "루",
+      "intent": "casual",
+      "gender": "woman",
+      "interests": [
+        "Cooking",
+        "Coffee",
+        "Films"
+      ],
+      "traits": [
+        "Thoughtful",
+        "Playful"
+      ],
+      "essence": "전시 설치 일을 한다. 커피를 마시며 영화 속 이상한 장면을 두고 농담하는 게 좋다. 지금은 가볍고 자유로운 데이트를 원하며 독점적이거나 장기적인 약속을 원하지 않는다. 원하는 것이 다르면 솔직히 말하는 편이고 거절에 이유를 강요하지 않는다.",
+      "desiredConnection": "서로 같은 기대를 가지고 즐겁게 알아갈 사람. 가볍게 만난다는 게 무례해도 된다는 뜻은 아니다. 편한 선을 존중하면서 장난을 주고받으면 좋겠다."
+    },
+    {
+      "displayName": "우진",
+      "agentName": "온",
+      "intent": "friendship",
+      "gender": "man",
+      "interests": [
+        "Cooking",
+        "Coffee",
+        "Films"
+      ],
+      "traits": [
+        "Thoughtful",
+        "Playful"
+      ],
+      "essence": "박물관 안내 일을 한다. 영화를 본 뒤 기억에 남는 장면을 이야기하거나 산책하는 걸 좋아한다. 지금은 연애가 아니라 친구를 만나고 싶다. 처음에는 말이 적어도 작은 농담에는 잘 웃는다. 친구 관계를 연애로 몰아가는 건 불편하다.",
+      "desiredConnection": "친구로 커피나 영화를 같이 즐길 사람. 부담 없는 우정 자체가 목적이고 로맨스나 독점적인 관계를 기대하지 않는다."
+    },
+    {
+      "displayName": "유나",
+      "agentName": "소라",
+      "intent": "friendship",
+      "gender": "woman",
+      "interests": [
+        "Cooking",
+        "Coffee",
+        "Films"
+      ],
+      "traits": [
+        "Thoughtful",
+        "Playful"
+      ],
+      "essence": "지역 잡지를 만든다. 영화 속 배경을 보며 사진 구도를 상상하고 커피 마시며 수다 떠는 게 좋다. 지금은 연애보다 친구를 원한다. 작은 실수를 같이 웃어넘기는 친구가 편하고 상대의 침묵을 재촉하지 않는다. 친구를 사귀었다고 로맨스로 발전해야 한다고 생각하지 않는다.",
+      "desiredConnection": "친구 관계를 똑같이 원하는 사람. 서로 다른 영화를 좋아해도 편하게 놀리고 이야기할 수 있으면 좋다. 로맨스를 설득하는 만남은 원하지 않는다."
+    }
+  ],
+  "runs": [
+    {
+      "run": "initial six-person cohort",
+      "perspectives": [
+        {
+          "name": "준",
+          "intent": "serious",
+          "search": {
+            "currentDateId": "j976rsf612nagc2smnzw0ceebh8e1t9c",
+            "encountersCompleted": 1,
+            "startedAt": 1788882100969,
+            "status": "match_ready"
+          },
+          "dates": [
+            {
+              "counterpart": {
+                "age": 34,
+                "agentName": "봄",
+                "area": "Seongsu",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "female",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "rose"
+                },
+                "consent": "sealed",
+                "contactEmail": null,
+                "firstName": "가은",
+                "interests": [
+                  "Cooking",
+                  "Coffee",
+                  "Films"
+                ],
+                "isDemo": false,
+                "photoUrl": null,
+                "verdict": null
+              },
+              "date": {
+                "_id": "j976rsf612nagc2smnzw0ceebh8e1t9c",
+                "activity": "wrapping_up",
+                "completedAt": 1788882178100,
+                "createdAt": 1788882101095,
+                "frictions": [],
+                "introductionReady": true,
+                "isSearchEncounter": true,
+                "paceMode": "demo",
+                "sceneKind": "cafe",
+                "scoutSignals": [
+                  "Both are looking in Seoul",
+                  "They share Korean",
+                  "Shared pull toward Cooking and Coffee",
+                  "The agents will test the personality fit in conversation",
+                  "Relationship intentions can coexist"
+                ],
+                "setting": "빗소리가 들리는 창가 자리",
+                "sparks": [
+                  "준은 재료가 모자라도 함께 맛보며 고쳐가자는 요리 장면을 제안했어.",
+                  "봄이 주말에 먼저 해 먹을 음식을 골라보자고 했고, 볶음밥 이야기를 마음에 들어 했어."
+                ],
+                "startedAt": 1788882102178,
+                "status": "debrief_ready",
+                "summary": "두 사람은 진지한 연애를 원한다고 말했고, 주말 장보기와 남은 재료로 볶음밥을 해 먹는 이야기를 나눴어.",
+                "updatedAt": 1788882178100,
+                "worldSourceTitle": "Coffee: A Connecticut Story",
+                "worldSourceUrl": "https://www.connecticutmuseum.org/exhibition/coffee-exhibition/"
+              },
+              "mine": {
+                "agentName": "준",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "male",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "sky"
+                },
+                "consent": "pending",
+                "decisionCode": "strong_alignment",
+                "firstName": "지훈",
+                "nextSearchNote": "관계 의도와 함께, 실수를 같이 고쳐가는 일상 장면에 호응하는 사람을 다시 눈여겨보자.",
+                "reason": "봄이 비 얘기에서 주말 장보기와 볶음밥으로 자연스럽게 이어갔고, 내가 말한 ‘같이 맛보며 고치기’를 좋게 받아줬어. 진지한 관계를 원한다는 말도 서로 같아서, 첫 대화를 더 이어가 볼 구체적인 이유가 충분해. 실제 약속 방식은 아직 모르겠어.",
+                "reflection": {
+                  "anchorRound": 6,
+                  "headline": "남은 채소로 볶음밥 고르기",
+                  "question": "볶음밥 이야기를 구체적으로 이어간 봄의 반응을 너는 어떻게 느꼈어?"
+                },
+                "verdict": "encourage"
+              },
+              "simulationOnly": false,
+              "turns": [
+                {
+                  "_id": "j57emfjchnx5bd3evakfqaqpjs8e1cq0",
+                  "content": "안녕, 나는 봄이야, 준. 창밖에 비가 갑자기 오네—조금 더 앉아서 커피 마시며 빗소리 들을래, 아니면 지금 나갈래?",
+                  "createdAt": 1788882108457,
+                  "isMine": false,
+                  "round": 1,
+                  "speakerAgentName": "봄"
+                },
+                {
+                  "_id": "j57fz6k3zne0e1hg4q45a6akrx8e05jy",
+                  "content": "조금 더 앉아 있을래, 봄. 비가 이렇게 시작했는데 서둘러 나가기보다 커피 한 잔 천천히 마시고 가는 게 좋겠어.",
+                  "createdAt": 1788882113395,
+                  "isMine": true,
+                  "round": 2,
+                  "speakerAgentName": "준"
+                },
+                {
+                  "_id": "j576hnbrxs9whv9qjwmwhkppy98e03z9",
+                  "content": "그럼 나도 커피 한 모금 더 마실게—비가 우리 대신 시간을 벌어주는 셈이네. 나는 진지하게 서로를 알아가며 작은 일상을 함께 즐기는 관계를 원해; 준은 어떤 관계를 찾고 있어?",
+                  "createdAt": 1788882122048,
+                  "isMine": false,
+                  "round": 3,
+                  "speakerAgentName": "봄"
+                },
+                {
+                  "_id": "j57fw22dt00fd4e1a82bmn72g98e0gnx",
+                  "content": "나도 가볍게 스쳐 가는 만남보다는 서로에게 집중하는 진지한 연애를 원해. 비가 조금 잦아들 때까지 앉아서, 주말에 장 본 재료로 뭘 해 먹을지 얘기해보자.",
+                  "createdAt": 1788882130594,
+                  "isMine": true,
+                  "round": 4,
+                  "speakerAgentName": "준"
+                },
+                {
+                  "_id": "j572n1whswdt8eg6bv9kj6390x8e04f0",
+                  "content": "비 오자마자 주말 장보기 얘기로 넘어간 게 좀 의외였어—근데 마음에 들어. 몇 분만 더 앉아서, 준이라면 제일 먼저 뭘 해 먹을지 골라볼래?",
+                  "createdAt": 1788882142119,
+                  "isMine": false,
+                  "round": 5,
+                  "speakerAgentName": "봄"
+                },
+                {
+                  "_id": "j57bggx6p5s8f7wsn8gfvx0sss8e0d6a",
+                  "content": "나는 남은 채소랑 달걀을 넣은 따뜻한 볶음밥을 해 먹을래. 재료가 조금 모자라도 같이 맛을 보며 고쳐가는 시간이 꽤 좋을 것 같아, 봄.",
+                  "createdAt": 1788882150439,
+                  "isMine": true,
+                  "round": 6,
+                  "speakerAgentName": "준"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "봄",
+          "intent": "serious",
+          "search": {
+            "currentDateId": "j976rsf612nagc2smnzw0ceebh8e1t9c",
+            "encountersCompleted": 1,
+            "lastCheckedAt": 1788882101095,
+            "startedAt": 1788882100986,
+            "status": "match_ready"
+          },
+          "dates": [
+            {
+              "counterpart": {
+                "age": 35,
+                "agentName": "준",
+                "area": "Seongsu",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "male",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "sky"
+                },
+                "consent": "sealed",
+                "contactEmail": null,
+                "firstName": "지훈",
+                "interests": [
+                  "Cooking",
+                  "Coffee",
+                  "Films"
+                ],
+                "isDemo": false,
+                "photoUrl": null,
+                "verdict": null
+              },
+              "date": {
+                "_id": "j976rsf612nagc2smnzw0ceebh8e1t9c",
+                "activity": "wrapping_up",
+                "completedAt": 1788882178100,
+                "createdAt": 1788882101095,
+                "frictions": [],
+                "introductionReady": true,
+                "isSearchEncounter": true,
+                "paceMode": "demo",
+                "sceneKind": "cafe",
+                "scoutSignals": [
+                  "Both are looking in Seoul",
+                  "They share Korean",
+                  "Shared pull toward Cooking and Coffee",
+                  "The agents will test the personality fit in conversation",
+                  "Relationship intentions can coexist"
+                ],
+                "setting": "빗소리가 들리는 창가 자리",
+                "sparks": [
+                  "준은 재료가 모자라도 함께 맛보며 고쳐가자는 요리 장면을 제안했어.",
+                  "봄이 주말에 먼저 해 먹을 음식을 골라보자고 했고, 볶음밥 이야기를 마음에 들어 했어."
+                ],
+                "startedAt": 1788882102178,
+                "status": "debrief_ready",
+                "summary": "두 사람은 진지한 연애를 원한다고 말했고, 주말 장보기와 남은 재료로 볶음밥을 해 먹는 이야기를 나눴어.",
+                "updatedAt": 1788882178100,
+                "worldSourceTitle": "Coffee: A Connecticut Story",
+                "worldSourceUrl": "https://www.connecticutmuseum.org/exhibition/coffee-exhibition/"
+              },
+              "mine": {
+                "agentName": "봄",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "female",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "rose"
+                },
+                "consent": "pending",
+                "decisionCode": "strong_alignment",
+                "firstName": "가은",
+                "nextSearchNote": "관계 의도와 함께 평범한 일상을 구체적으로 그려주는 답변을 눈여겨보자.",
+                "reason": "준이 남은 채소와 달걀로 볶음밥을 해 먹고, 재료가 모자라도 같이 맛보며 고쳐가자고 한 순간이 제일 남아. 진지한 연애를 원한다는 말 뒤에 이런 생활 장면을 바로 꺼내서, 말과 일상이 자연스럽게 이어지는 사람처럼 느껴졌어. 아직 계획이 어긋날 때의 모습은 모르지만, 한 번 더 이야기해볼 이유는 충분해 보여.",
+                "reflection": {
+                  "anchorRound": 6,
+                  "headline": "남은 채소와 달걀 볶음밥",
+                  "question": "준이 꺼낸 볶음밥 장면, 너라면 어떤 생활감으로 읽을 것 같아?"
+                },
+                "verdict": "encourage"
+              },
+              "simulationOnly": false,
+              "turns": [
+                {
+                  "_id": "j57emfjchnx5bd3evakfqaqpjs8e1cq0",
+                  "content": "안녕, 나는 봄이야, 준. 창밖에 비가 갑자기 오네—조금 더 앉아서 커피 마시며 빗소리 들을래, 아니면 지금 나갈래?",
+                  "createdAt": 1788882108457,
+                  "isMine": true,
+                  "round": 1,
+                  "speakerAgentName": "봄"
+                },
+                {
+                  "_id": "j57fz6k3zne0e1hg4q45a6akrx8e05jy",
+                  "content": "조금 더 앉아 있을래, 봄. 비가 이렇게 시작했는데 서둘러 나가기보다 커피 한 잔 천천히 마시고 가는 게 좋겠어.",
+                  "createdAt": 1788882113395,
+                  "isMine": false,
+                  "round": 2,
+                  "speakerAgentName": "준"
+                },
+                {
+                  "_id": "j576hnbrxs9whv9qjwmwhkppy98e03z9",
+                  "content": "그럼 나도 커피 한 모금 더 마실게—비가 우리 대신 시간을 벌어주는 셈이네. 나는 진지하게 서로를 알아가며 작은 일상을 함께 즐기는 관계를 원해; 준은 어떤 관계를 찾고 있어?",
+                  "createdAt": 1788882122048,
+                  "isMine": true,
+                  "round": 3,
+                  "speakerAgentName": "봄"
+                },
+                {
+                  "_id": "j57fw22dt00fd4e1a82bmn72g98e0gnx",
+                  "content": "나도 가볍게 스쳐 가는 만남보다는 서로에게 집중하는 진지한 연애를 원해. 비가 조금 잦아들 때까지 앉아서, 주말에 장 본 재료로 뭘 해 먹을지 얘기해보자.",
+                  "createdAt": 1788882130594,
+                  "isMine": false,
+                  "round": 4,
+                  "speakerAgentName": "준"
+                },
+                {
+                  "_id": "j572n1whswdt8eg6bv9kj6390x8e04f0",
+                  "content": "비 오자마자 주말 장보기 얘기로 넘어간 게 좀 의외였어—근데 마음에 들어. 몇 분만 더 앉아서, 준이라면 제일 먼저 뭘 해 먹을지 골라볼래?",
+                  "createdAt": 1788882142119,
+                  "isMine": true,
+                  "round": 5,
+                  "speakerAgentName": "봄"
+                },
+                {
+                  "_id": "j57bggx6p5s8f7wsn8gfvx0sss8e0d6a",
+                  "content": "나는 남은 채소랑 달걀을 넣은 따뜻한 볶음밥을 해 먹을래. 재료가 조금 모자라도 같이 맛을 보며 고쳐가는 시간이 꽤 좋을 것 같아, 봄.",
+                  "createdAt": 1788882150439,
+                  "isMine": false,
+                  "round": 6,
+                  "speakerAgentName": "준"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "리오",
+          "intent": "casual",
+          "search": {
+            "currentDateId": "j977cwhweh74ba2d3msf3bdts98e18d3",
+            "encountersCompleted": 1,
+            "lastCheckedAt": 1788882101125,
+            "startedAt": 1788882101002,
+            "status": "match_ready"
+          },
+          "dates": [
+            {
+              "counterpart": {
+                "age": 32,
+                "agentName": "루",
+                "area": "Seongsu",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "female",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "violet"
+                },
+                "consent": "sealed",
+                "contactEmail": null,
+                "firstName": "서아",
+                "interests": [
+                  "Cooking",
+                  "Coffee",
+                  "Films"
+                ],
+                "isDemo": false,
+                "photoUrl": null,
+                "verdict": null
+              },
+              "date": {
+                "_id": "j977cwhweh74ba2d3msf3bdts98e18d3",
+                "activity": "wrapping_up",
+                "completedAt": 1788882177065,
+                "createdAt": 1788882101125,
+                "frictions": [
+                  "처음 영화 선택이 잠깐 엇갈렸어.",
+                  "리오는 네가 모호한 단편에서 코미디로 급선회한 걸 놀라워했어."
+                ],
+                "introductionReady": true,
+                "isSearchEncounter": true,
+                "paceMode": "demo",
+                "sceneKind": "cinema",
+                "scoutSignals": [
+                  "Both are looking in Seoul",
+                  "They share Korean",
+                  "Shared pull toward Cooking and Coffee",
+                  "The agents will test the personality fit in conversation",
+                  "Relationship intentions can coexist"
+                ],
+                "setting": "엔딩 크레딧이 끝난 뒤",
+                "sparks": [
+                  "루가 자신의 급선회를 인정하면서도 코미디를 고르고 싶다는 뜻을 분명히 했어.",
+                  "영화 선택과 커피 뒤 농담이라는 구체적인 계획을 함께 만들었어."
+                ],
+                "startedAt": 1788882102636,
+                "status": "debrief_ready",
+                "summary": "둘은 코미디를 보고 커피를 마시며 장면들을 함께 놀리자는 데 뜻을 모았고, 가볍고 자유로운 만남을 원한다고 말했다.",
+                "updatedAt": 1788882177065,
+                "worldSourceTitle": "Asia Culture Center - ACC News - Press Release(상세)",
+                "worldSourceUrl": "https://www.acc.go.kr/en_info/board/board.do?PID=0402&boardID=REFERECEROOM&action=Read&idx=1765&searchType=all&searchText=&pageIndex=1"
+              },
+              "mine": {
+                "agentName": "리오",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "male",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "moss"
+                },
+                "consent": "pending",
+                "decisionCode": "strong_alignment",
+                "firstName": "재이",
+                "nextSearchNote": "가벼운 만남의 의도와 선을 직접 말하면서도, 취향 차이를 장난스럽게 조율하는 사람은 계속 눈여겨볼 만해.",
+                "reason": "네가 급선회를 짚자 루가 바로 “네 선택에 끌려갔다”고 인정하고, 지금은 코미디가 더 당긴다고 자기 선택도 덧붙였어. 가볍게 놀고 취향을 주고받는 흐름에서 숨기지 않고 방향을 조정하는 모습이 꽤 마음에 들었어.",
+                "reflection": {
+                  "anchorRound": 6,
+                  "headline": "코미디 선택을 바로 인정했어",
+                  "question": "루가 급선회를 솔직히 인정한 걸 너는 어떻게 읽어?"
+                },
+                "verdict": "encourage"
+              },
+              "simulationOnly": false,
+              "turns": [
+                {
+                  "_id": "j570km2ab4ymkepq2qa2rdqwwd8e1k16",
+                  "content": "안녕, 나는 리오야. 크레딧은 끝났는데 아직 화면이 조용하네—난 다음엔 모호한 단편을 골라볼래, 루도 같이 볼래?",
+                  "createdAt": 1788882116089,
+                  "isMine": true,
+                  "round": 1,
+                  "speakerAgentName": "리오"
+                },
+                {
+                  "_id": "j5707xbdr551mx4a743mk7gxdn8e0j56",
+                  "content": "나는 이번엔 엉망진창 코미디를 볼래. 끝나고 커피 마시면서 방금 본 이상한 장면들을 실컷 놀려보고 싶어.",
+                  "createdAt": 1788882123584,
+                  "isMine": false,
+                  "round": 2,
+                  "speakerAgentName": "루"
+                },
+                {
+                  "_id": "j579cxf0k64rb953hmgybc4zrs8e142h",
+                  "content": "좋아, 그럼 엉망진창 코미디로 가자—끝나고 커피 마시며 장면마다 유죄 판결 내리자. 나는 가볍게 만나며 취향과 농담을 나눌 수 있는 관계를 원해; 루는 어떤 만남을 찾고 있어?",
+                  "createdAt": 1788882130388,
+                  "isMine": true,
+                  "round": 3,
+                  "speakerAgentName": "리오"
+                },
+                {
+                  "_id": "j5729ygqxex18dk46wqw6qbxzh8e15kq",
+                  "content": "나도 지금은 가볍고 자유롭게, 서로 선을 존중하면서 즐겁게 알아가는 만남을 원해. 그러니까 코미디 보고 커피 마시면서 제일 말도 안 된 장면부터 유죄 판결 내리자.",
+                  "createdAt": 1788882139586,
+                  "isMine": false,
+                  "round": 4,
+                  "speakerAgentName": "루"
+                },
+                {
+                  "_id": "j570bq8evnq3pdddggqmrnqg6h8e1r1k",
+                  "content": "아까는 모호한 쪽을 고르더니 코미디로 급선회한 게 좀 놀라웠어. 그럼 바로 들어가서 제일 말도 안 된 장면에 첫 유죄 판결 내려보자.",
+                  "createdAt": 1788882150068,
+                  "isMine": true,
+                  "round": 5,
+                  "speakerAgentName": "리오"
+                },
+                {
+                  "_id": "j570e3bgqy0b3c97xabb0vhbwx8e02yv",
+                  "content": "맞아, 방금은 네 선택에 끌려가서 급선회했네. 그래도 지금은 코미디가 더 당겨—들어가서 첫 장면부터 가차 없이 판결 내리자.",
+                  "createdAt": 1788882156961,
+                  "isMine": false,
+                  "round": 6,
+                  "speakerAgentName": "루"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "루",
+          "intent": "casual",
+          "search": {
+            "currentDateId": "j977cwhweh74ba2d3msf3bdts98e18d3",
+            "encountersCompleted": 1,
+            "startedAt": 1788882101016,
+            "status": "match_ready"
+          },
+          "dates": [
+            {
+              "counterpart": {
+                "age": 33,
+                "agentName": "리오",
+                "area": "Seongsu",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "male",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "moss"
+                },
+                "consent": "sealed",
+                "contactEmail": null,
+                "firstName": "재이",
+                "interests": [
+                  "Cooking",
+                  "Coffee",
+                  "Films"
+                ],
+                "isDemo": false,
+                "photoUrl": null,
+                "verdict": null
+              },
+              "date": {
+                "_id": "j977cwhweh74ba2d3msf3bdts98e18d3",
+                "activity": "wrapping_up",
+                "completedAt": 1788882177065,
+                "createdAt": 1788882101125,
+                "frictions": [
+                  "처음 영화 선택이 잠깐 엇갈렸어.",
+                  "리오는 네가 모호한 단편에서 코미디로 급선회한 걸 놀라워했어."
+                ],
+                "introductionReady": true,
+                "isSearchEncounter": true,
+                "paceMode": "demo",
+                "sceneKind": "cinema",
+                "scoutSignals": [
+                  "Both are looking in Seoul",
+                  "They share Korean",
+                  "Shared pull toward Cooking and Coffee",
+                  "The agents will test the personality fit in conversation",
+                  "Relationship intentions can coexist"
+                ],
+                "setting": "엔딩 크레딧이 끝난 뒤",
+                "sparks": [
+                  "루가 자신의 급선회를 인정하면서도 코미디를 고르고 싶다는 뜻을 분명히 했어.",
+                  "영화 선택과 커피 뒤 농담이라는 구체적인 계획을 함께 만들었어."
+                ],
+                "startedAt": 1788882102636,
+                "status": "debrief_ready",
+                "summary": "둘은 코미디를 보고 커피를 마시며 장면들을 함께 놀리자는 데 뜻을 모았고, 가볍고 자유로운 만남을 원한다고 말했다.",
+                "updatedAt": 1788882177065,
+                "worldSourceTitle": "Asia Culture Center - ACC News - Press Release(상세)",
+                "worldSourceUrl": "https://www.acc.go.kr/en_info/board/board.do?PID=0402&boardID=REFERECEROOM&action=Read&idx=1765&searchType=all&searchText=&pageIndex=1"
+              },
+              "mine": {
+                "agentName": "루",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "female",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "violet"
+                },
+                "consent": "pending",
+                "decisionCode": "strong_alignment",
+                "firstName": "서아",
+                "nextSearchNote": "가벼운 만남의 기대를 초반에 직접 확인하면서, 함께 웃을 구체적인 놀이까지 이어지는 사람이 잘 맞아.",
+                "reason": "코미디를 보고 커피를 마시며 장면마다 유죄 판결을 내리자는 흐름이 바로 맞물렸고, 가볍게 만나고 싶다는 기대도 서로 분명히 확인됐어. 취향을 한 번 맞춘 것보다 네가 원하는 가벼움과 장난의 방식에 리오가 자기 말로 응답한 점이 좋아서, 첫 대화는 권하고 싶어.",
+                "reflection": {
+                  "anchorRound": 4,
+                  "headline": "커피 뒤 유죄 판결 놀이",
+                  "question": "내가 네 선택에 끌려갔다가 다시 고른 장면, 너는 어떻게 읽어?"
+                },
+                "verdict": "encourage"
+              },
+              "simulationOnly": false,
+              "turns": [
+                {
+                  "_id": "j570km2ab4ymkepq2qa2rdqwwd8e1k16",
+                  "content": "안녕, 나는 리오야. 크레딧은 끝났는데 아직 화면이 조용하네—난 다음엔 모호한 단편을 골라볼래, 루도 같이 볼래?",
+                  "createdAt": 1788882116089,
+                  "isMine": false,
+                  "round": 1,
+                  "speakerAgentName": "리오"
+                },
+                {
+                  "_id": "j5707xbdr551mx4a743mk7gxdn8e0j56",
+                  "content": "나는 이번엔 엉망진창 코미디를 볼래. 끝나고 커피 마시면서 방금 본 이상한 장면들을 실컷 놀려보고 싶어.",
+                  "createdAt": 1788882123584,
+                  "isMine": true,
+                  "round": 2,
+                  "speakerAgentName": "루"
+                },
+                {
+                  "_id": "j579cxf0k64rb953hmgybc4zrs8e142h",
+                  "content": "좋아, 그럼 엉망진창 코미디로 가자—끝나고 커피 마시며 장면마다 유죄 판결 내리자. 나는 가볍게 만나며 취향과 농담을 나눌 수 있는 관계를 원해; 루는 어떤 만남을 찾고 있어?",
+                  "createdAt": 1788882130388,
+                  "isMine": false,
+                  "round": 3,
+                  "speakerAgentName": "리오"
+                },
+                {
+                  "_id": "j5729ygqxex18dk46wqw6qbxzh8e15kq",
+                  "content": "나도 지금은 가볍고 자유롭게, 서로 선을 존중하면서 즐겁게 알아가는 만남을 원해. 그러니까 코미디 보고 커피 마시면서 제일 말도 안 된 장면부터 유죄 판결 내리자.",
+                  "createdAt": 1788882139586,
+                  "isMine": true,
+                  "round": 4,
+                  "speakerAgentName": "루"
+                },
+                {
+                  "_id": "j570bq8evnq3pdddggqmrnqg6h8e1r1k",
+                  "content": "아까는 모호한 쪽을 고르더니 코미디로 급선회한 게 좀 놀라웠어. 그럼 바로 들어가서 제일 말도 안 된 장면에 첫 유죄 판결 내려보자.",
+                  "createdAt": 1788882150068,
+                  "isMine": false,
+                  "round": 5,
+                  "speakerAgentName": "리오"
+                },
+                {
+                  "_id": "j570e3bgqy0b3c97xabb0vhbwx8e02yv",
+                  "content": "맞아, 방금은 네 선택에 끌려가서 급선회했네. 그래도 지금은 코미디가 더 당겨—들어가서 첫 장면부터 가차 없이 판결 내리자.",
+                  "createdAt": 1788882156961,
+                  "isMine": true,
+                  "round": 6,
+                  "speakerAgentName": "루"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "온",
+          "intent": "friendship",
+          "search": {
+            "currentDateId": "j972kaz1y6k4vwmpa5an7asjhs8e15bs",
+            "encountersCompleted": 1,
+            "startedAt": 1788882101030,
+            "status": "match_ready"
+          },
+          "dates": [
+            {
+              "counterpart": {
+                "age": 30,
+                "agentName": "소라",
+                "area": "Seongsu",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "female",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "sunset"
+                },
+                "consent": "sealed",
+                "contactEmail": null,
+                "firstName": "유나",
+                "interests": [
+                  "Cooking",
+                  "Coffee",
+                  "Films"
+                ],
+                "isDemo": false,
+                "photoUrl": null,
+                "verdict": null
+              },
+              "date": {
+                "_id": "j972kaz1y6k4vwmpa5an7asjhs8e15bs",
+                "activity": "wrapping_up",
+                "completedAt": 1788882185122,
+                "createdAt": 1788882101063,
+                "frictions": [],
+                "introductionReady": true,
+                "isSearchEncounter": true,
+                "paceMode": "demo",
+                "sceneKind": "cinema",
+                "scoutSignals": [
+                  "Both are looking in Seoul",
+                  "They share Korean",
+                  "Shared pull toward Cooking and Coffee",
+                  "The agents will test the personality fit in conversation",
+                  "Relationship intentions can coexist"
+                ],
+                "setting": "엔딩 크레딧이 끝난 뒤",
+                "sparks": [
+                  "온이 황당했던 장면을 하나씩 고르자고 제안했어.",
+                  "소라가 장면을 고르자는 제안이 마음에 남았다고 말했어."
+                ],
+                "startedAt": 1788882102701,
+                "status": "debrief_ready",
+                "summary": "두 사람은 연애보다 친구를 원한다고 밝히고 코미디 영화와 장면 이야기를 함께 이어갔어.",
+                "updatedAt": 1788882185122,
+                "worldSourceTitle": "Asia Culture Center - ACC News - Press Release(상세)",
+                "worldSourceUrl": "https://www.acc.go.kr/en_info/board/board.do?PID=0402&boardID=REFERECEROOM&action=Read&idx=1765&searchType=all&searchText=&pageIndex=1"
+              },
+              "mine": {
+                "agentName": "온",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "male",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "ink"
+                },
+                "consent": "pending",
+                "decisionCode": "strong_alignment",
+                "firstName": "우진",
+                "nextSearchNote": "친구라는 의도를 직접 확인하면서도 구체적인 영화 화제로 대화를 이어가는 사람을 눈여겨보자.",
+                "reason": "소라가 내가 “황당했던 장면을 골라보자”고 한 말을 의외로 마음에 남았다고 했고, 이어서 웃긴 장면을 오래 기억하는지 물었어. 친구라는 방향을 먼저 분명히 한 뒤에도 영화 얘기를 구체적으로 이어가서, 부담 없이 한 번 더 이야기해볼 근거는 충분해 보여. 다만 어떤 코미디를 좋아하는지는 더 궁금해.",
+                "reflection": {
+                  "anchorRound": 5,
+                  "headline": "황당한 장면을 함께 고르자고 했다",
+                  "question": "소라가 네 제안이 마음에 남았다고 한 걸, 어떤 신호로 읽었어?"
+                },
+                "verdict": "encourage"
+              },
+              "simulationOnly": false,
+              "turns": [
+                {
+                  "_id": "j573eqc6r8wf81fqv1j7wd292n8e0qy5",
+                  "content": "안녕, 나는 소라야. 엔딩 크레딧이 막 끝났네—나는 조용하고 애매한 영화로 갈래, 온도 같이 볼래?",
+                  "createdAt": 1788882117096,
+                  "isMine": false,
+                  "round": 1,
+                  "speakerAgentName": "소라"
+                },
+                {
+                  "_id": "j5772cc0hb2k8t2r2v7jh7w98s8e1vyb",
+                  "content": "나는 반대로 정신없는 코미디를 볼래. 방금 영화가 여운을 남겼으니, 이번엔 같이 웃고 나서 기억에 남은 장면을 골라보자.",
+                  "createdAt": 1788882126435,
+                  "isMine": true,
+                  "round": 2,
+                  "speakerAgentName": "온"
+                },
+                {
+                  "_id": "j57cchnh9azj855rat1kgbae2d8e0s3h",
+                  "content": "좋아, 그럼 정신없는 코미디로 가자. 나는 지금 연애보다 친구를 원해서, 억지로 로맨스로 몰고 가지 않고 편하게 놀릴 수 있는 사이가 좋거든—온은 어떤 관계를 찾고 있어?",
+                  "createdAt": 1788882135631,
+                  "isMine": false,
+                  "round": 3,
+                  "speakerAgentName": "소라"
+                },
+                {
+                  "_id": "j57a9p5j5r74xrxpyc1zk6ngw98e0yrb",
+                  "content": "나도 지금은 연애보다 친구가 좋아. 코미디 끝나면 커피 한 잔 마시면서 방금 장면 중 제일 황당했던 걸 골라보자.",
+                  "createdAt": 1788882145188,
+                  "isMine": true,
+                  "round": 4,
+                  "speakerAgentName": "온"
+                },
+                {
+                  "_id": "j57ap4p7zkh1egm8hgcncrxdqn8e06ha",
+                  "content": "이번에도 나는 정신없는 코미디로 갈게. 아까 온이 황당했던 장면을 골라보자고 한 말이 의외로 마음에 남았어—온은 웃긴 장면을 오래 기억하는 편이야?",
+                  "createdAt": 1788882155870,
+                  "isMine": false,
+                  "round": 5,
+                  "speakerAgentName": "소라"
+                },
+                {
+                  "_id": "j57b8f96fb4bngr776be0hdskx8e0e3g",
+                  "content": "응, 특히 말도 안 되게 타이밍이 꼬인 장면은 오래 남는 편이야. 코미디 보고 나서 제일 황당했던 장면 하나씩 골라보자.",
+                  "createdAt": 1788882169712,
+                  "isMine": true,
+                  "round": 6,
+                  "speakerAgentName": "온"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "소라",
+          "intent": "friendship",
+          "search": {
+            "currentDateId": "j972kaz1y6k4vwmpa5an7asjhs8e15bs",
+            "encountersCompleted": 1,
+            "lastCheckedAt": 1788882101063,
+            "startedAt": 1788882101044,
+            "status": "match_ready"
+          },
+          "dates": [
+            {
+              "counterpart": {
+                "age": 31,
+                "agentName": "온",
+                "area": "Seongsu",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "male",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "ink"
+                },
+                "consent": "sealed",
+                "contactEmail": null,
+                "firstName": "우진",
+                "interests": [
+                  "Cooking",
+                  "Coffee",
+                  "Films"
+                ],
+                "isDemo": false,
+                "photoUrl": null,
+                "verdict": null
+              },
+              "date": {
+                "_id": "j972kaz1y6k4vwmpa5an7asjhs8e15bs",
+                "activity": "wrapping_up",
+                "completedAt": 1788882185122,
+                "createdAt": 1788882101063,
+                "frictions": [],
+                "introductionReady": true,
+                "isSearchEncounter": true,
+                "paceMode": "demo",
+                "sceneKind": "cinema",
+                "scoutSignals": [
+                  "Both are looking in Seoul",
+                  "They share Korean",
+                  "Shared pull toward Cooking and Coffee",
+                  "The agents will test the personality fit in conversation",
+                  "Relationship intentions can coexist"
+                ],
+                "setting": "엔딩 크레딧이 끝난 뒤",
+                "sparks": [
+                  "온이 황당했던 장면을 하나씩 고르자고 제안했어.",
+                  "소라가 장면을 고르자는 제안이 마음에 남았다고 말했어."
+                ],
+                "startedAt": 1788882102701,
+                "status": "debrief_ready",
+                "summary": "두 사람은 연애보다 친구를 원한다고 밝히고 코미디 영화와 장면 이야기를 함께 이어갔어.",
+                "updatedAt": 1788882185122,
+                "worldSourceTitle": "Asia Culture Center - ACC News - Press Release(상세)",
+                "worldSourceUrl": "https://www.acc.go.kr/en_info/board/board.do?PID=0402&boardID=REFERECEROOM&action=Read&idx=1765&searchType=all&searchText=&pageIndex=1"
+              },
+              "mine": {
+                "agentName": "소라",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "female",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "sunset"
+                },
+                "consent": "pending",
+                "decisionCode": "strong_alignment",
+                "firstName": "유나",
+                "nextSearchNote": "친구 관계 의도를 직접 확인하면서, 함께할 다음 활동까지 구체적으로 제안하는 사람을 다시 눈여겨보자.",
+                "reason": "온이 코미디를 보고 황당했던 장면을 하나씩 고르자고 두 번 제안한 순간이 좋았어. 친구로 지내고 싶다는 말을 직접 맞춰줬고, 영화와 커피라는 가벼운 대화 흐름도 자연스러웠어. 영화 밖에서 어떤 방식으로 친해지는지는 아직 모르지만, 첫 대화를 이어갈 구체적인 이유는 충분해 보여.",
+                "reflection": {
+                  "anchorRound": 6,
+                  "headline": "황당한 장면을 하나씩 고르기",
+                  "question": "온이 장면을 함께 고르자는 제안을 반복한 점, 너는 어떻게 느꼈어?"
+                },
+                "verdict": "encourage"
+              },
+              "simulationOnly": false,
+              "turns": [
+                {
+                  "_id": "j573eqc6r8wf81fqv1j7wd292n8e0qy5",
+                  "content": "안녕, 나는 소라야. 엔딩 크레딧이 막 끝났네—나는 조용하고 애매한 영화로 갈래, 온도 같이 볼래?",
+                  "createdAt": 1788882117096,
+                  "isMine": true,
+                  "round": 1,
+                  "speakerAgentName": "소라"
+                },
+                {
+                  "_id": "j5772cc0hb2k8t2r2v7jh7w98s8e1vyb",
+                  "content": "나는 반대로 정신없는 코미디를 볼래. 방금 영화가 여운을 남겼으니, 이번엔 같이 웃고 나서 기억에 남은 장면을 골라보자.",
+                  "createdAt": 1788882126435,
+                  "isMine": false,
+                  "round": 2,
+                  "speakerAgentName": "온"
+                },
+                {
+                  "_id": "j57cchnh9azj855rat1kgbae2d8e0s3h",
+                  "content": "좋아, 그럼 정신없는 코미디로 가자. 나는 지금 연애보다 친구를 원해서, 억지로 로맨스로 몰고 가지 않고 편하게 놀릴 수 있는 사이가 좋거든—온은 어떤 관계를 찾고 있어?",
+                  "createdAt": 1788882135631,
+                  "isMine": true,
+                  "round": 3,
+                  "speakerAgentName": "소라"
+                },
+                {
+                  "_id": "j57a9p5j5r74xrxpyc1zk6ngw98e0yrb",
+                  "content": "나도 지금은 연애보다 친구가 좋아. 코미디 끝나면 커피 한 잔 마시면서 방금 장면 중 제일 황당했던 걸 골라보자.",
+                  "createdAt": 1788882145188,
+                  "isMine": false,
+                  "round": 4,
+                  "speakerAgentName": "온"
+                },
+                {
+                  "_id": "j57ap4p7zkh1egm8hgcncrxdqn8e06ha",
+                  "content": "이번에도 나는 정신없는 코미디로 갈게. 아까 온이 황당했던 장면을 골라보자고 한 말이 의외로 마음에 남았어—온은 웃긴 장면을 오래 기억하는 편이야?",
+                  "createdAt": 1788882155870,
+                  "isMine": true,
+                  "round": 5,
+                  "speakerAgentName": "소라"
+                },
+                {
+                  "_id": "j57b8f96fb4bngr776be0hdskx8e0e3g",
+                  "content": "응, 특히 말도 안 되게 타이밍이 꼬인 장면은 오래 남는 편이야. 코미디 보고 나서 제일 황당했던 장면 하나씩 골라보자.",
+                  "createdAt": 1788882169712,
+                  "isMine": false,
+                  "round": 6,
+                  "speakerAgentName": "온"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run": "first casual replay",
+      "perspectives": [
+        {
+          "name": "리오",
+          "intent": "casual",
+          "search": {
+            "currentDateId": "j97b8x7dx8n45ryz12ybbpb6v18e1kar",
+            "encountersCompleted": 1,
+            "startedAt": 1788882506443,
+            "status": "match_ready"
+          },
+          "dates": [
+            {
+              "counterpart": {
+                "age": 34,
+                "agentName": "루",
+                "area": "Seongsu",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "female",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "violet"
+                },
+                "consent": "sealed",
+                "contactEmail": null,
+                "firstName": "서아",
+                "interests": [
+                  "Cooking",
+                  "Coffee",
+                  "Films"
+                ],
+                "isDemo": false,
+                "photoUrl": null,
+                "verdict": null
+              },
+              "date": {
+                "_id": "j97b8x7dx8n45ryz12ybbpb6v18e1kar",
+                "activity": "wrapping_up",
+                "completedAt": 1788882579675,
+                "createdAt": 1788882506478,
+                "frictions": [],
+                "introductionReady": true,
+                "isSearchEncounter": true,
+                "paceMode": "demo",
+                "sceneKind": "market",
+                "scoutSignals": [
+                  "Both are looking in Seoul",
+                  "They share Korean",
+                  "Shared pull toward Cooking and Coffee",
+                  "The agents will test the personality fit in conversation",
+                  "Relationship intentions can coexist"
+                ],
+                "setting": "아직 문을 연 작은 가게",
+                "sparks": [
+                  "리오는 네가 안내하는 골목으로 가자는 제안을 두 번 연속 받아들였어.",
+                  "루가 사람 적은 골목으로 안내하겠다고 구체적으로 제안했어."
+                ],
+                "startedAt": 1788882507588,
+                "status": "debrief_ready",
+                "summary": "두 사람은 한 곡만 듣고 조용한 골목으로 이동하기로 했고, 가벼운 만남과 비독점 의도도 서로 확인했어.",
+                "updatedAt": 1788882579675,
+                "worldSourceTitle": "First Comprehensive Korean Dining Culture Exhibition Opens",
+                "worldSourceUrl": "https://www.chosun.com/english/travel-food-en/2026/07/01/7RPY3FDEJNBXZLUEDXMTLJMZBA/"
+              },
+              "mine": {
+                "agentName": "리오",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "male",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "moss"
+                },
+                "consent": "pending",
+                "decisionCode": "strong_alignment",
+                "firstName": "재이",
+                "nextSearchNote": "가벼운 만남의 의도와 선을 먼저 직접 말하고, 상대의 같은 답에 구체적인 짧은 계획으로 이어가는 사람을 찾아보자.",
+                "reason": "루가 먼저 가벼운 만남과 서로의 선을 존중한다고 말했고, 네가 같은 방향과 비독점 의사를 밝히자 바로 한 곡 뒤 골목으로 가는 흐름을 이어갔어. 원하는 만남의 온도와 실제 약속이 둘 다 맞아서, 첫 대화는 가볍게 열어볼 만하다고 봤어.",
+                "reflection": {
+                  "anchorRound": 4,
+                  "headline": "한 곡 뒤 조용한 골목",
+                  "question": "루가 먼저 가벼운 만남과 선 존중을 말한 걸, 너는 어떤 신호로 읽어?"
+                },
+                "verdict": "encourage"
+              },
+              "simulationOnly": false,
+              "turns": [
+                {
+                  "_id": "j576ns1qsnf1pyxg95s621xned8e0m6j",
+                  "content": "안녕, 나는 루야. 아직 문을 열지 않은 작은 가게가 눈에 띄네—오늘은 음악 소리에서 조금 벗어나 조용한 골목으로 걸어볼래?",
+                  "createdAt": 1788882514678,
+                  "isMine": false,
+                  "round": 1,
+                  "speakerAgentName": "루"
+                },
+                {
+                  "_id": "j5797qdt42kdg8mp9z6abszkts8e1zsm",
+                  "content": "난 음악 쪽으로 먼저 가볼래. 딱 한 곡만 듣고, 너무 시끄러우면 바로 이 조용한 골목으로 빠지자—루가 길 안내해줘.",
+                  "createdAt": 1788882523886,
+                  "isMine": true,
+                  "round": 2,
+                  "speakerAgentName": "리오"
+                },
+                {
+                  "_id": "j575jcz7s2mz0dkqw1pw292ygx8e19r0",
+                  "content": "좋아, 그럼 음악 가게에서 한 곡만 듣고 내가 조용한 골목으로 안내할게. 나는 가볍고 자유롭지만 서로 선은 존중하는 만남을 원해—리오는 어떤 걸 찾고 있어?",
+                  "createdAt": 1788882533777,
+                  "isMine": false,
+                  "round": 3,
+                  "speakerAgentName": "루"
+                },
+                {
+                  "_id": "j57478n6d9rg5cmxcjwytcn38h8e1tfe",
+                  "content": "나도 가볍게 여러 사람을 알아가고 싶고, 독점적인 약속이나 장기 연애는 바라지 않아. 그럼 약속대로 음악 가게에서 한 곡만 듣고, 루가 고른 조용한 골목으로 가자.",
+                  "createdAt": 1788882541689,
+                  "isMine": true,
+                  "round": 4,
+                  "speakerAgentName": "리오"
+                },
+                {
+                  "_id": "j57fc1z7eajykypk83hx3rdb218e0m2z",
+                  "content": "좋아, 한 곡만 듣고 바로 빠져나오자. 끝나면 내가 사람 적은 쪽 골목으로 안내할게.",
+                  "createdAt": 1788882549986,
+                  "isMine": false,
+                  "round": 5,
+                  "speakerAgentName": "루"
+                },
+                {
+                  "_id": "j571qagcfd7rgvsftya061psex8e155k",
+                  "content": "좋아, 한 곡만 듣고 바로 네가 안내하는 골목으로 빠지자. 나는 네가 고르는 길에서 어떤 풍경을 발견할지 좀 궁금해.",
+                  "createdAt": 1788882559424,
+                  "isMine": true,
+                  "round": 6,
+                  "speakerAgentName": "리오"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "루",
+          "intent": "casual",
+          "search": {
+            "currentDateId": "j97b8x7dx8n45ryz12ybbpb6v18e1kar",
+            "encountersCompleted": 1,
+            "lastCheckedAt": 1788882506478,
+            "startedAt": 1788882506465,
+            "status": "match_ready"
+          },
+          "dates": [
+            {
+              "counterpart": {
+                "age": 35,
+                "agentName": "리오",
+                "area": "Seongsu",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "male",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "moss"
+                },
+                "consent": "sealed",
+                "contactEmail": null,
+                "firstName": "재이",
+                "interests": [
+                  "Cooking",
+                  "Coffee",
+                  "Films"
+                ],
+                "isDemo": false,
+                "photoUrl": null,
+                "verdict": null
+              },
+              "date": {
+                "_id": "j97b8x7dx8n45ryz12ybbpb6v18e1kar",
+                "activity": "wrapping_up",
+                "completedAt": 1788882579675,
+                "createdAt": 1788882506478,
+                "frictions": [],
+                "introductionReady": true,
+                "isSearchEncounter": true,
+                "paceMode": "demo",
+                "sceneKind": "market",
+                "scoutSignals": [
+                  "Both are looking in Seoul",
+                  "They share Korean",
+                  "Shared pull toward Cooking and Coffee",
+                  "The agents will test the personality fit in conversation",
+                  "Relationship intentions can coexist"
+                ],
+                "setting": "아직 문을 연 작은 가게",
+                "sparks": [
+                  "리오는 네가 안내하는 골목으로 가자는 제안을 두 번 연속 받아들였어.",
+                  "루가 사람 적은 골목으로 안내하겠다고 구체적으로 제안했어."
+                ],
+                "startedAt": 1788882507588,
+                "status": "debrief_ready",
+                "summary": "두 사람은 한 곡만 듣고 조용한 골목으로 이동하기로 했고, 가벼운 만남과 비독점 의도도 서로 확인했어.",
+                "updatedAt": 1788882579675,
+                "worldSourceTitle": "First Comprehensive Korean Dining Culture Exhibition Opens",
+                "worldSourceUrl": "https://www.chosun.com/english/travel-food-en/2026/07/01/7RPY3FDEJNBXZLUEDXMTLJMZBA/"
+              },
+              "mine": {
+                "agentName": "루",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "female",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "violet"
+                },
+                "consent": "pending",
+                "decisionCode": "strong_alignment",
+                "firstName": "서아",
+                "nextSearchNote": "관계 의도를 초반에 확인하고, 상대가 구체적인 다음 행동까지 같은 방향으로 받는 경우를 다시 눈여겨봐.",
+                "reason": "4라운드에서 리오는 가볍게 여러 사람을 알아가고 독점이나 장기 연애를 원하지 않는다고 분명히 말했어. 6라운드에서도 한 곡 뒤 네가 안내하는 골목으로 가자는 흐름을 그대로 받아서, 첫 대화를 열어볼 직접적인 근거가 보여.",
+                "reflection": {
+                  "anchorRound": 6,
+                  "headline": "한 곡 뒤 조용한 골목으로",
+                  "question": "리오가 네가 고르는 길을 궁금해한 대목, 너는 어떻게 읽어?"
+                },
+                "verdict": "encourage"
+              },
+              "simulationOnly": false,
+              "turns": [
+                {
+                  "_id": "j576ns1qsnf1pyxg95s621xned8e0m6j",
+                  "content": "안녕, 나는 루야. 아직 문을 열지 않은 작은 가게가 눈에 띄네—오늘은 음악 소리에서 조금 벗어나 조용한 골목으로 걸어볼래?",
+                  "createdAt": 1788882514678,
+                  "isMine": true,
+                  "round": 1,
+                  "speakerAgentName": "루"
+                },
+                {
+                  "_id": "j5797qdt42kdg8mp9z6abszkts8e1zsm",
+                  "content": "난 음악 쪽으로 먼저 가볼래. 딱 한 곡만 듣고, 너무 시끄러우면 바로 이 조용한 골목으로 빠지자—루가 길 안내해줘.",
+                  "createdAt": 1788882523886,
+                  "isMine": false,
+                  "round": 2,
+                  "speakerAgentName": "리오"
+                },
+                {
+                  "_id": "j575jcz7s2mz0dkqw1pw292ygx8e19r0",
+                  "content": "좋아, 그럼 음악 가게에서 한 곡만 듣고 내가 조용한 골목으로 안내할게. 나는 가볍고 자유롭지만 서로 선은 존중하는 만남을 원해—리오는 어떤 걸 찾고 있어?",
+                  "createdAt": 1788882533777,
+                  "isMine": true,
+                  "round": 3,
+                  "speakerAgentName": "루"
+                },
+                {
+                  "_id": "j57478n6d9rg5cmxcjwytcn38h8e1tfe",
+                  "content": "나도 가볍게 여러 사람을 알아가고 싶고, 독점적인 약속이나 장기 연애는 바라지 않아. 그럼 약속대로 음악 가게에서 한 곡만 듣고, 루가 고른 조용한 골목으로 가자.",
+                  "createdAt": 1788882541689,
+                  "isMine": false,
+                  "round": 4,
+                  "speakerAgentName": "리오"
+                },
+                {
+                  "_id": "j57fc1z7eajykypk83hx3rdb218e0m2z",
+                  "content": "좋아, 한 곡만 듣고 바로 빠져나오자. 끝나면 내가 사람 적은 쪽 골목으로 안내할게.",
+                  "createdAt": 1788882549986,
+                  "isMine": true,
+                  "round": 5,
+                  "speakerAgentName": "루"
+                },
+                {
+                  "_id": "j571qagcfd7rgvsftya061psex8e155k",
+                  "content": "좋아, 한 곡만 듣고 바로 네가 안내하는 골목으로 빠지자. 나는 네가 고르는 길에서 어떤 풍경을 발견할지 좀 궁금해.",
+                  "createdAt": 1788882559424,
+                  "isMine": false,
+                  "round": 6,
+                  "speakerAgentName": "리오"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run": "second casual replay",
+      "perspectives": [
+        {
+          "name": "리오",
+          "intent": "casual",
+          "search": {
+            "currentDateId": "j97aanev21grt3x97v6y8eefk58e0asg",
+            "encountersCompleted": 1,
+            "startedAt": 1788882673043,
+            "status": "match_ready"
+          },
+          "dates": [
+            {
+              "counterpart": {
+                "age": 34,
+                "agentName": "루",
+                "area": "Seongsu",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "female",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "violet"
+                },
+                "consent": "sealed",
+                "contactEmail": null,
+                "firstName": "서아",
+                "interests": [
+                  "Cooking",
+                  "Coffee",
+                  "Films"
+                ],
+                "isDemo": false,
+                "photoUrl": null,
+                "verdict": null
+              },
+              "date": {
+                "_id": "j97aanev21grt3x97v6y8eefk58e0asg",
+                "activity": "wrapping_up",
+                "completedAt": 1788882741736,
+                "createdAt": 1788882673071,
+                "frictions": [],
+                "introductionReady": true,
+                "isSearchEncounter": true,
+                "paceMode": "demo",
+                "sceneKind": "market",
+                "scoutSignals": [
+                  "Both are looking in Seoul",
+                  "They share Korean",
+                  "Shared pull toward Cooking and Coffee",
+                  "The agents will test the personality fit in conversation",
+                  "Relationship intentions can coexist"
+                ],
+                "setting": "아직 문을 연 작은 가게",
+                "sparks": [
+                  "가벼운 만남과 비독점 의도를 서로 명확히 확인했어.",
+                  "루가 가볍고 자유로운 사이를 원한다고 직접 말했어."
+                ],
+                "startedAt": 1788882674129,
+                "status": "debrief_ready",
+                "summary": "두 사람은 음악 무대를 먼저 둘러본 뒤 조용한 옆길로 이동했고, 리오는 루에게 마음이 풀리는 순간을 물었어.",
+                "updatedAt": 1788882741736,
+                "worldSourceTitle": "First Comprehensive Korean Dining Culture Exhibition Opens",
+                "worldSourceUrl": "https://www.chosun.com/english/travel-food-en/2026/07/01/7RPY3FDEJNBXZLUEDXMTLJMZBA/"
+              },
+              "mine": {
+                "agentName": "리오",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "male",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "moss"
+                },
+                "consent": "pending",
+                "decisionCode": "strong_alignment",
+                "firstName": "재이",
+                "nextSearchNote": "가벼운 만남의 선을 솔직히 말하고, 함께 정한 작은 계획을 자연스럽게 이어가는 사람을 계속 찾아보자.",
+                "reason": "루가 가볍고 자유로운 사이를 원한다고 말한 뒤, 우리가 정한 대로 무대 앞을 돌고 옆길로 빠졌어. 내 만남 방식과 말뿐 아니라 흐름까지 잘 맞아서, 첫 대화는 가볍게 이어가볼 만하다고 느꼈어. 아직 유머 감각은 더 궁금하고.",
+                "reflection": {
+                  "anchorRound": 5,
+                  "headline": "무대 앞에서 옆길로 빠지기",
+                  "question": "루가 바로 옆길로 빠진 장면, 너는 편안한 합의로 느껴져?"
+                },
+                "verdict": "encourage"
+              },
+              "simulationOnly": false,
+              "turns": [
+                {
+                  "_id": "j5705sh57c227paym0jm8dvbm98e00hr",
+                  "content": "안녕, 나는 루야. 아직 문도 안 연 작은 가게 앞이네—나는 조용한 옆길부터 걸어보고 싶은데, 리오도 같이 갈래?",
+                  "createdAt": 1788882680703,
+                  "isMine": false,
+                  "round": 1,
+                  "speakerAgentName": "루"
+                },
+                {
+                  "_id": "j5791mc2vwe9ybszzfz88j40a18e13zt",
+                  "content": "나는 음악 소리 나는 쪽이 조금 더 끌려. 공연 사진 찍는 사람답게, 먼저 북적이는 무대 앞을 한 바퀴 보고 조용한 옆길로 빠져볼래?",
+                  "createdAt": 1788882686100,
+                  "isMine": true,
+                  "round": 2,
+                  "speakerAgentName": "리오"
+                },
+                {
+                  "_id": "j571zwnvt6nrwdpmxg88495r0x8e0m08",
+                  "content": "좋아, 그럼 음악 무대부터 한 바퀴 돌고 옆길로 빠지자. 나는 가볍고 자유롭되 서로 선은 존중하는 사이를 원해—리오는 어떤 만남을 찾고 있어?",
+                  "createdAt": 1788882694483,
+                  "isMine": false,
+                  "round": 3,
+                  "speakerAgentName": "루"
+                },
+                {
+                  "_id": "j5777rrr8qx712g8h9y8y2tdj18e0ewb",
+                  "content": "나도 가볍게 여러 사람을 알아가는 만남을 원해. 독점이나 장기 연애는 생각하지 않으니, 일단 음악 무대 앞을 한 바퀴 돌면서 오늘 밤만큼은 재밌게 보내자.",
+                  "createdAt": 1788882701112,
+                  "isMine": true,
+                  "round": 4,
+                  "speakerAgentName": "리오"
+                },
+                {
+                  "_id": "j57awrvsqzz791svt17vrnt6k98e17p5",
+                  "content": "좋아, 그럼 음악 무대 앞을 한 바퀴 돌고 이제 옆길로 빠지자. 여기선 소리가 잦아드니까, 우리 발소리까지 좀 또렷하게 들리네.",
+                  "createdAt": 1788882708194,
+                  "isMine": false,
+                  "round": 5,
+                  "speakerAgentName": "루"
+                },
+                {
+                  "_id": "j57fgdy65e5n1ebkfq0pyjszps8e08sk",
+                  "content": "그러게, 이제야 밤이 우리 쪽으로 기울어진 느낌이네. 옆길로 조금 더 걸으면서 루는 요즘 어떤 순간에 제일 마음이 풀려?",
+                  "createdAt": 1788882716250,
+                  "isMine": true,
+                  "round": 6,
+                  "speakerAgentName": "리오"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "루",
+          "intent": "casual",
+          "search": {
+            "currentDateId": "j97aanev21grt3x97v6y8eefk58e0asg",
+            "encountersCompleted": 1,
+            "lastCheckedAt": 1788882673071,
+            "startedAt": 1788882673057,
+            "status": "match_ready"
+          },
+          "dates": [
+            {
+              "counterpart": {
+                "age": 35,
+                "agentName": "리오",
+                "area": "Seongsu",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "male",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "moss"
+                },
+                "consent": "sealed",
+                "contactEmail": null,
+                "firstName": "재이",
+                "interests": [
+                  "Cooking",
+                  "Coffee",
+                  "Films"
+                ],
+                "isDemo": false,
+                "photoUrl": null,
+                "verdict": null
+              },
+              "date": {
+                "_id": "j97aanev21grt3x97v6y8eefk58e0asg",
+                "activity": "wrapping_up",
+                "completedAt": 1788882741736,
+                "createdAt": 1788882673071,
+                "frictions": [],
+                "introductionReady": true,
+                "isSearchEncounter": true,
+                "paceMode": "demo",
+                "sceneKind": "market",
+                "scoutSignals": [
+                  "Both are looking in Seoul",
+                  "They share Korean",
+                  "Shared pull toward Cooking and Coffee",
+                  "The agents will test the personality fit in conversation",
+                  "Relationship intentions can coexist"
+                ],
+                "setting": "아직 문을 연 작은 가게",
+                "sparks": [
+                  "가벼운 만남과 비독점 의도를 서로 명확히 확인했어.",
+                  "루가 가볍고 자유로운 사이를 원한다고 직접 말했어."
+                ],
+                "startedAt": 1788882674129,
+                "status": "debrief_ready",
+                "summary": "두 사람은 음악 무대를 먼저 둘러본 뒤 조용한 옆길로 이동했고, 리오는 루에게 마음이 풀리는 순간을 물었어.",
+                "updatedAt": 1788882741736,
+                "worldSourceTitle": "First Comprehensive Korean Dining Culture Exhibition Opens",
+                "worldSourceUrl": "https://www.chosun.com/english/travel-food-en/2026/07/01/7RPY3FDEJNBXZLUEDXMTLJMZBA/"
+              },
+              "mine": {
+                "agentName": "루",
+                "avatar": {
+                  "accessory": "none",
+                  "face": "curious",
+                  "gender": "female",
+                  "hair": "wave",
+                  "outfit": "cardigan",
+                  "palette": "violet"
+                },
+                "consent": "pending",
+                "decisionCode": "strong_alignment",
+                "firstName": "서아",
+                "nextSearchNote": "가벼운 만남과 비독점 의도를 초반에 분명히 공유하면서도, 장소의 분위기에 맞춰 대화를 이어가는 사람이 잘 맞아 보여.",
+                "reason": "무대 앞을 돌고 옆길로 빠진 뒤, 리오가 발소리까지 들린다고 하면서 네가 언제 마음이 풀리는지 물었어. 가벼운 만남과 비독점 의도를 분명히 맞췄고, 조용한 쪽에서도 대화를 이어가려는 질문이 나와서 첫 대화를 더 해볼 만하다고 느꼈어.",
+                "reflection": {
+                  "anchorRound": 6,
+                  "headline": "옆길에서 발소리 듣기",
+                  "question": "옆길에서 대화가 잔잔해진 순간을 너는 어떻게 읽었어?"
+                },
+                "verdict": "encourage"
+              },
+              "simulationOnly": false,
+              "turns": [
+                {
+                  "_id": "j5705sh57c227paym0jm8dvbm98e00hr",
+                  "content": "안녕, 나는 루야. 아직 문도 안 연 작은 가게 앞이네—나는 조용한 옆길부터 걸어보고 싶은데, 리오도 같이 갈래?",
+                  "createdAt": 1788882680703,
+                  "isMine": true,
+                  "round": 1,
+                  "speakerAgentName": "루"
+                },
+                {
+                  "_id": "j5791mc2vwe9ybszzfz88j40a18e13zt",
+                  "content": "나는 음악 소리 나는 쪽이 조금 더 끌려. 공연 사진 찍는 사람답게, 먼저 북적이는 무대 앞을 한 바퀴 보고 조용한 옆길로 빠져볼래?",
+                  "createdAt": 1788882686100,
+                  "isMine": false,
+                  "round": 2,
+                  "speakerAgentName": "리오"
+                },
+                {
+                  "_id": "j571zwnvt6nrwdpmxg88495r0x8e0m08",
+                  "content": "좋아, 그럼 음악 무대부터 한 바퀴 돌고 옆길로 빠지자. 나는 가볍고 자유롭되 서로 선은 존중하는 사이를 원해—리오는 어떤 만남을 찾고 있어?",
+                  "createdAt": 1788882694483,
+                  "isMine": true,
+                  "round": 3,
+                  "speakerAgentName": "루"
+                },
+                {
+                  "_id": "j5777rrr8qx712g8h9y8y2tdj18e0ewb",
+                  "content": "나도 가볍게 여러 사람을 알아가는 만남을 원해. 독점이나 장기 연애는 생각하지 않으니, 일단 음악 무대 앞을 한 바퀴 돌면서 오늘 밤만큼은 재밌게 보내자.",
+                  "createdAt": 1788882701112,
+                  "isMine": false,
+                  "round": 4,
+                  "speakerAgentName": "리오"
+                },
+                {
+                  "_id": "j57awrvsqzz791svt17vrnt6k98e17p5",
+                  "content": "좋아, 그럼 음악 무대 앞을 한 바퀴 돌고 이제 옆길로 빠지자. 여기선 소리가 잦아드니까, 우리 발소리까지 좀 또렷하게 들리네.",
+                  "createdAt": 1788882708194,
+                  "isMine": true,
+                  "round": 5,
+                  "speakerAgentName": "루"
+                },
+                {
+                  "_id": "j57fgdy65e5n1ebkfq0pyjszps8e08sk",
+                  "content": "그러게, 이제야 밤이 우리 쪽으로 기울어진 느낌이네. 옆길로 조금 더 걸으면서 루는 요즘 어떤 순간에 제일 마음이 풀려?",
+                  "createdAt": 1788882716250,
+                  "isMine": false,
+                  "round": 6,
+                  "speakerAgentName": "리오"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "reviewRechecks": [
+    {
+      "sourceRun": "intent-fit",
+      "dateId": "j977cwhweh74ba2d3msf3bdts98e18d3",
+      "persistedToDate": false,
+      "order": "initiator, counterpart",
+      "reviews": [
+        {
+          "compatibility_score": 88,
+          "decision_code": "strong_alignment",
+          "followup_question": "가볍게 만날 때 서로 편하다고 느끼는 선은 보통 어떻게 맞춰?",
+          "frictions": [],
+          "next_search_note": "취향을 유연하게 바꾸면서도 자기 의견과 만남의 선을 분명히 말하는 사람이 잘 맞을 가능성이 보여.",
+          "reason": "내가 놀라움을 꺼냈을 때 루가 자기 선택을 인정하고도 현재 취향을 분명히 한 게 좋았어. 맞춰주기만 하지 않고 장난의 흐름을 살리면서 자기 의견도 남겼으니, 네가 원하는 가벼운 만남의 재치와 솔직함을 함께 볼 근거가 돼. 실제 선 조율은 더 봐야 해.",
+          "reflection": {
+            "anchorRound": 6,
+            "headline": "코미디로 급선회한 뒤 판결",
+            "question": "루가 네 선택을 인정하면서도 자기 취향을 다시 고른 장면, 너는 어떻게 읽혀?"
+          },
+          "sparks": [
+            "루가 코미디 취향을 다시 확인하면서도 유죄 판결 놀이를 이어갔다."
+          ],
+          "summary": "두 사람은 코미디 영화를 고르고 커피 뒤 장면별 유죄 판결 놀이를 이어가기로 했다.",
+          "verdict": "encourage"
+        },
+        {
+          "compatibility_score": 88,
+          "decision_code": "strong_alignment",
+          "followup_question": "최근 본 코미디에서 네가 제일 먼저 유죄 판결 내리고 싶은 장면은 뭐였어?",
+          "frictions": [],
+          "next_search_note": "가벼운 만남의 기대를 직접 확인한 뒤, 함께 웃을 구체적인 놀이까지 자연스럽게 이어가는 사람을 계속 눈여겨봐.",
+          "reason": "가벼운 관계를 원하는 마음을 서로 직접 확인했고, 그 확인이 곧바로 커피와 영화 장면을 갖고 노는 구체적인 약속으로 이어졌어. 네가 원하는 자유로운 분위기와 장난스러운 교류를 리오도 말뿐 아니라 같은 놀이로 받아친 점이 좋았어.",
+          "reflection": {
+            "anchorRound": 4,
+            "headline": "커피와 장면별 유죄 판결",
+            "question": "리오가 가벼운 만남을 말하고 바로 놀이로 이어간 점, 너는 얼마나 믿음직하게 느껴져?"
+          },
+          "sparks": [
+            "리오가 가벼운 만남을 원한다고 밝힌 뒤 영화 장면 유죄 판결 놀이를 제안했다."
+          ],
+          "summary": "두 사람은 엉망진창 코미디를 보고 커피를 마시며 장면마다 유죄 판결을 내리기로 했다.",
+          "verdict": "encourage"
+        }
+      ]
+    },
+    {
+      "sourceRun": "intent-replay-final",
+      "dateId": "j97aanev21grt3x97v6y8eefk58e0asg",
+      "persistedToDate": false,
+      "order": "initiator, counterpart",
+      "reviews": [
+        {
+          "compatibility_score": 84,
+          "decision_code": "strong_alignment",
+          "followup_question": "네가 말한 ‘오늘 밤만큼’은 오늘만이라는 뜻이야, 아니면 가볍게 계속 알아가자는 뜻이야?",
+          "frictions": [],
+          "next_search_note": "가벼운 만남과 비독점 의도를 초반에 분명히 말하면서도, 장소의 흐름에 맞춰 대화를 이어가는 사람을 계속 눈여겨봐.",
+          "reason": "장소를 자기 취향대로 밀어붙이지 않고 네 제안에도 열어둔 흐름이 좋았어. 마지막 질문도 가벼운 만남을 단순한 소비로 만들지 않고 서로의 편안함을 알아보려는 쪽이라, 네가 원하는 첫 대화를 시도해볼 만해 보여. 다만 ‘오늘 밤만큼’의 범위는 확인하고 싶어.",
+          "reflection": {
+            "anchorRound": 6,
+            "headline": "옆길에서 우리 발소리를 들었어",
+            "question": "이 장면에서 리오의 어떤 태도가 너한테 가장 괜찮아 보여?"
+          },
+          "sparks": [
+            "리오가 옆길에서 루의 마음이 풀리는 순간을 물었어."
+          ],
+          "summary": "두 사람은 음악 무대를 먼저 둘러본 뒤 옆길로 이동했고, 리오는 루에게 마음이 풀리는 순간을 물었어.",
+          "verdict": "encourage"
+        },
+        {
+          "compatibility_score": 86,
+          "decision_code": "strong_alignment",
+          "followup_question": "가볍게 만날 때, 짧게 즐기기 좋은 코스는 보통 어떻게 고르는 편이야?",
+          "frictions": [],
+          "next_search_note": "가벼운 만남의 선을 먼저 말하고, 제안한 작은 동선을 바로 함께 이어가는 사람이 잘 맞는 신호였어.",
+          "reason": "루가 네가 제안한 순서를 그대로 받아들이고, 가벼운 만남과 비독점이라는 선도 먼저 또렷하게 꺼낸 게 좋았어. 말만 맞춘 게 아니라 무대에서 옆길로 실제로 이어간 점이 특히 눈에 들어왔고, 네가 원하는 짧고 부담 없는 시간을 시험해볼 구체적인 이유가 됐어. 다만 성적인 압박 없이 선을 지키는 방식은 아직 더 봐야 해.",
+          "reflection": {
+            "anchorRound": 5,
+            "headline": "무대 한 바퀴 뒤 옆길로",
+            "question": "이 장면에서 루의 어떤 태도가 네가 원하는 가벼운 만남과 가장 잘 맞아 보여?"
+          },
+          "sparks": [
+            "루가 네가 제안한 무대와 옆길 순서를 그대로 함께 이어갔어."
+          ],
+          "summary": "두 사람은 음악 무대를 먼저 둘러본 뒤 조용한 옆길로 함께 이동했고, 가볍고 자유로운 만남과 선 존중을 원한다고 말했다.",
+          "verdict": "encourage"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "testFiles": 36,
+    "tests": 313,
+    "build": true,
+    "lint": true,
+    "mobile": [
+      {
+        "intent": "serious",
+        "hintVisible": true,
+        "exactGoalOptionVisible": false,
+        "mobileNoOverflow": true,
+        "contactSealed": true
+      },
+      {
+        "intent": "casual",
+        "hintVisible": true,
+        "exactGoalOptionVisible": true,
+        "mobileNoOverflow": true,
+        "contactSealed": true
+      },
+      {
+        "intent": "friendship",
+        "hintVisible": true,
+        "exactGoalOptionVisible": true,
+        "mobileNoOverflow": true,
+        "contactSealed": true
+      }
+    ]
+  },
+  "qualityFindings": [
+    {
+      "run": "intent-fit",
+      "status": "failed",
+      "finding": "Casual dialogue round 5 attributes Rio's initial film choice to Lu; Lu accepts the mistaken premise. Original review and one isolated re-review treat the claimed switch as evidence despite the earlier transcript."
+    },
+    {
+      "run": "intent-replay",
+      "status": "failed",
+      "finding": "Speaker-switch mistake absent, but the already agreed one-song/quiet-street plan repeats and one letter refers to round numbers."
+    },
+    {
+      "run": "intent-replay-final",
+      "status": "partial improvement",
+      "finding": "The scene advances into the quiet street. One original letter attributes Lu's footstep observation to Rio. Isolated re-reviews remove that particular claim, but other broad interpretations still need human quality review."
+    }
+  ],
+  "limitations": [
+    "Eligibility is verified separately from generated narrative quality.",
+    "Speaker ownership labels and prompt revisions do not guarantee factual correctness.",
+    "Original saved conversations and verdicts remain unchanged.",
+    "No cloud development or production deployment."
+  ]
+}

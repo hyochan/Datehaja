@@ -24,9 +24,9 @@ import {
 import { resolve } from "node:path";
 
 const BEATS = "submission/demo-beats.json";
-const MARKS = "test-results/demo-marks.json";
+const MARKS = ".scratch/demo/marks.json";
 const CAPTIONS = "submission/DEMO_CAPTIONS.srt";
-const WORK = "test-results/demo-build";
+const WORK = ".scratch/demo/build";
 const OUTPUT = "submission/Datehaja-demo.mp4";
 const CEILING_SECONDS = 180; // the rules say under three minutes
 
@@ -83,7 +83,9 @@ for (const beat of storyboard.beats) {
   const mark = marks.get(beat.id);
   if (!mark) die(`The recording has no beat called "${beat.id}".`);
 
-  const rawSeconds = mark.end - mark.start;
+  // A bounded opening holds the full hero instead of rushing through several
+  // partially clipped landing sections. The source remains the recorded UI.
+  const rawSeconds = Math.min(mark.end - mark.start, beat.maxRawSeconds ?? Infinity);
   if (rawSeconds <= 0.5) {
     die(`Beat "${beat.id}" recorded only ${rawSeconds.toFixed(2)}s — re-record.`);
   }
@@ -98,7 +100,7 @@ for (const beat of storyboard.beats) {
     "-ss",
     mark.start.toFixed(3),
     "-to",
-    mark.end.toFixed(3),
+    (mark.start + rawSeconds).toFixed(3),
     "-i",
     recording.rawPath,
     "-an",
@@ -155,7 +157,7 @@ if (burnCaptions && existsSync(CAPTIONS)) {
       "-i",
       joined,
       "-vf",
-      `subtitles=${CAPTIONS}:force_style='FontName=Arial,FontSize=19,PrimaryColour=&H00FFFFFF&,OutlineColour=&H90000000&,BorderStyle=3,Outline=1,Shadow=0,MarginV=54'`,
+      `subtitles=${CAPTIONS}:force_style='FontName=Arial,FontSize=10,PrimaryColour=&H00FFFFFF&,OutlineColour=&H30000000&,BorderStyle=3,Outline=1,Shadow=0,MarginV=12'`,
       "-c:v",
       "libx264",
       "-preset",

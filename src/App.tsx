@@ -13,7 +13,9 @@ import { Wordmark } from "./components/layout/Wordmark";
 import { LocaleSwitcher } from "./components/layout/LocaleSwitcher";
 import { Spinner } from "./components/ui/primitives";
 import { useI18n } from "./i18n";
+import { safeAppDestination } from "./lib/navigation";
 import LandingPage from "./pages/LandingPage";
+import HowItWorksPage from "./pages/HowItWorksPage";
 import AuthPage from "./pages/AuthPage";
 import AgentOnboardingPage from "./pages/AgentOnboardingPage";
 import AgentDashboardPage from "./pages/AgentDashboardPage";
@@ -33,6 +35,10 @@ const CommunityGuidelinesPage = lazy(
 );
 const LegalConsentPage = lazy(() => import("./pages/LegalConsentPage"));
 const WatchPage = lazy(() => import("./pages/WatchPage"));
+const DateRecordPreviewPage = lazy(() => import("./pages/DateRecordPreviewPage"));
+const AgentCoachingPreviewPage = lazy(
+  () => import("./pages/AgentCoachingPreviewPage"),
+);
 // Dev-only bench. The import lives inside the DEV branch so a production
 // build drops the chunk instead of publishing it unreachable.
 const labRoute = import.meta.env.DEV
@@ -43,6 +49,12 @@ const labRoute = import.meta.env.DEV
   : null;
 
 export default function App() {
+  const location = useLocation();
+  // The explanation remains reachable when the home route redirects signed-in users.
+  if (location.pathname === "/how-it-works") return <><HowItWorksPage /><ScrollToTop /></>;
+  // The explicitly fictional preview must work from mail without an account.
+  if (location.pathname === "/preview/date-letter") return <Suspense fallback={<FullPageLoader />}><DateRecordPreviewPage /><ScrollToTop /></Suspense>;
+  if (location.pathname === "/preview/agent-coaching") return <Suspense fallback={<FullPageLoader />}><AgentCoachingPreviewPage /><ScrollToTop /></Suspense>;
   return (
     <>
       <ScrollToTop />
@@ -107,20 +119,22 @@ function ScrollToTop() {
 
   useEffect(() => {
     if (hash) {
-      let frame = 0;
-      let attempts = 0;
-
       const scrollToAnchor = () => {
         const target = document.getElementById(hash.slice(1));
         if (target) {
           target.scrollIntoView();
-          return;
+          return true;
         }
-        if (attempts++ < 30) frame = requestAnimationFrame(scrollToAnchor);
+        return false;
       };
-
-      frame = requestAnimationFrame(scrollToAnchor);
-      return () => cancelAnimationFrame(frame);
+      if (scrollToAnchor()) return;
+      // Mail links can arrive before the lazy route or authenticated query.
+      const observer = new MutationObserver(() => {
+        if (scrollToAnchor()) observer.disconnect();
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+      const timeout = window.setTimeout(() => observer.disconnect(), 10_000);
+      return () => { observer.disconnect(); window.clearTimeout(timeout); };
     }
 
     window.scrollTo(0, 0);
@@ -132,6 +146,7 @@ function ScrollToTop() {
 function AuthedRoutes() {
   const state = useQuery(api.profiles.onboardingState);
   const location = useLocation();
+  const returnDestination = safeAppDestination(new URLSearchParams(location.search).get("next"));
 
   if (state === undefined) return <FullPageLoader />;
 
@@ -180,8 +195,8 @@ function AuthedRoutes() {
             />
           }
         />
-        <Route path="/signin" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/signup" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/signin" element={<Navigate to={returnDestination} replace />} />
+        <Route path="/signup" element={<Navigate to={returnDestination} replace />} />
         <Route
           path="/dashboard"
           element={
@@ -334,7 +349,7 @@ function RedirectToSignIn() {
   const target =
     location.pathname === "/"
       ? "/"
-      : `/signin?next=${encodeURIComponent(location.pathname)}`;
+      : `/signin?next=${encodeURIComponent(location.pathname + location.search + location.hash)}`;
   return <Navigate to={target} replace />;
 }
 

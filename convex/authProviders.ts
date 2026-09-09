@@ -10,7 +10,10 @@ export const available = query({
     apple: v.boolean(),
   }),
   handler: async () => ({
-    email: Boolean(env.AGENTMAIL_API_KEY && env.AGENTMAIL_INBOX_ID),
+    // Development OTP sign-in is available without a mail provider. The auth
+    // action still enforces its explicit test-email allowlist before bypassing
+    // delivery; this flag grants no authentication or broader access.
+    email: Boolean(env.AGENTMAIL_API_KEY && env.AGENTMAIL_INBOX_ID) || env.ENVIRONMENT === "development",
     google: Boolean(env.AUTH_GOOGLE_ID && env.AUTH_GOOGLE_SECRET),
     apple: Boolean(env.AUTH_APPLE_ID && env.AUTH_APPLE_SECRET),
   }),

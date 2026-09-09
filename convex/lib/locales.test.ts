@@ -63,10 +63,11 @@ describe("languageDirective", () => {
     }
   });
 
-  test("asks for 반말 only when the date is in Korean", () => {
+  test("honors owner formality instead of forcing informal speech", () => {
     expect(languageDirective("ko-KR")).toContain("Korean");
-    expect(languageDirective("ko-KR")).toContain("반말");
-    expect(greetingExample("ko-KR", "Sol")).toBe('"안녕, 나는 Sol야"');
+    expect(languageDirective("ko-KR")).toContain("존댓말/반말 preference");
+    expect(languageDirective("ko-KR")).toContain("Do not switch register");
+    expect(greetingExample("ko-KR", "Sol")).toBe('"Sol예요."');
     expect(firstPersonRule("ko-KR")).toContain("내 친구");
   });
 
@@ -79,7 +80,9 @@ describe("languageDirective", () => {
 describe("introductionRule", () => {
   test("asks for an introduction on the first turn only", () => {
     expect(introductionRule(1, "en-US", "Juno")).toContain('"I\'m Juno"');
-    expect(introductionRule(1, "ko-KR", "Sol")).toContain("안녕, 나는 Sol야");
+    expect(introductionRule(1, "ko-KR", "Sol")).toContain("Sol예요.");
+    expect(introductionRule(1, "ko-KR", "봄")).toContain("봄이에요.");
+    expect(introductionRule(1, "ko-KR", "루")).toContain("루예요.");
   });
 
   test("forbids greeting again on every later turn", () => {

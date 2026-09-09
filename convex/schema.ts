@@ -24,6 +24,8 @@ import {
   socialEnergyValidator,
 } from "./lib/enums";
 import { agentAvatarValidator } from "./lib/agentAvatar";
+import { reflectionValidator, sceneKindValidator } from "./lib/dateStory";
+import { dateActivityValidator } from "./lib/dateActivity";
 
 export default defineSchema({
   // ---- auth (users, authAccounts, authSessions, ...) -------------------
@@ -122,6 +124,7 @@ export default defineSchema({
     areaHard: v.optional(v.boolean()),
 
     relationshipIntent: relationshipIntentValidator,
+    /** Restrict to the exact chosen goal; incompatible goals are always excluded. */
     intentHard: v.boolean(),
 
     smoking: smokingValidator,
@@ -185,6 +188,12 @@ export default defineSchema({
     ),
     /** Compact private memory learned from human-agent conversations. */
     privateMemory: v.string(),
+    /** Human message being learned; prevents a new encounter racing feedback. */
+    pendingReplyTo: v.optional(v.id("agentMessages")),
+    /** When the fence went up, so a lost reply cannot block dating forever. */
+    pendingReplyAt: v.optional(v.number()),
+    /** Idempotency fence for retried or out-of-order model replies. */
+    lastReplyTo: v.optional(v.id("agentMessages")),
     /** Compact lessons from the Agent's own private date verdicts. */
     scoutingMemory: v.optional(v.string()),
     status: v.union(v.literal("active"), v.literal("paused")),
@@ -197,10 +206,17 @@ export default defineSchema({
     userId: v.id("users"),
     /** Present when this message discusses one of the user's Agent dates. */
     agentDateId: v.optional(v.id("agentDates")),
+    /** Owner-only coaching attached to a saved public utterance. */
+    feedbackTarget: v.optional(v.union(v.literal("self"), v.literal("counterpart"))),
+    turnRound: v.optional(v.number()),
+    replyTo: v.optional(v.id("agentMessages")),
     role: v.union(v.literal("human"), v.literal("agent")),
     content: v.string(),
     createdAt: v.number(),
-  }).index("by_user_and_created", ["userId", "createdAt"]),
+  })
+    .index("by_user_and_created", ["userId", "createdAt"])
+    .index("by_user_and_date_and_created", ["userId", "agentDateId", "createdAt"])
+    .index("by_user_role_created", ["userId", "role", "createdAt"]),
 
   /**
    * A change to what the Agent looks for, proposed by the Agent and decided by
@@ -229,6 +245,7 @@ export default defineSchema({
       v.literal("pending"),
       v.literal("accepted"),
       v.literal("declined"),
+      v.literal("superseded"),
     ),
     createdAt: v.number(),
     resolvedAt: v.optional(v.number()),
@@ -277,7 +294,21 @@ export default defineSchema({
     nextTurnAt: v.optional(v.number()),
     startedAt: v.optional(v.number()),
     completedAt: v.optional(v.number()),
+    /** Re-review a completed failed transcript without restarting its encounter. */
+    reviewRetryStartedAt: v.optional(v.number()),
+    reviewRetryCount: v.optional(v.number()),
+    reviewRecoveredAt: v.optional(v.number()),
     setting: v.string(),
+    sceneKind: v.optional(sceneKindValidator),
+    sceneSituation: v.optional(v.string()),
+    /** Legacy 6/10-turn records remain readable; new encounters allow 12/16. */
+    plannedTurns: v.optional(v.union(v.literal(6), v.literal(10), v.literal(12), v.literal(16))),
+    activityJournal: v.optional(dateActivityValidator),
+    /** A participant chose to end; allow one reply, then review this encounter. */
+    closingAfterRound: v.optional(v.number()),
+    initiatorFollowup: v.optional(v.string()),
+    counterpartFollowup: v.optional(v.string()),
+    isSearchEncounter: v.optional(v.boolean()),
     worldSourceTitle: v.optional(v.string()),
     worldSourceUrl: v.optional(v.string()),
     compatibilityScore: v.number(),
@@ -298,6 +329,8 @@ export default defineSchema({
     ),
     initiatorReason: v.string(),
     counterpartReason: v.string(),
+    initiatorReflection: v.optional(reflectionValidator),
+    counterpartReflection: v.optional(reflectionValidator),
     /** Private structured explanations. Only the owning side is projected. */
     initiatorDecisionCode: v.optional(agentDecisionCodeValidator),
     counterpartDecisionCode: v.optional(agentDecisionCodeValidator),
@@ -314,6 +347,7 @@ export default defineSchema({
       v.literal("no"),
     ),
     isDemoCounterpart: v.boolean(),
+    demoLetterQueued: v.optional(v.boolean()),
     /** Public, explainable reasons these proxies crossed paths. No raw score. */
     scoutSignals: v.optional(v.array(v.string())),
     failureReason: v.optional(v.string()),
@@ -327,6 +361,21 @@ export default defineSchema({
       "counterpartUserId",
     ])
     .index("by_status", ["status"]),
+
+  agentSearches: defineTable({
+    userId: v.id("users"),
+    status: v.union(v.literal("searching"), v.literal("waiting"), v.literal("talking"), v.literal("match_ready"), v.literal("paused"), v.literal("connected"), v.literal("retrying")),
+    accessMode: v.union(v.literal("demo"), v.literal("subscription")),
+    revision: v.number(),
+    currentDateId: v.optional(v.id("agentDates")),
+    nextCheckAt: v.optional(v.number()),
+    lastCheckedAt: v.optional(v.number()),
+    cityIndex: v.number(),
+    cursor: v.union(v.string(), v.null()),
+    encountersCompleted: v.number(),
+    startedAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_user", ["userId"]),
 
   agentDateTurns: defineTable({
     agentDateId: v.id("agentDates"),
@@ -411,6 +460,16 @@ export default defineSchema({
     .index("by_agent_date", ["agentDateId"]),
 
   // ---- comms -----------------------------------------------------------
+  /** Retained for earlier development rows. New demo attempts never send mail. */
+  demoDebriefBatches: defineTable({
+    userId: v.id("users"),
+    latestDateId: v.id("agentDates"),
+    count: v.number(),
+    pending: v.boolean(),
+    sendAfter: v.number(),
+    lastSentAt: v.optional(v.number()),
+  }).index("by_user", ["userId"]),
+
   notifications: defineTable({
     userId: v.id("users"),
     kind: notificationKindValidator,

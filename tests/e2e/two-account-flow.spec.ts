@@ -140,19 +140,16 @@ async function createAccountAndAgent(page: Page, persona: Persona) {
   await expect(page.getByText("DEMO ACTIVE")).toBeVisible({ timeout: 20_000 });
   await page.getByRole("button", { name: /Send my Agent scouting/i }).click();
   await expect(page).toHaveURL(/\/dashboard/, { timeout: 20_000 });
+  await expect(page.getByRole("button", { name: "Pause search", exact: true })).toBeVisible();
   await expect(
     page.getByRole("heading", { name: persona.agentName, exact: true }),
   ).toBeVisible();
 
   await page.goto("/settings");
-  const demoMatches = page.getByRole("switch", {
-    name: /Include clearly labelled demo agents/i,
-  });
-  await expect(demoMatches).toHaveAttribute("aria-checked", "true");
-  await demoMatches.click();
-  await expect(demoMatches).toHaveAttribute("aria-checked", "false");
-  await page.reload();
-  await expect(demoMatches).toHaveAttribute("aria-checked", "false");
+  const mailSwitch = page.getByRole("switch", { name: /Email me at all/i });
+  await expect(mailSwitch).toHaveAttribute("aria-checked", "true");
+  await mailSwitch.click();
+  await expect(mailSwitch).toHaveAttribute("aria-checked", "false");
   await page.goto("/dashboard");
 }
 
@@ -161,7 +158,7 @@ test.skip(
   "Set DATEHAJA_TWO_ACCOUNT_E2E=1 to create two real accounts and connect them.",
 );
 
-test("two real agents date before private mutual contact reveal", async ({
+test("two searching agents converse and connect only when the encounter earns a match", async ({
   browser,
   baseURL,
 }, testInfo) => {
@@ -227,9 +224,7 @@ test("two real agents date before private mutual contact reveal", async ({
     await createAccountAndAgent(secondPage, second);
 
     await firstPage.goto("/dashboard");
-    await firstPage
-      .getByRole("button", { name: /Send Orbit scouting/i })
-      .click();
+    await firstPage.getByRole("button", { name: /Watch the date live/i }).click({ timeout: 30_000 });
     await expect(firstPage).toHaveURL(/\/agent-date\//, { timeout: 20_000 });
     const datePath = new URL(firstPage.url()).pathname;
     await secondPage.goto(datePath);
@@ -250,12 +245,10 @@ test("two real agents date before private mutual contact reveal", async ({
       // sixth turn lands, so that frame may never be painted and waiting on it
       // fails a date that actually completed. The debrief states the same count
       // and keeps stating it.
+      await expect(page.getByText(/Primary signal|Why I passed/i)).toBeVisible({ timeout: 180_000 });
       await expect(
-        page.getByRole("button", { name: /Introduce us/i }),
-      ).toBeVisible({ timeout: 180_000 });
-      await expect(
-        page.locator('[aria-label="6 observed moments"]'),
-      ).toBeVisible({ timeout: 20_000 });
+        page.locator(".date-record-transcript header span"),
+      ).toHaveText(/^(?:[2-9]|[1-9]\d+) saved lines$/);
       await expect(page.getByText(/clearly-labelled demo date/i)).toHaveCount(
         0,
       );
@@ -263,6 +256,16 @@ test("two real agents date before private mutual contact reveal", async ({
 
     await expect(firstPage.getByText(second.email)).toHaveCount(0);
     await expect(secondPage.getByText(first.email)).toHaveCount(0);
+    if (!await firstPage.getByRole("button", { name: /Introduce us/i }).isVisible()) {
+      for (const page of [firstPage, secondPage]) {
+        await expect(page.getByText("A conversation, not a match.")).toBeVisible();
+        await page.goto("/dashboard");
+        await expect(page.getByText("Conversations completed: 1")).toBeVisible();
+        await expect(page.getByRole("button", { name: "Pause search", exact: true })).toBeVisible();
+      }
+      await testInfo.attach("honest-outcome", { body: "The model did not recommend a mutual introduction. Both searches continued; no contact was revealed.", contentType: "text/plain" });
+      return;
+    }
     await firstPage.getByRole("button", { name: /Introduce us/i }).click();
     await expect(firstPage.getByText("Your answer is sealed")).toBeVisible();
     await expect(
@@ -291,6 +294,12 @@ test("two real agents date before private mutual contact reveal", async ({
       contentType: "image/png",
     });
   } finally {
+    for (const [page, persona] of [[firstPage, first], [secondPage, second]] as const) {
+      await page.goto("/dashboard").catch(() => {});
+      await page.getByRole("heading", { name: persona.agentName, exact: true }).waitFor({ timeout: 10_000 }).catch(() => {});
+      const pause = page.getByRole("button", { name: "Pause search", exact: true });
+      if (await pause.isVisible().catch(() => false)) await pause.click().catch(() => {});
+    }
     await firstContext.close();
     await secondContext.close();
   }

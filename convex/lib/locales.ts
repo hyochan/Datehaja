@@ -114,22 +114,24 @@ export function languageNameForLocale(locale?: string): string {
 export function languageDirective(locale?: string): string {
   const language = languageNameForLocale(locale);
   if (language === "Korean") {
-    return "Korean, in 친근한 반말 — the casual register close friends use";
+    return "Korean, in natural spoken language. Follow the owner's explicit 존댓말/반말 preference; otherwise use relaxed polite speech with a new acquaintance. Do not switch register merely because the other speaker did.";
   }
-  return `${language}, in the casual register two people use once they are at ease`;
+  return `${language}, in natural spoken language, honoring the owner's preferred level of formality`;
 }
 
 /** A first-turn greeting example in the date's own language, and only that one. */
 export function greetingExample(locale: string | undefined, name: string): string {
+  const last = name.charCodeAt(name.length - 1);
+  const hasFinalConsonant = last >= 0xac00 && last <= 0xd7a3 && (last - 0xac00) % 28 !== 0;
   return languageNameForLocale(locale) === "Korean"
-    ? `"안녕, 나는 ${name}야"`
+    ? `"${name}${hasFinalConsonant ? "이에요" : "예요"}."`
     : `"I'm ${name}"`;
 }
 
 /** The first-person pronouns to insist on, in the date's own language only. */
 export function firstPersonRule(locale?: string): string {
   return languageNameForLocale(locale) === "Korean"
-    ? 'Speak in the first person throughout — "나", "내가" — and never say "내 친구" or "네 친구".'
+    ? 'Use first-person speech when needed (나/저 matching your register), with natural subject omission. Never say "내 친구" or "네 친구" as a way to speak for your owner.'
     : 'Speak in the first person throughout — "I" — and never say "my friend" or "your friend".';
 }
 
@@ -147,7 +149,7 @@ export function introductionRule(
   name: string,
 ): string {
   if (round <= 1) {
-    return `This is your first turn: greet casually and introduce yourself by your own name (for example ${greetingExample(locale, name)}), then get to the point.`;
+    return `This is your first turn: introduce yourself briefly in your own preferred register (a neutral example is ${greetingExample(locale, name)}), then get to the point.`;
   }
   return "You already introduced yourself earlier in this conversation. Do not greet again and do not introduce yourself again — pick up exactly where the last message left off.";
 }

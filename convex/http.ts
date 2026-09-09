@@ -158,6 +158,31 @@ http.route({
 
 /* ------------------------- static site (must be last) ---------------------- */
 
+// The installed static-hosting uploader labels .mp4 as application/octet-stream.
+// Serve this public demo with the media type browsers need for inline playback.
+http.route({
+  path: "/demo/learning-proof.mp4",
+  method: "GET",
+  handler: httpAction(async (ctx, request) => {
+    const asset = await ctx.runQuery(components.staticHosting.lib.resolveAssetForHttp, {
+      path: "/demo/learning-proof.mp4", spaFallback: false,
+    });
+    if (!asset?.storageUrl) return new Response("Video not available", { status: 404 });
+    const range = request.headers.get("range");
+    const stored = await fetch(asset.storageUrl, { headers: range ? { Range: range } : {} });
+    if (!stored.ok || !stored.body) return new Response("Video not available", { status: 503 });
+    const headers = new Headers({
+      "Content-Type": "video/mp4", "Cache-Control": "public, max-age=3600",
+      "X-Content-Type-Options": "nosniff",
+    });
+    for (const name of ["content-length", "content-range", "accept-ranges", "etag"]) {
+      const value = stored.headers.get(name);
+      if (value) headers.set(name, value);
+    }
+    return new Response(stored.body, { status: stored.status, headers });
+  }),
+});
+
 registerStaticRoutes(http, components.staticHosting);
 
 export default http;

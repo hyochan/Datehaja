@@ -11,6 +11,7 @@ import {
 } from "../components/agent/AgentAvatar";
 import { AgentHomeWorld } from "../components/agent/AgentDateWorld";
 import { useI18n } from "../i18n";
+import { AgentSearchWorld } from "../components/agent/AgentSearchWorld";
 
 type AgentMessage = {
   _id: string;
@@ -31,11 +32,13 @@ type DateDiscussion = {
     _id: Id<"agentDates">;
     summary: string;
     status: string;
+    introductionReady?: boolean;
   };
   mine: {
     agentName: string;
     avatar: AvatarConfig | null;
     reason: string;
+    reflection?: { headline: string; question: string };
     consent: "pending" | "yes" | "no";
   };
   counterpart: {
@@ -80,6 +83,9 @@ function looksLikeMeetIntent(content: string) {
 export default function AgentDashboardPage() {
   const mine = useQuery(api.agents.mine);
   const dates = useQuery(api.agentDates.listMine);
+  const search = useQuery(api.scouting.mine);
+  const beginSearch = useAction(api.scouting.start);
+  const pauseSearch = useMutation(api.scouting.pause);
   const send = useMutation(api.agents.send);
   const consent = useMutation(api.agentDates.consent);
   const ensureQuestion = useMutation(api.agents.ensureQuestion);
@@ -182,9 +188,9 @@ export default function AgentDashboardPage() {
     messages.length > 0 && messages[messages.length - 1]?.role === "human";
   const discussionPrompts = discussion
     ? [
-        t("Explain what led you to this verdict."),
-        t("What should you carry into the next search?"),
-        t("Here's what your debrief got wrong:"),
+        t("Here's how I'd say it:"),
+        t("I liked this about them:"),
+        t("Next time, look for someone who…"),
         t("I think I want to meet them."),
       ]
     : [];
@@ -199,6 +205,7 @@ export default function AgentDashboardPage() {
   const showConsentConfirmation = Boolean(
     discussion &&
     discussion.date.status === "debrief_ready" &&
+    discussion.date.introductionReady !== false &&
     discussion.mine.consent === "pending" &&
     latestDiscussionHumanMessage &&
     latestDiscussionHumanMessage._id !== dismissedConsentMessageId &&
@@ -281,7 +288,7 @@ export default function AgentDashboardPage() {
     }
   }
 
-  async function startDate() {
+  async function tryDemoDate() {
     if (starting) return;
     if (!scoutAccess?.allowed) {
       navigate("/membership?intent=scout");
@@ -299,10 +306,29 @@ export default function AgentDashboardPage() {
     }
   }
 
+  async function startSearch() {
+    if (starting) return;
+    if (!scoutAccess?.allowed) { navigate("/membership?intent=scout"); return; }
+    setStarting(true);
+    setError(null);
+    try { await beginSearch({}); } catch (reason) { setError(readableError(reason)); }
+    finally { setStarting(false); }
+  }
+
   const activeDate = dates?.find(
     (date: any) => date.status === "queued" || date.status === "running",
   );
   const latestDate = dates?.[0] as any | undefined;
+  const searchOngoing = search && ["searching", "waiting", "talking", "retrying"].includes(search.status);
+  const readyDateId = search?.status === "match_ready" ? search.currentDateId : undefined;
+  const searchHeadline = activeDate ? t("{agent} is out meeting someone.", { agent: agent.name })
+    : readyDateId ? t("{agent} found someone to introduce.", { agent: agent.name })
+    : search?.status === "waiting" ? t("Still looking. No match to rush.")
+    : search?.status === "retrying" ? t("The search hit a pause.")
+    : search?.status === "searching" ? t("{agent} is looking for you.", { agent: agent.name })
+    : search?.status === "paused" ? t("Your search is paused.")
+    : search?.status === "connected" ? t("Your introduction is open.")
+    : t("Let {agent} keep looking for you.", { agent: agent.name });
   const profile = mine.profile as {
     displayName: string;
     city: string;
@@ -321,6 +347,7 @@ export default function AgentDashboardPage() {
     if (date.status === "connected") return t("Introduction opened");
     if (date.status === "closed") return t("Closed with care");
     if (date.status === "failed") return t("Date interrupted");
+    if (date.isSearchEncounter && !date.introductionReady) return t("Conversation saved · still searching");
     if (date.myVerdict === "encourage") return t("Your agent says meet");
     if (date.myVerdict === "pass") return t("Your agent says pass");
     return t("Private debrief ready");
@@ -375,69 +402,37 @@ export default function AgentDashboardPage() {
 
         <Card className="agent-launch-card overflow-hidden">
           <div className="agent-launch-copy">
-            <div className="docket-label text-[var(--accent-text)]">
-              {activeDate
-                ? t("Live from the date world")
-                : scoutAccess?.allowed
-                  ? t("Scout Pass ready")
-                  : t("Ready to search")}
-            </div>
-            <h2 className="agent-launch-title mt-2">
-              {activeDate
-                ? t("{agent} is out meeting someone.", { agent: agent.name })
-                : latestDate?.status === "debrief_ready"
-                  ? t("{agent} brought something home.", {
-                      agent: agent.name,
-                    })
-                  : t("Send {agent} out to meet someone.", {
-                      agent: agent.name,
-                    })}
-            </h2>
+            <div className="docket-label text-[var(--accent-text)]">{t("An ongoing search")}</div>
+            <h2 className="agent-launch-title mt-2">{searchHeadline}</h2>
             <p className="mt-3 text-[13px] leading-[1.65] text-soft">
-              {activeDate
-                ? t(
-                    "Drop in now. The six moments are saved as they happen, then {agent} returns with a private read.",
-                    { agent: agent.name },
-                  )
-                : t(
-                    "{agent} checks the brief, meets a compatible Agent, and returns with an honest recommendation.",
-                    { agent: agent.name },
-                  )}
+              {activeDate ? t("A real conversation is unfolding. You can drop in and watch.")
+                : readyDateId ? t("There is a specific conversation worth your attention. Read the letter before deciding.")
+                : search?.status === "waiting" ? t("No new available Agent fits your boundaries right now. I'll check again automatically; you don't need to keep pressing a button.")
+                : search?.status === "retrying" ? t("The last check could not finish. A retry is scheduled; no conversation has been invented.")
+                : t("Your Agent meets other searching Agents, learns from each conversation, and keeps going when it isn't right. You'll hear from us when there's someone to introduce.")}
             </p>
-            <Button
-              className="mt-6"
-              fullWidth
-              size="lg"
-              loading={starting}
+            <Button className="mt-6" fullWidth size="lg" loading={starting}
+              disabled={Boolean((searchOngoing && !activeDate) || (!activeDate && !readyDateId && scoutAccess === null))}
               onClick={() => {
                 if (activeDate) navigate(`/agent-date/${activeDate._id}`);
-                else if (latestDate?.status === "debrief_ready")
-                  navigate(`/agent-date/${latestDate._id}`);
-                else void startDate();
-              }}
-            >
-              {activeDate
-                ? t("Watch the date live →")
-                : latestDate?.status === "debrief_ready"
-                  ? t("Read the private debrief →")
-                  : scoutAccess === null
-                    ? t("Checking Scout Pass…")
-                    : scoutAccess.allowed
-                      ? t("Send {agent} scouting →", { agent: agent.name })
-                      : t("Unlock scouting →")}
+                else if (readyDateId) navigate(`/agent-date/${readyDateId}`);
+                else void startSearch();
+              }}>
+              {activeDate ? t("Watch the date live →") : readyDateId ? t("Read the private debrief →")
+                : searchOngoing ? t("Searching continues") : t("Send {agent} scouting →", { agent: agent.name })}
             </Button>
-            <p className="mt-3 text-center text-[11px] leading-relaxed text-muted">
-              {scoutAccess?.mode === "demo"
-                ? t("Development demo pass · no charge")
-                : t(
-                    "The pass funds the search, not a guaranteed match. Contact stays sealed.",
-                  )}
-            </p>
+            {search && <div className="agent-search-status" role="status">
+              <span>{t("Conversations completed: {count}", { count: search.encountersCompleted })}</span>
+              {search.lastCheckedAt && <span>{t("Last checked {time}", { time: formatTime(search.lastCheckedAt) })}</span>}
+              {searchOngoing && search.nextCheckAt && <span>{t("Next check {time}", { time: formatTime(search.nextCheckAt) })}</span>}
+              {searchOngoing && <button type="button" onClick={() => void pauseSearch({}).catch(reason => setError(readableError(reason)))}>{t("Pause search")}</button>}
+            </div>}
+            <p className="mt-3 text-[11px] leading-relaxed text-muted">{t("Search progress stays here. We'll email only when there's someone to introduce.")}</p>
+            {!searchOngoing && !readyDateId && !activeDate && <button type="button" disabled={starting || scoutAccess === null} className="mt-4 text-[12px] underline text-muted" onClick={() => void tryDemoDate()}>{t("Try a clearly labelled demo encounter")}</button>}
           </div>
           <div className="agent-launch-world">
-            <AgentHomeWorld
-              person={{ name: agent.name, avatar: agent.avatar }}
-            />
+            {search ? <AgentSearchWorld name={agent.name} avatar={agent.avatar} encounters={dates ?? []} currentDateId={search.currentDateId} />
+              : <AgentHomeWorld person={{ name: agent.name, avatar: agent.avatar }} />}
           </div>
         </Card>
       </section>
@@ -533,7 +528,7 @@ export default function AgentDashboardPage() {
                 </button>
               </div>
               <p className="mt-3 line-clamp-2 text-[12px] leading-relaxed text-soft">
-                {discussion.date.summary || discussion.mine.reason}
+                {discussion.mine.reflection?.question || discussion.mine.reason}
               </p>
               <div className="agent-discussion-prompts mt-3 flex flex-wrap gap-2">
                 {discussionPrompts.map((prompt) => (
@@ -820,9 +815,9 @@ export default function AgentDashboardPage() {
               <div className="agent-chat-starters">
                 <span>{t("Try asking")}</span>
                 {[
-                  t("What do you understand about me so far?"),
-                  t("What will you look for when you're out there as me?"),
-                  t("Ask me something that would change your search."),
+                  t("Keep my replies short and natural."),
+                  t("Look for someone who is curious about me too."),
+                  t("What have you learned about me?"),
                 ].map((prompt) => (
                   <button
                     type="button"
@@ -858,7 +853,7 @@ export default function AgentDashboardPage() {
                   discussion
                     ? t("Ask what your Agent noticed, or correct the debrief…")
                     : t(
-                        "Tell your agent what people usually misunderstand about you…",
+                        "Tell me how you'd say it, who you'd like to meet, or what felt right…",
                       )
                 }
                 onChange={(event) => setMessage(event.target.value)}

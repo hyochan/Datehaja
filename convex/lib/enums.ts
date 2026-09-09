@@ -139,6 +139,9 @@ export const aiPurposeValidator = v.union(
   v.literal("agent_companion"),
   v.literal("agent_date_turn"),
   v.literal("agent_date_verdict"),
+  v.literal("agent_date_review_audit"),
+  v.literal("agent_date_activity"),
+  v.literal("agent_date_activity_audit"),
 );
 
 /** A rotating private prompt that helps an Agent learn its owner over time. */

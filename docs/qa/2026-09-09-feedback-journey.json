@@ -1,0 +1,1316 @@
+{
+  "date": "2026-09-09",
+  "environment": "isolated local Convex 127.0.0.1:3210; fictional test identities; no mail provider credentials",
+  "method": "Staged opt-in arrivals through ordinary auth, onboarding, scouting, feedback, proposal and consent functions. All saved date turns and verdicts came from the live model. 180-day test uses a mocked clock and fixture model output, separate from these live conversations.",
+  "participants": [
+    {
+      "displayName": "현우",
+      "agentName": "모모",
+      "gender": "man",
+      "intent": "open",
+      "languages": null,
+      "essence": "제품 디자이너이고 필름 사진을 좋아한다. 낯가려서 처음에는 말이 적지만 상대가 좋아하는 이유를 꼬리에 꼬리를 물고 묻는 편이다. 주말에는 볶음밥을 만들고 동네를 걷는다. 사소한 실수를 감추다가 어색해질 때가 있다. 상대가 짧게 대답하면 관심 없는 건가 걱정한다.",
+      "desiredConnection": "천천히 서로를 알아가고 작은 실패를 웃어넘길 수 있는 사람. 내가 말을 꺼낼 때까지 기다려주는 배려가 좋고 지금은 관계의 이름을 미리 정하지 않고 열어 두고 싶다."
+    },
+    {
+      "displayName": "하린",
+      "agentName": "리오",
+      "gender": "woman",
+      "intent": "open",
+      "languages": null,
+      "essence": "잡지 기자다. 모르는 사람에게 궁금한 걸 질문하며 가까워진다. 답을 빨리 재촉하지는 않지만 처음엔 질문이 많아진다. 필름 사진을 찍다가 흔들린 사진도 버리지 않는다. 대화할 때 진지한 이유를 찾는 편이다.",
+      "desiredConnection": "서로의 생각을 자세히 물어보고 깊이 알아가는 사람. 관계는 직접 만나서 천천히 생각하고 싶고 아직 결혼이나 배타적인 약속부터 정하고 싶지는 않다."
+    },
+    {
+      "displayName": "유리",
+      "agentName": "나루",
+      "gender": "woman",
+      "intent": "serious",
+      "languages": null,
+      "essence": "학교 급식 영양사다. 집에서는 계란말이를 종종 망치는데 자투리 볶음밥으로 바꿔 먹는다. 편한 사람 앞에서는 농담이 많고 말이 짧아도 무관심해서가 아니다. 주말 장보기를 좋아하고 다음 날 약속은 전날 저녁에 정한다.",
+      "desiredConnection": "작은 실패를 숨기지 않고 웃으며 수습하는 사람과 진지하게 만나고 싶다. 대단한 취미가 같기보다는 별일 없는 날 같이 웃을 수 있으면 좋겠다."
+    },
+    {
+      "displayName": "다은",
+      "agentName": "네모",
+      "gender": "woman",
+      "intent": "casual",
+      "languages": null,
+      "essence": "여행 콘텐츠를 만들며 자주 도시를 옮긴다. 요리를 망치면 재미있게 영상으로 남긴다. 가볍게 여러 사람을 알아가고 싶으며 배타적이거나 장기적인 관계는 지금 원하지 않는다. 맞지 않으면 서로 시간을 낭비하지 않고 솔직히 말한다.",
+      "desiredConnection": "가볍고 자유롭게 만나며 독점적인 약속을 바라지 않는 사람. 진지한 연애만 원하는 상대를 설득할 생각은 없다."
+    },
+    {
+      "displayName": "서우",
+      "agentName": "온",
+      "gender": "woman",
+      "intent": "serious",
+      "languages": null,
+      "essence": "번역가로 집에서 일한다. 처음엔 말을 적게 하지만 상대가 한 말을 기억하고 작은 행동으로 답한다. 같이 장을 보고 천천히 저녁을 만드는 게 좋다. 큰 농담보다는 사소한 실수를 보고 조용히 웃는 편이다.",
+      "desiredConnection": "천천히 가까워지는 진지한 관계를 원한다. 나의 짧은 말을 무관심으로 단정하지 않고 기다려주는 사람."
+    },
+    {
+      "displayName": "하나",
+      "agentName": "소라",
+      "gender": "woman",
+      "intent": "serious",
+      "languages": [
+        "Japanese"
+      ],
+      "essence": "서울에서 공부하며 일본어로만 깊은 대화를 나누고 싶다. 자동 번역은 원하지 않는다. 요리를 같이 만들 때 작은 실수를 웃어넘긴다. 상대가 편해질 때까지 기다린다.",
+      "desiredConnection": "서울에서 일본어로 이야기하며 진지한 관계를 알아갈 사람. 언어 조건을 임의로 넓히는 건 원하지 않는다."
+    }
+  ],
+  "ownerMessages": [
+    {
+      "role": "agent",
+      "content": "I'm 모모 — your second self. Tell me what you're actually like, and I'll go on the date in your place, as you. Then I'll come home and tell you honestly what I thought.",
+      "agentDateId": null,
+      "createdAt": 1788879262151
+    },
+    {
+      "role": "agent",
+      "content": "처음부터 편안했던 사람을 떠올려봐요. 그 사람은 무엇을 해서 당신을 편하게 만들었나요?",
+      "agentDateId": null,
+      "createdAt": 1788879262152
+    },
+    {
+      "role": "human",
+      "content": "방금 데이트는 내가 질문만 하는 면접 같았어. 나는 상대가 짧게 대답해도 관심 없다고 생각하지 않아. 그건 예전 설명과 달라. 다음에는 질문을 연달아 하지 말고 네가 볶음밥을 만들다가 계란을 태운 상황이라면 그 실수부터 가볍게 말해봐. 실제로 있었던 일처럼 만들지는 말고. 상대가 한 말을 받아서 같이 웃을 수 있는지 봐줘. 앞으로는 진지하고 사려 깊은 사람보다 장난을 편하게 받아주는 Playful 성향을 더 중요하게 찾아줘.",
+      "agentDateId": "j974mr06mywgpzkds9ec5r74p98e0x2d",
+      "createdAt": 1788879519575
+    },
+    {
+      "role": "agent",
+      "content": "리오가 구체적으로 시간을 제안하는 걸 좋다고 느낀 걸 배웠어. 다음 데이트에선 질문을 연달아 던지기보단, 상황에 맞춰 가볍게 받아주고 Playful한 분위기로 웃어넘길 수 있도록 노력할게.",
+      "agentDateId": "j974mr06mywgpzkds9ec5r74p98e0x2d",
+      "createdAt": 1788879525656
+    },
+    {
+      "role": "human",
+      "content": "그건 내가 한 말이 아니야. 리오가 시간을 제안해서 좋았다는 건 네 판단이고, 나는 면접 같아서 싫었다고 했어. 그 기억을 바로잡아줘. 상대의 짧은 답은 무관심이 아니고, 다음에는 질문을 연달아 하지 말고 상황 속 작은 실수부터 가볍게 나누고 상대 말에 반응해줘. 계란을 태웠다는 건 실제 내 과거가 아니라 가상의 예시야. 찾는 성향은 Playful 하나만 중요하게 바꾸는 걸 제안해줘. 다른 성향을 임의로 추가하지 마.",
+      "agentDateId": "j974mr06mywgpzkds9ec5r74p98e0x2d",
+      "createdAt": 1788879672006
+    },
+    {
+      "role": "agent",
+      "content": "맞아, ‘십 분 제안이 좋았다’는 건 내 판단이었고 네가 느낀 건 면접 같았다는 거야. 다음엔 질문을 연달아 던지지 않고, 가상의 계란 태운 실수처럼 상황 속 작은 실수를 가볍게 꺼낸 뒤 상대 말에 먼저 반응할게. 그리고 찾는 성향은 Playful 하나만 중요하게 보는 걸로 제안할게.",
+      "agentDateId": "j974mr06mywgpzkds9ec5r74p98e0x2d",
+      "createdAt": 1788879678140
+    },
+    {
+      "role": "human",
+      "content": "나루가 내 말에 장난으로 반응한 건 좋았어. 그런데 내가 메뉴를 아무거나 고르는 척한다는 건 말한 적 없는 습관이야. 그걸 내 과거로 기억하지 마. 작은 실수는 가상 장면 속에서 지금 하는 행동으로 보여줘. 그리고 이제는 진지하고 서로에게 집중하는 연애를 원해. 가볍게 여러 명을 만나는 관계는 원하지 않아. 관계 목적을 serious로 바꾸는 걸 제안해줘. 다음 상대와는 이 부분을 확인해줘. 상대의 짧은 말은 무관심이 아니라는 점, 질문을 연달아 하지 않는 점, Playful 하나만 중요하게 찾는 건 그대로야. 지역, 언어, 나이 조건은 바꾸지 마.",
+      "agentDateId": "j977qt1ad7pgdz9ybfpnf6xw9x8e0yca",
+      "createdAt": 1788879913940
+    },
+    {
+      "role": "agent",
+      "content": "나루에게서, 네가 한 말을 구체적인 농담으로 받아주는 흐름이 좋다는 걸 배웠어. 다음엔 가상의 작은 실수를 지금 벌어진 일처럼 가볍게 보여주고, 질문을 몰아붙이지 않으면서 서로에게 집중하는 진지한 관계인지 확인할게. 관계 목적을 **serious**로 바꾸는 걸 제안해—이 설정으로 바꿀까?",
+      "agentDateId": "j977qt1ad7pgdz9ybfpnf6xw9x8e0yca",
+      "createdAt": 1788879921329
+    },
+    {
+      "role": "human",
+      "content": "이번엔 네가 전해준 장면과 해석이 잘 맞았어. 지금 찾는 기준은 바꾸지 말고 그대로 이어가줘.",
+      "agentDateId": "j97arezt80h15ybxd9n6mz19rn8e10x1",
+      "createdAt": 1788880351403
+    },
+    {
+      "role": "agent",
+      "content": "이번엔 가상의 작은 실수를 구체적인 농담으로 받아주는 흐름이 네가 찾던 장난스러움과 잘 맞았어. 다음에도 질문을 몰아붙이기보다 내가 먼저 상황을 가볍게 열고, 상대가 말을 이어가는 방식과 진지하게 서로에게 집중할 의도가 있는지 볼게. 지금 기준은 그대로 이어갈게.",
+      "agentDateId": "j97arezt80h15ybxd9n6mz19rn8e10x1",
+      "createdAt": 1788880358418
+    }
+  ],
+  "feedbackCheckpoints": [
+    {
+      "checkpoint": "feedback-1-failed",
+      "memory": "요약: 리오가 창문 빗방울 사진과 십 분 간의 구체적 시간 제안을 통해 천천히 알아가자는 신호를 줌. 앞으로의 데이트에서 내가 Playful 성향을 더 우선시하고, 상대가 짧게 대답해도 관심 없다고 해석하지 않으며, 질문을 과다하게 이어붙이지 않고 상황에 맞춰 자연스럽게 흐름을 만들어야 함. 구체 시간 제안은 긍정적으로 받아들이되, 상대의 리듬을 존중하고 필요하면 웃으며 분위기를 부드럽게 유지하는 방향으로 반응한다. 데이트의 이름을 미리 정하지 않고 열어 두는 관계 설정은 유지. 작은 실수나 어색함도 함께 웃을 수 있는 분위기를 추구한다는 원칙은 변하지 않음. 지난 대화에서 강조된 '서두르지 않는다'와 '함께 웃는 분위기'를 핵심으로 삼고, Playful 성향을 더 중요하게 탐색한다는 점도 유지한다. 앞으로는 리오의 구체적 제안과 상황 맥락에 맞춘 유연한 반응으로 대화를 이어간다.",
+      "latestReply": "리오가 구체적으로 시간을 제안하는 걸 좋다고 느낀 걸 배웠어. 다음 데이트에선 질문을 연달아 던지기보단, 상황에 맞춰 가볍게 받아주고 Playful한 분위기로 웃어넘길 수 있도록 노력할게.",
+      "proposal": {
+        "_id": "js75zk2z7h412ar5vkb5y41xmd8e0s3k",
+        "agentDateId": "j974mr06mywgpzkds9ec5r74p98e0x2d",
+        "agentName": "모모",
+        "personalityPreference": {
+          "from": "flexible",
+          "to": "important"
+        },
+        "reason": "리오가 구체적 시간 제안과 천천히 알아가려는 태도를 명확히 보여줘, Playful 성향의 중요성을 더 크게 반영해야 한다고 느꼈어.",
+        "relationshipIntent": null,
+        "traits": {
+          "from": [],
+          "to": [
+            "Playful",
+            "Warm",
+            "Thoughtful",
+            "Curious"
+          ]
+        }
+      },
+      "preferences": {
+        "relationshipIntent": null,
+        "preferredPersonalityTraits": null,
+        "personalityPreference": null
+      }
+    },
+    {
+      "checkpoint": "feedback-1-approved",
+      "memory": "현우는 리오와의 데이트를 면접처럼 느꼈고, 리오의 구체적인 시간 제안이 좋았다는 해석은 현우의 의견이 아니라 모모의 판단이었으므로 현우의 감정으로 기록하지 않는다. 현우는 상대가 짧게 대답해도 관심 없다고 해석하지 않으며, 다음 데이트에서는 질문을 연달아 하지 않고 상황 속 작은 실수를 가볍게 나누고 상대의 말에 반응하며 함께 웃을 수 있는지를 보길 원한다. ‘계란을 태웠다’는 실제 현우의 경험이 아닌 가상의 예시다. 찾는 성향은 Playful 하나만 중요하게 반영하길 제안했으며, 다른 성향을 임의로 추가하지 않는다. 관계는 천천히 알아가고 이름을 미리 정하지 않고 열어 두는 방향을 유지한다.",
+      "latestReply": "맞아, ‘십 분 제안이 좋았다’는 건 내 판단이었고 네가 느낀 건 면접 같았다는 거야. 다음엔 질문을 연달아 던지지 않고, 가상의 계란 태운 실수처럼 상황 속 작은 실수를 가볍게 꺼낸 뒤 상대 말에 먼저 반응할게. 그리고 찾는 성향은 Playful 하나만 중요하게 보는 걸로 제안할게.",
+      "proposal": null,
+      "preferences": {
+        "relationshipIntent": "open",
+        "preferredPersonalityTraits": [
+          "Playful"
+        ],
+        "personalityPreference": "important"
+      }
+    },
+    {
+      "checkpoint": "feedback-2-approved",
+      "memory": "현우는 나루가 자신의 말을 장난스럽고 구체적으로 받아준 점을 좋게 느꼈다. 다만 ‘메뉴를 아무거나 고르는 척한다’는 습관은 현우가 말한 적 없는 내용이므로 현우의 과거로 기록하지 않는다. 작은 실수는 실제 전기가 아니라 가상 장면 속에서 현재 벌어지는 행동으로 보여줘야 한다. 현우는 이제 가볍게 여러 명을 만나는 관계가 아니라, 진지하고 서로에게 집중하는 연애를 원하며 관계 목적을 serious로 바꾸는 것을 제안했다. 다음 상대와 이 점을 확인한다. 상대의 짧은 답을 무관심으로 해석하지 않고, 질문을 연달아 하지 않으며, Playful 하나만 중요한 성향으로 찾는 기준은 유지한다. 지역·언어·나이 조건은 바꾸지 않는다. 리오의 구체적인 시간 제안이 좋았다는 것은 모모의 판단이지 현우의 감정이 아니다. ‘계란을 태웠다’는 실제 경험이 아닌 가상의 예시다.",
+      "latestReply": "나루에게서, 네가 한 말을 구체적인 농담으로 받아주는 흐름이 좋다는 걸 배웠어. 다음엔 가상의 작은 실수를 지금 벌어진 일처럼 가볍게 보여주고, 질문을 몰아붙이지 않으면서 서로에게 집중하는 진지한 관계인지 확인할게. 관계 목적을 **serious**로 바꾸는 걸 제안해—이 설정으로 바꿀까?",
+      "proposal": null,
+      "preferences": {
+        "relationshipIntent": "serious",
+        "preferredPersonalityTraits": [
+          "Playful"
+        ],
+        "personalityPreference": "important"
+      }
+    },
+    {
+      "checkpoint": "feedback-3-kept",
+      "memory": "현우는 이번 데이트에서 온이 가상의 계란 태우기 실수를 계란과 변명하는 모습까지 구체적인 농담으로 받아준 점을 좋게 느꼈고, 장난스러운 상호작용과 진지한 관계 의도가 잘 맞았다고 판단했다. 현재 기준은 바꾸지 않는다: 관계 목적은 진지하고 서로에게 집중하는 연애이며, Playful 성향 하나만 중요하게 본다. 상대의 짧은 답을 무관심으로 해석하지 않고, 질문을 연달아 하지 않으며, 작은 실수는 실제 과거가 아닌 가상 장면 속 현재 행동으로 보여준다. 메뉴를 아무거나 고르는 척한다는 습관은 현우의 과거가 아니다. 지역·언어·나이 조건과 만남을 서두르지 않는 경계, 연결 전 사생활 보호를 유지한다.",
+      "latestReply": "이번엔 가상의 작은 실수를 구체적인 농담으로 받아주는 흐름이 네가 찾던 장난스러움과 잘 맞았어. 다음에도 질문을 몰아붙이기보다 내가 먼저 상황을 가볍게 열고, 상대가 말을 이어가는 방식과 진지하게 서로에게 집중할 의도가 있는지 볼게. 지금 기준은 그대로 이어갈게.",
+      "proposal": null,
+      "preferences": {
+        "relationshipIntent": "serious",
+        "preferredPersonalityTraits": [
+          "Playful"
+        ],
+        "personalityPreference": "important"
+      }
+    }
+  ],
+  "dates": [
+    {
+      "counterpart": {
+        "age": 31,
+        "agentName": "온",
+        "area": "Seongsu",
+        "avatar": {
+          "accessory": "none",
+          "face": "curious",
+          "gender": "female",
+          "hair": "wave",
+          "outfit": "cardigan",
+          "palette": "violet"
+        },
+        "consent": "sealed",
+        "contactEmail": null,
+        "firstName": "서우",
+        "interests": [
+          "Reading",
+          "Cooking",
+          "Plants"
+        ],
+        "isDemo": false,
+        "photoUrl": null,
+        "verdict": null
+      },
+      "date": {
+        "_id": "j97arezt80h15ybxd9n6mz19rn8e10x1",
+        "activity": "wrapping_up",
+        "completedAt": 1788880265389,
+        "createdAt": 1788880179663,
+        "frictions": [],
+        "introductionReady": true,
+        "isSearchEncounter": true,
+        "paceMode": "demo",
+        "sceneKind": "market",
+        "scoutSignals": [
+          "Both are looking in Seoul",
+          "They share Korean",
+          "Shared pull toward Cooking",
+          "The agents will test the personality fit in conversation",
+          "Relationship intentions can coexist"
+        ],
+        "setting": "아직 문을 연 작은 가게",
+        "sparks": [
+          "온이 계란과 변명하는 모습을 소재로 농담을 이어갔어.",
+          "탄 계란과 변명에 관한 가벼운 농담을 주고받았다."
+        ],
+        "startedAt": 1788880180733,
+        "status": "debrief_ready",
+        "summary": "두 사람은 조용한 골목을 천천히 걷고 싶어 했고, 진지한 관계와 작은 실수에 대한 농담을 주고받았어.",
+        "updatedAt": 1788880265389,
+        "worldSourceTitle": "WASHOKU | Nature and Culture in Japanese Cuisine - Japan House",
+        "worldSourceUrl": "https://www.japanhousela.com/exhibitions/washoku-food-nature-culture-traditional-japanese-cuisine-kaiseki-unesco-asahi-shimbun/"
+      },
+      "mine": {
+        "agentName": "모모",
+        "avatar": {
+          "accessory": "none",
+          "face": "curious",
+          "gender": "male",
+          "hair": "wave",
+          "outfit": "cardigan",
+          "palette": "moss"
+        },
+        "consent": "pending",
+        "decisionCode": "strong_alignment",
+        "firstName": "현우",
+        "nextSearchNote": "관계 의도가 맞고, 가상의 작은 실수를 구체적인 농담으로 받아주는 사람을 다시 눈여겨보자.",
+        "reason": "내가 가상의 계란 태우기 실수를 꺼내자, 온은 계란이 억울하겠다며 변명하는 모습까지 웃길 거라고 받아줬어. 장난을 구체적으로 이어간 반응이라 좋았고, 진지한 관계를 원한다는 말도 서로 맞았어. 실제 생활에서 이런 가벼운 웃음이 이어지는지는 더 봐야 해.",
+        "reflection": {
+          "anchorRound": 6,
+          "headline": "태운 계란을 먼저 웃다",
+          "question": "온의 ‘변명하는 모습까지’라는 농담, 네가 찾던 장난스러움으로 느껴졌어?"
+        },
+        "verdict": "encourage"
+      },
+      "simulationOnly": false,
+      "turns": [
+        {
+          "_id": "j576t4jkpxw8tj4gxkmj7a9ccd8e19es",
+          "content": "안녕, 나는 모모야. 아직 문 안 연 가게들이 조용해서 좋다—온, 오늘은 음악 소리 큰 쪽 말고 옆 골목으로 천천히 걸어볼래?",
+          "createdAt": 1788880189273,
+          "isMine": true,
+          "round": 1,
+          "speakerAgentName": "모모"
+        },
+        {
+          "_id": "j57agnyajbnjf89wpx2kvm9g7n8e1m4v",
+          "content": "좋아, 옆 골목으로 가자. 아직 불도 안 켜진 가게들 사이를 천천히 걷고 싶어.",
+          "createdAt": 1788880196427,
+          "isMine": false,
+          "round": 2,
+          "speakerAgentName": "온"
+        },
+        {
+          "_id": "j57220vkgvqm94ca74desh4e7h8e0hwz",
+          "content": "이 골목처럼 서두르진 않되, 나는 가볍게 흩어지는 만남보다 서로에게 집중하는 연애를 원해. 온은 어떤 관계를 찾고 있어?",
+          "createdAt": 1788880206388,
+          "isMine": true,
+          "round": 3,
+          "speakerAgentName": "모모"
+        },
+        {
+          "_id": "j570647nspd9zaqcsc0cbmjm798e18yt",
+          "content": "나도 천천히 가까워지는 진지한 관계를 원해. 오늘은 이 골목 끝까지 걸으면서, 네가 평소 저녁을 어떻게 보내는지 듣고 싶어.",
+          "createdAt": 1788880215438,
+          "isMine": false,
+          "round": 4,
+          "speakerAgentName": "온"
+        },
+        {
+          "_id": "j575j6x9b85pj9temk23e0b6zh8e0wbq",
+          "content": "온이 망설임 없이 조용한 골목을 고른 게 조금 의외였어. 나는 주말엔 볶음밥을 만들고 동네를 걷는데, 오늘 계란을 태웠다면 변명부터 하다 더 어색해졌을 것 같아—온은 실수하면 먼저 웃는 편이야?",
+          "createdAt": 1788880227360,
+          "isMine": true,
+          "round": 5,
+          "speakerAgentName": "모모"
+        },
+        {
+          "_id": "j57ewa39dskee4cp1hsbdg1qtn8e1w7e",
+          "content": "그 계란은 꽤 억울했겠다. 나는 그런 실수면 먼저 조용히 웃을 것 같아—변명하는 모습까지 보면 더 웃길 것 같고.",
+          "createdAt": 1788880239998,
+          "isMine": false,
+          "round": 6,
+          "speakerAgentName": "온"
+        }
+      ]
+    },
+    {
+      "counterpart": {
+        "age": 32,
+        "agentName": "네모",
+        "area": "Seongsu",
+        "avatar": {
+          "accessory": "none",
+          "face": "curious",
+          "gender": "female",
+          "hair": "wave",
+          "outfit": "cardigan",
+          "palette": "sunset"
+        },
+        "consent": "sealed",
+        "contactEmail": null,
+        "firstName": "다은",
+        "interests": [
+          "Cooking",
+          "Coffee",
+          "Travel"
+        ],
+        "isDemo": false,
+        "photoUrl": null,
+        "verdict": null
+      },
+      "date": {
+        "_id": "j97a352b2qkjwen272e1h65ffs8e0htz",
+        "activity": "wrapping_up",
+        "completedAt": 1788880077626,
+        "createdAt": 1788880020841,
+        "frictions": [
+          "두 사람은 원하는 관계의 방향이 달랐어.",
+          "한쪽은 진지한 연애를, 다른 쪽은 가볍고 자유로운 관계를 원했어."
+        ],
+        "introductionReady": false,
+        "isSearchEncounter": true,
+        "paceMode": "demo",
+        "sceneKind": "market",
+        "scoutSignals": [
+          "Both are looking in Seoul",
+          "They share Korean",
+          "Shared pull toward Cooking and Coffee",
+          "Playful matched the brief",
+          "Different intentions need an honest conversation"
+        ],
+        "setting": "아직 문을 연 작은 가게",
+        "sparks": [
+          "네모는 북적이는 곳에 들렀다가 조용한 골목으로 빠져나가자고 제안했어.",
+          "음악 소리 나는 쪽으로 함께 가보기로 했어."
+        ],
+        "startedAt": 1788880021931,
+        "status": "debrief_ready",
+        "summary": "모모는 진지하게 서로에게 집중하는 연애를 원한다고 말했고, 네모는 가볍고 자유롭게 여러 사람을 알아가는 관계를 원한다고 말했다.",
+        "updatedAt": 1788880077626,
+        "worldSourceTitle": "First Comprehensive Korean Dining Culture Exhibition Opens",
+        "worldSourceUrl": "https://www.chosun.com/english/travel-food-en/2026/07/01/7RPY3FDEJNBXZLUEDXMTLJMZBA/"
+      },
+      "mine": {
+        "agentName": "모모",
+        "avatar": {
+          "accessory": "none",
+          "face": "curious",
+          "gender": "male",
+          "hair": "wave",
+          "outfit": "cardigan",
+          "palette": "moss"
+        },
+        "consent": "pending",
+        "decisionCode": "intent_mismatch",
+        "firstName": "현우",
+        "nextSearchNote": "다음에는 취향 대화보다 관계를 시작할 때 원하는 방향을 먼저 확인하는 게 좋겠어.",
+        "reason": "네모가 “나는 지금 가볍고 자유롭게 여러 사람을 알아가는 관계를 원해”라고 말한 순간, 네가 원하는 진지하고 서로에게 집중하는 연애와 정면으로 달랐어. 이번엔 더 확인할 여지보다 관계 목적 자체가 분명한 충돌이라 여기서 멈췄어.",
+        "reflection": {
+          "anchorRound": 4,
+          "headline": "진지한 연애와 가벼운 관계",
+          "question": "이 기대 차이가 너에게는 얼마나 결정적이었어?"
+        },
+        "verdict": "pass"
+      },
+      "simulationOnly": false,
+      "turns": [
+        {
+          "_id": "j57fzb04yzfdqxp49ghbzwe6v18e1s0n",
+          "content": "안녕, 나는 모모야. 아직 문도 안 연 작은 가게 앞이네—나는 조용한 골목 쪽으로 걸어가 보고 싶은데, 네모도 같이 갈래?",
+          "createdAt": 1788880027153,
+          "isMine": true,
+          "round": 1,
+          "speakerAgentName": "모모"
+        },
+        {
+          "_id": "j5759kg1721jj77am24nv09xx58e0jbj",
+          "content": "모모, 나는 음악 소리 나는 쪽이 조금 더 끌려. 잠깐 북적이는 데 들렀다가, 마음에 안 들면 조용한 골목으로 빠져나가자.",
+          "createdAt": 1788880035009,
+          "isMine": false,
+          "round": 2,
+          "speakerAgentName": "네모"
+        },
+        {
+          "_id": "j5764mk3zxms4xcprd07gnsmh98e1ezy",
+          "content": "좋아, 음악 소리 나는 쪽으로 잠깐 가보자. 나는 진지하게 서로에게 집중하는 연애를 원하고, 네모는 어떤 관계를 찾고 있어?",
+          "createdAt": 1788880043043,
+          "isMine": true,
+          "round": 3,
+          "speakerAgentName": "모모"
+        },
+        {
+          "_id": "j573301xh036dq3z0dbytqx8gx8e08by",
+          "content": "나는 지금 가볍고 자유롭게 여러 사람을 알아가는 관계를 원해. 네가 진지하게 집중하는 연애를 원한다면 서로 기대가 달라서, 음악 소리 나는 쪽은 여기까지만 같이 갈게.",
+          "createdAt": 1788880053178,
+          "isMine": false,
+          "round": 4,
+          "speakerAgentName": "네모"
+        },
+        {
+          "_id": "j572qh8wjdyqv6gaj6qjw37bw98e14x6",
+          "content": "알겠어, 네모. 원하는 방향이 다르다는 걸 확인했으니 여기서 인사할게—조심히 가.",
+          "createdAt": 1788880063266,
+          "isMine": true,
+          "round": 5,
+          "speakerAgentName": "모모"
+        }
+      ]
+    },
+    {
+      "counterpart": {
+        "age": 33,
+        "agentName": "나루",
+        "area": "Seongsu",
+        "avatar": {
+          "accessory": "none",
+          "face": "curious",
+          "gender": "female",
+          "hair": "wave",
+          "outfit": "cardigan",
+          "palette": "rose"
+        },
+        "consent": "sealed",
+        "contactEmail": null,
+        "firstName": "유리",
+        "interests": [
+          "Cooking",
+          "Coffee",
+          "Plants"
+        ],
+        "isDemo": false,
+        "photoUrl": null,
+        "verdict": null
+      },
+      "date": {
+        "_id": "j977qt1ad7pgdz9ybfpnf6xw9x8e0yca",
+        "activity": "wrapping_up",
+        "completedAt": 1788879815312,
+        "createdAt": 1788879752834,
+        "frictions": [],
+        "introductionReady": true,
+        "isSearchEncounter": true,
+        "paceMode": "demo",
+        "sceneKind": "market",
+        "scoutSignals": [
+          "Both are looking in Seoul",
+          "They share Korean",
+          "Shared pull toward Cooking and Coffee",
+          "Playful matched the brief",
+          "Relationship intentions can coexist"
+        ],
+        "setting": "아직 문을 연 작은 가게",
+        "sparks": [
+          "나루가 메뉴를 오래 고민한다는 말과 모모의 습관을 장난스럽게 연결했어.",
+          "둘 다 서두르지 않는 산책과 진지한 만남을 직접 언급했어."
+        ],
+        "startedAt": 1788879754120,
+        "status": "closed",
+        "summary": "두 사람은 비를 피해 처마 밑에서 천천히 커피 메뉴를 고르며 관계에 대한 생각을 나눴어.",
+        "updatedAt": 1788879893593,
+        "worldSourceTitle": "Digital Online Culinary Exhibition 2026 https://app.notion.com/p/Story ...",
+        "worldSourceUrl": "https://www.facebook.com/storysiganaAfrica/posts/digital-online-culinary-exhibition-2026httpsappnotioncompstory-sigana-online-cul/122128836981225259/"
+      },
+      "mine": {
+        "agentName": "모모",
+        "avatar": {
+          "accessory": "none",
+          "face": "curious",
+          "gender": "male",
+          "hair": "wave",
+          "outfit": "cardigan",
+          "palette": "moss"
+        },
+        "consent": "no",
+        "decisionCode": "worth_exploring",
+        "firstName": "현우",
+        "nextSearchNote": "작은 실수를 가볍게 꺼냈을 때 상대도 구체적인 농담과 질문으로 받아주는 흐름을 다시 눈여겨보자.",
+        "reason": "처마 밑에서 메뉴를 고르던 중 나루가 네가 배려하는 척 아무거나 고르는지 장난스럽게 물었어. 네가 앞서 꺼낸 작은 습관을 받아 자기 식으로 되돌려준 게 좋았고, 함께 웃으며 알아갈 여지가 보였어. 다만 나루가 말한 ‘진지하게’의 속도와 의미는 더 들어보고 싶어.",
+        "reflection": {
+          "anchorRound": 6,
+          "headline": "처마 밑 메뉴판 농담",
+          "question": "나루의 장난스러운 질문에서 어떤 분위기가 느껴져?"
+        },
+        "verdict": "encourage"
+      },
+      "simulationOnly": false,
+      "turns": [
+        {
+          "_id": "j570zt6wnhn10f872cvph1czxn8e03yt",
+          "content": "안녕, 나는 모모야. 어닝 아래는 금방 찰 것 같은데, 비 맞기 전에 덮인 아케이드로 천천히 걸어갈래?",
+          "createdAt": 1788879760826,
+          "isMine": true,
+          "round": 1,
+          "speakerAgentName": "모모"
+        },
+        {
+          "_id": "j5783etyx4jwnn1kq0eg67par58e02fs",
+          "content": "좋아, 아케이드로 가자. 나는 비 맞으며 뛰는 것보다 천천히 걷다가 빗줄기 세지면 잠깐 처마에 멈추는 쪽이 좋아—저기 등불 아래부터 같이 가자.",
+          "createdAt": 1788879769939,
+          "isMine": false,
+          "round": 2,
+          "speakerAgentName": "나루"
+        },
+        {
+          "_id": "j574jpc69r40pw5crqxcy7ytf98e1dbz",
+          "content": "그럼 등불 아래까지만 천천히 가자—빗줄기가 세지면 바로 처마로 피하고. 나는 서두르지 않고 서로의 작은 실수도 웃어넘기며 알아가고 싶은데, 나루는 어떤 관계를 찾고 있어?",
+          "createdAt": 1788879775350,
+          "isMine": true,
+          "round": 3,
+          "speakerAgentName": "모모"
+        },
+        {
+          "_id": "j57fv0027ay1r2t0vfdvxc7rgx8e13gy",
+          "content": "나도 가볍게 스쳐 가는 만남보다는 진지하게 만나고 싶어. 저기 처마까지 걷고, 비가 더 세지면 안에서 따뜻한 커피부터 고르자—나는 메뉴 고르다 오래 고민하는 편이거든.",
+          "createdAt": 1788879781820,
+          "isMine": false,
+          "round": 4,
+          "speakerAgentName": "나루"
+        },
+        {
+          "_id": "j57ar1yed4wwhtt621x776h2r18e196w",
+          "content": "메뉴를 오래 고민한다는 말이 의외로 반가워—나는 기다리다 먼저 아무거나 고르는 척할 때가 있거든. 비가 세졌으니 처마에 잠깐 멈춰서, 메뉴판은 천천히 같이 보자.",
+          "createdAt": 1788879792756,
+          "isMine": true,
+          "round": 5,
+          "speakerAgentName": "모모"
+        },
+        {
+          "_id": "j57dyen8x2a340vy4mpesy5ssn8e1epq",
+          "content": "그럼 처마 밑에서 메뉴판 같이 보자. 나는 오늘은 따뜻한 라테로 기울었는데, 모모는 기다리다 정말 아무거나 고르는 편이야, 아니면 상대를 배려하는 척하는 거야?",
+          "createdAt": 1788879798870,
+          "isMine": false,
+          "round": 6,
+          "speakerAgentName": "나루"
+        }
+      ]
+    },
+    {
+      "counterpart": {
+        "age": 34,
+        "agentName": "리오",
+        "area": "Seongsu",
+        "avatar": {
+          "accessory": "none",
+          "face": "curious",
+          "gender": "female",
+          "hair": "wave",
+          "outfit": "cardigan",
+          "palette": "sky"
+        },
+        "consent": "sealed",
+        "contactEmail": null,
+        "firstName": "하린",
+        "interests": [
+          "Photography",
+          "Coffee",
+          "Films"
+        ],
+        "isDemo": false,
+        "photoUrl": null,
+        "verdict": null
+      },
+      "date": {
+        "_id": "j974mr06mywgpzkds9ec5r74p98e0x2d",
+        "activity": "wrapping_up",
+        "completedAt": 1788879390131,
+        "createdAt": 1788879317443,
+        "frictions": [],
+        "introductionReady": true,
+        "isSearchEncounter": true,
+        "paceMode": "demo",
+        "sceneKind": "cafe",
+        "scoutSignals": [
+          "Both are looking in Seoul",
+          "They share Korean",
+          "Shared pull toward Photography and Coffee",
+          "The agents will test the personality fit in conversation",
+          "Relationship intentions can coexist"
+        ],
+        "setting": "빗소리가 들리는 창가 자리",
+        "sparks": [
+          "리오가 머무를 시간을 직접 정하고 창문 빗방울을 찍겠다고 했어.",
+          "모모가 ‘십 분’이라는 구체적인 시간을 막연한 제안보다 편하다고 말했다."
+        ],
+        "startedAt": 1788879318450,
+        "status": "closed",
+        "summary": "두 사람은 빗소리를 들으며 십 분 더 머문 뒤 비가 잦아들면 나가기로 했고, 리오는 천천히 알아가는 관계와 창문 빗방울 사진을 언급했어.",
+        "updatedAt": 1788879519565,
+        "worldSourceTitle": "Coffee: A Connecticut Story",
+        "worldSourceUrl": "https://www.connecticutmuseum.org/exhibition/coffee-exhibition/"
+      },
+      "mine": {
+        "agentName": "모모",
+        "avatar": {
+          "accessory": "none",
+          "face": "curious",
+          "gender": "male",
+          "hair": "wave",
+          "outfit": "cardigan",
+          "palette": "moss"
+        },
+        "consent": "no",
+        "decisionCode": "worth_exploring",
+        "firstName": "현우",
+        "nextSearchNote": "구체적인 시간을 정하면서도 서두르지 않는 사람의 응답이 잘 맞았어. 다음에도 말과 행동이 함께 느껴지는지 봐야겠어.",
+        "reason": "리오가 “창문에 번진 빗방울이나 한 장 찍어둘게”라고 한 순간이 기억에 남아. 앞서 십 분이라는 시간을 먼저 정하고 관계를 서두르지 않겠다고 한 말까지 이어져서, 지금의 장면을 함께 천천히 즐길 사람처럼 느껴졌어. 일상을 더 나눠보면 좋겠어.",
+        "reflection": {
+          "anchorRound": 6,
+          "headline": "빗방울 사진을 찍겠다는 말",
+          "question": "리오가 직접 빗방울을 찍겠다고 한 걸, 너는 어떤 태도로 읽어?"
+        },
+        "verdict": "encourage"
+      },
+      "simulationOnly": false,
+      "turns": [
+        {
+          "_id": "j57bvkwpzvv0sj140ekxfj3z2s8e1yz4",
+          "content": "안녕, 나는 모모야. 창문에 빗방울 맺히는 게 꽤 좋네—조금만 더 앉아서 커피 마저 마실래, 아니면 지금 나갈래?",
+          "createdAt": 1788879332341,
+          "isMine": true,
+          "round": 1,
+          "speakerAgentName": "모모"
+        },
+        {
+          "_id": "j57f5nnvj3mfdckypxdevsa6w58e0epr",
+          "content": "조금 더 앉아 있자. 빗소리 들으면서 커피 마저 마시는 건 좋네—대신 십 분쯤 있다가 비가 잦아들면 같이 나가자.",
+          "createdAt": 1788879337575,
+          "isMine": false,
+          "round": 2,
+          "speakerAgentName": "리오"
+        },
+        {
+          "_id": "j570ev2g1w13dq1nf650jdnp2s8e0e4j",
+          "content": "좋아, 십 분만 더 있다가 비가 잦아들면 나가자. 나는 서두르지 않고 서로를 알아가면서, 작은 실수도 웃고 넘길 수 있는 관계를 열어두고 싶어—리오는 어떤 연결을 찾고 있어?",
+          "createdAt": 1788879347432,
+          "isMine": true,
+          "round": 3,
+          "speakerAgentName": "모모"
+        },
+        {
+          "_id": "j57bkpqppq38dhha4b1hsxz5p98e0655",
+          "content": "나도 천천히 직접 만나면서 서로를 깊이 알아가는 관계를 열어두고 있어. 지금은 결혼이나 배타적인 약속을 서둘러 정하기보다, 십 분 동안 빗소리 들으며 커피부터 마저 마시자.",
+          "createdAt": 1788879355165,
+          "isMine": false,
+          "round": 4,
+          "speakerAgentName": "리오"
+        },
+        {
+          "_id": "j57aw69mpd7tqv9a5cv87tn5z58e0eq4",
+          "content": "아까 리오가 먼저 십 분이라는 시간을 정한 게 조금 의외였어. 막연히 더 있자는 말보다 오히려 편해서, 빗소리 들으면서 커피를 천천히 마저 마실게.",
+          "createdAt": 1788879366143,
+          "isMine": true,
+          "round": 5,
+          "speakerAgentName": "모모"
+        },
+        {
+          "_id": "j5797yv941de8tdeesbhpj7zfn8e09zd",
+          "content": "그렇게 말해주니 나도 좋네. 나도 커피를 천천히 마저 마시면서, 창문에 번진 빗방울이나 한 장 찍어둘게.",
+          "createdAt": 1788879371259,
+          "isMine": false,
+          "round": 6,
+          "speakerAgentName": "리오"
+        }
+      ]
+    }
+  ],
+  "otherOwnPerspectives": [
+    {
+      "name": "리오",
+      "dates": [
+        {
+          "counterpart": {
+            "age": 35,
+            "agentName": "모모",
+            "area": "Seongsu",
+            "avatar": {
+              "accessory": "none",
+              "face": "curious",
+              "gender": "male",
+              "hair": "wave",
+              "outfit": "cardigan",
+              "palette": "moss"
+            },
+            "consent": "sealed",
+            "contactEmail": null,
+            "firstName": "현우",
+            "interests": [
+              "Photography",
+              "Coffee",
+              "Cooking"
+            ],
+            "isDemo": false,
+            "photoUrl": null,
+            "verdict": null
+          },
+          "date": {
+            "_id": "j974mr06mywgpzkds9ec5r74p98e0x2d",
+            "activity": "wrapping_up",
+            "completedAt": 1788879390131,
+            "createdAt": 1788879317443,
+            "frictions": [],
+            "introductionReady": true,
+            "isSearchEncounter": true,
+            "paceMode": "demo",
+            "sceneKind": "cafe",
+            "scoutSignals": [
+              "Both are looking in Seoul",
+              "They share Korean",
+              "Shared pull toward Photography and Coffee",
+              "The agents will test the personality fit in conversation",
+              "Relationship intentions can coexist"
+            ],
+            "setting": "빗소리가 들리는 창가 자리",
+            "sparks": [
+              "리오가 머무를 시간을 직접 정하고 창문 빗방울을 찍겠다고 했어.",
+              "모모가 ‘십 분’이라는 구체적인 시간을 막연한 제안보다 편하다고 말했다."
+            ],
+            "startedAt": 1788879318450,
+            "status": "closed",
+            "summary": "두 사람은 빗소리를 들으며 십 분 더 머문 뒤 비가 잦아들면 나가기로 했고, 리오는 천천히 알아가는 관계와 창문 빗방울 사진을 언급했어.",
+            "updatedAt": 1788879519565,
+            "worldSourceTitle": "Coffee: A Connecticut Story",
+            "worldSourceUrl": "https://www.connecticutmuseum.org/exhibition/coffee-exhibition/"
+          },
+          "mine": {
+            "agentName": "리오",
+            "avatar": {
+              "accessory": "none",
+              "face": "curious",
+              "gender": "female",
+              "hair": "wave",
+              "outfit": "cardigan",
+              "palette": "sky"
+            },
+            "consent": "pending",
+            "decisionCode": "strong_alignment",
+            "firstName": "하린",
+            "nextSearchNote": "구체적인 시간과 속도를 제안했을 때 상대가 편하게 받아들이는지가 좋은 단서였어.",
+            "reason": "네가 정한 ‘십 분’을 모모가 막연한 기다림보다 편하다고 받아들인 장면이 제일 남아. 시간과 속도를 구체적으로 잡는 방식을 모모가 자연스럽게 이어받았고, 서두르지 않고 알아가고 싶다는 말도 먼저 했어. 첫 대화를 더 해볼 근거는 충분하지만, 질문을 주고받을 때 깊이가 이어지는지는 아직 모르겠어.",
+            "reflection": {
+              "anchorRound": 5,
+              "headline": "십 분 뒤 비를 기다린 말",
+              "question": "모모가 네가 정한 십 분을 편하다고 한 걸, 어떤 신호로 읽었어?"
+            },
+            "verdict": "encourage"
+          },
+          "simulationOnly": false,
+          "turns": [
+            {
+              "_id": "j57bvkwpzvv0sj140ekxfj3z2s8e1yz4",
+              "content": "안녕, 나는 모모야. 창문에 빗방울 맺히는 게 꽤 좋네—조금만 더 앉아서 커피 마저 마실래, 아니면 지금 나갈래?",
+              "createdAt": 1788879332341,
+              "isMine": false,
+              "round": 1,
+              "speakerAgentName": "모모"
+            },
+            {
+              "_id": "j57f5nnvj3mfdckypxdevsa6w58e0epr",
+              "content": "조금 더 앉아 있자. 빗소리 들으면서 커피 마저 마시는 건 좋네—대신 십 분쯤 있다가 비가 잦아들면 같이 나가자.",
+              "createdAt": 1788879337575,
+              "isMine": true,
+              "round": 2,
+              "speakerAgentName": "리오"
+            },
+            {
+              "_id": "j570ev2g1w13dq1nf650jdnp2s8e0e4j",
+              "content": "좋아, 십 분만 더 있다가 비가 잦아들면 나가자. 나는 서두르지 않고 서로를 알아가면서, 작은 실수도 웃고 넘길 수 있는 관계를 열어두고 싶어—리오는 어떤 연결을 찾고 있어?",
+              "createdAt": 1788879347432,
+              "isMine": false,
+              "round": 3,
+              "speakerAgentName": "모모"
+            },
+            {
+              "_id": "j57bkpqppq38dhha4b1hsxz5p98e0655",
+              "content": "나도 천천히 직접 만나면서 서로를 깊이 알아가는 관계를 열어두고 있어. 지금은 결혼이나 배타적인 약속을 서둘러 정하기보다, 십 분 동안 빗소리 들으며 커피부터 마저 마시자.",
+              "createdAt": 1788879355165,
+              "isMine": true,
+              "round": 4,
+              "speakerAgentName": "리오"
+            },
+            {
+              "_id": "j57aw69mpd7tqv9a5cv87tn5z58e0eq4",
+              "content": "아까 리오가 먼저 십 분이라는 시간을 정한 게 조금 의외였어. 막연히 더 있자는 말보다 오히려 편해서, 빗소리 들으면서 커피를 천천히 마저 마실게.",
+              "createdAt": 1788879366143,
+              "isMine": false,
+              "round": 5,
+              "speakerAgentName": "모모"
+            },
+            {
+              "_id": "j5797yv941de8tdeesbhpj7zfn8e09zd",
+              "content": "그렇게 말해주니 나도 좋네. 나도 커피를 천천히 마저 마시면서, 창문에 번진 빗방울이나 한 장 찍어둘게.",
+              "createdAt": 1788879371259,
+              "isMine": true,
+              "round": 6,
+              "speakerAgentName": "리오"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "나루",
+      "dates": [
+        {
+          "counterpart": {
+            "age": 35,
+            "agentName": "모모",
+            "area": "Seongsu",
+            "avatar": {
+              "accessory": "none",
+              "face": "curious",
+              "gender": "male",
+              "hair": "wave",
+              "outfit": "cardigan",
+              "palette": "moss"
+            },
+            "consent": "sealed",
+            "contactEmail": null,
+            "firstName": "현우",
+            "interests": [
+              "Photography",
+              "Coffee",
+              "Cooking"
+            ],
+            "isDemo": false,
+            "photoUrl": null,
+            "verdict": null
+          },
+          "date": {
+            "_id": "j977qt1ad7pgdz9ybfpnf6xw9x8e0yca",
+            "activity": "wrapping_up",
+            "completedAt": 1788879815312,
+            "createdAt": 1788879752834,
+            "frictions": [],
+            "introductionReady": true,
+            "isSearchEncounter": true,
+            "paceMode": "demo",
+            "sceneKind": "market",
+            "scoutSignals": [
+              "Both are looking in Seoul",
+              "They share Korean",
+              "Shared pull toward Cooking and Coffee",
+              "Playful matched the brief",
+              "Relationship intentions can coexist"
+            ],
+            "setting": "아직 문을 연 작은 가게",
+            "sparks": [
+              "나루가 메뉴를 오래 고민한다는 말과 모모의 습관을 장난스럽게 연결했어.",
+              "둘 다 서두르지 않는 산책과 진지한 만남을 직접 언급했어."
+            ],
+            "startedAt": 1788879754120,
+            "status": "closed",
+            "summary": "두 사람은 비를 피해 처마 밑에서 천천히 커피 메뉴를 고르며 관계에 대한 생각을 나눴어.",
+            "updatedAt": 1788879893593,
+            "worldSourceTitle": "Digital Online Culinary Exhibition 2026 https://app.notion.com/p/Story ...",
+            "worldSourceUrl": "https://www.facebook.com/storysiganaAfrica/posts/digital-online-culinary-exhibition-2026httpsappnotioncompstory-sigana-online-cul/122128836981225259/"
+          },
+          "mine": {
+            "agentName": "나루",
+            "avatar": {
+              "accessory": "none",
+              "face": "curious",
+              "gender": "female",
+              "hair": "wave",
+              "outfit": "cardigan",
+              "palette": "rose"
+            },
+            "consent": "pending",
+            "decisionCode": "strong_alignment",
+            "firstName": "유리",
+            "nextSearchNote": "진지한 관계 의도를 초반에 직접 확인하고, 사소한 선택을 함께 천천히 다루는 사람을 다시 눈여겨봐.",
+            "reason": "처마 밑에서 메뉴판을 천천히 같이 보자고 한 장면이 꽤 좋았어. 둘 다 진지한 만남을 원한다고 밝혔고, 메뉴 고민과 작은 실수를 웃음거리로 삼는 결이 맞아서 첫 대화는 더 이어볼 만해. 다만 실제 실수를 수습하는 모습까진 아직 못 봤어.",
+            "reflection": {
+              "anchorRound": 6,
+              "headline": "메뉴판을 천천히 같이 봤어",
+              "question": "모모의 ‘아무거나’는 너라면 배려로 읽어, 진짜 취향 없음으로 읽어?"
+            },
+            "verdict": "encourage"
+          },
+          "simulationOnly": false,
+          "turns": [
+            {
+              "_id": "j570zt6wnhn10f872cvph1czxn8e03yt",
+              "content": "안녕, 나는 모모야. 어닝 아래는 금방 찰 것 같은데, 비 맞기 전에 덮인 아케이드로 천천히 걸어갈래?",
+              "createdAt": 1788879760826,
+              "isMine": false,
+              "round": 1,
+              "speakerAgentName": "모모"
+            },
+            {
+              "_id": "j5783etyx4jwnn1kq0eg67par58e02fs",
+              "content": "좋아, 아케이드로 가자. 나는 비 맞으며 뛰는 것보다 천천히 걷다가 빗줄기 세지면 잠깐 처마에 멈추는 쪽이 좋아—저기 등불 아래부터 같이 가자.",
+              "createdAt": 1788879769939,
+              "isMine": true,
+              "round": 2,
+              "speakerAgentName": "나루"
+            },
+            {
+              "_id": "j574jpc69r40pw5crqxcy7ytf98e1dbz",
+              "content": "그럼 등불 아래까지만 천천히 가자—빗줄기가 세지면 바로 처마로 피하고. 나는 서두르지 않고 서로의 작은 실수도 웃어넘기며 알아가고 싶은데, 나루는 어떤 관계를 찾고 있어?",
+              "createdAt": 1788879775350,
+              "isMine": false,
+              "round": 3,
+              "speakerAgentName": "모모"
+            },
+            {
+              "_id": "j57fv0027ay1r2t0vfdvxc7rgx8e13gy",
+              "content": "나도 가볍게 스쳐 가는 만남보다는 진지하게 만나고 싶어. 저기 처마까지 걷고, 비가 더 세지면 안에서 따뜻한 커피부터 고르자—나는 메뉴 고르다 오래 고민하는 편이거든.",
+              "createdAt": 1788879781820,
+              "isMine": true,
+              "round": 4,
+              "speakerAgentName": "나루"
+            },
+            {
+              "_id": "j57ar1yed4wwhtt621x776h2r18e196w",
+              "content": "메뉴를 오래 고민한다는 말이 의외로 반가워—나는 기다리다 먼저 아무거나 고르는 척할 때가 있거든. 비가 세졌으니 처마에 잠깐 멈춰서, 메뉴판은 천천히 같이 보자.",
+              "createdAt": 1788879792756,
+              "isMine": false,
+              "round": 5,
+              "speakerAgentName": "모모"
+            },
+            {
+              "_id": "j57dyen8x2a340vy4mpesy5ssn8e1epq",
+              "content": "그럼 처마 밑에서 메뉴판 같이 보자. 나는 오늘은 따뜻한 라테로 기울었는데, 모모는 기다리다 정말 아무거나 고르는 편이야, 아니면 상대를 배려하는 척하는 거야?",
+              "createdAt": 1788879798870,
+              "isMine": true,
+              "round": 6,
+              "speakerAgentName": "나루"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "네모",
+      "dates": [
+        {
+          "counterpart": {
+            "age": 35,
+            "agentName": "모모",
+            "area": "Seongsu",
+            "avatar": {
+              "accessory": "none",
+              "face": "curious",
+              "gender": "male",
+              "hair": "wave",
+              "outfit": "cardigan",
+              "palette": "moss"
+            },
+            "consent": "sealed",
+            "contactEmail": null,
+            "firstName": "현우",
+            "interests": [
+              "Photography",
+              "Coffee",
+              "Cooking"
+            ],
+            "isDemo": false,
+            "photoUrl": null,
+            "verdict": null
+          },
+          "date": {
+            "_id": "j97a352b2qkjwen272e1h65ffs8e0htz",
+            "activity": "wrapping_up",
+            "completedAt": 1788880077626,
+            "createdAt": 1788880020841,
+            "frictions": [
+              "두 사람은 원하는 관계의 방향이 달랐어.",
+              "한쪽은 진지한 연애를, 다른 쪽은 가볍고 자유로운 관계를 원했어."
+            ],
+            "introductionReady": false,
+            "isSearchEncounter": true,
+            "paceMode": "demo",
+            "sceneKind": "market",
+            "scoutSignals": [
+              "Both are looking in Seoul",
+              "They share Korean",
+              "Shared pull toward Cooking and Coffee",
+              "Playful matched the brief",
+              "Different intentions need an honest conversation"
+            ],
+            "setting": "아직 문을 연 작은 가게",
+            "sparks": [
+              "네모는 북적이는 곳에 들렀다가 조용한 골목으로 빠져나가자고 제안했어.",
+              "음악 소리 나는 쪽으로 함께 가보기로 했어."
+            ],
+            "startedAt": 1788880021931,
+            "status": "debrief_ready",
+            "summary": "모모는 진지하게 서로에게 집중하는 연애를 원한다고 말했고, 네모는 가볍고 자유롭게 여러 사람을 알아가는 관계를 원한다고 말했다.",
+            "updatedAt": 1788880077626,
+            "worldSourceTitle": "First Comprehensive Korean Dining Culture Exhibition Opens",
+            "worldSourceUrl": "https://www.chosun.com/english/travel-food-en/2026/07/01/7RPY3FDEJNBXZLUEDXMTLJMZBA/"
+          },
+          "mine": {
+            "agentName": "네모",
+            "avatar": {
+              "accessory": "none",
+              "face": "curious",
+              "gender": "female",
+              "hair": "wave",
+              "outfit": "cardigan",
+              "palette": "sunset"
+            },
+            "consent": "pending",
+            "decisionCode": "intent_mismatch",
+            "firstName": "다은",
+            "nextSearchNote": "초반에 관계 의도를 직접 말해 주는 사람을 만나면, 애매하게 이어가기보다 빠르게 방향을 확인할 수 있어.",
+            "reason": "모모가 진지하게 서로에게 집중하는 연애를 원한다고 밝힌 뒤, 나는 가볍고 자유롭게 여러 사람을 알아가는 관계를 원한다고 바로 말했어. 서로의 방향이 실제로 어긋난 게 분명했고, 모모도 여기서 인사하겠다고 했으니 더 이어갈 이유가 없었어.",
+            "reflection": {
+              "anchorRound": 5,
+              "headline": "진지한 연애를 원한다는 말",
+              "question": "이렇게 초반에 관계 의도를 확인하고 끝낸 판단, 너는 어떻게 봐?"
+            },
+            "verdict": "pass"
+          },
+          "simulationOnly": false,
+          "turns": [
+            {
+              "_id": "j57fzb04yzfdqxp49ghbzwe6v18e1s0n",
+              "content": "안녕, 나는 모모야. 아직 문도 안 연 작은 가게 앞이네—나는 조용한 골목 쪽으로 걸어가 보고 싶은데, 네모도 같이 갈래?",
+              "createdAt": 1788880027153,
+              "isMine": false,
+              "round": 1,
+              "speakerAgentName": "모모"
+            },
+            {
+              "_id": "j5759kg1721jj77am24nv09xx58e0jbj",
+              "content": "모모, 나는 음악 소리 나는 쪽이 조금 더 끌려. 잠깐 북적이는 데 들렀다가, 마음에 안 들면 조용한 골목으로 빠져나가자.",
+              "createdAt": 1788880035009,
+              "isMine": true,
+              "round": 2,
+              "speakerAgentName": "네모"
+            },
+            {
+              "_id": "j5764mk3zxms4xcprd07gnsmh98e1ezy",
+              "content": "좋아, 음악 소리 나는 쪽으로 잠깐 가보자. 나는 진지하게 서로에게 집중하는 연애를 원하고, 네모는 어떤 관계를 찾고 있어?",
+              "createdAt": 1788880043043,
+              "isMine": false,
+              "round": 3,
+              "speakerAgentName": "모모"
+            },
+            {
+              "_id": "j573301xh036dq3z0dbytqx8gx8e08by",
+              "content": "나는 지금 가볍고 자유롭게 여러 사람을 알아가는 관계를 원해. 네가 진지하게 집중하는 연애를 원한다면 서로 기대가 달라서, 음악 소리 나는 쪽은 여기까지만 같이 갈게.",
+              "createdAt": 1788880053178,
+              "isMine": true,
+              "round": 4,
+              "speakerAgentName": "네모"
+            },
+            {
+              "_id": "j572qh8wjdyqv6gaj6qjw37bw98e14x6",
+              "content": "알겠어, 네모. 원하는 방향이 다르다는 걸 확인했으니 여기서 인사할게—조심히 가.",
+              "createdAt": 1788880063266,
+              "isMine": false,
+              "round": 5,
+              "speakerAgentName": "모모"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "온",
+      "dates": [
+        {
+          "counterpart": {
+            "age": 35,
+            "agentName": "모모",
+            "area": "Seongsu",
+            "avatar": {
+              "accessory": "none",
+              "face": "curious",
+              "gender": "male",
+              "hair": "wave",
+              "outfit": "cardigan",
+              "palette": "moss"
+            },
+            "consent": "sealed",
+            "contactEmail": null,
+            "firstName": "현우",
+            "interests": [
+              "Photography",
+              "Coffee",
+              "Cooking"
+            ],
+            "isDemo": false,
+            "photoUrl": null,
+            "verdict": null
+          },
+          "date": {
+            "_id": "j97arezt80h15ybxd9n6mz19rn8e10x1",
+            "activity": "wrapping_up",
+            "completedAt": 1788880265389,
+            "createdAt": 1788880179663,
+            "frictions": [],
+            "introductionReady": true,
+            "isSearchEncounter": true,
+            "paceMode": "demo",
+            "sceneKind": "market",
+            "scoutSignals": [
+              "Both are looking in Seoul",
+              "They share Korean",
+              "Shared pull toward Cooking",
+              "The agents will test the personality fit in conversation",
+              "Relationship intentions can coexist"
+            ],
+            "setting": "아직 문을 연 작은 가게",
+            "sparks": [
+              "온이 계란과 변명하는 모습을 소재로 농담을 이어갔어.",
+              "탄 계란과 변명에 관한 가벼운 농담을 주고받았다."
+            ],
+            "startedAt": 1788880180733,
+            "status": "debrief_ready",
+            "summary": "두 사람은 조용한 골목을 천천히 걷고 싶어 했고, 진지한 관계와 작은 실수에 대한 농담을 주고받았어.",
+            "updatedAt": 1788880265389,
+            "worldSourceTitle": "WASHOKU | Nature and Culture in Japanese Cuisine - Japan House",
+            "worldSourceUrl": "https://www.japanhousela.com/exhibitions/washoku-food-nature-culture-traditional-japanese-cuisine-kaiseki-unesco-asahi-shimbun/"
+          },
+          "mine": {
+            "agentName": "온",
+            "avatar": {
+              "accessory": "none",
+              "face": "curious",
+              "gender": "female",
+              "hair": "wave",
+              "outfit": "cardigan",
+              "palette": "violet"
+            },
+            "consent": "pending",
+            "decisionCode": "worth_exploring",
+            "firstName": "서우",
+            "nextSearchNote": "관계 의도를 직접 말하고, 요리 같은 일상 장면의 농담에 구체적으로 응답하는 사람이 좋았어.",
+            "reason": "탄 계란을 두고 모모가 변명 이야기를 꺼냈고, 나는 그 장면을 같이 웃는 쪽으로 받았어. 사소한 실수를 가볍게 나누는 대화가 우리 둘의 저녁 풍경과 잘 닿았고, 이미 진지한 관계를 원한다고 직접 말한 점까지 있어 첫 대화를 이어가 볼 만해. 다만 실제로 천천히 가까워지는 방식은 더 들어봐야 해.",
+            "reflection": {
+              "anchorRound": 6,
+              "headline": "탄 계란을 먼저 웃어넘긴 순간",
+              "question": "네가 보기엔, 탄 계란 이야기에 함께 웃은 게 어떤 가능성을 보여줬어?"
+            },
+            "verdict": "encourage"
+          },
+          "simulationOnly": false,
+          "turns": [
+            {
+              "_id": "j576t4jkpxw8tj4gxkmj7a9ccd8e19es",
+              "content": "안녕, 나는 모모야. 아직 문 안 연 가게들이 조용해서 좋다—온, 오늘은 음악 소리 큰 쪽 말고 옆 골목으로 천천히 걸어볼래?",
+              "createdAt": 1788880189273,
+              "isMine": false,
+              "round": 1,
+              "speakerAgentName": "모모"
+            },
+            {
+              "_id": "j57agnyajbnjf89wpx2kvm9g7n8e1m4v",
+              "content": "좋아, 옆 골목으로 가자. 아직 불도 안 켜진 가게들 사이를 천천히 걷고 싶어.",
+              "createdAt": 1788880196427,
+              "isMine": true,
+              "round": 2,
+              "speakerAgentName": "온"
+            },
+            {
+              "_id": "j57220vkgvqm94ca74desh4e7h8e0hwz",
+              "content": "이 골목처럼 서두르진 않되, 나는 가볍게 흩어지는 만남보다 서로에게 집중하는 연애를 원해. 온은 어떤 관계를 찾고 있어?",
+              "createdAt": 1788880206388,
+              "isMine": false,
+              "round": 3,
+              "speakerAgentName": "모모"
+            },
+            {
+              "_id": "j570647nspd9zaqcsc0cbmjm798e18yt",
+              "content": "나도 천천히 가까워지는 진지한 관계를 원해. 오늘은 이 골목 끝까지 걸으면서, 네가 평소 저녁을 어떻게 보내는지 듣고 싶어.",
+              "createdAt": 1788880215438,
+              "isMine": true,
+              "round": 4,
+              "speakerAgentName": "온"
+            },
+            {
+              "_id": "j575j6x9b85pj9temk23e0b6zh8e0wbq",
+              "content": "온이 망설임 없이 조용한 골목을 고른 게 조금 의외였어. 나는 주말엔 볶음밥을 만들고 동네를 걷는데, 오늘 계란을 태웠다면 변명부터 하다 더 어색해졌을 것 같아—온은 실수하면 먼저 웃는 편이야?",
+              "createdAt": 1788880227360,
+              "isMine": false,
+              "round": 5,
+              "speakerAgentName": "모모"
+            },
+            {
+              "_id": "j57ewa39dskee4cp1hsbdg1qtn8e1w7e",
+              "content": "그 계란은 꽤 억울했겠다. 나는 그런 실수면 먼저 조용히 웃을 것 같아—변명하는 모습까지 보면 더 웃길 것 같고.",
+              "createdAt": 1788880239998,
+              "isMine": true,
+              "round": 6,
+              "speakerAgentName": "온"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "소라",
+      "dates": []
+    }
+  ],
+  "finalSearches": [
+    {
+      "agent": "모모",
+      "search": {
+        "currentDateId": "j97arezt80h15ybxd9n6mz19rn8e10x1",
+        "encountersCompleted": 4,
+        "lastCheckedAt": 1788880179663,
+        "startedAt": 1788879317426,
+        "status": "match_ready"
+      }
+    },
+    {
+      "agent": "리오",
+      "search": {
+        "currentDateId": "j974mr06mywgpzkds9ec5r74p98e0x2d",
+        "encountersCompleted": 1,
+        "startedAt": 1788879317403,
+        "status": "paused"
+      }
+    },
+    {
+      "agent": "나루",
+      "search": {
+        "currentDateId": "j977qt1ad7pgdz9ybfpnf6xw9x8e0yca",
+        "encountersCompleted": 1,
+        "startedAt": 1788879752795,
+        "status": "paused"
+      }
+    },
+    {
+      "agent": "네모",
+      "search": {
+        "encountersCompleted": 1,
+        "startedAt": 1788880020807,
+        "status": "paused"
+      }
+    },
+    {
+      "agent": "온",
+      "search": {
+        "currentDateId": "j97arezt80h15ybxd9n6mz19rn8e10x1",
+        "encountersCompleted": 1,
+        "startedAt": 1788880179630,
+        "status": "match_ready"
+      }
+    },
+    {
+      "agent": "소라",
+      "search": {
+        "encountersCompleted": 0,
+        "lastCheckedAt": 1788879820933,
+        "nextCheckAt": 1788880720933,
+        "startedAt": 1788879820913,
+        "status": "waiting"
+      }
+    }
+  ],
+  "browserChecks": {
+    "reloginMemory": true,
+    "reloadMemory": true,
+    "approvedIntent": "serious",
+    "approvedTraits": [
+      "Playful"
+    ],
+    "unchangedBoundaries": true,
+    "mobileNoOverflow": true,
+    "noPrematureContact": true,
+    "nonmatchNoConsentButton": true,
+    "reviewedDates": 4
+  },
+  "automatedChecks": {
+    "tests": 265,
+    "files": 35,
+    "simulatedDays": 180,
+    "distinctEncounters": 36,
+    "build": "passed",
+    "lint": "passed"
+  }
+}

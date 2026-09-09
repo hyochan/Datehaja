@@ -6,12 +6,16 @@ import {
   type AvatarConfig,
 } from "./AgentAvatar";
 import { useI18n } from "../../i18n";
+import type { SceneKind } from "@convex/lib/dateStory";
+import { DateSceneArt } from "./DateSceneArt";
+import { activityCopy, type DateActivity } from "@convex/lib/dateActivity";
 
 type WorldTurn = {
   _id: string;
   round: number;
   speakerAgentName: string;
   content: string;
+  isMine?: boolean;
 };
 
 type WorldPerson = {
@@ -213,44 +217,50 @@ export function worldThemeFor(text: string): AgentWorldTheme {
 }
 
 const MOMENTS = [
-  { a: [13, 77], b: [87, 23], label: "arriving" },
-  { a: [34, 68], b: [66, 44], label: "finding each other" },
-  { a: [41, 61], b: [59, 46], label: "settling in" },
-  { a: [38, 48], b: [62, 54], label: "getting curious" },
-  { a: [43, 55], b: [57, 47], label: "staying with the question" },
-  { a: [35, 43], b: [65, 57], label: "testing the edges" },
-  { a: [45, 51], b: [55, 51], label: "one honest minute" },
+  { a: [18, 84], b: [82, 84], label: "arriving" },
+  { a: [39, 84], b: [61, 84], label: "speaking" },
 ] as const;
-
-const EMOTES = ["✦", "?", "☕", "…", "↗", "♡"];
 
 export function AgentDateWorld({
   setting,
+  sceneKind,
   sourceTitle,
   status,
   mine,
   counterpart,
   turns,
   liveActivity,
+  activityJournal,
+  sceneSituation,
+  initialRound,
 }: {
   setting: string;
+  sceneKind?: SceneKind;
   sourceTitle?: string;
   status: string;
   mine: WorldPerson;
   counterpart: WorldPerson;
   turns: WorldTurn[];
   liveActivity?: string;
+  activityJournal?: DateActivity;
+  sceneSituation?: string;
+  initialRound?: number;
 }) {
-  const { t } = useI18n();
-  const theme = worldThemeFor(`${setting} ${sourceTitle ?? ""}`);
+  const { t, locale } = useI18n();
+  const copy = activityCopy(locale);
   const complete = !["queued", "running"].includes(status);
   const [selectedMoment, setSelectedMoment] = useState<number | null>(() =>
-    complete && turns.length > 0 ? 0 : null,
+    initialRound ?? (complete && turns.length > 0 ? 0 : null),
   );
-  const [playing, setPlaying] = useState(() => complete && turns.length > 0);
-  const [activeObject, setActiveObject] = useState(theme.objects[0]?.key);
+  const [playing, setPlaying] = useState(initialRound !== undefined);
+  const [activeObject, setActiveObject] = useState<string>();
   const maxMoment = turns.length;
   const moment = Math.min(selectedMoment ?? turns.length, maxMoment);
+  const activeEvent = activityJournal?.events.find(e => e.rounds.includes(turns[moment - 1]?.round));
+  const place = activityJournal?.events.filter(e => e.kind !== "proposal" && e.rounds[0] <= (turns[moment - 1]?.round ?? 0)).at(-1)?.sceneKind;
+  const theme = worldThemeFor(place ?? sceneKind ?? `${setting} ${sourceTitle ?? ""}`);
+  const replayDelay = Math.min(8000, Math.max(1800, (turns[moment - 1]?.content.length ?? 0) * 32));
+
 
   useEffect(() => {
     if (!playing) return;
@@ -259,11 +269,12 @@ export function AgentDateWorld({
     const timer = window.setTimeout(() => {
       setSelectedMoment(next);
       if (next >= maxMoment) setPlaying(false);
-    }, 1450);
+    }, replayDelay);
     return () => window.clearTimeout(timer);
-  }, [maxMoment, moment, playing]);
+  }, [maxMoment, moment, playing, replayDelay]);
 
   const current = moment > 0 ? turns[moment - 1] : null;
+  const ownSpeaker = current?.isMine ?? (current?.speakerAgentName === mine.name);
   const positions = MOMENTS[Math.min(moment, MOMENTS.length - 1)];
   const selectedObject = theme.objects.find(
     (item) => item.key === activeObject,
@@ -278,9 +289,9 @@ export function AgentDateWorld({
     <section className={`agent-world agent-world-${theme.key}`}>
       <header className="agent-world-header">
         <div>
-          <div className="docket-label">{t(theme.kicker)}</div>
-          <h2>{t(theme.title)}</h2>
-          <p>{t(theme.arrival)}</p>
+          <div className="docket-label">{sceneKind ? t("Agent date") : t(theme.kicker)}</div>
+          <h2>{sceneKind ? setting : t(theme.title)}</h2>
+          <p>{sceneSituation ? copy.illustration : t(theme.arrival)}</p>
         </div>
         <div className="agent-world-status">
           <span className={!complete ? "is-live" : ""} />
@@ -299,17 +310,9 @@ export function AgentDateWorld({
           place: t(theme.title),
         })}
       >
-        <div className="agent-world-wall agent-world-wall-north" />
-        <div className="agent-world-wall agent-world-wall-west" />
-        <div className="agent-world-window">
-          <i />
-          <i />
-          <span>20:10</span>
-        </div>
-        <div className="agent-world-rug" />
-        <div className="agent-world-path" />
+        <div className="agent-world-scenery" aria-hidden="true"><DateSceneArt kind={theme.key} /></div>
 
-        {theme.objects.map((object) => (
+        {!sceneSituation && theme.objects.map((object) => (
           <button
             key={object.key}
             type="button"
@@ -333,10 +336,10 @@ export function AgentDateWorld({
           person={mine}
           position={positions.a}
           side="a"
-          speaking={current?.speakerAgentName === mine.name}
+          speaking={Boolean(current) && ownSpeaker}
           emote={
-            current?.speakerAgentName === mine.name
-              ? EMOTES[(moment - 1) % EMOTES.length]
+            current && ownSpeaker
+              ? "…"
               : undefined
           }
         />
@@ -344,27 +347,33 @@ export function AgentDateWorld({
           person={counterpart}
           position={positions.b}
           side="b"
-          speaking={current?.speakerAgentName === counterpart.name}
+          speaking={Boolean(current) && !ownSpeaker}
           emote={
-            current?.speakerAgentName === counterpart.name
-              ? EMOTES[(moment - 1) % EMOTES.length]
+            current && !ownSpeaker
+              ? "…"
               : undefined
           }
         />
 
+        {selectedObject && (
+          <div className="agent-world-object-note">
+            <span>{t("NEARBY OBJECT")}</span>
+            <strong>{t(selectedObject.label)}</strong>
+            <p>{t(selectedObject.note)}</p>
+          </div>
+        )}
+      </div>
+
         <div
-          className={`agent-world-moment ${
-            current?.speakerAgentName === mine.name ? "is-side-a" : "is-side-b"
+          className={`agent-world-moment agent-world-caption ${
+            ownSpeaker ? "is-side-a" : "is-side-b"
           }`}
           aria-live="polite"
         >
           <span>
             {moment === 0
               ? t("ARRIVAL")
-              : t("MOMENT {number} · {label}", {
-                  number: `0${moment}`,
-                  label: t(positions.label),
-                })}
+              : `${String(moment).padStart(2, "0")} / ${maxMoment} · ${activeEvent ? copy[activeEvent.kind] : t(positions.label)}`}
           </span>
           <strong>
             {current?.speakerAgentName ?? t("Two Agents enter separately")}
@@ -377,24 +386,15 @@ export function AgentDateWorld({
           </p>
         </div>
 
-        {selectedObject && (
-          <div className="agent-world-object-note">
-            <span>{t("NEARBY OBJECT")}</span>
-            <strong>{t(selectedObject.label)}</strong>
-            <p>{t(selectedObject.note)}</p>
-          </div>
-        )}
-      </div>
 
       <footer className="agent-world-controls">
         <button
           type="button"
           className="agent-world-play"
-          onClick={replay}
+          onClick={() => playing ? setPlaying(false) : moment >= maxMoment ? replay() : setPlaying(true)}
           disabled={turns.length === 0}
         >
-          {playing ? t("replaying…") : t("replay the date")}{" "}
-          <span aria-hidden>↻</span>
+          {playing ? "Ⅱ" : "▶"} {playing ? copy.pause : t("replay the date")}
         </button>
         <div
           className="agent-world-timeline"
@@ -407,7 +407,7 @@ export function AgentDateWorld({
               aria-label={
                 index === 0
                   ? t("Arrival")
-                  : t("Moment {number}", { number: index })
+                  : `${index} / ${turns.length} · ${copy.lines}`
               }
               aria-pressed={moment === index}
               onClick={() => {
@@ -419,7 +419,7 @@ export function AgentDateWorld({
             </button>
           ))}
         </div>
-        <span>{t("{count}/6 memories", { count: turns.length })}</span>
+        <span>{turns.length} {copy.lines}</span>
       </footer>
     </section>
   );

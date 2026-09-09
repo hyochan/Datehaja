@@ -107,11 +107,14 @@ async function propose(
   userId: Id<"users">,
   proposal: Record<string, unknown>,
 ) {
+  await asUser(t, userId).mutation(api.agents.send, { content: "I want to correct what you look for." });
+  const context = await t.query(internal.agents.replyContext, { userId });
   await t.mutation(internal.agents.storeReply, {
     userId,
     reply: "Got it.",
     memory: "",
-    scoutingMemory: "",
+    sourceMessageId: context.messages.findLast(m => m.role === "human")!._id,
+    expectedContextKey: context.contextKey,
     proposal: {
       reason: "You said the quiet ones have not been landing.",
       preferredPersonalityTraits: [],

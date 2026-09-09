@@ -12,6 +12,8 @@ import {
   missingCoreTranslations,
   translate,
 } from ".";
+import { coachingCopy } from "./coachingCopy";
+import { scoutingCopy } from "./scoutingCopy";
 
 describe("internationalisation", () => {
   it("offers ten distinct country locales", () => {
@@ -126,6 +128,43 @@ describe("internationalisation", () => {
       for (const message of settingsMessages) {
         expect(translate(locale, message)).not.toBe(message);
       }
+    }
+  });
+
+  // CORE_TRANSLATION_MESSAGES only walks the German pack, so copy added to one
+  // pack alone is invisible to the check below. These two guard the tables that
+  // are meant to fill every pack at once.
+  const TRANSLATED_LOCALES = [
+    "ko-KR",
+    "ja-JP",
+    "de-DE",
+    "fr-FR",
+    "nl-NL",
+    "sv-SE",
+  ] as const;
+
+  it("gives every shared copy table one entry per translated locale", () => {
+    for (const [name, table] of Object.entries({ coachingCopy, scoutingCopy })) {
+      for (const [message, values] of Object.entries(table)) {
+        expect(
+          { table: name, message, count: values.length },
+          `${name}[${message}] must cover all ${TRANSLATED_LOCALES.length} translated locales`,
+        ).toEqual({
+          table: name,
+          message,
+          count: TRANSLATED_LOCALES.length,
+        });
+        expect(values.every((value) => value.trim().length > 0)).toBe(true);
+      }
+    }
+  });
+
+  it("translates the per-turn coaching surface in every locale", () => {
+    for (const locale of TRANSLATED_LOCALES) {
+      const untranslated = Object.keys(coachingCopy).filter(
+        (message) => translate(locale, message) === message,
+      );
+      expect(untranslated).toEqual([]);
     }
   });
 

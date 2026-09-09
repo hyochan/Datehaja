@@ -1,3 +1,4 @@
+import { safeAppDestination } from "../lib/navigation";
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "convex/react";
@@ -32,7 +33,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
 
   const signingUp = mode === "signUp";
   const next = params.get("next");
-  const destination = next && next.startsWith("/") ? next : "/dashboard";
+  const destination = safeAppDestination(next);
   const hasSocialProvider =
     authProviders?.google === true || authProviders?.apple === true;
   const developmentCode = localDevelopmentCodeFor(email);

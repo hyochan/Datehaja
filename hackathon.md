@@ -11,9 +11,10 @@
 - **Components:** @convex-dev/static-hosting
 - **Convex features:** schema, tables, indexes, queries, mutations, actions, HTTP actions, crons, scheduled functions, file storage, realtime queries, pagination
 - **Auth:** Convex Auth
-- **AI models:** gpt-5-nano for active Agent chat/dates, with gpt-5.6-luna as the first quality fallback and the proven default for heavier legacy extraction
+- **AI models:** gpt-5.6-sol for date dialogue, private coaching, letters and factual verification, with no silent economy fallback on these paths. Unverified letters are withheld; lower-cost models remain available for unrelated integrations.
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-09-06T15:48:52Z
+- **Last updated:** 2026-09-09
+- **Latest verified candidate:** https://adorable-boar-359.convex.site — the newer coaching and learning-loop experience is on development. The production URL above has not received this revision in this task.
 
 ## Rules, as verified on the official page
 
@@ -33,6 +34,83 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
   for the chatgpt.site route, which this project does not take.
 
 ## Log
+
+### 2026-09-09 - make the learning loop the product
+
+The owner corrected an explanation that exposed every backend gate as a
+user-facing step. The main experience now explains four things: create a dating
+Agent, let it date, hear what happened, and give feedback. Voice corrections,
+preferences about a future partner, and positive reactions each have a clearly
+labelled illustrative example. The detailed architecture is optional and lazy
+loaded. The actual private chat also offers those kinds of feedback in plain
+language.
+
+Per-line coaching links the owner's correction to the saved date, speaker, and
+utterance, accumulates private memory, and carries it into later prompts.
+351 automated tests pass. Live local runs also exposed repeated dialogue and
+an activity interpretation needing repair; a later Sol experiment retained the
+owner's polite register over twelve utterances. These are bounded checks, not
+proof of universal naturalness. Full evidence and the remaining submission work
+are in `docs/AGENT_COACHING_REVIEW.md` and `docs/SUBMISSION_READINESS.md`.
+
+The current film still needs to demonstrate a date, the owner's feedback, and
+a subsequent changed date together. The final public video, social-post and
+submission links remain unverified. The latest feature code is on development;
+this entry does not claim a production rollout or completed submission.
+
+### 2026-09-08 - let uncertainty change the conversation
+
+The first revision still had a deeper scripted behaviour: turn six instructed
+the Agents to leave, and the verdict then treated that early exit as a lack of
+evidence. The date now allows one bounded clarification. At six turns, an Agent
+with a specific unresolved question can continue the same encounter for four
+more turns, provided neither recommends passing and nobody has chosen to leave.
+Both reviews then use the full transcript. Tests cover the one-extension limit,
+private-question isolation, ten-turn persistence, and stale review races.
+
+Removed the automatic last-turn heart and staged progression toward closeness.
+The search screen now shows one neighbourhood with actual saved footprints,
+selectable encounters, and the owner's lesson for the next search. The public
+replay preserves a non-match outcome and allows switching fictional private
+perspectives; real owners' private projections remain isolated.
+
+The submission film uses two independently signed-in development accounts on
+the real search path. It verifies that both see the same encounter, disables
+mail, preserves generated verdicts and pauses both searches. Recording output
+is isolated from other Playwright tests. These changes are development-verified;
+production rollout and final submission links require separate verification.
+
+### 2026-09-08 - give the date something to do and the letter something to remember
+
+Repeated demos exposed a product problem: the Agents interviewed each other
+about abstract compatibility, then the email repeated the same conclusion as
+a letter, an atmosphere summary, signals, and disconnected transcript excerpts.
+
+The development experience now gives the Agents a concrete shared situation
+inside one of six illustrated sets. A route to choose, a title to propose, or
+an ending to change gives the next Agent something specific to answer. Each
+date keeps its chosen situation across scheduled turns. The quality model goes
+first for dialogue and letters; an unavailable model leaves an honest failed
+turn instead of inserting canned conversation.
+
+Each private letter selects an actual adjacent exchange, names that moment,
+and asks the owner how they read it. The app and email show the same scene.
+The remaining transcript and detailed observations are available on demand.
+Each owner's reflection stays sealed, including after mutual consent.
+
+Scouting now persists beyond a single encounter. It considers real Agents
+whose owners have opted into searching, paginates the available pool, saves
+actual encounters, and moves on when the conversation does not earn a mutual
+recommendation. An empty pool becomes an honest waiting state with a last
+check time, not an invented demo. Only a promising introduction sends a letter;
+the two humans still decide independently. Explicit fictional demos stay
+separate and do not send mail.
+
+Tests cover empty pools, candidate pagination, pair deduplication, continued
+search after an uncertain encounter or human no, paused jobs, model failure,
+and sealed consent. Development browser runs use disposable accounts with
+email disabled. This revision has not yet been rolled out to production; the
+final submission recording must reflect the continuous search experience.
 
 ### 2026-09-06 - the film had drifted, and nothing could have noticed
 
@@ -849,3 +927,10 @@ Replaced the previous restaurant illustration with a candid, text-free image of
 two adults at a small independent cinema. Updated the landing, onboarding,
 dashboard, preferences, demo script, submission copy, metadata, growth plan,
 and all supported landing locales to tell the same activity-first story.
+
+## 2026-09-09 — Core learning demonstration
+
+- [Saved before/after learning proof](https://adorable-boar-359.convex.site/preview/agent-coaching): one fictional owner, four scheduled encounters, 56 saved lines, and three linked feedback/reply pairs. All original dialogue is preserved. Two initially withheld reviews were subsequently corrected and independently verified; the page labels those recovered notes. Both records now include verified activity journals. Recovery changes neither human consent nor prior coaching memory.
+- [54-second browser walkthrough](https://adorable-boar-359.convex.site/demo/learning-proof.mp4): actual product screens replaying those records, with English captions. It is a recorded Korean rehearsal, not a live generation claim.
+- 365 tests pass. See `docs/REVIEW_RECOVERY.md` and `docs/LEARNING_PROOF_REVIEW.md` for limitations; polite register improved, average reply length did not. This does not establish real-user satisfaction or universal dialogue quality.
+- This updates the development candidate; the older full submission film and public submission/social steps remain separate.

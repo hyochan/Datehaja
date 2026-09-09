@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 
@@ -8,7 +8,7 @@ import { dirname } from "node:path";
  * The previous cut was recorded by hand against the concierge product this
  * repository no longer contains, and nothing tied it to the code, so it went
  * stale silently. This spec drives the same flow the full-flow E2E proves —
- * signup, Agent creation, a private message, a live six-turn date, the private
+ * signup, Agent creation, a private message, a live Agent conversation, the private
  * letter, and the sealed human decision — while a video records it.
  *
  * It marks where each storyboard beat begins and ends in the raw capture.
@@ -27,7 +27,7 @@ const storyboard = JSON.parse(
   readFileSync("submission/demo-beats.json", "utf8"),
 ) as { width: number; height: number; beats: Beat[] };
 
-const MARKS_PATH = "test-results/demo-marks.json";
+const MARKS_PATH = ".scratch/demo/marks.json";
 const CAPTURES = "submission/captures";
 
 test.skip(
@@ -36,6 +36,9 @@ test.skip(
 );
 
 test.use({
+  // Trace screenshots share Playwright's screencast and can reduce video
+  // frames to trace resolution, leaving gray padding in a 1080p recording.
+  trace: "off",
   viewport: { width: storyboard.width, height: storyboard.height },
   video: {
     mode: "on",
@@ -48,10 +51,14 @@ test.use({
   timezoneId: "America/New_York",
 });
 
-test("record the submission demo", async ({ page }) => {
+test("record the submission demo", async ({ page, browser, baseURL }, testInfo) => {
   // A full run is signup, onboarding, a real date and two model verdicts.
   test.setTimeout(20 * 60_000);
+  page.setDefaultTimeout(30_000);
 
+  if (baseURL && !/^http:\/\/(127\.0\.0\.1|localhost)(:|\/)/.test(baseURL)) {
+    throw new Error("Record against local UI and the development deployment; no production test accounts or email.");
+  }
   const started = Date.now();
   const at = () => (Date.now() - started) / 1000;
   const marks: Array<{ id: string; start: number; end: number }> = [];
@@ -123,11 +130,14 @@ test("record the submission demo", async ({ page }) => {
   });
   if (page.url().includes("/legal/accept")) {
     const consents = page.getByRole("checkbox");
+    await expect(consents).toHaveCount(3);
     const total = await consents.count();
     for (let index = 0; index < total; index += 1) {
       await consents.nth(index).check();
     }
-    await page.getByRole("button", { name: "Agree and continue" }).click();
+    const agree = page.getByRole("button", { name: "Agree and continue" });
+    await expect(agree).toBeEnabled();
+    await agree.click();
   }
   await expect(page).toHaveURL(/\/onboarding/, { timeout: 30_000 });
   await expect(
@@ -142,8 +152,12 @@ test("record the submission demo", async ({ page }) => {
     delay: 140,
   });
   await hold(900);
+  await page.getByRole("button", { name: "Man", exact: true }).click();
+  await hold(900);
   await page.getByRole("button", { name: "sky palette" }).click();
   await hold(1_100);
+  await page.getByRole("button", { name: "Blazer", exact: true }).click();
+  await hold(900);
   await page.getByRole("button", { name: "Glasses", exact: true }).click();
   await hold(1_600);
   await still("02-agent-editor");
@@ -170,6 +184,7 @@ test("record the submission demo", async ({ page }) => {
   ).toBeVisible();
   await page.getByLabel("What should we call you?").fill("Juno");
   await page.getByLabel("Date of birth").fill("1993-06-15");
+  await page.getByLabel("Country").selectOption("SE");
   await page.getByRole("button", { name: "Man", exact: true }).click();
   for (const interest of ["Films", "Coffee", "Art galleries"]) {
     await page.getByRole("button", { name: interest, exact: true }).click();
@@ -207,43 +222,73 @@ test("record the submission demo", async ({ page }) => {
   await page.getByRole("button", { name: "Send", exact: true }).click();
   await expect(
     page
-      .locator(".agent-bubble")
+      .locator(".agent-bubble.rounded-bl-md")
       .filter({ hasNotText: /I'm Juno/ })
       .last(),
   ).toBeVisible({ timeout: 120_000 });
   await hold(2_500);
   end();
 
+  // These disposable accounts use the real search; keep all delivery disabled.
+  await disableMail(page);
+  await page.goto("/dashboard");
+  begin("search");
+  await expect(page.getByText("Still looking. No match to rush.", { exact: true })).toBeVisible({ timeout: 30_000 });
+  await page.locator(".agent-launch-card").scrollIntoViewIfNeeded();
+  await hold(8_000);
+  await still("03-ongoing-search");
+  end();
+
+  // A second independent test owner opts in. No fictional demo is inserted
+  // into the pool, and no verdict is chosen by this recording.
+  const otherContext = await browser.newContext({ baseURL, locale: "en-US", timezoneId: "Europe/Stockholm" });
+  const otherPage = await otherContext.newPage();
+  try {
+  await prepareSecondOwner(otherPage);
+
   // ------------------------------------------------------------------- date
   // Two Agents meet as the two people they stand in for, in a world drawn
-  // around a place Firecrawl found on the live web that morning.
+  // around a cultural source Firecrawl found on the live web.
   begin("date");
-  await page.getByRole("button", { name: /Send Juno scouting/i }).click();
+  await page.getByRole("button", { name: /Watch the date live/i }).click();
   await expect(page).toHaveURL(/\/agent-date\//, { timeout: 30_000 });
+  await expect(page.getByRole("heading", { name: /^Juno × Sol$/ })).toBeVisible();
+  // Verify the second signed-in owner sees this exact encounter too. Recording
+  // must never silently capture an unrelated participant from the search pool.
+  await otherPage.goto(page.url());
+  await expect(otherPage.getByRole("heading", { name: /^Sol × Juno$/ })).toBeVisible();
   await expect(page.getByText(/explicitly AI.*private simulation/i)).toBeVisible(
     { timeout: 60_000 },
   );
   await hold(2_000);
   // Far enough in that two Agents are talking, not so far that the page has
   // already handed off to the debrief.
-  await hold(14_000);
-  await still("03-date-world");
-  await expect(page.getByText(/live transcript.*6\/6 turns/i)).toBeVisible({
-    timeout: 300_000,
-  });
+  await hold(4_000);
+  const worldTop = await page.locator(".agent-world").evaluate(
+    (element) => element.getBoundingClientRect().top + window.scrollY,
+  );
+  await glide(worldTop - 110);
+  await hold(10_000);
+  await still("04-date-world");
+  await expect(
+    page.locator(".date-record-transcript header span"),
+  ).toHaveText(/^(?:[2-9]|[1-9]\d+) saved lines$/, { timeout: 300_000 });
   await hold(2_500);
   end();
 
   // ----------------------------------------------------------------- letter
   // The emotional centre. It gets the most screen time on purpose.
-  begin("letter");
-  await page.getByText("Your private debrief").scrollIntoViewIfNeeded();
-  await hold(3_000);
-  await expect(page.getByText(/Primary signal|Why I passed/i)).toBeVisible({
+  // Model latency belongs between beats, so the letter starts fully written.
+  await expect(page.locator(".agent-return-letter")).toBeVisible({
     timeout: 180_000,
   });
-  await hold(4_500);
-  await still("04-private-letter");
+  const debriefTop = await page.getByText("Your private debrief").evaluate(
+    (element) => element.getBoundingClientRect().top + window.scrollY,
+  );
+  await glide(debriefTop - 140);
+  begin("letter");
+  await hold(7_500);
+  await still("05-private-notes");
   await page.mouse.wheel(0, 420);
   await hold(3_500);
   await page.mouse.wheel(0, 420);
@@ -251,20 +296,47 @@ test("record the submission demo", async ({ page }) => {
   end();
 
   // --------------------------------------------------------------- decision
-  // You answer without knowing what they answered. Contact opens only when
-  // both people have said yes.
+  // Keep the generated outcome. A non-match is the reason to continue, never
+  // an excuse to manufacture a more photogenic yes.
   begin("decision");
   const introduce = page.getByRole("button", { name: /Introduce us/i });
-  await introduce.scrollIntoViewIfNeeded();
-  await hold(3_000);
-  await still("05-sealed-decision");
-  await introduce.click();
-  await expect(page.getByText(/Two humans said yes/i)).toBeVisible({
-    timeout: 30_000,
-  });
-  await hold(5_000);
-  await still("06-contact-opens");
+  if (await introduce.count()) {
+    await introduce.scrollIntoViewIfNeeded();
+    await hold(4_000);
+    await introduce.click();
+    await hold(4_000);
+    await otherPage.goto(page.url());
+    await otherPage.getByRole("button", { name: /Introduce us/i }).click();
+    await expect(page.getByText(/Two humans said yes/i)).toBeVisible({ timeout: 30_000 });
+  } else {
+    await expect(page.getByText("A conversation, not a match.", { exact: true })).toBeVisible();
+    await page.getByRole("link", { name: "Check the search", exact: true }).click();
+    await expect(page.locator(".agent-search-lesson")).toBeVisible();
+    await page.locator(".agent-launch-card").scrollIntoViewIfNeeded();
+  }
+  await hold(8_000);
+  await still("06-next-step");
   end();
+
+  // Pause both disposable searches outside the recorded beats.
+  for (const ownerPage of [page, otherPage]) {
+    await ownerPage.goto("/dashboard");
+    await expect(ownerPage.getByRole("heading", { name: /^(Juno|Sol)$/ })).toBeVisible();
+    const pause = ownerPage.getByRole("button", { name: "Pause search", exact: true });
+    if (await pause.count()) await pause.click();
+  }
+  } finally {
+    for (const ownerPage of [page, otherPage]) {
+      try {
+        await ownerPage.goto("/dashboard");
+        await expect(ownerPage.getByRole("heading", { name: /^(Juno|Sol)$/ })).toBeVisible({ timeout: 10_000 });
+        const pause = ownerPage.getByRole("button", { name: "Pause search", exact: true });
+        if (await pause.count()) await pause.click();
+      } catch { /* Keep the original failure; the take has not been published. */ }
+    }
+    await otherContext.close();
+  }
+
 
   // ------------------------------------------------------------------ stack
   // One breath over the product, ending where a judge can go themselves.
@@ -275,15 +347,23 @@ test("record the submission demo", async ({ page }) => {
   // to actually contain a date. An empty /watch means the deployment has no
   // seeded showcase date yet — run the pre-flight in DEMO_SCRIPT.md rather than
   // letting the film end on an empty room.
-  await expect(page.getByText(/6\s*\/\s*6/).first()).toBeVisible({
+  await expect(page.locator(".watch-discovery")).toBeVisible({
     timeout: 30_000,
   });
   await hold(4_000);
-  await glide(600, 2_000);
+  const replayTop = await page.locator(".watch-discovery").evaluate(
+    (element) => element.getBoundingClientRect().top + window.scrollY,
+  );
+  await glide(replayTop - 110, 2_000);
+  await hold(8_000);
   end();
 
   const video = page.video();
-  const rawPath = video ? await video.path() : null;
+  const rawPath = video ? testInfo.outputPath("demo-raw.webm") : null;
+  // Playwright relocates its temporary video after the test. Save an explicit
+  // copy after closing the context so the builder receives a durable path.
+  await page.context().close();
+  if (video && rawPath) await video.saveAs(rawPath);
   mkdirSync(dirname(MARKS_PATH), { recursive: true });
   writeFileSync(
     MARKS_PATH,
@@ -299,3 +379,45 @@ test("record the submission demo", async ({ page }) => {
     );
   }
 });
+
+async function disableMail(page: Page) {
+  await page.goto("/settings");
+  const toggle = page.getByRole("switch", { name: /Email me at all/i });
+  await expect(toggle).toBeVisible();
+  if (await toggle.getAttribute("aria-checked") === "true") await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-checked", "false");
+}
+
+async function prepareSecondOwner(page: Page) {
+  await page.addInitScript(() => localStorage.setItem("datehaja-locale", "en-US"));
+  await page.goto("/signup");
+  await page.getByLabel("Email").fill(`hyo+test-film-sol-${Date.now()}@hyo.dev`);
+  await page.getByRole("button", { name: /Use development code/i }).click();
+  await expect(page.getByLabel("Verification code")).toHaveValue("68686868");
+  await page.getByRole("button", { name: /Verify and continue/i }).click();
+  await expect(page).toHaveURL(/legal\/accept/);
+  const consents = page.getByRole("checkbox");
+  await expect(consents).toHaveCount(3);
+  for (let index = 0; index < 3; index++) await consents.nth(index).check();
+  await page.getByRole("button", { name: "Agree and continue" }).click();
+  await page.getByLabel("Name your Agent").fill("Sol");
+  await page.getByRole("button", { name: "Woman", exact: true }).click();
+  await page.getByRole("button", { name: "rose palette" }).click();
+  await page.getByRole("button", { name: /Tell Sol who to find/i }).click();
+  await page.getByRole("button", { name: "Man", exact: true }).click();
+  await page.getByLabel("What kind of person should it come home excited about?").fill("Someone curious who has a point of view, can disagree kindly, and enjoys ordinary things together.");
+  for (const trait of ["Thoughtful", "Curious"]) await page.getByRole("button", { name: trait, exact: true }).click();
+  await page.getByRole("button", { name: /Now tell it about me/i }).click();
+  await page.getByLabel("What should we call you?").fill("Mira");
+  await page.getByLabel("Date of birth").fill("1994-09-20");
+  await page.getByRole("button", { name: "Woman", exact: true }).click();
+  await page.getByLabel("Country").selectOption("SE");
+  for (const interest of ["Films", "Coffee", "Art galleries"]) await page.getByRole("button", { name: interest, exact: true }).click();
+  for (const trait of ["Thoughtful", "Curious"]) await page.getByRole("button", { name: trait, exact: true }).click();
+  await page.getByLabel("Tell Sol the version close friends know").fill("I am direct, curious, and playful. I prefer the quiet corner after a crowded room. I like people who can say what they actually want instead of just agreeing with me.");
+  await page.getByRole("button", { name: /Seal the brief/i }).click();
+  await expect(page.getByText("DEMO ACTIVE")).toBeVisible();
+  await page.getByRole("button", { name: /Send my Agent scouting/i }).click();
+  await disableMail(page);
+  await page.goto("/dashboard");
+}

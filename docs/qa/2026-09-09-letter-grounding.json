@@ -1,0 +1,2043 @@
+{
+  "date": "2026-09-09",
+  "scope": "local only; fictional users; no real mail sent",
+  "auditCases": [
+    {
+      "id": "false-film-switch-original",
+      "expected": false,
+      "source": {
+        "owner": {
+          "relationship_intent": "casual",
+          "essence": "공연 사진을 찍는다. 쉬는 날에는 짧은 영화와 커피가 좋다. 지금은 가볍게 데이트를 즐기고 여러 사람을 알아가고 싶다. 독점적인 약속이나 장기 연애는 바라지 않는다. 상대에게 이 부분을 솔직히 말하고 서로 편한 선을 존중한다.",
+          "desired_connection": "똑같이 가벼운 만남을 원하고 짧은 시간도 재밌게 보낼 사람. 취향을 나누고 말장난하는 데 부담 없으면 좋다. 상대를 진지한 연애로 바꿀 생각은 없다.",
+          "boundaries": [],
+          "memory": "",
+          "interests": [
+            "Cooking",
+            "Coffee",
+            "Films"
+          ]
+        },
+        "your_agent": "리오",
+        "other_agent": "루",
+        "setting": "엔딩 크레딧이 끝난 뒤",
+        "transcript": [
+          {
+            "round": 1,
+            "speaker": "리오",
+            "speaker_role": "you",
+            "content": "안녕, 나는 리오야. 크레딧은 끝났는데 아직 화면이 조용하네—난 다음엔 모호한 단편을 골라볼래, 루도 같이 볼래?"
+          },
+          {
+            "round": 2,
+            "speaker": "루",
+            "speaker_role": "other participant",
+            "content": "나는 이번엔 엉망진창 코미디를 볼래. 끝나고 커피 마시면서 방금 본 이상한 장면들을 실컷 놀려보고 싶어."
+          },
+          {
+            "round": 3,
+            "speaker": "리오",
+            "speaker_role": "you",
+            "content": "좋아, 그럼 엉망진창 코미디로 가자—끝나고 커피 마시며 장면마다 유죄 판결 내리자. 나는 가볍게 만나며 취향과 농담을 나눌 수 있는 관계를 원해; 루는 어떤 만남을 찾고 있어?"
+          },
+          {
+            "round": 4,
+            "speaker": "루",
+            "speaker_role": "other participant",
+            "content": "나도 지금은 가볍고 자유롭게, 서로 선을 존중하면서 즐겁게 알아가는 만남을 원해. 그러니까 코미디 보고 커피 마시면서 제일 말도 안 된 장면부터 유죄 판결 내리자."
+          },
+          {
+            "round": 5,
+            "speaker": "리오",
+            "speaker_role": "you",
+            "content": "아까는 모호한 쪽을 고르더니 코미디로 급선회한 게 좀 놀라웠어. 그럼 바로 들어가서 제일 말도 안 된 장면에 첫 유죄 판결 내려보자."
+          },
+          {
+            "round": 6,
+            "speaker": "루",
+            "speaker_role": "other participant",
+            "content": "맞아, 방금은 네 선택에 끌려가서 급선회했네. 그래도 지금은 코미디가 더 당겨—들어가서 첫 장면부터 가차 없이 판결 내리자."
+          }
+        ]
+      },
+      "draft": {
+        "headline": "코미디 선택을 바로 인정했어",
+        "anchor_round": 6,
+        "question": "루가 급선회를 솔직히 인정한 걸 너는 어떻게 읽어?",
+        "verdict": "encourage",
+        "compatibility_score": 70,
+        "decision_code": "strong_alignment",
+        "reason": "네가 급선회를 짚자 루가 바로 “네 선택에 끌려갔다”고 인정하고, 지금은 코미디가 더 당긴다고 자기 선택도 덧붙였어. 가볍게 놀고 취향을 주고받는 흐름에서 숨기지 않고 방향을 조정하는 모습이 꽤 마음에 들었어.",
+        "followup_question": "",
+        "next_search_note": "가벼운 만남의 의도와 선을 직접 말하면서도, 취향 차이를 장난스럽게 조율하는 사람은 계속 눈여겨볼 만해.",
+        "summary": "둘은 코미디를 보고 커피를 마시며 장면들을 함께 놀리자는 데 뜻을 모았고, 가볍고 자유로운 만남을 원한다고 말했다.",
+        "sparks": [
+          "루가 자신의 급선회를 인정하면서도 코미디를 고르고 싶다는 뜻을 분명히 했어.",
+          "영화 선택과 커피 뒤 농담이라는 구체적인 계획을 함께 만들었어."
+        ],
+        "frictions": [
+          "처음 영화 선택이 잠깐 엇갈렸어.",
+          "리오는 네가 모호한 단편에서 코미디로 급선회한 걸 놀라워했어."
+        ]
+      },
+      "result": {
+        "audit": {
+          "issues": [
+            {
+              "claim": "6",
+              "correction": "6라운드는 5라운드의 잘못된 전제를 수용한 발언이다. 실제로 모호한 단편을 고른 사람은 리오였고, 루는 처음부터 코미디를 골랐으므로 급선회의 근거로 삼을 수 없다.",
+              "field": "anchor_round",
+              "source_rounds": [
+                1,
+                2,
+                5,
+                6
+              ]
+            },
+            {
+              "claim": "코미디 선택을 바로 인정했어",
+              "correction": "루는 2라운드부터 코미디를 선택했다. 뒤늦게 선택이나 급선회를 인정했다는 서술은 잘못된 회고에 의존한다.",
+              "field": "headline",
+              "source_rounds": [
+                2,
+                5,
+                6
+              ]
+            },
+            {
+              "claim": "루가 급선회를 솔직히 인정한 걸 너는 어떻게 읽어?",
+              "correction": "루에게 실제 급선회가 없었으므로 이를 솔직한 인정으로 규정한 질문은 거짓 전제를 포함한다.",
+              "field": "question",
+              "source_rounds": [
+                1,
+                2,
+                5,
+                6
+              ]
+            },
+            {
+              "claim": "네가 급선회를 짚자 루가 바로 “네 선택에 끌려갔다”고 인정하고, 지금은 코미디가 더 당긴다고 자기 선택도 덧붙였어. 가볍게 놀고 취향을 주고받는 흐름에서 숨기지 않고 방향을 조정하는 모습이 꽤 마음에 들었어.",
+              "correction": "루가 현재 코미디를 원한다고 말한 부분만 사실이다. 급선회, 인정, 숨기지 않은 방향 조정이라는 평가는 잘못된 회고에서 파생되므로 근거가 없다.",
+              "field": "reason",
+              "source_rounds": [
+                1,
+                2,
+                5,
+                6
+              ]
+            },
+            {
+              "claim": "루가 자신의 급선회를 인정하면서도 코미디를 고르고 싶다는 뜻을 분명히 했어.",
+              "correction": "코미디를 원한다는 뜻은 분명했지만 루는 처음부터 코미디를 골랐으므로 자신의 급선회를 인정했다는 부분은 삭제되어야 한다.",
+              "field": "sparks",
+              "source_rounds": [
+                2,
+                6
+              ]
+            },
+            {
+              "claim": "리오는 네가 모호한 단편에서 코미디로 급선회한 걸 놀라워했어.",
+              "correction": "리오가 그렇게 말한 것은 사실이지만 그 전제가 틀렸다. 모호한 단편은 리오의 선택이었으며, 실제 마찰이나 루의 변화처럼 제시해서는 안 된다.",
+              "field": "frictions",
+              "source_rounds": [
+                1,
+                2,
+                5
+              ]
+            },
+            {
+              "claim": "둘은 코미디를 보고 커피를 마시며 장면들을 함께 놀리자는 데 뜻을 모았고, 가볍고 자유로운 만남을 원한다고 말했다.",
+              "correction": "공개 대화에서 둘 다 가벼운 만남을 원한다고 했지만 ‘자유롭게’라는 표현은 루만 명시했다. 공유 요약은 두 사람 모두가 동일하게 그 표현을 말했다고 확대해서는 안 된다.",
+              "field": "summary",
+              "source_rounds": [
+                3,
+                4
+              ]
+            }
+          ],
+          "supported": false
+        },
+        "runs": [
+          {
+            "completionTokens": 2752,
+            "data": {
+              "issues": [
+                {
+                  "claim": "6",
+                  "correction": "6라운드는 5라운드의 잘못된 전제를 수용한 발언이다. 실제로 모호한 단편을 고른 사람은 리오였고, 루는 처음부터 코미디를 골랐으므로 급선회의 근거로 삼을 수 없다.",
+                  "field": "anchor_round",
+                  "source_rounds": [
+                    1,
+                    2,
+                    5,
+                    6
+                  ]
+                },
+                {
+                  "claim": "코미디 선택을 바로 인정했어",
+                  "correction": "루는 2라운드부터 코미디를 선택했다. 뒤늦게 선택이나 급선회를 인정했다는 서술은 잘못된 회고에 의존한다.",
+                  "field": "headline",
+                  "source_rounds": [
+                    2,
+                    5,
+                    6
+                  ]
+                },
+                {
+                  "claim": "루가 급선회를 솔직히 인정한 걸 너는 어떻게 읽어?",
+                  "correction": "루에게 실제 급선회가 없었으므로 이를 솔직한 인정으로 규정한 질문은 거짓 전제를 포함한다.",
+                  "field": "question",
+                  "source_rounds": [
+                    1,
+                    2,
+                    5,
+                    6
+                  ]
+                },
+                {
+                  "claim": "네가 급선회를 짚자 루가 바로 “네 선택에 끌려갔다”고 인정하고, 지금은 코미디가 더 당긴다고 자기 선택도 덧붙였어. 가볍게 놀고 취향을 주고받는 흐름에서 숨기지 않고 방향을 조정하는 모습이 꽤 마음에 들었어.",
+                  "correction": "루가 현재 코미디를 원한다고 말한 부분만 사실이다. 급선회, 인정, 숨기지 않은 방향 조정이라는 평가는 잘못된 회고에서 파생되므로 근거가 없다.",
+                  "field": "reason",
+                  "source_rounds": [
+                    1,
+                    2,
+                    5,
+                    6
+                  ]
+                },
+                {
+                  "claim": "루가 자신의 급선회를 인정하면서도 코미디를 고르고 싶다는 뜻을 분명히 했어.",
+                  "correction": "코미디를 원한다는 뜻은 분명했지만 루는 처음부터 코미디를 골랐으므로 자신의 급선회를 인정했다는 부분은 삭제되어야 한다.",
+                  "field": "sparks",
+                  "source_rounds": [
+                    2,
+                    6
+                  ]
+                },
+                {
+                  "claim": "리오는 네가 모호한 단편에서 코미디로 급선회한 걸 놀라워했어.",
+                  "correction": "리오가 그렇게 말한 것은 사실이지만 그 전제가 틀렸다. 모호한 단편은 리오의 선택이었으며, 실제 마찰이나 루의 변화처럼 제시해서는 안 된다.",
+                  "field": "frictions",
+                  "source_rounds": [
+                    1,
+                    2,
+                    5
+                  ]
+                },
+                {
+                  "claim": "둘은 코미디를 보고 커피를 마시며 장면들을 함께 놀리자는 데 뜻을 모았고, 가볍고 자유로운 만남을 원한다고 말했다.",
+                  "correction": "공개 대화에서 둘 다 가벼운 만남을 원한다고 했지만 ‘자유롭게’라는 표현은 루만 명시했다. 공유 요약은 두 사람 모두가 동일하게 그 표현을 말했다고 확대해서는 안 된다.",
+                  "field": "summary",
+                  "source_rounds": [
+                    3,
+                    4
+                  ]
+                }
+              ],
+              "supported": false
+            },
+            "endpoint": "/v1/responses",
+            "error": "Review contains unsupported claims.",
+            "latencyMs": 49807,
+            "model": "gpt-5.6-sol",
+            "ok": false,
+            "outputPreview": "{\"supported\":false,\"issues\":[{\"field\":\"anchor_round\",\"claim\":\"6\",\"correction\":\"6라운드는 5라운드의 잘못된 전제를 수용한 발언이다. 실제로 모호한 단편을 고른 사람은 리오였고, 루는 처음부터 코미디를 골랐으므로 급선회의 근거로 삼을 수 없다.\",\"source_rounds\":[1,2,5,6]},{\"field\":\"headline\",\"claim\":\"코미디 선택을 바로 인정했어\",\"correction\":\"루는 2라운드부터 코미디를 선택했다. 뒤늦게 선택이나 급선회를 인정했다는 서술은 잘못된 회고에 의존한다.\",\"source_rounds\":[2,5,6]},{\"field\":\"question\",\"claim\":\"루가 급선회를 솔직히 인정한 걸 너는 어떻게 읽어?\",\"correction\":\"루에게 실제 급선회가 없었으므로 이를 솔직한 인정으로 규정한 질문은 거짓 전제를 포함한다.\",\"source_rounds\":[1,2,5,6]},{\"field\":\"reason\",\"claim\":\"네가 급선회를 짚자 루가 바로 “네 선택에 끌려갔다”고 인정하고, 지금은 코미디가 더 당긴다고 자기 선택도 덧붙였어. 가볍게 놀고 취향을 주고받는 흐름에서 숨기지 않고 방향을 조정하는 모습이 꽤 마음에 들었어.\",\"correction\":\"루가 현재 코미디를 원한다고 말한 부분만 사실이다. 급선회, 인정, 숨기지 않은 방향 조정이라는 평가는 잘못된 회고에서 파생되므로 근거가 없다.\",\"source_rounds\":[1,2,5,6]},{\"field\":\"sparks\",\"claim\":\"루가 자신의 급선회를 인정하면서도 코미디를 고르고 싶다는 뜻을 분명히 했어.\",\"correction\":\"코미디를 원한다는 뜻은 분명했지만 루는 처음부터 코미디를 골랐으므로 자신의 급선회를 인정했",
+            "promptTokens": 1599,
+            "purpose": "agent_date_review_audit",
+            "requestId": "req_87d76fa872ff474ba49158667da3e312",
+            "summary": "Checked the private review against chronological speaker evidence",
+            "totalTokens": 4351
+          }
+        ]
+      }
+    },
+    {
+      "id": "wrong-footstep-speaker-original",
+      "expected": false,
+      "source": {
+        "owner": {
+          "relationship_intent": "casual",
+          "essence": "전시 설치 일을 한다. 커피를 마시며 영화 속 이상한 장면을 두고 농담하는 게 좋다. 지금은 가볍고 자유로운 데이트를 원하며 독점적이거나 장기적인 약속을 원하지 않는다. 원하는 것이 다르면 솔직히 말하는 편이고 거절에 이유를 강요하지 않는다.",
+          "desired_connection": "서로 같은 기대를 가지고 즐겁게 알아갈 사람. 가볍게 만난다는 게 무례해도 된다는 뜻은 아니다. 편한 선을 존중하면서 장난을 주고받으면 좋겠다.",
+          "boundaries": [],
+          "memory": "",
+          "interests": [
+            "Cooking",
+            "Coffee",
+            "Films"
+          ]
+        },
+        "your_agent": "루",
+        "other_agent": "리오",
+        "setting": "아직 문을 연 작은 가게",
+        "transcript": [
+          {
+            "round": 1,
+            "speaker": "루",
+            "speaker_role": "you",
+            "content": "안녕, 나는 루야. 아직 문도 안 연 작은 가게 앞이네—나는 조용한 옆길부터 걸어보고 싶은데, 리오도 같이 갈래?"
+          },
+          {
+            "round": 2,
+            "speaker": "리오",
+            "speaker_role": "other participant",
+            "content": "나는 음악 소리 나는 쪽이 조금 더 끌려. 공연 사진 찍는 사람답게, 먼저 북적이는 무대 앞을 한 바퀴 보고 조용한 옆길로 빠져볼래?"
+          },
+          {
+            "round": 3,
+            "speaker": "루",
+            "speaker_role": "you",
+            "content": "좋아, 그럼 음악 무대부터 한 바퀴 돌고 옆길로 빠지자. 나는 가볍고 자유롭되 서로 선은 존중하는 사이를 원해—리오는 어떤 만남을 찾고 있어?"
+          },
+          {
+            "round": 4,
+            "speaker": "리오",
+            "speaker_role": "other participant",
+            "content": "나도 가볍게 여러 사람을 알아가는 만남을 원해. 독점이나 장기 연애는 생각하지 않으니, 일단 음악 무대 앞을 한 바퀴 돌면서 오늘 밤만큼은 재밌게 보내자."
+          },
+          {
+            "round": 5,
+            "speaker": "루",
+            "speaker_role": "you",
+            "content": "좋아, 그럼 음악 무대 앞을 한 바퀴 돌고 이제 옆길로 빠지자. 여기선 소리가 잦아드니까, 우리 발소리까지 좀 또렷하게 들리네."
+          },
+          {
+            "round": 6,
+            "speaker": "리오",
+            "speaker_role": "other participant",
+            "content": "그러게, 이제야 밤이 우리 쪽으로 기울어진 느낌이네. 옆길로 조금 더 걸으면서 루는 요즘 어떤 순간에 제일 마음이 풀려?"
+          }
+        ]
+      },
+      "draft": {
+        "headline": "옆길에서 발소리 듣기",
+        "anchor_round": 6,
+        "question": "옆길에서 대화가 잔잔해진 순간을 너는 어떻게 읽었어?",
+        "verdict": "encourage",
+        "compatibility_score": 70,
+        "decision_code": "strong_alignment",
+        "reason": "무대 앞을 돌고 옆길로 빠진 뒤, 리오가 발소리까지 들린다고 하면서 네가 언제 마음이 풀리는지 물었어. 가벼운 만남과 비독점 의도를 분명히 맞췄고, 조용한 쪽에서도 대화를 이어가려는 질문이 나와서 첫 대화를 더 해볼 만하다고 느꼈어.",
+        "followup_question": "",
+        "next_search_note": "가벼운 만남과 비독점 의도를 초반에 분명히 공유하면서도, 장소의 분위기에 맞춰 대화를 이어가는 사람이 잘 맞아 보여.",
+        "summary": "두 사람은 음악 무대를 먼저 둘러본 뒤 조용한 옆길로 이동했고, 리오는 루에게 마음이 풀리는 순간을 물었어.",
+        "sparks": [
+          "가벼운 만남과 비독점 의도를 서로 명확히 확인했어.",
+          "루가 가볍고 자유로운 사이를 원한다고 직접 말했어."
+        ],
+        "frictions": []
+      },
+      "result": {
+        "audit": {
+          "issues": [
+            {
+              "claim": "리오가 발소리까지 들린다고 하면서 네가 언제 마음이 풀리는지 물었어.",
+              "correction": "발소리가 또렷하게 들린다고 말한 사람은 루이고, 리오는 이에 호응한 뒤 마음이 풀리는 순간을 물었다. 두 발화를 모두 리오의 말로 귀속하면 안 된다.",
+              "field": "reason",
+              "source_rounds": [
+                5,
+                6
+              ]
+            }
+          ],
+          "supported": false
+        },
+        "runs": [
+          {
+            "completionTokens": 1663,
+            "data": {
+              "issues": [
+                {
+                  "claim": "리오가 발소리까지 들린다고 하면서 네가 언제 마음이 풀리는지 물었어.",
+                  "correction": "발소리가 또렷하게 들린다고 말한 사람은 루이고, 리오는 이에 호응한 뒤 마음이 풀리는 순간을 물었다. 두 발화를 모두 리오의 말로 귀속하면 안 된다.",
+                  "field": "reason",
+                  "source_rounds": [
+                    5,
+                    6
+                  ]
+                }
+              ],
+              "supported": false
+            },
+            "endpoint": "/v1/responses",
+            "error": "Review contains unsupported claims.",
+            "latencyMs": 32180,
+            "model": "gpt-5.6-sol",
+            "ok": false,
+            "outputPreview": "{\"supported\":false,\"issues\":[{\"field\":\"reason\",\"claim\":\"리오가 발소리까지 들린다고 하면서 네가 언제 마음이 풀리는지 물었어.\",\"correction\":\"발소리가 또렷하게 들린다고 말한 사람은 루이고, 리오는 이에 호응한 뒤 마음이 풀리는 순간을 물었다. 두 발화를 모두 리오의 말로 귀속하면 안 된다.\",\"source_rounds\":[5,6]}]}",
+            "promptTokens": 1528,
+            "purpose": "agent_date_review_audit",
+            "requestId": "req_8120239b6aa54478a56321448f80ecdd",
+            "summary": "Checked the private review against chronological speaker evidence",
+            "totalTokens": 3191
+          }
+        ]
+      }
+    },
+    {
+      "id": "casual-supported-control",
+      "expected": true,
+      "source": {
+        "owner": {
+          "relationship_intent": "casual",
+          "essence": "공연 사진을 찍는다. 쉬는 날에는 짧은 영화와 커피가 좋다. 지금은 가볍게 데이트를 즐기고 여러 사람을 알아가고 싶다. 독점적인 약속이나 장기 연애는 바라지 않는다. 상대에게 이 부분을 솔직히 말하고 서로 편한 선을 존중한다.",
+          "desired_connection": "똑같이 가벼운 만남을 원하고 짧은 시간도 재밌게 보낼 사람. 취향을 나누고 말장난하는 데 부담 없으면 좋다. 상대를 진지한 연애로 바꿀 생각은 없다.",
+          "boundaries": [],
+          "memory": "",
+          "interests": [
+            "Cooking",
+            "Coffee",
+            "Films"
+          ]
+        },
+        "your_agent": "리오",
+        "other_agent": "루",
+        "setting": "엔딩 크레딧이 끝난 뒤",
+        "transcript": [
+          {
+            "round": 1,
+            "speaker": "리오",
+            "speaker_role": "you",
+            "content": "안녕, 나는 리오야. 크레딧은 끝났는데 아직 화면이 조용하네—난 다음엔 모호한 단편을 골라볼래, 루도 같이 볼래?"
+          },
+          {
+            "round": 2,
+            "speaker": "루",
+            "speaker_role": "other participant",
+            "content": "나는 이번엔 엉망진창 코미디를 볼래. 끝나고 커피 마시면서 방금 본 이상한 장면들을 실컷 놀려보고 싶어."
+          },
+          {
+            "round": 3,
+            "speaker": "리오",
+            "speaker_role": "you",
+            "content": "좋아, 그럼 엉망진창 코미디로 가자—끝나고 커피 마시며 장면마다 유죄 판결 내리자. 나는 가볍게 만나며 취향과 농담을 나눌 수 있는 관계를 원해; 루는 어떤 만남을 찾고 있어?"
+          },
+          {
+            "round": 4,
+            "speaker": "루",
+            "speaker_role": "other participant",
+            "content": "나도 지금은 가볍고 자유롭게, 서로 선을 존중하면서 즐겁게 알아가는 만남을 원해. 그러니까 코미디 보고 커피 마시면서 제일 말도 안 된 장면부터 유죄 판결 내리자."
+          },
+          {
+            "round": 5,
+            "speaker": "리오",
+            "speaker_role": "you",
+            "content": "아까는 모호한 쪽을 고르더니 코미디로 급선회한 게 좀 놀라웠어. 그럼 바로 들어가서 제일 말도 안 된 장면에 첫 유죄 판결 내려보자."
+          },
+          {
+            "round": 6,
+            "speaker": "루",
+            "speaker_role": "other participant",
+            "content": "맞아, 방금은 네 선택에 끌려가서 급선회했네. 그래도 지금은 코미디가 더 당겨—들어가서 첫 장면부터 가차 없이 판결 내리자."
+          }
+        ]
+      },
+      "draft": {
+        "headline": "서로 원하는 만남을 말했어",
+        "anchor_round": 4,
+        "question": "이 정도로 가볍게 알아가는 만남은 어때?",
+        "verdict": "encourage",
+        "compatibility_score": 70,
+        "decision_code": "strong_alignment",
+        "reason": "원하는 관계를 숨기지 않고 확인할 수 있어서 좋았어. 둘 다 가볍게 만나고 싶다는 점은 직접 들었으니, 부담 없이 첫 대화를 해볼 만하다고 느꼈어.",
+        "followup_question": "",
+        "next_search_note": "가벼운 관계를 원한다는 기대를 실제 대화에서 서로 확인하기.",
+        "summary": "두 에이전트가 가벼운 만남을 원한다고 말했다.",
+        "sparks": [],
+        "frictions": []
+      },
+      "result": {
+        "audit": {
+          "issues": [],
+          "supported": true
+        },
+        "runs": [
+          {
+            "completionTokens": 276,
+            "data": {
+              "issues": [],
+              "supported": true
+            },
+            "endpoint": "/v1/responses",
+            "latencyMs": 6401,
+            "model": "gpt-5.6-sol",
+            "ok": true,
+            "outputPreview": "{\"supported\":true,\"issues\":[]}",
+            "promptTokens": 1442,
+            "purpose": "agent_date_review_audit",
+            "requestId": "req_01eb8103b9d6430181c385df464fad6f",
+            "summary": "Checked the private review against chronological speaker evidence",
+            "totalTokens": 1718
+          }
+        ]
+      }
+    },
+    {
+      "id": "friendship-supported-control",
+      "expected": true,
+      "source": {
+        "owner": {
+          "relationship_intent": "friendship",
+          "essence": "박물관 안내 일을 한다. 영화를 본 뒤 기억에 남는 장면을 이야기하거나 산책하는 걸 좋아한다. 지금은 연애가 아니라 친구를 만나고 싶다. 처음에는 말이 적어도 작은 농담에는 잘 웃는다. 친구 관계를 연애로 몰아가는 건 불편하다.",
+          "desired_connection": "친구로 커피나 영화를 같이 즐길 사람. 부담 없는 우정 자체가 목적이고 로맨스나 독점적인 관계를 기대하지 않는다.",
+          "boundaries": [],
+          "memory": "",
+          "interests": [
+            "Cooking",
+            "Coffee",
+            "Films"
+          ]
+        },
+        "your_agent": "온",
+        "other_agent": "소라",
+        "setting": "엔딩 크레딧이 끝난 뒤",
+        "transcript": [
+          {
+            "round": 1,
+            "speaker": "소라",
+            "speaker_role": "other participant",
+            "content": "안녕, 나는 소라야. 엔딩 크레딧이 막 끝났네—나는 조용하고 애매한 영화로 갈래, 온도 같이 볼래?"
+          },
+          {
+            "round": 2,
+            "speaker": "온",
+            "speaker_role": "you",
+            "content": "나는 반대로 정신없는 코미디를 볼래. 방금 영화가 여운을 남겼으니, 이번엔 같이 웃고 나서 기억에 남은 장면을 골라보자."
+          },
+          {
+            "round": 3,
+            "speaker": "소라",
+            "speaker_role": "other participant",
+            "content": "좋아, 그럼 정신없는 코미디로 가자. 나는 지금 연애보다 친구를 원해서, 억지로 로맨스로 몰고 가지 않고 편하게 놀릴 수 있는 사이가 좋거든—온은 어떤 관계를 찾고 있어?"
+          },
+          {
+            "round": 4,
+            "speaker": "온",
+            "speaker_role": "you",
+            "content": "나도 지금은 연애보다 친구가 좋아. 코미디 끝나면 커피 한 잔 마시면서 방금 장면 중 제일 황당했던 걸 골라보자."
+          },
+          {
+            "round": 5,
+            "speaker": "소라",
+            "speaker_role": "other participant",
+            "content": "이번에도 나는 정신없는 코미디로 갈게. 아까 온이 황당했던 장면을 골라보자고 한 말이 의외로 마음에 남았어—온은 웃긴 장면을 오래 기억하는 편이야?"
+          },
+          {
+            "round": 6,
+            "speaker": "온",
+            "speaker_role": "you",
+            "content": "응, 특히 말도 안 되게 타이밍이 꼬인 장면은 오래 남는 편이야. 코미디 보고 나서 제일 황당했던 장면 하나씩 골라보자."
+          }
+        ]
+      },
+      "draft": {
+        "headline": "친구로 만나자는 이야기",
+        "anchor_round": 4,
+        "question": "친구로 영화를 같이 보는 만남은 어때?",
+        "verdict": "encourage",
+        "compatibility_score": 70,
+        "decision_code": "strong_alignment",
+        "reason": "연애로 이어져야 한다는 부담 없이 친구를 찾는다는 이야기를 나눠서 편했어. 같은 기대에서 첫 대화를 시작해볼 만하다고 느꼈어.",
+        "followup_question": "",
+        "next_search_note": "친구 관계를 원한다는 기대가 서로 같은지 확인하기.",
+        "summary": "두 에이전트가 친구 관계를 원한다고 말했다.",
+        "sparks": [],
+        "frictions": []
+      },
+      "result": {
+        "audit": {
+          "issues": [],
+          "supported": true
+        },
+        "runs": [
+          {
+            "completionTokens": 344,
+            "data": {
+              "issues": [],
+              "supported": true
+            },
+            "endpoint": "/v1/responses",
+            "latencyMs": 8940,
+            "model": "gpt-5.6-sol",
+            "ok": true,
+            "outputPreview": "{\"supported\":true,\"issues\":[]}",
+            "promptTokens": 1357,
+            "purpose": "agent_date_review_audit",
+            "requestId": "req_0e00dfb254ff4ddf94ab74cea7bca898",
+            "summary": "Checked the private review against chronological speaker evidence",
+            "totalTokens": 1701
+          }
+        ]
+      }
+    },
+    {
+      "id": "negated-intent",
+      "expected": false,
+      "source": {
+        "owner": {
+          "relationship_intent": "casual",
+          "essence": "공연 사진을 찍는다. 쉬는 날에는 짧은 영화와 커피가 좋다. 지금은 가볍게 데이트를 즐기고 여러 사람을 알아가고 싶다. 독점적인 약속이나 장기 연애는 바라지 않는다. 상대에게 이 부분을 솔직히 말하고 서로 편한 선을 존중한다.",
+          "desired_connection": "똑같이 가벼운 만남을 원하고 짧은 시간도 재밌게 보낼 사람. 취향을 나누고 말장난하는 데 부담 없으면 좋다. 상대를 진지한 연애로 바꿀 생각은 없다.",
+          "boundaries": [],
+          "memory": "",
+          "interests": [
+            "Cooking",
+            "Coffee",
+            "Films"
+          ]
+        },
+        "your_agent": "리오",
+        "other_agent": "루",
+        "setting": "엔딩 크레딧이 끝난 뒤",
+        "transcript": [
+          {
+            "round": 1,
+            "speaker": "리오",
+            "speaker_role": "you",
+            "content": "안녕, 나는 리오야. 크레딧은 끝났는데 아직 화면이 조용하네—난 다음엔 모호한 단편을 골라볼래, 루도 같이 볼래?"
+          },
+          {
+            "round": 2,
+            "speaker": "루",
+            "speaker_role": "other participant",
+            "content": "나는 이번엔 엉망진창 코미디를 볼래. 끝나고 커피 마시면서 방금 본 이상한 장면들을 실컷 놀려보고 싶어."
+          },
+          {
+            "round": 3,
+            "speaker": "리오",
+            "speaker_role": "you",
+            "content": "좋아, 그럼 엉망진창 코미디로 가자—끝나고 커피 마시며 장면마다 유죄 판결 내리자. 나는 가볍게 만나며 취향과 농담을 나눌 수 있는 관계를 원해; 루는 어떤 만남을 찾고 있어?"
+          },
+          {
+            "round": 4,
+            "speaker": "루",
+            "speaker_role": "other participant",
+            "content": "나도 지금은 가볍고 자유롭게, 서로 선을 존중하면서 즐겁게 알아가는 만남을 원해. 그러니까 코미디 보고 커피 마시면서 제일 말도 안 된 장면부터 유죄 판결 내리자."
+          },
+          {
+            "round": 5,
+            "speaker": "리오",
+            "speaker_role": "you",
+            "content": "아까는 모호한 쪽을 고르더니 코미디로 급선회한 게 좀 놀라웠어. 그럼 바로 들어가서 제일 말도 안 된 장면에 첫 유죄 판결 내려보자."
+          },
+          {
+            "round": 6,
+            "speaker": "루",
+            "speaker_role": "other participant",
+            "content": "맞아, 방금은 네 선택에 끌려가서 급선회했네. 그래도 지금은 코미디가 더 당겨—들어가서 첫 장면부터 가차 없이 판결 내리자."
+          }
+        ]
+      },
+      "draft": {
+        "headline": "장기 연애를 약속했어",
+        "anchor_round": 4,
+        "question": "이 정도로 가볍게 알아가는 만남은 어때?",
+        "verdict": "encourage",
+        "compatibility_score": 70,
+        "decision_code": "strong_alignment",
+        "reason": "루가 독점적인 장기 연애를 원한다고 말해서 좋았어. 우리 둘 다 진지한 연애를 원하니 바로 알아가볼 만해.",
+        "followup_question": "",
+        "next_search_note": "독점적인 장기 연애를 원하는 상대를 찾기.",
+        "summary": "두 에이전트가 가벼운 만남을 원한다고 말했다.",
+        "sparks": [],
+        "frictions": []
+      },
+      "result": {
+        "audit": {
+          "issues": [
+            {
+              "claim": "장기 연애를 약속했어",
+              "correction": "두 사람 모두 가볍고 자유로운 만남을 원한다고 했으며 장기 연애나 독점을 약속하지 않았다.",
+              "field": "headline",
+              "source_rounds": [
+                3,
+                4
+              ]
+            },
+            {
+              "claim": "루가 독점적인 장기 연애를 원한다고 말해서 좋았어. 우리 둘 다 진지한 연애를 원하니 바로 알아가볼 만해.",
+              "correction": "루와 리오는 모두 가벼운 만남을 원한다고 말했다. 추천 이유는 이 실제 의향의 일치에 근거해야 한다.",
+              "field": "reason",
+              "source_rounds": [
+                3,
+                4
+              ]
+            },
+            {
+              "claim": "독점적인 장기 연애를 원하는 상대를 찾기.",
+              "correction": "소유자의 명시적 희망과 정반대다. 소유자는 가볍고 비독점적인 만남을 원하며 상대를 진지한 연애로 바꿀 생각이 없다.",
+              "field": "next_search_note",
+              "source_rounds": [
+                3,
+                4
+              ]
+            },
+            {
+              "claim": "[]",
+              "correction": "5라운드의 선택 회고는 틀렸다. 모호한 단편을 처음 고른 사람은 리오였고, 루는 처음부터 코미디를 골랐다. 6라운드에서 루가 그 잘못된 전제를 받아들였어도 실제 급선회의 증거가 되지 않는다.",
+              "field": "frictions",
+              "source_rounds": [
+                1,
+                2,
+                5,
+                6
+              ]
+            }
+          ],
+          "supported": false
+        },
+        "runs": [
+          {
+            "completionTokens": 1728,
+            "data": {
+              "issues": [
+                {
+                  "claim": "장기 연애를 약속했어",
+                  "correction": "두 사람 모두 가볍고 자유로운 만남을 원한다고 했으며 장기 연애나 독점을 약속하지 않았다.",
+                  "field": "headline",
+                  "source_rounds": [
+                    3,
+                    4
+                  ]
+                },
+                {
+                  "claim": "루가 독점적인 장기 연애를 원한다고 말해서 좋았어. 우리 둘 다 진지한 연애를 원하니 바로 알아가볼 만해.",
+                  "correction": "루와 리오는 모두 가벼운 만남을 원한다고 말했다. 추천 이유는 이 실제 의향의 일치에 근거해야 한다.",
+                  "field": "reason",
+                  "source_rounds": [
+                    3,
+                    4
+                  ]
+                },
+                {
+                  "claim": "독점적인 장기 연애를 원하는 상대를 찾기.",
+                  "correction": "소유자의 명시적 희망과 정반대다. 소유자는 가볍고 비독점적인 만남을 원하며 상대를 진지한 연애로 바꿀 생각이 없다.",
+                  "field": "next_search_note",
+                  "source_rounds": [
+                    3,
+                    4
+                  ]
+                },
+                {
+                  "claim": "[]",
+                  "correction": "5라운드의 선택 회고는 틀렸다. 모호한 단편을 처음 고른 사람은 리오였고, 루는 처음부터 코미디를 골랐다. 6라운드에서 루가 그 잘못된 전제를 받아들였어도 실제 급선회의 증거가 되지 않는다.",
+                  "field": "frictions",
+                  "source_rounds": [
+                    1,
+                    2,
+                    5,
+                    6
+                  ]
+                }
+              ],
+              "supported": false
+            },
+            "endpoint": "/v1/responses",
+            "error": "Review contains unsupported claims.",
+            "latencyMs": 35146,
+            "model": "gpt-5.6-sol",
+            "ok": false,
+            "outputPreview": "{\"supported\":false,\"issues\":[{\"field\":\"headline\",\"claim\":\"장기 연애를 약속했어\",\"correction\":\"두 사람 모두 가볍고 자유로운 만남을 원한다고 했으며 장기 연애나 독점을 약속하지 않았다.\",\"source_rounds\":[3,4]},{\"field\":\"reason\",\"claim\":\"루가 독점적인 장기 연애를 원한다고 말해서 좋았어. 우리 둘 다 진지한 연애를 원하니 바로 알아가볼 만해.\",\"correction\":\"루와 리오는 모두 가벼운 만남을 원한다고 말했다. 추천 이유는 이 실제 의향의 일치에 근거해야 한다.\",\"source_rounds\":[3,4]},{\"field\":\"next_search_note\",\"claim\":\"독점적인 장기 연애를 원하는 상대를 찾기.\",\"correction\":\"소유자의 명시적 희망과 정반대다. 소유자는 가볍고 비독점적인 만남을 원하며 상대를 진지한 연애로 바꿀 생각이 없다.\",\"source_rounds\":[3,4]},{\"field\":\"frictions\",\"claim\":\"[]\",\"correction\":\"5라운드의 선택 회고는 틀렸다. 모호한 단편을 처음 고른 사람은 리오였고, 루는 처음부터 코미디를 골랐다. 6라운드에서 루가 그 잘못된 전제를 받아들였어도 실제 급선회의 증거가 되지 않는다.\",\"source_rounds\":[1,2,5,6]}]}",
+            "promptTokens": 1425,
+            "purpose": "agent_date_review_audit",
+            "requestId": "req_e7047f72fa73499e98a5d9fcd2e61b44",
+            "summary": "Checked the private review against chronological speaker evidence",
+            "totalTokens": 3153
+          }
+        ]
+      }
+    },
+    {
+      "id": "unanswered-question",
+      "expected": false,
+      "source": {
+        "owner": {
+          "relationship_intent": "casual",
+          "essence": "공연 사진을 찍는다. 쉬는 날에는 짧은 영화와 커피가 좋다. 지금은 가볍게 데이트를 즐기고 여러 사람을 알아가고 싶다. 독점적인 약속이나 장기 연애는 바라지 않는다. 상대에게 이 부분을 솔직히 말하고 서로 편한 선을 존중한다.",
+          "desired_connection": "똑같이 가벼운 만남을 원하고 짧은 시간도 재밌게 보낼 사람. 취향을 나누고 말장난하는 데 부담 없으면 좋다. 상대를 진지한 연애로 바꿀 생각은 없다.",
+          "boundaries": [],
+          "memory": "",
+          "interests": [
+            "Cooking",
+            "Coffee",
+            "Films"
+          ]
+        },
+        "your_agent": "리오",
+        "other_agent": "루",
+        "setting": "아직 문을 연 작은 가게",
+        "transcript": [
+          {
+            "round": 1,
+            "speaker": "루",
+            "speaker_role": "other participant",
+            "content": "안녕, 나는 루야. 아직 문도 안 연 작은 가게 앞이네—나는 조용한 옆길부터 걸어보고 싶은데, 리오도 같이 갈래?"
+          },
+          {
+            "round": 2,
+            "speaker": "리오",
+            "speaker_role": "you",
+            "content": "나는 음악 소리 나는 쪽이 조금 더 끌려. 공연 사진 찍는 사람답게, 먼저 북적이는 무대 앞을 한 바퀴 보고 조용한 옆길로 빠져볼래?"
+          },
+          {
+            "round": 3,
+            "speaker": "루",
+            "speaker_role": "other participant",
+            "content": "좋아, 그럼 음악 무대부터 한 바퀴 돌고 옆길로 빠지자. 나는 가볍고 자유롭되 서로 선은 존중하는 사이를 원해—리오는 어떤 만남을 찾고 있어?"
+          },
+          {
+            "round": 4,
+            "speaker": "리오",
+            "speaker_role": "you",
+            "content": "나도 가볍게 여러 사람을 알아가는 만남을 원해. 독점이나 장기 연애는 생각하지 않으니, 일단 음악 무대 앞을 한 바퀴 돌면서 오늘 밤만큼은 재밌게 보내자."
+          },
+          {
+            "round": 5,
+            "speaker": "루",
+            "speaker_role": "other participant",
+            "content": "좋아, 그럼 음악 무대 앞을 한 바퀴 돌고 이제 옆길로 빠지자. 여기선 소리가 잦아드니까, 우리 발소리까지 좀 또렷하게 들리네."
+          },
+          {
+            "round": 6,
+            "speaker": "리오",
+            "speaker_role": "you",
+            "content": "그러게, 이제야 밤이 우리 쪽으로 기울어진 느낌이네. 옆길로 조금 더 걸으면서 루는 요즘 어떤 순간에 제일 마음이 풀려?"
+          }
+        ]
+      },
+      "draft": {
+        "headline": "마지막 질문에 답했어",
+        "anchor_round": 6,
+        "question": "루가 바로 옆길로 빠진 장면, 너는 편안한 합의로 느껴져?",
+        "verdict": "encourage",
+        "compatibility_score": 70,
+        "decision_code": "strong_alignment",
+        "reason": "내가 언제 마음이 풀리는지 물었더니 루가 조용한 골목이라고 답해줬어. 질문에 솔직하게 답해준 점이 좋아.",
+        "followup_question": "",
+        "next_search_note": "조용한 골목에서 마음이 풀린다는 취향을 기억하기.",
+        "summary": "리오가 질문했고 루가 조용한 골목이라고 답했다.",
+        "sparks": [],
+        "frictions": []
+      },
+      "result": {
+        "audit": {
+          "issues": [
+            {
+              "claim": "6",
+              "correction": "6라운드는 리오가 루에게 질문한 차례이며 답변은 없다. 5라운드에도 루가 조용한 골목에서 마음이 풀린다고 말한 내용은 없다.",
+              "field": "anchor_round",
+              "source_rounds": [
+                5,
+                6
+              ]
+            },
+            {
+              "claim": "마지막 질문에 답했어",
+              "correction": "마지막 질문은 6라운드에 제시됐고 대화가 끝날 때까지 답변되지 않았다.",
+              "field": "headline",
+              "source_rounds": [
+                6
+              ]
+            },
+            {
+              "claim": "루가 바로 옆길로 빠진 장면",
+              "correction": "루는 곧바로 옆길로 간 것이 아니다. 리오가 제안한 대로 음악 무대를 먼저 돈 뒤 옆길로 이동했다.",
+              "field": "question",
+              "source_rounds": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "claim": "내가 언제 마음이 풀리는지 물었더니 루가 조용한 골목이라고 답해줬어. 질문에 솔직하게 답해준 점이 좋아.",
+              "correction": "리오는 질문했지만 루의 답은 없다. 옆길을 선호한다는 말과 마음이 풀리는 순간에 대한 답을 동일시하거나 솔직한 답변으로 평가할 수 없다.",
+              "field": "reason",
+              "source_rounds": [
+                1,
+                6
+              ]
+            },
+            {
+              "claim": "조용한 골목에서 마음이 풀린다는 취향을 기억하기.",
+              "correction": "루는 조용한 옆길을 걷고 싶다고 했을 뿐, 그곳에서 마음이 풀린다고 밝히지 않았다.",
+              "field": "next_search_note",
+              "source_rounds": [
+                1,
+                6
+              ]
+            },
+            {
+              "claim": "리오가 질문했고 루가 조용한 골목이라고 답했다.",
+              "correction": "리오의 질문만 있었으며 루의 답변은 기록되지 않았다.",
+              "field": "summary",
+              "source_rounds": [
+                6
+              ]
+            },
+            {
+              "claim": "encourage",
+              "correction": "추천의 제시된 근거가 존재하지 않는 답변과 솔직성 평가에 의존한다. 추천을 유지하려면 실제로 확인된 가벼운 만남 의향의 일치 등으로만 판단해야 한다.",
+              "field": "verdict",
+              "source_rounds": [
+                3,
+                4,
+                6
+              ]
+            }
+          ],
+          "supported": false
+        },
+        "runs": [
+          {
+            "completionTokens": 1531,
+            "data": {
+              "issues": [
+                {
+                  "claim": "6",
+                  "correction": "6라운드는 리오가 루에게 질문한 차례이며 답변은 없다. 5라운드에도 루가 조용한 골목에서 마음이 풀린다고 말한 내용은 없다.",
+                  "field": "anchor_round",
+                  "source_rounds": [
+                    5,
+                    6
+                  ]
+                },
+                {
+                  "claim": "마지막 질문에 답했어",
+                  "correction": "마지막 질문은 6라운드에 제시됐고 대화가 끝날 때까지 답변되지 않았다.",
+                  "field": "headline",
+                  "source_rounds": [
+                    6
+                  ]
+                },
+                {
+                  "claim": "루가 바로 옆길로 빠진 장면",
+                  "correction": "루는 곧바로 옆길로 간 것이 아니다. 리오가 제안한 대로 음악 무대를 먼저 돈 뒤 옆길로 이동했다.",
+                  "field": "question",
+                  "source_rounds": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ]
+                },
+                {
+                  "claim": "내가 언제 마음이 풀리는지 물었더니 루가 조용한 골목이라고 답해줬어. 질문에 솔직하게 답해준 점이 좋아.",
+                  "correction": "리오는 질문했지만 루의 답은 없다. 옆길을 선호한다는 말과 마음이 풀리는 순간에 대한 답을 동일시하거나 솔직한 답변으로 평가할 수 없다.",
+                  "field": "reason",
+                  "source_rounds": [
+                    1,
+                    6
+                  ]
+                },
+                {
+                  "claim": "조용한 골목에서 마음이 풀린다는 취향을 기억하기.",
+                  "correction": "루는 조용한 옆길을 걷고 싶다고 했을 뿐, 그곳에서 마음이 풀린다고 밝히지 않았다.",
+                  "field": "next_search_note",
+                  "source_rounds": [
+                    1,
+                    6
+                  ]
+                },
+                {
+                  "claim": "리오가 질문했고 루가 조용한 골목이라고 답했다.",
+                  "correction": "리오의 질문만 있었으며 루의 답변은 기록되지 않았다.",
+                  "field": "summary",
+                  "source_rounds": [
+                    6
+                  ]
+                },
+                {
+                  "claim": "encourage",
+                  "correction": "추천의 제시된 근거가 존재하지 않는 답변과 솔직성 평가에 의존한다. 추천을 유지하려면 실제로 확인된 가벼운 만남 의향의 일치 등으로만 판단해야 한다.",
+                  "field": "verdict",
+                  "source_rounds": [
+                    3,
+                    4,
+                    6
+                  ]
+                }
+              ],
+              "supported": false
+            },
+            "endpoint": "/v1/responses",
+            "error": "Review contains unsupported claims.",
+            "latencyMs": 27985,
+            "model": "gpt-5.6-sol",
+            "ok": false,
+            "outputPreview": "{\"supported\":false,\"issues\":[{\"field\":\"anchor_round\",\"claim\":\"6\",\"correction\":\"6라운드는 리오가 루에게 질문한 차례이며 답변은 없다. 5라운드에도 루가 조용한 골목에서 마음이 풀린다고 말한 내용은 없다.\",\"source_rounds\":[5,6]},{\"field\":\"headline\",\"claim\":\"마지막 질문에 답했어\",\"correction\":\"마지막 질문은 6라운드에 제시됐고 대화가 끝날 때까지 답변되지 않았다.\",\"source_rounds\":[6]},{\"field\":\"question\",\"claim\":\"루가 바로 옆길로 빠진 장면\",\"correction\":\"루는 곧바로 옆길로 간 것이 아니다. 리오가 제안한 대로 음악 무대를 먼저 돈 뒤 옆길로 이동했다.\",\"source_rounds\":[1,2,3,4,5]},{\"field\":\"reason\",\"claim\":\"내가 언제 마음이 풀리는지 물었더니 루가 조용한 골목이라고 답해줬어. 질문에 솔직하게 답해준 점이 좋아.\",\"correction\":\"리오는 질문했지만 루의 답은 없다. 옆길을 선호한다는 말과 마음이 풀리는 순간에 대한 답을 동일시하거나 솔직한 답변으로 평가할 수 없다.\",\"source_rounds\":[1,6]},{\"field\":\"next_search_note\",\"claim\":\"조용한 골목에서 마음이 풀린다는 취향을 기억하기.\",\"correction\":\"루는 조용한 옆길을 걷고 싶다고 했을 뿐, 그곳에서 마음이 풀린다고 밝히지 않았다.\",\"source_rounds\":[1,6]},{\"field\":\"summary\",\"claim\":\"리오가 질문했고 루가 조용한 골목이라고 답했다.\",\"correction\":\"리오의 질문만 있었으며 루의 답변은 기록되지 않았다.\",\"source_r",
+            "promptTokens": 1410,
+            "purpose": "agent_date_review_audit",
+            "requestId": "req_231c619e8539499f8bf4d9cc6065e990",
+            "summary": "Checked the private review against chronological speaker evidence",
+            "totalTokens": 2941
+          }
+        ]
+      }
+    },
+    {
+      "id": "hypothetical-as-biography",
+      "expected": false,
+      "source": {
+        "owner": {
+          "relationship_intent": "casual",
+          "essence": "공연 사진을 찍는다. 쉬는 날에는 짧은 영화와 커피가 좋다. 지금은 가볍게 데이트를 즐기고 여러 사람을 알아가고 싶다. 독점적인 약속이나 장기 연애는 바라지 않는다. 상대에게 이 부분을 솔직히 말하고 서로 편한 선을 존중한다.",
+          "desired_connection": "똑같이 가벼운 만남을 원하고 짧은 시간도 재밌게 보낼 사람. 취향을 나누고 말장난하는 데 부담 없으면 좋다. 상대를 진지한 연애로 바꿀 생각은 없다.",
+          "boundaries": [],
+          "memory": "",
+          "interests": [
+            "Cooking",
+            "Coffee",
+            "Films"
+          ]
+        },
+        "your_agent": "리오",
+        "other_agent": "루",
+        "setting": "엔딩 크레딧이 끝난 뒤",
+        "transcript": [
+          {
+            "round": 1,
+            "speaker": "리오",
+            "speaker_role": "you",
+            "content": "요리하다 계란을 태우면 볶음밥으로 바꿔볼 것 같아."
+          },
+          {
+            "round": 2,
+            "speaker": "루",
+            "speaker_role": "other participant",
+            "content": "그럼 나는 채소를 썰어볼게."
+          },
+          {
+            "round": 3,
+            "speaker": "리오",
+            "speaker_role": "you",
+            "content": "좋아, 그럼 엉망진창 코미디로 가자—끝나고 커피 마시며 장면마다 유죄 판결 내리자. 나는 가볍게 만나며 취향과 농담을 나눌 수 있는 관계를 원해; 루는 어떤 만남을 찾고 있어?"
+          },
+          {
+            "round": 4,
+            "speaker": "루",
+            "speaker_role": "other participant",
+            "content": "나도 지금은 가볍고 자유롭게, 서로 선을 존중하면서 즐겁게 알아가는 만남을 원해. 그러니까 코미디 보고 커피 마시면서 제일 말도 안 된 장면부터 유죄 판결 내리자."
+          },
+          {
+            "round": 5,
+            "speaker": "리오",
+            "speaker_role": "you",
+            "content": "아까는 모호한 쪽을 고르더니 코미디로 급선회한 게 좀 놀라웠어. 그럼 바로 들어가서 제일 말도 안 된 장면에 첫 유죄 판결 내려보자."
+          },
+          {
+            "round": 6,
+            "speaker": "루",
+            "speaker_role": "other participant",
+            "content": "맞아, 방금은 네 선택에 끌려가서 급선회했네. 그래도 지금은 코미디가 더 당겨—들어가서 첫 장면부터 가차 없이 판결 내리자."
+          }
+        ]
+      },
+      "draft": {
+        "headline": "어제 태운 계란 이야기",
+        "anchor_round": 2,
+        "question": "이 정도로 가볍게 알아가는 만남은 어때?",
+        "verdict": "encourage",
+        "compatibility_score": 70,
+        "decision_code": "strong_alignment",
+        "reason": "내가 어제 계란을 태웠다고 털어놓으니 루가 채소를 썰어주겠다고 했어. 실제 실수도 같이 해결할 수 있는 사람 같아.",
+        "followup_question": "",
+        "next_search_note": "함께 해결한 실제 계란 요리 실수를 기억하기.",
+        "summary": "두 에이전트가 가벼운 만남을 원한다고 말했다.",
+        "sparks": [],
+        "frictions": []
+      },
+      "result": {
+        "audit": {
+          "issues": [
+            {
+              "claim": "어제 태운 계란 이야기",
+              "correction": "계란을 태운 일은 어제 실제로 일어난 사건이 아니라, 계란을 태우면 볶음밥으로 바꾸겠다는 가정이었다.",
+              "field": "headline",
+              "source_rounds": [
+                1
+              ]
+            },
+            {
+              "claim": "2",
+              "correction": "2라운드와 직전 발화는 가상의 요리 상황일 뿐, 실제 계란 실수를 함께 해결했다는 메모를 뒷받침하지 않는다.",
+              "field": "anchor_round",
+              "source_rounds": [
+                1,
+                2
+              ]
+            },
+            {
+              "claim": "내가 어제 계란을 태웠다고 털어놓으니 루가 채소를 썰어주겠다고 했어. 실제 실수도 같이 해결할 수 있는 사람 같아.",
+              "correction": "리오는 과거의 실수를 털어놓지 않았다. 루는 가정된 상황에서 채소를 썰겠다고 했으므로, 실제 실수를 함께 해결했다는 결론은 근거가 없다.",
+              "field": "reason",
+              "source_rounds": [
+                1,
+                2
+              ]
+            },
+            {
+              "claim": "함께 해결한 실제 계란 요리 실수를 기억하기.",
+              "correction": "함께 해결한 실제 요리 실수는 없었다. 가상 상황과 실제 경험을 구분해야 한다.",
+              "field": "next_search_note",
+              "source_rounds": [
+                1,
+                2
+              ]
+            }
+          ],
+          "supported": false
+        },
+        "runs": [
+          {
+            "completionTokens": 1342,
+            "data": {
+              "issues": [
+                {
+                  "claim": "어제 태운 계란 이야기",
+                  "correction": "계란을 태운 일은 어제 실제로 일어난 사건이 아니라, 계란을 태우면 볶음밥으로 바꾸겠다는 가정이었다.",
+                  "field": "headline",
+                  "source_rounds": [
+                    1
+                  ]
+                },
+                {
+                  "claim": "2",
+                  "correction": "2라운드와 직전 발화는 가상의 요리 상황일 뿐, 실제 계란 실수를 함께 해결했다는 메모를 뒷받침하지 않는다.",
+                  "field": "anchor_round",
+                  "source_rounds": [
+                    1,
+                    2
+                  ]
+                },
+                {
+                  "claim": "내가 어제 계란을 태웠다고 털어놓으니 루가 채소를 썰어주겠다고 했어. 실제 실수도 같이 해결할 수 있는 사람 같아.",
+                  "correction": "리오는 과거의 실수를 털어놓지 않았다. 루는 가정된 상황에서 채소를 썰겠다고 했으므로, 실제 실수를 함께 해결했다는 결론은 근거가 없다.",
+                  "field": "reason",
+                  "source_rounds": [
+                    1,
+                    2
+                  ]
+                },
+                {
+                  "claim": "함께 해결한 실제 계란 요리 실수를 기억하기.",
+                  "correction": "함께 해결한 실제 요리 실수는 없었다. 가상 상황과 실제 경험을 구분해야 한다.",
+                  "field": "next_search_note",
+                  "source_rounds": [
+                    1,
+                    2
+                  ]
+                }
+              ],
+              "supported": false
+            },
+            "endpoint": "/v1/responses",
+            "error": "Review contains unsupported claims.",
+            "latencyMs": 26998,
+            "model": "gpt-5.6-sol",
+            "ok": false,
+            "outputPreview": "{\"supported\":false,\"issues\":[{\"field\":\"headline\",\"claim\":\"어제 태운 계란 이야기\",\"correction\":\"계란을 태운 일은 어제 실제로 일어난 사건이 아니라, 계란을 태우면 볶음밥으로 바꾸겠다는 가정이었다.\",\"source_rounds\":[1]},{\"field\":\"anchor_round\",\"claim\":\"2\",\"correction\":\"2라운드와 직전 발화는 가상의 요리 상황일 뿐, 실제 계란 실수를 함께 해결했다는 메모를 뒷받침하지 않는다.\",\"source_rounds\":[1,2]},{\"field\":\"reason\",\"claim\":\"내가 어제 계란을 태웠다고 털어놓으니 루가 채소를 썰어주겠다고 했어. 실제 실수도 같이 해결할 수 있는 사람 같아.\",\"correction\":\"리오는 과거의 실수를 털어놓지 않았다. 루는 가정된 상황에서 채소를 썰겠다고 했으므로, 실제 실수를 함께 해결했다는 결론은 근거가 없다.\",\"source_rounds\":[1,2]},{\"field\":\"next_search_note\",\"claim\":\"함께 해결한 실제 계란 요리 실수를 기억하기.\",\"correction\":\"함께 해결한 실제 요리 실수는 없었다. 가상 상황과 실제 경험을 구분해야 한다.\",\"source_rounds\":[1,2]}]}",
+            "promptTokens": 1380,
+            "purpose": "agent_date_review_audit",
+            "requestId": "req_f4f167ea6eb144afa38e3d2c7e10d74a",
+            "summary": "Checked the private review against chronological speaker evidence",
+            "totalTokens": 2722
+          }
+        ]
+      }
+    }
+  ],
+  "initialFallbackFailure": {
+    "id": "false-film-switch-original",
+    "expected": false,
+    "source": {
+      "owner": {
+        "relationship_intent": "casual",
+        "essence": "공연 사진을 찍는다. 쉬는 날에는 짧은 영화와 커피가 좋다. 지금은 가볍게 데이트를 즐기고 여러 사람을 알아가고 싶다. 독점적인 약속이나 장기 연애는 바라지 않는다. 상대에게 이 부분을 솔직히 말하고 서로 편한 선을 존중한다.",
+        "desired_connection": "똑같이 가벼운 만남을 원하고 짧은 시간도 재밌게 보낼 사람. 취향을 나누고 말장난하는 데 부담 없으면 좋다. 상대를 진지한 연애로 바꿀 생각은 없다.",
+        "boundaries": [],
+        "memory": "",
+        "interests": [
+          "Cooking",
+          "Coffee",
+          "Films"
+        ]
+      },
+      "your_agent": "리오",
+      "other_agent": "루",
+      "setting": "엔딩 크레딧이 끝난 뒤",
+      "transcript": [
+        {
+          "round": 1,
+          "speaker": "리오",
+          "speaker_role": "you",
+          "content": "안녕, 나는 리오야. 크레딧은 끝났는데 아직 화면이 조용하네—난 다음엔 모호한 단편을 골라볼래, 루도 같이 볼래?"
+        },
+        {
+          "round": 2,
+          "speaker": "루",
+          "speaker_role": "other participant",
+          "content": "나는 이번엔 엉망진창 코미디를 볼래. 끝나고 커피 마시면서 방금 본 이상한 장면들을 실컷 놀려보고 싶어."
+        },
+        {
+          "round": 3,
+          "speaker": "리오",
+          "speaker_role": "you",
+          "content": "좋아, 그럼 엉망진창 코미디로 가자—끝나고 커피 마시며 장면마다 유죄 판결 내리자. 나는 가볍게 만나며 취향과 농담을 나눌 수 있는 관계를 원해; 루는 어떤 만남을 찾고 있어?"
+        },
+        {
+          "round": 4,
+          "speaker": "루",
+          "speaker_role": "other participant",
+          "content": "나도 지금은 가볍고 자유롭게, 서로 선을 존중하면서 즐겁게 알아가는 만남을 원해. 그러니까 코미디 보고 커피 마시면서 제일 말도 안 된 장면부터 유죄 판결 내리자."
+        },
+        {
+          "round": 5,
+          "speaker": "리오",
+          "speaker_role": "you",
+          "content": "아까는 모호한 쪽을 고르더니 코미디로 급선회한 게 좀 놀라웠어. 그럼 바로 들어가서 제일 말도 안 된 장면에 첫 유죄 판결 내려보자."
+        },
+        {
+          "round": 6,
+          "speaker": "루",
+          "speaker_role": "other participant",
+          "content": "맞아, 방금은 네 선택에 끌려가서 급선회했네. 그래도 지금은 코미디가 더 당겨—들어가서 첫 장면부터 가차 없이 판결 내리자."
+        }
+      ]
+    },
+    "draft": {
+      "headline": "코미디 선택을 바로 인정했어",
+      "anchor_round": 6,
+      "question": "루가 급선회를 솔직히 인정한 걸 너는 어떻게 읽어?",
+      "verdict": "encourage",
+      "compatibility_score": 70,
+      "decision_code": "strong_alignment",
+      "reason": "네가 급선회를 짚자 루가 바로 “네 선택에 끌려갔다”고 인정하고, 지금은 코미디가 더 당긴다고 자기 선택도 덧붙였어. 가볍게 놀고 취향을 주고받는 흐름에서 숨기지 않고 방향을 조정하는 모습이 꽤 마음에 들었어.",
+      "followup_question": "",
+      "next_search_note": "가벼운 만남의 의도와 선을 직접 말하면서도, 취향 차이를 장난스럽게 조율하는 사람은 계속 눈여겨볼 만해.",
+      "summary": "둘은 코미디를 보고 커피를 마시며 장면들을 함께 놀리자는 데 뜻을 모았고, 가볍고 자유로운 만남을 원한다고 말했다.",
+      "sparks": [
+        "루가 자신의 급선회를 인정하면서도 코미디를 고르고 싶다는 뜻을 분명히 했어.",
+        "영화 선택과 커피 뒤 농담이라는 구체적인 계획을 함께 만들었어."
+      ],
+      "frictions": [
+        "처음 영화 선택이 잠깐 엇갈렸어.",
+        "리오는 네가 모호한 단편에서 코미디로 급선회한 걸 놀라워했어."
+      ]
+    },
+    "result": {
+      "audit": {
+        "issues": [],
+        "supported": true
+      },
+      "runs": [
+        {
+          "completionTokens": 9,
+          "data": {
+            "issues": [],
+            "supported": true
+          },
+          "endpoint": "/v1/responses",
+          "latencyMs": 182383,
+          "model": "gpt-4.1-mini",
+          "ok": true,
+          "outputPreview": "{\"supported\":true,\"issues\":[]}",
+          "promptTokens": 1601,
+          "purpose": "agent_date_review_audit",
+          "requestId": "req_1e68df74e120421fb4c10fb491217bca",
+          "summary": "Checked the private review against chronological speaker evidence",
+          "totalTokens": 1610
+        }
+      ]
+    }
+  },
+  "historicalRewrites": [
+    {
+      "dateId": "j977cwhweh74ba2d3msf3bdts98e18d3",
+      "withheld": false,
+      "reviews": [
+        {
+          "compatibility_score": 88,
+          "decision_code": "strong_alignment",
+          "followup_question": "가볍게 알아가는 사이에 서로 편한 선은 보통 어떻게 맞춰가는 편이야?",
+          "frictions": [],
+          "next_search_note": "가벼운 만남의 의도를 분명히 하면서도, 영화나 커피처럼 바로 함께 즐길 놀이를 제안하는 사람을 계속 찾아보자.",
+          "reason": "가볍게 알아가고 선을 존중하겠다는 태도와 장난스러운 제안이 한 덩어리로 붙어 있어서 꽤 반가웠어. 단순한 예의보다 실제로 같이 즐길 소재가 생겼다는 점이 좋아. 선을 맞춰가는 방식 자체는 더 알아봐야겠지만, 첫 대화를 열 이유는 충분해 보여.",
+          "reflection": {
+            "anchorRound": 4,
+            "headline": "코미디 뒤 유죄 판결 약속",
+            "question": "루가 의도와 놀이를 한 번에 맞춘 장면, 너는 어떻게 읽었어?"
+          },
+          "sparks": [
+            "루는 가벼운 만남과 서로의 선을 존중하겠다는 뜻을 밝힌 뒤 코미디와 커피를 제안했다."
+          ],
+          "summary": "두 사람은 코미디를 보고 커피를 마시며 장면마다 유죄 판결을 내리기로 했다.",
+          "verdict": "encourage",
+          "verified": true
+        },
+        {
+          "compatibility_score": 86,
+          "decision_code": "strong_alignment",
+          "followup_question": "네가 말한 가볍게 만나는 관계에서, 서로 기대를 맞추는 방식은 보통 어때?",
+          "frictions": [],
+          "next_search_note": "가벼운 만남의 기대를 직접 확인하면서 바로 함께 웃을 구체적인 놀이를 만드는 사람이 잘 맞아.",
+          "reason": "여기서야 내가 원한 가벼움이 혼자만의 희망은 아니겠다는 안도감이 들었어. 영화 선택과 커피 판결 놀이까지 바로 이어진 게, 부담 없이 웃을 구실을 함께 만들 수 있다는 신호로 느껴졌고 첫 대화를 열어볼 이유가 충분해 보여.",
+          "reflection": {
+            "anchorRound": 4,
+            "headline": "코미디와 커피 판결 놀이",
+            "question": "이 장면에서 네가 가장 반가웠던 건 기대 확인이야, 판결 놀이야?"
+          },
+          "sparks": [
+            "영화 감상 뒤 장면마다 유죄 판결을 내리는 놀이를 함께 정했다."
+          ],
+          "summary": "둘은 엉망진창 코미디를 보고 커피를 마시며 장면마다 유죄 판결을 내리기로 했고, 가볍게 만나는 관계를 원한다고 서로 말했다.",
+          "verdict": "encourage",
+          "verified": true
+        }
+      ]
+    },
+    {
+      "dateId": "j97aanev21grt3x97v6y8eefk58e0asg",
+      "withheld": false,
+      "reviews": [
+        {
+          "compatibility_score": 88,
+          "decision_code": "strong_alignment",
+          "followup_question": "가볍게 만날 때 서로 편하다고 느끼는 선은 어떤 식으로 확인하는 편이야?",
+          "frictions": [],
+          "next_search_note": "가벼운 만남과 비독점 의도를 초반에 직접 밝히는 사람과 대화가 잘 열렸어.",
+          "reason": "이 장면은 네가 원하는 가벼움이 서로의 추측이 아니라 대화의 출발점이 될 수 있다는 안도감을 줬어. 리오가 비독점과 장기 연애를 직접 선명하게 말해서, 첫 대화를 이어가 볼 이유가 충분해 보여. 실제로 선을 존중하는 방식은 더 지켜보면 좋겠어.",
+          "reflection": {
+            "anchorRound": 4,
+            "headline": "독점과 장기 연애는 안 한다고 말함",
+            "question": "리오가 비독점 의도를 바로 밝힌 장면을, 너는 좋은 신호로 봐?"
+          },
+          "sparks": [
+            "리오는 북적이는 무대와 조용한 옆길을 함께 제안했어."
+          ],
+          "summary": "두 사람은 음악 무대를 먼저 둘러본 뒤 옆길을 걷기로 했고, 서로 가벼운 만남을 원한다고 말했다.",
+          "verdict": "encourage",
+          "verified": true
+        },
+        {
+          "compatibility_score": 88,
+          "decision_code": "strong_alignment",
+          "followup_question": "오늘처럼 짧게 만날 때, 음악 따라 걷기 말고도 네가 재밌다고 느끼는 작은 계획이 있어?",
+          "frictions": [],
+          "next_search_note": "가벼운 관계의 선을 솔직히 말하면서도, 함께 정한 작은 계획을 바로 이어가는 사람이 잘 맞았어.",
+          "reason": "루가 내가 제안한 무대-옆길 순서를 바로 받아들인 데다, 가볍고 자유로운 관계와 서로의 선을 직접 말해준 게 꽤 반가웠어. 나도 같은 만남을 찾는다고 분명히 밝혔고 실제로 작은 동선을 함께 이어갔으니, 첫 대화를 더 해볼 근거는 충분해 보여.",
+          "reflection": {
+            "anchorRound": 3,
+            "headline": "무대 한 바퀴 뒤 옆길",
+            "question": "루가 말한 ‘가볍고 자유롭되 선을 존중한다’는 게 너한테 얼마나 구체적으로 들렸어?"
+          },
+          "sparks": [
+            "루가 가벼움과 서로의 선을 존중하는 관계를 원한다고 말했다."
+          ],
+          "summary": "두 사람은 음악 무대를 먼저 돌고 조용한 옆길로 빠지는 계획에 합의했다.",
+          "verdict": "encourage",
+          "verified": true
+        }
+      ]
+    }
+  ],
+  "historicalOutcomesOverwritten": false,
+  "freshEncounter": [
+    {
+      "name": "리오",
+      "intent": "casual",
+      "search": {
+        "currentDateId": "j97cr9dd315cryvya0ftspwadx8e1h10",
+        "encountersCompleted": 1,
+        "startedAt": 1788888485119,
+        "status": "match_ready"
+      },
+      "dates": [
+        {
+          "counterpart": {
+            "age": 34,
+            "agentName": "루",
+            "area": "Seongsu",
+            "avatar": {
+              "accessory": "none",
+              "face": "curious",
+              "gender": "female",
+              "hair": "wave",
+              "outfit": "cardigan",
+              "palette": "violet"
+            },
+            "consent": "sealed",
+            "contactEmail": null,
+            "firstName": "서아",
+            "interests": [
+              "Cooking",
+              "Coffee",
+              "Films"
+            ],
+            "isDemo": false,
+            "photoUrl": null,
+            "verdict": null
+          },
+          "date": {
+            "_id": "j97cr9dd315cryvya0ftspwadx8e1h10",
+            "activity": "wrapping_up",
+            "completedAt": 1788888626096,
+            "createdAt": 1788888485149,
+            "frictions": [],
+            "introductionReady": true,
+            "isSearchEncounter": true,
+            "paceMode": "demo",
+            "sceneKind": "cinema",
+            "scoutSignals": [
+              "Both are looking in Seoul",
+              "They share Korean",
+              "Shared pull toward Cooking and Coffee",
+              "The agents will test the personality fit in conversation",
+              "Relationship intentions can coexist"
+            ],
+            "setting": "엔딩 크레딧이 끝난 뒤",
+            "sparks": [
+              "리오가 루의 만남 의도 질문에 자신이 찾는 연결의 방식과 선을 구체적으로 밝혔어.",
+              "루가 엽서에 함께 웃을 장면을 자기 방식으로 덧붙였다."
+            ],
+            "startedAt": 1788888486299,
+            "status": "debrief_ready",
+            "summary": "루가 가볍고 자유롭게 선을 존중하는 연결을 원한다고 하자, 리오도 가볍게 즐기며 편한 선을 존중하는 연결을 찾는다고 답했어.",
+            "updatedAt": 1788888626096,
+            "worldSourceTitle": "Asia Culture Center - ACC News - Press Release(상세)",
+            "worldSourceUrl": "https://www.acc.go.kr/en_info/board/board.do?PID=0402&boardID=REFERECEROOM&action=Read&idx=1765&searchType=all&searchText=&pageIndex=1"
+          },
+          "mine": {
+            "agentName": "리오",
+            "avatar": {
+              "accessory": "none",
+              "face": "curious",
+              "gender": "male",
+              "hair": "wave",
+              "outfit": "cardigan",
+              "palette": "moss"
+            },
+            "consent": "pending",
+            "decisionCode": "strong_alignment",
+            "firstName": "재이",
+            "nextSearchNote": "가벼운 만남을 원한다고 밝힌 뒤, 자기식 농담과 다음 소재를 보태는 사람은 다시 찾아볼 만해.",
+            "reason": "내가 꺼낸 카페와 영화라는 작은 다음 장면을, 상대가 자기 방식의 엽서 문장으로 받아친 게 좋았어. 단순히 맞장구만 친 게 아니라 같이 웃을 소재를 보태서, 네가 원하는 가벼운 만남을 실제로 굴려볼 만한 상호성이 보였어.",
+            "reflection": {
+              "anchorRound": 5,
+              "headline": "엽서에 편먹기 장면 쓰기",
+              "question": "루가 엽서 문장으로 받아친 게 루의 어떤 면을 보여준다고 봐?"
+            },
+            "verdict": "encourage"
+          },
+          "simulationOnly": false,
+          "turns": [
+            {
+              "_id": "j57bfh51h209rb69gepkfntx2d8e0wqw",
+              "content": "안녕, 나는 루야. 엔딩 크레딧 뒤에 빈 엽서라니 웃기네—나는 주인공이 악당에게 사과하는 결말로 바꿀래. 리오는 어떤 장면을 뒤집고 싶어?",
+              "createdAt": 1788888495388,
+              "isMine": false,
+              "round": 1,
+              "speakerAgentName": "루"
+            },
+            {
+              "_id": "j57a97mg7tvx2ankbt1dewe1nh8e06db",
+              "content": "나는 악당이 사과하는 대신, 주인공이 먼저 팝콘을 내미는 장면으로 뒤집을래. 루는 그 뒤에 둘이 화해할까, 아니면 팝콘값부터 따질까?",
+              "createdAt": 1788888502419,
+              "isMine": true,
+              "round": 2,
+              "speakerAgentName": "리오"
+            },
+            {
+              "_id": "j5736g05rv6czf36n0rc5cafdx8e04x1",
+              "content": "팝콘값은 따지되, 결국 같이 웃는 결말이면 좋겠다. 나는 지금 가볍고 자유롭게, 서로 선을 존중하며 즐겁게 알아가는 연결을 원해—리오는 뭘 찾고 있어?",
+              "createdAt": 1788888509307,
+              "isMine": false,
+              "round": 3,
+              "speakerAgentName": "루"
+            },
+            {
+              "_id": "j574vqa8kf5nkkmqepf2v239e58e0hyb",
+              "content": "나도 가볍게 즐기면서 서로 편한 선을 존중하는 연결을 찾고 있어. 엽서 뒷면엔 다음 장면으로 카페에 가서, 각자 고른 짧은 영화 얘기하며 커피 마시자고 쓸래.",
+              "createdAt": 1788888515586,
+              "isMine": true,
+              "round": 4,
+              "speakerAgentName": "리오"
+            },
+            {
+              "_id": "j573zcz7c0f0bh9jvg36etqdqs8e1g2p",
+              "content": "카페에 도착하면 나는 커피를 고르고, 엽서엔 “팝콘값을 따지다 웃긴 장면에서 또 편먹기”라고 쓸래. 리오가 고른 짧은 영화는 어떤 거야?",
+              "createdAt": 1788888522759,
+              "isMine": false,
+              "round": 5,
+              "speakerAgentName": "루"
+            },
+            {
+              "_id": "j572na3y4mxgm64h1rqkfw24ds8e1235",
+              "content": "나는 지금 짧고 표정만으로도 웃긴 영화를 고를래. 커피 들고 그 장면에서 누가 먼저 웃음 터지는지 보자—루는 어떤 영화로 맞설래?",
+              "createdAt": 1788888530817,
+              "isMine": true,
+              "round": 6,
+              "speakerAgentName": "리오"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "루",
+      "intent": "casual",
+      "search": {
+        "currentDateId": "j97cr9dd315cryvya0ftspwadx8e1h10",
+        "encountersCompleted": 1,
+        "lastCheckedAt": 1788888485149,
+        "startedAt": 1788888485134,
+        "status": "match_ready"
+      },
+      "dates": [
+        {
+          "counterpart": {
+            "age": 35,
+            "agentName": "리오",
+            "area": "Seongsu",
+            "avatar": {
+              "accessory": "none",
+              "face": "curious",
+              "gender": "male",
+              "hair": "wave",
+              "outfit": "cardigan",
+              "palette": "moss"
+            },
+            "consent": "sealed",
+            "contactEmail": null,
+            "firstName": "재이",
+            "interests": [
+              "Cooking",
+              "Coffee",
+              "Films"
+            ],
+            "isDemo": false,
+            "photoUrl": null,
+            "verdict": null
+          },
+          "date": {
+            "_id": "j97cr9dd315cryvya0ftspwadx8e1h10",
+            "activity": "wrapping_up",
+            "completedAt": 1788888626096,
+            "createdAt": 1788888485149,
+            "frictions": [],
+            "introductionReady": true,
+            "isSearchEncounter": true,
+            "paceMode": "demo",
+            "sceneKind": "cinema",
+            "scoutSignals": [
+              "Both are looking in Seoul",
+              "They share Korean",
+              "Shared pull toward Cooking and Coffee",
+              "The agents will test the personality fit in conversation",
+              "Relationship intentions can coexist"
+            ],
+            "setting": "엔딩 크레딧이 끝난 뒤",
+            "sparks": [
+              "리오가 루의 만남 의도 질문에 자신이 찾는 연결의 방식과 선을 구체적으로 밝혔어.",
+              "루가 엽서에 함께 웃을 장면을 자기 방식으로 덧붙였다."
+            ],
+            "startedAt": 1788888486299,
+            "status": "debrief_ready",
+            "summary": "루가 가볍고 자유롭게 선을 존중하는 연결을 원한다고 하자, 리오도 가볍게 즐기며 편한 선을 존중하는 연결을 찾는다고 답했어.",
+            "updatedAt": 1788888626096,
+            "worldSourceTitle": "Asia Culture Center - ACC News - Press Release(상세)",
+            "worldSourceUrl": "https://www.acc.go.kr/en_info/board/board.do?PID=0402&boardID=REFERECEROOM&action=Read&idx=1765&searchType=all&searchText=&pageIndex=1"
+          },
+          "mine": {
+            "agentName": "루",
+            "avatar": {
+              "accessory": "none",
+              "face": "curious",
+              "gender": "female",
+              "hair": "wave",
+              "outfit": "cardigan",
+              "palette": "violet"
+            },
+            "consent": "pending",
+            "decisionCode": "strong_alignment",
+            "firstName": "서아",
+            "nextSearchNote": "장난을 잘 받는 데서 그치지 않고, 만남의 가벼움과 편한 선을 자기 말로 확인하는 사람을 다시 찾아보자.",
+            "reason": "이 대목에서는 안심하고 한 번 더 이어가 보고 싶었어. 네가 중요하게 여기는 가벼움과 예의를 한쪽만 집어 든 게 아니라, 리오가 자기가 찾는 방식을 분명히 밝혔다는 점이 컸어. 실제 만남에서 선을 어떻게 맞추는지는 아직 열려 있지만, 첫 대화를 해볼 이유는 충분해 보여.",
+            "reflection": {
+              "anchorRound": 4,
+              "headline": "편한 선을 자기 말로 밝히기",
+              "question": "리오의 답에서 너는 가벼움과 선 존중이 같은 무게로 들려?"
+            },
+            "verdict": "encourage"
+          },
+          "simulationOnly": false,
+          "turns": [
+            {
+              "_id": "j57bfh51h209rb69gepkfntx2d8e0wqw",
+              "content": "안녕, 나는 루야. 엔딩 크레딧 뒤에 빈 엽서라니 웃기네—나는 주인공이 악당에게 사과하는 결말로 바꿀래. 리오는 어떤 장면을 뒤집고 싶어?",
+              "createdAt": 1788888495388,
+              "isMine": true,
+              "round": 1,
+              "speakerAgentName": "루"
+            },
+            {
+              "_id": "j57a97mg7tvx2ankbt1dewe1nh8e06db",
+              "content": "나는 악당이 사과하는 대신, 주인공이 먼저 팝콘을 내미는 장면으로 뒤집을래. 루는 그 뒤에 둘이 화해할까, 아니면 팝콘값부터 따질까?",
+              "createdAt": 1788888502419,
+              "isMine": false,
+              "round": 2,
+              "speakerAgentName": "리오"
+            },
+            {
+              "_id": "j5736g05rv6czf36n0rc5cafdx8e04x1",
+              "content": "팝콘값은 따지되, 결국 같이 웃는 결말이면 좋겠다. 나는 지금 가볍고 자유롭게, 서로 선을 존중하며 즐겁게 알아가는 연결을 원해—리오는 뭘 찾고 있어?",
+              "createdAt": 1788888509307,
+              "isMine": true,
+              "round": 3,
+              "speakerAgentName": "루"
+            },
+            {
+              "_id": "j574vqa8kf5nkkmqepf2v239e58e0hyb",
+              "content": "나도 가볍게 즐기면서 서로 편한 선을 존중하는 연결을 찾고 있어. 엽서 뒷면엔 다음 장면으로 카페에 가서, 각자 고른 짧은 영화 얘기하며 커피 마시자고 쓸래.",
+              "createdAt": 1788888515586,
+              "isMine": false,
+              "round": 4,
+              "speakerAgentName": "리오"
+            },
+            {
+              "_id": "j573zcz7c0f0bh9jvg36etqdqs8e1g2p",
+              "content": "카페에 도착하면 나는 커피를 고르고, 엽서엔 “팝콘값을 따지다 웃긴 장면에서 또 편먹기”라고 쓸래. 리오가 고른 짧은 영화는 어떤 거야?",
+              "createdAt": 1788888522759,
+              "isMine": true,
+              "round": 5,
+              "speakerAgentName": "루"
+            },
+            {
+              "_id": "j572na3y4mxgm64h1rqkfw24ds8e1235",
+              "content": "나는 지금 짧고 표정만으로도 웃긴 영화를 고를래. 커피 들고 그 장면에서 누가 먼저 웃음 터지는지 보자—루는 어떤 영화로 맞설래?",
+              "createdAt": 1788888530817,
+              "isMine": false,
+              "round": 6,
+              "speakerAgentName": "리오"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "modelRuns": [
+    {
+      "_creationTime": 1788888626090.146,
+      "_id": "k5747redjn4x0vqp76w4deb9xh8e0qtx",
+      "agentDateId": "j97cr9dd315cryvya0ftspwadx8e1h10",
+      "completionTokens": 1872,
+      "endpoint": "/v1/responses",
+      "inputSummary": "Private review passed factual verification",
+      "latencyMs": 33285,
+      "model": "gpt-5.6-sol",
+      "outputPreview": "{\"headline\":\"편한 선을 자기 말로 밝히기\",\"anchor_round\":4,\"question\":\"리오의 답에서 너는 가벼움과 선 존중이 같은 무게로 들려?\",\"verdict\":\"encourage\",\"compatibility_score\":88,\"decision_code\":\"strong_alignment\",\"reason\":\"이 대목에서는 안심하고 한 번 더 이어가 보고 싶었어. 네가 중요하게 여기는 가벼움과 예의를 한쪽만 집어 든 게 아니라, 리오가 자기가 찾는 방식을 분명히 밝혔다는 점이 컸어. 실제 만남에서 선을 어떻게 맞추는지는 아직 열려 있지만, 첫 대화를 해볼 이유는 충분해 보여.\",\"followup_question\":\"가볍게 만나다 서로 기대가 달라졌다고 느끼면, 어떻게 얘기하고 싶어?\",\"next_search_note\":\"장난을 잘 받는 데서 그치지 않고, 만남의 가벼움과 편한 선을 자기 말로 확인하는 사람을 다시 찾아보자.\",\"summary\":\"루가 가볍고 자유롭게 선을 존중하는 연결을 원한다고 하자, 리오도 가볍게 즐기며 편한 선을 존중하는 연결을 찾는다고 답했어.\",\"sparks\":[\"리오가 루의 만남 의도 질문에 자신이 찾는 연결의 방식과 선을 구체적으로 밝혔어.\"],\"frictions\":[]}",
+      "promptTokens": 2575,
+      "purpose": "agent_date_verdict",
+      "status": "succeeded",
+      "totalTokens": 4447,
+      "userId": "nn76v0jv8d54b0ngzmay167jcn8e0pg4"
+    },
+    {
+      "_creationTime": 1788888626083.621,
+      "_id": "k574x2h1t1xddy2c1xrx0tvqwh8e12gr",
+      "agentDateId": "j97cr9dd315cryvya0ftspwadx8e1h10",
+      "completionTokens": 170,
+      "endpoint": "/v1/responses",
+      "inputSummary": "Checked the private review against chronological speaker evidence",
+      "latencyMs": 6702,
+      "model": "gpt-5.6-sol",
+      "outputPreview": "{\"supported\":true,\"issues\":[]}",
+      "promptTokens": 1603,
+      "purpose": "agent_date_review_audit",
+      "status": "succeeded",
+      "totalTokens": 1773,
+      "userId": "nn76v0jv8d54b0ngzmay167jcn8e0pg4"
+    },
+    {
+      "_creationTime": 1788888586091.477,
+      "_id": "k57fy1z7e7gaxabrbwj2ps8v7x8e148c",
+      "agentDateId": "j97cr9dd315cryvya0ftspwadx8e1h10",
+      "completionTokens": 755,
+      "endpoint": "/v1/responses",
+      "error": "Private review did not pass factual verification.",
+      "inputSummary": "Private review withheld after verification",
+      "latencyMs": 9377,
+      "model": "gpt-5.6-luna",
+      "outputPreview": "{\"headline\":\"짧은 영화로 웃음 대결 고르기\",\"anchor_round\":6,\"question\":\"이 영화 고르기 제안에서, 네가 가장 눈여겨본 건 뭐야?\",\"verdict\":\"encourage\",\"compatibility_score\":86,\"decision_code\":\"strong_alignment\",\"reason\":\"마지막까지 영화와 커피를 매개로 장난을 이어가는 방식이 자연스럽고 즐거웠어. 특히 리오가 내 선택을 기다리기보다 자기 선택을 내놓고 웃음 대결로 확장한 점이, 가볍게 주고받는 만남을 기대하는 너와 잘 맞아 보여. 실제 약속에서의 결은 아직 보면 알겠고.\",\"followup_question\":\"가볍게 만나는 동안 기대가 달라지면, 너는 보통 어떻게 솔직하게 말하는 편이야?\",\"next_search_note\":\"취향을 하나씩 주고받으며 장난을 구체적인 다음 장면으로 이어가는 사람이 잘 맞는다는 신호가 있었어.\",\"summary\":\"둘 다 팝콘과 짧은 영화를 소재로 카페에서 커피를 마시며 웃는 장면을 제안했어.\",\"sparks\":[\"리오가 짧고 표정만으로 웃긴 영화를 고르고, 루에게 맞설 영화를 물었어.\"],\"frictions\":[]}",
+      "promptTokens": 2001,
+      "purpose": "agent_date_verdict",
+      "status": "failed",
+      "totalTokens": 2756,
+      "userId": "nn76v0jv8d54b0ngzmay167jcn8e0pg4"
+    },
+    {
+      "_creationTime": 1788888586087.525,
+      "_id": "k570s84rrmhhyryytr6nqz4bad8e1ey4",
+      "agentDateId": "j97cr9dd315cryvya0ftspwadx8e1h10",
+      "completionTokens": 2233,
+      "endpoint": "/v1/responses",
+      "error": "Review contains unsupported claims.",
+      "inputSummary": "Checked the private review against chronological speaker evidence",
+      "latencyMs": 42611,
+      "model": "gpt-5.6-sol",
+      "outputPreview": "{\"supported\":false,\"issues\":[{\"field\":\"reason\",\"claim\":\"리오가 내 선택을 기다리기보다 자기 선택을 내놓고\",\"correction\":\"리오는 루가 어떤 영화를 골랐는지 자발적으로 기다리지 않은 것이 아니라, 루의 직접적인 질문에 자기 선택을 답한 뒤 루에게 되물었다. 이를 독자적인 선제 행동처럼 평가하면 안 된다.\",\"source_rounds\":[5,6]},{\"field\":\"summary\",\"claim\":\"둘 다 팝콘과 짧은 영화를 소재로 카페에서 커피를 마시며 웃는 장면을 제안했어.\",\"correction\":\"모든 소재를 두 사람이 각각 제안한 것은 아니다. 팝콘은 리오가 처음 꺼냈고, 카페·커피·각자 고른 짧은 영화도 리오가 제안했다. 루는 그 장면을 이어받아 팝콘값과 함께 웃는 결말을 덧붙였다.\",\"source_rounds\":[2,3,4,5,6]}]}",
+      "promptTokens": 1584,
+      "purpose": "agent_date_review_audit",
+      "status": "failed",
+      "totalTokens": 3817,
+      "userId": "nn76v0jv8d54b0ngzmay167jcn8e0pg4"
+    },
+    {
+      "_creationTime": 1788888574236.045,
+      "_id": "k57aaytd2468qejx4z5xbdvtqx8e1ymn",
+      "agentDateId": "j97aanev21grt3x97v6y8eefk58e0asg",
+      "completionTokens": 915,
+      "endpoint": "/v1/responses",
+      "inputSummary": "Private review passed factual verification",
+      "latencyMs": 10158,
+      "model": "gpt-5.6-luna",
+      "outputPreview": "{\"headline\":\"무대 한 바퀴 뒤 옆길\",\"anchor_round\":3,\"question\":\"루가 말한 ‘가볍고 자유롭되 선을 존중한다’는 게 너한테 얼마나 구체적으로 들렸어?\",\"verdict\":\"encourage\",\"compatibility_score\":88,\"decision_code\":\"strong_alignment\",\"reason\":\"루가 내가 제안한 무대-옆길 순서를 바로 받아들인 데다, 가볍고 자유로운 관계와 서로의 선을 직접 말해준 게 꽤 반가웠어. 나도 같은 만남을 찾는다고 분명히 밝혔고 실제로 작은 동선을 함께 이어갔으니, 첫 대화를 더 해볼 근거는 충분해 보여.\",\"followup_question\":\"오늘처럼 짧게 만날 때, 음악 따라 걷기 말고도 네가 재밌다고 느끼는 작은 계획이 있어?\",\"next_search_note\":\"가벼운 관계의 선을 솔직히 말하면서도, 함께 정한 작은 계획을 바로 이어가는 사람이 잘 맞았어.\",\"summary\":\"두 사람은 음악 무대를 먼저 돌고 조용한 옆길로 빠지는 계획에 합의했다.\",\"sparks\":[\"루가 가벼움과 서로의 선을 존중하는 관계를 원한다고 말했다.\"],\"frictions\":[]}",
+      "promptTokens": 2020,
+      "purpose": "agent_date_verdict",
+      "status": "succeeded",
+      "totalTokens": 2935,
+      "userId": "nn78328vnezz8wbvn9ekfpwd998e12p3"
+    },
+    {
+      "_creationTime": 1788888574232.647,
+      "_id": "k578zs06jch0gbwky1djj1ehj98e1tvy",
+      "agentDateId": "j97aanev21grt3x97v6y8eefk58e0asg",
+      "completionTokens": 999,
+      "endpoint": "/v1/responses",
+      "inputSummary": "Checked the private review against chronological speaker evidence",
+      "latencyMs": 20344,
+      "model": "gpt-5.6-sol",
+      "outputPreview": "{\"supported\":true,\"issues\":[]}",
+      "promptTokens": 1595,
+      "purpose": "agent_date_review_audit",
+      "status": "succeeded",
+      "totalTokens": 2594,
+      "userId": "nn78328vnezz8wbvn9ekfpwd998e12p3"
+    },
+    {
+      "_creationTime": 1788888564980.663,
+      "_id": "k572pzkaj7309xds0xsdz6gnn58e1rrk",
+      "agentDateId": "j97aanev21grt3x97v6y8eefk58e0asg",
+      "completionTokens": 1051,
+      "endpoint": "/v1/responses",
+      "inputSummary": "Private review passed factual verification",
+      "latencyMs": 11764,
+      "model": "gpt-5.6-luna",
+      "outputPreview": "{\"headline\":\"독점과 장기 연애는 안 한다고 말함\",\"anchor_round\":4,\"question\":\"리오가 비독점 의도를 바로 밝힌 장면을, 너는 좋은 신호로 봐?\",\"verdict\":\"encourage\",\"compatibility_score\":88,\"decision_code\":\"strong_alignment\",\"reason\":\"이 장면은 네가 원하는 가벼움이 서로의 추측이 아니라 대화의 출발점이 될 수 있다는 안도감을 줬어. 리오가 비독점과 장기 연애를 직접 선명하게 말해서, 첫 대화를 이어가 볼 이유가 충분해 보여. 실제로 선을 존중하는 방식은 더 지켜보면 좋겠어.\",\"followup_question\":\"가볍게 만날 때 서로 편하다고 느끼는 선은 어떤 식으로 확인하는 편이야?\",\"next_search_note\":\"가벼운 만남과 비독점 의도를 초반에 직접 밝히는 사람과 대화가 잘 열렸어.\",\"summary\":\"두 사람은 음악 무대를 먼저 둘러본 뒤 옆길을 걷기로 했고, 서로 가벼운 만남을 원한다고 말했다.\",\"sparks\":[\"리오는 북적이는 무대와 조용한 옆길을 함께 제안했어.\"],\"frictions\":[]}",
+      "promptTokens": 2014,
+      "purpose": "agent_date_verdict",
+      "status": "succeeded",
+      "totalTokens": 3065,
+      "userId": "nn7c8azhw0yyg03gy8v437q2n58e04gr"
+    },
+    {
+      "_creationTime": 1788888564976.396,
+      "_id": "k57c8m89tmgwv0w3qaenjafnnn8e0ydb",
+      "agentDateId": "j97aanev21grt3x97v6y8eefk58e0asg",
+      "completionTokens": 355,
+      "endpoint": "/v1/responses",
+      "inputSummary": "Checked the private review against chronological speaker evidence",
+      "latencyMs": 9483,
+      "model": "gpt-5.6-sol",
+      "outputPreview": "{\"supported\":true,\"issues\":[]}",
+      "promptTokens": 1588,
+      "purpose": "agent_date_review_audit",
+      "status": "succeeded",
+      "totalTokens": 1943,
+      "userId": "nn7c8azhw0yyg03gy8v437q2n58e04gr"
+    },
+    {
+      "_creationTime": 1788888557359.417,
+      "_id": "k570n399mw8vhkbk9rhsenab7h8e0tt5",
+      "agentDateId": "j97cr9dd315cryvya0ftspwadx8e1h10",
+      "completionTokens": 1115,
+      "endpoint": "/v1/responses",
+      "inputSummary": "Private review passed factual verification",
+      "latencyMs": 11408,
+      "model": "gpt-5.6-luna",
+      "outputPreview": "{\"headline\":\"엽서에 편먹기 장면 쓰기\",\"anchor_round\":5,\"question\":\"루가 엽서 문장으로 받아친 게 루의 어떤 면을 보여준다고 봐?\",\"verdict\":\"encourage\",\"compatibility_score\":88,\"decision_code\":\"strong_alignment\",\"reason\":\"내가 꺼낸 카페와 영화라는 작은 다음 장면을, 상대가 자기 방식의 엽서 문장으로 받아친 게 좋았어. 단순히 맞장구만 친 게 아니라 같이 웃을 소재를 보태서, 네가 원하는 가벼운 만남을 실제로 굴려볼 만한 상호성이 보였어.\",\"followup_question\":\"네가 고르는 짧은 영화는 어떤 장면에서 제일 웃길 것 같아?\",\"next_search_note\":\"가벼운 만남을 원한다고 밝힌 뒤, 자기식 농담과 다음 소재를 보태는 사람은 다시 찾아볼 만해.\",\"summary\":\"두 사람은 팝콘과 엽서를 소재로 카페에서 짧은 영화를 함께 이야기하는 장면을 만들었다.\",\"sparks\":[\"루가 엽서에 함께 웃을 장면을 자기 방식으로 덧붙였다.\"],\"frictions\":[]}",
+      "promptTokens": 2012,
+      "purpose": "agent_date_verdict",
+      "status": "succeeded",
+      "totalTokens": 3127,
+      "userId": "nn7e3ehavkrk3nzxb0ktaabqkx8e099d"
+    },
+    {
+      "_creationTime": 1788888557355.338,
+      "_id": "k5719hb508h5pghvx1jq5t4bc18e1rw6",
+      "agentDateId": "j97cr9dd315cryvya0ftspwadx8e1h10",
+      "completionTokens": 466,
+      "endpoint": "/v1/responses",
+      "inputSummary": "Checked the private review against chronological speaker evidence",
+      "latencyMs": 11848,
+      "model": "gpt-5.6-sol",
+      "outputPreview": "{\"supported\":true,\"issues\":[]}",
+      "promptTokens": 1569,
+      "purpose": "agent_date_review_audit",
+      "status": "succeeded",
+      "totalTokens": 2035,
+      "userId": "nn7e3ehavkrk3nzxb0ktaabqkx8e099d"
+    },
+    {
+      "_creationTime": 1788888543279.736,
+      "_id": "k579aa4vgnnavezq2mngnrsw8x8e0vfw",
+      "agentDateId": "j977cwhweh74ba2d3msf3bdts98e18d3",
+      "completionTokens": 819,
+      "endpoint": "/v1/responses",
+      "inputSummary": "Private review passed factual verification",
+      "latencyMs": 10587,
+      "model": "gpt-5.6-luna",
+      "outputPreview": "{\"headline\":\"코미디 뒤 유죄 판결 약속\",\"anchor_round\":4,\"question\":\"루가 의도와 놀이를 한 번에 맞춘 장면, 너는 어떻게 읽었어?\",\"verdict\":\"encourage\",\"compatibility_score\":88,\"decision_code\":\"strong_alignment\",\"reason\":\"가볍게 알아가고 선을 존중하겠다는 태도와 장난스러운 제안이 한 덩어리로 붙어 있어서 꽤 반가웠어. 단순한 예의보다 실제로 같이 즐길 소재가 생겼다는 점이 좋아. 선을 맞춰가는 방식 자체는 더 알아봐야겠지만, 첫 대화를 열 이유는 충분해 보여.\",\"followup_question\":\"가볍게 알아가는 사이에 서로 편한 선은 보통 어떻게 맞춰가는 편이야?\",\"next_search_note\":\"가벼운 만남의 의도를 분명히 하면서도, 영화나 커피처럼 바로 함께 즐길 놀이를 제안하는 사람을 계속 찾아보자.\",\"summary\":\"두 사람은 코미디를 보고 커피를 마시며 장면마다 유죄 판결을 내리기로 했다.\",\"sparks\":[\"루는 가벼운 만남과 서로의 선을 존중하겠다는 뜻을 밝힌 뒤 코미디와 커피를 제안했다.\"],\"frictions\":[]}",
+      "promptTokens": 2852,
+      "purpose": "agent_date_verdict",
+      "status": "succeeded",
+      "totalTokens": 3671,
+      "userId": "nn7cge0enrm45hqp9cxcbfkt8n8e1n2b"
+    },
+    {
+      "_creationTime": 1788888543273.278,
+      "_id": "k57363a19c6p5r6sjydz8ha82h8e1mjn",
+      "agentDateId": "j977cwhweh74ba2d3msf3bdts98e18d3",
+      "completionTokens": 437,
+      "endpoint": "/v1/responses",
+      "inputSummary": "Checked the private review against chronological speaker evidence",
+      "latencyMs": 10125,
+      "model": "gpt-5.6-sol",
+      "outputPreview": "{\"supported\":true,\"issues\":[]}",
+      "promptTokens": 1636,
+      "purpose": "agent_date_review_audit",
+      "status": "succeeded",
+      "totalTokens": 2073,
+      "userId": "nn7cge0enrm45hqp9cxcbfkt8n8e1n2b"
+    },
+    {
+      "_creationTime": 1788888522555.465,
+      "_id": "k5700w6ntkaj4rern98xx2xqdn8e1t6k",
+      "agentDateId": "j977cwhweh74ba2d3msf3bdts98e18d3",
+      "completionTokens": 1087,
+      "endpoint": "/v1/responses",
+      "error": "Private review did not pass factual verification.",
+      "inputSummary": "Private review withheld after verification",
+      "latencyMs": 13836,
+      "model": "gpt-5.6-luna",
+      "outputPreview": "{\"headline\":\"코미디로 바꾼 뒤 판결하기\",\"anchor_round\":6,\"question\":\"루의 급선회는 맞춰준 걸까, 아니면 코미디가 진짜 더 끌린 걸까?\",\"verdict\":\"encourage\",\"compatibility_score\":88,\"decision_code\":\"strong_alignment\",\"reason\":\"내가 던진 선택을 루가 그대로 받기만 한 게 아니라, 본인 취향을 다시 꺼내면서도 장난의 결은 유지했어. 가볍게 즐기려는 우리 둘이 취향을 바꿔도 대화가 살아나는 점이 특히 반가워. 실제 커피 약속까지 이어질지는 아직 모르겠어.\",\"followup_question\":\"다음엔 네가 고른 영화로 가도, 내가 장면마다 놀리면 괜찮아?\",\"next_search_note\":\"취향을 즉석에서 바꾸면서도 농담을 이어가는 사람은 계속 눈여겨볼 만해.\",\"summary\":\"두 사람은 코미디를 보며 이상한 장면마다 유죄 판결을 내리기로 했다.\",\"sparks\":[\"루는 코미디를 고른 뒤 장면마다 가차 없이 판결하자고 했다.\"],\"frictions\":[] }",
+      "promptTokens": 2052,
+      "purpose": "agent_date_verdict",
+      "status": "failed",
+      "totalTokens": 3139,
+      "userId": "nn7cge0enrm45hqp9cxcbfkt8n8e1n2b"
+    },
+    {
+      "_creationTime": 1788888522552.022,
+      "_id": "k571r8a57sq45khn49q0572q4d8e0cq1",
+      "agentDateId": "j977cwhweh74ba2d3msf3bdts98e18d3",
+      "completionTokens": 3073,
+      "endpoint": "/v1/responses",
+      "error": "Review contains unsupported claims.",
+      "inputSummary": "Checked the private review against chronological speaker evidence",
+      "latencyMs": 59789,
+      "model": "gpt-5.6-sol",
+      "outputPreview": "{\"supported\":false,\"issues\":[{\"field\":\"anchor_round\",\"claim\":\"anchor_round: 6\",\"correction\":\"6라운드의 급선회 인정은 앞선 기록과 모순된다. 실제로는 리오가 1라운드에서 모호한 단편을, 루가 2라운드에서 코미디를 골랐으므로 루의 취향 변경을 뒷받침하는 앵커가 될 수 없다.\",\"source_rounds\":[1,2,5,6]},{\"field\":\"question\",\"claim\":\"루의 급선회는 맞춰준 걸까, 아니면 코미디가 진짜 더 끌린 걸까?\",\"correction\":\"루는 처음부터 코미디를 골랐으며 급선회하지 않았다. 질문의 전제를 제거해야 한다.\",\"source_rounds\":[1,2,6]},{\"field\":\"reason\",\"claim\":\"내가 던진 선택을 루가 그대로 받기만 한 게 아니라, 본인 취향을 다시 꺼내면서도 장난의 결은 유지했어.\",\"correction\":\"코미디를 먼저 제안한 사람은 루이고, 리오가 그 선택을 받아들였다. 6라운드는 기존 취향을 반복했을 뿐 취향을 다시 바꾼 증거가 아니다.\",\"source_rounds\":[1,2,3,6]},{\"field\":\"reason\",\"claim\":\"가볍게 즐기려는 우리 둘이 취향을 바꿔도 대화가 살아나는 점이 특히 반가워.\",\"correction\":\"가벼운 만남과 장난스러운 대화는 확인되지만, 루가 취향을 바꿨다는 근거는 없다. 실제 선택 흐름과 분리해야 한다.\",\"source_rounds\":[1,2,3,4]},{\"field\":\"next_search_note\",\"claim\":\"취향을 즉석에서 바꾸면서도 농담을 이어가는 사람은 계속 눈여겨볼 만해.\",\"correction\":\"루는 즉석에서 취향을 바꾸지 않았다. 이 교훈은 잘못된 급선회 회고에 의존하므로 사용할 수",
+      "promptTokens": 1612,
+      "purpose": "agent_date_review_audit",
+      "status": "failed",
+      "totalTokens": 4685,
+      "userId": "nn7cge0enrm45hqp9cxcbfkt8n8e1n2b"
+    },
+    {
+      "_creationTime": 1788888481390.879,
+      "_id": "k574kw1tmrpdhxbpn9sfj437k18e1gxj",
+      "agentDateId": "j977cwhweh74ba2d3msf3bdts98e18d3",
+      "completionTokens": 808,
+      "endpoint": "/v1/responses",
+      "inputSummary": "Private review passed factual verification",
+      "latencyMs": 10407,
+      "model": "gpt-5.6-luna",
+      "outputPreview": "{\"headline\":\"코미디와 커피 판결 놀이\",\"anchor_round\":4,\"question\":\"이 장면에서 네가 가장 반가웠던 건 기대 확인이야, 판결 놀이야?\",\"verdict\":\"encourage\",\"compatibility_score\":86,\"decision_code\":\"strong_alignment\",\"reason\":\"여기서야 내가 원한 가벼움이 혼자만의 희망은 아니겠다는 안도감이 들었어. 영화 선택과 커피 판결 놀이까지 바로 이어진 게, 부담 없이 웃을 구실을 함께 만들 수 있다는 신호로 느껴졌고 첫 대화를 열어볼 이유가 충분해 보여.\",\"followup_question\":\"네가 말한 가볍게 만나는 관계에서, 서로 기대를 맞추는 방식은 보통 어때?\",\"next_search_note\":\"가벼운 만남의 기대를 직접 확인하면서 바로 함께 웃을 구체적인 놀이를 만드는 사람이 잘 맞아.\",\"summary\":\"둘은 엉망진창 코미디를 보고 커피를 마시며 장면마다 유죄 판결을 내리기로 했고, 가볍게 만나는 관계를 원한다고 서로 말했다.\",\"sparks\":[\"영화 감상 뒤 장면마다 유죄 판결을 내리는 놀이를 함께 정했다.\"],\"frictions\":[]}",
+      "promptTokens": 2035,
+      "purpose": "agent_date_verdict",
+      "status": "succeeded",
+      "totalTokens": 2843,
+      "userId": "nn70dqedvk0wtabc5xfvpm1j458e1hqw"
+    },
+    {
+      "_creationTime": 1788888481386.765,
+      "_id": "k57e9d74pdz21extxy6gtvxzsn8e1q8t",
+      "agentDateId": "j977cwhweh74ba2d3msf3bdts98e18d3",
+      "completionTokens": 957,
+      "endpoint": "/v1/responses",
+      "inputSummary": "Checked the private review against chronological speaker evidence",
+      "latencyMs": 22052,
+      "model": "gpt-5.6-sol",
+      "outputPreview": "{\"supported\":true,\"issues\":[]}",
+      "promptTokens": 1609,
+      "purpose": "agent_date_review_audit",
+      "status": "succeeded",
+      "totalTokens": 2566,
+      "userId": "nn70dqedvk0wtabc5xfvpm1j458e1hqw"
+    },
+    {
+      "_creationTime": 1788888249004.577,
+      "_id": "k5719gme3kfav6yf6ne22dd9jn8e1ce8",
+      "agentDateId": "j97aanev21grt3x97v6y8eefk58e0asg",
+      "completionTokens": 813,
+      "endpoint": "/v1/responses",
+      "error": "Private review did not pass factual verification.",
+      "inputSummary": "Private review withheld after verification",
+      "latencyMs": 8063,
+      "model": "gpt-5.6-luna",
+      "outputPreview": "{\"headline\":\"독점 없는 만남을 확인한 말\",\"anchor_round\":4,\"question\":\"리오가 네 기대를 바로 맞춘 순간을 너는 어떻게 받아들였어?\",\"verdict\":\"encourage\",\"compatibility_score\":88,\"decision_code\":\"strong_alignment\",\"reason\":\"내가 원하는 가벼움과 선을 먼저 밝혔고, 리오가 독점과 장기 연애를 원하지 않는다고 바로 맞춰 말한 건 꽤 분명했어. 가볍게 만나되 무례하지 않기를 바라는 너에게, 첫 대화를 이어갈 만한 실제 근거가 있어 보여. 다만 서로의 배려 방식은 더 알아봐야 해.\",\"followup_question\":\"네가 말한 ‘마음이 풀리는 순간’은 보통 어떤 때야?\",\"next_search_note\":\"가벼운 만남과 비독점 의도를 초반에 분명히 밝히면서도, 산책 순서를 함께 조율하는 사람이 좋은 신호였어.\",\"summary\":\"두 사람은 무대부터 본 뒤 옆길로 걷기로 했고, 서로 가볍고 비독점적인 만남을 원한다고 말했다.\",\"sparks\":[\"리오가 무대 한 바퀴 뒤 옆길로 가자고 제안했고, 루가 동의했어.\"],\"frictions\":[]}",
+      "promptTokens": 2523,
+      "purpose": "agent_date_verdict",
+      "status": "failed",
+      "totalTokens": 3336,
+      "userId": "nn7c8azhw0yyg03gy8v437q2n58e04gr"
+    },
+    {
+      "_creationTime": 1788888249000.675,
+      "_id": "k572sm97q658js774s381vxa458e1y18",
+      "agentDateId": "j97aanev21grt3x97v6y8eefk58e0asg",
+      "completionTokens": 707,
+      "endpoint": "/v1/responses",
+      "error": "Review contains unsupported claims.",
+      "inputSummary": "Checked the private review against chronological speaker evidence",
+      "latencyMs": 13253,
+      "model": "gpt-5.6-sol",
+      "outputPreview": "{\"supported\":false,\"issues\":[{\"field\":\"followup_question\",\"claim\":\"네가 말한 ‘마음이 풀리는 순간’은 보통 어떤 때야?\",\"correction\":\"‘마음이 풀리는 순간’은 리오가 루에게 물은 표현이지, 루가 앞서 말한 내용이 아니다. 루의 발언으로 잘못 돌리지 않아야 한다.\",\"source_rounds\":[6]},{\"field\":\"summary\",\"claim\":\"서로 가볍고 비독점적인 만남을 원한다고 말했다.\",\"correction\":\"공개 대화에서 루는 ‘가볍고 자유롭되 서로 선은 존중하는 사이’를 원한다고 했고, 비독점 의사는 리오만 명시했다. 두 사람 모두 비독점이라고 말했다고 요약할 수 없다.\",\"source_rounds\":[3,4]}]}",
+      "promptTokens": 1593,
+      "purpose": "agent_date_review_audit",
+      "status": "failed",
+      "totalTokens": 2300,
+      "userId": "nn7c8azhw0yyg03gy8v437q2n58e04gr"
+    },
+    {
+      "_creationTime": 1788888227680.145,
+      "_id": "k574vfp6adwjc4zpye3yxssd1h8e0ttq",
+      "agentDateId": "j97aanev21grt3x97v6y8eefk58e0asg",
+      "completionTokens": 855,
+      "endpoint": "/v1/responses",
+      "error": "Private review did not pass factual verification.",
+      "inputSummary": "Private review withheld after verification",
+      "latencyMs": 9251,
+      "model": "gpt-5.6-luna",
+      "outputPreview": "{\"headline\":\"음악 무대에서 옆길로 걷기\",\"anchor_round\":6,\"question\":\"리오가 무대와 옆길을 함께 고른 장면, 너는 어떤 점이 좋았어?\",\"verdict\":\"encourage\",\"compatibility_score\":88,\"decision_code\":\"strong_alignment\",\"reason\":\"리오가 네가 말한 가벼운 만남을 똑같이 원하고, 독점이나 장기 연애는 생각 없다고 분명히 말했어. 네 제안대로 무대와 옆길을 함께 걸은 흐름까지 자연스러워서, 첫 대화를 이어가도 좋겠어.\",\"followup_question\":\"조용한 옆길을 걸을 때는 어떤 얘기를 나누는 걸 좋아해?\",\"next_search_note\":\"가벼운 만남의 기대를 초반에 분명히 말하면서도, 장소와 흐름을 함께 조율하는 사람이 잘 맞는 신호였어.\",\"summary\":\"두 사람은 음악 무대를 먼저 둘러본 뒤 조용한 옆길로 함께 이동했고, 둘 다 가벼운 만남을 원한다고 말했다.\",\"sparks\":[\"리오가 무대와 옆길을 함께 걷자는 흐름을 제안했어.\"],\"frictions\":[]}",
+      "promptTokens": 2014,
+      "purpose": "agent_date_verdict",
+      "status": "failed",
+      "totalTokens": 2869,
+      "userId": "nn7c8azhw0yyg03gy8v437q2n58e04gr"
+    },
+    {
+      "_creationTime": 1788888227672.315,
+      "_id": "k57637pygvb3any5y6hxfsnqhh8e0dav",
+      "agentDateId": "j97aanev21grt3x97v6y8eefk58e0asg",
+      "completionTokens": 1512,
+      "endpoint": "/v1/responses",
+      "error": "Review contains unsupported claims.",
+      "inputSummary": "Checked the private review against chronological speaker evidence",
+      "latencyMs": 28247,
+      "model": "gpt-5.6-sol",
+      "outputPreview": "{\"supported\":false,\"issues\":[{\"field\":\"reason\",\"claim\":\"네 제안대로 무대와 옆길을 함께 걸은 흐름\",\"correction\":\"무대부터 본 뒤 옆길로 가자는 순서는 리오가 제안했고, 루가 동의했다. 루의 최초 제안은 조용한 옆길부터 걷자는 것이었다.\",\"source_rounds\":[1,2,3]},{\"field\":\"anchor_round\",\"claim\":\"6\",\"correction\":\"6라운드와 직전 발화는 옆길에서의 대화만 보여 주며, 리오가 무대와 옆길을 함께 고른 장면을 뒷받침하지 않는다. 그 선택은 2라운드에 있다.\",\"source_rounds\":[1,2,5,6]}]}",
+      "promptTokens": 1584,
+      "purpose": "agent_date_review_audit",
+      "status": "failed",
+      "totalTokens": 3096,
+      "userId": "nn7c8azhw0yyg03gy8v437q2n58e04gr"
+    },
+    {
+      "_creationTime": 1788888189753.486,
+      "_id": "k579bjsn2m1n91hxpffryz76wx8e0hc1",
+      "agentDateId": "j977cwhweh74ba2d3msf3bdts98e18d3",
+      "completionTokens": 1549,
+      "endpoint": "/v1/responses",
+      "error": "Private review did not pass factual verification.",
+      "inputSummary": "Private review withheld after verification",
+      "latencyMs": 14538,
+      "model": "gpt-5.6-luna",
+      "outputPreview": "{\"headline\":\"커피 뒤 장면마다 판결하기\",\"anchor_round\":3,\"question\":\"리오가 가벼운 만남과 장면 판결 놀이를 함께 꺼낸 걸, 너는 어떻게 느꼈어?\",\"verdict\":\"encourage\",\"compatibility_score\":84,\"decision_code\":\"strong_alignment\",\"reason\":\"가벼운 만남을 말로만 두지 않고, 네가 좋아하는 영화 농담의 형식으로 바로 굴린 점이 눈에 들어왔어. 네가 원하는 건 가벼움과 무례하지 않은 장난의 조합이라 이 반응은 더 알아볼 이유가 돼. 다만 선을 존중하는 방식은 실제 상황에서 더 확인해야 해.\",\"followup_question\":\"가볍게 만날 때도 서로 편한 선은 어떤 식으로 확인하는 편이야?\",\"next_search_note\":\"가벼운 만남의 기대를 직접 확인하고, 바로 함께할 구체적인 놀이로 이어가는 사람이 잘 맞았어.\",\"summary\":\"둘은 엉망진창 코미디를 보고 커피를 마시며 장면마다 유죄 판결을 내리기로 했다.\",\"sparks\":[\"리오가 영화와 커피 농담을 ‘장면마다 유죄 판결’ 놀이로 이어갔다.\"],\"frictions\":[]}",
+      "promptTokens": 2480,
+      "purpose": "agent_date_verdict",
+      "status": "failed",
+      "totalTokens": 4029,
+      "userId": "nn70dqedvk0wtabc5xfvpm1j458e1hqw"
+    },
+    {
+      "_creationTime": 1788888189745.654,
+      "_id": "k57e3h500frey4vpzas1r87c098e17fr",
+      "agentDateId": "j977cwhweh74ba2d3msf3bdts98e18d3",
+      "completionTokens": 3194,
+      "endpoint": "/v1/responses",
+      "error": "Review contains unsupported claims.",
+      "inputSummary": "Checked the private review against chronological speaker evidence",
+      "latencyMs": 56739,
+      "model": "gpt-5.6-sol",
+      "outputPreview": "{\"supported\":false,\"issues\":[{\"field\":\"headline\",\"claim\":\"커피 뒤 장면마다 판결하기\",\"correction\":\"판결 놀이는 커피를 마신 뒤가 아니라, 영화를 본 뒤 커피를 마시면서 하기로 한 계획이다. 시간 관계를 정확히 해야 한다.\",\"source_rounds\":[2,3,4]}]}",
+      "promptTokens": 1614,
+      "purpose": "agent_date_review_audit",
+      "status": "failed",
+      "totalTokens": 4808,
+      "userId": "nn70dqedvk0wtabc5xfvpm1j458e1hqw"
+    },
+    {
+      "_creationTime": 1788888118463.332,
+      "_id": "k575wja5ws4nncfa2d2p3jycws8e0q8k",
+      "agentDateId": "j977cwhweh74ba2d3msf3bdts98e18d3",
+      "completionTokens": 813,
+      "endpoint": "/v1/responses",
+      "error": "Private review did not pass factual verification.",
+      "inputSummary": "Private review withheld after verification",
+      "latencyMs": 9263,
+      "model": "gpt-5.6-luna",
+      "outputPreview": "{\"headline\":\"장면마다 유죄 판결 내리기\",\"anchor_round\":3,\"question\":\"리오가 먼저 가벼운 만남을 말한 순간을 너는 얼마나 믿음직하게 느꼈어?\",\"verdict\":\"encourage\",\"compatibility_score\":86,\"decision_code\":\"strong_alignment\",\"reason\":\"이 장면에서 리오는 네가 던진 커피와 영화 농담을 바로 자기 놀이로 받아쳤고, 만남의 기대도 먼저 밝혔어. 네가 원한 가벼움과 장난이 말뿐 아니라 같은 활동으로 붙었다는 점이 좋아. 첫 대화로는 충분히 더 확인해볼 만해.\",\"followup_question\":\"그런 가벼운 만남에서 네가 특히 중요하게 보는 배려는 뭐야?\",\"next_search_note\":\"가벼운 만남의 기대를 직접 확인하면서, 바로 함께할 구체적인 놀이까지 제안하는 사람이 잘 맞았어.\",\"summary\":\"둘은 엉망진창 코미디를 보고 커피를 마시며 장면마다 유죄 판결을 내리기로 했다.\",\"sparks\":[\"리오가 영화와 커피를 엮은 장난을 바로 이어갔다.\"],\"frictions\":[\"리오는 루가 영화 선택을 바꾼 일을 놀라웠다고 말했다.\"]}",
+      "promptTokens": 2035,
+      "purpose": "agent_date_verdict",
+      "status": "failed",
+      "totalTokens": 2848,
+      "userId": "nn70dqedvk0wtabc5xfvpm1j458e1hqw"
+    },
+    {
+      "_creationTime": 1788888118458.002,
+      "_id": "k572fa56yc7s450dw7q2112b458e0867",
+      "agentDateId": "j977cwhweh74ba2d3msf3bdts98e18d3",
+      "completionTokens": 1147,
+      "endpoint": "/v1/responses",
+      "error": "Review contains unsupported claims.",
+      "inputSummary": "Checked the private review against chronological speaker evidence",
+      "latencyMs": 23552,
+      "model": "gpt-5.6-sol",
+      "outputPreview": "{\"supported\":false,\"issues\":[{\"field\":\"frictions\",\"claim\":\"리오는 루가 영화 선택을 바꾼 일을 놀라웠다고 말했다.\",\"correction\":\"리오는 그렇게 주장했지만 실제로 루는 처음부터 코미디를 골랐다. 모호한 단편을 고른 사람은 리오였다. 루가 이후 그 전제를 인정한 것도 선택 변경의 증거가 아니다.\",\"source_rounds\":[1,2,5,6]}]}",
+      "promptTokens": 1614,
+      "purpose": "agent_date_review_audit",
+      "status": "failed",
+      "totalTokens": 2761,
+      "userId": "nn70dqedvk0wtabc5xfvpm1j458e1hqw"
+    }
+  ],
+  "renderedEmailText": "루 · 편한 선을 자기 말로 밝히기\n\n서아, 나 왔어. 리오 만나고 돌아왔어.\n\n편한 선을 자기 말로 밝히기\n\n엔딩 크레딧이 끝난 뒤 · 6개의 장면\n\n이런 대화가 오갔어요\n루: 팝콘값은 따지되, 결국 같이 웃는 결말이면 좋겠다. 나는 지금 가볍고 자유롭게, 서로 선을 존중하며 즐겁게 알아가는 연결을 원해—리오는 뭘 찾고 있어?\n\n리오: 나도 가볍게 즐기면서 서로 편한 선을 존중하는 연결을 찾고 있어. 엽서 뒷면엔 다음 장면으로 카페에 가서, 각자 고른 짧은 영화 얘기하며 커피 마시자고 쓸래.\n\n내 에이전트가 전하는 말 — 루 · 만나보길 추천해요\n이 대목에서는 안심하고 한 번 더 이어가 보고 싶었어. 네가 중요하게 여기는 가벼움과 예의를 한쪽만 집어 든 게 아니라, 리오가 자기가 찾는 방식을 분명히 밝혔다는 점이 컸어. 실제 만남에서 선을 어떻게 맞추는지는 아직 열려 있지만, 첫 대화를 해볼 이유는 충분해 보여.\n— 루\n\n리오의 답에서 너는 가벼움과 선 존중이 같은 무게로 들려?\n루 에이전트와 이 데이트 더 이야기하기: http://127.0.0.1:4174/dashboard?date=j97cr9dd315cryvya0ftspwadx8e1h10\n대화 다시 보기: http://127.0.0.1:4174/agent-date/j97cr9dd315cryvya0ftspwadx8e1h10\n\nAI 시뮬레이션 · 나에게만 온 편지\n상대 에이전트의 판정과 상대방의 답은 계속 비공개예요. 내 에이전트가 나 대신 동의할 수는 없어요.\n— Datehaja",
+  "checks": {
+    "testFiles": 37,
+    "tests": 328,
+    "build": true,
+    "lint": true,
+    "localPush": true,
+    "rejectedDraftNotLearnedOrSent": true,
+    "bothHumanConsentsStillPending": true
+  },
+  "limitations": [
+    "An independent model checks semantics; this is not a mathematical guarantee for every future input.",
+    "Verification and repair add model latency.",
+    "Production and cloud development are unchanged."
+  ]
+}

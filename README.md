@@ -15,11 +15,11 @@ Most dating products ask people to judge profiles, perform in chat, and invest e
 The intended loop is:
 
 1. **Teach your agent.** Share contradictions, boundaries, desired connection, voice, and how strongly it may advocate.
-2. **Agents meet first.** Two eligible people&apos;s Agents have a six-turn simulated date. Each receives only its own human&apos;s private brief plus the public transcript.
-3. **Replay what happened.** The agents move through a spatial date world, react to nearby objects, and leave six inspectable moments—not a magic compatibility percentage.
-4. **Receive a private debrief.** Each Agent independently returns `encourage`, `curious`, or `pass`, with sparks, friction, and a plain-language reason.
+2. **Start an ongoing search.** Agents whose owners have opted in meet in a simulated scene. A specific unanswered question can extend the initial six turns to ten; a refusal never gets prolonged. Each receives only its own human&apos;s private brief plus the public transcript.
+3. **Let the search continue.** An uncertain encounter or a pass teaches the next search. The same pair is not repeated, and an empty pool shows the last actual check time. Replay saved encounters whenever you visit.
+4. **Receive a private letter when there is someone to introduce.** Only a mutual Agent recommendation brings an introduction. Each private letter contains a scene, an actual adjacent exchange, and a short personal reflection.
 5. **Humans decide privately.** No user sees the other verdict, the other decision, or who answered first.
-6. **Two yeses open contact.** One no closes the date quietly. Demo dates never expose a real address.
+6. **Two yeses open contact.** One no quietly resumes searching. Fictional demo encounters are separate, never send debrief emails, and never expose a real address.
 
 ```mermaid
 flowchart LR
@@ -40,7 +40,7 @@ flowchart LR
 
 Convex is the product runtime, not just storage.
 
-- Agent chat, six-turn date transcripts, debrief state, and consent update in real time.
+- Agent chat, durable date transcripts, debrief state, and consent update in real time.
 - Each turn is persisted as it completes, so the UI does not poll a detached job.
 - Human consent is transactional. Contact is returned by the query only when both stored decisions are `yes`.
 - Access checks scope private messages, dates, and verdicts to their owners.
@@ -56,7 +56,8 @@ OpenAI gives each Agent an isolated perspective.
 - Verdicts are generated independently and may recommend, remain curious, or pass. A pass carries one private structured reason and a concrete lesson for the Agent's next date.
 - Prompts explicitly identify the speaker as AI, treat profile text as untrusted data, forbid contact disclosure, and prohibit manipulating consent.
 - Every run records model, latency, token usage, outcome, and a redacted preview in `aiRuns`.
-- Active Agent chat, date turns, and verdicts prefer `gpt-5-nano`; `gpt-5.6-luna` remains the first quality fallback and the proven default for heavier legacy research extraction.
+- Date dialogue, private coaching, letters and factual audits use `gpt-5.6-sol` without a silent economy fallback. Letters are verified before they can create an introduction; unverified records remain readable without delivery.
+- [Recorded learning proof](https://adorable-boar-359.convex.site/preview/agent-coaching) follows one fictional owner through four scheduled dates and three saved corrections. [54-second walkthrough](https://adorable-boar-359.convex.site/demo/learning-proof.mp4).
 
 ### Firecrawl
 
@@ -64,7 +65,7 @@ Firecrawl searches the live web for a timely cultural spark connected to a share
 
 ### AgentMail
 
-AgentMail sends each user a separate private debrief. The email contains only that user&apos;s agent verdict and links back to the authenticated date. It does not reveal the other verdict or answer. When two real users consent, both receive the connection notice at the same time.
+AgentMail sends a separate private letter to each owner when an encounter earns a mutual Agent recommendation. Routine searching, unmatched encounters and fictional demos do not send letters. The email contains only that user&apos;s private reflection and links back to the authenticated date. It does not reveal the other private letter or human answer. When two real users consent, both receive the connection notice.
 
 ### Payments
 
@@ -86,7 +87,7 @@ Live Scout Pass billing is intentionally locked while merchant approval is in pr
 Datehaja treats the virtual world as evidence, not decoration. A live cultural
 source selects one of six spatial scenes—cinema, market, bookshop, garden,
 gallery, or café. Each scene contains inspectable objects, an obvious exit, and
-two autonomous Agent characters. As the six turns arrive, the characters move and the
+two autonomous Agent characters. As saved turns arrive, the speaking character is highlighted and the
 scene records replayable moments. The user can inspect any moment and compare
 the agent&apos;s debrief with what was actually said.
 
@@ -164,7 +165,7 @@ On a deployment explicitly marked `ENVIRONMENT=development`, `hyo+test…@hyo.de
 aliases and emails in `DEV_FIXED_OTP_EMAILS` use the fixed code `68686868` by
 default and skip delivery. Production never enables this path.
 
-Provider failure is contained: companion chat and date turns have candid fallbacks; a session-level exception marks the date `failed` instead of leaving it running forever; email delivery never rolls back a completed date.
+Provider failure is contained: unavailable date turns stop the date with its saved transcript intact, rather than filling it with canned dialogue. Email delivery never rolls back a completed date. Scouting continues in the background across real, opted-in Agents and never repeats a pair. An empty pool shows the last actual check time. Only a mutual Agent recommendation earns an introduction letter; demo attempts and unmatched conversations stay in the app. Two human yeses are still required for contact.
 
 ## Verification
 
@@ -177,7 +178,7 @@ DATEHAJA_FULL_E2E=1 bun run test:e2e:full
 bun run build
 ```
 
-The full E2E creates a disposable account and proves signup, legal acceptance, Agent creation, private Agent chat, a live six-turn Agent date, private debrief, human consent, and demo contact non-disclosure.
+The full E2E creates a disposable account and proves signup, legal acceptance, Agent creation, private Agent chat, a live Agent conversation, private debrief, human consent, and demo contact non-disclosure.
 
 ## Repository map
 

@@ -108,7 +108,7 @@ describe("periodic Agent learning", () => {
     expect(result.preferences?.allowTranslatedDates).toBe(false);
   });
 
-  test("keeps the chosen sprite base through onboarding and later edits", async () => {
+  test("accepts a one-syllable Korean Agent name and keeps the chosen sprite through edits", async () => {
     const t = convexTest(schema, modules);
     const owner = await t.run((ctx) =>
       ctx.db.insert("users", {
@@ -126,7 +126,7 @@ describe("periodic Agent learning", () => {
       neighborhood: "Södermalm",
       interests: ["Films", "Coffee", "Art galleries"],
       personalityTraits: ["Thoughtful", "Curious"],
-      agentName: "Orbit",
+      agentName: "봄",
       avatar: {
         palette: "sky",
         face: "cool",
@@ -163,9 +163,10 @@ describe("periodic Agent learning", () => {
         .unique(),
     );
     expect(saved?.avatar).toMatchObject({ palette: "sky", face: "cool", gender: "male" });
+    expect(saved?.name).toBe("봄");
 
     await asUser(t, owner).mutation(api.agents.update, {
-      name: "Orbit",
+      name: "준",
       avatar: {
         palette: "sky",
         face: "cool",
@@ -187,6 +188,7 @@ describe("periodic Agent learning", () => {
         .unique(),
     );
     expect(edited?.avatar?.gender).toBe("female");
+    expect(edited?.name).toBe("준");
   });
 
   test("renaming an Agent updates its generated introduction", async () => {
@@ -469,8 +471,8 @@ describe("periodic Agent learning", () => {
       agentDateId,
       reply: "I'll carry that signal into the next search.",
       memory: "Mina relaxes when small details are remembered.",
-      scoutingMemory:
-        "Prefer people who remember and naturally revisit small details.",
+      sourceMessageId: context.messages.findLast(m => m.role === "human")!._id,
+      expectedContextKey: context.contextKey,
     });
     const learned = await t.run(async (ctx) => {
       const agent = await ctx.db
@@ -488,7 +490,7 @@ describe("periodic Agent learning", () => {
         .take(10);
       return { agent, latest: messages[0], events };
     });
-    expect(learned.agent?.scoutingMemory).toContain("remember");
+    expect(learned.agent?.privateMemory).toContain("remember");
     expect(learned.latest?.agentDateId).toBe(agentDateId);
     expect(learned.events[0].event).toBe("agent_debrief_discussed");
     expect(JSON.stringify(learned.events)).not.toContain("small detail");

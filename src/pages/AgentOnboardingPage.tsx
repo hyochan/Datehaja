@@ -276,7 +276,7 @@ export default function AgentOnboardingPage() {
       ? t("Age {age} ✓", { age: aboutMeProgress.age ?? "" })
       : t("Enter a valid date for an adult aged 18 to 100.");
   const stepReady = {
-    1: agentName.trim().length >= 2,
+    1: agentName.trim().length >= 1,
     2: idealPersonProgress.isReady,
     3: aboutMeProgress.isReady && matchingLocationReady && languagesReady,
   } satisfies Record<Step, boolean>;
@@ -637,7 +637,7 @@ export default function AgentOnboardingPage() {
                   onChange={setStylePreference}
                   t={t}
                 />
-                <Field label={t("What are you open to?")}>
+                <Field label={t("What are you open to?")} hint={t(relationshipIntent === "serious" ? "Serious relationships are matched with people seeking the same." : "Your Agent looks for people whose relationship goals fit yours.")}>
                   <Select
                     value={relationshipIntent}
                     onChange={(event) =>

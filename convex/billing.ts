@@ -28,6 +28,16 @@ export async function getScoutAccess(
   _ctx: ActionCtx,
   _subject: string,
 ): Promise<ScoutAccess> {
+  return scoutAccessFor();
+}
+
+/**
+ * The entitlement itself, with no caller identity attached. Background workers
+ * have no signed-in identity to offer, and passing an empty subject would
+ * quietly resolve every owner's access as nobody once billing becomes per-user.
+ * Give this a userId at that point, and the callers already have one.
+ */
+export function scoutAccessFor(): ScoutAccess {
   if (process.env.DATEHAJA_DEMO_BILLING === "1") {
     return { allowed: true, mode: "demo", configured: false };
   }

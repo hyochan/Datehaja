@@ -473,11 +473,11 @@ export default function PreferencesPage() {
             )}
           </Field>
 
-          <Field label={t("What you're looking for")}>
+          <Field label={t("What you're looking for")} hint={t(p.relationshipIntent === "serious" ? "Serious relationships are matched with people seeking the same." : "Your Agent looks for people whose relationship goals fit yours.")}>
             <ChipRadio
               options={[
                 { key: "casual" as const, label: t("Something casual") },
-                { key: "open" as const, label: t("Open to anything") },
+                { key: "open" as const, label: t("Open to seeing what develops") },
                 { key: "serious" as const, label: t("Something serious") },
                 { key: "friendship" as const, label: t("Friendship first") },
                 { key: "unsure" as const, label: t("Still working it out") },
@@ -486,10 +486,12 @@ export default function PreferencesPage() {
               onChange={(next) => set("relationshipIntent", next)}
               ariaLabel={t("Relationship intent")}
             />
-            <Hard
+            {p.relationshipIntent !== "serious" && <Hard
               checked={p.intentHard}
               onChange={(v) => set("intentHard", v)}
-            />
+              label={t("Only meet people who chose the same relationship goal")}
+              description={t(p.intentHard ? "Only the same goal is included." : "Different choices are included only when your relationship goals can fit.")}
+            />}
           </Field>
 
           <Field
@@ -782,10 +784,12 @@ function Hard({
   checked,
   onChange,
   label = "This is a hard requirement",
+  description,
 }: {
   checked: boolean;
   onChange: (next: boolean) => void;
   label?: string;
+  description?: string;
 }) {
   const { t } = useI18n();
   return (
@@ -794,11 +798,11 @@ function Hard({
         checked={checked}
         onChange={onChange}
         label={t(label)}
-        description={
+        description={description ?? (
           checked
             ? t("We'll never match you outside this.")
             : t("We'll prefer this, but won't rule someone out for it.")
-        }
+        )}
       />
     </div>
   );
