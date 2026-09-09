@@ -2472,17 +2472,11 @@ Object.assign(ko, {
   Playful: "유쾌한",
   Direct: "솔직한",
   Calm: "차분한",
-  Affectionate: "다정한",
-  Polished: "단정한",
-  Casual: "편안한",
-  Artistic: "개성 있는",
   Sporty: "활동적인",
   Minimal: "미니멀한",
   Important: "중요해요",
   Flexible: "유연해요",
   "Scout Pass": "Scout Pass",
-  ACTIVE: "사용 중",
-  Free: "무료",
 });
 
 Object.assign(ko, {
@@ -2917,11 +2911,6 @@ Object.assign(ko, {
   "back from the date": "데이트에서 돌아옴",
   "I'm back! I have so much to tell you.": "나 왔어! 할 얘기 진짜 많아.",
   "Now meet as yourselves.": "이제 진짜 서로를 만나세요.",
-  PRIVATE: "비공개",
-  BEFORE: "평소에는",
-  SCOUTING: "찾는 동안",
-  DURING: "데이트 중",
-  AFTER: "돌아온 뒤",
 });
 
 /* Restored strings emitted by convex/ and localized client-side. */

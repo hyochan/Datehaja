@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   ACCESSIBILITY_OPTIONS,
@@ -158,6 +159,24 @@ describe("internationalisation", () => {
         expect(values.every((value) => value.trim().length > 0)).toBe(true);
       }
     }
+  });
+
+  // The tables above only prove themselves. This reads the source, so copy
+  // added straight to the Korean pack — quoted or as a bare identifier, which
+  // is how eleven keys stayed hidden — cannot slip past again.
+  it("has no Korean-only copy anywhere in the pack source", () => {
+    const src = readFileSync("src/i18n/index.tsx", "utf8");
+    const keys = new Set<string>();
+    for (const m of src.matchAll(/^  "((?:[^"\\]|\\.)+)":\s*"/gm)) keys.add(m[1]);
+    for (const m of src.matchAll(/^  ([A-Za-z_$][\w$]*):\s*"/gm)) keys.add(m[1]);
+    const koreanOnly = [...keys]
+      .filter((message) => translate("ko-KR", message) !== message)
+      .filter((message) =>
+        TRANSLATED_LOCALES.filter((l) => l !== "ko-KR").every(
+          (locale) => translate(locale, message) === message,
+        ),
+      );
+    expect(koreanOnly).toEqual([]);
   });
 
   it("leaves no Korean-only product copy behind", () => {
