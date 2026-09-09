@@ -891,40 +891,44 @@ export default function AgentDashboardPage() {
         </Card>
 
         <div>
-          {!openQuestion && justAnswered && (
-            <Card className="agent-question-sent mb-5 p-5">
-              <div className="flex items-start gap-3">
-                <span className="agent-question-sent-mark" aria-hidden="true">
-                  ✓
-                </span>
-                <div className="min-w-0">
-                  <div className="docket-label text-[var(--accent-text)]">
-                    {t("{agent} has your answer", { agent: agent.name })}
+          {/* Always mounted, so the card being inserted is announced rather
+              than appearing silently after the answer is sent. */}
+          <div role="status">
+            {!openQuestion && justAnswered && (
+              <Card className="agent-question-sent mb-5 p-5">
+                <div className="flex items-start gap-3">
+                  <span className="agent-question-sent-mark" aria-hidden="true">
+                    ✓
+                  </span>
+                  <div className="min-w-0">
+                    <div className="docket-label text-[var(--accent-text)]">
+                      {t("{agent} has your answer", { agent: agent.name })}
+                    </div>
+                    <p className="mt-2 text-[14px] leading-relaxed text-soft">
+                      {t(
+                        "It continues in your conversation, where you can read the question and reply again.",
+                      )}
+                    </p>
+                    <p className="agent-question-sent-quote">{t(justAnswered)}</p>
+                    <button
+                      type="button"
+                      className="mt-3 text-[12px] font-bold text-[var(--accent-text)]"
+                      onClick={() => {
+                        setJustAnswered(null);
+                        messageRef.current?.scrollIntoView({
+                          block: "center",
+                          behavior: "smooth",
+                        });
+                        messageRef.current?.focus();
+                      }}
+                    >
+                      {t("Open the conversation →")}
+                    </button>
                   </div>
-                  <p className="mt-2 text-[14px] leading-relaxed text-soft">
-                    {t(
-                      "It continues in your conversation, where you can read the question and reply again.",
-                    )}
-                  </p>
-                  <p className="agent-question-sent-quote">{t(justAnswered)}</p>
-                  <button
-                    type="button"
-                    className="mt-3 text-[12px] font-bold text-[var(--accent-text)]"
-                    onClick={() => {
-                      setJustAnswered(null);
-                      messageRef.current?.scrollIntoView({
-                        block: "center",
-                        behavior: "smooth",
-                      });
-                      messageRef.current?.focus();
-                    }}
-                  >
-                    {t("Open the conversation →")}
-                  </button>
                 </div>
-              </div>
-            </Card>
-          )}
+              </Card>
+            )}
+          </div>
           {openQuestion && (
             <Card className="agent-question-note mb-5 overflow-hidden p-5 sm:p-6">
               <div className="agent-learning-path" aria-hidden="true">
