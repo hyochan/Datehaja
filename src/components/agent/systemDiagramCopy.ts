@@ -151,7 +151,7 @@ const de: DiagramCopy = {
   search: "Ein passendes Paar finden", searchCaption: "Beide haben zugestimmt. Die Einstellungen beider passen.",
   agentA: "Dein KI-Agent", agentB: "KI-Agent der anderen Person", agentCaption: "Spricht aus dem eigenen Briefing und dem Gespräch",
   transcript: "Virtuelles Date & Aufzeichnung", transcriptCaption: "Abwechselnde Beiträge · Szene · gespeicherter Dialog",
-  reviewA: "Die Einschätzung deines Agenten", reviewB: "Einschätzung der anderen Person", reviewCaption: "Unabhängige Lesart + Belegprüfung",
+  reviewA: "Die Einschätzung deines Agenten", reviewB: "Einschätzung des anderen Agenten", reviewCaption: "Unabhängige Lesart + Belegprüfung",
   recommend: "Empfehlen beide?", recommendCaption: "Für eine Vorstellung braucht es zwei Empfehlungen.",
   humanA: "Du entscheidest", humanB: "Die andere Person entscheidet", humanCaption: "Lies deinen privaten Brief. Wähle ja oder nein.",
   connect: "Sagen beide Menschen ja?", connectCaption: "Erst dann öffnet sich der Kontakt.",
