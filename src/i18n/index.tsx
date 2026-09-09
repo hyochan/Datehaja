@@ -717,7 +717,7 @@ Object.assign(fr, {
     "Je deviens joueur dès que je me sens en sécurité.",
   "I go quiet when I'm happy, actually.":
     "Je deviens silencieux quand je suis heureux, en fait.",
-  "Your Dating Agent": "Votre agent",
+  "Your Dating Agent": "Votre Agent de rencontre",
   "Your Dating Agent can say:": "Votre Agent de rencontre peut dire :",
   "don't meet them.": "Ne les rencontrez pas.",
   "An interpretation, not a score": "Une interprétation, pas une note",
@@ -764,7 +764,7 @@ Object.assign(fr, {
   "I think you should meet.": "Je pense que vous devriez vous rencontrer.",
   "Quiet feels safe to both": "Le silence rassure les deux",
   "Different social pace": "Rythmes sociaux différents",
-  "My Dating Agent": "Mon agent",
+  "My Dating Agent": "Mon Agent de rencontre",
   Human: "Humain",
   Settings: "Réglages",
 });
@@ -789,7 +789,7 @@ Object.assign(nl, {
     "Ik word speels zodra ik me veilig voel.",
   "I go quiet when I'm happy, actually.":
     "Ik word juist stil als ik blij ben.",
-  "Your Dating Agent": "Jouw agent",
+  "Your Dating Agent": "Jouw dating-Agent",
   "Your Dating Agent can say:": "Jouw dating-Agent kan zeggen:",
   "don't meet them.": "Ontmoet diegene niet.",
   "An interpretation, not a score": "Een interpretatie, geen score",
@@ -836,7 +836,7 @@ Object.assign(nl, {
   "I think you should meet.": "Ik denk dat jullie elkaar moeten ontmoeten.",
   "Quiet feels safe to both": "Stilte voelt voor beiden veilig",
   "Different social pace": "Ander sociaal tempo",
-  "My Dating Agent": "Mijn agent",
+  "My Dating Agent": "Mijn dating-Agent",
   Human: "Mens",
   Settings: "Instellingen",
 });
