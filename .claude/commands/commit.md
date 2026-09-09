@@ -151,6 +151,7 @@ preview is behind Vercel SSO, so the user opens it, not Claude.
 
 ## 7. Stop at the PR
 
-Opening the PR ends this command. Do not merge, and do not deploy: the user
-reviews the PR first. Production deploys are `main` merging (frontend, via
-Vercel) plus `bunx convex deploy -y` run by the user (backend).
+Opening the PR ends this command. Do not merge: the user reviews the PR first.
+Merging is what deploys — `.github/workflows/deploy.yml` pushes the Convex
+backend and publishes `convex.site` on `main`, and Vercel rebuilds
+`datehaja.com` independently. There is no separate deploy command to run.

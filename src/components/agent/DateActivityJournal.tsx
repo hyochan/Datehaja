@@ -5,11 +5,11 @@ import { DateSceneArt } from "./DateSceneArt";
 export function DateActivityJournal({ journal, totalLines, onReplay }: {
   journal?: DateActivity; totalLines: number; onReplay?: (round: number) => void;
 }) {
-  const { locale } = useI18n();
+  const { locale, t } = useI18n();
   const copy = activityCopy(locale);
   return <section className="date-journal" id="activity" aria-labelledby="date-journal-heading">
     <header className="date-journal-heading">
-      <div><span className="docket-label">DATE JOURNAL</span><h2 id="date-journal-heading">{copy.heading}</h2></div>
+      <div><span className="docket-label">{t("DATE JOURNAL")}</span><h2 id="date-journal-heading">{copy.heading}</h2></div>
       <span className="date-journal-count">{totalLines} {copy.lines}</span>
     </header>
     {journal ? <>

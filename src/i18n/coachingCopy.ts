@@ -5,6 +5,10 @@
  * five other translated locales.
  */
 export const coachingCopy: Record<string, readonly string[]> = {
+  "TRANSCRIPT": ["대화 기록", "会話記録", "GESPRÄCH", "TRANSCRIPTION", "GESPREK", "SAMTAL"],
+  "DATE JOURNAL": ["데이트 기록", "デート記録", "DATE-JOURNAL", "JOURNAL DU RENDEZ-VOUS", "DATEVERSLAG", "DEJTANTECKNING"],
+  "You decide": ["내가 결정", "あなたが決める", "Du entscheidest", "Vous décidez", "Jij beslist", "Du bestämmer"],
+  "Open to seeing what develops": ["자연스럽게 알아가기", "自然に見ていきたい", "Offen dafür, was sich entwickelt", "Ouvert à ce qui se dessine", "Open voor wat zich ontwikkelt", "Öppen för vad som växer fram"],
   "Make this more like me": ["내 말투 다듬기", "もっと自分らしく", "Klingt mehr nach mir", "Rendre ça plus fidèle à moi", "Meer zoals ik het zeg", "Gör det mer likt mig"],
   "My feedback": ["내 피드백", "私のフィードバック", "Mein Feedback", "Mon retour", "Mijn feedback", "Min återkoppling"],
   "How I felt about this": ["상대에 대한 피드백", "相手について感じたこと", "Wie ich das empfunden habe", "Ce que j’en ai pensé", "Wat ik hiervan vond", "Vad jag kände om det här"],

@@ -14,7 +14,7 @@ export function DateTranscript({ turns, mine, counterpart, coaching }: DateTrans
   const { t, locale } = useI18n();
   const copy = activityCopy(locale);
   return <section className="date-record-transcript" id="conversation" aria-labelledby="date-transcript-heading">
-    <header><div className="docket-label">TRANSCRIPT</div><h2 id="date-transcript-heading">{t("Read the whole conversation")}</h2><span>{turns.length} {copy.lines}</span></header>
+    <header><div className="docket-label">{t("TRANSCRIPT")}</div><h2 id="date-transcript-heading">{t("Read the whole conversation")}</h2><span>{turns.length} {copy.lines}</span></header>
     {coaching && <div className="date-coaching-intro">{t("Not quite you? Open the feedback under any line to shape your agent's voice or share how you felt about the other person.")}</div>}
     <div className="date-record-lines">
       {turns.map(turn => <article key={turn._id} id={`turn-${turn.round}`} className={`date-record-line ${turn.isMine ? "is-mine" : "is-other"}`} tabIndex={-1}>

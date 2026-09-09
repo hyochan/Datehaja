@@ -12,11 +12,16 @@ branch (`gh pr view --json number`).
 ## Repo facts
 
 - Repository: `hyochan/Datehaja`.
-- Checks on a PR: the Vercel preview deployment. There is no CI workflow, so
-  the local gates below are the only proof the code is sound.
-- There is no external review bot. The reviewer is the `code-review` skill, run
-  against the exact head.
-- Local gates: `bun run typecheck`, `bun run lint`, `bun run test`.
+- Checks on a PR: the `Verify + Deploy` workflow
+  (`.github/workflows/deploy.yml`), whose `Typecheck + lint + test + build` job
+  runs `bun run typecheck`, `bun run lint`, `bun run test` and `bun run build`
+  on every pull request, plus the Vercel preview deployment. CI is the record
+  for the exact head.
+- CodeRabbit reviews pull requests, but skips any diff over 100 files. When it
+  skips, the reviewer is the `code-review` skill, run against the exact head.
+- Local gates: `bun run typecheck`, `bun run lint`, `bun run test`. These are
+  faster than waiting on CI; add `bun run build`, which CI also runs, whenever
+  the bundle could break.
 
 ## Response rules
 
@@ -124,4 +129,4 @@ attempts, stop scheduling and hand back with a summary of what is disputed.
 ## Stop at clean
 
 This command ends when the PR is clean. Merging belongs to `loop-review`, and
-deploying belongs to the user.
+merging is what deploys — there is no separate deploy step to hand over.
