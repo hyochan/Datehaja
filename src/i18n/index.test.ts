@@ -1,6 +1,7 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { AVATAR_PALETTES } from "@convex/lib/agentAvatar";
 import {
   ACCESSIBILITY_OPTIONS,
   DATE_TYPE_OPTIONS,
@@ -187,6 +188,17 @@ describe("internationalisation", () => {
       .filter((message) =>
         TRANSLATED_LOCALES.every((locale) => translate(locale, message) === message),
       );
+    expect(untranslated).toEqual([]);
+  });
+
+  // The scan above only sees literal t("…") calls, so keys the app builds at
+  // runtime stay invisible to it. The avatar editor asks for `${option} palette`,
+  // which is how four of these were nearly dropped as unused copy.
+  it("translates every key the app builds at runtime", () => {
+    const asked = AVATAR_PALETTES.map((palette) => `${palette} palette`);
+    const untranslated = asked.filter((message) =>
+      TRANSLATED_LOCALES.every((locale) => translate(locale, message) === message),
+    );
     expect(untranslated).toEqual([]);
   });
 

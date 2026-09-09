@@ -485,7 +485,7 @@ function DebriefCard({ t }: { t: Translate }) {
       </div>
       <header className="agent-debrief-card-header">
         <span className="docket-label text-[var(--accent-text)]">
-          {t("YOUR AGENT'S PRIVATE READ")}
+          {t("YOUR DATING AGENT'S PRIVATE READ")}
         </span>
         <span className="agent-sample-score">
           <b>6</b>

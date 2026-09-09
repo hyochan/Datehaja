@@ -88,7 +88,7 @@ const STYLES = ["Polished", "Casual", "Artistic", "Sporty", "Minimal"];
 
 const STEP_COPY = {
   1: {
-    kicker: "FIRST · YOUR AGENT",
+    kicker: "FIRST · YOUR DATING AGENT",
     title: "Create your Dating Agent.",
     body: "Your Dating Agent is your second self. Give it a face, a voice and permission to be candid.",
   },
@@ -397,7 +397,7 @@ export default function AgentOnboardingPage() {
         <aside className="lg:sticky lg:top-10 lg:self-start">
           <div className="agent-onboarding-studio">
             <span className="agent-onboarding-studio-label">
-              {t("MY AGENT")}
+              {t("MY DATING AGENT")}
             </span>
             <AgentAvatar
               name={agentDisplayName}
@@ -451,7 +451,7 @@ export default function AgentOnboardingPage() {
             {step === 1 && (
               <section>
                 <div className="docket-label mb-2 text-[var(--accent-text)]">
-                  {t("CREATE YOUR AGENT")}
+                  {t("CREATE YOUR DATING AGENT")}
                 </div>
                 <h2 className="text-[34px]">{t("Meet your Dating Agent.")}</h2>
                 <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-soft">

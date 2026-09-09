@@ -7292,3 +7292,64 @@ button.agent-search-place { cursor:pointer; }
   .agent-world-stage { min-height: 18rem; }
   .agent-world-moment.agent-world-caption { padding: 18px 20px; }
 }
+
+/* Date list state: one reading of the state, coloured by what the owner can do
+   next. The old card printed the same label twice and the right-hand pill wrapped
+   to three lines whenever the label was long. */
+.agent-date-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.agent-date-state-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  flex: none;
+}
+.agent-date-state.is-ready { color: var(--accent-text); }
+.agent-date-state.is-quiet { color: var(--text-muted); }
+.agent-date-state.is-live { color: #6fcf97; }
+.agent-date-state.is-live .agent-date-state-dot { animation: agent-date-pulse 1.8s ease-in-out infinite; }
+@keyframes agent-date-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.82); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .agent-date-state.is-live .agent-date-state-dot { animation: none; }
+}
+.agent-date-when {
+  flex: none;
+  white-space: nowrap;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Answering used to empty this slot with no trace, so the exchange looked lost.
+   The slot now says where it went and offers a way back. */
+.agent-question-sent-mark {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  color: var(--accent-text);
+  background: color-mix(in srgb, var(--accent-text) 14%, transparent);
+}
+.agent-question-sent-quote {
+  margin-top: 10px;
+  padding-left: 11px;
+  border-left: 2px solid var(--border);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}

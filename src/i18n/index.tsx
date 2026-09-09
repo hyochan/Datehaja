@@ -200,12 +200,8 @@ Object.assign(ko, {
   "Agent": "에이전트",
   "Woman": "여성",
   "Man": "남성",
-  "A real agent date": "실제 에이전트 데이트",
-  "This is what your Dating Agent brings back.": "데이트 에이전트가 가져오는 건 이런 것입니다.",
-  "Two agents met as the people they stand in for, then each wrote home privately. Both agents here are clearly marked demo characters, so nothing below belongs to a real person.": "두 에이전트가 각자의 사람으로서 만난 뒤, 각자 자기 사람에게만 편지를 썼습니다. 여기 두 에이전트는 데모 캐릭터로 표시되어 있어 아래 내용은 실제 인물의 것이 아닙니다.",
   "Loading the date…": "데이트를 불러오는 중…",
   "No date is ready to show yet. Please check back shortly.": "아직 보여드릴 데이트가 없습니다. 잠시 후 다시 확인해 주세요.",
-  "Neither agent ever saw the other's letter, and neither person's contact was revealed. That only happens when both humans say yes.": "어느 에이전트도 상대의 편지를 보지 못했고, 두 사람의 연락처도 공개되지 않았습니다. 그건 두 사람이 모두 좋다고 할 때만 열립니다.",
   "Watch a real agent date": "실제 에이전트 데이트 보기",
   "Menu": "메뉴",
   "Theme": "화면 모드",
@@ -253,12 +249,8 @@ Object.assign(ja, {
   "Agent": "エージェント",
   "Woman": "女性",
   "Man": "男性",
-  "A real agent date": "実際のエージェントデート",
-  "This is what your Dating Agent brings back.": "デートエージェントが持ち帰るのはこういうものです。",
-  "Two agents met as the people they stand in for, then each wrote home privately. Both agents here are clearly marked demo characters, so nothing below belongs to a real person.": "二人のエージェントがそれぞれの人として会い、各自が自分の人だけに手紙を書きました。ここの二人はデモキャラクターとして明示されており、以下は実在の人物のものではありません。",
   "Loading the date…": "デートを読み込み中…",
   "No date is ready to show yet. Please check back shortly.": "お見せできるデートがまだありません。しばらくしてからご確認ください。",
-  "Neither agent ever saw the other's letter, and neither person's contact was revealed. That only happens when both humans say yes.": "どちらのエージェントも相手の手紙を見ておらず、二人の連絡先も公開されていません。それは二人ともが「はい」と答えたときだけです。",
   "Watch a real agent date": "実際のエージェントデートを見る",
   "Menu": "メニュー",
   "Theme": "表示モード",
@@ -306,12 +298,8 @@ Object.assign(de, {
   "Agent": "Agent",
   "Woman": "Frau",
   "Man": "Mann",
-  "A real agent date": "Ein echtes Agent-Date",
-  "This is what your Dating Agent brings back.": "Das bringt dein Dating-Agent zurück.",
-  "Two agents met as the people they stand in for, then each wrote home privately. Both agents here are clearly marked demo characters, so nothing below belongs to a real person.": "Zwei Agenten trafen sich als die Menschen, für die sie einstehen, und schrieben danach jeweils privat nach Hause. Beide sind klar als Demo-Figuren gekennzeichnet; nichts unten gehört einer realen Person.",
   "Loading the date…": "Date wird geladen…",
   "No date is ready to show yet. Please check back shortly.": "Es ist noch kein Date zu sehen. Bitte schau gleich noch einmal vorbei.",
-  "Neither agent ever saw the other's letter, and neither person's contact was revealed. That only happens when both humans say yes.": "Kein Agent hat den Brief des anderen gesehen, und keine Kontaktdaten wurden preisgegeben. Das passiert erst, wenn beide Menschen zustimmen.",
   "Watch a real agent date": "Ein echtes Agent-Date ansehen",
   "Menu": "Menü",
   "Theme": "Darstellung",
@@ -505,7 +493,7 @@ Object.assign(ko, {
   "Agent date": "에이전트 데이트",
   "Private read": "비공개 리포트",
   "Your call": "내 결정",
-  "YOUR AGENT'S PRIVATE READ": "내 에이전트의 비공개 리포트",
+  "YOUR DATING AGENT'S PRIVATE READ": "내 데이트 에이전트의 비공개 리포트",
   "LIVE / SIMULATION": "실시간 / 시뮬레이션",
   "I get playful once I feel safe.":
     "나는 마음이 편해지면 장난꾸러기가 돼.",
@@ -514,8 +502,6 @@ Object.assign(ko, {
   "Your Dating Agent": "내 데이트 에이전트",
   "Your Dating Agent can say:": "내 데이트 에이전트는 말할 수 있어요.",
   "don't meet them.": "그 사람은 만나지 마요.",
-  "Six moments. Two independent reads. One honest recommendation.":
-    "여섯 순간. 두 개의 독립된 판단. 하나의 솔직한 추천.",
   "An interpretation, not a score": "점수가 아닌 해석",
   "Their answer remains sealed": "상대의 답변은 계속 비공개",
   "Worth meeting": "만나보길 추천해요",
@@ -533,7 +519,6 @@ Object.assign(ko, {
     "솔직히? 우리 둘, 진짜 잘 맞을 것 같아.",
   "You'd like this one. When I said I go quiet when I'm worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.":
     "이 사람, 네 마음에 들 거야. 오해받을까 봐 조용해지는 편이라고 말했더니, Sol은 그걸 고치려 들지 않고 오히려 귀를 기울이더라. 만나봐.",
-  "zero contacts exposed": "공개된 연락처 0개",
   "I want warmth without having to perform confidence.":
     "자신감 있는 척하지 않아도 따뜻한 관계를 원해요.",
   "private memory": "비공개 기억",
@@ -548,8 +533,6 @@ Object.assign(ko, {
   "contact locked": "연락처 잠김",
   moments: "장면",
   "{count} moments": "{count}개의 장면",
-  "my second self dates for me.": "내 분신이 대신 데이트해요.",
-  "Create one AI second self. It goes on the date as you, meets someone else's, and writes home privately. Contact opens only when both people say yes.": "AI 분신을 하나 만들어요. 나로서 데이트에 나가 다른 사람의 분신을 만나고, 돌아와 나에게만 이야기해요. 연락처는 두 사람이 모두 좋다고 할 때만 열려요.",
   "What I'd look for next": "다음엔 이런 사람을 볼까 해",
   "Should I change who I look for?": "내가 찾는 사람, 바꿔볼까?",
   "Personality I look for": "내가 보는 성향",
@@ -561,7 +544,6 @@ Object.assign(ko, {
   "I think you should meet.": "두 사람, 만나봤으면 해요.",
   "Quiet feels safe to both": "둘 다 침묵을 편안해해요",
   "Different social pace": "서로 다른 사교 속도",
-  "Create my Dating Agent": "내 데이트 에이전트 만들기",
   "My Dating Agent": "내 데이트 에이전트",
   Human: "사람",
   Settings: "설정",
@@ -581,7 +563,7 @@ Object.assign(ja, {
   "Agent date": "エージェントのデート",
   "Private read": "非公開レポート",
   "Your call": "あなたの決断",
-  "YOUR AGENT'S PRIVATE READ": "あなたのエージェントの非公開レポート",
+  "YOUR DATING AGENT'S PRIVATE READ": "あなたのデートエージェントの非公開レポート",
   "LIVE / SIMULATION": "ライブ / シミュレーション",
   "I get playful once I feel safe.":
     "私、安心すると急に茶目っ気が出るんだ。",
@@ -590,8 +572,6 @@ Object.assign(ja, {
   "Your Dating Agent": "あなたのデートエージェント",
   "Your Dating Agent can say:": "あなたのデートエージェントは言える：",
   "don't meet them.": "会わないほうがいい。",
-  "Six moments. Two independent reads. One honest recommendation.":
-    "6つの瞬間。2つの独立した視点。1つの正直な提案。",
   "An interpretation, not a score": "点数ではなく、ひとつの解釈",
   "Their answer remains sealed": "相手の回答は非公開のまま",
   "Worth meeting": "会ってみる価値あり",
@@ -609,7 +589,6 @@ Object.assign(ja, {
     "正直に言うと、私たち、本当に気が合うと思う。",
   "You'd like this one. When I said I go quiet when I'm worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.":
     "この人、きっと気に入るよ。誤解されそうなときは静かになるって話したら、Solは直そうとせず、むしろ耳を傾けてくれた。会ってみて。",
-  "zero contacts exposed": "連絡先の公開はゼロ",
   "I want warmth without having to perform confidence.":
     "自信を演じなくても感じられる温かさがほしい。",
   "private memory": "非公開メモリー",
@@ -624,8 +603,6 @@ Object.assign(ja, {
   "contact locked": "連絡先はロック中",
   moments: "場面",
   "{count} moments": "{count}場面",
-  "my second self dates for me.": "私の分身が代わりにデートします。",
-  "Create one AI second self. It goes on the date as you, meets someone else's, and writes home privately. Contact opens only when both people say yes.": "AIの分身をひとつ作ります。あなたとしてデートに出かけ、別の誰かの分身と会い、帰ってあなただけに話します。連絡先は二人とも「はい」と答えたときだけ開きます。",
   "What I'd look for next": "次はこんな人を探そうかな",
   "Should I change who I look for?": "探す相手、変えてみようか？",
   "Personality I look for": "探している性格",
@@ -637,7 +614,6 @@ Object.assign(ja, {
   "I think you should meet.": "会ってみてほしいです。",
   "Quiet feels safe to both": "ふたりとも沈黙が心地よい",
   "Different social pace": "異なる社交のペース",
-  "Create my Dating Agent": "デートエージェントを作る",
   "My Dating Agent": "マイ・デートエージェント",
   Human: "本人",
   Settings: "設定",
@@ -657,7 +633,7 @@ Object.assign(de, {
   "Agent date": "Agent-Date",
   "Private read": "Privater Bericht",
   "Your call": "Deine Wahl",
-  "YOUR AGENT'S PRIVATE READ": "PRIVATE EINSCHÄTZUNG DEINES AGENTEN",
+  "YOUR DATING AGENT'S PRIVATE READ": "PRIVATE EINSCHÄTZUNG DEINES DATING-AGENTEN",
   "LIVE / SIMULATION": "LIVE / SIMULATIONSMODUS",
   "I get playful once I feel safe.":
     "Ich werde verspielt, sobald ich mich sicher fühle.",
@@ -666,8 +642,6 @@ Object.assign(de, {
   "Your Dating Agent": "Dein Dating-Agent",
   "Your Dating Agent can say:": "Dein Dating-Agent kann sagen:",
   "don't meet them.": "Triff diese Person nicht.",
-  "Six moments. Two independent reads. One honest recommendation.":
-    "Sechs Momente. Zwei unabhängige Einschätzungen. Eine ehrliche Empfehlung.",
   "An interpretation, not a score": "Eine Einordnung, keine Punktzahl",
   "Their answer remains sealed":
     "Die Antwort der anderen Person bleibt versiegelt",
@@ -686,7 +660,6 @@ Object.assign(de, {
     "Ehrlich? Ich glaube, wir beide würden uns richtig mögen.",
   "You'd like this one. When I said I go quiet when I'm worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.":
     "Die Person wird dir gefallen. Als ich erzählte, dass ich still werde, wenn ich fürchte, missverstanden zu werden, wollte Sol nichts reparieren — Sol hat zugehört. Trefft euch.",
-  "zero contacts exposed": "keine Kontaktdaten offengelegt",
   "I want warmth without having to perform confidence.":
     "Ich wünsche mir Wärme, ohne Selbstsicherheit vorspielen zu müssen.",
   "private memory": "private Erinnerung",
@@ -701,8 +674,6 @@ Object.assign(de, {
   "contact locked": "Kontakt gesperrt",
   moments: "Momente",
   "{count} moments": "{count} Momente",
-  "my second self dates for me.": "mein zweites Ich datet für mich.",
-  "Create one AI second self. It goes on the date as you, meets someone else's, and writes home privately. Contact opens only when both people say yes.": "Erstelle ein zweites Ich aus KI. Es geht als du auf das Date, trifft das zweite Ich eines anderen und berichtet dir danach privat. Kontakt entsteht nur, wenn beide zustimmen.",
   "What I'd look for next": "Wonach ich als Nächstes suchen würde",
   "Should I change who I look for?": "Soll ich ändern, nach wem ich suche?",
   "Personality I look for": "Persönlichkeit, auf die ich achte",
@@ -714,7 +685,6 @@ Object.assign(de, {
   "I think you should meet.": "Ich denke, ihr solltet euch treffen.",
   "Quiet feels safe to both": "Stille fühlt sich für beide sicher an",
   "Different social pace": "Unterschiedliches soziales Tempo",
-  "Create my Dating Agent": "Meinen Dating-Agenten erstellen",
   "My Dating Agent": "Mein Dating-Agent",
   Human: "Mensch",
   Settings: "Einstellungen",
@@ -735,7 +705,7 @@ Object.assign(fr, {
   "Agent date": "Rendez-vous des agents",
   "Private read": "Rapport privé",
   "Your call": "Votre décision",
-  "YOUR AGENT'S PRIVATE READ": "AVIS PRIVÉ DE VOTRE AGENT",
+  "YOUR DATING AGENT'S PRIVATE READ": "AVIS PRIVÉ DE VOTRE AGENT DE RENCONTRE",
   "LIVE / SIMULATION": "EN DIRECT / SIMULATION",
   "I get playful once I feel safe.":
     "Je deviens joueur dès que je me sens en sécurité.",
@@ -744,8 +714,6 @@ Object.assign(fr, {
   "Your Dating Agent": "Votre agent",
   "Your Dating Agent can say:": "Votre agent peut dire :",
   "don't meet them.": "Ne les rencontrez pas.",
-  "Six moments. Two independent reads. One honest recommendation.":
-    "Six moments. Deux avis indépendants. Une recommandation honnête.",
   "An interpretation, not a score": "Une interprétation, pas une note",
   "Their answer remains sealed": "La réponse de l'autre personne reste scellée",
   "Worth meeting": "Une rencontre vaut la peine",
@@ -763,7 +731,6 @@ Object.assign(fr, {
     "Honnêtement ? Je crois qu'on se plairait vraiment.",
   "You'd like this one. When I said I go quiet when I'm worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.":
     "Cette personne va te plaire. Quand j'ai parlé de mon silence quand je crains d'être mal compris, Sol n'a rien voulu corriger — Sol s'est penché pour écouter. Rencontrez-vous.",
-  "zero contacts exposed": "aucun contact dévoilé",
   "I want warmth without having to perform confidence.":
     "Je veux de la chaleur sans devoir jouer la confiance.",
   "private memory": "mémoire privée",
@@ -778,8 +745,6 @@ Object.assign(fr, {
   "contact locked": "contact verrouillé",
   moments: "instants",
   "{count} moments": "{count} instants",
-  "my second self dates for me.": "mon autre moi y va à ma place.",
-  "Create one AI second self. It goes on the date as you, meets someone else's, and writes home privately. Contact opens only when both people say yes.": "Créez un autre vous, en IA. Il va au rendez-vous à votre place, rencontre celui de quelqu’un d’autre, puis vous en parle en privé. Les coordonnées ne s’ouvrent que si les deux disent oui.",
   "What I'd look for next": "Ce que je chercherais ensuite",
   "Should I change who I look for?": "Je change qui je cherche ?",
   "Personality I look for": "Le tempérament que je cherche",
@@ -791,7 +756,6 @@ Object.assign(fr, {
   "I think you should meet.": "Je pense que vous devriez vous rencontrer.",
   "Quiet feels safe to both": "Le silence rassure les deux",
   "Different social pace": "Rythmes sociaux différents",
-  "Create my Dating Agent": "Créer mon agent",
   "My Dating Agent": "Mon agent",
   Human: "Humain",
   Settings: "Réglages",
@@ -811,7 +775,7 @@ Object.assign(nl, {
   "Agent date": "Agentdate",
   "Private read": "Privéverslag",
   "Your call": "Jouw keuze",
-  "YOUR AGENT'S PRIVATE READ": "PRIVÉVERSLAG VAN JE AGENT",
+  "YOUR DATING AGENT'S PRIVATE READ": "PRIVÉVERSLAG VAN JE DATING-AGENT",
   "LIVE / SIMULATION": "LIVE / SIMULATIE",
   "I get playful once I feel safe.":
     "Ik word speels zodra ik me veilig voel.",
@@ -820,8 +784,6 @@ Object.assign(nl, {
   "Your Dating Agent": "Jouw agent",
   "Your Dating Agent can say:": "Jouw agent kan zeggen:",
   "don't meet them.": "Ontmoet diegene niet.",
-  "Six moments. Two independent reads. One honest recommendation.":
-    "Zes momenten. Twee onafhankelijke oordelen. Eén eerlijk advies.",
   "An interpretation, not a score": "Een interpretatie, geen score",
   "Their answer remains sealed": "Het antwoord van de ander blijft verzegeld",
   "Worth meeting": "Het waard om te ontmoeten",
@@ -839,7 +801,6 @@ Object.assign(nl, {
     "Eerlijk? Ik denk dat wij elkaar echt zouden mogen.",
   "You'd like this one. When I said I go quiet when I'm worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.":
     "Deze ga je leuk vinden. Toen ik zei dat ik stil word als ik bang ben verkeerd begrepen te worden, wilde Sol niets oplossen — Sol boog juist naar voren. Ga die ontmoeting aan.",
-  "zero contacts exposed": "geen contactgegevens onthuld",
   "I want warmth without having to perform confidence.":
     "Ik wil warmte zonder zelfvertrouwen te hoeven spelen.",
   "private memory": "privéherinnering",
@@ -854,8 +815,6 @@ Object.assign(nl, {
   "contact locked": "contact vergrendeld",
   moments: "momenten",
   "{count} moments": "{count} momenten",
-  "my second self dates for me.": "mijn tweede zelf datet voor mij.",
-  "Create one AI second self. It goes on the date as you, meets someone else's, and writes home privately. Contact opens only when both people say yes.": "Maak één AI-tweede-zelf. Het gaat als jou op date, ontmoet dat van iemand anders en vertelt het jou daarna privé. Contact opent alleen als beiden ja zeggen.",
   "What I'd look for next": "Waar ik hierna naar zou zoeken",
   "Should I change who I look for?": "Zal ik veranderen naar wie ik zoek?",
   "Personality I look for": "Het karakter waar ik op let",
@@ -867,7 +826,6 @@ Object.assign(nl, {
   "I think you should meet.": "Ik denk dat jullie elkaar moeten ontmoeten.",
   "Quiet feels safe to both": "Stilte voelt voor beiden veilig",
   "Different social pace": "Ander sociaal tempo",
-  "Create my Dating Agent": "Mijn agent maken",
   "My Dating Agent": "Mijn agent",
   Human: "Mens",
   Settings: "Instellingen",
@@ -887,7 +845,7 @@ Object.assign(sv, {
   "Agent date": "Agentdejt",
   "Private read": "Privat rapport",
   "Your call": "Ditt beslut",
-  "YOUR AGENT'S PRIVATE READ": "DIN AGENTS PRIVATA OMDÖME",
+  "YOUR DATING AGENT'S PRIVATE READ": "DIN DEJTINGAGENTS PRIVATA OMDÖME",
   "LIVE / SIMULATION": "LIVE / SIMULERING",
   "I get playful once I feel safe.":
     "Jag blir lekfull först när det känns tryggt.",
@@ -896,8 +854,6 @@ Object.assign(sv, {
   "Your Dating Agent": "Din dejtingagent",
   "Your Dating Agent can say:": "Din dejtingagent kan säga:",
   "don't meet them.": "Träffa dem inte.",
-  "Six moments. Two independent reads. One honest recommendation.":
-    "Sex ögonblick. Två oberoende omdömen. En ärlig rekommendation.",
   "An interpretation, not a score": "En tolkning, inte ett betyg",
   "Their answer remains sealed": "Den andras svar förblir förseglat",
   "Worth meeting": "Värd att träffa",
@@ -915,7 +871,6 @@ Object.assign(sv, {
     "Ärligt? Jag tror att vi två verkligen skulle gilla varandra.",
   "You'd like this one. When I said I go quiet when I'm worried about being misread, Sol didn't rush to fix it — they leaned in. Meet them.":
     "Den här kommer du att gilla. När jag berättade att jag blir tyst när jag är rädd att bli missförstådd försökte Sol inte fixa det — Sol lutade sig närmare. Träffas.",
-  "zero contacts exposed": "inga kontaktuppgifter avslöjade",
   "I want warmth without having to perform confidence.":
     "Jag vill ha värme utan att behöva spela självsäker.",
   "private memory": "privat minne",
@@ -930,8 +885,6 @@ Object.assign(sv, {
   "contact locked": "kontakt låst",
   moments: "ögonblick",
   "{count} moments": "{count} ögonblick",
-  "my second self dates for me.": "mitt andra jag dejtar åt mig.",
-  "Create one AI second self. It goes on the date as you, meets someone else's, and writes home privately. Contact opens only when both people say yes.": "Skapa ett andra jag av AI. Det går på dejten som du, möter någon annans och berättar sedan för dig i enrum. Kontakt öppnas bara när båda säger ja.",
   "What I'd look for next": "Vad jag skulle leta efter härnäst",
   "Should I change who I look for?": "Ska jag ändra vem jag letar efter?",
   "Personality I look for": "Personligheten jag letar efter",
@@ -943,7 +896,6 @@ Object.assign(sv, {
   "I think you should meet.": "Jag tycker att ni borde träffas.",
   "Quiet feels safe to both": "Tystnad känns trygg för båda",
   "Different social pace": "Olika socialt tempo",
-  "Create my Dating Agent": "Skapa min dejtingagent",
   "My Dating Agent": "Min dejtingagent",
   Human: "Person",
   Settings: "Inställningar",
@@ -1357,7 +1309,6 @@ Object.assign(ko, {
   "No background checks": "신원 조회 없음",
   "By design": "설계 단계부터",
   "What the product does for you": "제품이 제공하는 보호",
-  "Public places only": "공공장소만",
   "No contact details exchanged": "연락처 교환 없음",
   "Neighbourhood, not address": "주소가 아닌 동네",
   "You can stop instantly": "언제든 즉시 중지",
@@ -1383,7 +1334,6 @@ Object.assign(ja, {
   "No background checks": "身元調査なし",
   "By design": "設計による保護",
   "What the product does for you": "製品が提供する保護",
-  "Public places only": "公共の場所のみ",
   "No contact details exchanged": "連絡先の交換なし",
   "Neighbourhood, not address": "住所ではなく地域",
   "You can stop instantly": "いつでもすぐ停止",
@@ -1409,7 +1359,6 @@ Object.assign(de, {
   "No background checks": "Keine Hintergrundprüfung",
   "By design": "Durch das Design",
   "What the product does for you": "Was das Produkt für dich tut",
-  "Public places only": "Nur öffentliche Orte",
   "No contact details exchanged": "Keine Kontaktdaten ausgetauscht",
   "Neighbourhood, not address": "Viertel statt Adresse",
   "You can stop instantly": "Du kannst sofort stoppen",
@@ -1436,7 +1385,6 @@ Object.assign(fr, {
   "No background checks": "Aucune vérification des antécédents",
   "By design": "Par conception",
   "What the product does for you": "Ce que le produit fait pour vous",
-  "Public places only": "Lieux publics uniquement",
   "No contact details exchanged": "Aucune coordonnée échangée",
   "Neighbourhood, not address": "Quartier, pas adresse",
   "You can stop instantly": "Vous pouvez arrêter immédiatement",
@@ -1462,7 +1410,6 @@ Object.assign(nl, {
   "No background checks": "Geen antecedentenonderzoek",
   "By design": "Door het ontwerp",
   "What the product does for you": "Wat het product voor je doet",
-  "Public places only": "Alleen openbare plaatsen",
   "No contact details exchanged": "Geen contactgegevens uitgewisseld",
   "Neighbourhood, not address": "Buurt, geen adres",
   "You can stop instantly": "Je kunt direct stoppen",
@@ -1488,7 +1435,6 @@ Object.assign(sv, {
   "No background checks": "Ingen bakgrundskontroll",
   "By design": "Genom designen",
   "What the product does for you": "Vad produkten gör för dig",
-  "Public places only": "Endast offentliga platser",
   "No contact details exchanged": "Inga kontaktuppgifter utbyts",
   "Neighbourhood, not address": "Område, inte adress",
   "You can stop instantly": "Du kan stoppa direkt",
@@ -1509,18 +1455,8 @@ Object.assign(ko, {
     "Datehaja는 어떤 형태로도 신원을 확인하지 않으며 프로필 정보는 모두 사용자가 직접 입력합니다. 확보하지 못한 안전을 암시하는 것보다 한계를 솔직히 밝히는 것이 더 안전합니다.",
   "What we do enforce: every account confirms it's 18 or over, blocked pairs are never matched again in either direction, and serious reports immediately restrict the reported account pending review.":
     "모든 계정은 만 18세 이상임을 확인해야 합니다. 차단된 두 사람은 어느 방향으로도 다시 매칭되지 않으며, 심각한 신고가 접수된 계정은 검토 전까지 즉시 제한됩니다.",
-  "Every date is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.":
-    "모든 데이트는 실시간 웹 조사로 확인한 실제 영업 중인 공공장소에서만 계획하며 사적 주소는 사용하지 않습니다.",
-  "You can complete an entire date without your match ever having your email, number or socials. Nothing in the product asks you to hand them over.":
-    "이메일, 전화번호, 소셜 계정을 상대방에게 주지 않고도 데이트 전 과정을 마칠 수 있습니다. 제품 어디에서도 공유를 요구하지 않습니다.",
   "Your location is stored as an approximate neighbourhood centre, and shown to a match only as a neighbourhood name.":
     "위치는 대략적인 동네 중심으로 저장되고 상대방에게는 동네 이름만 표시됩니다.",
-  "One switch in Settings takes you out of everyone's candidate pool immediately, so no new date plan can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.":
-    "설정의 스위치 하나로 즉시 모든 후보 목록에서 빠질 수 있습니다. 이미 진행 중인 검색은 초대 하나를 보낼 수 있지만 거절하면 더 이어지지 않으며 데이터는 삭제되지 않습니다.",
-  "Blocking someone cancels any date plan you share, frees both evenings, and permanently removes you from each other's candidate pool.":
-    "차단하면 함께한 데이트 계획이 취소되고 두 사람의 시간이 풀리며 서로의 후보 목록에서 영구히 제외됩니다.",
-  "Tell someone you trust where you're going and when. The date plan page has the venue, address and time — it's built to be forwarded.":
-    "신뢰하는 사람에게 언제 어디로 가는지 알리세요. 데이트 계획 페이지의 장소, 주소, 시간은 바로 전달할 수 있습니다.",
   "Arrange your own way there and back. Don't accept a lift on a first date.":
     "왕복 교통편은 직접 준비하고 첫 데이트에서는 차를 얻어 타지 마세요.",
   "Stay in the public venue. If someone pushes to move somewhere private, that's your answer.":
@@ -1529,8 +1465,6 @@ Object.assign(ko, {
     "음료를 지켜보고 원할 때 언제든 떠나세요. 낯선 사람에게 빚진 것은 없습니다.",
   "If they pressure you for your number, socials or money, report it. That's exactly what Datehaja exists to make unnecessary.":
     "전화번호, 소셜 계정, 돈을 요구하거나 압박하면 신고하세요. Datehaja는 그런 요구가 필요 없도록 만든 서비스입니다.",
-  "Open the date plan and use Report at the bottom of the page. The report reaches us with the date plan attached, so we can see who, when and where without you having to explain it twice.":
-    "데이트 계획을 열고 페이지 아래의 신고를 누르세요. 계획 정보가 함께 전달되어 누구와 언제 어디서 있었는지 반복해서 설명하지 않아도 됩니다.",
   "Reports of harassment or of someone appearing to be under 18 immediately restrict that account while we look at it. You can block at the same time, or separately — the two are independent on purpose.":
     "괴롭힘이나 미성년자로 의심되는 신고는 검토 중 해당 계정을 즉시 제한합니다. 차단은 동시에 또는 별도로 할 수 있습니다.",
   "You can also reply to any Datehaja Concierge email. It comes to us.":
@@ -1548,18 +1482,8 @@ Object.assign(ja, {
     "Datehajaはいかなる本人確認も行わず、プロフィールはすべて自己申告です。確保していない安全を匂わせるより、限界を明確にする方が安全だと考えています。",
   "What we do enforce: every account confirms it's 18 or over, blocked pairs are never matched again in either direction, and serious reports immediately restrict the reported account pending review.":
     "すべてのアカウントは18歳以上を確認します。ブロックした二人は再びマッチせず、重大な報告を受けたアカウントは審査まで直ちに制限されます。",
-  "Every date is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.":
-    "すべてのデートは最新のウェブ調査で確認した営業中の公共施設で計画し、個人宅は使いません。",
-  "You can complete an entire date without your match ever having your email, number or socials. Nothing in the product asks you to hand them over.":
-    "メール、電話番号、SNSを相手に渡さずにデート全体を完了できます。製品内で共有を求めることはありません。",
   "Your location is stored as an approximate neighbourhood centre, and shown to a match only as a neighbourhood name.":
     "位置は地域のおおよその中心として保存され、相手には地域名だけが表示されます。",
-  "One switch in Settings takes you out of everyone's candidate pool immediately, so no new date plan can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.":
-    "設定のスイッチ一つで候補からすぐ外れます。進行中の検索から招待が一件届く場合はありますが、見送ればそれ以上は続きません。データは削除されません。",
-  "Blocking someone cancels any date plan you share, frees both evenings, and permanently removes you from each other's candidate pool.":
-    "ブロックすると共有するデートプランがキャンセルされ、二人の予定が解放され、お互いの候補から恒久的に外れます。",
-  "Tell someone you trust where you're going and when. The date plan page has the venue, address and time — it's built to be forwarded.":
-    "信頼できる人に行き先と時間を伝えてください。デートプランの会場、住所、時間はそのまま共有できます。",
   "Arrange your own way there and back. Don't accept a lift on a first date.":
     "往復の交通手段は自分で用意し、初デートでは送迎を受けないでください。",
   "Stay in the public venue. If someone pushes to move somewhere private, that's your answer.":
@@ -1568,8 +1492,6 @@ Object.assign(ja, {
     "飲み物から目を離さず、いつでも帰って構いません。見知らぬ人に借りはありません。",
   "If they pressure you for your number, socials or money, report it. That's exactly what Datehaja exists to make unnecessary.":
     "電話番号、SNS、お金を要求されたら報告してください。Datehajaはそうした要求を不要にするためのサービスです。",
-  "Open the date plan and use Report at the bottom of the page. The report reaches us with the date plan attached, so we can see who, when and where without you having to explain it twice.":
-    "デートプランを開き、ページ下部の報告を使ってください。プラン情報が添付されるため、相手、日時、場所を繰り返し説明する必要はありません。",
   "Reports of harassment or of someone appearing to be under 18 immediately restrict that account while we look at it. You can block at the same time, or separately — the two are independent on purpose.":
     "嫌がらせや18歳未満に見える人の報告は、確認中そのアカウントを直ちに制限します。ブロックは同時にも別々にも行えます。",
   "You can also reply to any Datehaja Concierge email. It comes to us.":
@@ -1587,18 +1509,8 @@ Object.assign(de, {
     "Datehaja prüft Identitäten in keiner Form. Alle Profilangaben sind selbst gemacht. Ein Produkt, das unverdiente Sicherheit suggeriert, ist gefährlicher als ein ehrliches.",
   "What we do enforce: every account confirms it's 18 or over, blocked pairs are never matched again in either direction, and serious reports immediately restrict the reported account pending review.":
     "Jedes Konto bestätigt ein Mindestalter von 18. Blockierte Paare werden nie wieder gematcht, und ernste Meldungen schränken das gemeldete Konto bis zur Prüfung sofort ein.",
-  "Every date is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.":
-    "Jedes Date findet an einem realen, öffentlichen und aktuell geöffneten Ort statt, der live im Web geprüft wurde. Private Adressen nutzen wir nie.",
-  "You can complete an entire date without your match ever having your email, number or socials. Nothing in the product asks you to hand them over.":
-    "Du kannst das ganze Date erleben, ohne E-Mail, Nummer oder Socials zu teilen. Das Produkt fordert sie nie an.",
   "Your location is stored as an approximate neighbourhood centre, and shown to a match only as a neighbourhood name.":
     "Dein Standort wird als ungefährer Mittelpunkt eines Viertels gespeichert und nur als Viertelname gezeigt.",
-  "One switch in Settings takes you out of everyone's candidate pool immediately, so no new date plan can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.":
-    "Ein Schalter in den Einstellungen entfernt dich sofort aus allen Kandidatenlisten. Eine laufende Suche kann noch eine Einladung liefern; lehne sie ab, dann folgt nichts Weiteres. Nichts wird gelöscht.",
-  "Blocking someone cancels any date plan you share, frees both evenings, and permanently removes you from each other's candidate pool.":
-    "Blockieren storniert gemeinsame Date-Pläne, gibt beide Abende frei und entfernt euch dauerhaft aus den Kandidatenlisten des jeweils anderen.",
-  "Tell someone you trust where you're going and when. The date plan page has the venue, address and time — it's built to be forwarded.":
-    "Sag einer vertrauten Person, wohin und wann du gehst. Die Seite des Date-Plans mit Ort, Adresse und Zeit lässt sich weiterleiten.",
   "Arrange your own way there and back. Don't accept a lift on a first date.":
     "Organisiere Hin- und Rückweg selbst und nimm beim ersten Date keine Mitfahrgelegenheit an.",
   "Stay in the public venue. If someone pushes to move somewhere private, that's your answer.":
@@ -1607,8 +1519,6 @@ Object.assign(de, {
     "Behalte dein Getränk im Blick und geh jederzeit — du schuldest einer fremden Person nichts.",
   "If they pressure you for your number, socials or money, report it. That's exactly what Datehaja exists to make unnecessary.":
     "Melde Druck wegen Nummer, Socials oder Geld. Genau das soll Datehaja unnötig machen.",
-  "Open the date plan and use Report at the bottom of the page. The report reaches us with the date plan attached, so we can see who, when and where without you having to explain it twice.":
-    "Öffne den Date-Plan und nutze unten Melden. Der Plan wird angehängt, damit wir Person, Zeit und Ort sehen, ohne dass du alles doppelt erklären musst.",
   "Reports of harassment or of someone appearing to be under 18 immediately restrict that account while we look at it. You can block at the same time, or separately — the two are independent on purpose.":
     "Meldungen zu Belästigung oder mutmaßlich Minderjährigen schränken das Konto während der Prüfung sofort ein. Blockieren ist gleichzeitig oder separat möglich.",
   "You can also reply to any Datehaja Concierge email. It comes to us.":
@@ -1626,18 +1536,8 @@ Object.assign(fr, {
     "Datehaja ne vérifie l'identité sous aucune forme. Toutes les informations sont déclaratives. Un produit qui suggère une sécurité non acquise est plus dangereux qu'un produit honnête.",
   "What we do enforce: every account confirms it's 18 or over, blocked pairs are never matched again in either direction, and serious reports immediately restrict the reported account pending review.":
     "Chaque compte confirme avoir au moins 18 ans. Les personnes bloquées ne sont plus jamais rapprochées et les signalements graves limitent immédiatement le compte pendant l'examen.",
-  "Every date is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.":
-    "Chaque rendez-vous est prévu dans un lieu réel, public et actuellement ouvert, vérifié sur le web. Jamais à une adresse privée.",
-  "You can complete an entire date without your match ever having your email, number or socials. Nothing in the product asks you to hand them over.":
-    "Vous pouvez vivre tout le rendez-vous sans partager e-mail, numéro ou réseaux sociaux. Le produit ne vous le demande jamais.",
   "Your location is stored as an approximate neighbourhood centre, and shown to a match only as a neighbourhood name.":
     "Votre localisation est stockée comme centre approximatif d'un quartier et affichée uniquement par son nom.",
-  "One switch in Settings takes you out of everyone's candidate pool immediately, so no new date plan can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.":
-    "Un bouton dans les réglages vous retire immédiatement de toutes les sélections. Une recherche déjà lancée peut encore produire une invitation ; refusez-la et rien d'autre ne suivra. Rien n'est supprimé.",
-  "Blocking someone cancels any date plan you share, frees both evenings, and permanently removes you from each other's candidate pool.":
-    "Bloquer quelqu'un annule tout projet de rendez-vous commun, libère les deux soirées et vous retire définitivement des sélections respectives.",
-  "Tell someone you trust where you're going and when. The date plan page has the venue, address and time — it's built to be forwarded.":
-    "Dites à une personne de confiance où et quand vous allez. La page du rendez-vous contient le lieu, l'adresse et l'heure et peut être transférée.",
   "Arrange your own way there and back. Don't accept a lift on a first date.":
     "Organisez vous-même l'aller et le retour. N'acceptez pas d'être raccompagné au premier rendez-vous.",
   "Stay in the public venue. If someone pushes to move somewhere private, that's your answer.":
@@ -1646,8 +1546,6 @@ Object.assign(fr, {
     "Gardez votre boisson à l'œil et partez quand vous le souhaitez — vous ne devez rien à un inconnu.",
   "If they pressure you for your number, socials or money, report it. That's exactly what Datehaja exists to make unnecessary.":
     "Si l'on vous presse de donner numéro, réseaux ou argent, signalez-le. Datehaja existe précisément pour rendre cela inutile.",
-  "Open the date plan and use Report at the bottom of the page. The report reaches us with the date plan attached, so we can see who, when and where without you having to explain it twice.":
-    "Ouvrez le projet de rendez-vous et utilisez Signaler en bas. Le projet est joint afin que nous voyions qui, quand et où sans vous faire répéter.",
   "Reports of harassment or of someone appearing to be under 18 immediately restrict that account while we look at it. You can block at the same time, or separately — the two are independent on purpose.":
     "Les signalements de harcèlement ou de personne semblant mineure limitent immédiatement le compte pendant l'examen. Le blocage peut être effectué en même temps ou séparément.",
   "You can also reply to any Datehaja Concierge email. It comes to us.":
@@ -1665,18 +1563,8 @@ Object.assign(nl, {
     "Datehaja verifieert identiteit op geen enkele manier. Alles op een profiel is zelf opgegeven. Een product dat onverdiende veiligheid suggereert is gevaarlijker dan een eerlijk product.",
   "What we do enforce: every account confirms it's 18 or over, blocked pairs are never matched again in either direction, and serious reports immediately restrict the reported account pending review.":
     "Elk account bevestigt 18+ te zijn. Geblokkeerde personen worden nooit opnieuw gekoppeld en ernstige meldingen beperken het account direct tijdens onderzoek.",
-  "Every date is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.":
-    "Elke date wordt gepland op een echte, openbare en actuele locatie die live op het web is gecontroleerd. Nooit op een privéadres.",
-  "You can complete an entire date without your match ever having your email, number or socials. Nothing in the product asks you to hand them over.":
-    "Je kunt de hele date afronden zonder e-mail, nummer of socials te delen. Het product vraagt daar nooit om.",
   "Your location is stored as an approximate neighbourhood centre, and shown to a match only as a neighbourhood name.":
     "Je locatie wordt opgeslagen als globaal buurtcentrum en alleen als buurtnaam getoond.",
-  "One switch in Settings takes you out of everyone's candidate pool immediately, so no new date plan can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.":
-    "Eén schakelaar in Instellingen haalt je direct uit alle kandidatenlijsten. Een lopende zoekactie kan nog één uitnodiging opleveren; sla die over en er volgt niets. Er wordt niets verwijderd.",
-  "Blocking someone cancels any date plan you share, frees both evenings, and permanently removes you from each other's candidate pool.":
-    "Iemand blokkeren annuleert gedeelde dateplannen, maakt beide avonden vrij en verwijdert jullie permanent uit elkaars kandidatenlijsten.",
-  "Tell someone you trust where you're going and when. The date plan page has the venue, address and time — it's built to be forwarded.":
-    "Vertel iemand die je vertrouwt waar en wanneer je gaat. De dateplanpagina met locatie, adres en tijd is gemaakt om door te sturen.",
   "Arrange your own way there and back. Don't accept a lift on a first date.":
     "Regel zelf vervoer heen en terug en neem geen lift aan op een eerste date.",
   "Stay in the public venue. If someone pushes to move somewhere private, that's your answer.":
@@ -1685,8 +1573,6 @@ Object.assign(nl, {
     "Houd je drankje in de gaten en vertrek wanneer je wilt — je bent een onbekende niets verschuldigd.",
   "If they pressure you for your number, socials or money, report it. That's exactly what Datehaja exists to make unnecessary.":
     "Meld druk om je nummer, socials of geld te geven. Datehaja bestaat juist om dat overbodig te maken.",
-  "Open the date plan and use Report at the bottom of the page. The report reaches us with the date plan attached, so we can see who, when and where without you having to explain it twice.":
-    "Open het dateplan en kies Melden onderaan. Het plan wordt meegestuurd zodat we persoon, tijd en plaats zien zonder dat je alles dubbel hoeft uit te leggen.",
   "Reports of harassment or of someone appearing to be under 18 immediately restrict that account while we look at it. You can block at the same time, or separately — the two are independent on purpose.":
     "Meldingen van intimidatie of iemand die onder 18 lijkt beperken het account direct tijdens onderzoek. Blokkeren kan tegelijk of apart.",
   "You can also reply to any Datehaja Concierge email. It comes to us.":
@@ -1704,18 +1590,8 @@ Object.assign(sv, {
     "Datehaja verifierar inte identitet i någon form. All profilinformation är självrapporterad. En produkt som antyder oförtjänt säkerhet är farligare än en ärlig produkt.",
   "What we do enforce: every account confirms it's 18 or over, blocked pairs are never matched again in either direction, and serious reports immediately restrict the reported account pending review.":
     "Varje konto bekräftar 18+. Blockerade personer matchas aldrig igen och allvarliga rapporter begränsar kontot direkt under granskning.",
-  "Every date is planned at a real, public, currently-operating venue found through live web research. We never plan anything at a private address.":
-    "Varje dejt planeras på en verklig, offentlig och öppen plats som kontrollerats live på webben. Aldrig på en privat adress.",
-  "You can complete an entire date without your match ever having your email, number or socials. Nothing in the product asks you to hand them over.":
-    "Du kan genomföra hela dejten utan att dela e-post, nummer eller sociala konton. Produkten ber aldrig om det.",
   "Your location is stored as an approximate neighbourhood centre, and shown to a match only as a neighbourhood name.":
     "Din plats lagras som ett ungefärligt områdescentrum och visas bara som områdesnamn.",
-  "One switch in Settings takes you out of everyone's candidate pool immediately, so no new date plan can reach you. A search already in flight may still finish and produce one invitation; pass on it and nothing else will follow. Nothing is deleted.":
-    "En knapp i Inställningar tar direkt bort dig från alla kandidatlistor. En pågående sökning kan ge en sista inbjudan; avstå så följer inget mer. Inget raderas.",
-  "Blocking someone cancels any date plan you share, frees both evenings, and permanently removes you from each other's candidate pool.":
-    "Blockering avbryter gemensamma dejtplaner, frigör båda kvällarna och tar permanent bort er från varandras kandidatlistor.",
-  "Tell someone you trust where you're going and when. The date plan page has the venue, address and time — it's built to be forwarded.":
-    "Berätta för någon du litar på vart och när du går. Dejtplanens sida med plats, adress och tid kan vidarebefordras.",
   "Arrange your own way there and back. Don't accept a lift on a first date.":
     "Ordna transport dit och hem själv. Tacka inte ja till skjuts på första dejten.",
   "Stay in the public venue. If someone pushes to move somewhere private, that's your answer.":
@@ -1724,8 +1600,6 @@ Object.assign(sv, {
     "Håll koll på din dryck och gå när du vill — du är inte skyldig en främling något.",
   "If they pressure you for your number, socials or money, report it. That's exactly what Datehaja exists to make unnecessary.":
     "Rapportera press om nummer, sociala konton eller pengar. Datehaja finns för att göra sådant onödigt.",
-  "Open the date plan and use Report at the bottom of the page. The report reaches us with the date plan attached, so we can see who, when and where without you having to explain it twice.":
-    "Öppna dejtplanen och använd Rapportera längst ned. Planen bifogas så att vi ser person, tid och plats utan att du behöver förklara allt två gånger.",
   "Reports of harassment or of someone appearing to be under 18 immediately restrict that account while we look at it. You can block at the same time, or separately — the two are independent on purpose.":
     "Rapporter om trakasserier eller någon som verkar under 18 begränsar kontot direkt under granskning. Blockering kan göras samtidigt eller separat.",
   "You can also reply to any Datehaja Concierge email. It comes to us.":
@@ -1766,153 +1640,31 @@ Object.assign(sv, {
 });
 
 Object.assign(ko, {
-  "Private safety settings saved.": "비공개 안전 설정을 저장했어요.",
-  "Optional · private": "선택 사항 · 비공개",
-  "Your safety circle": "나의 안전 연락망",
-  "Why we ask": "왜 필요한가요?",
-  "A real person can know where you are.":
-    "믿을 수 있는 사람이 내 행선지를 알 수 있어요.",
-  "Add one trusted contact, then share a confirmed plan with one tap. They receive only your first name, the time, and the public venue — never your match's identity.":
-    "신뢰 연락처 한 명을 추가하고 확정된 일정을 한 번에 공유하세요. 연락처에는 내 이름, 시간, 공개 장소만 전달되며 상대의 신원은 절대 공유되지 않아요.",
-  "We do not collect ID scans or claim identity verification. Extra data without a real safety action would only create risk.":
-    "신분증 사본을 수집하거나 신원 인증을 했다고 주장하지 않아요. 실제 안전 조치로 이어지지 않는 개인정보는 위험만 늘립니다.",
-  "Trusted contact name": "신뢰 연락처 이름",
-  "Trusted contact email": "신뢰 연락처 이메일",
-  "They agreed that I can store this email for Datehaja safety plans.":
-    "이 이메일을 Datehaja 안전 일정 공유에 저장하는 데 동의받았어요.",
-  "Ask me how the date went": "데이트 후 안부 묻기",
-  "A private, optional check-in after the planned end time.":
-    "예정 종료 시간 뒤에 보내는 선택형 비공개 체크인이에요.",
-  "Save private safety settings": "비공개 안전 설정 저장",
-  "Sign in to add a trusted contact and choose whether Datehaja checks in after a date.":
-    "로그인하면 신뢰 연락처를 추가하고 데이트 후 체크인 여부를 선택할 수 있어요.",
   "Prefer not to say": "답하지 않을래요",
   star: "점",
 });
 
 Object.assign(ja, {
-  "Private safety settings saved.": "非公開の安全設定を保存しました。",
-  "Optional · private": "任意・非公開",
-  "Your safety circle": "あなたの安全連絡先",
-  "Why we ask": "必要な理由",
-  "A real person can know where you are.":
-    "信頼できる人に行き先を知らせられます。",
-  "Add one trusted contact, then share a confirmed plan with one tap. They receive only your first name, the time, and the public venue — never your match's identity.":
-    "信頼できる連絡先を1人追加し、確定した予定をワンタップで共有できます。伝わるのは名前、時間、公共の会場だけで、相手の身元は共有されません。",
-  "We do not collect ID scans or claim identity verification. Extra data without a real safety action would only create risk.":
-    "身分証の画像は収集せず、本人確認済みとも表示しません。実際の安全対策につながらない個人情報はリスクを増やすだけです。",
-  "Trusted contact name": "信頼できる連絡先の名前",
-  "Trusted contact email": "信頼できる連絡先のメール",
-  "They agreed that I can store this email for Datehaja safety plans.":
-    "このメールをDatehajaの安全予定に保存する同意を得ています。",
-  "Ask me how the date went": "デート後にチェックインする",
-  "A private, optional check-in after the planned end time.":
-    "予定終了後の任意の非公開チェックインです。",
-  "Save private safety settings": "非公開の安全設定を保存",
-  "Sign in to add a trusted contact and choose whether Datehaja checks in after a date.":
-    "ログインすると、信頼できる連絡先とデート後のチェックインを設定できます。",
   "Prefer not to say": "回答しない",
   star: "点",
 });
 
 Object.assign(de, {
-  "Private safety settings saved.":
-    "Private Sicherheitseinstellungen gespeichert.",
-  "Optional · private": "Optional · privat",
-  "Your safety circle": "Dein Sicherheitskreis",
-  "Why we ask": "Warum wir fragen",
-  "A real person can know where you are.":
-    "Eine vertraute Person kann wissen, wo du bist.",
-  "Add one trusted contact, then share a confirmed plan with one tap. They receive only your first name, the time, and the public venue — never your match's identity.":
-    "Füge eine Vertrauensperson hinzu und teile einen bestätigten Plan mit einem Tippen. Sie erhält nur deinen Vornamen, die Zeit und den öffentlichen Treffpunkt — nie die Identität deines Matches.",
-  "We do not collect ID scans or claim identity verification. Extra data without a real safety action would only create risk.":
-    "Wir sammeln keine Ausweiskopien und behaupten keine Identitätsprüfung. Zusätzliche Daten ohne konkrete Schutzwirkung würden nur Risiken schaffen.",
-  "Trusted contact name": "Name der Vertrauensperson",
-  "Trusted contact email": "E-Mail der Vertrauensperson",
-  "They agreed that I can store this email for Datehaja safety plans.":
-    "Die Person hat zugestimmt, dass ich diese E-Mail für Datehaja-Sicherheitspläne speichere.",
-  "Ask me how the date went": "Nach dem Date nachfragen",
-  "A private, optional check-in after the planned end time.":
-    "Ein privater, optionaler Check-in nach dem geplanten Ende.",
-  "Save private safety settings": "Private Sicherheitseinstellungen speichern",
-  "Sign in to add a trusted contact and choose whether Datehaja checks in after a date.":
-    "Melde dich an, um eine Vertrauensperson und den Check-in nach dem Date einzurichten.",
   "Prefer not to say": "Keine Angabe",
   star: "Stern",
 });
 
 Object.assign(fr, {
-  "Private safety settings saved.":
-    "Paramètres de sécurité privés enregistrés.",
-  "Optional · private": "Facultatif · privé",
-  "Your safety circle": "Votre cercle de sécurité",
-  "Why we ask": "Pourquoi nous le demandons",
-  "A real person can know where you are.":
-    "Une personne de confiance peut savoir où vous êtes.",
-  "Add one trusted contact, then share a confirmed plan with one tap. They receive only your first name, the time, and the public venue — never your match's identity.":
-    "Ajoutez un contact de confiance puis partagez un rendez-vous confirmé en un geste. Cette personne reçoit seulement votre prénom, l'heure et le lieu public — jamais l'identité de l'autre personne.",
-  "We do not collect ID scans or claim identity verification. Extra data without a real safety action would only create risk.":
-    "Nous ne collectons pas de copie d'identité et ne prétendons pas vérifier l'identité. Des données sans action de sécurité concrète ne feraient qu'ajouter un risque.",
-  "Trusted contact name": "Nom du contact de confiance",
-  "Trusted contact email": "E-mail du contact de confiance",
-  "They agreed that I can store this email for Datehaja safety plans.":
-    "Cette personne accepte que je conserve cet e-mail pour les plans de sécurité Datehaja.",
-  "Ask me how the date went": "Me demander comment s'est passé le rendez-vous",
-  "A private, optional check-in after the planned end time.":
-    "Un suivi privé et facultatif après l'heure de fin prévue.",
-  "Save private safety settings": "Enregistrer les paramètres privés",
-  "Sign in to add a trusted contact and choose whether Datehaja checks in after a date.":
-    "Connectez-vous pour ajouter un contact de confiance et choisir le suivi après le rendez-vous.",
   "Prefer not to say": "Je préfère ne pas répondre",
   star: "étoile",
 });
 
 Object.assign(nl, {
-  "Private safety settings saved.": "Privé-veiligheidsinstellingen opgeslagen.",
-  "Optional · private": "Optioneel · privé",
-  "Your safety circle": "Jouw veiligheidskring",
-  "Why we ask": "Waarom we dit vragen",
-  "A real person can know where you are.":
-    "Een vertrouwd persoon kan weten waar je bent.",
-  "Add one trusted contact, then share a confirmed plan with one tap. They receive only your first name, the time, and the public venue — never your match's identity.":
-    "Voeg één vertrouwd contact toe en deel een bevestigd plan met één tik. Die persoon ontvangt alleen je voornaam, tijd en openbare locatie — nooit de identiteit van je match.",
-  "We do not collect ID scans or claim identity verification. Extra data without a real safety action would only create risk.":
-    "We verzamelen geen identiteitsbewijzen en claimen geen identiteitscontrole. Extra gegevens zonder concrete veiligheidsactie zorgen alleen voor meer risico.",
-  "Trusted contact name": "Naam vertrouwd contact",
-  "Trusted contact email": "E-mail vertrouwd contact",
-  "They agreed that I can store this email for Datehaja safety plans.":
-    "Deze persoon stemt ermee in dat ik dit e-mailadres bewaar voor Datehaja-veiligheidsplannen.",
-  "Ask me how the date went": "Vraag na de date hoe het ging",
-  "A private, optional check-in after the planned end time.":
-    "Een privé en optionele check-in na de geplande eindtijd.",
-  "Save private safety settings": "Privé-instellingen opslaan",
-  "Sign in to add a trusted contact and choose whether Datehaja checks in after a date.":
-    "Log in om een vertrouwd contact toe te voegen en een check-in na de date te kiezen.",
   "Prefer not to say": "Zeg ik liever niet",
   star: "ster",
 });
 
 Object.assign(sv, {
-  "Private safety settings saved.": "Privata säkerhetsinställningar sparade.",
-  "Optional · private": "Valfritt · privat",
-  "Your safety circle": "Din trygghetskrets",
-  "Why we ask": "Varför vi frågar",
-  "A real person can know where you are.":
-    "En person du litar på kan veta var du är.",
-  "Add one trusted contact, then share a confirmed plan with one tap. They receive only your first name, the time, and the public venue — never your match's identity.":
-    "Lägg till en trygghetskontakt och dela en bekräftad plan med ett tryck. Personen får bara ditt förnamn, tiden och den offentliga platsen — aldrig din matchnings identitet.",
-  "We do not collect ID scans or claim identity verification. Extra data without a real safety action would only create risk.":
-    "Vi samlar inte in ID-kopior och påstår inte att identiteten är verifierad. Extra uppgifter utan konkret skydd skulle bara öka risken.",
-  "Trusted contact name": "Trygghetskontaktens namn",
-  "Trusted contact email": "Trygghetskontaktens e-post",
-  "They agreed that I can store this email for Datehaja safety plans.":
-    "Personen har godkänt att jag sparar e-posten för trygghetsplaner i Datehaja.",
-  "Ask me how the date went": "Fråga hur dejten gick",
-  "A private, optional check-in after the planned end time.":
-    "En privat, valfri avstämning efter planerad sluttid.",
-  "Save private safety settings": "Spara privata säkerhetsinställningar",
-  "Sign in to add a trusted contact and choose whether Datehaja checks in after a date.":
-    "Logga in för att lägga till en trygghetskontakt och välja avstämning efter dejten.",
   "Prefer not to say": "Vill inte svara",
   star: "stjärna",
 });
@@ -2332,12 +2084,8 @@ Object.assign(fr, {
   "Agent": "Agent",
   "Woman": "Femme",
   "Man": "Homme",
-  "A real agent date": "Un vrai rendez-vous d'agents",
-  "This is what your Dating Agent brings back.": "Voilà ce que votre agent rapporte.",
-  "Two agents met as the people they stand in for, then each wrote home privately. Both agents here are clearly marked demo characters, so nothing below belongs to a real person.": "Deux agents se sont rencontrés en tant que les personnes qu'ils incarnent, puis chacun a écrit en privé à la sienne. Les deux sont clairement des personnages de démonstration ; rien ci-dessous n'appartient à une personne réelle.",
   "Loading the date…": "Chargement du rendez-vous…",
   "No date is ready to show yet. Please check back shortly.": "Aucun rendez-vous n'est encore prêt. Revenez dans un instant.",
-  "Neither agent ever saw the other's letter, and neither person's contact was revealed. That only happens when both humans say yes.": "Aucun agent n'a vu la lettre de l'autre, et aucun contact n'a été révélé. Cela n'arrive que si les deux personnes disent oui.",
   "Watch a real agent date": "Voir un vrai rendez-vous d'agents",
   "Menu": "Menu",
   "Theme": "Apparence",
@@ -2385,12 +2133,8 @@ Object.assign(nl, {
   "Agent": "Agent",
   "Woman": "Vrouw",
   "Man": "Man",
-  "A real agent date": "Een echte agent-date",
-  "This is what your Dating Agent brings back.": "Dit is wat jouw agent meebrengt.",
-  "Two agents met as the people they stand in for, then each wrote home privately. Both agents here are clearly marked demo characters, so nothing below belongs to a real person.": "Twee agents ontmoetten elkaar als de mensen die ze vertolken en schreven daarna elk privé naar huis. Beide zijn duidelijk gemarkeerd als demofiguren; niets hieronder is van een echt persoon.",
   "Loading the date…": "Date wordt geladen…",
   "No date is ready to show yet. Please check back shortly.": "Er is nog geen date om te tonen. Kom zo even terug.",
-  "Neither agent ever saw the other's letter, and neither person's contact was revealed. That only happens when both humans say yes.": "Geen van beide agents zag de brief van de ander, en niemands contactgegevens werden onthuld. Dat gebeurt pas als beide mensen ja zeggen.",
   "Watch a real agent date": "Bekijk een echte agent-date",
   "Menu": "Menu",
   "Theme": "Weergave",
@@ -2438,12 +2182,8 @@ Object.assign(sv, {
   "Agent": "Agent",
   "Woman": "Kvinna",
   "Man": "Man",
-  "A real agent date": "En riktig agentdejt",
-  "This is what your Dating Agent brings back.": "Det här är vad din dejtingagent tar med sig hem.",
-  "Two agents met as the people they stand in for, then each wrote home privately. Both agents here are clearly marked demo characters, so nothing below belongs to a real person.": "Två agenter möttes som de människor de träder in för och skrev sedan var för sig hem. Båda är tydligt märkta som demofigurer, så inget nedan tillhör en verklig person.",
   "Loading the date…": "Laddar dejten…",
   "No date is ready to show yet. Please check back shortly.": "Ingen dejt är redo att visas än. Titta in igen strax.",
-  "Neither agent ever saw the other's letter, and neither person's contact was revealed. That only happens when both humans say yes.": "Ingen av agenterna såg den andras brev, och ingens kontaktuppgifter avslöjades. Det sker först när båda människorna säger ja.",
   "Watch a real agent date": "Se en riktig agentdejt",
   "Menu": "Meny",
   "Theme": "Utseende",
@@ -2695,7 +2435,6 @@ Object.assign(ko, {
   "Challenge the verdict or tell {agent} what felt right. Your reaction becomes private context for the next search.":
     "판단에 반박하거나 잘 짚은 점을 {agent}에게 말해주세요. 내 반응은 다음 탐색을 위한 비공개 기억이 됩니다.",
   "Talk this date over with {agent}": "{agent}에게 이 데이트 이야기하기",
-  "Explain what led you to this verdict.": "왜 이런 판단을 했는지 더 설명해줘.",
   "What should you carry into the next search?":
     "다음 탐색에 꼭 반영할 점은 뭐야?",
   "Here's what your debrief got wrong:": "이 리포트가 잘못 본 점은:",
@@ -2728,7 +2467,6 @@ Object.assign(ja, {
   "Challenge the verdict or tell {agent} what felt right. Your reaction becomes private context for the next search.":
     "判断に異議を伝えたり、{agent}が正しく捉えた点を教えてください。反応は次の探索の非公開コンテキストになります。",
   "Talk this date over with {agent}": "{agent}とこのデートを振り返る",
-  "Explain what led you to this verdict.": "この判断に至った理由を教えて。",
   "What should you carry into the next search?": "次の探索に何を反映すべき？",
   "Here's what your debrief got wrong:": "このレポートが違っていた点：",
   "I think I want to meet them.": "この人に会ってみたい。",
@@ -2760,8 +2498,6 @@ Object.assign(de, {
   "Challenge the verdict or tell {agent} what felt right. Your reaction becomes private context for the next search.":
     "Hinterfrage das Urteil oder sage {agent}, was stimmig war. Deine Reaktion wird privater Kontext für die nächste Suche.",
   "Talk this date over with {agent}": "Dieses Date mit {agent} besprechen",
-  "Explain what led you to this verdict.":
-    "Erkläre mir, wie du zu diesem Urteil kamst.",
   "What should you carry into the next search?":
     "Was solltest du in die nächste Suche mitnehmen?",
   "Here's what your debrief got wrong:": "Das hat dein Bericht falsch gesehen:",
@@ -2795,8 +2531,6 @@ Object.assign(fr, {
   "Challenge the verdict or tell {agent} what felt right. Your reaction becomes private context for the next search.":
     "Conteste le verdict ou dis à {agent} ce qui sonnait juste. Ta réaction devient un contexte privé pour la prochaine recherche.",
   "Talk this date over with {agent}": "Parler de ce rendez-vous avec {agent}",
-  "Explain what led you to this verdict.":
-    "Explique-moi ce qui t’a conduit à ce verdict.",
   "What should you carry into the next search?":
     "Que dois-tu retenir pour la prochaine recherche ?",
   "Here's what your debrief got wrong:":
@@ -2831,8 +2565,6 @@ Object.assign(nl, {
   "Challenge the verdict or tell {agent} what felt right. Your reaction becomes private context for the next search.":
     "Trek het oordeel in twijfel of vertel {agent} wat klopte. Je reactie wordt privécontext voor de volgende zoektocht.",
   "Talk this date over with {agent}": "Deze date bespreken met {agent}",
-  "Explain what led you to this verdict.":
-    "Leg uit hoe je tot dit oordeel kwam.",
   "What should you carry into the next search?":
     "Wat moet je meenemen naar de volgende zoektocht?",
   "Here's what your debrief got wrong:": "Dit zag je verslag verkeerd:",
@@ -2865,8 +2597,6 @@ Object.assign(sv, {
   "Challenge the verdict or tell {agent} what felt right. Your reaction becomes private context for the next search.":
     "Ifrågasätt omdömet eller berätta för {agent} vad som kändes rätt. Din reaktion blir privat kontext för nästa sökning.",
   "Talk this date over with {agent}": "Prata igenom dejten med {agent}",
-  "Explain what led you to this verdict.":
-    "Förklara vad som ledde till det här omdömet.",
   "What should you carry into the next search?":
     "Vad ska du ta med dig till nästa sökning?",
   "Here's what your debrief got wrong:": "Det här missförstod rapporten:",
@@ -3087,14 +2817,6 @@ const agentWorkspaceCopy: Record<
     "De relatie-intenties passen bij elkaar",
     "Relationsönskemålen går att förena",
   ],
-  "Different intentions need an honest conversation": [
-    "서로 다른 관계 기대는 솔직한 대화가 필요해요",
-    "異なる関係への期待には率直な会話が必要です",
-    "Unterschiedliche Absichten brauchen ein ehrliches Gespräch",
-    "Des intentions différentes demandent une conversation honnête",
-    "Andere intenties vragen om een eerlijk gesprek",
-    "Olika avsikter kräver ett ärligt samtal",
-  ],
   "Your Dating Agent is back": [
     "에이전트가 돌아왔어요",
     "エージェントが戻りました",
@@ -3102,30 +2824,6 @@ const agentWorkspaceCopy: Record<
     "Votre Agent est de retour",
     "Je Agent is terug",
     "Din Agent är tillbaka",
-  ],
-  "The virtual date is over. Your private debrief is ready.": [
-    "가상 데이트가 끝났어요. 나만의 비공개 리포트가 준비됐어요.",
-    "バーチャルデートが終わりました。あなただけの非公開レポートが完成しています。",
-    "Das virtuelle Date ist vorbei. Dein privater Bericht ist bereit.",
-    "Le rendez-vous virtuel est terminé. Votre compte rendu privé est prêt.",
-    "De virtuele date is afgelopen. Je privéverslag staat klaar.",
-    "Den virtuella dejten är slut. Din privata rapport är klar.",
-  ],
-  "Your Dating Agent went on a date": [
-    "내 에이전트가 데이트를 다녀왔어요",
-    "あなたのエージェントがデートをしました",
-    "Dein Agent war auf einem Date",
-    "Votre Agent a eu un rendez-vous",
-    "Je Agent is op date geweest",
-    "Din Agent har varit på dejt",
-  ],
-  "Read what happened, then decide for yourself.": [
-    "무슨 일이 있었는지 읽고, 만나보고 싶은지 직접 결정하세요.",
-    "何があったのかを読んで、自分で決めてください。",
-    "Lies, was passiert ist, und entscheide dann selbst.",
-    "Lisez ce qui s'est passé, puis décidez par vous-même.",
-    "Lees wat er gebeurde en beslis daarna zelf.",
-    "Läs vad som hände och bestäm sedan själv.",
   ],
   "Your private agent": [
     "나만의 데이팅 에이전트",
@@ -3219,30 +2917,6 @@ const agentWorkspaceCopy: Record<
     "aanmoedigen",
     "förespråka",
   ],
-  "Live from the date world": [
-    "데이트 월드에서 실시간으로",
-    "デートワールドからライブ",
-    "Live aus der Date-Welt",
-    "En direct du monde des rendez-vous",
-    "Live uit de datewereld",
-    "Live från dejtvärlden",
-  ],
-  "Scout Pass ready": [
-    "Scout Pass 준비 완료",
-    "Scout Pass 準備完了",
-    "Scout Pass bereit",
-    "Scout Pass prêt",
-    "Scout Pass klaar",
-    "Scout Pass redo",
-  ],
-  "Ready to search": [
-    "탐색 준비 완료",
-    "探索の準備完了",
-    "Bereit zur Suche",
-    "Prêt à chercher",
-    "Klaar om te zoeken",
-    "Redo att söka",
-  ],
   "{agent} is out meeting someone.": [
     "{agent}, 지금 데이트 중이에요.",
     "{agent}は今、誰かに会っています。",
@@ -3251,40 +2925,6 @@ const agentWorkspaceCopy: Record<
     "{agent} ontmoet nu iemand.",
     "{agent} träffar någon just nu.",
   ],
-  "{agent} brought something home.": [
-    "{agent}의 데이트 리포트가 도착했어요.",
-    "{agent}が話を持ち帰りました。",
-    "{agent} hat etwas mitgebracht.",
-    "{agent} a rapporté quelque chose.",
-    "{agent} heeft iets meegebracht.",
-    "{agent} har tagit med sig något hem.",
-  ],
-  "Send {agent} out to meet someone.": [
-    "{agent}를 새로운 만남에 보내세요.",
-    "{agent}を新しい出会いへ送り出しましょう。",
-    "Schick {agent} los, um jemanden zu treffen.",
-    "Envoyez {agent} rencontrer quelqu’un.",
-    "Stuur {agent} eropuit om iemand te ontmoeten.",
-    "Skicka ut {agent} för att träffa någon.",
-  ],
-  "Drop in now. The six moments are saved as they happen, then {agent} returns with a private read.":
-    [
-      "지금 들어가 보세요. 여섯 장면이 차례로 기록되고, 끝나면 {agent}가 비공개 소감을 들려줘요.",
-      "今すぐのぞいてみましょう。6つの場面が記録され、最後に{agent}が非公開の感想を届けます。",
-      "Schau jetzt vorbei. Sechs Momente werden live gespeichert, danach kehrt {agent} mit einer privaten Einschätzung zurück.",
-      "Entrez maintenant. Les six moments sont enregistrés, puis {agent} revient avec son avis privé.",
-      "Kijk nu mee. Zes momenten worden live bewaard, daarna komt {agent} terug met een privé-oordeel.",
-      "Titta in nu. Sex ögonblick sparas, sedan återvänder {agent} med en privat bedömning.",
-    ],
-  "{agent} checks the brief, meets a compatible Agent, and returns with an honest recommendation.":
-    [
-      "{agent}: 내 브리프를 들고 잘 맞을 법한 에이전트를 만난 뒤, 솔직한 추천을 가지고 돌아와요.",
-      "{agent}が希望を確認し、相性のよいエージェントと会って、率直な提案を持ち帰ります。",
-      "{agent} prüft das Briefing, trifft einen passenden Agent und kehrt mit einer ehrlichen Empfehlung zurück.",
-      "{agent} relit votre brief, rencontre un Agent compatible et revient avec une recommandation honnête.",
-      "{agent} bekijkt je briefing, ontmoet een passende Agent en komt terug met een eerlijk advies.",
-      "{agent} läser briefen, träffar en passande Agent och återvänder med ett ärligt råd.",
-    ],
   "Watch the date live →": [
     "데이트 실시간으로 보기 →",
     "デートをライブで見る →",
@@ -3301,14 +2941,6 @@ const agentWorkspaceCopy: Record<
     "Lees het privéverslag →",
     "Läs den privata rapporten →",
   ],
-  "Checking Scout Pass…": [
-    "Scout Pass 확인 중…",
-    "Scout Passを確認中…",
-    "Scout Pass wird geprüft…",
-    "Vérification du Scout Pass…",
-    "Scout Pass controleren…",
-    "Kontrollerar Scout Pass…",
-  ],
   "Send {agent} scouting →": [
     "{agent} 탐색 보내기 →",
     "{agent}を探索へ →",
@@ -3316,30 +2948,6 @@ const agentWorkspaceCopy: Record<
     "Envoyer {agent} en exploration →",
     "Stuur {agent} op pad →",
     "Skicka ut {agent} →",
-  ],
-  "Unlock scouting →": [
-    "탐색 시작하기 →",
-    "探索を解放 →",
-    "Suche freischalten →",
-    "Débloquer l’exploration →",
-    "Ontgrendel zoeken →",
-    "Lås upp sökning →",
-  ],
-  "Development demo pass · no charge": [
-    "개발 데모 패스 · 결제 없음",
-    "開発デモパス・課金なし",
-    "Entwicklungs-Demopass · kostenlos",
-    "Pass démo de développement · gratuit",
-    "Ontwikkeldemopas · gratis",
-    "Utvecklingsdemo · kostnadsfri",
-  ],
-  "The pass funds the search, not a guaranteed match. Contact stays sealed.": [
-    "패스는 탐색 비용이며 매칭을 보장하지 않아요. 연락처는 계속 비공개예요.",
-    "パスは探索のためのもので、マッチを保証しません。連絡先は非公開です。",
-    "Der Pass finanziert die Suche, nicht ein garantiertes Match. Kontaktdaten bleiben versiegelt.",
-    "Le pass finance la recherche, sans garantir un match. Les coordonnées restent scellées.",
-    "De pas betaalt de zoektocht, niet een gegarandeerde match. Contact blijft afgeschermd.",
-    "Passet finansierar sökningen, inte en garanterad match. Kontaktuppgifter förblir dolda.",
   ],
   "How your scout works": [
     "에이전트 탐색 흐름",
@@ -3428,38 +3036,6 @@ const agentWorkspaceCopy: Record<
     "Essayez de demander",
     "Probeer te vragen",
     "Prova att fråga",
-  ],
-  "What do you understand about me so far?": [
-    "지금까지 나를 어떻게 이해했어?",
-    "今のところ私をどう理解してる？",
-    "Was hast du bisher über mich verstanden?",
-    "Qu’as-tu compris de moi jusqu’ici ?",
-    "Wat begrijp je tot nu toe van mij?",
-    "Vad har du förstått om mig hittills?",
-  ],
-  "What will you look for when you're out there as me?": [
-    "네가 나로 나갔을 때, 어떤 사람을 볼 거야?",
-    "私として出かけたとき、どんな人を見るの？",
-    "Worauf wirst du achten, wenn du als ich unterwegs bist?",
-    "Que regarderas-tu quand tu seras moi ?",
-    "Waar let je op als je als mij op pad bent?",
-    "Vad tittar du efter när du är ute som jag?",
-  ],
-  "Ask me something that would change your search.": [
-    "다음 탐색이 달라질 만한 걸 하나 물어봐.",
-    "次の探索が変わる質問をして。",
-    "Frag mich etwas, das deine Suche verändern würde.",
-    "Pose-moi une question qui changerait ta recherche.",
-    "Vraag iets dat je zoektocht zou veranderen.",
-    "Fråga mig något som skulle ändra din sökning.",
-  ],
-  "Tell your Dating Agent what people usually misunderstand about you…": [
-    "사람들이 나를 자주 오해하는 점을 말해보세요…",
-    "人によく誤解されることを話してみて…",
-    "Erzähl deinem Agent, was andere oft an dir missverstehen…",
-    "Dites à votre Agent ce que les autres comprennent souvent mal…",
-    "Vertel je Agent wat mensen vaak verkeerd begrijpen…",
-    "Berätta vad andra ofta missförstår om dig…",
   ],
   Send: ["보내기", "送信", "Senden", "Envoyer", "Versturen", "Skicka"],
   you: ["나", "あなた", "du", "vous", "jij", "du"],
@@ -3624,14 +3200,6 @@ const agentWorkspaceCopy: Record<
     "duidelijk AI · privésimulatie",
     "tydligt AI · privat simulering",
   ],
-  "World spark": [
-    "오늘의 영감",
-    "今日のきっかけ",
-    "Inspiration der Welt",
-    "Inspiration du monde",
-    "Wereldvonk",
-    "Världens gnista",
-  ],
   "Agent scouting journey": [
     "에이전트 탐색 여정",
     "エージェント探索の旅",
@@ -3639,38 +3207,6 @@ const agentWorkspaceCopy: Record<
     "Parcours d’exploration",
     "Zoektocht van de Agent",
     "Agentens sökresa",
-  ],
-  "Left home": [
-    "방을 나섰어요",
-    "部屋を出た",
-    "Von zu Hause aufgebrochen",
-    "A quitté sa chambre",
-    "Vertrokken",
-    "Lämnade hemmet",
-  ],
-  "Found a promising Agent": [
-    "궁금한 에이전트를 만났어요",
-    "気になるエージェントを発見",
-    "Einen vielversprechenden Agent gefunden",
-    "Un Agent prometteur trouvé",
-    "Een veelbelovende Agent gevonden",
-    "Hittade en lovande Agent",
-  ],
-  "Shared six moments": [
-    "여섯 장면을 함께했어요",
-    "6つの場面を共有",
-    "Sechs Momente geteilt",
-    "Six moments partagés",
-    "Zes momenten gedeeld",
-    "Delade sex ögonblick",
-  ],
-  "Brought the truth home": [
-    "솔직한 판단을 가져왔어요",
-    "率直な判断を持ち帰った",
-    "Die Wahrheit mitgebracht",
-    "A rapporté un avis sincère",
-    "Bracht een eerlijk oordeel mee",
-    "Tog hem ett ärligt omdöme",
   ],
   "Why their paths crossed": [
     "두 에이전트가 만난 이유",
@@ -3688,55 +3224,7 @@ const agentWorkspaceCopy: Record<
     "Alleen uitlegbare signalen, geen geheime compatibiliteitsscore.",
     "Bara förklarbara signaler, ingen hemlig poäng.",
   ],
-  "The virtual date": [
-    "가상 데이트 대화",
-    "仮想デート",
-    "Das virtuelle Date",
-    "Le rendez-vous virtuel",
-    "De virtuele date",
-    "Den virtuella dejten",
-  ],
-  "live transcript · {count}/6 turns": [
-    "실시간 대화 · {count}/6 장면",
-    "ライブ会話・{count}/6場面",
-    "Live-Transkript · {count}/6 Runden",
-    "Conversation en direct · {count}/6 moments",
-    "Live transcript · {count}/6 beurten",
-    "Livetranskript · {count}/6 turer",
-  ],
-  "demo time": [
-    "데모 속도",
-    "デモ時間",
-    "Demo-Zeit",
-    "temps de démo",
-    "demotijd",
-    "demotid",
-  ],
   live: ["실시간", "ライブ", "live", "en direct", "live", "live"],
-  "The world is opening.": [
-    "데이트 월드가 열리고 있어요.",
-    "デートワールドが開いています。",
-    "Die Welt öffnet sich.",
-    "Le monde s’ouvre.",
-    "De wereld gaat open.",
-    "Världen öppnas.",
-  ],
-  "A live cultural spark is becoming a place where two AI Agents can talk.": [
-    "오늘의 문화 이야기가 두 AI 에이전트가 만날 공간으로 바뀌고 있어요.",
-    "今日の文化の話題が、二人のAIエージェントが話せる場所になります。",
-    "Ein aktueller Kulturimpuls wird zum Ort für das Gespräch zweier KI-Agents.",
-    "Une inspiration culturelle devient un lieu où deux Agents IA peuvent parler.",
-    "Een actuele culturele vonk wordt een plek waar twee AI-Agents praten.",
-    "En aktuell kulturell gnista blir en plats där två AI-Agenter kan prata.",
-  ],
-  "the agents are comparing private notes…": [
-    "두 에이전트가 각자의 비공개 메모를 정리하고 있어요…",
-    "二人がそれぞれの非公開メモを整理しています…",
-    "Die Agents vergleichen ihre privaten Notizen…",
-    "Les Agents relisent leurs notes privées…",
-    "De Agents vergelijken hun privénotities…",
-    "Agenterna jämför sina privata anteckningar…",
-  ],
   "Your private debrief": [
     "나에게만 온 데이트 리포트",
     "あなただけの非公開レポート",
@@ -4066,23 +3554,7 @@ const agentWorkspaceCopy: Record<
     "date opnieuw afspelen",
     "spela upp dejten",
   ],
-  "replaying…": [
-    "다시 보는 중…",
-    "再生中…",
-    "wird wiederholt…",
-    "lecture…",
-    "opnieuw afspelen…",
-    "spelar upp…",
-  ],
   Arrival: ["도착", "到着", "Ankunft", "Arrivée", "Aankomst", "Ankomst"],
-  "{count}/6 memories": [
-    "{count}/6 장면",
-    "{count}/6場面",
-    "{count}/6 Erinnerungen",
-    "{count}/6 moments",
-    "{count}/6 herinneringen",
-    "{count}/6 minnen",
-  ],
   "This story isn't here.": [
     "이 데이트 기록을 찾을 수 없어요.",
     "このデート記録はありません。",
@@ -4504,14 +3976,6 @@ const agentWorkspaceCopy: Record<
       "Denk aan iemand bij wie je je meteen op je gemak voelde. Wat deed diegene waardoor dat kwam?",
       "Tänk på någon du genast kände dig trygg med. Vad gjorde personen som skapade den känslan?",
     ],
-  "{count} observed moments": [
-    "관찰한 장면 {count}개",
-    "観察した{count}場面",
-    "{count} beobachtete Momente",
-    "{count} moments observés",
-    "{count} waargenomen momenten",
-    "{count} observerade ögonblick",
-  ],
   "Both are looking in {city}": [
     "두 사람 모두 {city}에서 만남을 찾고 있어요",
     "二人とも{city}で出会いを探しています",
@@ -4817,54 +4281,6 @@ const agentWorkspaceCopy: Record<
     "Aankomen",
     "Anländer",
   ],
-  "finding each other": [
-    "서로를 발견하는 중",
-    "互いを見つける",
-    "Sich finden",
-    "Ils se découvrent",
-    "Elkaar vinden",
-    "Hittar varandra",
-  ],
-  "settling in": [
-    "자리를 잡는 중",
-    "落ち着く",
-    "Ankommen",
-    "Ils s’installent",
-    "Even landen",
-    "Kommer till ro",
-  ],
-  "getting curious": [
-    "서로 궁금해지는 중",
-    "興味が生まれる",
-    "Neugierig werden",
-    "La curiosité naît",
-    "Nieuwsgierig worden",
-    "Blir nyfikna",
-  ],
-  "staying with the question": [
-    "질문에 머무는 중",
-    "問いに向き合う",
-    "Bei der Frage bleiben",
-    "Ils restent avec la question",
-    "Bij de vraag blijven",
-    "Stannar i frågan",
-  ],
-  "testing the edges": [
-    "서로의 결을 확인하는 중",
-    "境界を確かめる",
-    "Grenzen erkunden",
-    "Ils testent les contours",
-    "Grenzen aftasten",
-    "Känner av gränserna",
-  ],
-  "one honest minute": [
-    "솔직해지는 순간",
-    "率直な一分",
-    "Eine ehrliche Minute",
-    "Une minute sincère",
-    "Eén eerlijke minuut",
-    "En ärlig minut",
-  ],
   "{agent}, speaking": [
     "{agent}, 말하는 중",
     "{agent}、話しています",
@@ -4889,14 +4305,6 @@ const agentWorkspaceCopy: Record<
     "{object} bekijken",
     "Undersök {object}",
   ],
-  "MOMENT {number} · {label}": [
-    "장면 {number} · {label}",
-    "場面 {number}・{label}",
-    "MOMENT {number} · {label}",
-    "INSTANT {number} · {label}",
-    "MOMENT {number} · {label}",
-    "ÖGONBLICK {number} · {label}",
-  ],
   "Date replay moments": [
     "데이트 리플레이 장면",
     "デートリプレイの場面",
@@ -4904,14 +4312,6 @@ const agentWorkspaceCopy: Record<
     "Moments du replay",
     "Momenten van de date-replay",
     "Ögonblick i dejtreprisen",
-  ],
-  "Moment {number}": [
-    "장면 {number}",
-    "場面 {number}",
-    "Moment {number}",
-    "Instant {number}",
-    "Moment {number}",
-    "Ögonblick {number}",
   ],
   Seoul: ["서울", "ソウル", "Seoul", "Séoul", "Seoel", "Seoul"],
   Seongsu: ["성수", "ソンス", "Seongsu", "Seongsu", "Seongsu", "Seongsu"],
@@ -5822,23 +5222,6 @@ const settingsCopy: Record<
       "Je kunt dit altijd uitzetten. Een lopende date mag afronden, maar je agent deelt nooit namens jou contactgegevens.",
       "Du kan stänga av detta när som helst. En pågående dejt kan slutföras, men Agenten delar aldrig kontakt åt dig.",
     ],
-  "Include clearly labelled demo agents": [
-    "데모 에이전트도 후보에 포함",
-    "明示されたデモエージェントも含める",
-    "Klar gekennzeichnete Demo-Agents einschließen",
-    "Inclure les Agents de démonstration signalés",
-    "Duidelijk gemarkeerde demo-agents meenemen",
-    "Ta med tydligt märkta demo-Agenter",
-  ],
-  "Useful while the network is small. A demo can complete the consent flow but never reveals a real person or contact.":
-    [
-      "아직 이용자가 적을 때 체험하기 좋아요. 데모는 동의 흐름까지 보여주지만 실제 사람이나 연락처는 공개하지 않아요.",
-      "利用者が少ない間の体験用です。デモは同意フローを完了できますが、実在の人物や連絡先は表示しません。",
-      "Hilfreich, solange das Netzwerk klein ist. Eine Demo zeigt den Zustimmungsablauf, aber nie eine echte Person oder Kontaktdaten.",
-      "Utile tant que le réseau est réduit. Une démo montre le parcours de consentement sans révéler de personne ni de coordonnées réelles.",
-      "Handig zolang het netwerk klein is. Een demo toont de toestemmingsflow, maar nooit een echt persoon of contactgegevens.",
-      "Bra medan nätverket är litet. En demo visar samtyckesflödet men avslöjar aldrig en riktig person eller kontakt.",
-    ],
   "Agent name": [
     "에이전트 이름",
     "エージェント名",
@@ -6016,14 +5399,6 @@ const settingsCopy: Record<
     "Bilans de rendez-vous",
     "Agentdate-verslagen",
     "Agentens dejtrapporter",
-  ],
-  "A separate private message when your Dating Agent returns.": [
-    "에이전트가 돌아오면 나만 보는 리포트를 받아요.",
-    "エージェントが戻ると非公開レポートが届きます。",
-    "Eine separate private Nachricht, wenn dein Agent zurückkehrt.",
-    "Un message privé séparé au retour de votre Agent.",
-    "Een apart privébericht wanneer je agent terugkomt.",
-    "Ett separat privat meddelande när din Agent återvänder.",
   ],
   "Mutual introductions": [
     "서로 만나기로 했을 때",
@@ -6249,12 +5624,7 @@ const dateLetterCopy: Record<string, readonly string[]> = {
   "What have you learned about me?": ["지금까지 나에 대해 뭘 알게 됐어?", "今まで私について何がわかった？", "Was hast du bisher über mich gelernt?", "Qu'as-tu appris sur moi jusqu'ici ?", "Wat heb je tot nu toe over mij geleerd?", "Vad har du lärt dig om mig hittills?"],
   "Tell me how you'd say it, who you'd like to meet, or what felt right…": ["나라면 어떻게 말할지, 어떤 사람이 좋은지, 뭐가 좋았는지 들려줘…", "自分ならどう話すか、どんな人がいいか、何がよかったか教えて…", "Sag mir, wie du es sagen würdest, wen du treffen möchtest oder was dir gefiel…", "Dis-moi comment tu le dirais, qui tu aimerais rencontrer ou ce qui t'a plu…", "Vertel hoe jij het zou zeggen, wie je wilt ontmoeten of wat goed voelde…", "Berätta hur du skulle säga det, vem du vill träffa eller vad som kändes bra…"],
   "One saved conversation. Two independent reads. Your decision.": ["하나의 대화 기록. 각자의 독립적인 회고. 결정은 당신에게.", "ひとつの会話記録。それぞれの振り返り。決めるのはあなた。", "Ein gespeichertes Gespräch. Zwei unabhängige Einschätzungen. Deine Entscheidung.", "Une conversation enregistrée. Deux avis indépendants. Votre décision.", "Eén bewaard gesprek. Twee onafhankelijke inzichten. Jouw beslissing.", "Ett sparat samtal. Två oberoende bedömningar. Ditt beslut."],
-  "The moment I brought back": ["내가 가져온 한 장면", "持ち帰ったひと場面", "Der Moment, den ich mitbrachte", "Le moment que j'ai rapporté", "Het moment dat ik meebracht", "Ögonblicket jag tog med hem"],
-  "Two saved lines. Read the response for yourself.": ["저장된 대화 두 마디. 상대의 답을 직접 읽어봐요.", "保存したふたつの言葉。返事を自分で読んでみて。", "Zwei gespeicherte Zeilen. Lies die Antwort selbst.", "Deux répliques sauvegardées. Lisez la réponse vous-même.", "Twee bewaarde zinnen. Lees zelf het antwoord.", "Två sparade repliker. Läs svaret själv."],
-  "Tell {agent} how you read it": ["{agent}에게 내 생각 들려주기", "{agent}に自分の受け取り方を話す", "Sag {agent}, wie du es liest", "Dites à {agent} comment vous le voyez", "Vertel {agent} hoe jij het leest", "Berätta för {agent} hur du tolkar det"],
   "Read the whole conversation": ["대화 전체 읽기", "会話をすべて読む", "Das ganze Gespräch lesen", "Lire toute la conversation", "Lees het hele gesprek", "Läs hela samtalet"],
-  "Here's how that moment felt to me:": ["나는 그 장면을 이렇게 느꼈어:", "あの場面を私はこう感じた：", "So fühlte sich dieser Moment für mich an:", "Voici comment j'ai ressenti ce moment :", "Zo voelde dat moment voor mij:", "Så här kändes det ögonblicket för mig:"],
-  "the agents are writing separate private notes…": ["각자의 비공개 편지를 쓰고 있어요…", "それぞれに非公開の手紙を書いています…", "Die Agents schreiben getrennte private Notizen…", "Les Agents écrivent chacun leur lettre privée…", "De Agents schrijven elk een privébrief…", "Agenterna skriver var sitt privat brev…"],
 };
 
 for (const copy of [agentWorkspaceCopy, settingsCopy, avatarStudioCopy, dateLetterCopy, scoutingCopy, coachingCopy, productCopy]) {
