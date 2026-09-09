@@ -87,7 +87,7 @@ const de: LoopCopy = {
   examples: [
     { label: "Lass es mehr nach mir klingen", feedback: "So eine Rede würde ich nicht halten. Fass dich kürzer und beende nicht jede Antwort mit einer Frage.", memory: "Kurze, natürliche Antworten. Lass der anderen Person Raum.", nextLabel: "So ließe es sich nächstes Mal sagen", next: "„Geht mir genauso. Ich würde es lieber langsam angehen.“" },
     { label: "Ändern, wonach ich suche", feedback: "Ich mag jemanden, der auch neugierig auf mich ist. Such nach jemandem, der zurückfragt.", memory: "Auf gegenseitige Neugier achten, nicht nur auf ein leichtes Gespräch.", nextLabel: "Worauf beim nächsten Treffen zu achten ist", next: "Greift die Person eine Antwort auf und will mehr wissen? Geht die Neugier in beide Richtungen?" },
-    { label: "Behalten, was mir gefiel", feedback: "Mir hat gefallen, dass sie beim Scherz mitgegangen sind. Such weiter nach dieser Leichtigkeit.", memory: "Ein leichter Scherz, auf dem beide aufbauen können, ist dir wichtig.", nextLabel: "Ein Moment, den es wieder zu finden gilt", next: "Achte darauf, wann aus einem kleinen Scherz etwas wird, das beide genießen, statt korrigiert oder übergangen zu werden." },
+    { label: "Behalten, was mir gefiel", feedback: "Mir hat gefallen, dass die Person beim Scherz mitgegangen ist. Such weiter nach dieser Leichtigkeit.", memory: "Ein leichter Scherz, auf dem beide aufbauen können, ist dir wichtig.", nextLabel: "Ein Moment, den es wieder zu finden gilt", next: "Achte darauf, wann aus einem kleinen Scherz etwas wird, das beide genießen, statt korrigiert oder übergangen zu werden." },
   ],
 };
 
@@ -138,7 +138,7 @@ const sv: LoopCopy = {
   intro: "Din agent letar upp människor, går på virtuella dejter och kommer tillbaka med en berättelse. Berätta vad som kändes rätt, vad som inte gjorde det, och vad den ska prova härnäst.",
   steps: [
     { title: "Skapa min dejtingagent", body: "Berätta hur du pratar och vem du vill träffa. Skicka sedan ut din agent." },
-    { title: "Låt den gå på dejter", body: "Den letar efter någon som passar och lär känna personen genom deras agent." },
+    { title: "Låt den gå på dejter", body: "Den letar efter någon som passar och lär känna personen genom hens agent." },
     { title: "Hör hur det gick", body: "Se vad de gjorde och sa, och hör din agents ärliga intryck." },
     { title: "Säg vad du tycker", body: "Rätta till hur den låter, säg vad du gillade eller be den leta efter någon annan." },
   ],
@@ -150,7 +150,7 @@ const sv: LoopCopy = {
   examples: [
     { label: "Låt mer som jag", feedback: "Jag skulle inte hålla ett sådant tal. Håll det kortare, och avsluta inte varje svar med en fråga.", memory: "Korta, naturliga svar. Lämna plats åt den andra.", nextLabel: "Så skulle det kunna sägas nästa gång", next: "”Samma här. Jag tar hellre det lugnt.”" },
     { label: "Ändra vad jag söker", feedback: "Jag gillar någon som är nyfiken på mig också. Leta efter någon som frågar tillbaka.", memory: "Lägg märke till ömsesidig nyfikenhet, inte bara ett lättsamt samtal.", nextLabel: "Vad den ska lägga märke till vid nästa möte", next: "Tar personen fasta på ett svar och vill veta mer? Går nyfikenheten åt båda håll?" },
-    { label: "Behåll det jag gillade", feedback: "Jag gillade att de hängde med i skämtet. Fortsätt leta efter den lättheten.", memory: "Ett lätt skämt som båda kan bygga vidare på betyder något för dig.", nextLabel: "Ett bra ögonblick att hitta igen", next: "Lägg märke till när ett litet skämt blir något båda njuter av, i stället för att rättas eller viftas bort." },
+    { label: "Behåll det jag gillade", feedback: "Jag gillade att hen hängde med i skämtet. Fortsätt leta efter den lättheten.", memory: "Ett lätt skämt som båda kan bygga vidare på betyder något för dig.", nextLabel: "Ett bra ögonblick att hitta igen", next: "Lägg märke till när ett litet skämt blir något båda njuter av, i stället för att rättas eller viftas bort." },
   ],
 };
 
