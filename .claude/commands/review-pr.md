@@ -14,12 +14,14 @@ branch (`gh pr view --json number`).
 - Repository: `hyochan/Datehaja`.
 - Checks on a PR: the `Verify + Deploy` workflow
   (`.github/workflows/deploy.yml`), whose `Typecheck + lint + test + build` job
-  runs the same gates as below on every pull request, plus the Vercel preview
-  deployment. Run the local gates too: they are faster and cover the same
-  ground, but CI is the record for the exact head.
+  runs `bun run typecheck`, `bun run lint`, `bun run test` and `bun run build`
+  on every pull request, plus the Vercel preview deployment. CI is the record
+  for the exact head.
 - CodeRabbit reviews pull requests, but skips any diff over 100 files. When it
   skips, the reviewer is the `code-review` skill, run against the exact head.
-- Local gates: `bun run typecheck`, `bun run lint`, `bun run test`.
+- Local gates: `bun run typecheck`, `bun run lint`, `bun run test`. These are
+  faster than waiting on CI; add `bun run build`, which CI also runs, whenever
+  the bundle could break.
 
 ## Response rules
 

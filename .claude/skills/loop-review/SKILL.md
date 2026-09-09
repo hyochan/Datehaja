@@ -91,7 +91,7 @@ Clean means all of these hold for the same head SHA:
 - the reviewer pass is clean for that exact head;
 - the Vercel preview deployment is `Ready`, not `Error`;
 - `bun run typecheck`, `bun run lint`, and `bun run test` pass locally on that
-  head, since this repo has no CI to prove it;
+  head, ahead of the same gates running in CI;
 - the PR is mergeable and contains every required update from `main`;
 - the worktree is clean and the final diff has been reread.
 
@@ -136,8 +136,10 @@ After merging:
 3. Switch to `main` and fast-forward when that cannot disturb other work.
 4. Report the PR, merge commit, checks, review coverage, and anything skipped.
 
-Do not deploy. Merging `main` triggers the Vercel production build on its own;
-the Convex backend still needs the user's command from step 6.
+Do not deploy by hand. Merging `main` triggers both halves on its own: Vercel
+rebuilds the production frontend, and the `Deploy backend + convex.site` job
+pushes the Convex backend and publishes the static site. Watch that run and
+check the served bundle before calling the change shipped.
 
 ## Stop conditions
 
