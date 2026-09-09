@@ -5221,7 +5221,7 @@ const settingsCopy: Record<
     "다른 에이전트와 만날 수 있어요",
     "ほかのエージェントと会える",
     "Mein Dating-Agent darf andere Agents treffen",
-    "Mon Agent de rencontre peut rencontrer d’autres Agents",
+    "Mon Agent de rencontre peut croiser d’autres Agents",
     "Mijn dating-Agent mag andere agents ontmoeten",
     "Min dejtingagent får träffa andra Agenter",
   ],
