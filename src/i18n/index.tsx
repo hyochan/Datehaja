@@ -733,7 +733,7 @@ Object.assign(nl, {
   "Your dating agent": "Jouw datingagent",
   "Too busy for another first date?": "Te druk voor nóg een eerste date?",
   "My second self": "Mijn tweede zelf",
-  "dates for me.": "date voor mij.",
+  "dates for me.": "datet voor mij.",
   "It goes on the date as you, then comes home with an honest read. You decide whether to make it real.":
     "Hij gaat als jou op date en komt terug met een eerlijk oordeel. Jij beslist of jullie echt afspreken.",
   "Create my Dating Agent": "Mijn datingagent maken",
@@ -4892,7 +4892,7 @@ export const agentWorkspaceCopy: Record<
     "Sportig",
   ],
   Creative: [
-    "개성 있는",
+    "크리에이티브",
     "クリエイティブ",
     "Kreativ",
     "Créatif",

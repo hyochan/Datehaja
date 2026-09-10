@@ -362,13 +362,13 @@ export default function ProfilePage() {
             />
           </Field>
 
-          <Field label={t("Languages")}>
+          <Field label={t("Languages you can comfortably use")}>
             <ChipGroup
               options={LANGUAGE_OPTIONS}
               selected={languages}
               onChange={setLanguages}
               max={6}
-              ariaLabel={t("Languages")}
+              ariaLabel={t("Languages you can comfortably use")}
             />
           </Field>
 
