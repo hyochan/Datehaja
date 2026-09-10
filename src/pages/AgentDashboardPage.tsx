@@ -1070,7 +1070,7 @@ export default function AgentDashboardPage() {
                 <h3 className="mt-3 text-[22px]">{t("No stories yet.")}</h3>
                 <p className="mt-2 text-[14px] leading-relaxed text-soft">
                   {t(
-                    "Your first agent date will appear here as a transcript and an honest private debrief.",
+                    "Your first Dating Agent date will appear here as a transcript and an honest private debrief.",
                   )}
                 </p>
               </Card>

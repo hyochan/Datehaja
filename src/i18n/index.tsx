@@ -55,7 +55,7 @@ const ko: TranslationPack = {
   Privacy: "개인정보",
   Safety: "안전",
   Home: "홈",
-  History: "기록",
+  History: "역사",
   You: "내 정보",
   Main: "주요 메뉴",
   Notifications: "알림",
@@ -94,7 +94,7 @@ const ja: TranslationPack = {
   Privacy: "プライバシー",
   Safety: "安全",
   Home: "ホーム",
-  History: "履歴",
+  History: "歴史",
   You: "あなた",
   Main: "メインメニュー",
   Notifications: "通知",
@@ -133,7 +133,7 @@ const de: TranslationPack = {
   Privacy: "Datenschutz",
   Safety: "Sicherheit",
   Home: "Start",
-  History: "Verlauf",
+  History: "Geschichte",
   You: "Du",
   Main: "Hauptmenü",
   Notifications: "Benachrichtigungen",
@@ -337,7 +337,7 @@ Object.assign(fr, {
   Privacy: "Confidentialité",
   Safety: "Sécurité",
   Home: "Accueil",
-  History: "Historique",
+  History: "Histoire",
   You: "Vous",
   Main: "Menu principal",
   Notifications: "Notifications",
@@ -433,7 +433,7 @@ Object.assign(sv, {
   Privacy: "Integritet",
   Safety: "Säkerhet",
   Home: "Hem",
-  History: "Historik",
+  History: "Historia",
   You: "Du",
   Main: "Huvudmeny",
   Notifications: "Aviseringar",
@@ -2124,8 +2124,8 @@ Object.assign(ko, {
     "코드가 올바르지 않거나 만료됐어요. 새 코드를 요청해 주세요.",
   "Couldn't verify that code.": "코드를 확인하지 못했어요.",
   "Couldn't send the code.": "코드를 보내지 못했어요.",
-  "Your email protects your private Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.":
-    "이메일은 비공개 에이전트를 보호하며 다른 사용자에게 공개되지 않아요. 로그인 후 만 18세 이상 사용자는 온보딩 전에 필수 약관을 확인합니다.",
+  "Your email protects your private Dating Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.":
+    "이메일은 비공개 데이트 에이전트를 보호하며 다른 사용자에게 공개되지 않아요. 로그인 후 만 18세 이상 사용자는 온보딩 전에 필수 약관을 확인합니다.",
 });
 
 Object.assign(ja, {
@@ -2152,8 +2152,8 @@ Object.assign(ja, {
     "コードが無効か期限切れです。新しいコードをリクエストしてください。",
   "Couldn't verify that code.": "コードを確認できませんでした。",
   "Couldn't send the code.": "コードを送信できませんでした。",
-  "Your email protects your private Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.":
-    "メールは非公開のエージェントを守り、他のユーザーには表示されません。ログイン後、18歳以上であることと必須規約をオンボーディング前に確認します。",
+  "Your email protects your private Dating Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.":
+    "メールは非公開のデートエージェントを守り、他のユーザーには表示されません。ログイン後、18歳以上であることと必須規約をオンボーディング前に確認します。",
 });
 
 Object.assign(de, {
@@ -2180,8 +2180,8 @@ Object.assign(de, {
     "Der Code ist ungültig oder abgelaufen. Fordere einen neuen an.",
   "Couldn't verify that code.": "Der Code konnte nicht bestätigt werden.",
   "Couldn't send the code.": "Der Code konnte nicht gesendet werden.",
-  "Your email protects your private Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.":
-    "Deine E-Mail schützt deinen privaten Agenten und wird anderen nie angezeigt. Nach der Anmeldung bestätigen Erwachsene die Pflichtvereinbarungen vor dem Onboarding.",
+  "Your email protects your private Dating Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.":
+    "Deine E-Mail schützt deinen privaten Dating-Agenten und wird anderen nie angezeigt. Nach der Anmeldung bestätigen Erwachsene die Pflichtvereinbarungen vor dem Onboarding.",
 });
 
 Object.assign(fr, {
@@ -2208,8 +2208,8 @@ Object.assign(fr, {
     "Ce code est invalide ou expiré. Demandez-en un nouveau.",
   "Couldn't verify that code.": "Impossible de vérifier ce code.",
   "Couldn't send the code.": "Impossible d’envoyer le code.",
-  "Your email protects your private Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.":
-    "Votre e-mail protège votre Agent privé et n’est jamais montré aux autres. Après connexion, les adultes valident les accords requis avant l’intégration.",
+  "Your email protects your private Dating Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.":
+    "Votre e-mail protège votre Agent de rencontre privé et n’est jamais montré aux autres. Après connexion, les adultes valident les accords requis avant l’intégration.",
 });
 
 Object.assign(nl, {
@@ -2236,8 +2236,8 @@ Object.assign(nl, {
     "De code is ongeldig of verlopen. Vraag een nieuwe aan.",
   "Couldn't verify that code.": "De code kon niet worden geverifieerd.",
   "Couldn't send the code.": "De code kon niet worden verstuurd.",
-  "Your email protects your private Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.":
-    "Je e-mail beschermt je privé-Agent en wordt nooit aan anderen getoond. Na het inloggen beoordelen volwassenen de vereiste afspraken vóór de onboarding.",
+  "Your email protects your private Dating Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.":
+    "Je e-mail beschermt je privé-datingagent en wordt nooit aan anderen getoond. Na het inloggen beoordelen volwassenen de vereiste afspraken vóór de onboarding.",
 });
 
 Object.assign(sv, {
@@ -2264,8 +2264,8 @@ Object.assign(sv, {
     "Koden är ogiltig eller har gått ut. Begär en ny.",
   "Couldn't verify that code.": "Det gick inte att verifiera koden.",
   "Couldn't send the code.": "Det gick inte att skicka koden.",
-  "Your email protects your private Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.":
-    "Din e-post skyddar din privata Agent och visas aldrig för andra. Efter inloggning granskar vuxna de obligatoriska avtalen före introduktionen.",
+  "Your email protects your private Dating Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.":
+    "Din e-post skyddar din privata dejtingagent och visas aldrig för andra. Efter inloggning granskar vuxna de obligatoriska avtalen före introduktionen.",
 });
 
 Object.assign(ko, {
@@ -3013,14 +3013,14 @@ export const agentWorkspaceCopy: Record<
     "Nog geen verhalen.",
     "Inga berättelser än.",
   ],
-  "Your first agent date will appear here as a transcript and an honest private debrief.":
+  "Your first Dating Agent date will appear here as a transcript and an honest private debrief.":
     [
-      "첫 에이전트 데이트가 시작되면 대화 기록과 솔직한 비공개 리포트가 여기에 남아요.",
-      "最初のエージェントデートは会話記録と率直な非公開レポートとしてここに表示されます。",
-      "Dein erstes Agent-Date erscheint hier als Transkript und ehrlicher privater Bericht.",
-      "Votre premier rendez-vous d’Agents apparaîtra ici avec la conversation et un compte rendu privé.",
-      "Je eerste agentdate verschijnt hier als transcript en eerlijk privéverslag.",
-      "Din första Agent-dejt visas här som transkript och ärlig privat rapport.",
+      "첫 데이트 에이전트 데이트가 시작되면 대화 기록과 솔직한 비공개 리포트가 여기에 남아요.",
+      "最初のデートエージェントとのデートは会話記録と率直な非公開レポートとしてここに表示されます。",
+      "Das erste Date deines Dating-Agenten erscheint hier als Transkript und ehrlicher privater Bericht.",
+      "Le premier rendez-vous de votre Agent de rencontre apparaîtra ici avec la conversation et un compte rendu privé.",
+      "De eerste date van je datingagent verschijnt hier als transcript en eerlijk privéverslag.",
+      "Din dejtingagents första dejt visas här som transkript och ärlig privat rapport.",
     ],
   "Preparing the date world": [
     "데이트 월드 준비 중",
@@ -3348,7 +3348,7 @@ export const agentWorkspaceCopy: Record<
     "非公開ブリーフィング",
     "PRIVATES BRIEFING",
     "BRIEF PRIVÉ",
-    "PRIVÉBRIEF",
+    "PRIVÉBRIEFING",
     "PRIVAT BRIEF",
   ],
   SEALED: [
@@ -4852,8 +4852,8 @@ export const agentWorkspaceCopy: Record<
     "Omtänksam",
   ],
   Spontaneous: [
-    "즉흥적",
-    "自発的",
+    "즉흥성",
+    "フットワークが軽い",
     "Spontan",
     "Spontané",
     "Spontaan",
@@ -4868,7 +4868,7 @@ export const agentWorkspaceCopy: Record<
     "Pålitlig",
   ],
   Natural: [
-    "자연스러운",
+    "자연스러움",
     "ナチュラル",
     "Natürlich",
     "Naturel",
@@ -4907,7 +4907,7 @@ export const agentWorkspaceCopy: Record<
     "Minimalistisch",
     "Minimalistisk",
   ],
-  Bold: ["대담한", "大胆", "Markant", "Audacieux", "Gedurfd", "Djärv"],
+  Bold: ["대담함", "大胆", "Markant", "Audacieux", "Gedurfd", "Djärv"],
   Vegetarian: [
     "채식",
     "ベジタリアン",

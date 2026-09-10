@@ -40,7 +40,6 @@ import { readableError } from "../components/ui/Toast";
 import { useI18n } from "../i18n";
 import { dobStringToMs } from "../lib/format";
 import {
-  LANGUAGE_NATIVE_NAMES,
   defaultLanguageForLocale,
   type MatchLocationScope,
 } from "../lib/matchingPreferences";
@@ -881,7 +880,7 @@ export default function AgentOnboardingPage() {
                           toggle(language, languages, setLanguages)
                         }
                       >
-                        {LANGUAGE_NATIVE_NAMES[language] ?? language}
+                        {t(language)}
                       </Chip>
                     ))}
                   </div>

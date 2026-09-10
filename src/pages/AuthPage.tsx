@@ -439,7 +439,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
 
               <p className="mt-7 border-t border-[var(--border)] pt-5 text-[12px] leading-relaxed text-muted">
                 {t(
-                  "Your email protects your private Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.",
+                  "Your email protects your private Dating Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.",
                 )}{" "}
                 <Link to="/terms" className="underline underline-offset-4">
                   {t("Terms of Service")}

@@ -687,8 +687,8 @@ export function agentDebriefEmail(args: {
       talkNote:
         "Besprich offene Fragen mit deinem Dating-Agenten. Wenn du die Person treffen möchtest, bestätigst du am Ende selbst.",
       privacy:
-        "Das Urteil des anderen Agents und die Antwort der anderen Person bleiben verborgen. Dein Dating-Agent kann nicht für dich zustimmen.",
-      footer: "Eine private Servicenachricht zu deinem Datehaja-Agent.",
+        "Das Urteil des anderen Agenten und die Antwort der anderen Person bleiben verborgen. Dein Dating-Agent kann nicht für dich zustimmen.",
+      footer: "Eine private Servicenachricht zu deinem Datehaja-Agenten.",
       settings:
         "In den Einstellungen kannst du E-Mails ändern oder das Matching pausieren.",
     },
