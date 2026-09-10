@@ -75,8 +75,10 @@ export function AgentCharacterArt({ config, colors, fullBody = false, className 
             wearables with the head so their anchors stay together. The female
             wave sheet carries its hair volume to one side, so its head reads as
             sitting right of the neck at the shared offset even though the jaw
-            silhouette measures centred. This value was chosen by eye. */}
-        <g transform={`translate(${gender === "male" ? 152 : config.hair === "wave" ? 146 : 154} 230) scale(.76) translate(-160 -228)`}>
+            silhouette measures centred. All three values were chosen by eye
+            against a rendered strip, because the measured centre and the
+            perceived centre disagree on every one of these sheets. */}
+        <g transform={`translate(${gender === "male" ? 156 : config.hair === "wave" ? 146 : 154} 230) scale(.76) translate(-160 -228)`}>
         <g className="character-look"><g className="character-head">
           <g data-character-layer="head">
             <image href={`${ASSETS}/${head}.png`} width="320" height="280" />
