@@ -343,13 +343,45 @@ function PublicPage({ children }: { children: React.ReactNode }) {
   );
 }
 
+/**
+ * Paths that exist but need a session. A signed-out visitor to one of these
+ * should sign in and land back on it; a signed-out visitor to anything else
+ * typed a dead URL and deserves the 404 rather than a sign-in form.
+ */
+const AUTHED_PATHS = [
+  "/dashboard",
+  "/onboarding",
+  "/profile",
+  "/preferences",
+  "/settings",
+  "/notifications",
+  "/membership",
+  "/history",
+  "/availability",
+  "/legal/accept",
+  "/agent-date/",
+];
+
+function needsSession(pathname: string) {
+  return AUTHED_PATHS.some(
+    (path) => pathname === path || pathname.startsWith(`${path}/`) || pathname.startsWith(path.endsWith("/") ? path : `${path}/`),
+  );
+}
+
 function RedirectToSignIn() {
   const location = useLocation();
   // Emailed date-plan links survive the sign-in round trip.
-  const target =
-    location.pathname === "/"
-      ? "/"
-      : `/signin?next=${encodeURIComponent(location.pathname + location.search + location.hash)}`;
+  if (location.pathname === "/") return <Navigate to="/" replace />;
+  if (!needsSession(location.pathname)) {
+    // PublicPage carries the Suspense boundary the lazy page needs, plus the
+    // header, so a dead link looks like the rest of the signed-out site.
+    return (
+      <PublicPage>
+        <NotFoundPage />
+      </PublicPage>
+    );
+  }
+  const target = `/signin?next=${encodeURIComponent(location.pathname + location.search + location.hash)}`;
   return <Navigate to={target} replace />;
 }
 
