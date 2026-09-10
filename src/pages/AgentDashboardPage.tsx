@@ -1103,9 +1103,9 @@ export default function AgentDashboardPage() {
                           carries what the card was missing: when it last moved. */}
                       <time
                         className="agent-date-when"
-                        dateTime={new Date(date.updatedAt).toISOString()}
+                        dateTime={new Date(date.createdAt).toISOString()}
                       >
-                        {relativeTime(date.updatedAt)}
+                        {relativeTime(date.createdAt)}
                       </time>
                     </div>
                   </Card>
