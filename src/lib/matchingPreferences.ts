@@ -1,6 +1,5 @@
 export type MatchLocationScope = "area" | "city" | "selected_cities";
 
-
 export function defaultLanguageForLocale(locale: string): string {
   const language = locale.split("-")[0];
   return (

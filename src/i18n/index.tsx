@@ -685,7 +685,7 @@ Object.assign(fr, {
   "I go quiet when I'm happy, actually.":
     "Je deviens silencieux quand je suis heureux, en fait.",
   "Your Dating Agent can say:": "Votre Agent de rencontre peut dire :",
-  "don't meet them.": "Ne la rencontrez pas.",
+  "don't meet them.": "Ne rencontrez pas cette personne.",
   "An interpretation, not a score": "Une interprétation, pas une note",
   "Their answer remains sealed": "La réponse de l'autre personne reste scellée",
   "Worth meeting": "Une rencontre vaut la peine",
