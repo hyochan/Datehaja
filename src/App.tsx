@@ -359,13 +359,15 @@ const AUTHED_PATHS = [
   "/history",
   "/availability",
   "/legal/accept",
-  "/agent-date/",
 ];
 
+/** The one authed route with a parameter. */
+const AGENT_DATE = /^\/agent-date\/[^/]+$/;
+
 function needsSession(pathname: string) {
-  return AUTHED_PATHS.some(
-    (path) => pathname === path || pathname.startsWith(`${path}/`) || pathname.startsWith(path.endsWith("/") ? path : `${path}/`),
-  );
+  // Exact, not prefix: /dashboard/invalid is a dead URL, not a page behind a
+  // session, and should reach the 404 like any other typo.
+  return AUTHED_PATHS.includes(pathname) || AGENT_DATE.test(pathname);
 }
 
 function RedirectToSignIn() {
