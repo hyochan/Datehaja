@@ -2,10 +2,16 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { AVATAR_PALETTES } from "@convex/lib/agentAvatar";
+import { sceneKinds } from "@convex/lib/dateStory";
 import {
   ACCESSIBILITY_OPTIONS,
   DATE_TYPE_OPTIONS,
   DIETARY_OPTIONS,
+  FIRST_DATE_VIBE_OPTIONS,
+  HOBBY_OPTIONS,
+  INTEREST_OPTIONS,
+  LANGUAGE_OPTIONS,
+  OCCUPATION_CATEGORIES,
   PERSONALITY_TRAIT_OPTIONS,
   STYLE_TAG_OPTIONS,
 } from "@convex/lib/catalog";
@@ -359,13 +365,52 @@ describe("internationalisation", () => {
 
   it("translates every key the app builds at runtime", () => {
     const asked = AVATAR_PALETTES.map((palette) => `${palette} palette`);
-    // some(), not every(): one locale missing the row is the failure to catch,
-    // and these six keys have no proper-noun rendering that equals the source.
     const untranslated = asked.flatMap((message) =>
       TRANSLATED_LOCALES.filter((locale) => translate(locale, message) === message)
         .map((locale) => `${locale}: ${message}`),
     );
     expect(untranslated).toEqual([]);
+
+    // Catalogue labels reach the screen as data through t(option.label), not as
+    // literal t("…") calls, so the literal scan cannot see them. Asserting a row
+    // exists is the right invariant here rather than asserting the value differs:
+    // Jazz, Yoga and Techno are the same word in several of these languages, and
+    // a row proves someone wrote all six cells on purpose.
+    const rows = new Set(
+      [
+        agentWorkspaceCopy,
+        settingsCopy,
+        avatarStudioCopy,
+        dateLetterCopy,
+        scoutingCopy,
+        coachingCopy,
+        productCopy,
+      ].flatMap((table) => Object.keys(table)),
+    );
+    // A few catalogue words are written straight into the packs instead.
+    for (const block of readFileSync("src/i18n/index.tsx", "utf8").matchAll(
+      /(?:Object\.assign\(|const )(?:ko|ja|de|fr|nl|sv)(?:, |: TranslationPack = )\{([\s\S]*?)\n\}[;)]/g,
+    )) {
+      for (const entry of block[1].matchAll(
+        /^  (?:"((?:[^"\\]|\\.)+)"|([A-Za-z_$][\w$]*)):/gm,
+      )) {
+        rows.add(entry[1] ?? entry[2]);
+      }
+    }
+    const catalogue = [
+      ...sceneKinds,
+      ...INTEREST_OPTIONS,
+      ...HOBBY_OPTIONS,
+      ...LANGUAGE_OPTIONS,
+      ...OCCUPATION_CATEGORIES,
+      ...PERSONALITY_TRAIT_OPTIONS,
+      ...STYLE_TAG_OPTIONS,
+      ...FIRST_DATE_VIBE_OPTIONS,
+      ...DATE_TYPE_OPTIONS.map((option) => option.label),
+      ...DIETARY_OPTIONS.map((option) => option.label),
+      ...ACCESSIBILITY_OPTIONS.map((option) => option.label),
+    ];
+    expect(catalogue.filter((label) => !rows.has(label))).toEqual([]);
   });
 
   // Reads the pack source, so copy added straight to the Korean pack — quoted

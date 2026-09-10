@@ -685,7 +685,7 @@ Object.assign(fr, {
   "I go quiet when I'm happy, actually.":
     "Je deviens silencieux quand je suis heureux, en fait.",
   "Your Dating Agent can say:": "Votre Agent de rencontre peut dire :",
-  "don't meet them.": "Ne les rencontrez pas.",
+  "don't meet them.": "Ne la rencontrez pas.",
   "An interpretation, not a score": "Une interprétation, pas une note",
   "Their answer remains sealed": "La réponse de l'autre personne reste scellée",
   "Worth meeting": "Une rencontre vaut la peine",
@@ -3015,8 +3015,8 @@ export const agentWorkspaceCopy: Record<
   ],
   "Your first Dating Agent date will appear here as a transcript and an honest private debrief.":
     [
-      "첫 데이트 에이전트 데이트가 시작되면 대화 기록과 솔직한 비공개 리포트가 여기에 남아요.",
-      "最初のデートエージェントとのデートは会話記録と率直な非公開レポートとしてここに表示されます。",
+      "데이트 에이전트의 첫 데이트가 시작되면 대화 기록과 솔직한 비공개 리포트가 여기에 남아요.",
+      "デートエージェントの最初のデートは、会話記録と率直な非公開レポートとしてここに表示されます。",
       "Das erste Date deines Dating-Agenten erscheint hier als Transkript und ehrlicher privater Bericht.",
       "Le premier rendez-vous de votre Agent de rencontre apparaîtra ici avec la conversation et un compte rendu privé.",
       "De eerste date van je datingagent verschijnt hier als transcript en eerlijk privéverslag.",
@@ -3932,7 +3932,7 @@ export const agentWorkspaceCopy: Record<
     "Halb volles Popcorn",
     "Pop-corn à moitié fini",
     "Halfvolle popcorn",
-    "Halväten popcorn",
+    "Halvätna popcorn",
   ],
   "A low-stakes object gives the agents somewhere natural to begin.": [
     "가벼운 소재 하나가 에이전트들의 자연스러운 첫마디가 돼요.",
@@ -4028,7 +4028,7 @@ export const agentWorkspaceCopy: Record<
     "読みかけの棚",
     "Unfertiges Regal",
     "Étagère inachevée",
-    "Onvoltooide plank",
+    "Half gelezen boekenplank",
     "Oavslutad hylla",
   ],
   "Reading lamp": [
