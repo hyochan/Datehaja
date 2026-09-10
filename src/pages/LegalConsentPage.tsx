@@ -16,13 +16,13 @@ export default function LegalConsentPage() {
   const { signOut } = useAuthActions();
   const { locale, t } = useI18n();
   const toast = useToast();
-  const [age, setAge] = useState(false);
-  const [terms, setTerms] = useState(false);
-  const [privacy, setPrivacy] = useState(false);
+  // One statement covering all three documents. The backend still records the
+  // four flags separately, so nothing about what was agreed to is lost.
+  const [accepted, setAccepted] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const ready = age && terms && privacy && legal !== undefined;
+  const ready = accepted && legal !== undefined;
 
   async function submit() {
     if (!legal || !ready) return;
@@ -31,10 +31,10 @@ export default function LegalConsentPage() {
     try {
       await accept({
         versions: legal.currentVersions,
-        termsAccepted: terms,
-        communityAccepted: terms,
-        privacyAcknowledged: privacy,
-        ageConfirmed: age,
+        termsAccepted: accepted,
+        communityAccepted: accepted,
+        privacyAcknowledged: accepted,
+        ageConfirmed: accepted,
         locale,
       });
       toast(t("Your choices were saved."), "success");
@@ -105,27 +105,21 @@ export default function LegalConsentPage() {
           </div>
 
           <div className="space-y-3">
-            <ConsentRow checked={age} onChange={setAge}>
-              {t(
-                "I confirm that I am 18 or over. I understand Datehaja does not verify identity or run background checks, and an agent's analysis is not a safety guarantee.",
-              )}
-            </ConsentRow>
-            <ConsentRow checked={terms} onChange={setTerms}>
-              {t("I agree to the")} {" "}
-              <DocumentLink to="/terms">{t("Terms of Service")}</DocumentLink>{" "}
-              {t("and")} {" "}
+            <ConsentRow checked={accepted} onChange={setAccepted}>
+              {t("I am 18 or over, and I agree to the")} {" "}
+              <DocumentLink to="/terms">{t("Terms of Service")}</DocumentLink>
+              {t(", the")} {" "}
               <DocumentLink to="/community-guidelines">
                 {t("Community Guidelines")}
               </DocumentLink>
-              .
+              {t(", and the")} {" "}
+              <DocumentLink to="/privacy">{t("Privacy Notice")}</DocumentLink>.
             </ConsentRow>
-            <ConsentRow checked={privacy} onChange={setPrivacy}>
-              {t("I acknowledge the")} {" "}
-              <DocumentLink to="/privacy">{t("Privacy Notice")}</DocumentLink>
+            <p className="pt-1 text-[13px] leading-relaxed text-muted">
               {t(
-                ", including how my private agent brief, memory, simulated transcripts, and consent decisions are processed.",
+                "Datehaja does not verify identity or run background checks, and an agent's analysis is not a safety guarantee.",
               )}
-            </ConsentRow>
+            </p>
           </div>
 
           {error && (
