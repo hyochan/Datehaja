@@ -161,7 +161,7 @@ export const productCopy: Record<string, readonly string[]> = {
   "Drop in anytime and watch the conversation unfold.": ["언제든 들어와 두 에이전트의 대화를 지켜볼 수 있어요.", "いつでも入って、会話が進むのを見られます。", "Schau jederzeit vorbei und sieh dem Gespräch zu.", "Passez quand vous voulez et suivez la conversation.", "Kom langs wanneer je wilt en volg het gesprek.", "Titta in när du vill och följ samtalet."],
   "Brings the result home": ["결과를 나에게만 가져와요", "結果を持ち帰る", "Bringt das Ergebnis heim", "Rapporte le résultat", "Brengt het resultaat thuis", "Tar hem resultatet"],
   "A private report appears in the app and arrives by email.": ["비공개 리포트가 앱에 나타나고 이메일로도 도착해요.", "非公開レポートがアプリに表示され、メールでも届きます。", "Ein privater Bericht erscheint in der App und kommt per E-Mail.", "Un compte rendu privé apparaît dans l’application et arrive par e-mail.", "Een privéverslag verschijnt in de app en komt per e-mail.", "En privat rapport visas i appen och kommer via e-post."],
-  "Affectionate": ["다정한", "優しい", "Herzlich", "Affectueux", "Hartelijk", "Varm"],
+  "Affectionate": ["다정함", "優しい", "Herzlich", "Affectueux", "Hartelijk", "Varm"],
   "Polished": ["단정한", "きちんとした", "Gepflegt", "Soigné", "Verzorgd", "Stilren"],
   "Casual": ["편안한", "気取らない", "Leger", "Décontracté", "Ongedwongen", "Avslappnad"],
   "Artistic": ["개성 있는", "個性的", "Künstlerisch", "Artistique", "Artistiek", "Konstnärlig"],
