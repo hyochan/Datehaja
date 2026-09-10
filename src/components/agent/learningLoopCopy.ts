@@ -107,8 +107,8 @@ const fr: LoopCopy = {
   talk: "Parler à mon Agent de rencontre", create: "Créer mon Agent de rencontre", technical: "Curieux de ce qui se passe en coulisses ?", proof: "Voir de vraies traces avant-après · démo en coréen",
   examples: [
     { label: "Parle davantage comme moi", feedback: "Je ne ferais pas un discours pareil. Fais plus court, et ne termine pas chaque réponse par une question.", memory: "Des réponses courtes et naturelles. Laisser de la place à l’autre.", nextLabel: "Une façon de le dire la prochaine fois", next: "« Moi aussi. Je préfère qu’on prenne notre temps. »" },
-    { label: "Change ce que je cherche", feedback: "J’aime quelqu’un qui est curieux de moi aussi. Cherche quelqu’un qui pose des questions en retour.", memory: "Remarquer la curiosité mutuelle, pas seulement une conversation facile.", nextLabel: "Ce qu’il faut observer à la prochaine rencontre", next: "Rebondit-elle sur une réponse pour en savoir plus ? La curiosité va-t-elle dans les deux sens ?" },
-    { label: "Garde ce qui m’a plu", feedback: "J’ai aimé qu’ils entrent dans le jeu. Continue à chercher cette légèreté.", memory: "Une plaisanterie légère que les deux peuvent prolonger compte pour vous.", nextLabel: "Un bon moment à retrouver", next: "Repérez quand une petite plaisanterie devient quelque chose que les deux apprécient, au lieu d’être corrigée ou balayée." },
+    { label: "Change ce que je cherche", feedback: "J’aime quelqu’un qui est curieux de moi aussi. Cherche quelqu’un qui pose des questions en retour.", memory: "Remarquer la curiosité mutuelle, pas seulement une conversation facile.", nextLabel: "Ce qu’il faut observer à la prochaine rencontre", next: "La personne rebondit-elle sur une réponse pour en savoir plus ? La curiosité va-t-elle dans les deux sens ?" },
+    { label: "Garde ce qui m’a plu", feedback: "J’ai aimé que cette personne entre dans le jeu. Continue à chercher cette légèreté.", memory: "Une plaisanterie légère que les deux peuvent prolonger compte pour vous.", nextLabel: "Un bon moment à retrouver", next: "Repérez quand une petite plaisanterie devient quelque chose que les deux apprécient, au lieu d’être corrigée ou balayée." },
   ],
 };
 
@@ -129,7 +129,7 @@ const nl: LoopCopy = {
   examples: [
     { label: "Klink meer als ik", feedback: "Zo’n heel verhaal zou ik niet houden. Hou het korter en eindig niet elke reactie met een vraag.", memory: "Korte, natuurlijke reacties. Laat ruimte voor de ander.", nextLabel: "Zo zou het de volgende keer kunnen", next: "“Ik ook. Ik neem liever de tijd.”" },
     { label: "Verander waar ik naar zoek", feedback: "Ik hou van iemand die ook nieuwsgierig naar mij is. Zoek iemand die terugvraagt.", memory: "Let op wederzijdse nieuwsgierigheid, niet alleen op een makkelijk gesprek.", nextLabel: "Waar je bij de volgende ontmoeting op let", next: "Pakt de ander een antwoord op en wil meer weten? Gaat de nieuwsgierigheid beide kanten op?" },
-    { label: "Hou vast wat ik leuk vond", feedback: "Ik vond het fijn dat ze meegingen in de grap. Blijf zoeken naar dat gemak.", memory: "Een lichte grap waar allebei op kunnen doorbouwen is belangrijk voor jou.", nextLabel: "Een moment om weer te zoeken", next: "Let op wanneer een kleine grap iets wordt waar allebei van genieten, in plaats van gecorrigeerd of weggewuifd te worden." },
+    { label: "Hou vast wat ik leuk vond", feedback: "Ik vond het fijn dat die persoon meeging in de grap. Blijf zoeken naar dat gemak.", memory: "Een lichte grap waar allebei op kunnen doorbouwen is belangrijk voor jou.", nextLabel: "Een moment om weer te zoeken", next: "Let op wanneer een kleine grap iets wordt waar allebei van genieten, in plaats van gecorrigeerd of weggewuifd te worden." },
   ],
 };
 

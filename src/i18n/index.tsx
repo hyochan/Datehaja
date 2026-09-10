@@ -815,7 +815,7 @@ Object.assign(sv, {
   "I go quiet when I'm happy, actually.":
     "Jag blir faktiskt tyst av lycka.",
   "Your Dating Agent can say:": "Din dejtingagent kan säga:",
-  "don't meet them.": "Träffa dem inte.",
+  "don't meet them.": "Träffa inte den personen.",
   "An interpretation, not a score": "En tolkning, inte ett betyg",
   "Their answer remains sealed": "Den andras svar förblir förseglat",
   "Worth meeting": "Värd att träffa",
@@ -4026,10 +4026,10 @@ export const agentWorkspaceCopy: Record<
   "Unfinished shelf": [
     "아직 다 보지 못한 책장",
     "読みかけの棚",
-    "Unfertiges Regal",
-    "Étagère inachevée",
+    "Halb gelesenes Regal",
+    "Étagère de lectures inachevées",
     "Half gelezen boekenplank",
-    "Oavslutad hylla",
+    "Halvläst hylla",
   ],
   "Reading lamp": [
     "독서등",
