@@ -194,10 +194,27 @@ describe("internationalisation", () => {
         asked.add(m[1] ?? m[2]);
       }
     }
+    // Words that are the same in that language, checked one by one. every()
+    // used to hide a message translated in one locale and English in five;
+    // naming the exceptions catches that without flagging real cognates.
+    const SAME_IN_LOCALE = new Set([
+      "de-DE\u0000Optional",
+      "fr-FR\u0000Friction",
+      "fr-FR\u0000Menu",
+      "fr-FR\u0000Notifications",
+      "nl-NL\u0000Alcohol",
+      "nl-NL\u0000Home",
+      "nl-NL\u0000Menu",
+      "nl-NL\u0000Privacy",
+    ]);
     const untranslated = [...asked]
       .filter((message) => !PROPER_NOUNS.has(message))
-      .filter((message) =>
-        TRANSLATED_LOCALES.every((locale) => translate(locale, message) === message),
+      .flatMap((message) =>
+        TRANSLATED_LOCALES.filter(
+          (locale) =>
+            translate(locale, message) === message &&
+            !SAME_IN_LOCALE.has(`${locale}\u0000${message}`),
+        ).map((locale) => `${locale}: ${message}`),
       );
     expect(untranslated).toEqual([]);
   });
@@ -241,7 +258,9 @@ describe("internationalisation", () => {
       /(?:Object\.assign\(|const )(ko|ja|de|fr|nl|sv)(?:, |: TranslationPack = )\{([\s\S]*?)\n\}[;)]/g,
     )) {
       for (const entry of block[2].matchAll(
-        /^  (?:"((?:[^"\\]|\\.)+)"|([A-Za-z_$][\w$]*)):\s*"/gm,
+        // No value requirement: prettier wraps long values onto the next
+        // line, and 371 of the 1,885 pack entries are written that way.
+        /^  (?:"((?:[^"\\]|\\.)+)"|([A-Za-z_$][\w$]*)):/gm,
       )) {
         const id = `${block[1]}\u0000${entry[1] ?? entry[2]}`;
         seen.set(id, (seen.get(id) ?? 0) + 1);
@@ -274,7 +293,9 @@ describe("internationalisation", () => {
       /(?:Object\.assign\(|const )(ko|ja|de|fr|nl|sv)(?:, |: TranslationPack = )\{([\s\S]*?)\n\}[;)]/g,
     )) {
       for (const entry of block[2].matchAll(
-        /^  (?:"((?:[^"\\]|\\.)+)"|([A-Za-z_$][\w$]*)):\s*"/gm,
+        // No value requirement: prettier wraps long values onto the next
+        // line, and 371 of the 1,885 pack entries are written that way.
+        /^  (?:"((?:[^"\\]|\\.)+)"|([A-Za-z_$][\w$]*)):/gm,
       )) {
         const key = entry[1] ?? entry[2];
         if (tableKeys.has(key)) shadowed.push(`${block[1]} pack redefines ${key}`);

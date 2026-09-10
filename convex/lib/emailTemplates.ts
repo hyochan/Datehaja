@@ -191,7 +191,7 @@ function agentReportCopy(locale?: string): AgentReportCopy {
     (
       {
         ko: {
-          letter: "내 에이전트가 전하는 말",
+          letter: "내 데이트 에이전트가 전하는 말",
           verdictEncourage: "만나보길 추천해요",
           verdictCurious: "조금 더 궁금해요",
           verdictPass: "이번엔 보내줄게요",
@@ -211,7 +211,7 @@ function agentReportCopy(locale?: string): AgentReportCopy {
           noSignal: "아직 또렷한 신호는 없었어요.",
         },
         ja: {
-          letter: "エージェントからあなたへ",
+          letter: "デートエージェントからあなたへ",
           verdictEncourage: "会ってみる価値あり",
           verdictCurious: "もう少し知りたい",
           verdictPass: "今回は見送り",
@@ -231,7 +231,7 @@ function agentReportCopy(locale?: string): AgentReportCopy {
           noSignal: "まだはっきりしたサインはありませんでした。",
         },
         de: {
-          letter: "Eine Nachricht von deinem Agent",
+          letter: "Eine Nachricht von deinem Dating-Agenten",
           verdictEncourage: "Ein Treffen lohnt sich",
           verdictCurious: "Noch neugierig",
           verdictPass: "Diesmal loslassen",
@@ -251,7 +251,7 @@ function agentReportCopy(locale?: string): AgentReportCopy {
           noSignal: "Noch kein klares Signal.",
         },
         fr: {
-          letter: "Un mot de votre Agent",
+          letter: "Un mot de votre Agent de rencontre",
           verdictEncourage: "Une rencontre vaut la peine",
           verdictCurious: "Encore curieux",
           verdictPass: "On laisse passer",
@@ -271,7 +271,7 @@ function agentReportCopy(locale?: string): AgentReportCopy {
           noSignal: "Aucun signal net pour le moment.",
         },
         nl: {
-          letter: "Een bericht van je Agent",
+          letter: "Een bericht van je datingagent",
           verdictEncourage: "Het waard om te ontmoeten",
           verdictCurious: "Nog nieuwsgierig",
           verdictPass: "Deze laten gaan",
@@ -291,7 +291,7 @@ function agentReportCopy(locale?: string): AgentReportCopy {
           noSignal: "Nog geen duidelijk signaal.",
         },
         sv: {
-          letter: "Ett meddelande från din Agent",
+          letter: "Ett meddelande från din dejtingagent",
           verdictEncourage: "Värd att träffa",
           verdictCurious: "Fortfarande nyfiken",
           verdictPass: "Släpper den här",
@@ -628,7 +628,7 @@ export function agentDebriefEmail(args: {
   const language = args.locale?.split("-")[0] ?? "en";
   const localized = {
     ko: {
-      subject: "내 에이전트가 돌아왔어요 — 비공개 데이트 리포트",
+      subject: "내 데이트 에이전트가 돌아왔어요 — 비공개 데이트 리포트",
       headline:
         args.verdict === "encourage"
           ? `${args.agentName}: 이 사람은 만나봐도 좋아요`
@@ -642,15 +642,15 @@ export function agentDebriefEmail(args: {
       button: "나만의 비공개 리포트 보기",
       talk: `${args.agentName}에게 내 생각 말하기`,
       talkNote:
-        "궁금한 점이나 마음에 걸리는 부분을 내 에이전트에게 말해보세요. 대화 끝에 만나고 싶다면 내가 직접 최종 승인할 수 있어요.",
+        "궁금한 점이나 마음에 걸리는 부분을 내 데이트 에이전트에게 말해보세요. 대화 끝에 만나고 싶다면 내가 직접 최종 승인할 수 있어요.",
       privacy:
-        "상대 에이전트의 판정과 상대방의 답은 계속 비공개예요. 내 에이전트가 나 대신 동의할 수는 없어요.",
+        "상대 에이전트의 판정과 상대방의 답은 계속 비공개예요. 내 데이트 에이전트가 나 대신 동의할 수는 없어요.",
       footer: "Datehaja 에이전트 데이트에 관한 비공개 서비스 메시지예요.",
       settings:
         "설정에서 이메일 수신 방식을 바꾸거나 매칭을 잠시 멈출 수 있어요.",
     },
     ja: {
-      subject: "エージェントが戻りました — 非公開デートレポート",
+      subject: "デートエージェントが戻りました — 非公開デートレポート",
       headline:
         args.verdict === "encourage"
           ? `${args.agentName}は、会ってみる価値があると思っています`
@@ -664,14 +664,14 @@ export function agentDebriefEmail(args: {
       button: "非公開レポートを開く",
       talk: `${args.agentName}とこのデートについて話す`,
       talkNote:
-        "気になる点を自分のエージェントに話してください。会いたいと思ったら、会話の最後に自分で承認できます。",
+        "気になる点を自分のデートエージェントに話してください。会いたいと思ったら、会話の最後に自分で承認できます。",
       privacy:
         "相手エージェントの判定と相手の回答は非公開のままです。エージェントがあなたの代わりに同意することはありません。",
       footer: "Datehajaのエージェントデートに関する非公開メッセージです。",
       settings: "メール設定の変更やマッチングの一時停止は設定から行えます。",
     },
     de: {
-      subject: "Dein Agent ist zurück — privater Date-Bericht",
+      subject: "Dein Dating-Agent ist zurück — privater Date-Bericht",
       headline:
         args.verdict === "encourage"
           ? `${args.agentName} findet, ihr solltet euch treffen`
@@ -685,15 +685,15 @@ export function agentDebriefEmail(args: {
       button: "Privaten Bericht öffnen",
       talk: `Mit ${args.agentName} über dieses Date sprechen`,
       talkNote:
-        "Besprich offene Fragen mit deinem Agent. Wenn du die Person treffen möchtest, bestätigst du am Ende selbst.",
+        "Besprich offene Fragen mit deinem Dating-Agenten. Wenn du die Person treffen möchtest, bestätigst du am Ende selbst.",
       privacy:
-        "Das Urteil des anderen Agents und die Antwort der anderen Person bleiben verborgen. Dein Agent kann nicht für dich zustimmen.",
+        "Das Urteil des anderen Agents und die Antwort der anderen Person bleiben verborgen. Dein Dating-Agent kann nicht für dich zustimmen.",
       footer: "Eine private Servicenachricht zu deinem Datehaja-Agent.",
       settings:
         "In den Einstellungen kannst du E-Mails ändern oder das Matching pausieren.",
     },
     fr: {
-      subject: "Votre Agent est de retour — compte rendu privé",
+      subject: "Votre Agent de rencontre est de retour — compte rendu privé",
       headline:
         args.verdict === "encourage"
           ? `${args.agentName} pense que vous devriez vous rencontrer`
@@ -707,15 +707,15 @@ export function agentDebriefEmail(args: {
       button: "Ouvrir mon compte rendu privé",
       talk: `Parler de ce rendez-vous avec ${args.agentName}`,
       talkNote:
-        "Parlez à votre Agent de ce qui vous intrigue ou vous retient. Si vous souhaitez rencontrer cette personne, vous confirmerez vous-même à la fin.",
+        "Parlez à votre Agent de rencontre de ce qui vous intrigue ou vous retient. Si vous souhaitez rencontrer cette personne, vous confirmerez vous-même à la fin.",
       privacy:
-        "L'avis de l'autre Agent et la réponse de l'autre personne restent secrets. Votre Agent ne peut pas consentir à votre place.",
-      footer: "Message privé concernant votre Agent Datehaja.",
+        "L'avis de l'autre Agent et la réponse de l'autre personne restent secrets. Votre Agent de rencontre ne peut pas consentir à votre place.",
+      footer: "Message privé concernant votre Agent de rencontre Datehaja.",
       settings:
         "Dans les réglages, vous pouvez modifier les e-mails ou suspendre les rencontres.",
     },
     nl: {
-      subject: "Je Agent is terug — privéverslag",
+      subject: "Je datingagent is terug — privéverslag",
       headline:
         args.verdict === "encourage"
           ? `${args.agentName} vindt dat jullie elkaar moeten ontmoeten`
@@ -729,15 +729,15 @@ export function agentDebriefEmail(args: {
       button: "Mijn privéverslag openen",
       talk: `Deze date bespreken met ${args.agentName}`,
       talkNote:
-        "Bespreek je vragen of twijfels met je Agent. Wil je daarna kennismaken, dan bevestig je dat zelf aan het einde.",
+        "Bespreek je vragen of twijfels met je datingagent. Wil je daarna kennismaken, dan bevestig je dat zelf aan het einde.",
       privacy:
-        "Het oordeel van de andere Agent en het antwoord van de andere persoon blijven verborgen. Je Agent kan niet namens jou instemmen.",
+        "Het oordeel van de andere Agent en het antwoord van de andere persoon blijven verborgen. Je datingagent kan niet namens jou instemmen.",
       footer: "Een privébericht over je Datehaja-agent.",
       settings:
         "In Instellingen kun je e-mails aanpassen of matching pauzeren.",
     },
     sv: {
-      subject: "Din Agent är tillbaka — privat rapport",
+      subject: "Din dejtingagent är tillbaka — privat rapport",
       headline:
         args.verdict === "encourage"
           ? `${args.agentName} tycker att ni borde träffas`
@@ -751,9 +751,9 @@ export function agentDebriefEmail(args: {
       button: "Öppna min privata rapport",
       talk: `Prata om dejten med ${args.agentName}`,
       talkNote:
-        "Prata med din Agent om det som känns spännande eller osäkert. Vill du träffas bekräftar du det själv i slutet.",
+        "Prata med din dejtingagent om det som känns spännande eller osäkert. Vill du träffas bekräftar du det själv i slutet.",
       privacy:
-        "Den andra Agentens omdöme och den andra personens svar förblir dolda. Din Agent kan inte samtycka åt dig.",
+        "Den andra Agentens omdöme och den andra personens svar förblir dolda. Din dejtingagent kan inte samtycka åt dig.",
       footer: "Ett privat servicemeddelande om din Datehaja-agent.",
       settings: "I Inställningar kan du ändra e-post eller pausa matchningen.",
     },

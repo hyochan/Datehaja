@@ -1783,12 +1783,12 @@ export const finish = internalMutation({
           }),
           body: localDateCopy(locale, {
             en: "Your Dating Agent found a promising conversation. Read its private letter, then decide for yourself.",
-            ko: "에이전트가 대화를 나누고 소개하고 싶은 상대를 찾았어요. 편지를 읽고 직접 결정해 주세요.",
-            ja: "エージェントが紹介したい相手を見つけました。手紙を読んで、自分で決めてください。",
-            de: "Dein Agent hat jemanden kennengelernt. Lies den privaten Brief und entscheide selbst.",
-            fr: "Votre Agent a rencontré quelqu’un. Lisez sa lettre et décidez vous-même.",
-            nl: "Je Agent heeft iemand ontmoet. Lees de privébrief en beslis zelf.",
-            sv: "Din Agent har träffat någon. Läs brevet och bestäm själv.",
+            ko: "데이트 에이전트가 대화를 나누고 소개하고 싶은 상대를 찾았어요. 편지를 읽고 직접 결정해 주세요.",
+            ja: "デートエージェントが紹介したい相手を見つけました。手紙を読んで、自分で決めてください。",
+            de: "Dein Dating-Agent hat jemanden kennengelernt. Lies den privaten Brief und entscheide selbst.",
+            fr: "Votre Agent de rencontre a rencontré quelqu’un. Lisez sa lettre et décidez vous-même.",
+            nl: "Je datingagent heeft iemand ontmoet. Lees de privébrief en beslis zelf.",
+            sv: "Din dejtingagent har träffat någon. Läs brevet och bestäm själv.",
           }),
           href: `/agent-date/${args.agentDateId}`,
         });

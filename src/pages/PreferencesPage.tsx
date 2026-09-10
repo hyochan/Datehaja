@@ -35,7 +35,6 @@ import { readableError, useToast } from "../components/ui/Toast";
 import { formatMoney } from "../lib/format";
 import { useI18n } from "../i18n";
 import {
-  LANGUAGE_NATIVE_NAMES,
   defaultLanguageForLocale,
   type MatchLocationScope,
 } from "../lib/matchingPreferences";
@@ -350,7 +349,9 @@ export default function PreferencesPage() {
             <ChipGroup
               options={LANGUAGE_OPTIONS.map((language) => ({
                 key: language,
-                label: LANGUAGE_NATIVE_NAMES[language] ?? language,
+                // ChipGroup translates the label, so pass the key: a native-name
+                // lookup left "English" translated among sixteen native names.
+                label: language,
               }))}
               selected={p.languages}
               onChange={(update) =>

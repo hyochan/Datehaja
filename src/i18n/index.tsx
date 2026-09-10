@@ -2845,7 +2845,7 @@ export const agentWorkspaceCopy: Record<
   ],
   "Briefed by you": [
     "내가 알려준 것",
-    "あなたからのブリーフ",
+    "あなたからのブリーフィング",
     "Von dir gebrieft",
     "Briefé par vous",
     "Door jou gebrieft",
@@ -3344,8 +3344,8 @@ export const agentWorkspaceCopy: Record<
     "PRIVAT RUM",
   ],
   "PRIVATE BRIEF": [
-    "비공개 브리프",
-    "非公開ブリーフ",
+    "비공개 브리핑",
+    "非公開ブリーフィング",
     "PRIVATES BRIEFING",
     "BRIEF PRIVÉ",
     "PRIVÉBRIEF",
@@ -3417,8 +3417,8 @@ export const agentWorkspaceCopy: Record<
     "Två Agenter går in var för sig",
   ],
   "Two proxies enter with separate briefs and no contact details.": [
-    "두 에이전트는 서로 다른 브리프만 가지고 입장해요. 연락처는 알 수 없어요.",
-    "二人は別々のブリーフだけを持ち、連絡先なしで入ります。",
+    "두 에이전트는 서로 다른 브리핑만 가지고 입장해요. 연락처는 알 수 없어요.",
+    "二人は別々のブリーフィングだけを持ち、連絡先なしで入ります。",
     "Zwei Stellvertreter kommen mit getrennten Briefings und ohne Kontaktdaten.",
     "Deux représentants entrent avec des briefs séparés et sans coordonnées.",
     "Twee vertegenwoordigers komen binnen met aparte briefings en zonder contactgegevens.",
@@ -3788,7 +3788,7 @@ export const agentWorkspaceCopy: Record<
   ],
   ", including how my private agent brief, memory, simulated transcripts, and consent decisions are processed.":
     [
-      ". 여기에는 내 비공개 에이전트 브리프, 기억, 가상 데이트 대화, 동의 여부가 처리되는 방식이 포함됩니다.",
+      ". 여기에는 내 비공개 에이전트 브리핑, 기억, 가상 데이트 대화, 동의 여부가 처리되는 방식이 포함됩니다.",
       "。非公開のエージェント情報、記憶、仮想会話、同意の判断がどのように扱われるかを含みます。",
       ", einschließlich der Verarbeitung meines privaten Agent-Briefings, der Erinnerungen, simulierten Gespräche und Zustimmungsentscheidungen.",
       ", notamment la façon dont mon brief privé, la mémoire, les conversations simulées et mes décisions de consentement sont traités.",
@@ -3805,8 +3805,8 @@ export const agentWorkspaceCopy: Record<
   ],
   "Your private agent messages never become the other agent's brief. Contact opens only after two independent human yeses.":
     [
-      "나와 에이전트의 비공개 대화는 상대 에이전트의 브리프가 되지 않아요. 두 사람이 각자 만나겠다고 해야 연락처가 열립니다.",
-      "あなたとエージェントの非公開会話が相手のブリーフになることはありません。二人がそれぞれ会いたいと答えたときだけ連絡先が開きます。",
+      "나와 에이전트의 비공개 대화는 상대 에이전트의 브리핑이 되지 않아요. 두 사람이 각자 만나겠다고 해야 연락처가 열립니다.",
+      "あなたとエージェントの非公開会話が相手のブリーフィングになることはありません。二人がそれぞれ会いたいと答えたときだけ連絡先が開きます。",
       "Deine privaten Agent-Nachrichten werden niemals zum Briefing des anderen Agents. Kontakt wird erst nach zwei unabhängigen menschlichen Jas geöffnet.",
       "Vos messages privés ne deviennent jamais le brief de l’autre Agent. Les coordonnées ne s’ouvrent qu’après deux oui humains indépendants.",
       "Je privéberichten worden nooit de briefing van de andere Agent. Contact opent pas na twee onafhankelijke menselijke ja's.",
@@ -3879,7 +3879,7 @@ export const agentWorkspaceCopy: Record<
     "Gemensamma intressen · {interests}",
   ],
   "{traits} matched the brief": [
-    "브리프와 맞는 성향 · {traits}",
+    "브리핑과 맞는 성향 · {traits}",
     "希望に合う特性・{traits}",
     "Passende Eigenschaften · {traits}",
     "Traits en accord avec le brief · {traits}",
@@ -5117,7 +5117,7 @@ export const settingsCopy: Record<
     "Agentens namn",
   ],
   "Private instructions": [
-    "비공개 브리프",
+    "비공개 브리핑",
     "非公開の指示",
     "Private Anweisungen",
     "Consignes privées",

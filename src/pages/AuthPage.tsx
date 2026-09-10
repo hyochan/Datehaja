@@ -458,7 +458,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
               </p>
             </div>
 
-            <div className="auth-agent-preview mb-6">
+            <div className="auth-agent-preview mt-6">
               <AgentLoopPlayer t={t} compact />
             </div>
           </div>
