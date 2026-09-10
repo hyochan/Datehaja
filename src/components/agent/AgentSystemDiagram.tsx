@@ -8,7 +8,7 @@ type Step = "brief" | "search" | "date" | "review" | "letter" | "consent" | "mem
 type Node = { id: string; step: Step; col: number; row: number; title: string; caption: string; kind?: "gate" | "store" };
 
 export function AgentSystemDiagram({ standalone = false, embedded = false }: { standalone?: boolean; embedded?: boolean }) {
-  const { locale } = useI18n();
+  const { locale, t } = useI18n();
   const copy = systemDiagramText(locale);
   const [view, setView] = useState<"system" | "learning">("system");
   const [selected, setSelected] = useState<Step>("search");
@@ -52,7 +52,7 @@ export function AgentSystemDiagram({ standalone = false, embedded = false }: { s
     <div className="system-diagram" id={embedded ? "agent-system-details" : "agent-system"}>
       <div className="system-diagram-intro">
         <div>
-          <p className="system-diagram-eyebrow">SYSTEM DESIGN / 01</p>
+          <p className="system-diagram-eyebrow">{t("SYSTEM DESIGN / 01")}</p>
           <Heading className="system-diagram-title">{copy.title}</Heading>
           <p>{copy.intro}</p>
         </div>
@@ -127,7 +127,7 @@ export function AgentSystemDiagram({ standalone = false, embedded = false }: { s
 
             <div className="system-loop-note"><span aria-hidden="true">↺</span><p><strong>{copy.waiting}</strong>{copy.waitingDetail}</p></div>
           </> : <div className="system-learning">
-            <div className="sequence-heading"><span>SEQUENCE / 02</span><DetailHeading>{copy.sequenceTitle}</DetailHeading><p>{copy.sequenceIntro}</p></div>
+            <div className="sequence-heading"><span>{t("SEQUENCE / 02")}</span><DetailHeading>{copy.sequenceTitle}</DetailHeading><p>{copy.sequenceIntro}</p></div>
             <div className="system-sequence" role="img" aria-label={copy.sequenceAlt}>
               <div className="sequence-actors">{[copy.owner, copy.agentA, copy.memory, copy.nextDate].map((actor) => <strong key={actor}>{actor}</strong>)}</div>
               <div className="sequence-lifelines" aria-hidden="true"><i /><i /><i /><i /></div>
@@ -135,8 +135,8 @@ export function AgentSystemDiagram({ standalone = false, embedded = false }: { s
             </div>
             <ol className="sequence-mobile">{copy.messages.map((message, index) => <li key={message}><small>{copy.sequenceRoutes[index]}</small><p>{message}</p></li>)}</ol>
             <div className="system-feedback-types">
-              <div><span>SELF</span><strong>{copy.selfTitle}</strong><p>{copy.selfDetail}</p></div>
-              <div><span>COUNTERPART</span><strong>{copy.otherTitle}</strong><p>{copy.otherDetail}</p></div>
+              <div><span>{t("SELF")}</span><strong>{copy.selfTitle}</strong><p>{copy.selfDetail}</p></div>
+              <div><span>{t("COUNTERPART")}</span><strong>{copy.otherTitle}</strong><p>{copy.otherDetail}</p></div>
             </div>
             <div className="system-approval"><span aria-hidden="true">◇</span><p><strong>{copy.approvalTitle}</strong>{copy.approvalDetail}</p></div>
           </div>}

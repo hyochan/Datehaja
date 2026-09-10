@@ -120,7 +120,7 @@ export default function ProfilePage() {
         headers: { "Content-Type": file.type },
         body: file,
       });
-      if (!result.ok) throw new Error("Upload failed.");
+      if (!result.ok) throw new Error(t("Upload failed."));
       const { storageId } = (await result.json()) as {
         storageId: Id<"_storage">;
       };
@@ -152,7 +152,7 @@ export default function ProfilePage() {
         smokes,
         drinks,
       });
-      toast("Profile saved.", "success");
+      toast(t("Profile saved."), "success");
     } catch (e) {
       const message = readableError(e);
       setError(message);
@@ -178,7 +178,7 @@ export default function ProfilePage() {
           {me.photoUrl ? (
             <img
               src={me.photoUrl}
-              alt="Your profile photo"
+              alt={t("Your profile photo")}
               className="h-20 w-20 rounded-full object-cover"
             />
           ) : (
@@ -208,7 +208,7 @@ export default function ProfilePage() {
                   onClick={async () => {
                     try {
                       await setPhoto({ storageId: null });
-                      toast("Photo removed.", "success");
+                      toast(t("Photo removed."), "success");
                     } catch (e) {
                       toast(readableError(e), "error");
                     }

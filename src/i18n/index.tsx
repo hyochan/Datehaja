@@ -3368,7 +3368,7 @@ export const agentWorkspaceCopy: Record<
     "NÄSTA STOPP",
   ],
   "AGENT WORLD": [
-    "데이트 월드",
+    "에이전트 월드",
     "エージェントワールド",
     "AGENT-WELT",
     "MONDE DES AGENTS",
@@ -4325,7 +4325,7 @@ export const agentWorkspaceCopy: Record<
     "Voorkeuren opgeslagen.",
     "Inställningarna sparades.",
   ],
-  Who: ["누구", "相手", "Wer", "Qui", "Wie", "Vem"],
+  Who: ["누구", "誰", "Wer", "Qui", "Wie", "Vem"],
   People: ["사람", "相手", "Personen", "Personnes", "Mensen", "Personer"],
   "{min} to {max}": [
     "{min}~{max}세",

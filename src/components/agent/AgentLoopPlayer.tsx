@@ -78,7 +78,7 @@ export function AgentLoopPlayer({
         <button
           type="button"
           onClick={() => setPlaying((current) => !current)}
-          aria-label={playing ? "Pause preview" : "Play preview"}
+          aria-label={playing ? t("Pause preview") : t("Play preview")}
         >
           {playing ? "Ⅱ" : "▶"}
         </button>
