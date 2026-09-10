@@ -200,9 +200,13 @@ describe("internationalisation", () => {
     const SAME_IN_LOCALE = new Set([
       "de-DE\u0000Optional",
       "fr-FR\u0000Friction",
+      "fr-FR\u0000Photo",
       "fr-FR\u0000Menu",
       "fr-FR\u0000Notifications",
       "nl-NL\u0000Alcohol",
+      "nl-NL\u0000Introvert",
+      "sv-SE\u0000Introvert",
+      "sv-SE\u0000Extrovert",
       "nl-NL\u0000Home",
       "nl-NL\u0000Menu",
       "nl-NL\u0000Privacy",

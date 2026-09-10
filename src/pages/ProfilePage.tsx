@@ -165,15 +165,15 @@ export default function ProfilePage() {
   return (
     <div className="product-page mx-auto max-w-3xl space-y-10 pb-8">
       <PageIntro
-        eyebrow="The human behind your Dating Agent"
-        title="Your human profile"
+        eyebrow={t("The human behind your Dating Agent")}
+        title={t("Your human profile")}
         description={`${profile.displayName} · ${profile.ageYears} · ${profile.neighborhood}, ${profile.city}`}
         motif={profile.displayName.slice(0, 1).toUpperCase()}
         tone="butter"
       />
 
       <section>
-        <SectionHeading eyebrow="Optional" title="Photo" />
+        <SectionHeading eyebrow={t("Optional")} title={t("Photo")} />
         <Card className="flex items-center gap-5 p-5">
           {me.photoUrl ? (
             <img
@@ -199,7 +199,7 @@ export default function ProfilePage() {
                 loading={uploading}
                 onClick={() => fileInput.current?.click()}
               >
-                {me.photoUrl ? "Replace" : "Add a photo"}
+                {me.photoUrl ? t("Replace") : t("Add a photo")}
               </Button>
               {me.photoUrl && (
                 <Button
@@ -214,7 +214,7 @@ export default function ProfilePage() {
                     }
                   }}
                 >
-                  Remove
+                  {t("Remove")}
                 </Button>
               )}
             </div>
@@ -261,7 +261,7 @@ export default function ProfilePage() {
       </section>
 
       <section>
-        <SectionHeading eyebrow="What your Dating Agent can represent" title="About you" />
+        <SectionHeading eyebrow={t("What your Dating Agent can represent")} title={t("About you")} />
         <Card className="p-5">
           {error && (
             <div className="mb-5">
@@ -271,7 +271,7 @@ export default function ProfilePage() {
 
           <Field
             label={t("Introduce yourself")}
-            hint="Contact details are removed automatically before anyone sees this."
+            hint={t("Contact details are removed automatically before anyone sees this.")}
             htmlFor="bio"
           >
             <TextArea
@@ -314,7 +314,7 @@ export default function ProfilePage() {
             />
           </Field>
 
-          <Field label="What you do" optional htmlFor="occupation">
+          <Field label={t("What you do")} optional htmlFor="occupation">
             <Select
               id="occupation"
               value={occupation}
@@ -332,15 +332,15 @@ export default function ProfilePage() {
                 <Toggle
                   checked={showOccupation}
                   onChange={setShowOccupation}
-                  label="Show this to matches"
+                  label={t("Show this to matches")}
                 />
               </div>
             )}
           </Field>
 
           <Field
-            label="Interests"
-            hint="At least three — this drives matching."
+            label={t("Interests")}
+            hint={t("At least three — this drives matching.")}
           >
             <ChipGroup
               options={INTEREST_OPTIONS}
@@ -352,7 +352,7 @@ export default function ProfilePage() {
             <SelectionCount count={interests.length} min={3} max={12} />
           </Field>
 
-          <Field label="Hobbies" optional>
+          <Field label={t("Hobbies")} optional>
             <ChipGroup
               options={HOBBY_OPTIONS}
               selected={hobbies}
@@ -362,7 +362,7 @@ export default function ProfilePage() {
             />
           </Field>
 
-          <Field label="Languages">
+          <Field label={t("Languages")}>
             <ChipGroup
               options={LANGUAGE_OPTIONS}
               selected={languages}
@@ -372,20 +372,20 @@ export default function ProfilePage() {
             />
           </Field>
 
-          <Field label="On a night out, you're">
+          <Field label={t("On a night out, you're")}>
             <SegmentedControl
               value={socialEnergy}
               onChange={setSocialEnergy}
               ariaLabel="Social energy"
               options={[
-                { value: "introvert", label: "Introvert" },
-                { value: "ambivert", label: "In between" },
-                { value: "extrovert", label: "Extrovert" },
+                { value: "introvert", label: t("Introvert") },
+                { value: "ambivert", label: t("In between") },
+                { value: "extrovert", label: t("Extrovert") },
               ]}
             />
           </Field>
 
-          <Field label="Your ideal first date feels" optional>
+          <Field label={t("Your ideal first date feels")} optional>
             <ChipGroup
               options={FIRST_DATE_VIBE_OPTIONS}
               selected={firstDateVibe}
@@ -395,20 +395,20 @@ export default function ProfilePage() {
             />
           </Field>
 
-          <Field label="Lifestyle">
-            <Toggle checked={smokes} onChange={setSmokes} label="I smoke" />
+          <Field label={t("Lifestyle")}>
+            <Toggle checked={smokes} onChange={setSmokes} label={t("I smoke")} />
             <div className="mt-3">
               <span className="mb-2 block text-[13px] font-medium text-soft">
-                I drink
+                {t("I drink")}
               </span>
               <SegmentedControl
                 value={drinks}
                 onChange={setDrinks}
                 ariaLabel="Drinking"
                 options={[
-                  { value: "none", label: "Not at all" },
-                  { value: "occasional", label: "Occasionally" },
-                  { value: "social", label: "Socially" },
+                  { value: "none", label: t("Not at all") },
+                  { value: "occasional", label: t("Occasionally") },
+                  { value: "social", label: t("Socially") },
                 ]}
               />
             </div>
@@ -431,7 +431,7 @@ export default function ProfilePage() {
             disabled={!profileTruthConfirmed}
             size="lg"
           >
-            Save profile
+            {t("Save profile")}
           </Button>
         </Card>
       </section>
