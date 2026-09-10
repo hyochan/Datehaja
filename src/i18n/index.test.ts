@@ -1,15 +1,27 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { AVATAR_PALETTES } from "@convex/lib/agentAvatar";
+import { sceneKinds } from "@convex/lib/dateStory";
 import {
   ACCESSIBILITY_OPTIONS,
   DATE_TYPE_OPTIONS,
   DIETARY_OPTIONS,
+  FIRST_DATE_VIBE_OPTIONS,
+  HOBBY_OPTIONS,
+  INTEREST_OPTIONS,
+  LANGUAGE_OPTIONS,
+  OCCUPATION_CATEGORIES,
   PERSONALITY_TRAIT_OPTIONS,
   STYLE_TAG_OPTIONS,
 } from "@convex/lib/catalog";
 import {
+  PACKS,
   SUPPORTED_LOCALES,
+  agentWorkspaceCopy,
+  avatarStudioCopy,
+  dateLetterCopy,
+  settingsCopy,
   chooseLocale,
   missingCoreTranslations,
   translate,
@@ -109,10 +121,10 @@ describe("internationalisation", () => {
     const settingsMessages = [
       "Private control room",
       "Agent settings",
-      "Let my agent date",
-      "My agent may meet other agents",
+      "Let my Dating Agent date",
+      "My Dating Agent may meet other agents",
       "Private instructions",
-      "How my agent represents me",
+      "How my Dating Agent represents me",
       "What arrives by email",
       "Agent debriefs",
       "Mutual introductions",
@@ -147,7 +159,7 @@ describe("internationalisation", () => {
   ] as const;
 
   it("gives every shared copy table one entry per translated locale", () => {
-    for (const [name, table] of Object.entries({ coachingCopy, productCopy, scoutingCopy })) {
+    for (const [name, table] of Object.entries({ coachingCopy, dateLetterCopy, productCopy, scoutingCopy })) {
       for (const [message, values] of Object.entries(table)) {
         expect(
           { table: name, message, count: values.length },
@@ -178,16 +190,227 @@ describe("internationalisation", () => {
     walk("src");
     const asked = new Set<string>();
     for (const file of files) {
-      for (const m of readFileSync(file, "utf8").matchAll(/\bt\(\s*"((?:[^"\\]|\\.)+)"/g)) {
-        asked.add(m[1]);
+      // Both call shapes: t("…"), and translate(locale, "…") where the key is
+      // the second argument. Missing the latter is how the page title and meta
+      // description were deleted as unused — their only callers are the ones
+      // inside this module.
+      for (const m of readFileSync(file, "utf8").matchAll(
+        /\bt\(\s*"((?:[^"\\]|\\.)+)"|\btranslate\(\s*[A-Za-z_$][\w$]*\s*,\s*\n?\s*"((?:[^"\\]|\\.)+)"/g,
+      )) {
+        asked.add(m[1] ?? m[2]);
       }
     }
+    // Words that are the same in that language, checked one by one. every()
+    // used to hide a message translated in one locale and English in five;
+    // naming the exceptions catches that without flagging real cognates.
+    const SAME_IN_LOCALE = new Set([
+      "de-DE\u0000Optional",
+      "fr-FR\u0000Friction",
+      "fr-FR\u0000Photo",
+      "fr-FR\u0000Menu",
+      "fr-FR\u0000Notifications",
+      "nl-NL\u0000Alcohol",
+      "nl-NL\u0000Introvert",
+      "sv-SE\u0000Introvert",
+      "sv-SE\u0000Extrovert",
+      "nl-NL\u0000Home",
+      "nl-NL\u0000Menu",
+      "nl-NL\u0000Privacy",
+    ]);
     const untranslated = [...asked]
       .filter((message) => !PROPER_NOUNS.has(message))
-      .filter((message) =>
-        TRANSLATED_LOCALES.every((locale) => translate(locale, message) === message),
+      .flatMap((message) =>
+        TRANSLATED_LOCALES.filter(
+          (locale) =>
+            translate(locale, message) === message &&
+            !SAME_IN_LOCALE.has(`${locale}\u0000${message}`),
+        ).map((locale) => `${locale}: ${message}`),
       );
     expect(untranslated).toEqual([]);
+  });
+
+  // The scan above only sees literal t("…") calls, so keys the app builds at
+  // runtime stay invisible to it. The avatar editor asks for `${option} palette`,
+  // which is how four of the six were nearly dropped as unused copy.
+  // The seven shared tables are merged last-wins over the raw packs, so a key
+  // defined twice silently takes the other definition's copy with no diff on
+  // the one that looks like it owns the phrase. That is how four chips changed
+  // language mid-row, and how 33 pack cells came to disagree with what renders.
+  it("defines every shared key in exactly one table", () => {
+    const tables = {
+      agentWorkspaceCopy,
+      settingsCopy,
+      avatarStudioCopy,
+      dateLetterCopy,
+      scoutingCopy,
+      coachingCopy,
+      productCopy,
+    };
+    const owners = new Map<string, string[]>();
+    for (const [name, table] of Object.entries(tables)) {
+      for (const key of Object.keys(table)) {
+        owners.set(key, [...(owners.get(key) ?? []), name]);
+      }
+    }
+    const shadowed = [...owners]
+      .filter(([, names]) => names.length > 1)
+      .map(([key, names]) => `${key} defined in ${names.join(" and ")}`);
+    expect(shadowed).toEqual([]);
+  });
+
+  // Neither check above looks inside a single pack. "Brief" was defined twice in
+  // every one of them, and the later definition — 안내, ガイド, "Guide" — won,
+  // so the loop player's first frame said "notice" instead of naming the brief.
+  it("never defines the same key twice within one locale pack", () => {
+    const src = readFileSync("src/i18n/index.tsx", "utf8");
+    const seen = new Map<string, number>();
+    for (const block of src.matchAll(
+      /(?:Object\.assign\(|const )(ko|ja|de|fr|nl|sv)(?:, |: TranslationPack = )\{([\s\S]*?)\n\}[;)]/g,
+    )) {
+      for (const entry of block[2].matchAll(
+        // No value requirement: prettier wraps long values onto the next
+        // line, and 371 of the 1,885 pack entries are written that way.
+        /^  (?:"((?:[^"\\]|\\.)+)"|([A-Za-z_$][\w$]*)):/gm,
+      )) {
+        const id = `${block[1]}\u0000${entry[1] ?? entry[2]}`;
+        seen.set(id, (seen.get(id) ?? 0) + 1);
+      }
+    }
+    const repeated = [...seen]
+      .filter(([, count]) => count > 1)
+      .map(([id, count]) => `${id.replace("\u0000", " pack defines ")} ${count} times`);
+    expect(repeated).toEqual([]);
+  });
+
+  // The check above compares the tables to each other. This one covers the
+  // other direction: a phrase written straight into a locale pack that a table
+  // then overrides, leaving dead source that contradicts the live copy.
+  it("never defines a table key directly in a locale pack as well", () => {
+    const src = readFileSync("src/i18n/index.tsx", "utf8");
+    const tableKeys = new Set(
+      [
+        agentWorkspaceCopy,
+        settingsCopy,
+        avatarStudioCopy,
+        dateLetterCopy,
+        scoutingCopy,
+        coachingCopy,
+        productCopy,
+      ].flatMap((table) => Object.keys(table)),
+    );
+    const shadowed: string[] = [];
+    for (const block of src.matchAll(
+      /(?:Object\.assign\(|const )(ko|ja|de|fr|nl|sv)(?:, |: TranslationPack = )\{([\s\S]*?)\n\}[;)]/g,
+    )) {
+      for (const entry of block[2].matchAll(
+        // No value requirement: prettier wraps long values onto the next
+        // line, and 371 of the 1,885 pack entries are written that way.
+        /^  (?:"((?:[^"\\]|\\.)+)"|([A-Za-z_$][\w$]*)):/gm,
+      )) {
+        const key = entry[1] ?? entry[2];
+        if (tableKeys.has(key)) shadowed.push(`${block[1]} pack redefines ${key}`);
+      }
+    }
+    expect(shadowed).toEqual([]);
+  });
+
+  // A translation that says "Agent" where the key says "Dating Agent" is not
+  // untranslated, so the check above passes it. That is how "Wake your first
+  // Dating Agent." kept six values reading plain "Agent", and how the Korean and
+  // Japanese coaching copy went on calling it 분신 / 分身 — the word this repo
+  // reserves for "second self" — while the other four locales were renamed.
+  it("names the product consistently wherever the key does", () => {
+    const TERM: Record<string, RegExp> = {
+      "ko-KR": /데이트 에이전트/,
+      "ja-JP": /デートエージェント/,
+      "de-DE": /Dating-Agent/i,
+      "fr-FR": /Agent de rencontre/i,
+      "nl-NL": /datingagent/i,
+      "sv-SE": /dejtingagent/i,
+    };
+    // Korean and Japanese drop the subject here, and in each case the card
+    // heading or field label directly above already names the agent. Nine
+    // entries, all pro-drop: an entry for a language that does not drop
+    // subjects would be hiding a gap, not recording an idiom.
+    const IMPLIED_SUBJECT = new Set([
+      "ko-KR\u0000My Dating Agent may meet other agents",
+      "ja-JP\u0000My Dating Agent may meet other agents",
+      "ko-KR\u0000Your Dating Agent looks for people whose relationship goals fit yours.",
+      "ja-JP\u0000Your Dating Agent looks for people whose relationship goals fit yours.",
+      "ko-KR\u0000Not quite you? Open the feedback under any line to shape your Dating Agent's voice or share how you felt about the other person.",
+      "ja-JP\u0000Not quite you? Open the feedback under any line to shape your Dating Agent's voice or share how you felt about the other person.",
+      "ko-KR\u0000Your Dating Agent meets other searching Agents, learns from each conversation, and keeps going when it isn't right. You'll hear from us when there's someone to introduce.",
+      "ja-JP\u0000Your Dating Agent meets other searching Agents, learns from each conversation, and keeps going when it isn't right. You'll hear from us when there's someone to introduce.",
+      "ja-JP\u0000Your Dating Agent only considers someone when both location settings include each other and both people share a language—or both allow translation.",
+    ]);
+    // Walk the merged packs, not the tables: 42 keys naming the product live
+    // directly in a pack, and a rename that stops halfway there is exactly the
+    // defect this guard exists for.
+    const keys = new Set(
+      Object.values(PACKS)
+        .flatMap((pack) => Object.keys(pack ?? {}))
+        .filter((key) => /Dating Agent/i.test(key)),
+    );
+    const wrong: string[] = [];
+    for (const key of keys) {
+      for (const [locale, term] of Object.entries(TERM)) {
+        const value = translate(locale as (typeof TRANSLATED_LOCALES)[number], key);
+        if (value === key || term.test(value)) continue;
+        if (IMPLIED_SUBJECT.has(`${locale}\u0000${key}`)) continue;
+        wrong.push(`${locale}: ${key}`);
+      }
+    }
+    expect(wrong).toEqual([]);
+  });
+
+  it("translates every key the app builds at runtime", () => {
+    const asked = AVATAR_PALETTES.map((palette) => `${palette} palette`);
+    const untranslated = asked.flatMap((message) =>
+      TRANSLATED_LOCALES.filter((locale) => translate(locale, message) === message)
+        .map((locale) => `${locale}: ${message}`),
+    );
+    expect(untranslated).toEqual([]);
+
+    // Catalogue labels reach the screen as data through t(option.label), not as
+    // literal t("…") calls, so the literal scan cannot see them. Asserting a row
+    // exists is the right invariant here rather than asserting the value differs:
+    // Jazz, Yoga and Techno are the same word in several of these languages, and
+    // a row proves someone wrote all six cells on purpose.
+    const rows = new Set(
+      [
+        agentWorkspaceCopy,
+        settingsCopy,
+        avatarStudioCopy,
+        dateLetterCopy,
+        scoutingCopy,
+        coachingCopy,
+        productCopy,
+      ].flatMap((table) => Object.keys(table)),
+    );
+    // A few catalogue words are written straight into the packs instead.
+    for (const block of readFileSync("src/i18n/index.tsx", "utf8").matchAll(
+      /(?:Object\.assign\(|const )(?:ko|ja|de|fr|nl|sv)(?:, |: TranslationPack = )\{([\s\S]*?)\n\}[;)]/g,
+    )) {
+      for (const entry of block[1].matchAll(
+        /^  (?:"((?:[^"\\]|\\.)+)"|([A-Za-z_$][\w$]*)):/gm,
+      )) {
+        rows.add(entry[1] ?? entry[2]);
+      }
+    }
+    const catalogue = [
+      ...sceneKinds,
+      ...INTEREST_OPTIONS,
+      ...HOBBY_OPTIONS,
+      ...LANGUAGE_OPTIONS,
+      ...OCCUPATION_CATEGORIES,
+      ...PERSONALITY_TRAIT_OPTIONS,
+      ...STYLE_TAG_OPTIONS,
+      ...FIRST_DATE_VIBE_OPTIONS,
+      ...DATE_TYPE_OPTIONS.map((option) => option.label),
+      ...DIETARY_OPTIONS.map((option) => option.label),
+      ...ACCESSIBILITY_OPTIONS.map((option) => option.label),
+    ];
+    expect(catalogue.filter((label) => !rows.has(label))).toEqual([]);
   });
 
   // Reads the pack source, so copy added straight to the Korean pack — quoted
@@ -208,13 +431,15 @@ describe("internationalisation", () => {
     expect(koreanOnly).toEqual([]);
   });
 
-  it("leaves no Korean-only product copy behind", () => {
-    for (const locale of TRANSLATED_LOCALES) {
-      const untranslated = Object.keys(productCopy).filter(
-        (message) => translate(locale, message) === message,
-      );
-      expect(untranslated).toEqual([]);
-    }
+  // A row in the table cannot fall through to English, so "resolves to its own
+  // key" proves nothing here — plenty of labels are the same word in several
+  // languages (Yoga, Jazz, Design, Hindi). Korean never legitimately equals an
+  // English label, so that is the cell worth asserting on.
+  it("gives every product-copy row real Korean", () => {
+    const untranslated = Object.keys(productCopy).filter(
+      (message) => translate("ko-KR", message) === message,
+    );
+    expect(untranslated).toEqual([]);
   });
 
   it("translates the per-turn coaching surface in every locale", () => {

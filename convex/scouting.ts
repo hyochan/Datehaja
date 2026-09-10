@@ -57,7 +57,7 @@ export const start = action({
     const [identity, userId] = await Promise.all([ctx.auth.getUserIdentity(), getAuthUserId(ctx)]);
     if (!identity || !userId) throw new Error("Not signed in.");
     const access = await getScoutAccess(ctx, identity.tokenIdentifier);
-    if (!access.allowed) throw new Error("A Scout Pass is required before your agent can search.");
+    if (!access.allowed) throw new Error("A Scout Pass is required before your Dating Agent can search.");
     await ctx.runMutation(internal.scouting.begin, { userId, accessMode: access.mode === "subscription" ? "subscription" : "demo" });
     return null;
   },
@@ -69,8 +69,8 @@ export const begin = internalMutation({
     const profile = await requireActiveProfile(ctx, args.userId);
     const preferences = await getPreferencesByUser(ctx, args.userId);
     const agent = await ctx.db.query("agentProfiles").withIndex("by_user", q => q.eq("userId", args.userId)).unique();
-    if (profile.status !== "active" || agent?.status !== "active" || preferences?.dropsPaused) throw new Error("Your agent is paused in Settings.");
-    if (!hasCompleteMatchingBoundaries(profile, preferences)) throw new Error("Finish choosing where and in which languages your agent may search.");
+    if (profile.status !== "active" || agent?.status !== "active" || preferences?.dropsPaused) throw new Error("Your Dating Agent is paused in Settings.");
+    if (!hasCompleteMatchingBoundaries(profile, preferences)) throw new Error("Finish choosing where and in which languages your Dating Agent may search.");
     let session = await byUser(ctx, args.userId);
     if (session && !["paused", "connected"].includes(session.status)) {
       const stalled = session.status === "talking" && session.currentDateId

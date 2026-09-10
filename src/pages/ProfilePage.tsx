@@ -120,7 +120,7 @@ export default function ProfilePage() {
         headers: { "Content-Type": file.type },
         body: file,
       });
-      if (!result.ok) throw new Error("Upload failed.");
+      if (!result.ok) throw new Error(t("Upload failed."));
       const { storageId } = (await result.json()) as {
         storageId: Id<"_storage">;
       };
@@ -152,7 +152,7 @@ export default function ProfilePage() {
         smokes,
         drinks,
       });
-      toast("Profile saved.", "success");
+      toast(t("Profile saved."), "success");
     } catch (e) {
       const message = readableError(e);
       setError(message);
@@ -165,20 +165,20 @@ export default function ProfilePage() {
   return (
     <div className="product-page mx-auto max-w-3xl space-y-10 pb-8">
       <PageIntro
-        eyebrow="The human behind your agent"
-        title="Your human profile"
+        eyebrow={t("The human behind your Dating Agent")}
+        title={t("Your human profile")}
         description={`${profile.displayName} · ${profile.ageYears} · ${profile.neighborhood}, ${profile.city}`}
         motif={profile.displayName.slice(0, 1).toUpperCase()}
         tone="butter"
       />
 
       <section>
-        <SectionHeading eyebrow="Optional" title="Photo" />
+        <SectionHeading eyebrow={t("Optional")} title={t("Photo")} />
         <Card className="flex items-center gap-5 p-5">
           {me.photoUrl ? (
             <img
               src={me.photoUrl}
-              alt="Your profile photo"
+              alt={t("Your profile photo")}
               className="h-20 w-20 rounded-full object-cover"
             />
           ) : (
@@ -199,7 +199,7 @@ export default function ProfilePage() {
                 loading={uploading}
                 onClick={() => fileInput.current?.click()}
               >
-                {me.photoUrl ? "Replace" : "Add a photo"}
+                {me.photoUrl ? t("Replace") : t("Add a photo")}
               </Button>
               {me.photoUrl && (
                 <Button
@@ -208,13 +208,13 @@ export default function ProfilePage() {
                   onClick={async () => {
                     try {
                       await setPhoto({ storageId: null });
-                      toast("Photo removed.", "success");
+                      toast(t("Photo removed."), "success");
                     } catch (e) {
                       toast(readableError(e), "error");
                     }
                   }}
                 >
-                  Remove
+                  {t("Remove")}
                 </Button>
               )}
             </div>
@@ -261,7 +261,7 @@ export default function ProfilePage() {
       </section>
 
       <section>
-        <SectionHeading eyebrow="What your agent can represent" title="About you" />
+        <SectionHeading eyebrow={t("What your Dating Agent can represent")} title={t("About you")} />
         <Card className="p-5">
           {error && (
             <div className="mb-5">
@@ -271,7 +271,7 @@ export default function ProfilePage() {
 
           <Field
             label={t("Introduce yourself")}
-            hint="Contact details are removed automatically before anyone sees this."
+            hint={t("Contact details are removed automatically before anyone sees this.")}
             htmlFor="bio"
           >
             <TextArea
@@ -314,16 +314,16 @@ export default function ProfilePage() {
             />
           </Field>
 
-          <Field label="What you do" optional htmlFor="occupation">
+          <Field label={t("What you do")} optional htmlFor="occupation">
             <Select
               id="occupation"
               value={occupation}
               onChange={(e) => setOccupation(e.target.value)}
             >
-              <option value="">Prefer not to say</option>
+              <option value="">{t("Prefer not to say")}</option>
               {OCCUPATION_CATEGORIES.map((option) => (
                 <option key={option} value={option}>
-                  {option}
+                  {t(option)}
                 </option>
               ))}
             </Select>
@@ -332,83 +332,83 @@ export default function ProfilePage() {
                 <Toggle
                   checked={showOccupation}
                   onChange={setShowOccupation}
-                  label="Show this to matches"
+                  label={t("Show this to matches")}
                 />
               </div>
             )}
           </Field>
 
           <Field
-            label="Interests"
-            hint="At least three — this drives matching."
+            label={t("Interests")}
+            hint={t("At least three — this drives matching.")}
           >
             <ChipGroup
               options={INTEREST_OPTIONS}
               selected={interests}
               onChange={setInterests}
               max={12}
-              ariaLabel="Interests"
+              ariaLabel={t("Interests")}
             />
             <SelectionCount count={interests.length} min={3} max={12} />
           </Field>
 
-          <Field label="Hobbies" optional>
+          <Field label={t("Hobbies")} optional>
             <ChipGroup
               options={HOBBY_OPTIONS}
               selected={hobbies}
               onChange={setHobbies}
               max={8}
-              ariaLabel="Hobbies"
+              ariaLabel={t("Hobbies")}
             />
           </Field>
 
-          <Field label="Languages">
+          <Field label={t("Languages you can comfortably use")}>
             <ChipGroup
               options={LANGUAGE_OPTIONS}
               selected={languages}
               onChange={setLanguages}
               max={6}
-              ariaLabel="Languages"
+              ariaLabel={t("Languages you can comfortably use")}
             />
           </Field>
 
-          <Field label="On a night out, you're">
+          <Field label={t("On a night out, you're")}>
             <SegmentedControl
               value={socialEnergy}
               onChange={setSocialEnergy}
-              ariaLabel="Social energy"
+              ariaLabel={t("Social energy")}
               options={[
-                { value: "introvert", label: "Introvert" },
-                { value: "ambivert", label: "In between" },
-                { value: "extrovert", label: "Extrovert" },
+                { value: "introvert", label: t("Introvert") },
+                { value: "ambivert", label: t("In between") },
+                { value: "extrovert", label: t("Extrovert") },
               ]}
             />
           </Field>
 
-          <Field label="Your ideal first date feels" optional>
+          <Field label={t("Your ideal first date feels")} optional>
             <ChipGroup
               options={FIRST_DATE_VIBE_OPTIONS}
               selected={firstDateVibe}
               onChange={setFirstDateVibe}
               max={5}
-              ariaLabel="First date vibe"
+              ariaLabel={t("First date vibe")}
             />
           </Field>
 
-          <Field label="Lifestyle">
-            <Toggle checked={smokes} onChange={setSmokes} label="I smoke" />
+          <Field label={t("Lifestyle")}>
+            <Toggle checked={smokes} onChange={setSmokes} label={t("I smoke")} />
             <div className="mt-3">
               <span className="mb-2 block text-[13px] font-medium text-soft">
-                I drink
+                {t("I drink")}
               </span>
               <SegmentedControl
                 value={drinks}
                 onChange={setDrinks}
-                ariaLabel="Drinking"
+                ariaLabel={t("Drinking")}
                 options={[
-                  { value: "none", label: "Not at all" },
-                  { value: "occasional", label: "Occasionally" },
-                  { value: "social", label: "Socially" },
+                  { value: "none", label: t("Not at all") },
+                  { value: "occasional", label: t("Occasionally") },
+                  { value: "social", label: t("Socially") },
                 ]}
               />
             </div>
@@ -431,7 +431,7 @@ export default function ProfilePage() {
             disabled={!profileTruthConfirmed}
             size="lg"
           >
-            Save profile
+            {t("Save profile")}
           </Button>
         </Card>
       </section>

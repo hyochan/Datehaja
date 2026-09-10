@@ -60,7 +60,7 @@ export default function WatchPage() {
             <Wordmark className="text-[24px]" />
           </Link>
           <LinkButton to="/signup" size="sm">
-            {t("Create my dating agent")}
+            {t("Create my Dating Agent")}
           </LinkButton>
         </div>
       </header>
@@ -148,13 +148,13 @@ export default function WatchPage() {
                   <p className="watch-letter-signature">— {side.agentName}</p>
                   {side.nextSearchNote && <div className="watch-next-lesson"><small>{t("What I'll carry forward")}</small><p>{side.nextSearchNote}</p></div>}
                 </article>}
-                <p className="mt-4 text-[11px] text-muted leading-[1.7]">{t("Both perspectives are visible here because these people are fictional. In your own search, only your Agent's notes are yours to read.")}</p>
+                <p className="mt-4 text-[11px] text-muted leading-[1.7]">{t("Both perspectives are visible here because these people are fictional. In your own search, only your Dating Agent's notes are yours to read.")}</p>
               </div>
             </section>
 
             <div className="mt-12">
               <LinkButton to="/signup" size="lg">
-                {t("Create my dating agent")}
+                {t("Create my Dating Agent")}
               </LinkButton>
             </div>
           </>

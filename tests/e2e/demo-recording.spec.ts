@@ -141,14 +141,14 @@ test("record the submission demo", async ({ page, browser, baseURL }, testInfo) 
   }
   await expect(page).toHaveURL(/\/onboarding/, { timeout: 30_000 });
   await expect(
-    page.getByRole("heading", { name: /Meet your Agent/i }),
+    page.getByRole("heading", { name: /Meet your Dating Agent/i }),
   ).toBeVisible();
 
   // ------------------------------------------------------------------ agent
   // Give it a face, then tell it the things that do not fit in a profile.
   begin("agent");
   await hold(1_800);
-  await page.getByLabel("Name your Agent").pressSequentially("Juno", {
+  await page.getByLabel("Name your Dating Agent").pressSequentially("Juno", {
     delay: 140,
   });
   await hold(900);
@@ -179,7 +179,7 @@ test("record the submission demo", async ({ page, browser, baseURL }, testInfo) 
 
   await expect(
     page.getByRole("heading", {
-      name: /What should your agent know about you/i,
+      name: /What should your Dating Agent know about you/i,
     }),
   ).toBeVisible();
   await page.getByLabel("What should we call you?").fill("Juno");
@@ -206,7 +206,7 @@ test("record the submission demo", async ({ page, browser, baseURL }, testInfo) 
   await expect(page).toHaveURL(/\/membership/, { timeout: 30_000 });
   await expect(page.getByText("DEMO ACTIVE")).toBeVisible({ timeout: 30_000 });
   await hold(2_000);
-  await page.getByRole("button", { name: /Send my Agent scouting/i }).click();
+  await page.getByRole("button", { name: /Send my Dating Agent scouting/i }).click();
 
   await expect(page).toHaveURL(/\/dashboard/, { timeout: 30_000 });
   await expect(
@@ -400,7 +400,7 @@ async function prepareSecondOwner(page: Page) {
   await expect(consents).toHaveCount(3);
   for (let index = 0; index < 3; index++) await consents.nth(index).check();
   await page.getByRole("button", { name: "Agree and continue" }).click();
-  await page.getByLabel("Name your Agent").fill("Sol");
+  await page.getByLabel("Name your Dating Agent").fill("Sol");
   await page.getByRole("button", { name: "Woman", exact: true }).click();
   await page.getByRole("button", { name: "rose palette" }).click();
   await page.getByRole("button", { name: /Tell Sol who to find/i }).click();
@@ -417,7 +417,7 @@ async function prepareSecondOwner(page: Page) {
   await page.getByLabel("Tell Sol the version close friends know").fill("I am direct, curious, and playful. I prefer the quiet corner after a crowded room. I like people who can say what they actually want instead of just agreeing with me.");
   await page.getByRole("button", { name: /Seal the brief/i }).click();
   await expect(page.getByText("DEMO ACTIVE")).toBeVisible();
-  await page.getByRole("button", { name: /Send my Agent scouting/i }).click();
+  await page.getByRole("button", { name: /Send my Dating Agent scouting/i }).click();
   await disableMail(page);
   await page.goto("/dashboard");
 }

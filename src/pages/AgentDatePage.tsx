@@ -110,15 +110,15 @@ const VERDICT_COPY: Record<
   { kicker: string; title: string }
 > = {
   encourage: {
-    kicker: "Your agent is advocating",
+    kicker: "Your Dating Agent is advocating",
     title: "I think you should meet.",
   },
   curious: {
-    kicker: "Your agent sees a maybe",
+    kicker: "Your Dating Agent sees a maybe",
     title: "One human conversation could be worth it.",
   },
   pass: {
-    kicker: "Your agent is protecting your time",
+    kicker: "Your Dating Agent is protecting your time",
     title: "I wouldn't push this one.",
   },
 };
@@ -250,7 +250,7 @@ export default function AgentDatePage() {
           to="/dashboard"
           className="mt-6 inline-block text-[14px] font-bold text-[var(--accent-text)]"
         >
-          {t("Back to my agent →")}
+          {t("Back to my Dating Agent →")}
         </Link>
       </Card>
     );
@@ -652,19 +652,19 @@ export default function AgentDatePage() {
         <Card className="mt-7 p-7">
           <div className="docket-label text-[var(--accent-text)]">{t("The search continues")}</div>
           <h2 className="mt-3 text-[28px]">{t("A conversation, not a match.")}</h2>
-          <p className="mt-3 text-[14px] text-soft">{t("This encounter stays in your Agent's memory. It will keep looking; there is no introduction to approve here.")}</p>
+          <p className="mt-3 text-[14px] text-soft">{t("This encounter stays in your Dating Agent's memory. It will keep looking; there is no introduction to approve here.")}</p>
           <LinkButton to="/dashboard" variant="secondary" className="mt-5">{t("Check the search")}</LinkButton>
         </Card>
       )}
       {date.reviewRecoveredAt && (
         <Card className="mt-7 p-7">
           <div className="docket-label">{t("Review recovered from the saved conversation")}</div>
-          <h2 className="mt-3 text-[28px]">{mine.reflection?.headline ?? t("Your Agent's private note")}</h2>
+          <h2 className="mt-3 text-[28px]">{mine.reflection?.headline ?? t("Your Dating Agent's private note")}</h2>
           <p className="mt-4 whitespace-pre-line text-soft">{mine.reason}</p>
           <p className="mt-5 text-[13px] text-muted">{t("Only the review was updated. Your conversation, feedback and meeting decisions stay as they were.")}</p>
           {/* A re-check no longer rewrites the shared status, so this record keeps
               its own state and needs to say the check is running on its own. */}
-          {date.reviewRetrying && <p className="mt-5 text-[14px] text-soft">{t("Your Agent is rewriting and checking its private note. The original conversation stays unchanged.")}</p>}
+          {date.reviewRetrying && <p className="mt-5 text-[14px] text-soft">{t("Your Dating Agent is rewriting and checking its private note. The original conversation stays unchanged.")}</p>}
           {date.canRetryReview && <Button className="mt-5" variant="secondary" disabled={retryBusy} onClick={recheckReview}>{t("Recheck this date's review")}</Button>}
           {error && <p role="alert" className="mt-4 text-[var(--accent-text)]">{error}</p>}
         </Card>
@@ -673,8 +673,8 @@ export default function AgentDatePage() {
         <Card className="mt-7 p-7">
           <h2 className="text-[28px]">{t(date.reviewRetrying ? "Checking the saved conversation again" : "This world went quiet.")}</h2>
           <p className="mt-2 text-soft">
-            {date.reviewRetrying ? t("Your Agent is rewriting and checking its private note. The original conversation stays unchanged.") : date.failureReason ??
-              t("Your agent couldn't finish this date. No contact was shared.")}
+            {date.reviewRetrying ? t("Your Dating Agent is rewriting and checking its private note. The original conversation stays unchanged.") : date.failureReason ??
+              t("Your Dating Agent couldn't finish this date. No contact was shared.")}
           </p>
           {date.canRetryReview && <Button className="mt-5" variant="secondary" disabled={retryBusy} onClick={recheckReview}>{t("Recheck this date's review")}</Button>}
           {error && <p role="alert" className="mt-4 text-[var(--accent-text)]">{error}</p>}
@@ -686,7 +686,7 @@ export default function AgentDatePage() {
           to="/dashboard"
           className="text-[13px] font-bold text-muted hover:text-[var(--text)]"
         >
-          {t("← Back to my agent")}
+          {t("← Back to my Dating Agent")}
         </Link>
       </div>
     </div>

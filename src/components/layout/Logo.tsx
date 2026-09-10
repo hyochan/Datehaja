@@ -5,7 +5,7 @@ import { useId } from "react";
  *
  * A generic heart said nothing this product does not share with every other
  * dating app. The finger heart is a gesture someone *makes* — which is the
- * whole proposition here: your agent goes and makes it for you. It is also
+ * whole proposition here: your Dating Agent goes and makes it for you. It is also
  * unmistakably Korean, which the name already is.
  *
  * The outline is traced from a flat silhouette and carries the brand gradient,

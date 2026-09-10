@@ -12,6 +12,7 @@ import {
 import { AgentHomeWorld } from "../components/agent/AgentDateWorld";
 import { useI18n } from "../i18n";
 import { AgentSearchWorld } from "../components/agent/AgentSearchWorld";
+import { relativeTime } from "../lib/format";
 
 type AgentMessage = {
   _id: string;
@@ -114,6 +115,9 @@ export default function AgentDashboardPage() {
     "accept" | "decline" | null
   >(null);
   const [answering, setAnswering] = useState(false);
+  // The card vanishes the moment it is answered and the exchange moves to the
+  // conversation on the other side of the page, which reads as losing it.
+  const [justAnswered, setJustAnswered] = useState<string | null>(null);
   const [consenting, setConsenting] = useState(false);
   const [consentError, setConsentError] = useState<string | null>(null);
   const [dismissedConsentMessageId, setDismissedConsentMessageId] = useState<
@@ -128,10 +132,18 @@ export default function AgentDashboardPage() {
   const endRef = useRef<HTMLDivElement>(null);
   const chatScrollRef = useRef<HTMLDivElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
+  const ackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (mine === null) navigate("/onboarding", { replace: true });
   }, [mine, navigate]);
+  const openQuestionId =
+    (mine?.openQuestion as { _id?: string } | null | undefined)?._id ?? null;
+  // Answering unmounts the card holding the submit button, so focus would fall
+  // to the document. Move it to the acknowledgement the announcement describes.
+  useEffect(() => {
+    if (!openQuestionId && justAnswered) ackRef.current?.focus();
+  }, [openQuestionId, justAnswered]);
   useEffect(() => {
     const chat = chatScrollRef.current;
     if (chat) chat.scrollTop = chat.scrollHeight;
@@ -238,6 +250,7 @@ export default function AgentDashboardPage() {
     setError(null);
     try {
       await answerQuestion({ questionId: openQuestion._id, answer });
+      setJustAnswered(openQuestion.prompt);
       setQuestionAnswer("");
     } catch (reason) {
       setError(readableError(reason));
@@ -280,6 +293,9 @@ export default function AgentDashboardPage() {
     setError(null);
     try {
       await skipQuestion({ questionId: openQuestion._id });
+      // Otherwise the acknowledgement for an earlier question reappears once
+      // this one clears, claiming an answer was sent for a question just skipped.
+      setJustAnswered(null);
       setQuestionAnswer("");
     } catch (reason) {
       setError(readableError(reason));
@@ -348,9 +364,17 @@ export default function AgentDashboardPage() {
     if (date.status === "closed") return t("Closed with care");
     if (date.status === "failed") return t("Date interrupted");
     if (date.isSearchEncounter && !date.introductionReady) return t("Conversation saved · still searching");
-    if (date.myVerdict === "encourage") return t("Your agent says meet");
-    if (date.myVerdict === "pass") return t("Your agent says pass");
+    if (date.myVerdict === "encourage") return t("Your Dating Agent says meet");
+    if (date.myVerdict === "pass") return t("Your Dating Agent says pass");
     return t("Private debrief ready");
+  };
+
+  /** Colour the state dot by what the owner can do next, not by raw status. */
+  const dateStateTone = (date: any): "live" | "ready" | "quiet" => {
+    if (date.status === "queued" || date.status === "running") return "live";
+    if (date.status === "closed" || date.status === "failed") return "quiet";
+    if (date.isSearchEncounter && !date.introductionReady) return "quiet";
+    return "ready";
   };
 
   return (
@@ -366,7 +390,7 @@ export default function AgentDashboardPage() {
             />
             <div>
               <div className="docket-label text-[var(--accent-text)]">
-                {t("Your private agent")}
+                {t("Your private Dating Agent")}
               </div>
               <h1 className="agent-identity-name mt-1">{agent.name}</h1>
             </div>
@@ -409,7 +433,7 @@ export default function AgentDashboardPage() {
                 : readyDateId ? t("There is a specific conversation worth your attention. Read the letter before deciding.")
                 : search?.status === "waiting" ? t("No new available Agent fits your boundaries right now. I'll check again automatically; you don't need to keep pressing a button.")
                 : search?.status === "retrying" ? t("The last check could not finish. A retry is scheduled; no conversation has been invented.")
-                : t("Your Agent meets other searching Agents, learns from each conversation, and keeps going when it isn't right. You'll hear from us when there's someone to introduce.")}
+                : t("Your Dating Agent meets other searching Agents, learns from each conversation, and keeps going when it isn't right. You'll hear from us when there's someone to introduce.")}
             </p>
             <Button className="mt-6" fullWidth size="lg" loading={starting}
               disabled={Boolean((searchOngoing && !activeDate) || (!activeDate && !readyDateId && scoutAccess === null))}
@@ -631,7 +655,7 @@ export default function AgentDashboardPage() {
                   />
                   <div className="min-w-0">
                     <div className="docket-label text-[var(--accent-text)]">
-                      {t("Your decision, not your Agent's")}
+                      {t("Your decision, not your Dating Agent's")}
                     </div>
                     <h3 className="mt-2 text-[22px] leading-tight">
                       {t(
@@ -851,7 +875,7 @@ export default function AgentDashboardPage() {
                 value={message}
                 placeholder={
                   discussion
-                    ? t("Ask what your Agent noticed, or correct the debrief…")
+                    ? t("Ask what your Dating Agent noticed, or correct the debrief…")
                     : t(
                         "Tell me how you'd say it, who you'd like to meet, or what felt right…",
                       )
@@ -878,6 +902,51 @@ export default function AgentDashboardPage() {
         </Card>
 
         <div>
+          {/* Always mounted, so the card being inserted is announced rather
+              than appearing silently after the answer is sent. */}
+          <div role="status">
+            {!openQuestion && justAnswered && (
+              <Card className="agent-question-sent mb-5 p-5">
+                {/* Focus target sits inside the live region, not on it:
+                    focusing the region itself makes a screen reader read the
+                    focused element instead of the pending announcement. */}
+                <div
+                  ref={ackRef}
+                  tabIndex={-1}
+                  className="flex items-start gap-3 outline-none"
+                >
+                  <span className="agent-question-sent-mark" aria-hidden="true">
+                    ✓
+                  </span>
+                  <div className="min-w-0">
+                    <div className="docket-label text-[var(--accent-text)]">
+                      {t("{agent} has your answer", { agent: agent.name })}
+                    </div>
+                    <p className="mt-2 text-[14px] leading-relaxed text-soft">
+                      {t(
+                        "It continues in your conversation, where you can read the question and reply again.",
+                      )}
+                    </p>
+                    <p className="agent-question-sent-quote">{t(justAnswered)}</p>
+                    <button
+                      type="button"
+                      className="mt-3 text-[12px] font-bold text-[var(--accent-text)]"
+                      onClick={() => {
+                        setJustAnswered(null);
+                        messageRef.current?.scrollIntoView({
+                          block: "center",
+                          behavior: "smooth",
+                        });
+                        messageRef.current?.focus();
+                      }}
+                    >
+                      {t("Open the conversation →")}
+                    </button>
+                  </div>
+                </div>
+              </Card>
+            )}
+          </div>
           {openQuestion && (
             <Card className="agent-question-note mb-5 overflow-hidden p-5 sm:p-6">
               <div className="agent-learning-path" aria-hidden="true">
@@ -1001,7 +1070,7 @@ export default function AgentDashboardPage() {
                 <h3 className="mt-3 text-[22px]">{t("No stories yet.")}</h3>
                 <p className="mt-2 text-[14px] leading-relaxed text-soft">
                   {t(
-                    "Your first agent date will appear here as a transcript and an honest private debrief.",
+                    "Your first Dating Agent date will appear here as a transcript and an honest private debrief.",
                   )}
                 </p>
               </Card>
@@ -1017,7 +1086,8 @@ export default function AgentDashboardPage() {
                           className="agent-avatar-note"
                         />
                         <div className="min-w-0">
-                          <div className="docket-label text-[var(--accent-text)]">
+                          <div className={`agent-date-state is-${dateStateTone(date)}`}>
+                            <span className="agent-date-state-dot" aria-hidden="true" />
                             {dateStateLabel(date)}
                           </div>
                           <h3 className="mt-2 text-[21px]">
@@ -1029,9 +1099,14 @@ export default function AgentDashboardPage() {
                           </p>
                         </div>
                       </div>
-                      <span className="rounded-full bg-[var(--bg-sunken)] px-3 py-1 text-[11px] text-muted">
-                        {dateStateLabel(date)}
-                      </span>
+                      {/* The state already reads once, above. This slot now
+                          carries what the card was missing: when it last moved. */}
+                      <time
+                        className="agent-date-when"
+                        dateTime={new Date(date.createdAt).toISOString()}
+                      >
+                        {relativeTime(date.createdAt)}
+                      </time>
                     </div>
                   </Card>
                 </Link>

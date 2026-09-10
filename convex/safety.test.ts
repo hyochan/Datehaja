@@ -373,7 +373,7 @@ describe("AgentMail event persistence is idempotent", () => {
       messageId: "<m1@agentmail.to>",
       fromAddress: "someone@example.com",
       toAddress: "concierge@agentmail.to",
-      subject: "Re: your agent's date",
+      subject: "Re: your Dating Agent's date",
       preview: "hello",
       signatureVerified: true,
       rawPreview: "{}",

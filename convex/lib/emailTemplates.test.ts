@@ -124,7 +124,7 @@ describe("a short, grounded letter", () => {
     expect(english.html).not.toMatch(/[가-힣]/);
     expect(english.text).not.toMatch(/[가-힣]/);
     const korean = agentDebriefEmail({ ...base, locale: "ko-KR" });
-    for (const label of ["Primary reason", "What they said", "The atmosphere", "A note from your Agent", "moments"]) expect(korean.html).not.toContain(label);
+    for (const label of ["Primary reason", "What they said", "The atmosphere", "A note from your Dating Agent", "moments"]) expect(korean.html).not.toContain(label);
   });
 
   it("does not treat generated titles, questions or dialogue as HTML", () => {

@@ -24,14 +24,14 @@ export function TurnCoaching({ turn, coaching, agentName }: { turn: TranscriptLi
     <div className="turn-coaching-panel">
       <h3>{t(turn.isMine ? "How would you say it?" : "What stood out about their reply?")}</h3>
       <div className="turn-coaching-hint">{t(turn.isMine
-        ? "Tell your agent how you talk, or write your version of this line. Your guidance carries into future dates."
-        : "Tell your agent what you liked or disliked, and whether it matters in future matches. This stays between you and your agent.")}</div>
+        ? "Tell your Dating Agent how you talk, or write your version of this line. Your guidance carries into future dates."
+        : "Tell your Dating Agent what you liked or disliked, and whether it matters in future matches. This stays between you and your Dating Agent.")}</div>
       {messages.length > 0 && <ol className="turn-coaching-history" aria-label={t("Saved feedback")} aria-live="polite">
         {messages.map(m => <li key={m._id} className={m.role === "human" ? "is-owner" : "is-agent"}>
           <b>{m.role === "human" ? t("My feedback") : agentName}</b><div>{m.content}</div>
         </li>)}
       </ol>}
-      {coaching.preview && <div className="turn-coaching-preview">{t("Preview only. This fictional character does not learn from this form. On your own date, your feedback is saved privately and your agent replies here.")}</div>}
+      {coaching.preview && <div className="turn-coaching-preview">{t("Preview only. This fictional character does not learn from this form. On your own date, your feedback is saved privately and your Dating Agent replies here.")}</div>}
       <form onSubmit={async e => {
         e.preventDefault();
         if (!coaching.send || !content.trim() || busy || coaching.pending) return;
@@ -46,10 +46,10 @@ export function TurnCoaching({ turn, coaching, agentName }: { turn: TranscriptLi
             ? "I don't explain so much. I'd say: ‘Okay, but you're carrying the popcorn.’ Keep it short and don't end every reply with a question."
             : "I liked that they played along. But I'm not comfortable when every reply becomes another question.")} />
         <div className="turn-coaching-actions">
-          <Button type="submit" size="sm" disabled={Boolean(coaching.preview || coaching.pending || !content.trim())} loading={busy}>{t("Tell my agent")}</Button>
-          <span>{t("Only your agent sees this")}</span>
+          <Button type="submit" size="sm" disabled={Boolean(coaching.preview || coaching.pending || !content.trim())} loading={busy}>{t("Tell my Dating Agent")}</Button>
+          <span>{t("Only your Dating Agent sees this")}</span>
         </div>
-        {coaching.pending && <div className="turn-coaching-status" role="status">{t("Your agent is reading your feedback. You can add more when it replies.")}</div>}
+        {coaching.pending && <div className="turn-coaching-status" role="status">{t("Your Dating Agent is reading your feedback. You can add more when it replies.")}</div>}
         {error && <div className="turn-coaching-error" role="alert">{error}</div>}
       </form>
     </div>

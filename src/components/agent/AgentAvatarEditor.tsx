@@ -69,7 +69,7 @@ export function AgentAvatarEditor({
               name={name}
               avatar={value}
               className="agent-avatar-editor-hero"
-              label={t("Preview of {agent}", { agent: name || t("my agent") })}
+              label={t("Preview of {agent}", { agent: name || t("my Dating Agent") })}
             />
             <AgentCharacter name={name} avatar={value} className="avatar-editor-full-figure" />
           </div>

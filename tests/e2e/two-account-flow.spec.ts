@@ -102,7 +102,7 @@ async function createAccountAndAgent(page: Page, persona: Persona) {
   await page
     .getByRole("button", { name: `${persona.palette} palette` })
     .click();
-  await page.getByLabel("Name your Agent").fill(persona.agentName);
+  await page.getByLabel("Name your Dating Agent").fill(persona.agentName);
   await page
     .getByRole("button", {
       name: new RegExp(`Tell ${persona.agentName} who to find`, "i"),
@@ -138,7 +138,7 @@ async function createAccountAndAgent(page: Page, persona: Persona) {
 
   await expect(page).toHaveURL(/\/membership/, { timeout: 20_000 });
   await expect(page.getByText("DEMO ACTIVE")).toBeVisible({ timeout: 20_000 });
-  await page.getByRole("button", { name: /Send my Agent scouting/i }).click();
+  await page.getByRole("button", { name: /Send my Dating Agent scouting/i }).click();
   await expect(page).toHaveURL(/\/dashboard/, { timeout: 20_000 });
   await expect(page.getByRole("button", { name: "Pause search", exact: true })).toBeVisible();
   await expect(

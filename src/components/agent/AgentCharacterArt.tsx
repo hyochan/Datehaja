@@ -72,8 +72,11 @@ export function AgentCharacterArt({ config, colors, fullBody = false, className 
           <image href={`${ASSETS}/accessory-scarf.png`} x="108" y="213" width="105" height="133" />
         </g>}
         {/* Align the three-quarter jaw with the body's neck, and scale
-            wearables with the head so their anchors stay together. */}
-        <g transform={`translate(${gender === "male" ? 152 : 154} 230) scale(.76) translate(-160 -228)`}>
+            wearables with the head so their anchors stay together. The female
+            wave sheet carries its hair volume to one side, so its head reads as
+            sitting right of the neck at the shared offset even though the jaw
+            silhouette measures centred. This value was chosen by eye. */}
+        <g transform={`translate(${gender === "male" ? 152 : config.hair === "wave" ? 146 : 154} 230) scale(.76) translate(-160 -228)`}>
         <g className="character-look"><g className="character-head">
           <g data-character-layer="head">
             <image href={`${ASSETS}/${head}.png`} width="320" height="280" />

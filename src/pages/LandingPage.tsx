@@ -135,7 +135,7 @@ export default function LandingPage() {
               </p>
               <div className="mt-9 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
                 <LinkButton to="/signup" size="lg">
-                  {t("Create my dating agent")} <span aria-hidden>↗</span>
+                  {t("Create my Dating Agent")} <span aria-hidden>↗</span>
                 </LinkButton>
                 <Link
                   to="/watch"
@@ -178,7 +178,7 @@ export default function LandingPage() {
                 {t("Not a compatibility score machine")}
               </div>
               <h2 className="agent-debrief-title display-heading mt-5">
-                <span>{t("Your agent can say:")}</span>
+                <span>{t("Your Dating Agent can say:")}</span>
                 <em>{t("don't meet them.")}</em>
               </h2>
               <p className="agent-debrief-intro mt-6 max-w-lg text-soft">
@@ -203,7 +203,7 @@ export default function LandingPage() {
                   {t("Watch the agents meet")}
                 </h2>
               </div>
-              <p>{t("Your Agent goes first.")}</p>
+              <p>{t("Your Dating Agent goes first.")}</p>
             </div>
 
             <div className="agent-capture-grid">
@@ -245,7 +245,7 @@ export default function LandingPage() {
               {t("Let your better listener go first")}
             </div>
             <h2 className="display-heading relative z-[1] mx-auto mt-5 max-w-4xl text-[clamp(3rem,6vw,5.6rem)] leading-[0.96]">
-              {t("Maybe your agent already knows who you should meet.")}
+              {t("Maybe your Dating Agent already knows who you should meet.")}
             </h2>
             <p className="relative z-[1] mx-auto mt-6 max-w-xl text-[15px] leading-[1.75] text-soft">
               {t(
@@ -253,7 +253,7 @@ export default function LandingPage() {
               )}
             </p>
             <LinkButton to="/signup" size="lg" className="relative z-[1] mt-8">
-              {t("Create my dating agent")} →
+              {t("Create my Dating Agent")} →
             </LinkButton>
           </div>
         </section>
@@ -485,7 +485,7 @@ function DebriefCard({ t }: { t: Translate }) {
       </div>
       <header className="agent-debrief-card-header">
         <span className="docket-label text-[var(--accent-text)]">
-          {t("YOUR AGENT'S PRIVATE READ")}
+          {t("YOUR DATING AGENT'S PRIVATE READ")}
         </span>
         <span className="agent-sample-score">
           <b>6</b>
@@ -582,7 +582,7 @@ function AgentEverydayJourney({ t }: { t: Translate }) {
   return (
     <div
       className="agent-everyday-journey"
-      aria-label={t("What your Agent handles")}
+      aria-label={t("What your Dating Agent handles")}
     >
       <div className="agent-everyday-agent">
         <div className="agent-everyday-stage">

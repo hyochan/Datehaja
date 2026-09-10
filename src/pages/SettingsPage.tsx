@@ -113,7 +113,7 @@ export default function SettingsPage() {
         voice,
         autonomy,
       });
-      toast(t("Your agent was updated."), "success");
+      toast(t("Your Dating Agent was updated."), "success");
     } catch (error) {
       toast(readableError(error), "error");
     } finally {
@@ -127,7 +127,7 @@ export default function SettingsPage() {
         eyebrow={t("Private control room")}
         title={t("Agent settings")}
         description={t(
-          "Change how your Agent sounds, what it protects, and when it may date. Your private memory is never shown here as a public profile.",
+          "Change how your Dating Agent sounds, what it protects, and when it may date. Your private memory is never shown here as a public profile.",
         )}
         motif="◌"
         tone="sage"
@@ -136,7 +136,7 @@ export default function SettingsPage() {
       <section>
         <SectionHeading
           eyebrow={t("The big switch")}
-          title={t("Let my agent date")}
+          title={t("Let my Dating Agent date")}
         />
         <Card className="p-2">
           <Toggle
@@ -149,8 +149,8 @@ export default function SettingsPage() {
                 await setStatus({ status: next ? "active" : "paused" });
                 toast(
                   next
-                    ? t("Your agent is available again.")
-                    : t("Your agent is staying home."),
+                    ? t("Your Dating Agent is available again.")
+                    : t("Your Dating Agent is staying home."),
                   "success",
                 );
               } catch (error) {
@@ -162,7 +162,7 @@ export default function SettingsPage() {
             label={
               paused
                 ? t("Agent dates are paused")
-                : t("My agent may meet other agents")
+                : t("My Dating Agent may meet other agents")
             }
             description={
               paused
@@ -180,7 +180,7 @@ export default function SettingsPage() {
       <section>
         <SectionHeading
           eyebrow={t("My other self")}
-          title={t("Name and style my Agent")}
+          title={t("Name and style my Dating Agent")}
         />
         <Card className="p-5 sm:p-7">
           <Field
@@ -217,13 +217,13 @@ export default function SettingsPage() {
       <section>
         <SectionHeading
           eyebrow={t("Private instructions")}
-          title={t("How my agent represents me")}
+          title={t("How my Dating Agent represents me")}
         />
         <Card className="p-5 sm:p-7">
           <Field
             label={t("The unpolished you")}
             hint={t(
-              "Correct this whenever your agent starts sounding like a résumé.",
+              "Correct this whenever your Dating Agent starts sounding like a résumé.",
             )}
             htmlFor="settings-agent-essence"
           >
@@ -249,7 +249,7 @@ export default function SettingsPage() {
           </Field>
           <Field
             label={t("Hard boundaries")}
-            hint={t("One per line. These remain private to your agent.")}
+            hint={t("One per line. These remain private to your Dating Agent.")}
             htmlFor="settings-agent-boundaries"
           >
             <TextArea

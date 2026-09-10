@@ -24,7 +24,7 @@ test("landing and public legal records are reachable", async ({ page }) => {
   await expect(page.locator(".agent-capture-section")).not.toContainText(
     "내 에이전트",
   );
-  await expect(page.getByLabel("What your Agent handles")).toBeVisible();
+  await expect(page.getByLabel("What your Dating Agent handles")).toBeVisible();
   await expect(page.locator(".agent-service-moment")).toHaveCount(4);
   const landingOverflow = await page.evaluate(
     () => document.documentElement.scrollWidth - window.innerWidth,
@@ -106,7 +106,7 @@ test("the explanation and both fictional previews are reachable signed out", asy
 }) => {
   await page.goto("/how-it-works");
   await expect(
-    page.getByRole("heading", { name: /Create your Agent/i }),
+    page.getByRole("heading", { name: /Create your Dating Agent/i }),
   ).toBeVisible();
   await expect(
     page.getByText(/Create my dating Agent/i).first(),

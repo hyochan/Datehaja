@@ -179,7 +179,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
             <span className="mr-2" aria-hidden>
               ♥
             </span>
-            {t("Your private Agent")}
+            {t("Your private Dating Agent")}
           </div>
           <h2 className="mt-5 text-[clamp(3rem,5vw,5.1rem)] leading-[0.97] tracking-[-0.04em]">
             {t("Let your better listener go first.")}
@@ -234,18 +234,14 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
               </div>
               <h1 className="mt-3 max-w-2xl text-[clamp(2.55rem,5vw,4.5rem)] leading-[1.02] tracking-[-0.035em]">
                 {signingUp
-                  ? t("Create the account behind your agent.")
-                  : t("Come back to your agent.")}
+                  ? t("Create the account behind your Dating Agent.")
+                  : t("Come back to your Dating Agent.")}
               </h1>
               <p className="mt-4 max-w-2xl text-[15.5px] leading-[1.75] text-soft">
                 {t(
                   "Signing in protects your private agent brief, keeps both verdicts separate, and lets us reveal contact only when two humans independently say yes.",
                 )}
               </p>
-            </div>
-
-            <div className="auth-agent-preview mb-6">
-              <AgentLoopPlayer t={t} compact />
             </div>
 
             <div className="soft-section px-5 py-6 sm:px-7 sm:py-7">
@@ -256,8 +252,8 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
                   </div>
                   <h2 className="mt-2 text-[23px] leading-tight">
                     {signingUp
-                      ? t("Wake your first agent.")
-                      : t("Open your private agent dates.")}
+                      ? t("Wake your first Dating Agent.")
+                      : t("Open your private Dating Agent dates.")}
                   </h2>
                 </div>
                 <span className="hidden rounded-full border border-[var(--tint-sage-border)] bg-[var(--tint-sage-bg)] px-3 py-1.5 text-[11px] font-semibold text-[var(--tint-sage-fg)] sm:inline-flex">
@@ -443,7 +439,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
 
               <p className="mt-7 border-t border-[var(--border)] pt-5 text-[12px] leading-relaxed text-muted">
                 {t(
-                  "Your email protects your private Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.",
+                  "Your email protects your private Dating Agent and is never shown to another user. After sign-in, adults review the required agreements before onboarding.",
                 )}{" "}
                 <Link to="/terms" className="underline underline-offset-4">
                   {t("Terms of Service")}
@@ -460,6 +456,10 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
                   {t("Community Guidelines")}
                 </Link>
               </p>
+            </div>
+
+            <div className="auth-agent-preview mt-6">
+              <AgentLoopPlayer t={t} compact />
             </div>
           </div>
         </div>

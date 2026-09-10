@@ -550,7 +550,7 @@ export function AgentHomeWorld({ person }: { person: WorldPerson }) {
       <AgentWorldSprite
         person={person}
         className="agent-home-sprite"
-        displayName={t("Your Agent")}
+        displayName={t("Your Dating Agent")}
       />
       <div className="agent-home-presence">
         <i /> {t("ready to scout")}

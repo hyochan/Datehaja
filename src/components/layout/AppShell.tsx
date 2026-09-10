@@ -17,7 +17,7 @@ import {
 } from "../../lib/theme";
 
 const NAV = [
-  { to: "/dashboard", label: "My agent", icon: HomeIcon },
+  { to: "/dashboard", label: "My Dating Agent", icon: HomeIcon },
   { to: "/profile", label: "Human", icon: PersonIcon },
   { to: "/settings", label: "Settings", icon: SettingsIcon },
 ];
@@ -112,7 +112,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               to={item.to}
               className={({ isActive }) =>
                 cx(
-                  "flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] font-medium transition-colors",
+                  "flex flex-1 flex-col items-center gap-1 py-2.5 text-center text-[11px] font-medium leading-tight transition-colors",
                   isActive
                     ? "bg-[var(--tint-ember-bg)] text-[var(--accent-text)]"
                     : "text-muted",

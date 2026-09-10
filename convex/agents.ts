@@ -494,7 +494,7 @@ export const bootstrap = mutation({
       throw new Error("Datehaja is for adults aged 18 or over.");
     }
     if (args.interestedIn.length === 0) {
-      throw new Error("Tell your agent who you are open to meeting.");
+      throw new Error("Tell your Dating Agent who you are open to meeting.");
     }
     const city = findCity(args.city);
     const area = city && findNeighborhood(city.city, args.neighborhood);
@@ -522,10 +522,10 @@ export const bootstrap = mutation({
     const desiredConnection = cleanMultiline(args.desiredConnection, 700);
     const agentName = clean(args.agentName, 32);
     if (agentName.length < 1) {
-      throw new Error("Give your dating agent a name.");
+      throw new Error("Give your Dating Agent a name.");
     }
     if (essence.length < 30 || desiredConnection.length < 20) {
-      throw new Error("Give your agent a little more to understand.");
+      throw new Error("Give your Dating Agent a little more to understand.");
     }
 
     const profilePatch = {
@@ -741,7 +741,7 @@ export const answerQuestion = mutation({
     if (question.status !== "open") return null;
     const answer = cleanMultiline(args.answer, 1200);
     if (answer.length < 3) {
-      throw new Error("Give your agent a little more to learn from.");
+      throw new Error("Give your Dating Agent a little more to learn from.");
     }
     const now = Date.now();
     const rate = await checkRateLimit(
@@ -751,7 +751,7 @@ export const answerQuestion = mutation({
       60_000,
       now,
     );
-    if (!rate.ok) throw new Error("Give your agent a moment before answering.");
+    if (!rate.ok) throw new Error("Give your Dating Agent a moment before answering.");
     await ctx.db.patch("agentQuestions", question._id, {
       status: "answered",
       answeredAt: now,
@@ -827,12 +827,12 @@ export const send = mutation({
       now,
     );
     if (!rate.ok)
-      throw new Error("Give your agent a moment before sending more.");
+      throw new Error("Give your Dating Agent a moment before sending more.");
     const agent = await ctx.db
       .query("agentProfiles")
       .withIndex("by_user", (q) => q.eq("userId", userId))
       .unique();
-    if (!agent) throw new Error("Create your agent first.");
+    if (!agent) throw new Error("Create your Dating Agent first.");
     if ((args.feedbackTarget || args.turnRound !== undefined) && !args.agentDateId) {
       throw new Error("Choose the date this feedback belongs to.");
     }
@@ -916,7 +916,7 @@ export const update = mutation({
       .query("agentProfiles")
       .withIndex("by_user", (q) => q.eq("userId", userId))
       .unique();
-    if (!agent) throw new Error("Create your agent first.");
+    if (!agent) throw new Error("Create your Dating Agent first.");
     const name = clean(args.name, 32);
     const essence = cleanMultiline(args.essence, 1200);
     const desiredConnection = cleanMultiline(args.desiredConnection, 700);
@@ -926,7 +926,7 @@ export const update = mutation({
       desiredConnection.length < 20
     ) {
       throw new Error(
-        "Give your agent enough context to represent you honestly.",
+        "Give your Dating Agent enough context to represent you honestly.",
       );
     }
     await supersedeAgentProposals(ctx, userId);
