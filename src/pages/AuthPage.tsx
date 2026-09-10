@@ -253,7 +253,7 @@ export default function AuthPage({ mode }: { mode: "signIn" | "signUp" }) {
                   <h2 className="mt-2 text-[23px] leading-tight">
                     {signingUp
                       ? t("Wake your first Dating Agent.")
-                      : t("Open your private agent dates.")}
+                      : t("Open your private Dating Agent dates.")}
                   </h2>
                 </div>
                 <span className="hidden rounded-full border border-[var(--tint-sage-border)] bg-[var(--tint-sage-bg)] px-3 py-1.5 text-[11px] font-semibold text-[var(--tint-sage-fg)] sm:inline-flex">

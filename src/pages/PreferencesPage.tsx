@@ -293,7 +293,7 @@ export default function PreferencesPage() {
                 <ChipGroup
                   options={city.neighborhoods.map((area) => ({
                     key: area.name,
-                    label: t(area.name),
+                    label: area.name,
                   }))}
                   selected={p.preferredAreas}
                   onChange={(update) =>
@@ -317,7 +317,7 @@ export default function PreferencesPage() {
                 <ChipGroup
                   options={SUPPORTED_CITIES.map((option) => ({
                     key: option.city,
-                    label: t(option.city),
+                    label: option.city,
                     emoji: SUPPORTED_COUNTRIES.find(
                       (country) => country.code === option.countryCode,
                     )?.flag,
@@ -448,7 +448,7 @@ export default function PreferencesPage() {
                 <ChipGroup
                   options={city.neighborhoods.map((area) => ({
                     key: area.name,
-                    label: t(area.name),
+                    label: area.name,
                   }))}
                   selected={p.preferredAreas}
                   onChange={(update) =>
@@ -477,11 +477,11 @@ export default function PreferencesPage() {
           <Field label={t("What you're looking for")} hint={t(p.relationshipIntent === "serious" ? "Serious relationships are matched with people seeking the same." : "Your Dating Agent looks for people whose relationship goals fit yours.")}>
             <ChipRadio
               options={[
-                { key: "casual" as const, label: t("Something casual") },
-                { key: "open" as const, label: t("Open to seeing what develops") },
-                { key: "serious" as const, label: t("Something serious") },
-                { key: "friendship" as const, label: t("Friendship first") },
-                { key: "unsure" as const, label: t("Still working it out") },
+                { key: "casual" as const, label: "Something casual" },
+                { key: "open" as const, label: "Open to seeing what develops" },
+                { key: "serious" as const, label: "Something serious" },
+                { key: "friendship" as const, label: "Friendship first" },
+                { key: "unsure" as const, label: "Still working it out" },
               ]}
               value={p.relationshipIntent}
               onChange={(next) => set("relationshipIntent", next)}
@@ -519,7 +519,7 @@ export default function PreferencesPage() {
                 <ChipGroup
                   options={PERSONALITY_TRAIT_OPTIONS.map((trait) => ({
                     key: trait,
-                    label: t(trait),
+                    label: trait,
                   }))}
                   selected={p.preferredPersonalityTraits}
                   onChange={(update) =>
@@ -565,7 +565,7 @@ export default function PreferencesPage() {
                 <ChipGroup
                   options={STYLE_TAG_OPTIONS.map((style) => ({
                     key: style,
-                    label: t(style),
+                    label: style,
                   }))}
                   selected={p.preferredStyleTags}
                   onChange={(update) =>
@@ -650,7 +650,7 @@ export default function PreferencesPage() {
             <ChipGroup
               options={DATE_TYPE_OPTIONS.map((d) => ({
                 key: d.key,
-                label: t(d.label),
+                label: d.label,
                 emoji: d.emoji,
               }))}
               selected={p.preferredDateTypes}
@@ -733,7 +733,7 @@ export default function PreferencesPage() {
             <ChipGroup
               options={DIETARY_OPTIONS.map((d) => ({
                 key: d.key,
-                label: t(d.label),
+                label: d.label,
               }))}
               selected={p.dietary}
               onChange={(update) =>
@@ -753,7 +753,7 @@ export default function PreferencesPage() {
             <ChipGroup
               options={ACCESSIBILITY_OPTIONS.map((a) => ({
                 key: a.key,
-                label: t(a.label),
+                label: a.label,
               }))}
               selected={p.accessibility}
               onChange={(update) =>

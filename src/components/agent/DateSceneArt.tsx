@@ -1,8 +1,10 @@
 import { useId } from "react";
+import { useI18n } from "../../i18n";
 import type { SceneKind } from "@convex/lib/dateStory";
 
 /** The same little set appears in the live room and in its email postcard. */
 export function DateSceneArt({ kind }: { kind: SceneKind }) {
+  const { t } = useI18n();
   // Several scenes share a page (the world plus one per journal event), and
   // url(#id) resolves against the whole document — without a unique suffix
   // every scene would paint with the first one’s gradients.
@@ -15,7 +17,7 @@ export function DateSceneArt({ kind }: { kind: SceneKind }) {
     gallery: ["#887b77", "#d0bda7", "#fae6c4"],
     cafe: ["#344a5b", "#829296", "#f0cd9c"],
   }[kind];
-  return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 520" preserveAspectRatio="xMidYMid slice" role="img" aria-label={`${kind} · illustrated simulation setting`}>
+  return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 520" preserveAspectRatio="xMidYMid slice" role="img" aria-label={t("{scene} · illustrated simulation setting", { scene: t(kind) })}>
     <defs>
       <linearGradient id={`room-${uid}`} x2="0" y2="1"><stop stopColor={colors[0]} /><stop offset="1" stopColor={colors[1]} /></linearGradient>
       <linearGradient id={`floor-${uid}`} x2="0" y2="1"><stop stopColor={colors[1]} /><stop offset="1" stopColor={colors[0]} /></linearGradient>

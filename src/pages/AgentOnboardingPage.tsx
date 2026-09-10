@@ -11,6 +11,8 @@ import { api } from "@convex/_generated/api";
 import {
   INTEREST_OPTIONS,
   LANGUAGE_OPTIONS,
+  PERSONALITY_TRAIT_OPTIONS,
+  STYLE_TAG_OPTIONS,
   SUPPORTED_CITIES,
   SUPPORTED_COUNTRIES,
   citiesForCountry,
@@ -74,16 +76,12 @@ const BOUNDARIES = [
   "No pressure to meet quickly",
 ];
 
-const PERSONALITIES = [
-  "Thoughtful",
-  "Playful",
-  "Direct",
-  "Calm",
-  "Curious",
-  "Affectionate",
-];
+// The same vocabularies Preferences and Profile render. Onboarding used to have
+// its own lists, so a trait picked here had no chip there and was dropped on the
+// next save.
+const PERSONALITIES = PERSONALITY_TRAIT_OPTIONS;
 
-const STYLES = ["Polished", "Casual", "Artistic", "Sporty", "Minimal"];
+const STYLES = STYLE_TAG_OPTIONS;
 
 const STEP_COPY = {
   1: {
