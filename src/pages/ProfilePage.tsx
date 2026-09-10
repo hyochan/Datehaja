@@ -347,7 +347,7 @@ export default function ProfilePage() {
               selected={interests}
               onChange={setInterests}
               max={12}
-              ariaLabel="Interests"
+              ariaLabel={t("Interests")}
             />
             <SelectionCount count={interests.length} min={3} max={12} />
           </Field>
@@ -358,7 +358,7 @@ export default function ProfilePage() {
               selected={hobbies}
               onChange={setHobbies}
               max={8}
-              ariaLabel="Hobbies"
+              ariaLabel={t("Hobbies")}
             />
           </Field>
 
@@ -368,7 +368,7 @@ export default function ProfilePage() {
               selected={languages}
               onChange={setLanguages}
               max={6}
-              ariaLabel="Languages"
+              ariaLabel={t("Languages")}
             />
           </Field>
 
@@ -376,7 +376,7 @@ export default function ProfilePage() {
             <SegmentedControl
               value={socialEnergy}
               onChange={setSocialEnergy}
-              ariaLabel="Social energy"
+              ariaLabel={t("Social energy")}
               options={[
                 { value: "introvert", label: t("Introvert") },
                 { value: "ambivert", label: t("In between") },
@@ -391,7 +391,7 @@ export default function ProfilePage() {
               selected={firstDateVibe}
               onChange={setFirstDateVibe}
               max={5}
-              ariaLabel="First date vibe"
+              ariaLabel={t("First date vibe")}
             />
           </Field>
 
@@ -404,7 +404,7 @@ export default function ProfilePage() {
               <SegmentedControl
                 value={drinks}
                 onChange={setDrinks}
-                ariaLabel="Drinking"
+                ariaLabel={t("Drinking")}
                 options={[
                   { value: "none", label: t("Not at all") },
                   { value: "occasional", label: t("Occasionally") },

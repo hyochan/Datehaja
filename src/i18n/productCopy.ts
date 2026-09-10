@@ -365,4 +365,7 @@ export const productCopy: Record<string, readonly string[]> = {
   "Replace": ["바꾸기", "差し替える", "Ersetzen", "Remplacer", "Vervangen", "Byt ut"],
   "Occasionally": ["가끔", "ときどき", "Gelegentlich", "De temps en temps", "Af en toe", "Ibland"],
   "Socially": ["사람들과 있을 때만", "人と会うときに", "In Gesellschaft", "En société", "Sociaal", "I sällskap"],
+  "Social energy": ["사교 에너지", "人づきあいのペース", "Soziale Energie", "Énergie sociale", "Sociale energie", "Social energi"],
+  "First date vibe": ["첫 데이트 분위기", "初デートの雰囲気", "Stimmung beim ersten Date", "Ambiance du premier rendez-vous", "Sfeer van de eerste date", "Stämning på första dejten"],
+  "Drinking": ["음주", "お酒", "Alkohol", "Alcool", "Drinken", "Alkohol"],
 };
