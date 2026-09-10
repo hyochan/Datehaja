@@ -106,14 +106,38 @@ export default function LegalConsentPage() {
 
           <div className="space-y-3">
             <ConsentRow checked={accepted} onChange={setAccepted}>
-              {t("I am 18 or over, and I agree to the")} {" "}
-              <DocumentLink to="/terms">{t("Terms of Service")}</DocumentLink>
-              {t(", the")} {" "}
-              <DocumentLink to="/community-guidelines">
-                {t("Community Guidelines")}
-              </DocumentLink>
-              {t(", and the")} {" "}
-              <DocumentLink to="/privacy">{t("Privacy Notice")}</DocumentLink>.
+              {/* One translatable sentence with the links as placeholders.
+                  Assembling it from fragments around the links forced English
+                  word order on every locale — French lost its article and
+                  German could not reach the dative. */}
+              {t(
+                "I am 18 or over, and I agree to the {terms}, the {community}, and the {privacy}.",
+              )
+                .split(/(\{terms\}|\{community\}|\{privacy\})/)
+                .map((piece, index) => {
+                  if (piece === "{terms}") {
+                    return (
+                      <DocumentLink key={index} to="/terms">
+                        {t("Terms of Service")}
+                      </DocumentLink>
+                    );
+                  }
+                  if (piece === "{community}") {
+                    return (
+                      <DocumentLink key={index} to="/community-guidelines">
+                        {t("Community Guidelines")}
+                      </DocumentLink>
+                    );
+                  }
+                  if (piece === "{privacy}") {
+                    return (
+                      <DocumentLink key={index} to="/privacy">
+                        {t("Privacy Notice")}
+                      </DocumentLink>
+                    );
+                  }
+                  return <span key={index}>{piece}</span>;
+                })}
             </ConsentRow>
             <p className="pt-1 text-[13px] leading-relaxed text-muted">
               {t(

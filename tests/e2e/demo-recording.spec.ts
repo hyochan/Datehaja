@@ -129,12 +129,9 @@ test("record the submission demo", async ({ page, browser, baseURL }, testInfo) 
     timeout: 30_000,
   });
   if (page.url().includes("/legal/accept")) {
-    const consents = page.getByRole("checkbox");
-    await expect(consents).toHaveCount(3);
-    const total = await consents.count();
-    for (let index = 0; index < total; index += 1) {
-      await consents.nth(index).check();
-    }
+    const consent = page.getByRole("checkbox");
+    await expect(consent).toHaveCount(1);
+    await consent.check();
     const agree = page.getByRole("button", { name: "Agree and continue" });
     await expect(agree).toBeEnabled();
     await agree.click();
@@ -396,9 +393,9 @@ async function prepareSecondOwner(page: Page) {
   await expect(page.getByLabel("Verification code")).toHaveValue("68686868");
   await page.getByRole("button", { name: /Verify and continue/i }).click();
   await expect(page).toHaveURL(/legal\/accept/);
-  const consents = page.getByRole("checkbox");
-  await expect(consents).toHaveCount(3);
-  for (let index = 0; index < 3; index++) await consents.nth(index).check();
+  const consent = page.getByRole("checkbox");
+  await expect(consent).toHaveCount(1);
+  await consent.check();
   await page.getByRole("button", { name: "Agree and continue" }).click();
   await page.getByLabel("Name your Dating Agent").fill("Sol");
   await page.getByRole("button", { name: "Woman", exact: true }).click();
