@@ -207,6 +207,8 @@ describe("internationalisation", () => {
       "de-DE\u0000Optional",
       "fr-FR\u0000Friction",
       "fr-FR\u0000Photo",
+      "fr-FR\u0000Prototype",
+      "nl-NL\u0000Prototype",
       "fr-FR\u0000Menu",
       "fr-FR\u0000Notifications",
       "nl-NL\u0000Alcohol",

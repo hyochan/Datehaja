@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { LEGAL_EFFECTIVE_DATE } from "@convex/lib/legal";
+import { useI18n } from "../../i18n";
 import { PageIntro } from "../layout/PageIntro";
-import { Card } from "../ui/primitives";
+import { Card, Notice } from "../ui/primitives";
 
 export function LegalDocument({
   eyebrow,
@@ -17,6 +18,7 @@ export function LegalDocument({
   motif: string;
   children: ReactNode;
 }) {
+  const { t } = useI18n();
   return (
     <article className="legal-document product-page mx-auto max-w-3xl space-y-8">
       <PageIntro
@@ -27,18 +29,24 @@ export function LegalDocument({
         tone="sage"
       />
 
+      <Notice tone="warn" title={t("Prototype")}>
+        {t(
+          "Datehaja is an early prototype. These pages describe how it works today and will change before any public release.",
+        )}
+      </Notice>
+
       <Card className="legal-document-meta p-4 sm:p-5">
         <div>
           <div className="docket-label text-[var(--accent-text)]">
-            Effective date
+            {t("Effective date")}
           </div>
           <div className="mt-1 text-[14px]">{LEGAL_EFFECTIVE_DATE}</div>
         </div>
-        <nav aria-label="Legal documents" className="flex flex-wrap gap-2">
-          <LegalLink to="/terms">Terms</LegalLink>
-          <LegalLink to="/privacy">Privacy</LegalLink>
-          <LegalLink to="/community-guidelines">Community</LegalLink>
-          <LegalLink to="/safety">Safety</LegalLink>
+        <nav aria-label={t("Legal documents")} className="flex flex-wrap gap-2">
+          <LegalLink to="/terms">{t("Terms")}</LegalLink>
+          <LegalLink to="/privacy">{t("Privacy")}</LegalLink>
+          <LegalLink to="/community-guidelines">{t("Community")}</LegalLink>
+          <LegalLink to="/safety">{t("Safety")}</LegalLink>
         </nav>
       </Card>
 

@@ -94,14 +94,10 @@ test("account to private agent debrief and human consent", async ({ page }, test
   await page.waitForTimeout(1_200);
   if (page.url().includes("/legal/accept")) {
     await expect(page.getByText(/Required.*version 2026/i)).toBeVisible();
-    const legalCheckboxes = page.getByRole("checkbox");
-    await expect(legalCheckboxes).toHaveCount(3);
-    for (let index = 0; index < 3; index += 1) {
-      await legalCheckboxes.nth(index).check();
-    }
-    for (let index = 0; index < 3; index += 1) {
-      await expect(legalCheckboxes.nth(index)).toBeChecked();
-    }
+    const consent = page.getByRole("checkbox");
+    await expect(consent).toHaveCount(1);
+    await consent.check();
+    await expect(consent).toBeChecked();
     const continueButton = page.getByRole("button", {
       name: "Agree and continue",
     });

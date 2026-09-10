@@ -91,11 +91,9 @@ async function createAccountAndAgent(page: Page, persona: Persona) {
   await page.getByRole("button", { name: /Verify and continue/i }).click();
 
   await expect(page).toHaveURL(/\/legal\/accept/, { timeout: 20_000 });
-  const legalCheckboxes = page.getByRole("checkbox");
-  await expect(legalCheckboxes).toHaveCount(3);
-  for (let index = 0; index < 3; index += 1) {
-    await legalCheckboxes.nth(index).check();
-  }
+  const consent = page.getByRole("checkbox");
+  await expect(consent).toHaveCount(1);
+  await consent.check();
   await page.getByRole("button", { name: "Agree and continue" }).click();
 
   await expect(page).toHaveURL(/\/onboarding/, { timeout: 20_000 });
