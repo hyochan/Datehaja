@@ -1,0 +1,22 @@
+.submission-page { max-width:1100px; padding:24px clamp(20px,4vw,48px) 80px; margin:auto; }
+.submission-mast { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; min-height:64px; margin-bottom:48px; border-bottom:1px solid var(--border-strong); }
+.submission-mast>a:first-child { font-family:var(--font-display); font-size:28px; }
+.submission-mast button { padding:10px 16px; min-height:44px; }
+.submission-mast button[aria-pressed=true] { color:var(--accent-text); text-decoration:underline; text-underline-offset:6px; }
+.submission-page h1 { font-size:clamp(34px,5vw,62px); line-height:1.1; margin:20px 0 24px; max-width:900px; }
+.submission-page>p { max-width:760px; line-height:1.8; color:var(--text-soft); margin:16px 0 28px; }
+.submission-page .submission-note { font-size:13px; color:var(--text-muted); }
+.submission-video { width:100%; display:block; background:var(--bg-sunken); border:1px solid var(--border-strong); border-radius:18px; margin-top:32px; aspect-ratio:32/21; }
+.submission-links { display:flex; gap:24px; flex-wrap:wrap; margin:18px 0 38px; font-size:14px; }
+.submission-links a { text-decoration:underline; text-underline-offset:5px; min-height:44px; display:inline-flex; align-items:center; }
+.submission-cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px; }
+.submission-cards>a { display:block; border:1px solid var(--border-strong); border-radius:18px; padding:28px; }
+.submission-cards span { color:var(--accent-text); font-family:var(--font-mono); font-size:12px; }
+.submission-cards h2 { margin:14px 0; font-size:24px; }
+.submission-cards p { color:var(--text-muted); line-height:1.7; }
+.study-question { display:grid; gap:12px; margin:24px 0; max-width:740px; }
+.study-question>span { line-height:1.65; }
+.study-question :is(input,select) { width:100%; min-width:0; max-width:100%; min-height:48px; padding:12px; border:1px solid var(--border-strong); border-radius:10px; background:var(--bg-raised); color:var(--text); }
+.submission-cta { margin:20px 0; border-radius:999px; padding:16px 24px; background:var(--accent-text); color:var(--bg-sunken); font-weight:700; min-height:48px; }
+.submission-page :is(a,button,input,select):focus-visible { outline:2px solid var(--accent-text); outline-offset:4px; }
+@media(max-width:640px) { .submission-cards { grid-template-columns:1fr; } .submission-mast { margin-bottom:30px; } }

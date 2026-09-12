@@ -19,7 +19,7 @@ const en: LoopCopy = {
   exampleLabel: "A little feedback goes a long way", exampleTitle: "“That's more like me.”", chooseExample: "Explore a feedback example",
   youSay: "You say", yourAgent: "Your AI Agent", carriesForward: "What it takes into the next date", exampleNote: "Illustrative examples of how feedback can carry forward. Changes to search settings are confirmed with you.",
   waiting: "If it hasn't found someone, it keeps looking. Check in whenever you like.", consent: "Meeting in real life is always a choice for both people.",
-  talk: "Talk with my Dating Agent", create: "Create my Dating Agent", technical: "Curious about what happens behind the scenes?", proof: "See real before-and-after records · Korean demo",
+  talk: "Talk with my Dating Agent", create: "Create my Dating Agent", technical: "Curious about what happens behind the scenes?", proof: "See real before-and-after records · English translation available",
   examples: [
     { label: "Make it sound like me", feedback: "I wouldn't give a speech like that. Keep it shorter, and don't end every reply with a question.", memory: "Short, natural replies. Leave room for the other person.", nextLabel: "A way to say it next time", next: "“Same here. I'd rather take our time.”" },
     { label: "Change what I look for", feedback: "I like someone who's curious about me too. Look for someone who asks questions back.", memory: "Notice mutual curiosity, not just an easy conversation.", nextLabel: "What to notice in the next encounter", next: "Do they pick up on an answer and want to know more? Does the curiosity go both ways?" },

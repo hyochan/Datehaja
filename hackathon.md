@@ -13,7 +13,7 @@
 - **Auth:** Convex Auth
 - **AI models:** gpt-5.6-sol for date dialogue, private coaching, letters and factual verification, with no silent economy fallback on these paths. Unverified letters are withheld; lower-cost models remain available for unrelated integrations.
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-09-09
+- **Last updated:** 2026-09-11
 - **Latest verified candidate:** https://adorable-boar-359.convex.site — the newer coaching and learning-loop experience is on development. The production URL above has not received this revision in this task.
 
 ## Rules, as verified on the official page
@@ -34,6 +34,32 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
   for the chatgpt.site route, which this project does not take.
 
 ## Log
+
+### 2026-09-11 - a reviewable English submission and a real-user study kit
+
+The new development `/watch` replay is an actual generated English gallery
+encounter between fictional Juno and Sol. Its six-line explicit ending, four
+journal events and two independent curious verdicts are preserved. An internal
+publication pointer pins the reviewed record; newer demo traffic cannot silently
+replace it. Publication rejects unfinished records and any real participant.
+
+The four-date learning proof now has an editorial English translation of all
+56 lines, three corrections, saved replies, memories, journals and reflections.
+The unchanged Korean source remains one click away. Polite speech persisted;
+average reply length did not decrease. Neither this nor the showcase is evidence
+of independent user satisfaction.
+
+The current film is `submission/Datehaja-demo.mp4`: 170 seconds, actual browser
+screens of saved fictional records, burned English captions, VTT and transcript.
+`/demo` plays it publicly on the development candidate. This supersedes the
+older film described in historical entries below. Capture/build provenance and
+the SHA-256 are in `submission/DEMO_SCRIPT.md` and `film-verification.json`.
+
+`/feedback` provides a bilingual, local-only response download. Recruitment
+drafts, neutral tasks and an aggregate-only summarizer are ready for 3–5 adult
+first-time users. Independent sessions completed: **0**. Invitations, social
+posts and final submission have not been sent in this task. Production rollout
+still needs explicit approval of `merry-bass-190`.
 
 ### 2026-09-09 - make the learning loop the product
 

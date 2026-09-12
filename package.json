@@ -16,6 +16,7 @@
     "test:e2e:pair": "DATEHAJA_TWO_ACCOUNT_E2E=1 playwright test tests/e2e/two-account-flow.spec.ts",
     "demo:record": "DATEHAJA_DEMO_RECORD=1 playwright test tests/e2e/demo-recording.spec.ts --output .scratch/demo/recording",
     "demo:build": "node scripts/build-demo.mjs",
+    "demo:submission": "node scripts/build-submission-demo.mjs",
     "convex:dev": "convex dev",
     "convex:deploy": "convex deploy",
     "deploy": "static-hosting deploy",

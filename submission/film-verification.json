@@ -1,0 +1,50 @@
+{
+  "durationSeconds": 134,
+  "width": 1280,
+  "height": 840,
+  "fps": "24/1",
+  "bytes": 1888765,
+  "sha256": "2ffa7b1f1d8fdb6aa096028375c9260132c72295e7e9a6651b695681cf098a59",
+  "captions": "Burned English; VTT and transcript also provided",
+  "audio": "None",
+  "decodedCompletely": true,
+  "source": "Browser UI screenshots of saved fictional records; playback retimed",
+  "chapters": [
+    {
+      "name": "01-introduction",
+      "seconds": 6
+    },
+    {
+      "name": "03-generated-date",
+      "seconds": 32
+    },
+    {
+      "name": "04-grounded-journal",
+      "seconds": 10
+    },
+    {
+      "name": "05-private-reason",
+      "seconds": 14
+    },
+    {
+      "name": "07-saved-feedback",
+      "seconds": 14
+    },
+    {
+      "name": "06-before-after",
+      "seconds": 24
+    },
+    {
+      "name": "09-later-date",
+      "seconds": 12
+    },
+    {
+      "name": "11-execution",
+      "seconds": 10
+    },
+    {
+      "name": "10-human-choice",
+      "seconds": 12
+    }
+  ]
+}
