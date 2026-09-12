@@ -1,76 +1,72 @@
-# Datehaja submission film
+# Current submission film — September 11, 2026
 
-The new core learning comparison is documented in [LEARNING_DEMO.md](LEARNING_DEMO.md).
-The film below is the earlier search/intro cut and must not be mistaken for footage
-of the new feedback → subsequent-date proof.
+The canonical film is [Datehaja-demo.mp4](Datehaja-demo.mp4), **2:14**.
+[Watch the development candidate](https://adorable-boar-359.convex.site/demo).
+It replaces the earlier search/intro cut. Production publication is pending.
 
-The current story is an ongoing search: start once, meet when another searching
-Agent fits both owners' boundaries, learn from the actual conversation, and
-continue when it does not earn an introduction. A private introduction letter
-requires two independent Agent recommendations. Contact still requires two
-independent human yeses.
+This is a browser walkthrough of the actual product. It replays previously
+generated records from fictional test people; navigation is cut and playback
+is retimed. The homepage examples and system diagram explain the product.
+They are not new live generations, independent human sessions or evidence
+of real-world chemistry. No email delivery is demonstrated by this film.
 
-The recording uses two disposable development accounts, each controlled through
-its own signed-in browser. They use the real search, not seeded demo matches.
-Their email preferences are disabled. The recording verifies that both owners
-see the same encounter before capturing its dialogue. It never overrides a
-verdict to obtain a more convenient ending, and pauses both searches afterwards.
+## What the film shows
 
-## Record and build
+| Time | Actual screen |
+| --- | --- |
+| 0:00–0:06 | Product hook |
+| 0:06–0:38 | Newly generated English Juno/Sol gallery encounter |
+| 0:38–0:48 | Journal grounded in saved lines |
+| 0:48–1:02 | Independent private reflection and a preserved non-introduction |
+| 1:02–1:16 | Separate Rio rehearsal: saved correction, reply and memory |
+| 1:16–1:40 | Before/after, English translation beside Korean originals |
+| 1:40–1:52 | Replay of a later encounter with a new partner |
+| 1:52–2:02 | Convex / OpenAI / Firecrawl / AgentMail — load-bearing |
+| 2:02–2:14 | Two independent human yeses to open contact |
 
-Use the development deployment `adorable-boar-359` and the local Vite app.
-The recorder intentionally refuses a production URL. Production deployment,
-public video hosting and posting the submission remain separate launch steps.
+The learning proof preserves all 56 source lines and outcomes. Polite Korean
+persisted, but average reply length did not decrease. This is evidence of
+retained guidance, not perfect learning or user satisfaction.
 
-```bash
-bunx convex dev --once --typecheck enable --tail-logs disable
-# Only needed if the fictional public replay is missing or stale.
-# Generates a new encounter; does not send email or force a recommendation.
-bunx convex run showcase:ensure '{"refresh":true}'
-# Wait for its recorded dialogue and notes to appear at /watch.
-bun run demo:record
-bun run demo:build
+## Build and verify
+
+`submission/film-storyboard.json` is the timed caption source.
+The browser UI capture writes numbered screenshot bytes and a manifest to
+`.scratch/submission/capture/`. It contains only public fictional records.
+Recapture through the browser UI whenever the product or record changes.
+
+```sh
+# FFmpeg and FFprobe on PATH, or DATEHAJA_FFMPEG / DATEHAJA_FFPROBE.
+# Optional local tools: npm install --prefix .scratch/media-tools --no-save ffmpeg-static ffprobe-static
+node scripts/build-submission-demo.mjs
 ```
 
-Do not run another test that starts a search in the same city during recording:
-that test account may correctly become the counterpart before the intended
-second owner starts. The recorder rejects a different pairing. A failed take
-must be investigated before another run; never edit a verdict or transcript.
+The builder validates frames and total duration, retimes the captured beats,
+burns English captions below the screen, fully decodes the output to verify
+it, and writes `submission/film-verification.json` with its SHA-256. Caption
+failure stops the build; there is no silent uncaptioned fallback. No narration
+audio. It creates:
 
-## The cut
+- `public/demo/Datehaja-demo.mp4` and identical `submission/Datehaja-demo.mp4`
+- `public/demo/Datehaja-demo.vtt` and `public/demo/transcript.txt`
+- `public/demo/submission-poster.jpg`
 
-| Beat | Window | What the viewer sees |
-| --- | --- | --- |
-| `problem` | 0:00–0:12 | Your Agent does the looking; the human decides |
-| `agent` | 0:12–0:40 | A face, a private brief, and a correction in the private room |
-| `search` | 0:40–1:05 | An actual empty pool, check times, and an ongoing search |
-| `date` | 1:05–1:41 | A generated conversation between the two test owners' Agents |
-| `letter` | 1:41–2:11 | A selected real exchange, the owner's note, and its limits |
-| `decision` | 2:11–2:35 | The actual outcome: continued searching, or independent human consent |
-| `stack` | 2:35–2:55 | Public replay with fictional people, independent reflections and the outcome |
+The old `demo:record` and `demo:build` commands describe the earlier
+authenticated-account take and can overwrite the submission copy. For this
+release use `demo:submission`. `learning-proof.mp4` is historical supporting
+footage, not the current full film.
 
-A non-match ending is valid and desirable to show when that is what happened.
-The film calls the private encounter record a note; it does not claim that
-unmatched encounters generate email. In the recommendation branch, each test
-owner separately clicks consent. No production contact is shown.
+## Refresh the public record
 
-`demo-beats.json` specifies the durations. The Playwright recording writes
-actual spans to `.scratch/demo/marks.json`. The builder cuts those spans
-and retimes each to the storyboard; unrecorded setup and model waits are cut.
-New encounters start with twelve turns and can extend once to sixteen for a specific uncertainty; earlier six/ten-turn records remain readable. The film keeps
-that generated outcome and never forces an introduction. The total is 2:55, with a checked ceiling below three minutes. Captions are
-burned into the footage by default; this version has no narration audio.
+Target development `adorable-boar-359`. Generate with
+`showcase:startRefresh {}`, inspect the returned date using
+`showcase:preview`, and publish that exact completed record using
+`showcase:publish`. Both participants must be fictional and the journal,
+reflections, contiguous full transcript and completion must exist. Do not
+edit dialogue or verdicts to manufacture an introduction. See
+`docs/DEMO_REFRESH_REVIEW.md` for the reviewed September 11 record.
 
-The current screenshots are captured during the same run as the film:
-`01-landing-hero`, `02-agent-editor`, `03-ongoing-search`, `04-date-world`,
-`05-private-notes`, and `06-next-step`. Older stills remain historical and should
-not be used to describe the current experience.
-
-## Before submitting
-
-Review the final encoded video, including the captioned opening, the actual
-outcome and the closing shot. Deploy the verified code and refresh the public
-fictional replay in the approved production deployment. Confirm its language
-and that /watch works without login. Upload the final film to a publicly
-accessible video host, verify that link signed out, then complete the required
-social/submission steps. Do not declare these complete from passing tests.
+Production `merry-bass-190` requires explicit target approval. Deploy backend
+before frontend, preview the production record before pinning it, verify the
+film with no login, then use the updated social/submission drafts. Posting
+and final submission are still separate, unsent actions.

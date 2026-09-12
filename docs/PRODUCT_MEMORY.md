@@ -1,10 +1,24 @@
 # Datehaja product memory
 
-Last updated: 2026-09-09
-Experience revision: 2026-09-09 (latest backend and frontend on development adorable-boar-359; production rollout pending)
+Last updated: 2026-09-11
+Experience revision: 2026-09-11 (submission candidate on development adorable-boar-359; production rollout pending)
 
 This file is the durable product decision record for future work. Read it before
 changing priorities, billing, launch scope, or deployment.
+
+September 11 submission work: `/watch` pins a reviewed, newly generated English
+encounter between fictional people, including the verified journal and both
+independent reflections. Do not replace its verdict to produce an introduction.
+`/preview/agent-coaching?lang=en` translates the unchanged Korean four-date
+learning rehearsal; the Korean original stays accessible. The current 134-second
+film is `/demo/Datehaja-demo.mp4`, presented at `/demo`, with English captions.
+The legacy 54-second film is supplemental historical footage.
+
+Independent user validation is still pending. `/feedback` downloads closed
+answers locally; it does not store or send responses. `submission/USER_STUDY.md`
+contains unsent invitations and neutral tasks. Never count fictional users,
+automated tests, or the builder's own rehearsal as independent participants.
+See `docs/SUBMISSION_READINESS.md` for release evidence and remaining actions.
 
 ## Current north star
 

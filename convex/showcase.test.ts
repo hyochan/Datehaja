@@ -102,6 +102,38 @@ async function seedDate(
 }
 
 describe("public showcase date", () => {
+  test("pins the reviewed record even when a newer unfinished showcase appears", async () => {
+    const t = convexTest(schema, modules);
+    const { agentDateId } = await seedDate(t, { initiator: true, counterpart: true });
+    await expect(t.mutation(internal.showcase.publish, { agentDateId })).rejects.toThrow("verified journal");
+    await t.run(async ctx => {
+      await ctx.db.patch("agentDates", agentDateId, {
+        completedAt: NOW, plannedTurns: 6,
+        activityJournal: { overview: "A recorded conversation.", events: [{ kind: "conversation", title: "A pause", detail: "They discussed silence.", sceneKind: "cinema", rounds: [1, 2] }] },
+        initiatorReflection: { headline: "One conversation", anchorRound: 1, question: "How did that feel?" },
+        counterpartReflection: { headline: "Still curious", anchorRound: 2, question: "What would you ask?" },
+        setting: "The reviewed recording",
+      });
+    });
+    await t.mutation(internal.showcase.publish, { agentDateId });
+    for (let index = 0; index < 21; index++) await seedDate(t, { initiator: true, counterpart: true });
+    const shown = await t.query(api.showcase.publicDate, {});
+    expect(shown?.setting).toBe("The reviewed recording");
+    // Pinning never upgrades a curious verdict into a recommendation.
+    expect(shown?.counterpart.verdict).toBe("curious");
+    await t.run(ctx => ctx.db.delete("agentDates", agentDateId));
+    expect(await t.query(api.showcase.publicDate, {})).toBeNull();
+  });
+
+  test("rechecks fictional ownership even for an explicitly pinned date", async () => {
+    const t = convexTest(schema, modules);
+    const { agentDateId } = await seedDate(t, { initiator: true, counterpart: false });
+    await expect(t.mutation(internal.showcase.publish, { agentDateId })).rejects.toThrow("fictional personas");
+    await t.run(ctx => ctx.db.insert("showcasePublications", { slot: "main", agentDateId, publishedAt: NOW }));
+    expect(await t.query(api.showcase.publicDate, {})).toBeNull();
+    expect(await t.query(internal.showcase.preview, { agentDateId })).toBeNull();
+  });
+
   test("serves a date only when both sides are seeded personas", async () => {
     const t = convexTest(schema, modules);
     await seedDate(t, { initiator: true, counterpart: true });

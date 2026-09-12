@@ -35,6 +35,8 @@ const CommunityGuidelinesPage = lazy(
 );
 const LegalConsentPage = lazy(() => import("./pages/LegalConsentPage"));
 const WatchPage = lazy(() => import("./pages/WatchPage"));
+const DemoPage = lazy(() => import("./pages/DemoPage"));
+const StudyFeedbackPage = lazy(() => import("./pages/StudyFeedbackPage"));
 const DateRecordPreviewPage = lazy(() => import("./pages/DateRecordPreviewPage"));
 const AgentCoachingPreviewPage = lazy(
   () => import("./pages/AgentCoachingPreviewPage"),
@@ -50,6 +52,8 @@ const labRoute = import.meta.env.DEV
 
 export default function App() {
   const location = useLocation();
+  if (location.pathname === "/demo") return <Suspense fallback={<FullPageLoader />}><DemoPage /><ScrollToTop /></Suspense>;
+  if (location.pathname === "/feedback") return <Suspense fallback={<FullPageLoader />}><StudyFeedbackPage /><ScrollToTop /></Suspense>;
   // The explanation remains reachable when the home route redirects signed-in users.
   if (location.pathname === "/how-it-works") return <><HowItWorksPage /><ScrollToTop /></>;
   // The explicitly fictional preview must work from mail without an account.

@@ -1,4 +1,9 @@
 .learning-proof { scroll-padding-top: 24px; }
+.proof-language { display:flex; gap:8px; flex-wrap:wrap; }
+.proof-language button { min-height:44px; padding:8px 14px; border:1px solid var(--border-strong); border-radius:999px; font-size:12px; }
+.proof-language button[aria-pressed=true] { color:var(--accent-text); border-color:var(--accent-text); }
+.proof-original { font-size:13px; color:var(--text-muted); line-height:1.8; margin:0 0 24px; }
+.learning-proof .date-preview-mast { flex-wrap:wrap; gap:16px; }
 .learning-proof :is(#comparison,#coaching,#dates,#replay) { scroll-margin-top: 28px; }
 .proof-comparison,.proof-feedback,.proof-dates,.proof-letter { padding: clamp(24px,5vw,64px); border-bottom: 1px solid var(--border-strong); }
 .learning-proof :is(.proof-comparison,.proof-feedback,.proof-dates) header h2 { margin: 12px 0 16px; font-size: clamp(24px,3vw,36px); line-height: 1.4; word-break: keep-all; }

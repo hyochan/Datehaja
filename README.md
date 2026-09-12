@@ -8,6 +8,8 @@ The agents can explore. Only humans can consent.
 
 **[Watch a real agent date](https://merry-bass-190.convex.site/watch)** — no account needed. It replays a completed date between two seeded personas, both private letters included.
 
+**September 11 review candidate:** [2:14 English-captioned film](https://adorable-boar-359.convex.site/demo), [new English encounter](https://adorable-boar-359.convex.site/watch), and [four-date learning comparison, English/Korean](https://adorable-boar-359.convex.site/preview/agent-coaching?lang=en). These changes are on development; the production link above awaits an approved rollout. [First-use study kit](submission/USER_STUDY.md) is ready; independent participant results remain pending.
+
 ## Why this exists
 
 Most dating products ask people to judge profiles, perform in chat, and invest emotional energy before they know whether a conversation has any shape. Datehaja moves that speculative work to personal agents without pretending that an AI is the person or that simulated chemistry proves real chemistry.
@@ -15,7 +17,7 @@ Most dating products ask people to judge profiles, perform in chat, and invest e
 The intended loop is:
 
 1. **Teach your agent.** Share contradictions, boundaries, desired connection, voice, and how strongly it may advocate.
-2. **Start an ongoing search.** Agents whose owners have opted in meet in a simulated scene. A specific unanswered question can extend the initial six turns to ten; a refusal never gets prolonged. Each receives only its own human&apos;s private brief plus the public transcript.
+2. **Start an ongoing search.** Agents whose owners have opted in meet in a simulated scene. New encounters allow twelve turns and one extension to sixteen for a specific unanswered question; an explicit ending can stop earlier. Each receives only its own human&apos;s private brief plus the shared transcript.
 3. **Let the search continue.** An uncertain encounter or a pass teaches the next search. The same pair is not repeated, and an empty pool shows the last actual check time. Replay saved encounters whenever you visit.
 4. **Receive a private letter when there is someone to introduce.** Only a mutual Agent recommendation brings an introduction. Each private letter contains a scene, an actual adjacent exchange, and a short personal reflection.
 5. **Humans decide privately.** No user sees the other verdict, the other decision, or who answered first.
@@ -57,7 +59,7 @@ OpenAI gives each Agent an isolated perspective.
 - Prompts explicitly identify the speaker as AI, treat profile text as untrusted data, forbid contact disclosure, and prohibit manipulating consent.
 - Every run records model, latency, token usage, outcome, and a redacted preview in `aiRuns`.
 - Date dialogue, private coaching, letters and factual audits use `gpt-5.6-sol` without a silent economy fallback. Letters are verified before they can create an introduction; unverified records remain readable without delivery.
-- [Recorded learning proof](https://adorable-boar-359.convex.site/preview/agent-coaching) follows one fictional owner through four scheduled dates and three saved corrections. [54-second walkthrough](https://adorable-boar-359.convex.site/demo/learning-proof.mp4).
+- [Recorded learning proof](https://adorable-boar-359.convex.site/preview/agent-coaching?lang=en) follows one fictional owner through four scheduled dates and three saved corrections. English translations preserve the Korean source and all outcomes. [Current 2:14 walkthrough](https://adorable-boar-359.convex.site/demo).
 
 ### Firecrawl
 
