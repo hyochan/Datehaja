@@ -1,7 +1,8 @@
 import { v } from "convex/values";
 import { reflectionValidator, sceneKindValidator } from "./lib/dateStory";
 import { dateActivityValidator } from "./lib/dateActivity";
-import type { Doc } from "./_generated/dataModel";
+import type { Doc, Id } from "./_generated/dataModel";
+import type { QueryCtx } from "./_generated/server";
 import { internal } from "./_generated/api";
 import {
   internalAction,
@@ -9,7 +10,7 @@ import {
   internalQuery,
   query,
 } from "./_generated/server";
-import { syntheticAgentName } from "./agentDates";
+import { conversationLimit, syntheticAgentName } from "./agentDates";
 import {
   agentAvatarValidator,
   defaultAvatarFor,
@@ -76,9 +77,26 @@ const FINISHED = ["debrief_ready", "connected", "closed"] as const;
 export const publicDate = query({
   args: {},
   returns: v.union(v.null(), showcaseValidator),
-  handler: async (ctx) => {
+  handler: async (ctx) => readRecording(ctx),
+});
+
+/** Internal preview uses the very same privacy projection as the public page. */
+export const preview = internalQuery({
+  args: { agentDateId: v.id("agentDates") },
+  returns: v.union(v.null(), showcaseValidator),
+  handler: async (ctx, args) => readRecording(ctx, args.agentDateId),
+});
+
+async function readRecording(ctx: QueryCtx, candidateId?: Id<"agentDates">) {
+    const publication = candidateId ? null : await ctx.db.query("showcasePublications")
+      .withIndex("by_slot", q => q.eq("slot", "main")).unique();
+    const selectedId = candidateId ?? publication?.agentDateId;
     for (const status of FINISHED) {
-      const dates = await ctx.db
+      // Keep an existing installation readable until its first reviewed record
+      // is published. Once pinned, a missing/invalid record fails closed; never
+      // replace it with a random date from a moving 20-row status window.
+      const selected = selectedId ? await ctx.db.get("agentDates", selectedId) : null;
+      const dates = selectedId ? (selected?.status === status ? [selected] : []) : await ctx.db
         .query("agentDates")
         .withIndex("by_status", (q) => q.eq("status", status))
         .order("desc")
@@ -176,6 +194,83 @@ export const publicDate = query({
       }
     }
     return null;
+}
+
+export const publish = internalMutation({
+  args: { agentDateId: v.id("agentDates") },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const date = await ctx.db.get("agentDates", args.agentDateId);
+    const projected = await readRecording(ctx, args.agentDateId);
+    if (!date || !projected) throw new Error("Only a completed date between two fictional personas can be published.");
+    if (!date.completedAt || !date.activityJournal?.events.length ||
+        !date.initiatorReflection || !date.counterpartReflection ||
+        projected.turns.length !== conversationLimit(date) ||
+        projected.turns.some((turn, index) => turn.round !== index + 1)) {
+      throw new Error("Finish the full conversation, verified journal and both reflections before publishing.");
+    }
+    const publication = await ctx.db.query("showcasePublications")
+      .withIndex("by_slot", q => q.eq("slot", "main")).unique();
+    if (publication) await ctx.db.patch("showcasePublications", publication._id, { agentDateId: date._id, publishedAt: Date.now() });
+    else await ctx.db.insert("showcasePublications", { slot: "main", agentDateId: date._id, publishedAt: Date.now() });
+    return null;
+  },
+});
+
+/** Fresh, explicitly fictional participants avoid exhausting the old seed cast.
+ * They never enter real search; the normal demo date pipeline generates every
+ * turn, journal and independent review. No email can be sent to these owners. */
+export const prepareFreshPair = internalMutation({
+  args: {},
+  returns: v.id("users"),
+  handler: async ctx => {
+    const now = Date.now();
+    const people = [
+      { name: "Juno", gender: "man" as const, other: "woman" as const, voice: "playful" as const,
+        essence: "I design everyday objects. I enjoy making things, dry little jokes, and unhurried coffee. I can sound outgoing, but I need quiet after a crowd. I prefer short, concrete replies to a string of questions.",
+        desire: "Someone with a taste of their own. Disagreement about small things is welcome. I am interested in casual dating, taking time to get to know someone." },
+      { name: "Sol", gender: "woman" as const, other: "man" as const, voice: "quiet" as const,
+        essence: "I edit books and draw in the margins. I prefer tea to coffee. I am quietly funny, and I will say when an idea is not for me. I do not fill every pause. I answer what I am asked before changing the subject.",
+        desire: "A person who is comfortable with independent choices and a little silence. I want casual dating, with no rush or promise of commitment." },
+    ];
+    let first: Id<"users"> | undefined;
+    for (const person of people) {
+      const userId = await ctx.db.insert("users", { name: `Fictional ${person.name}`, email: `showcase-${person.name.toLowerCase()}-${now}@demo.test.invalid` });
+      first ??= userId;
+      await ctx.db.insert("profiles", {
+        userId, preferredLocale: "en-US", displayName: `Fictional ${person.name}`,
+        dobMs: Date.UTC(1994, 5, 15), ageYears: new Date(now).getUTCFullYear() - 1994 - (now < Date.UTC(new Date(now).getUTCFullYear(), 5, 15) ? 1 : 0), ageConfirmed18: true,
+        gender: person.gender, interestedIn: [person.other], countryCode: "KR", city: "Seoul", neighborhood: "Seongsu",
+        approxLat: 37.54, approxLng: 127.06, timezone: "Asia/Seoul", bio: person.essence,
+        showOccupation: false, interests: ["Reading", "Coffee", "Art galleries"], hobbies: [], languages: ["English"],
+        socialEnergy: "ambivert", firstDateVibe: [], lifestyle: { smokes: false, drinks: "occasional" },
+        onboardingStep: 7, onboardingComplete: true, status: "active", moderationStatus: "ok", isDemo: true, updatedAt: now,
+      });
+      await ctx.db.insert("preferences", {
+        userId, matchLocationScope: "area", preferredCountryCodes: ["KR"], preferredCities: ["Seoul"], preferredAreas: ["Seongsu"],
+        allowTranslatedDates: false, ageMin: 25, ageMax: 40, ageHard: true, maxDistanceKm: 15, distanceHard: true,
+        relationshipIntent: "casual", intentHard: true, smoking: "no_preference", smokingHard: false, alcohol: "no_preference", alcoholHard: false,
+        preferredDateTypes: ["coffee"], budgetMinPerPerson: 10000, budgetMaxPerPerson: 50000, currency: "KRW", budgetHard: false,
+        dayPreference: "either", indoorOutdoor: "either", atmosphere: "quiet", dietary: [], accessibility: [],
+        notifyEmail: false, notifyInvitations: false, notifyConfirmations: false, notifyReminders: false,
+        dropsPaused: false, maxDropsPerWeek: 5, allowDemoMatches: true, updatedAt: now,
+      });
+      await ctx.db.insert("agentProfiles", {
+        userId, name: person.name, avatar: defaultAvatarFor(person.name, person.gender), essence: person.essence,
+        desiredConnection: person.desire, boundaries: ["No pressure to meet", "No contact disclosure"], voice: person.voice,
+        autonomy: "suggest", privateMemory: "", status: "active", createdAt: now, updatedAt: now,
+      });
+    }
+    return first!;
+  },
+});
+
+export const startRefresh = internalAction({
+  args: {},
+  returns: v.id("agentDates"),
+  handler: async (ctx): Promise<Id<"agentDates">> => {
+    const userId: Id<"users"> = await ctx.runMutation(internal.showcase.prepareFreshPair, {});
+    return await ctx.runMutation(internal.agentDates.createRequest, { userId, accessMode: "demo", locale: "en-US", demoOnly: true });
   },
 });
 

@@ -362,6 +362,13 @@ export default defineSchema({
     ])
     .index("by_status", ["status"]),
 
+  /** One explicitly reviewed fictional recording for the public entry point. */
+  showcasePublications: defineTable({
+    slot: v.literal("main"),
+    agentDateId: v.id("agentDates"),
+    publishedAt: v.number(),
+  }).index("by_slot", ["slot"]),
+
   agentSearches: defineTable({
     userId: v.id("users"),
     status: v.union(v.literal("searching"), v.literal("waiting"), v.literal("talking"), v.literal("match_ready"), v.literal("paused"), v.literal("connected"), v.literal("retrying")),
