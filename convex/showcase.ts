@@ -149,6 +149,10 @@ async function readRecording(ctx: QueryCtx, candidateId?: Id<"agentDates">) {
           counterpartAgent?.name ??
           syntheticAgentName(counterpart.userId, initiatorName);
 
+        // A pin must keep meeting the publish bar after later review retries.
+        if (publication && (!date.completedAt || !date.activityJournal?.events.length ||
+            !date.initiatorReflection || !date.counterpartReflection)) continue;
+
         return {
           locale: date.locale,
           setting: date.setting,
@@ -222,7 +226,7 @@ export const publish = internalMutation({
  * turn, journal and independent review. No email can be sent to these owners. */
 export const prepareFreshPair = internalMutation({
   args: {},
-  returns: v.id("users"),
+  returns: v.object({ initiatorUserId: v.id("users"), counterpartUserId: v.id("users") }),
   handler: async ctx => {
     const now = Date.now();
     const people = [
@@ -233,10 +237,10 @@ export const prepareFreshPair = internalMutation({
         essence: "I edit books and draw in the margins. I prefer tea to coffee. I am quietly funny, and I will say when an idea is not for me. I do not fill every pause. I answer what I am asked before changing the subject.",
         desire: "A person who is comfortable with independent choices and a little silence. I want casual dating, with no rush or promise of commitment." },
     ];
-    let first: Id<"users"> | undefined;
+    const created: Id<"users">[] = [];
     for (const person of people) {
       const userId = await ctx.db.insert("users", { name: `Fictional ${person.name}`, email: `showcase-${person.name.toLowerCase()}-${now}@demo.test.invalid` });
-      first ??= userId;
+      created.push(userId);
       await ctx.db.insert("profiles", {
         userId, preferredLocale: "en-US", displayName: `Fictional ${person.name}`,
         dobMs: Date.UTC(1994, 5, 15), ageYears: new Date(now).getUTCFullYear() - 1994 - (now < Date.UTC(new Date(now).getUTCFullYear(), 5, 15) ? 1 : 0), ageConfirmed18: true,
@@ -261,7 +265,7 @@ export const prepareFreshPair = internalMutation({
         autonomy: "suggest", privateMemory: "", status: "active", createdAt: now, updatedAt: now,
       });
     }
-    return first!;
+    return { initiatorUserId: created[0]!, counterpartUserId: created[1]! };
   },
 });
 
@@ -269,8 +273,14 @@ export const startRefresh = internalAction({
   args: {},
   returns: v.id("agentDates"),
   handler: async (ctx): Promise<Id<"agentDates">> => {
-    const userId: Id<"users"> = await ctx.runMutation(internal.showcase.prepareFreshPair, {});
-    return await ctx.runMutation(internal.agentDates.createRequest, { userId, accessMode: "demo", locale: "en-US", demoOnly: true });
+    const pair = await ctx.runMutation(internal.showcase.prepareFreshPair, {});
+    return await ctx.runMutation(internal.agentDates.createRequest, {
+      userId: pair.initiatorUserId,
+      counterpartUserId: pair.counterpartUserId,
+      accessMode: "demo",
+      locale: "en-US",
+      demoOnly: true,
+    });
   },
 });
 

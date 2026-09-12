@@ -464,6 +464,7 @@ export const request = action({
 export const createRequest = internalMutation({
   args: {
     userId: v.id("users"),
+    counterpartUserId: v.optional(v.id("users")),
     accessMode: v.union(v.literal("subscription"), v.literal("demo")),
     locale: v.optional(v.string()),
     demoOnly: v.optional(v.boolean()),
@@ -479,6 +480,7 @@ export const createRequest = internalMutation({
 /** Shared by an explicit demo and the durable search worker. Only the worker may supply searchId. */
 export async function createDateRequest(ctx: MutationCtx, args: {
   userId: Id<"users">;
+  counterpartUserId?: Id<"users">;
   accessMode: "subscription" | "demo";
   locale?: string;
   demoOnly?: boolean;
@@ -577,6 +579,7 @@ export async function createDateRequest(ctx: MutationCtx, args: {
       signals: string[];
     }> = [];
     for (const candidate of profiles) {
+      if (args.counterpartUserId && candidate.userId !== args.counterpartUserId) continue;
       if (candidate.userId === userId || previous.has(candidate.userId))
         continue;
       if (args.demoOnly && !candidate.isDemo) continue;

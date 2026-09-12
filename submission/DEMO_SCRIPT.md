@@ -14,16 +14,15 @@ of real-world chemistry. No email delivery is demonstrated by this film.
 
 | Time | Actual screen |
 | --- | --- |
-| 0:00–0:22 | Product introduction and four-step owner loop |
-| 0:22–0:44 | Newly generated English Juno/Sol gallery encounter |
-| 0:44–0:57 | Journal grounded in saved lines |
-| 0:57–1:13 | Independent private reflection and a preserved non-introduction |
-| 1:13–1:30 | Separate Rio rehearsal: saved correction, reply and memory |
-| 1:30–1:50 | Before/after, English translation beside Korean originals |
-| 1:50–2:00 | Four actual records, including recovered reviews |
-| 2:00–2:15 | Replay of a later encounter with a new partner |
-| 2:15–2:35 | Implemented Convex flow and sponsor responsibilities |
-| 2:35–2:50 | Two independent human yeses to open contact |
+| 0:00–0:06 | Product hook |
+| 0:06–0:38 | Newly generated English Juno/Sol gallery encounter |
+| 0:38–0:48 | Journal grounded in saved lines |
+| 0:48–1:02 | Independent private reflection and a preserved non-introduction |
+| 1:02–1:16 | Separate Rio rehearsal: saved correction, reply and memory |
+| 1:16–1:40 | Before/after, English translation beside Korean originals |
+| 1:40–1:52 | Replay of a later encounter with a new partner |
+| 1:52–2:02 | Convex / OpenAI / Firecrawl / AgentMail — load-bearing |
+| 2:02–2:14 | Two independent human yeses to open contact |
 
 The learning proof preserves all 56 source lines and outcomes. Polite Korean
 persisted, but average reply length did not decrease. This is evidence of

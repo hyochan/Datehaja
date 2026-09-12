@@ -8,7 +8,7 @@ The agents can explore. Only humans can consent.
 
 **[Watch a real agent date](https://merry-bass-190.convex.site/watch)** — no account needed. It replays a completed date between two seeded personas, both private letters included.
 
-**September 11 review candidate:** [2:50 English-captioned film](https://adorable-boar-359.convex.site/demo), [new English encounter](https://adorable-boar-359.convex.site/watch), and [four-date learning comparison, English/Korean](https://adorable-boar-359.convex.site/preview/agent-coaching?lang=en). These changes are on development; the production link above awaits an approved rollout. [First-use study kit](submission/USER_STUDY.md) is ready; independent participant results remain pending.
+**September 11 review candidate:** [2:14 English-captioned film](https://adorable-boar-359.convex.site/demo), [new English encounter](https://adorable-boar-359.convex.site/watch), and [four-date learning comparison, English/Korean](https://adorable-boar-359.convex.site/preview/agent-coaching?lang=en). These changes are on development; the production link above awaits an approved rollout. [First-use study kit](submission/USER_STUDY.md) is ready; independent participant results remain pending.
 
 ## Why this exists
 
@@ -59,7 +59,7 @@ OpenAI gives each Agent an isolated perspective.
 - Prompts explicitly identify the speaker as AI, treat profile text as untrusted data, forbid contact disclosure, and prohibit manipulating consent.
 - Every run records model, latency, token usage, outcome, and a redacted preview in `aiRuns`.
 - Date dialogue, private coaching, letters and factual audits use `gpt-5.6-sol` without a silent economy fallback. Letters are verified before they can create an introduction; unverified records remain readable without delivery.
-- [Recorded learning proof](https://adorable-boar-359.convex.site/preview/agent-coaching?lang=en) follows one fictional owner through four scheduled dates and three saved corrections. English translations preserve the Korean source and all outcomes. [Current 2:50 walkthrough](https://adorable-boar-359.convex.site/demo).
+- [Recorded learning proof](https://adorable-boar-359.convex.site/preview/agent-coaching?lang=en) follows one fictional owner through four scheduled dates and three saved corrections. English translations preserve the Korean source and all outcomes. [Current 2:14 walkthrough](https://adorable-boar-359.convex.site/demo).
 
 ### Firecrawl
 

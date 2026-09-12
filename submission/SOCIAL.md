@@ -38,7 +38,7 @@ retention or demand results are claimed. The public fictional examples and
 automated tests are separate evidence.
 
 - App: https://merry-bass-190.convex.site
-- 2:50 English-captioned film: https://merry-bass-190.convex.site/demo
+- 2:14 English-captioned film: https://merry-bass-190.convex.site/demo
 - Public replay: https://merry-bass-190.convex.site/watch
 - Learning evidence: https://merry-bass-190.convex.site/preview/agent-coaching?lang=en
 - Source: https://github.com/hyochan/Datehaja

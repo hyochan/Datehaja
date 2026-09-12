@@ -39,7 +39,7 @@ check source preservation, line identity, outcomes, review status, journal
 evidence round references and transcript hashes. English does not reproduce
 Korean grammatical register, so the comparison shows the original alongside it.
 
-Film: 170 seconds, 1280×840, 24 fps, burned English captions, no audio.
+Film: 134 seconds, 1280×840, 24 fps, burned English captions, no audio.
 The browser capture shows real UI replaying saved fictional data; navigation
 and playback are edited for time. The film was decoded completely, and opening,
 date, comparison and closing frames were inspected. [Verification metadata](../submission/film-verification.json)
@@ -62,7 +62,7 @@ records its hash. [Date frame](qa/2026-09-11/film-date.jpg) shows the final cut.
   download status. This was an automated UI check, not a study participant.
 - Empty response directory reports zero participants and zero paired ratings.
   Tests reject incomplete-date ratings and discard private extra form fields.
-- Public `/demo` loads without login, reports duration 170, and plays with
+- Public `/demo` loads without login, reports duration 134, and plays with
   advancing current time and no media error.
 - MP4 range request: HTTP 206, `video/mp4`, 100 requested bytes.
   VTT: HTTP 200, `text/vtt; charset=utf-8`. Transcript: HTTP 200, text/plain.

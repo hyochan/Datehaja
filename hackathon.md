@@ -49,7 +49,7 @@ The unchanged Korean source remains one click away. Polite speech persisted;
 average reply length did not decrease. Neither this nor the showcase is evidence
 of independent user satisfaction.
 
-The current film is `submission/Datehaja-demo.mp4`: 170 seconds, actual browser
+The current film is `submission/Datehaja-demo.mp4`: 134 seconds, actual browser
 screens of saved fictional records, burned English captions, VTT and transcript.
 `/demo` plays it publicly on the development candidate. This supersedes the
 older film described in historical entries below. Capture/build provenance and
