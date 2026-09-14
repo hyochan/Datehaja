@@ -3086,14 +3086,6 @@ export const agentWorkspaceCopy: Record<
     "duidelijk AI · privésimulatie",
     "tydligt AI · privat simulering",
   ],
-  "Agent scouting journey": [
-    "에이전트 탐색 여정",
-    "エージェント探索の旅",
-    "Reise des Agents",
-    "Parcours d’exploration",
-    "Zoektocht van de Agent",
-    "Agentens sökresa",
-  ],
   "Why their paths crossed": [
     "두 에이전트가 만난 이유",
     "二人の道が交わった理由",

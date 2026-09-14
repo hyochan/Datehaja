@@ -247,9 +247,17 @@ restore a public password form.
 
 ## Payment decision: deliberately deferred
 
-Live checkout is locked. `DATEHAJA_DEMO_BILLING=1` is only for a labelled,
-non-paying development experience. The application must not collect payment
-or card details while merchant approval is pending.
+Live checkout is locked. `DATEHAJA_OPEN_TRIAL=1` opens a labelled, non-paying
+trial instead, and every deployment that is meant to be usable carries it —
+including the submitted production one. `DATEHAJA_DEMO_BILLING=1` is the older
+name for the same entitlement and still works. The application must not collect
+payment or card details while merchant approval is pending, and none of this
+changes that: `createCheckout` throws on every deployment regardless.
+
+Leaving the trial closed does not protect anything. It only means a visitor can
+finish the entire brief and find the scouting button dead, which is what
+production shipped for a week while every check stayed green. `bun run verify`
+now reports `scoutAccess`, so the drift is visible without reading env by hand.
 
 Rejected shortcuts:
 

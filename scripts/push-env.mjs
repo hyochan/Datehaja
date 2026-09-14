@@ -56,6 +56,9 @@ const KNOWN = new Set([
   "AUTH_GOOGLE_SECRET",
   "AUTH_APPLE_ID",
   "AUTH_APPLE_SECRET",
+  // Not a secret, but it belongs here: it was missing, so the only way to set
+  // it was by hand per deployment, and production quietly never got it.
+  "DATEHAJA_OPEN_TRIAL",
 ]);
 
 const PLACEHOLDER = /^(sk|am|fc|whsec)-?\.\.\.$|^$|\.\.\.$/;
