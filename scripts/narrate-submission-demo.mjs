@@ -160,7 +160,9 @@ const report = JSON.parse(readFileSync("submission/film-verification.json", "utf
 report.durationSeconds = Number(probe.format.duration);
 report.bytes = Number(probe.format.size);
 report.sha256 = createHash("sha256").update(readFileSync(film)).digest("hex");
-report.audio = `ElevenLabs ${MODEL}, voice ${voice.name}; reads the burned captions verbatim`;
+report.audio = ENGINE === "elevenlabs"
+  ? `ElevenLabs ${MODEL}, voice ${voice.name}; reads the burned captions verbatim`
+  : `macOS speech synthesis, voice ${voice.name}; reads the burned captions verbatim`;
 report.decodedCompletely = true;
 writeFileSync("submission/film-verification.json", JSON.stringify(report, null, 2) + "\n");
 console.log(`\n${report.durationSeconds.toFixed(1)}s, ${audio.codec_name} ${audio.sample_rate}Hz, ${report.bytes} bytes`);
