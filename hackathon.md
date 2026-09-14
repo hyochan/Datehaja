@@ -35,6 +35,20 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-15 - the film speaks
+
+The film had no audio. It now reads its own burned captions aloud, taken from
+the VTT the builder writes, so the voice cannot drift from the words on screen
+and anyone watching muted loses nothing at all.
+
+Each line sits at its own caption's start; one line that would have outrun its
+caption is quickened to fit rather than allowed to spill onto the next screen.
+Still 134 seconds, mean -23.8 dB with no clipping.
+
+The voice is the one built into macOS, which costs nothing. The same step
+switches to ElevenLabs when a key exists, and swapping either way re-runs
+narration alone — the 536 captured frames are untouched.
+
 ### 2026-09-15 - the public replay was still Korean, and the film could not be rebuilt
 
 The link every document offers a stranger first — `/watch`, no account needed —
