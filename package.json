@@ -18,6 +18,7 @@
     "demo:build": "node scripts/build-demo.mjs",
     "demo:capture": "node scripts/capture-submission-demo.mjs",
     "demo:submission": "node scripts/build-submission-demo.mjs",
+    "demo:narrate": "node scripts/narrate-submission-demo.mjs",
     "convex:dev": "convex dev",
     "convex:deploy": "convex deploy",
     "deploy": "static-hosting deploy",

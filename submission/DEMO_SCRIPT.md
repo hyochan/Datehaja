@@ -43,7 +43,13 @@ off screen. Recapture whenever the product or the pinned record changes.
 # Optional local tools: npm install --prefix .scratch/media-tools --no-save ffmpeg-static ffprobe-static
 bun run demo:capture      # add --site URL to film a different deployment
 bun run demo:submission
+bun run demo:narrate      # DATEHAJA_SAY_VOICE=Daniel to change voice
 ```
+
+The narration reads the burned captions verbatim, from the VTT the builder just
+wrote, so the voice cannot drift from the words on screen and a viewer with the
+sound off loses nothing. It uses the voice built into macOS; setting
+`ELEVENLABS_API_KEY` switches the same step to ElevenLabs without recapturing.
 
 The builder validates frames and total duration, retimes the captured beats,
 burns English captions below the screen, fully decodes the output to verify

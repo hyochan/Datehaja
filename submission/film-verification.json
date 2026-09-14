@@ -3,10 +3,10 @@
   "width": 1280,
   "height": 840,
   "fps": "24/1",
-  "bytes": 2403687,
-  "sha256": "9d400f0475c2c2e56effc33a6c7acf4e8b5a5f9acd33bf2eb632c31986d4bf15",
+  "bytes": 3452896,
+  "sha256": "c7cb5cb8388ba9c537762c625b8b4771c6442fb60b44f5b4dbdb33e76bb1552b",
   "captions": "Burned English; VTT and transcript also provided",
-  "audio": "None",
+  "audio": "ElevenLabs eleven_multilingual_v2, voice Samantha; reads the burned captions verbatim",
   "decodedCompletely": true,
   "source": "Browser UI screenshots of saved fictional records; playback retimed",
   "chapters": [
