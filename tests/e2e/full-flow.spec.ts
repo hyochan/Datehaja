@@ -16,7 +16,13 @@ async function waitForAgentMailOtp(
   recipient: string,
   requestedAt: number,
 ): Promise<string> {
-  if (/^hyo\+test[\w.+-]*@hyo\.dev$/i.test(recipient)) return "68686868";
+  // The fixed code exists only where ENVIRONMENT=development, which production
+  // deliberately is not. Pointed at any other deployment the real code has to
+  // come out of the Concierge inbox, test alias or not.
+  const fixedCodeDeployment = !process.env.E2E_BASE_URL;
+  if (fixedCodeDeployment && /^hyo\+test[\w.+-]*@hyo\.dev$/i.test(recipient)) {
+    return "68686868";
+  }
 
   const apiKey = localEnv("AGENTMAIL_API_KEY");
   const inboxId = localEnv("AGENTMAIL_INBOX_ID");
@@ -116,7 +122,11 @@ test("account to private agent debrief and human consent", async ({ page }, test
     .click();
   await expect(page.getByLabel("Verification code")).toBeVisible();
   const otp = await waitForAgentMailOtp(email, requestedAt);
-  await expect(page.getByLabel("Verification code")).toHaveValue(otp);
+  const codeField = page.getByLabel("Verification code");
+  // A development deployment prefills its fixed code. Everywhere else the field
+  // starts empty and the mailed code has to be typed.
+  if ((await codeField.inputValue()) !== otp) await codeField.fill(otp);
+  await expect(codeField).toHaveValue(otp);
   await page.getByRole("button", { name: /Verify and continue/i }).click();
 
   await expect(page).toHaveURL(/\/(legal\/accept|onboarding)/, {
