@@ -1,8 +1,8 @@
 # Current submission film — September 11, 2026
 
 The canonical film is [Datehaja-demo.mp4](Datehaja-demo.mp4), **2:14**.
-[Watch the development candidate](https://adorable-boar-359.convex.site/demo).
-It replaces the earlier search/intro cut. Production publication is pending.
+[Watch it on the submitted URL](https://merry-bass-190.convex.site/demo).
+It replaces the earlier search/intro cut, and production now serves it.
 
 This is a browser walkthrough of the actual product. It replays previously
 generated records from fictional test people; navigation is cut and playback
