@@ -64,10 +64,41 @@ test.skip(
   "Set DATEHAJA_FULL_E2E=1 to create a disposable account and run an agent date.",
 );
 
-test.use({ timezoneId: "America/New_York" });
+// `html { scroll-behavior: smooth }` is only switched off under reduced motion,
+// so without this every scroll-into-view animates and a click can resolve its
+// target mid-flight — one run spent twelve minutes retrying a chip that kept
+// landing "outside of the viewport". The action timeout stops a stuck click
+// from eating the whole budget the way that one did; the long waits below set
+// their own. This test is about the flow, not about animation.
+test.use({
+  timezoneId: "America/New_York",
+  reducedMotion: "reduce",
+  actionTimeout: 30_000,
+});
+
+// Whether or not the assertions passed. A failed run used to leave its
+// disposable account scouting forever: spending model calls on every tick and
+// sitting in the candidate pool as somebody no real person can be matched with.
+test.afterEach(async ({ page }) => {
+  const pause = page.getByRole("button", { name: "Pause search", exact: true });
+  try {
+    await page.goto("/dashboard");
+    await pause.waitFor({ state: "visible", timeout: 10_000 });
+  } catch {
+    return; // Never signed in, or never started a search. Nothing to stop.
+  }
+  await pause.click();
+  // The button itself is the signal. The headline is not: a date still running
+  // says "out meeting someone" and hides the paused state behind it, which is
+  // exactly the situation a failed run leaves behind.
+  await expect(pause).toBeHidden({ timeout: 20_000 });
+});
 
 test("account to private agent debrief and human consent", async ({ page }, testInfo) => {
-  test.setTimeout(240_000);
+  // Four minutes was calibrated for a six-turn date. A conversation that earns
+  // its extension now runs twelve, and the private letter is written after the
+  // last line, so the whole flow needs roughly three times the room it used to.
+  test.setTimeout(720_000);
   await page.addInitScript(() => {
     window.localStorage.setItem("datehaja-locale", "en-US");
   });
@@ -182,7 +213,7 @@ test("account to private agent debrief and human consent", async ({ page }, test
     page.getByRole("heading", { name: "Juno", exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByRole("group", { name: /Juno's private room/i }),
+    page.getByRole("group", { name: "Your Dating Agent's world" }),
   ).toBeVisible();
   await expect(page.getByText("What Juno remembers")).toBeVisible();
   await expect(
@@ -205,15 +236,27 @@ test("account to private agent debrief and human consent", async ({ page }, test
       "People often mistake my quietness for disinterest. Please remember that.",
     );
   await page.getByRole("button", { name: "Send", exact: true }).click();
-  await expect(page.getByText(/Juno is thinking, not typing/i)).toBeVisible();
+  const thinking = page.getByText(/Juno is thinking, not typing/i);
+  await expect(thinking).toBeVisible();
   await expect(
     page
       .locator(".agent-bubble")
       .filter({ hasNotText: /I'm Juno/ })
       .last(),
   ).toBeVisible({ timeout: 60_000 });
+  // Wait for the reply to actually land, not just for a bubble to exist. The
+  // backend refuses a date while the agent is still reading, so leaving this
+  // out made the next step fail on a race rather than on anything real.
+  await expect(thinking).toBeHidden({ timeout: 60_000 });
 
-  await page.getByRole("button", { name: /Try a clearly labelled demo encounter/i }).click();
+  // Reachable while the search is still running. The pool is usually empty at
+  // this point, which leaves the button above disabled — so this is the only
+  // thing a first visitor can actually press, and it has to be on screen.
+  const demoEncounter = page.getByRole("button", {
+    name: /Try a clearly labelled demo encounter/i,
+  });
+  await expect(demoEncounter).toBeVisible();
+  await demoEncounter.click();
   await expect(page).toHaveURL(/\/agent-date\//, { timeout: 20_000 });
   await expect(
     page.getByText(/explicitly AI.*private simulation/i),
@@ -225,18 +268,21 @@ test("account to private agent debrief and human consent", async ({ page }, test
     page.getByRole("button", { name: /replay the date/i }),
   ).toBeVisible();
   await expect(page.getByLabel(/Date replay moments/i)).toBeVisible();
-  await expect(page.getByLabel(/Agent scouting journey/i)).toBeVisible();
   await expect(page.getByText("Why their paths crossed")).toBeVisible();
   await expect(page.getByText(/No secret compatibility score/i)).toBeVisible();
   await expect(
     page.getByRole("region", { name: /Juno and .* in/i }),
   ).toBeVisible();
   await expect(page.getByText("Your private debrief")).toBeVisible();
+  // The transcript fills while the date is still going, so reaching this point
+  // says nothing about the date being over — the wait below covers almost the
+  // whole date. Two measured runs took 4m08s and 4m16s from request to
+  // debrief_ready, and both failed a 2-minute and a 4-minute wait by seconds.
   await expect(page.getByText(/Primary signal|Why I passed/i)).toBeVisible({
-    timeout: 120_000,
+    timeout: 360_000,
   });
   await expect(page.getByRole("button", { name: /Introduce us/i })).toBeVisible(
-    { timeout: 120_000 },
+    { timeout: 360_000 },
   );
   await expect(page.getByText(/not a compatibility score/i)).toBeVisible();
 

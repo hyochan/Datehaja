@@ -452,7 +452,14 @@ export default function AgentDashboardPage() {
               {searchOngoing && <button type="button" onClick={() => void pauseSearch({}).catch(reason => setError(readableError(reason)))}>{t("Pause search")}</button>}
             </div>}
             <p className="mt-3 text-[11px] leading-relaxed text-muted">{t("Search progress stays here. We'll email only when there's someone to introduce.")}</p>
-            {!searchOngoing && !readyDateId && !activeDate && <button type="button" disabled={starting || scoutAccess === null} className="mt-4 text-[12px] underline text-muted" onClick={() => void tryDemoDate()}>{t("Try a clearly labelled demo encounter")}</button>}
+            {/* Also offered mid-search. An empty pool leaves the button above
+                disabled and reading "Searching continues", and hiding this too
+                left the only person in the pool with nothing to press and no
+                way to learn there was a demo at all. It hides once there is a
+                real date to open instead, and greys out while the reply is
+                still coming — the backend refuses a date in that window, and
+                pressing it threw the refusal on screen as an uncaught error. */}
+            {!readyDateId && !activeDate && <button type="button" disabled={starting || scoutAccess === null || waitingForAgent} className="mt-4 text-[12px] underline text-muted" onClick={() => void tryDemoDate()}>{t("Try a clearly labelled demo encounter")}</button>}
           </div>
           <div className="agent-launch-world">
             {search ? <AgentSearchWorld name={agent.name} avatar={agent.avatar} encounters={dates ?? []} currentDateId={search.currentDateId} />

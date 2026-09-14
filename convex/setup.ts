@@ -12,6 +12,7 @@ import {
 } from "./integrations/agentmail";
 import { hasFirecrawlKey, search } from "./integrations/firecrawl";
 import { hasOpenAI, obj, structured } from "./integrations/openai";
+import { scoutAccessFor } from "./billing";
 
 /**
  * Operational actions used to provision and verify the third-party
@@ -240,6 +241,20 @@ export const verifyIntegrations = internalAction({
         error: "AGENTMAIL_API_KEY is not set on this deployment.",
       };
     }
+
+    /* --------------------------- Scout access -------------------------- */
+    // The integrations can all answer and the app still be unusable: with the
+    // trial closed and billing in merchant review, nobody on this deployment
+    // can send their Agent anywhere. Production drifted into exactly that and
+    // nothing here said so, so the entitlement is now part of the report.
+    const access = scoutAccessFor();
+    report.scoutAccess = {
+      ...access,
+      ok: access.allowed,
+      error: access.allowed
+        ? null
+        : "Nobody can scout on this deployment. Set DATEHAJA_OPEN_TRIAL=1 to open the labelled, non-paying trial.",
+    };
 
     report.siteUrl = process.env.SITE_URL ?? null;
     report.convexSiteUrl = process.env.CONVEX_SITE_URL ?? null;

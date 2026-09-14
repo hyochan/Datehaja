@@ -13,8 +13,9 @@
 - **Auth:** Convex Auth
 - **AI models:** gpt-5.6-sol for date dialogue, private coaching, letters and factual verification, with no silent economy fallback on these paths. Unverified letters are withheld; lower-cost models remain available for unrelated integrations.
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-09-11
+- **Last updated:** 2026-09-14
 - **Latest verified candidate:** https://adorable-boar-359.convex.site — the newer coaching and learning-loop experience is on development. The production URL above has not received this revision in this task.
+- **Known gap on the submitted URL:** production has no `DATEHAJA_OPEN_TRIAL`, so scouting is locked there for everybody and a judge cannot send their own Agent out. See `docs/HACKATHON_REVIEW_2026-09-11.md`.
 
 ## Rules, as verified on the official page
 
@@ -34,6 +35,64 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
   for the chatgpt.site route, which this project does not take.
 
 ## Log
+
+### 2026-09-14 - make the submitted deployment usable, and fix the test that should have said so
+
+Production carried nine environment variables and none of them opened scouting,
+so `scoutAccessFor` returned `locked` for everybody. A visitor could create an
+account, finish the entire brief, and find the button dead. The entitlement is
+now `DATEHAJA_OPEN_TRIAL`, it is documented as belonging on the public
+deployment rather than only on development, `scripts/push-env.mjs` can carry it
+so it stops being a per-deployment manual step, and `bun run verify` reports
+`scoutAccess` so the same drift is visible without reading env by hand. Nothing
+about payment changed: `createCheckout` still throws on every deployment.
+
+The dashboard hid the demo encounter while a search was running. With an empty
+pool that left the only person in it with a disabled button and no way to reach
+the thing that works, so it is now offered during a search too, and disabled
+while the Agent is still replying — pressing it in that window threw the
+backend's refusal on screen as an uncaught error.
+
+The full account-to-debrief browser test was repaired against the UI that
+shipped. It asserted a dashboard group that had been renamed, an
+`Agent scouting journey` label no component renders any more — the string was
+still in the locale files, and is now gone — and it raced the agent's reply.
+Its timeouts were also calibrated for a six-turn date; two measured runs took
+4m08s and 4m16s from request to `debrief_ready`, and the old four-minute
+ceiling failed by seconds. It now runs with reduced motion, because
+`html { scroll-behavior: smooth }` is switched off only for that preference and
+one run spent twelve minutes retrying a chip that kept resolving mid-scroll as
+"outside of the viewport". A new `afterEach` stops that account's search
+whether or not the run passed, which earlier failures did not do.
+
+`smoke` and `avatar-customization` now run in CI. They create no accounts and
+read no inbox, and they are advisory on main so they cannot stand between a fix
+and the submitted URL. The account-creating suites stay manual.
+
+Still open: production does not have `DATEHAJA_OPEN_TRIAL` set yet, so the
+paragraph above describes the code, not the deployed entitlement, until it is
+set and the merge deploys.
+
+### 2026-09-11 - audit the app a judge can actually try
+
+Verified the public repository, current production deployment workflow and
+public coaching preview. 383 unit/Convex tests, build, lint and 15 browser checks
+passed. The full account-to-debrief browser test failed on a stale dashboard
+selector, before generating its date, so it is not reported as a successful
+end-to-end run.
+
+A separate development API probe reused that fictional test account with email
+disabled and searching paused. One explicit demo completed in 160 seconds with
+12 saved turns, a verified activity journal and an encouraging private review;
+no contact was exposed. This proves one current generation path, not a full
+browser flow or real-user consent. The audit account's search remains paused.
+
+Read-only production checks found that scouting access is locked, and the
+public replay still uses a Korean six-turn recording completed on September 3
+UTC. The stronger four-date learning proof is available in production but its
+page is Korean-only. The final film is under three minutes; public final-video,
+social-post and submission-completion links remain unverified. The detailed
+report separates these gaps from current code deployment and passing tests.
 
 ### 2026-09-11 - a reviewable English submission and a real-user study kit
 
@@ -60,6 +119,7 @@ drafts, neutral tasks and an aggregate-only summarizer are ready for 3–5 adult
 first-time users. Independent sessions completed: **0**. Invitations, social
 posts and final submission have not been sent in this task. Production rollout
 still needs explicit approval of `merry-bass-190`.
+
 
 ### 2026-09-09 - make the learning loop the product
 
