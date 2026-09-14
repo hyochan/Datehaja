@@ -278,6 +278,15 @@ test("account to private agent debrief and human consent", async ({ page }, test
     page.getByRole("button", { name: /replay the date/i }),
   ).toBeVisible();
   await expect(page.getByLabel(/Date replay moments/i)).toBeVisible();
+  // The Firecrawl result the scene was built around, as a link somebody can
+  // follow. Every one of the last twenty dates carried one, so a missing link
+  // means the integration stopped contributing, not that this date was unlucky.
+  const culturalSource = page
+    .getByText(/Cultural inspiration for this fictional scene/i)
+    .getByRole("link");
+  await expect(culturalSource).toBeVisible();
+  await expect(culturalSource).toHaveAttribute("href", /^https?:\/\//);
+
   await expect(page.getByText("Why their paths crossed")).toBeVisible();
   await expect(page.getByText(/No secret compatibility score/i)).toBeVisible();
   await expect(

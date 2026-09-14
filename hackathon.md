@@ -13,9 +13,8 @@
 - **Auth:** Convex Auth
 - **AI models:** gpt-5.6-sol for date dialogue, private coaching, letters and factual verification, with no silent economy fallback on these paths. Unverified letters are withheld; lower-cost models remain available for unrelated integrations.
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-09-14
-- **Latest verified candidate:** https://adorable-boar-359.convex.site — the newer coaching and learning-loop experience is on development. The production URL above has not received this revision in this task.
-- **Known gap on the submitted URL:** production has no `DATEHAJA_OPEN_TRIAL`, so scouting is locked there for everybody and a judge cannot send their own Agent out. See `docs/HACKATHON_REVIEW_2026-09-11.md`.
+- **Last updated:** 2026-09-15
+- **Latest verified candidate:** https://merry-bass-190.convex.site — production carries `DATEHAJA_OPEN_TRIAL`, and `bun run verify:prod` reports `scoutAccess.ok: true`. A new account signed up there with a real mailed code, completed the brief and ran a twelve-turn date.
 
 ## Rules, as verified on the official page
 
@@ -69,9 +68,24 @@ whether or not the run passed, which earlier failures did not do.
 read no inbox, and they are advisory on main so they cannot stand between a fix
 and the submitted URL. The account-creating suites stay manual.
 
-Still open: production does not have `DATEHAJA_OPEN_TRIAL` set yet, so the
-paragraph above describes the code, not the deployed entitlement, until it is
-set and the merge deploys.
+Both landed on production. `bun run verify:prod` reports
+`scoutAccess: { allowed: true, mode: "demo", ok: true }`, where it had reported
+`locked` for everybody.
+
+Running that flow against the submitted URL rather than against development
+then found a second fault, and it is the more interesting one. A finished
+twelve-turn date produced no letters. One owner's review was written, rejected
+by the factual editor for a single overreach, rewritten and verified — a good
+letter. The other owner's request never answered, and the drafting loop gave up
+on the spot with two of three attempts and roughly 140 seconds of its
+180-second budget unused, because it treated a request that never answered the
+same as a draft that failed verification. Since the caller discards both
+reviews when either is missing, the verified letter went with it. A failed
+request now drafts again; an answer that arrives and cannot be normalized still
+fails closed on the first try.
+
+Independent user sessions completed: still **0**. Social posts and the
+submission form have not been sent.
 
 ### 2026-09-11 - audit the app a judge can actually try
 

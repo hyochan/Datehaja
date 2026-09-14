@@ -3086,6 +3086,14 @@ export const agentWorkspaceCopy: Record<
     "duidelijk AI · privésimulatie",
     "tydligt AI · privat simulering",
   ],
+  "Cultural inspiration for this fictional scene, not a real visit:": [
+    "이 가상 장면의 문화적 영감 · 실제 방문 기록이 아닙니다:",
+    "この架空のシーンの文化的インスピレーションであり、実際の訪問記録ではありません:",
+    "Kulturelle Inspiration für diese erfundene Szene – kein tatsächlicher Besuch:",
+    "Inspiration culturelle pour cette scène fictive, pas une visite réelle :",
+    "Culturele inspiratie voor deze verzonnen scène, geen echt bezoek:",
+    "Kulturell inspiration till den påhittade scenen, inget faktiskt besök:",
+  ],
   "Why their paths crossed": [
     "두 에이전트가 만난 이유",
     "二人の道が交わった理由",
