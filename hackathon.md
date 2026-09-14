@@ -35,6 +35,29 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-15 - the whole path, run on the URL that gets submitted
+
+A browser drove `merry-bass-190` from nothing to a finished date, with no
+development shortcut anywhere in it: a new account, a real sign-in code
+delivered by AgentMail and read back out of the Concierge inbox, the consent
+record, the whole brief, a labelled DEMO pass, a coaching message and the
+Agent's reply, a twelve-turn English conversation, a private letter that passed
+factual verification, both human yeses, and a paused search at the end. Six
+minutes twelve seconds. Nothing here is a fixture: production has no
+`ENVIRONMENT=development`, so the fixed sign-in code does not exist there and
+the mail had to actually arrive.
+
+That is the claim the rules care about — that a stranger can open the submitted
+URL and use the thing — and until today it had only ever been checked against
+development, which is why it was wrong for a week without any check going red.
+
+The scene's Firecrawl source is now a link on the date itself, not only on the
+public replay. Twenty of the last twenty dates carried one, and the end-to-end
+test asserts the link rather than trusting the integration still contributes.
+
+What remains is not code. Independent user sessions completed: **0**. Nothing
+has been posted and the submission form has not been filled in.
+
 ### 2026-09-14 - make the submitted deployment usable, and fix the test that should have said so
 
 Production carried nine environment variables and none of them opened scouting,
