@@ -362,6 +362,19 @@ export default function AgentDatePage() {
         />
       </div>
 
+      {/* The live search result the scene was built around. The public replay
+          has always linked it; a date you ran yourself did not, which left the
+          one sponsor integration with a visible artefact invisible at exactly
+          the moment someone is looking at what it produced. */}
+      {date.worldSourceUrl && /^https?:\/\//.test(date.worldSourceUrl) && (
+        <p className="mt-5 text-[12px] leading-relaxed text-muted">
+          {t("Cultural inspiration for this fictional scene, not a real visit:")}{" "}
+          <a className="underline underline-offset-4" href={date.worldSourceUrl} target="_blank" rel="noreferrer">
+            {date.worldSourceTitle}
+          </a>
+        </p>
+      )}
+
       <DateActivityJournal journal={date.activityJournal} totalLines={turns.length}
         onReplay={round => { setSeek({ round, request: Date.now() }); document.querySelector(".agent-date-live-capture")?.scrollIntoView({ behavior: "smooth", block: "start" }); }} />
 
