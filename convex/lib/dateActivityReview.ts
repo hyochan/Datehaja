@@ -72,6 +72,19 @@ export async function generateVerifiedActivity(source: ActivitySource, log: Log)
 }
 
 export async function auditActivity(source: ActivitySource, draft: DateActivity, log: Log): Promise<{ supported: boolean; issues: string[] } | null> {
+  // Ask twice before giving up, but only when the request itself never
+  // answered. Production lost journals exactly this way: the draft succeeded,
+  // the auditor timed out, and the caller could not tell "nothing judged this"
+  // apart from "this was rejected", so it withheld a journal no editor had
+  // actually read. An answer that arrives and does not hold up still fails
+  // closed on the spot, which is the part worth keeping.
+  for (let attempt = 0; ; attempt++) {
+    const verdict = await requestActivityAudit(source, draft, log);
+    if (verdict.answered || attempt > 0) return verdict.audit;
+  }
+}
+
+async function requestActivityAudit(source: ActivitySource, draft: DateActivity, log: Log): Promise<{ answered: boolean; audit: { supported: boolean; issues: string[] } | null }> {
   const audit = await structured<{ supported: boolean; issues: string[] }>({ ...policy,
     // A complete transcript check needs room for reasoning plus its verdict.
     // The former 5,000-token ceiling could end before any audit JSON existed.
@@ -82,7 +95,8 @@ export async function auditActivity(source: ActivitySource, draft: DateActivity,
   });
   await log("agent_date_activity_audit", "Verify events, speakers and proposed versus performed actions", audit);
   const a = audit.data;
-  return audit.ok && a && typeof a.supported === "boolean" && Array.isArray(a.issues) && a.issues.length <= 8
+  const usable = audit.ok && a && typeof a.supported === "boolean" && Array.isArray(a.issues) && a.issues.length <= 8
     && a.issues.every(i => typeof i === "string" && i.trim())
     && (a.supported ? a.issues.length === 0 : a.issues.length > 0) ? a : null;
+  return { answered: audit.ok, audit: usable };
 }
