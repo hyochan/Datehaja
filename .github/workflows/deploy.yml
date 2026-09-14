@@ -91,9 +91,13 @@ jobs:
         # deployment. These two render from the bundle and need the Convex URL
         # only so the client can boot, which is why a full-flow selector could
         # go stale against copy that shipped and every check still passed.
+        #
+        # The default 30s per-test ceiling is a Mac's budget, not a runner's:
+        # the avatar geometry test decodes an image per hair-and-outfit pair and
+        # takes 20s here, so it timed out on hardware roughly twice as slow.
         env:
           VITE_CONVEX_URL: https://adorable-boar-359.convex.cloud
-        run: bunx playwright test tests/e2e/smoke.spec.ts tests/e2e/avatar-customization.spec.ts
+        run: bunx playwright test tests/e2e/smoke.spec.ts tests/e2e/avatar-customization.spec.ts --timeout=120000
 
       - name: Keep the trace from a failure
         if: failure()
