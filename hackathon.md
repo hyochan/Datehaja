@@ -35,6 +35,38 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-15 - the public replay was still Korean, and the film could not be rebuilt
+
+The link every document offers a stranger first — `/watch`, no account needed —
+was serving a six-line Korean conversation with no activity journal. The
+September 11 audit had found exactly this and a later change fixed it, but on
+development: production was never pinned, so it kept falling back to whatever
+the moving twenty-row window happened to hold. An English-speaking judge
+clicking the primary public link got 591 Hangul characters.
+
+It is now a pinned, reviewed English record: sixteen saved lines in a bookshop,
+five journal events, both Agents independently recommending an introduction and
+neither human having answered. The guard earned its keep on the way — the first
+generated candidate was refused for ending at five turns.
+
+Journals were the reason it took three attempts. `auditActivity` returned null
+both when it rejected a draft and when its request never answered, and the
+caller withheld the journal either way, so a single timeout threw away a journal
+no editor had read. Same defect as the letter path, in the module next door: it
+now asks a second time when nothing answered, and still fails closed the moment
+an answer arrives and does not hold up.
+
+The film is rebuilt from the record judges will actually see, and for the first
+time it can be rebuilt at all. `build-submission-demo.mjs` was in the repository
+but the capture that feeds it never was, so `DEMO_SCRIPT.md` instructed a
+recapture that nothing could perform. `bun run demo:capture` drives the public
+pages, signs in nowhere and resolves every position from selectors, so a longer
+pinned record cannot shift a beat off screen. Two burned captions described the
+old record and were wrong the moment the pin changed; they now describe what is
+on screen.
+
+Still 134 seconds, still under the three-minute limit.
+
 ### 2026-09-15 - the whole path, run on the URL that gets submitted
 
 A browser drove `merry-bass-190` from nothing to a finished date, with no

@@ -1,4 +1,4 @@
-# Current submission film — September 11, 2026
+# Current submission film — September 15, 2026
 
 The canonical film is [Datehaja-demo.mp4](Datehaja-demo.mp4), **2:14**.
 [Watch it on the submitted URL](https://merry-bass-190.convex.site/demo).
@@ -15,9 +15,9 @@ of real-world chemistry. No email delivery is demonstrated by this film.
 | Time | Actual screen |
 | --- | --- |
 | 0:00–0:06 | Product hook |
-| 0:06–0:38 | Newly generated English Juno/Sol gallery encounter |
+| 0:06–0:38 | The pinned public replay: Juno and Sol, sixteen saved lines |
 | 0:38–0:48 | Journal grounded in saved lines |
-| 0:48–1:02 | Independent private reflection and a preserved non-introduction |
+| 0:48–1:02 | Each Agent's independent note, and two recommendations nobody has answered |
 | 1:02–1:16 | Separate Rio rehearsal: saved correction, reply and memory |
 | 1:16–1:40 | Before/after, English translation beside Korean originals |
 | 1:40–1:52 | Replay of a later encounter with a new partner |
@@ -31,14 +31,18 @@ retained guidance, not perfect learning or user satisfaction.
 ## Build and verify
 
 `submission/film-storyboard.json` is the timed caption source.
-The browser UI capture writes numbered screenshot bytes and a manifest to
-`.scratch/submission/capture/`. It contains only public fictional records.
-Recapture through the browser UI whenever the product or record changes.
+`scripts/capture-submission-demo.mjs` drives the public pages of a deployment
+and writes numbered screenshot bytes and a manifest to
+`.scratch/submission/capture/`. It never signs in, so every frame is a screen a
+judge can reach themselves, and it resolves positions from selectors rather
+than fixed offsets so a differently sized pinned record does not shift a beat
+off screen. Recapture whenever the product or the pinned record changes.
 
 ```sh
 # FFmpeg and FFprobe on PATH, or DATEHAJA_FFMPEG / DATEHAJA_FFPROBE.
 # Optional local tools: npm install --prefix .scratch/media-tools --no-save ffmpeg-static ffprobe-static
-node scripts/build-submission-demo.mjs
+bun run demo:capture      # add --site URL to film a different deployment
+bun run demo:submission
 ```
 
 The builder validates frames and total duration, retimes the captured beats,

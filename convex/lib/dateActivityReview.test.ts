@@ -30,6 +30,30 @@ describe("activity evidence", () => {
     expect(sent.source.transcript.map((t: { participant: string }) => t.participant)).toEqual(["a", "b"]);
     expect(sent.draft.events[0].kind).toBe("proposal");
   });
+  // Production published no journal at all for a stretch: the draft succeeded,
+  // the auditor timed out, and a journal no editor had read was withheld as
+  // though it had been rejected.
+  test("asks the auditor again when its request never answered", async () => {
+    let calls = 0;
+    vi.stubGlobal("fetch", vi.fn(async (_url, options) => {
+      inputs.push(JSON.parse(options.body));
+      calls++;
+      if (calls === 2) {
+        return new Response(JSON.stringify({ error: { code: "invalid_request_error", message: "Fixture: auditor did not answer" } }), { status: 400 });
+      }
+      const value = calls === 1 ? good : approved;
+      return new Response(JSON.stringify({ status: "completed", output: [{ type: "message", content: [{ type: "output_text", text: JSON.stringify(value) }] }] }));
+    }));
+
+    expect(await generateVerifiedActivity(source, log)).toEqual(good);
+    expect(calls).toBe(3);
+  });
+  test("still withholds a journal the auditor actually rejected", async () => {
+    responses([good, rejected, bad, rejected]);
+    expect(await generateVerifiedActivity(source, log)).toBeNull();
+    // One draft, one rejection, one repair, one rejection — never a re-ask.
+    expect(inputs).toHaveLength(4);
+  });
   test("repairs a fabricated completed action, then audits the exact repair", async () => {
     responses([bad, rejected, good, approved]);
     expect(await generateVerifiedActivity(source, log)).toEqual(good);
