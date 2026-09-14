@@ -6,7 +6,7 @@
   "bytes": 3452896,
   "sha256": "c7cb5cb8388ba9c537762c625b8b4771c6442fb60b44f5b4dbdb33e76bb1552b",
   "captions": "Burned English; VTT and transcript also provided",
-  "audio": "ElevenLabs eleven_multilingual_v2, voice Samantha; reads the burned captions verbatim",
+  "audio": "macOS speech synthesis, voice Samantha; reads the burned captions verbatim",
   "decodedCompletely": true,
   "source": "Browser UI screenshots of saved fictional records; playback retimed",
   "chapters": [
