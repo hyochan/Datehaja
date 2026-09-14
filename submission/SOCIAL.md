@@ -89,8 +89,8 @@ plain pasted @ text creates a platform mention.
 | Evidence | Status |
 | --- | --- |
 | Current film and caption files | Built; see film-verification.json |
-| Development candidate | https://adorable-boar-359.convex.site/demo |
-| Production revision | Awaiting approved rollout |
+| Film on the submitted URL | https://merry-bass-190.convex.site/demo |
+| Production revision | Shipped; `verify:prod` reports `scoutAccess.ok` |
 | Independent human sessions | 0 completed; USER_STUDY.md is ready |
 | X / LinkedIn post permalinks | Pending |
 | Final submission receipt | Pending |

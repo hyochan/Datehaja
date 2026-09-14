@@ -34,9 +34,10 @@ exchange for help, rewards or a favorable result.
 
 ## Host setup
 
-Candidate: https://adorable-boar-359.convex.site . Confirm the release checks in
-SUBMISSION_READINESS.md before inviting people. Final public target is
-https://merry-bass-190.convex.site after approved publication.
+Run the study on https://merry-bass-190.convex.site — the URL that gets
+submitted, now that it is the one that works. A participant who finishes the
+brief there can send their Agent out; before 2026-09-14 they could not, which
+would have ended every session at the same dead button.
 
 Give each participant the ordinary home URL and their code. Let them use
 their own email and choose their own preferences. Never give an external
