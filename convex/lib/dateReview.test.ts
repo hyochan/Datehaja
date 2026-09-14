@@ -100,6 +100,53 @@ describe('verified date reviews', () => {
     expect(await generateVerifiedDateReview(request, log)).toBeNull();
     expect(requests).toHaveLength(1);
   });
+  // Production lost a finished twelve-turn date this way. One owner's letter
+  // was written and verified; the other owner's request never answered, the
+  // loop gave up on the spot with two attempts and most of the budget unused,
+  // and the caller discards both reviews when either is missing.
+  test('writes the draft again when the request itself fails', async () => {
+    let calls = 0;
+    vi.stubGlobal('fetch', vi.fn(async (_url, options) => {
+      requests.push(JSON.parse(options.body));
+      if (++calls === 1) {
+        return new Response(JSON.stringify({ error: { code: 'invalid_request_error', message: 'Fixture: request rejected' } }), { status: 400 });
+      }
+      const value = calls === 2 ? good : approved;
+      return new Response(JSON.stringify({ status: 'completed', output: [{ type: 'message', content: [{ type: 'output_text', text: JSON.stringify(value) }] }] }));
+    }));
+
+    expect(await generateVerifiedDateReview(request, log)).toEqual(good);
+    expect(requests.map(r => r.text.format.name)).toEqual(['agent_date_verdict', 'agent_date_verdict', 'agent_date_review_audit']);
+  });
+  test('asks for a whole review after a failed request, never a patch of a draft that never arrived', async () => {
+    let calls = 0;
+    vi.stubGlobal('fetch', vi.fn(async (_url, options) => {
+      requests.push(JSON.parse(options.body));
+      if (++calls === 1) {
+        return new Response(JSON.stringify({ error: { code: 'invalid_request_error', message: 'Fixture: request rejected' } }), { status: 400 });
+      }
+      const value = calls === 2 ? good : approved;
+      return new Response(JSON.stringify({ status: 'completed', output: [{ type: 'message', content: [{ type: 'output_text', text: JSON.stringify(value) }] }] }));
+    }));
+
+    await generateVerifiedDateReview(request, log);
+    const retry = JSON.parse(requests[1].input);
+    expect(retry.required_corrections).toBeUndefined();
+    expect(retry.rejected_draft).toBeUndefined();
+    const retrySchema = (requests[1].text.format as unknown as { schema: { properties: object } }).schema;
+    const wholeReview = DATE_REVIEW_SCHEMA.properties as Record<string, unknown>;
+    expect(Object.keys(retrySchema.properties)).toEqual(Object.keys(wholeReview));
+  });
+  test('still gives up when every request fails, rather than looping on a dead model', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (_url, options) => {
+      requests.push(JSON.parse(options.body));
+      return new Response(JSON.stringify({ error: { code: 'invalid_request_error', message: 'Fixture: request rejected' } }), { status: 400 });
+    }));
+
+    expect(await generateVerifiedDateReview(request, log)).toBeNull();
+    expect(requests.every(r => r.text.format.name === 'agent_date_verdict')).toBe(true);
+    expect(records.filter(r => r.purpose === 'agent_date_verdict')).toHaveLength(3);
+  });
   test('does not release a draft when the verifier is unavailable', async () => {
     vi.stubGlobal('fetch', vi.fn(async (_url, options) => {
       const r = JSON.parse(options.body); requests.push(r);

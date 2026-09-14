@@ -132,9 +132,14 @@ export async function generateVerifiedDateReview(request: StructuredRequest, log
   let rejectedDraft: DateReviewDraft | null = null;
   for (let attempt = 0; attempt < 3; attempt++) {
     if (timeLeft() < 1000) return null;
+    // Whether this attempt repairs a rejected draft or writes a fresh one.
+    // Not the same as "attempt > 0": a request that never answered leaves
+    // nothing to repair, and asking for a patch of no draft would send an
+    // empty schema.
+    const repairing: boolean = rejectedDraft !== null;
     const properties = DATE_REVIEW_SCHEMA.properties as Record<string, unknown>;
     const result: StructuredResult<unknown> = await structured<unknown>({ ...request,
-      ...(attempt ? { input: JSON.stringify({ ...source, rejected_draft: rejectedDraft, required_corrections: corrections }),
+      ...(repairing ? { input: JSON.stringify({ ...source, rejected_draft: rejectedDraft, required_corrections: corrections }),
         schema: obj(Object.fromEntries(fieldsToRepair.map(field => [field, properties[field]]))),
         preferredModels: ['gpt-5.6-sol'], fallbackToDefaultModels: false,
         maxOutputTokens: 5000, reasoningEffort: 'medium' as const,
@@ -143,13 +148,19 @@ export async function generateVerifiedDateReview(request: StructuredRequest, log
       deadlineMs: deadline,
     });
     const patch = result.data;
-    const validPatch = !attempt || (patch && typeof patch === 'object' && !Array.isArray(patch)
+    const validPatch: boolean = !repairing || Boolean(patch && typeof patch === 'object' && !Array.isArray(patch)
       && fieldsToRepair.every(field => Object.hasOwn(patch, field))
       && Object.keys(patch).every(field => fieldsToRepair.includes(field as typeof FIELDS[number])));
     const draft: DateReviewDraft | null = result.ok && validPatch
-      ? normalizeDraft(attempt ? Object.assign({}, rejectedDraft, patch) : patch, source) : null;
+      ? normalizeDraft(repairing ? Object.assign({}, rejectedDraft, patch) : patch, source) : null;
     if (!draft) {
       await log('agent_date_verdict', 'Private review could not be validated', { ...result, ok: false, error: 'Invalid or unavailable private review.' });
+      // A request that never answered is not a grounding failure. There is no
+      // draft to withhold and the budget is still open, so write one again
+      // rather than lose the whole date — and with it the other owner's
+      // already-verified letter — to a single timeout. An answer that arrived
+      // and cannot be normalized is a content failure and still fails closed.
+      if (!result.ok) continue;
       return null;
     }
     if (timeLeft() < 1000) return null;
