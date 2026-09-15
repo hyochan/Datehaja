@@ -40,7 +40,7 @@ const toSeconds = (stamp) => {
   return Number(h) * 3600 + Number(m) * 60 + Number(s) + Number(ms) / 1000;
 };
 const cues = [...readFileSync("public/demo/Datehaja-demo.vtt", "utf8")
-  .matchAll(/(\d\d:\d\d:\d\d\.\d\d\d) --> (\d\d:\d\d:\d\d\.\d\d\d)\n(.+)/g)]
+  .matchAll(/(\d\d:\d\d:\d\d\.\d\d\d) --> (\d\d:\d\d:\d\d\.\d\d\d)\r?\n(.+)/g)]
   .map((m, i) => ({ n: i + 1, at: (toSeconds(m[1]) + toSeconds(m[2])) / 2, text: m[3].trim() }));
 if (!cues.length) throw new Error("No caption cues in public/demo/Datehaja-demo.vtt");
 
