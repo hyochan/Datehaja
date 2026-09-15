@@ -16,14 +16,14 @@ of real-world chemistry.
 | --- | --- |
 | 0:00–0:07 | Product hook |
 | 0:07–0:39 | The pinned public replay: Juno and Sol, sixteen saved lines |
-| 0:39–0:50 | Journal grounded in saved lines |
+| 0:39–0:50 | That same date's journal, each card naming the lines behind it |
 | 0:50–1:06 | Each Agent's independent note, and two recommendations nobody has answered |
 | 1:06–1:19 | The introduction letter as it landed in a mailbox, sent through AgentMail |
 | 1:19–1:34 | Separate Rio rehearsal: saved correction, reply and memory |
 | 1:34–1:58 | Before/after, English translation beside the untouched originals |
 | 1:58–2:10 | Replay of a later encounter with a new partner |
-| 2:10–2:20 | Convex / OpenAI / Firecrawl / AgentMail — load-bearing |
-| 2:20–2:34 | Two independent human yeses to open contact |
+| 2:10–2:20 | The four job cards, each naming the service that handles it |
+| 2:20–2:34 | Two independent human yeses to open contact, then the closing page |
 
 The letter beat is one real message, taken from the Concierge inbox after
 AgentMail delivered it and kept at
@@ -53,7 +53,14 @@ off screen. Recapture whenever the product or the pinned record changes.
 bun run demo:capture      # add --site URL to film a different deployment
 bun run demo:submission
 bun run demo:narrate      # reads submission/narration; a key re-renders it
+bun run demo:review       # one frame per caption, to read picture against words
 ```
+
+`demo:review` is the step that is easy to skip and should not be. Every other
+check is about the file — duration, captions present, decodes end to end, hash
+recorded — and none of them can notice that a beat is narrating something that
+is not on the screen. Four beats once shipped that way. Read the sheets it
+writes and ask of each frame whether it shows what its caption says.
 
 The narration reads the burned captions verbatim, from the VTT the builder just
 wrote, so the voice cannot drift from the words on screen and a viewer with the
@@ -67,6 +74,12 @@ takes precedence and renders a fresh reading instead; `DATEHAJA_TTS=say` falls
 back to the voice built into macOS. If a caption is edited without re-rendering,
 `demo:narrate` stops and names the line rather than shipping a voice reading
 something that is no longer on screen.
+
+Each beat asserts that what its captions describe is actually in frame before
+it shoots — the sponsor tags, the line-evidence chips, the private-notes panel,
+the four-date chooser, the source link — and positions are measured only after
+the page stops growing. An earlier cut narrated private letters, a journal and
+a sponsor list that were never on screen, and nothing could tell.
 
 The builder validates frames and total duration, retimes the captured beats,
 burns English captions below the screen, fully decodes the output to verify
