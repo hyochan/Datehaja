@@ -51,12 +51,15 @@ for (const [index, beat] of story.entries()) {
 writeFileSync(resolve(scratch, "concat.txt"), segments.join("\n"));
 const joined = resolve(scratch, "joined.mp4");
 run(ffmpeg, ["-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", resolve(scratch, "concat.txt"), "-c", "copy", joined]);
-const ass = `[Script Info]\nScriptType: v4.00+\nPlayResX: 1280\nPlayResY: 840\nWrapStyle: 2\n\n[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\nStyle: Default,Arial,24,&H00FFFFFF,&H00FFFFFF,&H00151014,&H00151014,0,0,0,0,100,100,0,0,1,0,0,2,25,25,29,1\n\n[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n` + cues.map(cue => `Dialogue: 0,${assTime(cue.start)},${assTime(cue.end)},Default,,0,0,0,,${cue.caption.replaceAll("\n", "\\N")}`).join("\n");
+const ass = `[Script Info]\nScriptType: v4.00+\nPlayResX: 1280\nPlayResY: 840\nWrapStyle: 2\n\n[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\nStyle: Default,Helvetica Neue,31,&H00EEECF0,&H00EEECF0,&H00151014,&H00151014,0,0,0,0,100,100,0.6,0,1,0,0,2,90,90,40,1\n\n[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n` + cues.map(cue => `Dialogue: 0,${assTime(cue.start)},${assTime(cue.end)},Default,,0,0,0,,${cue.caption.replaceAll("\n", "\\N")}`).join("\n");
 const assPath = resolve(scratch, "captions.ass");
 writeFileSync(assPath, ass);
 const film = resolve("public/demo/Datehaja-demo.mp4");
 // Subtitle failures are fatal. Never silently publish an uncaptioned film.
-run(ffmpeg, ["-y", "-v", "error", "-i", joined, "-vf", `ass=${relative(root, assPath).replaceAll("\\", "/")}`, "-c:v", "libx264", "-preset", "fast", "-crf", "21", "-pix_fmt", "yuv420p", "-threads", "4", "-an", "-movflags", "+faststart", film]);
+// Open and close on the background colour rather than cutting from nothing to a
+// full screen and back. Half a second at each end, which no caption occupies.
+const fades = `fade=t=in:st=0:d=0.5:color=0x151014,fade=t=out:st=${(total - 0.5).toFixed(2)}:d=0.5:color=0x151014`;
+run(ffmpeg, ["-y", "-v", "error", "-i", joined, "-vf", `ass=${relative(root, assPath).replaceAll("\\", "/")},${fades}`, "-c:v", "libx264", "-preset", "fast", "-crf", "21", "-pix_fmt", "yuv420p", "-threads", "4", "-an", "-movflags", "+faststart", film]);
 const metadata = JSON.parse(run(ffprobe, ["-v", "error", "-show_format", "-show_streams", "-of", "json", film]));
 assert(Number(metadata.format.duration) < 180 && Math.abs(Number(metadata.format.duration) - total) < 0.2, "Unexpected film duration");
 run(ffmpeg, ["-v", "error", "-i", film, "-f", "null", "-"]);

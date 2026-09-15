@@ -26,9 +26,11 @@ const arg = (flag, fallback) => {
 };
 const SITE = arg("--site", "https://merry-bass-190.convex.site").replace(/\/$/, "");
 const OUT = resolve(arg("--out", ".scratch/submission/capture"));
-// Four frames per second of finished film. The builder retimes each beat to the
-// storyboard's duration, so this only sets how smooth the motion is.
-const FPS = 4;
+// Frames per second of finished film. The builder retimes each beat to the
+// storyboard's duration, so this only sets how smooth the motion is — and it is
+// the whole difference between a pan that glides and one that stutters. At four
+// the 24fps output held every frame six times and every scroll juddered.
+const FPS = Number(process.env.DATEHAJA_CAPTURE_FPS || 12);
 
 const story = require("../submission/film-storyboard.json");
 const seconds = (name) => {
