@@ -36,6 +36,11 @@ const ONLY = arg("--only", "");
 const FPS = Number(process.env.DATEHAJA_CAPTURE_FPS || 12);
 
 const story = require("../submission/film-storyboard.json");
+// A mistyped --only matches nothing, captures nothing, and would otherwise exit
+// zero having done no work at all.
+if (ONLY && !story.some((b) => b.name === ONLY)) {
+  throw new Error(`No storyboard beat named ${ONLY}. Beats: ${story.map((b) => b.name).join(", ")}`);
+}
 const seconds = (name) => {
   const beat = story.find((b) => b.name === name);
   if (!beat) throw new Error(`No storyboard beat named ${name}`);
@@ -227,8 +232,13 @@ await beat("04-grounded-journal", async (frames) => {
 
 let manifest = beats;
 if (ONLY) {
+  // Merge rather than map over the old manifest: a beat captured for the very
+  // first time is not in it, and mapping would drop the only thing this run
+  // did. Storyboard order also keeps the manifest readable as the film's order.
   const existing = JSON.parse(readFileSync(resolve(OUT, "beats.json"), "utf8"));
-  manifest = existing.map((b) => beats.find((c) => c.name === b.name) ?? b);
+  const merged = new Map(existing.map((b) => [b.name, b]));
+  for (const b of beats) merged.set(b.name, b);
+  manifest = story.filter((b) => merged.has(b.name)).map((b) => merged.get(b.name));
 }
 writeFileSync(resolve(OUT, "beats.json"), JSON.stringify(manifest, null, 2) + "\n");
 await browser.close();
