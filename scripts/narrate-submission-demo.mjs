@@ -70,7 +70,7 @@ const toSeconds = (stamp) => {
   const [s, ms] = rest.split(".");
   return Number(h) * 3600 + Number(m) * 60 + Number(s) + Number(ms) / 1000;
 };
-const cues = [...vtt.matchAll(/(\d\d:\d\d:\d\d\.\d\d\d) --> (\d\d:\d\d:\d\d\.\d\d\d)\n(.+)/g)].map((m) => ({
+const cues = [...vtt.matchAll(/(\d\d:\d\d:\d\d\.\d\d\d) --> (\d\d:\d\d:\d\d\.\d\d\d)\r?\n(.+)/g)].map((m) => ({
   start: toSeconds(m[1]),
   window: toSeconds(m[2]) - toSeconds(m[1]),
   // The captions carry typographic quotes and a middot list separator, which

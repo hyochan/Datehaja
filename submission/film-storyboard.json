@@ -51,7 +51,7 @@
     "name": "07-saved-feedback",
     "seconds": 15,
     "captions": [
-      "“That’s not how I talk.”",
+      "\u201cThat\u2019s not how I talk.\u201d",
       "The owner corrects Rio. The reply and the memory are saved.",
       "The correction points back to the line that caused it.",
       "The date it came from is never rewritten."
@@ -62,9 +62,9 @@
     "seconds": 24,
     "captions": [
       "Now the same Agent, across four saved dates.",
-      "On a later date, the polite register is still there.",
-      "The original stays beside a clearly labelled translation.",
       "Four dates, fifty-six lines, all kept.",
+      "The original stays beside a clearly labelled translation.",
+      "On a later date, the polite register is still there.",
       "Nothing replaces the original. Both versions stay visible."
     ]
   },

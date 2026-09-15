@@ -35,6 +35,40 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-16 - the film narrated four things that were not on screen
+
+The narration was fixed; nobody had checked the picture. Pulling one frame from
+the middle of each of the thirty-four captions and reading them side by side
+found four beats describing a screen the viewer was not being shown.
+
+The worst was the one that matters most here. Ten seconds say "Convex, OpenAI,
+Firecrawl, AgentMail — not logos, every one of them ran in this film", over a
+landing section that names none of them. Searching every text node of the
+rendered page for those four words returned nothing at all. The four job cards
+now name the service that does each job, so the claim is checkable on the
+screen it is spoken over.
+
+Fourteen seconds of the learning proof were a fully Korean page. The capture
+clicked the Korean toggle to show the untouched source, the toggle re-rendered
+the page and reset the scroll to the top, and the frames held there while the
+English narration explained that the original sits beside a labelled
+translation. Sixteen seconds meant to show each Agent's private letter showed
+the end of the transcript instead: the journal's illustrations load late, the
+beat measured its scroll position before they arrived, and everything moved
+several hundred pixels after the camera had settled. The journal beat was
+filming a different couple's date than the one the film had just watched.
+
+Positions are now measured only after the page stops growing, and every beat
+asserts that the thing its captions talk about is actually in frame — the
+sponsor tags, the line-evidence chips, the private-notes panel, the four-date
+chooser, the source link. A beat that cannot see its own subject fails the
+capture instead of being narrated over.
+
+Two captions were also swapped so the two lines about the four saved dates sit
+together, which turned three cuts inside one beat into one, and the film now
+closes on the product's own last word rather than on a half-empty column.
+
+
 ### 2026-09-16 - the new film deployed, and the old one kept playing
 
 The deploy reported success, the bundle was current, and the submitted URL was

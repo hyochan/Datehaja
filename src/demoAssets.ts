@@ -12,7 +12,7 @@
  * `scripts/narrate-submission-demo.mjs` from the bytes they just produced, so
  * it cannot describe a film that is not the one on disk. Do not edit by hand.
  */
-export const demoAssetVersion = "35c3abd2";
+export const demoAssetVersion = "2e99fde1";
 
 /** A `public/demo/` path a cache will treat as new whenever the film changes. */
 export const demoAsset = (file: string) => `/demo/${file}?v=${demoAssetVersion}`;
