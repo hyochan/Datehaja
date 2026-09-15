@@ -192,11 +192,22 @@ jobs:
           set -euo pipefail
           expected=$(node -p "require('./submission/film-verification.json').sha256")
           url="$SITE/demo/Datehaja-demo.mp4?v=${expected:0:8}"
+          # Retry against a throwaway query string. Polling the real URL while
+          # publishing is still in flight would cache whatever the origin
+          # happened to return, and every later visitor would get that for four
+          # hours — the failure this versioning exists to prevent.
           for attempt in 1 2 3 4 5; do
-            served=$(curl -fsSL "$url" | shasum -a 256 | cut -d' ' -f1 || true)
+            probe="$url&probe=$GITHUB_RUN_ID-$attempt"
+            served=$(curl -fsSL "$probe" | shasum -a 256 | cut -d' ' -f1) || served=none
             if [ "$served" = "$expected" ]; then
-              echo "$SITE serves the film in film-verification.json."
-              exit 0
+              # Now the origin is known good, ask for it the way a visitor does.
+              visitor=$(curl -fsSL "$url" | shasum -a 256 | cut -d' ' -f1) || visitor=none
+              if [ "$visitor" = "$expected" ]; then
+                echo "$SITE serves the film in film-verification.json."
+                exit 0
+              fi
+              echo "::error::The origin has the right film but $url served $visitor."
+              exit 1
             fi
             echo "Attempt $attempt: served $served, expected $expected."
             sleep 5

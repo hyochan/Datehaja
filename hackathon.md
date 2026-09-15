@@ -94,11 +94,18 @@ bundle was current — which it always was.
 Twenty-seven of the film's thirty-four spoken lines ended while sound was still
 coming out. The cut was taken from the last word's end time plus a fixed 0.14s,
 but a word's end time marks where the vowel resolves, not where the room goes
-quiet — so tails kept landing inside the decay. The loudest offender ended at
--23 dB, which is plainly audible, and that is what a listener reported. Cutting
-now walks the waveform forward from the word boundary until the level has held
-under -52 dB for 100ms, with 15ms and 80ms fades so the joins do not click. No
-line now ends above -48.6 dB.
+quiet — so tails kept landing inside the decay. The loudest offender was still
+sounding when it stopped, which is what a listener reported. Each clip was
+re-cut with a one-off alignment script kept outside the repository: it walks
+forward from the last word's boundary until the tail has decayed, then applies
+15ms and 80ms fades so the joins do not click. Measured on the committed clips
+with `volumedetect` over decoded PCM, no tail is above -41 dB across its last
+30ms, or above -58 dB across its last 10ms.
+
+Those numbers were wrong when this entry was first written. They were taken by
+seeking inside the MP3s, where a seek lands on a frame boundary — which for a
+30ms window is most of the window — and they read far quieter than the audio
+actually is. Decode first, then measure.
 
 One cut was a genuine content loss, not a rough edge. Speech recognition splits
 `AgentMail` into two tokens, and the aligner stopped at the first, so the line
@@ -120,9 +127,12 @@ criticism and reworked from that.
 The voice is ElevenLabs `eleven_v3`, not the macOS one the previous entry
 describes. `submission/narration/` now carries that reading — one MP3 per
 caption, plus a manifest naming the voice and the exact line each clip reads —
-so `bun run demo:submission && bun run demo:narrate` reproduces the submitted
-film byte for byte with no key and nothing to pay for; verified by rebuilding
-to the same SHA-256. A key still takes precedence and renders a fresh reading.
+so `bun run demo:submission && bun run demo:narrate` rebuilds the film with no
+key and nothing to pay for. On the machine that shot the frames, from the same
+capture directory, that rebuild reproduced the submitted SHA-256 exactly. A
+fresh clone cannot: the capture directory is deliberately outside git, so it
+has to shoot the pages again, and frames taken at a different moment will not
+hash the same. A key still takes precedence and renders a fresh reading.
 If a caption is edited without re-rendering, narration stops and names the line
 instead of shipping a voice that describes a screen that no longer exists.
 
@@ -621,6 +631,11 @@ agent chat → agent-date request → realtime six-turn world → independent
 debrief → sealed human decision → mutual contact gate. The legacy concierge
 entries below remain as an implementation history; their routes are no longer
 the current product surface.
+
+## Earlier commits, oldest first
+
+Everything above this line is newest first. Everything below it is the original
+build log, kept in the order it was written.
 
 Live Scout Pass billing is deliberately locked while merchant approval is in
 progress. Stripe does not support a direct South Korean merchant account, and

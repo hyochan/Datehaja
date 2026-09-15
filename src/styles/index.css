@@ -4505,7 +4505,7 @@ html[lang^="ja"] .agent-debrief-title {
   border: 1px solid var(--border);
   border-radius: 99px;
   color: var(--text-muted);
-  font: 700 0.44rem/1 var(--font-mono);
+  font: 700 0.5rem/1 var(--font-mono);
   font-style: normal;
   letter-spacing: 0.06em;
   justify-self: start;
@@ -4519,7 +4519,7 @@ html[lang^="ja"] .agent-debrief-title {
   letter-spacing: 0.02em;
   text-transform: none;
   /* The name is the point of the tag, so it outsizes its own label. */
-  font-size: 0.58rem;
+  font-size: 0.62rem;
 }
 
 .agent-memory-note {

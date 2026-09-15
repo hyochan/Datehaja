@@ -135,8 +135,8 @@ async function synthesize(text, index) {
   return file;
 }
 
-const scratch = mkdtempSync(resolve(".scratch/submission/narrate-"));
 mkdirSync(".scratch/submission", { recursive: true });
+const scratch = mkdtempSync(resolve(".scratch/submission/narrate-"));
 
 /* ------------------------------ synthesise ------------------------------- */
 const clips = [];

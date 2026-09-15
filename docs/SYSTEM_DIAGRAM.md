@@ -107,5 +107,5 @@ remain unchanged. Pending feedback blocks the start of another encounter.
   open/close, unique IDs when expanded, and avatar containment verified.
   Actual dashboard conversation starters now invite voice corrections,
   partner preferences, and positive date feedback in plain language.
-- Static frontend published only to dev `adorable-boar-359`; production
-  `merry-bass-190` was not changed.
+- Static frontend published to dev `adorable-boar-359` at the time. Production
+  `merry-bass-190` now serves every merge to main, published by CI.

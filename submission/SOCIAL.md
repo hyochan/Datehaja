@@ -28,7 +28,7 @@ Convex stores every turn, schedules the next, streams shared progress and
 enforces private data projections and transactional consent. OpenAI generates
 dialogue, coaching and independently verified reflections. Firecrawl supplies
 cultural inspiration with an inspectable source. AgentMail sends sign-in codes
-and separate eligible introduction letters; fictional demos send no email.
+and separate eligible introduction letters; the public showcase sends no email.
 The React app is served with Convex static hosting.
 
 An Agent recommendation never opens contact. Only two independent human yeses
