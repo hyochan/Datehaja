@@ -13,7 +13,7 @@
 - **Auth:** Convex Auth
 - **AI models:** gpt-5.6-sol for date dialogue, private coaching, letters and factual verification, with no silent economy fallback on these paths. Unverified letters are withheld; lower-cost models remain available for unrelated integrations.
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-09-15
+- **Last updated:** 2026-09-16
 - **Latest verified candidate:** https://merry-bass-190.convex.site — production carries `DATEHAJA_OPEN_TRIAL`, and `bun run verify:prod` reports `scoutAccess.ok: true`. A new account signed up there with a real mailed code, completed the brief and ran a twelve-turn date.
 
 ## Rules, as verified on the official page
@@ -34,6 +34,47 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
   for the chatgpt.site route, which this project does not take.
 
 ## Log
+
+### 2026-09-16 - the narration was cutting its own words off
+
+Twenty-seven of the film's thirty-four spoken lines ended while sound was still
+coming out. The cut was taken from the last word's end time plus a fixed 0.14s,
+but a word's end time marks where the vowel resolves, not where the room goes
+quiet — so tails kept landing inside the decay. The loudest offender ended at
+-23 dB, which is plainly audible, and that is what a listener reported. Cutting
+now walks the waveform forward from the word boundary until the level has held
+under -52 dB for 100ms, with 15ms and 80ms fades so the joins do not click. No
+line now ends above -48.6 dB.
+
+One cut was a genuine content loss, not a rough edge. Speech recognition splits
+`AgentMail` into two tokens, and the aligner stopped at the first, so the line
+naming the sponsors was cut to "Convex, OpenAI, Firecrawl, Agent-". The matcher
+now consumes source tokens until the caption's word is covered, which the other
+compound names in the script needed too.
+
+Correct tails are longer tails, and five lines then no longer fit their beat.
+Rather than speed those lines up, the beats were widened. Nothing in the film is
+now played at a speed nobody spoke it at, and integrated loudness is -16.4 LUFS.
+
+The script was rewritten in the same pass. Sixteen captions carried the whole
+134-second film, which left long stretches of screen with nothing said about
+them; it is now thirty-four across 154 seconds, still inside the three-minute
+limit. The opening was the weakest part — it described the product before
+showing why anyone would want it — so it was put to an outside reader for
+criticism and reworked from that.
+
+The voice is ElevenLabs `eleven_v3`, not the macOS one the previous entry
+describes. `submission/narration/` now carries that reading — one MP3 per
+caption, plus a manifest naming the voice and the exact line each clip reads —
+so `bun run demo:submission && bun run demo:narrate` reproduces the submitted
+film byte for byte with no key and nothing to pay for; verified by rebuilding
+to the same SHA-256. A key still takes precedence and renders a fresh reading.
+If a caption is edited without re-rendering, narration stops and names the line
+instead of shipping a voice that describes a screen that no longer exists.
+
+Two references to a specific country went with it. They were describing the
+test data rather than the product, and the product does not care which language
+an Agent learns.
 
 ### 2026-09-15 - the film speaks
 

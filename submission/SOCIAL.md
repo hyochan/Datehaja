@@ -1,9 +1,9 @@
-# Submission and social copy — September 11, 2026
+# Submission and social copy — September 16, 2026
 
 **Unsent drafts. No social post or submission receipt is claimed.**
-The candidate currently lives on development. The production URLs below are
-release targets; verify the new /demo, /watch and English learning proof there
-after an approved rollout before sending these drafts.
+Every link below is on the submitted production deployment and was checked
+there. Re-check /demo after any film rebuild: the page is served by CI, so a
+new film is live only once the deploy finishes.
 
 ## Submission description
 
@@ -18,9 +18,10 @@ reply and memory, then compare its first and latest lines. The English view
 preserves the Korean original. Polite speech persisted; shorter replies did
 not consistently follow. We show the limits along with the improvement.
 
-A new English public replay follows two fictional Agents through a playful
-disagreement at a gallery. Its journal points to saved dialogue. Each Agent
-reflects independently, and the actual non-introduction outcome is preserved.
+A new English public replay follows two fictional Agents through sixteen saved
+lines in a bookshop. Its journal points back to the exact dialogue behind each
+moment. Each Agent then writes home independently; both recommended meeting,
+and the record stops there, because contact opens only after two human yeses.
 There is no compatibility score and no forced match.
 
 Convex stores every turn, schedules the next, streams shared progress and
@@ -38,7 +39,7 @@ retention or demand results are claimed. The public fictional examples and
 automated tests are separate evidence.
 
 - App: https://merry-bass-190.convex.site
-- 2:14 English-captioned film: https://merry-bass-190.convex.site/demo
+- 2:34 narrated, English-captioned film: https://merry-bass-190.convex.site/demo
 - Public replay: https://merry-bass-190.convex.site/watch
 - Learning evidence: https://merry-bass-190.convex.site/preview/agent-coaching?lang=en
 - Source: https://github.com/hyochan/Datehaja
