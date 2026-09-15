@@ -9,11 +9,13 @@
  *   node scripts/build-submission-demo.mjs [DIR]
  *
  * It only ever visits public pages of a deployment and never signs in, so every
- * frame is a screen a judge can reach themselves. Positions are resolved from
+ * frame but one is a screen a judge can reach themselves; the exception is the
+ * letter beat, which renders the delivered message kept at
+ * `submission/fixtures/introduction-letter.html`. Positions are resolved from
  * selectors at capture time rather than hardcoded, because the public replay's
  * height depends on whichever record is pinned.
  */
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createRequire } from "node:module";
 
@@ -130,7 +132,7 @@ async function mustSee(selector, claim) {
   const seen = await page.locator(selector).first().evaluate((el) => {
     const r = el.getBoundingClientRect();
     return r.height > 0 && r.top < window.innerHeight - 60 && r.bottom > 60;
-  }).catch(() => false);
+  }, undefined, { timeout: 2000 }).catch(() => false);
   if (!seen) throw new Error(`Filming "${claim}" but ${selector} is not on screen`);
 }
 
@@ -278,10 +280,16 @@ await open("/preview/agent-coaching?lang=en");
 
 /* ---- 07 the owner corrects their Agent --------------------------------- */
 await beat("07-saved-feedback", async (frames) => {
+  // The reply, the memory and the button back to the line that caused the
+  // correction all live inside a closed disclosure. Three captions described
+  // them over a screen showing only "Read Rio's reply and memory +".
+  await page.locator(".proof-feedback details").first()
+    .evaluate((node) => { node.open = true; }).catch(() => {});
+  await settle();
   const top = await topOf(".proof-feedback", -70);
   await goTo(top);
-  await mustSee(".proof-feedback", "the owner corrects Rio");
-  await pan(top, top + 700, frames);
+  await mustSee(".proof-saved-reply", "the reply and the memory are saved");
+  await pan(top, top + 620, frames);
 });
 
 /* ---- 06 four dates, and the original kept beside the translation ------- */
@@ -328,7 +336,9 @@ if (ONLY) {
   // Merge rather than map over the old manifest: a beat captured for the very
   // first time is not in it, and mapping would drop the only thing this run
   // did. Storyboard order also keeps the manifest readable as the film's order.
-  const existing = JSON.parse(readFileSync(resolve(OUT, "beats.json"), "utf8"));
+  const existing = existsSync(resolve(OUT, "beats.json"))
+    ? JSON.parse(readFileSync(resolve(OUT, "beats.json"), "utf8"))
+    : [];
   const merged = new Map(existing.map((b) => [b.name, b]));
   for (const b of beats) merged.set(b.name, b);
   manifest = story.filter((b) => merged.has(b.name)).map((b) => merged.get(b.name));

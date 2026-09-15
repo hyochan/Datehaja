@@ -18,7 +18,7 @@ of real-world chemistry.
 | 0:07–0:39 | The pinned public replay: Juno and Sol, sixteen saved lines |
 | 0:39–0:50 | That same date's journal, each card naming the lines behind it |
 | 0:50–1:06 | Each Agent's independent note, and two recommendations nobody has answered |
-| 1:06–1:19 | The introduction letter as it landed in a mailbox, sent through AgentMail |
+| 1:06–1:19 | An introduction letter as it landed in a mailbox, sent through AgentMail — an earlier Juno/Sol rehearsal, not the bookshop date above |
 | 1:19–1:34 | Separate Rio rehearsal: saved correction, reply and memory |
 | 1:34–1:58 | Before/after, English translation beside the untouched originals |
 | 1:58–2:10 | Replay of a later encounter with a new partner |
@@ -28,10 +28,19 @@ of real-world chemistry.
 The letter beat is one real message, taken from the Concierge inbox after
 AgentMail delivered it and kept at
 [fixtures/introduction-letter.html](fixtures/introduction-letter.html) so the
-film can be rebuilt without opening a mailbox on camera. It is a send between
-two fictional personas; only its localhost links were rewritten to the
-submitted URL, and it carries no address, because the recipient lives in the
-mail metadata rather than the body. Nothing else in the film is a fixture.
+film can be rebuilt without opening a mailbox on camera. Only its localhost
+links were rewritten to the submitted URL, and it carries no recipient address,
+because the recipient lives in the mail metadata rather than the body. The
+sender's own concierge inbox does appear in a tracking parameter, and it is
+public already.
+
+It is a **different encounter** from the bookshop date the film has just been
+watching: an earlier Juno/Sol rehearsal on a development deployment, a salon
+scene with six journal moments, delivered to a test account's mailbox. The
+showcase pair pinned at `/watch` have `@demo.test.invalid` addresses and cannot
+be mailed at all, so no letter exists for that date — which is the point of
+showing one that does. The test owner happened to be named Juno too, which is
+why the greeting matches the signature. Nothing else in the film is a fixture.
 
 The learning proof preserves all 56 source lines and outcomes. Polite Korean
 persisted, but average reply length did not decrease. This is evidence of
@@ -68,8 +77,11 @@ sound off loses nothing.
 
 `submission/narration/` holds the reading that shipped — one MP3 per caption,
 plus a `voice.json` naming the voice and the exact line each clip reads. Those
-two steps therefore rebuild the submitted film byte for byte on any machine
-with FFmpeg, with no key and nothing to pay for. Setting `ELEVENLABS_API_KEY`
+two steps therefore rebuild the film with no key and nothing to pay for; from
+the same capture directory on the machine that shot it, the rebuild reproduced
+the submitted SHA-256 exactly. A fresh clone has to recapture first — the
+capture directory is deliberately outside git — and frames shot at a different
+moment will not hash the same. Setting `ELEVENLABS_API_KEY`
 takes precedence and renders a fresh reading instead; `DATEHAJA_TTS=say` falls
 back to the voice built into macOS. If a caption is edited without re-rendering,
 `demo:narrate` stops and names the line rather than shipping a voice reading
@@ -105,7 +117,7 @@ footage, not the current full film.
 
 ## Refresh the public record
 
-Target development `adorable-boar-359`. Generate with
+Target development `adorable-boar-359` first; production `merry-bass-190` pins the September 14 bookshop record the film shows. Generate with
 `showcase:startRefresh {}`, inspect the returned date using
 `showcase:preview`, and publish that exact completed record using
 `showcase:publish`. Both participants must be fictional and the journal,

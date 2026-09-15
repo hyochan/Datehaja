@@ -21,7 +21,7 @@ The intended loop is:
 3. **Let the search continue.** An uncertain encounter or a pass teaches the next search. The same pair is not repeated, and an empty pool shows the last actual check time. Replay saved encounters whenever you visit.
 4. **Receive a private letter when there is someone to introduce.** Only a mutual Agent recommendation brings an introduction. Each private letter contains a scene, an actual adjacent exchange, and a short personal reflection.
 5. **Humans decide privately.** No user sees the other verdict, the other decision, or who answered first.
-6. **Two yeses open contact.** One no quietly resumes searching. Fictional demo encounters are separate, never send debrief emails, and never expose a real address.
+6. **Two yeses open contact.** One no quietly resumes searching. Fictional showcase encounters are separate, never send debrief emails, and never expose a real address.
 
 ```mermaid
 flowchart LR
