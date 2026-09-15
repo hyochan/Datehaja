@@ -35,6 +35,26 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-16 - the new film deployed, and the old one kept playing
+
+The deploy reported success, the bundle was current, and the submitted URL was
+still serving the previous release's film. The captions and transcript beside
+it had already updated, which is what made it visible: three files published
+together from the same directory, two of them new and one of them not.
+
+The film sits behind a four-hour CDN cache and keeps its name across rebuilds,
+so the cache had no way to know it had changed. The stale entry had been warmed
+minutes earlier — by a check asking whether production was serving the new film
+yet, which is the sort of thing that only has to happen once.
+
+The page now asks for the film, its captions and its poster by hash. The build
+writes that hash from the bytes it just produced, so it cannot point at a film
+that is not the one on disk, and every rebuild is a new object to the cache.
+The deploy then fetches the same URL a visitor would and compares the bytes
+against `film-verification.json`, because the existing check only proved the
+bundle was current — which it always was.
+
+
 ### 2026-09-16 - the narration was cutting its own words off
 
 Twenty-seven of the film's thirty-four spoken lines ended while sound was still

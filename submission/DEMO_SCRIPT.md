@@ -77,6 +77,13 @@ uncaptioned fallback. It creates:
 - `public/demo/Datehaja-demo.mp4` and identical `submission/Datehaja-demo.mp4`
 - `public/demo/Datehaja-demo.vtt` and `public/demo/transcript.txt`
 - `public/demo/submission-poster.jpg`
+- `src/demoAssets.ts`, holding the new film's hash
+
+That last one is what gets the film past the CDN. These files keep their names
+across rebuilds and are cached for four hours at the submitted URL, so `/demo`
+asks for them by hash instead. Commit it with the film; the deploy fetches the
+same URL a visitor would and fails if the bytes do not match
+`film-verification.json`.
 
 The old `demo:record` and `demo:build` commands describe the earlier
 authenticated-account take and can overwrite the submission copy. For this

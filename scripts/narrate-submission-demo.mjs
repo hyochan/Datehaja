@@ -19,6 +19,7 @@ import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { createHash } from "node:crypto";
 import assert from "node:assert/strict";
+import { writeDemoAssetVersion } from "./demo-asset-version.mjs";
 
 const require = createRequire(import.meta.url);
 const optional = (path, select = (v) => v) => { try { return select(require(path)); } catch { return undefined; } };
@@ -197,5 +198,7 @@ report.audio = ENGINE === "elevenlabs"
     : `macOS speech synthesis, voice ${voice.name}; reads the burned captions verbatim`;
 report.decodedCompletely = true;
 writeFileSync("submission/film-verification.json", JSON.stringify(report, null, 2) + "\n");
+// Narration re-muxes the film, so the hash the page points at moved again.
+writeDemoAssetVersion(report.sha256);
 console.log(`\n${report.durationSeconds.toFixed(1)}s, ${audio.codec_name} ${audio.sample_rate}Hz, ${report.bytes} bytes`);
 console.log(`sha256 ${report.sha256}`);
