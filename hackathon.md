@@ -35,6 +35,25 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-16 - say on screen whose date the letter is
+
+The film spends forty seconds in a bookshop and then shows a delivered
+introduction letter. The letter is real, and it is a different encounter — an
+earlier Juno and Sol rehearsal in a salon scene, sent to a test account's
+mailbox, because the showcase pair pinned at `/watch` carry
+`@demo.test.invalid` addresses and cannot be mailed at all. That was documented
+and not shown, which left a viewer to assume continuity that is not there.
+
+The beat now carries a band above the message, outside it and in the film's own
+colour so it cannot read as part of the email, saying what it is. No caption
+changed, so the narration did not have to be re-rendered.
+
+Two stale descriptions went with it: the product memory still described the
+initial conversation as six turns extending to ten, which is the legacy path —
+new dates run twelve and extend to sixteen — and one log entry said "the current
+film is 134 seconds" in the present tense inside a dated entry.
+
+
 ### 2026-09-16 - the film narrated four things that were not on screen
 
 The narration was fixed; nobody had checked the picture. Pulling one frame from
@@ -296,10 +315,11 @@ The unchanged Korean source remains one click away. Polite speech persisted;
 average reply length did not decrease. Neither this nor the showcase is evidence
 of independent user satisfaction.
 
-The current film is `submission/Datehaja-demo.mp4`: 134 seconds, actual browser
-screens of saved fictional records, burned English captions, VTT and transcript.
-`/demo` plays it publicly on the development candidate. This supersedes the
-older film described in historical entries below. Capture/build provenance and
+The film as of this entry is `submission/Datehaja-demo.mp4`: 134 seconds,
+actual browser screens of saved fictional records, burned English captions, VTT
+and transcript. `/demo` plays it publicly on the development candidate. This
+supersedes the older film described in historical entries below, and is itself
+superseded by the 154-second narrated cut in the September 16 entries above. Capture/build provenance and
 the SHA-256 are in `submission/DEMO_SCRIPT.md` and `film-verification.json`.
 
 `/feedback` provides a bilingual, local-only response download. Recruitment

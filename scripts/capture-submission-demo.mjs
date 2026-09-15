@@ -270,6 +270,21 @@ await beat("08-private-email", async (frames) => {
   // Mail clients left-align a fixed-width table, which on a 1280 frame leaves
   // half the screen blank. Centring is framing, not a change to the letter.
   await page.addStyleTag({ content: "body>table{margin:0 auto!important}" });
+  // Say whose date this is. The film has just spent forty seconds in a
+  // bookshop, and this letter is an earlier Juno and Sol rehearsal — true, and
+  // the wrong thing to leave a viewer to assume. The band sits outside the
+  // message, in the film's own colour, so it cannot read as part of the email.
+  await page.evaluate(() => {
+    const band = document.createElement("div");
+    band.textContent =
+      "A real delivered message, kept as a fixture — an earlier Juno and Sol rehearsal, not the bookshop date";
+    Object.assign(band.style, {
+      background: "#151014", color: "#b9b2bb", font: "500 15px/1.5 -apple-system, Helvetica Neue, sans-serif",
+      letterSpacing: ".01em", padding: "14px 24px", textAlign: "center", position: "sticky", top: "0", zIndex: "9",
+    });
+    document.body.prepend(band);
+    document.body.style.background = "#151014";
+  });
   await page.waitForTimeout(900);
   const height = await page.evaluate(() => document.documentElement.scrollHeight);
   await pan(0, Math.max(0, height - 700), frames);

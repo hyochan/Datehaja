@@ -18,7 +18,7 @@ of real-world chemistry.
 | 0:07–0:39 | The pinned public replay: Juno and Sol, sixteen saved lines |
 | 0:39–0:50 | That same date's journal, each card naming the lines behind it |
 | 0:50–1:06 | Each Agent's independent note, and two recommendations nobody has answered |
-| 1:06–1:19 | An introduction letter as it landed in a mailbox, sent through AgentMail — an earlier Juno/Sol rehearsal, not the bookshop date above |
+| 1:06–1:19 | An introduction letter as it landed in a mailbox, sent through AgentMail — labelled on screen as an earlier Juno/Sol rehearsal, not the bookshop date above |
 | 1:19–1:34 | Separate Rio rehearsal: saved correction, reply and memory |
 | 1:34–1:58 | Before/after, English translation beside the untouched originals |
 | 1:58–2:10 | Replay of a later encounter with a new partner |
@@ -36,7 +36,9 @@ public already.
 
 It is a **different encounter** from the bookshop date the film has just been
 watching: an earlier Juno/Sol rehearsal on a development deployment, a salon
-scene with six journal moments, delivered to a test account's mailbox. The
+scene with six journal moments, delivered to a test account's mailbox. The beat
+says so on screen, in a band above the message and outside it, so a viewer does
+not have to read this file to know. The
 showcase pair pinned at `/watch` have `@demo.test.invalid` addresses and cannot
 be mailed at all, so no letter exists for that date — which is the point of
 showing one that does. The test owner happened to be named Juno too, which is
