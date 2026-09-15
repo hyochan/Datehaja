@@ -10,7 +10,7 @@ September 11 submission work: `/watch` pins a reviewed, newly generated English
 encounter between fictional people, including the verified journal and both
 independent reflections. Do not replace its verdict to produce an introduction.
 `/preview/agent-coaching?lang=en` translates the unchanged Korean four-date
-learning rehearsal; the Korean original stays accessible. The current 154-second
+learning rehearsal; the Korean original stays accessible. The current 155-second
 film is `/demo/Datehaja-demo.mp4`, presented at `/demo`, narrated and with
 English captions. `/demo` requests it by content hash, so a rebuild is not held
 behind the four-hour CDN cache.

@@ -1,6 +1,6 @@
 # Current submission film — September 16, 2026
 
-The canonical film is [Datehaja-demo.mp4](Datehaja-demo.mp4), **2:34**, narrated.
+The canonical film is [Datehaja-demo.mp4](Datehaja-demo.mp4), **2:35**, narrated.
 [Watch it on the submitted URL](https://merry-bass-190.convex.site/demo).
 It replaces the earlier search/intro cut, and production now serves it.
 
@@ -14,16 +14,18 @@ of real-world chemistry.
 
 | Time | Actual screen |
 | --- | --- |
-| 0:00–0:07 | Product hook |
-| 0:07–0:39 | The pinned public replay: Juno and Sol, sixteen saved lines |
-| 0:39–0:50 | That same date's journal, each card naming the lines behind it |
-| 0:50–1:06 | Each Agent's independent note, and two recommendations nobody has answered |
+| 0:00–0:09 | Product hook |
+| 0:09–0:41 | The pinned public replay: Juno and Sol, sixteen saved lines |
+| 0:40–0:51 | That same date's journal, each card naming the lines behind it |
+| 0:51–1:07 | Each Agent's independent note, and two recommendations nobody has answered |
 | 1:06–1:19 | An introduction letter as it landed in a mailbox, sent through AgentMail — labelled on screen as an earlier Juno/Sol rehearsal, not the bookshop date above |
 | 1:19–1:34 | Separate Rio rehearsal: saved correction, reply and memory |
 | 1:34–1:58 | Before/after, English translation beside the untouched originals |
-| 1:58–2:10 | Replay of a later encounter with a new partner |
-| 2:10–2:20 | The four job cards, each naming the service that handles it |
-| 2:20–2:34 | Two independent human yeses to open contact, then the closing page |
+| 1:57–2:09 | Replay of a later encounter with a new partner |
+| 2:09–2:19 | The four job cards, each naming the service that handles it |
+| 2:18–2:35 | Two independent human yeses to open contact, then the closing page |
+
+Beats cross-dissolve, so the rows overlap by four tenths of a second.
 
 The letter beat is one real message, taken from the Concierge inbox after
 AgentMail delivered it and kept at

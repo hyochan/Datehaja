@@ -1,10 +1,10 @@
 {
-  "durationSeconds": 154,
+  "durationSeconds": 155.416667,
   "width": 1280,
   "height": 840,
   "fps": "24/1",
-  "bytes": 5835779,
-  "sha256": "6077d9cb163116b70dad37ccc8d4b87a0f7f5050bbcaffc59aeeca89a3ef603d",
+  "bytes": 7472455,
+  "sha256": "d0268b9d112b23f6e496d8be1de1ba12c0436deea483ff904ece553cd334ebf3",
   "captions": "Burned English; VTT and transcript also provided",
   "audio": "ElevenLabs eleven_v3, voice Juniper; reads the burned captions verbatim",
   "decodedCompletely": true,
@@ -12,7 +12,7 @@
   "chapters": [
     {
       "name": "01-introduction",
-      "seconds": 7
+      "seconds": 9
     },
     {
       "name": "03-generated-date",
@@ -48,7 +48,7 @@
     },
     {
       "name": "10-human-choice",
-      "seconds": 14
+      "seconds": 17
     }
   ]
 }

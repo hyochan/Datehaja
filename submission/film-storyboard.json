@@ -1,7 +1,7 @@
 [
   {
     "name": "01-introduction",
-    "seconds": 7,
+    "seconds": 9,
     "captions": [
       "On Datehaja, you don't go on the first date.",
       "Your Agent meets theirs. You decide whether anything follows."
@@ -86,7 +86,7 @@
   },
   {
     "name": "10-human-choice",
-    "seconds": 14,
+    "seconds": 17,
     "captions": [
       "Agents can recommend. Contact opens only after two human yeses.",
       "One no, and the result never reveals who declined.",
