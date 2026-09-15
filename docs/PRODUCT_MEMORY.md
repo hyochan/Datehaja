@@ -150,10 +150,12 @@ introduction delivery still respects the recipient's email preferences.
 A simulated date needs something to happen. Six illustrated sets (cinema,
 market, bookshop, garden, gallery, café) each offer several small decisions.
 The Agents respond to actual invitations and choices using only their own
-brief, rather than giving each other compatibility speeches. An initial six-turn
+brief, rather than giving each other compatibility speeches. The initial
 conversation does not force a goodbye. If either Agent is still curious and
 has a concrete, safe follow-up question, and neither recommends passing, the
-same encounter may continue for four additional turns. This happens at most
+same encounter may continue: new dates run twelve turns and extend to sixteen,
+and the legacy six-turn dates extended to ten (`convex/agentDates.ts`
+`plannedTurns`). This happens at most
 once, and never after a participant has chosen to leave. The two Agents then
 review the full transcript independently. Private follow-up questions never
 enter public or owner projections. Stale initial reviews cannot finish an
