@@ -146,8 +146,15 @@ for (const [i, cue] of cues.entries()) {
   // Keep a breath at the end of the caption rather than butting up against it.
   const room = Math.max(0.4, cue.window - 0.25);
   const tempo = spoken > room ? Math.min(1.35, spoken / room) : 1;
-  clips.push({ file, start: cue.start, spoken, tempo });
-  console.log(`${String(i + 1).padStart(2)}. ${spoken.toFixed(1)}s in ${cue.window.toFixed(1)}s${tempo > 1 ? ` (tempo ${tempo.toFixed(2)})` : ""}  ${cue.text.slice(0, 46)}`);
+  // Let the screen arrive before the voice does, by a share of whatever the
+  // line can spare. Every line starting on its caption's tick is what made the
+  // reading sound like a metronome. A dense line comes in almost at once; one
+  // with room to breathe waits, which is what a person reading aloud does.
+  const slack = room - spoken / tempo;
+  const lead = Math.min(1, Math.max(0, slack * 0.45));
+  clips.push({ file, start: cue.start + lead, spoken, tempo, lead });
+  console.log(`${String(i + 1).padStart(2)}. ${spoken.toFixed(1)}s in ${cue.window.toFixed(1)}s` +
+    `${lead > 0.05 ? ` (+${lead.toFixed(2)}s in)` : ""}${tempo > 1 ? ` (tempo ${tempo.toFixed(2)})` : ""}  ${cue.text.slice(0, 44)}`);
 }
 
 /* --------------------------------- mux ----------------------------------- */

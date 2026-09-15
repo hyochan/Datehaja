@@ -17,7 +17,11 @@ const captures = resolve(process.argv[2] || ".scratch/submission/capture");
 const beats = JSON.parse(readFileSync(resolve(captures, "beats.json"), "utf8"));
 const story = JSON.parse(readFileSync("submission/film-storyboard.json", "utf8"));
 assert(new Set(beats.map(b => b.name)).size === beats.length, "Duplicate captured beats");
-const total = story.reduce((n, beat) => n + beat.seconds, 0);
+// Beats cross-dissolve rather than cut. Each transition eats this much from the
+// running time, so caption times are figured on the joined timeline rather than
+// on the sum of the beats.
+const DISSOLVE = 0.4;
+const total = story.reduce((n, beat) => n + beat.seconds, 0) - DISSOLVE * (story.length - 1);
 assert(total > 0 && total < 180, "Submission must be under three minutes");
 mkdirSync(".scratch/submission", { recursive: true });
 mkdirSync("public/demo", { recursive: true });
@@ -32,7 +36,7 @@ const time = (seconds, separator = ".") => {
   return `${String(Math.floor(ms / 3600000)).padStart(2,"0")}:${String(Math.floor(ms / 60000) % 60).padStart(2,"0")}:${String(Math.floor(ms / 1000) % 60).padStart(2,"0")}${separator}${String(ms % 1000).padStart(3,"0")}`;
 };
 const assTime = seconds => time(seconds).replace(/^(\d)0:/, "$1:").slice(0, -1);
-const cues = [], segments = [];
+const cues = [], segments = [], lengths = [];
 let offset = 0;
 for (const [index, beat] of story.entries()) {
   const source = beats.find(value => value.name === beat.name);
@@ -44,14 +48,29 @@ for (const [index, beat] of story.entries()) {
   const magic = readFileSync(resolve(captures, beat.name, "0001.png"));
   const codec = magic[0] === 0xff && magic[1] === 0xd8 ? "mjpeg" : "png";
   run(ffmpeg, ["-y", "-v", "error", "-framerate", String(source.frames / beat.seconds), "-c:v", codec, "-i", resolve(captures, beat.name, "%04d.png"), "-vf", "scale=1280:720:flags=lanczos,pad=1280:840:0:0:color=0x151014,fps=24,setsar=1", "-t", String(beat.seconds), "-an", "-c:v", "libx264", "-preset", "fast", "-crf", "21", "-pix_fmt", "yuv420p", "-threads", "4", output]);
-  segments.push(`file '${output.replaceAll("\\", "/").replaceAll("'", "'\\''")}'`);
+  segments.push(output);
+  lengths.push(beat.seconds);
   beat.captions.forEach((caption, i) => cues.push({ start: offset + beat.seconds * i / beat.captions.length, end: offset + beat.seconds * (i + 1) / beat.captions.length, caption }));
-  offset += beat.seconds;
+  offset += beat.seconds - DISSOLVE;
   console.log(`Encoded ${index + 1}/${story.length}: ${beat.name}`);
 }
-writeFileSync(resolve(scratch, "concat.txt"), segments.join("\n"));
+for (let i = 0; i < cues.length - 1; i++) cues[i].end = Math.min(cues[i].end, cues[i + 1].start);
 const joined = resolve(scratch, "joined.mp4");
-run(ffmpeg, ["-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", resolve(scratch, "concat.txt"), "-c", "copy", joined]);
+// Each xfade shortens the result by its own duration, so every offset after the
+// first is measured against a timeline that has already lost the earlier ones.
+let chain = "[0:v]", at = 0;
+const steps = [];
+for (let i = 1; i < segments.length; i++) {
+  at += lengths[i - 1] - DISSOLVE;
+  const out = i === segments.length - 1 ? "[vout]" : `[vx${i}]`;
+  steps.push(`${chain}[${i}:v]xfade=transition=fade:duration=${DISSOLVE}:offset=${at.toFixed(3)}${out}`);
+  chain = out;
+}
+run(ffmpeg, ["-y", "-v", "error", ...segments.flatMap((f) => ["-i", f]),
+  "-filter_complex", steps.join(";"), "-map", "[vout]",
+  // The captions are burned in a second pass, so this one is an intermediate.
+  // Encoding it at the delivery quality would spend the loss twice.
+  "-c:v", "libx264", "-preset", "fast", "-crf", "16", "-pix_fmt", "yuv420p", "-threads", "4", "-an", joined]);
 const ass = `[Script Info]\nScriptType: v4.00+\nPlayResX: 1280\nPlayResY: 840\nWrapStyle: 2\n\n[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\nStyle: Default,Helvetica Neue,31,&H00EEECF0,&H00EEECF0,&H00151014,&H00151014,0,0,0,0,100,100,0.6,0,1,0,0,2,90,90,40,1\n\n[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n` + cues.map(cue => `Dialogue: 0,${assTime(cue.start)},${assTime(cue.end)},Default,,0,0,0,,${cue.caption.replaceAll("\n", "\\N")}`).join("\n");
 const assPath = resolve(scratch, "captions.ass");
 writeFileSync(assPath, ass);

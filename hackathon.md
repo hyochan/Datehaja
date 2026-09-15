@@ -35,6 +35,30 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-16 - the film was accurate and it was a metronome
+
+Everything in it was true and nothing in it had a pulse. Thirty-four captions,
+each about the same length, each with the voice starting on its tick, and every
+beat butting against the next with a hard cut. Watched end to end it read as a
+correct slideshow.
+
+Three changes, none of which touch a caption or a clip, so no line had to be
+re-rendered. Beats cross-dissolve over four tenths of a second instead of
+cutting, which costs 3.6 seconds of running time and is why caption times are
+now figured on the joined timeline rather than the sum of the beats. Each
+line's voice now enters a share of whatever time that line can spare, so a
+dense line comes in almost at once and a sparse one lets the screen sit for a
+second first — between 0.09s and 1.0s across the film, where before every line
+started on the tick. And the two beats that were being cut away from while they
+were still landing, the opening hook and the closing card, got two and three
+seconds more.
+
+Two minutes thirty-five, -16.4 LUFS, still no line played at a speed nobody
+spoke it at. The frame-to-caption check was re-run: every caption still shows
+the screen it describes, and no caption now overlaps the dissolve into the next
+beat.
+
+
 ### 2026-09-16 - say on screen whose date the letter is
 
 The film spends forty seconds in a bookshop and then shows a delivered
