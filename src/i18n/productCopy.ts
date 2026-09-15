@@ -152,6 +152,7 @@ export const productCopy: Record<string, readonly string[]> = {
   "PRIVATE EMAIL": ["비공개 이메일", "非公開メール", "PRIVATE E-MAIL", "E-MAIL PRIVÉ", "PRIVÉ-E-MAIL", "PRIVAT E-POST"],
   "Juno is back.": ["주노가 돌아왔어요.", "Junoが戻りました。", "Juno ist zurück.", "Juno est de retour.", "Juno is terug.", "Juno är tillbaka."],
   "Your date report is ready": ["데이트 리포트가 도착했어요", "デートのレポートが届きました", "Dein Date-Bericht ist fertig", "Votre compte rendu est prêt", "Je dateverslag is klaar", "Din dejtrapport är klar"],
+  "handled by": ["담당", "担当", "erledigt von", "assuré par", "uitgevoerd door", "sköts av"],
   "Listens and remembers": ["듣고 기억해요", "聞いて、覚える", "Hört zu und merkt es sich", "Écoute et retient", "Luistert en onthoudt", "Lyssnar och minns"],
   "Your conversations shape who Juno looks for.": ["나눈 대화가 주노의 다음 탐색을 더 정확하게 만들어요.", "あなたとの会話が、Junoの探す相手を形づくります。", "Deine Gespräche formen, wen Juno sucht.", "Vos conversations façonnent le genre de personne que Juno recherche.", "Jullie gesprekken bepalen naar wie Juno zoekt.", "Dina samtal formar vem Juno letar efter."],
   "Finds a fresh place and spark": ["지금 어울리는 장소와 화제를 찾아요", "新しい場所ときっかけを見つける", "Findet einen neuen Ort und Anlass", "Trouve un lieu et une étincelle du moment", "Vindt een nieuwe plek en aanleiding", "Hittar en ny plats och gnista"],

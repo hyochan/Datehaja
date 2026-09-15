@@ -557,24 +557,30 @@ function AgentEverydayJourney({ t }: { t: Translate }) {
       stage: t("BEFORE"),
       title: t("Listens and remembers"),
       body: t("Your conversations shape who Juno looks for."),
+      // Which service does this job. Named because each one is load-bearing:
+      // remove it and the step above it stops, rather than looking plainer.
+      runs: "OpenAI",
       mark: "01",
     },
     {
       stage: t("SCOUTING"),
       title: t("Finds a fresh place and spark"),
       body: t("Current public place and culture data—not stale suggestions."),
+      runs: "Firecrawl",
       mark: "02",
     },
     {
       stage: t("DURING"),
       title: t("Keeps the date room live"),
       body: t("Drop in anytime and watch the conversation unfold."),
+      runs: "Convex",
       mark: "03",
     },
     {
       stage: t("AFTER"),
       title: t("Brings the result home"),
       body: t("A private report appears in the app and arrives by email."),
+      runs: "AgentMail",
       mark: "04",
     },
   ];
@@ -611,6 +617,9 @@ function AgentEverydayJourney({ t }: { t: Translate }) {
               <small>{moment.stage}</small>
               <b>{moment.title}</b>
               <p>{moment.body}</p>
+              <em className="agent-service-runs">
+                {t("handled by")} <span>{moment.runs}</span>
+              </em>
             </div>
           </li>
         ))}
