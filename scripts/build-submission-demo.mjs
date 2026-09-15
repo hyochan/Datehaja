@@ -4,6 +4,7 @@ import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { createHash } from "node:crypto";
 import assert from "node:assert/strict";
+import { writeDemoAssetVersion } from "./demo-asset-version.mjs";
 
 // Frames are captured through the browser UI. This builder never creates dialogue
 // or alters an outcome. Keep the private capture directory outside git.
@@ -69,4 +70,5 @@ run(ffmpeg, ["-y", "-v", "error", "-ss", "3", "-i", film, "-frames:v", "1", "-up
 copyFileSync(film, "submission/Datehaja-demo.mp4");
 const report = { durationSeconds: Number(metadata.format.duration), width: metadata.streams[0].width, height: metadata.streams[0].height, fps: metadata.streams[0].avg_frame_rate, bytes: Number(metadata.format.size), sha256: createHash("sha256").update(readFileSync(film)).digest("hex"), captions: "Burned English; VTT and transcript also provided", audio: "None", decodedCompletely: true, source: "Browser UI screenshots of saved fictional records; playback retimed", chapters: story.map(beat => ({ name: beat.name, seconds: beat.seconds })) };
 writeFileSync("submission/film-verification.json", JSON.stringify(report, null, 2) + "\n");
+writeDemoAssetVersion(report.sha256);
 console.log(JSON.stringify(report, null, 2));
