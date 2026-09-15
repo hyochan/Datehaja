@@ -1,7 +1,8 @@
 /**
  * Speak the film's captions with ElevenLabs and mux the result onto the video.
  *
- *   ELEVENLABS_API_KEY=... bun run demo:narrate
+ *   bun run demo:narrate                      # the reading that shipped
+ *   ELEVENLABS_API_KEY=... bun run demo:narrate   # a fresh one
  *
  * Runs after `demo:submission`. The burned captions are the script, read from
  * the VTT the builder just wrote, so the voice can never drift from the words
@@ -12,7 +13,7 @@
  * next one, because a voice describing the previous screen is worse than no
  * voice at all.
  */
-import { mkdtempSync, readFileSync, writeFileSync, copyFileSync, mkdirSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, writeFileSync, copyFileSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
@@ -42,8 +43,15 @@ const VOICE_NAME = localEnv("ELEVENLABS_VOICE") || "Rachel";
 // local one is not as good, but it is the difference between hearing the
 // pacing today and waiting on a credential — and swapping engines later only
 // re-runs this step, never the capture.
-const ENGINE = localEnv("DATEHAJA_TTS") || (KEY ? "elevenlabs" : "say");
-assert(["elevenlabs", "say"].includes(ENGINE), `Unknown DATEHAJA_TTS: ${ENGINE}`);
+// "clips" reads one already-rendered file per caption, in caption order, for a
+// voice this machine cannot synthesise itself. `submission/narration` holds the
+// reading that shipped, so the film rebuilds without anyone paying for a key;
+// a key still wins, because a fresh render is the point of having one.
+const SHIPPED = "submission/narration";
+const CLIPS = localEnv("DATEHAJA_VOICE_CLIPS") || (existsSync(SHIPPED) ? SHIPPED : undefined);
+const ENGINE = localEnv("DATEHAJA_TTS") || (KEY ? "elevenlabs" : CLIPS ? "clips" : "say");
+assert(["elevenlabs", "say", "clips"].includes(ENGINE), `Unknown DATEHAJA_TTS: ${ENGINE}`);
+assert(ENGINE !== "clips" || CLIPS, "Set DATEHAJA_VOICE_CLIPS to a directory of <index>.mp3 files.");
 assert(ENGINE !== "elevenlabs" || KEY, "Set ELEVENLABS_API_KEY, in the environment or .env.local.");
 const SAY_VOICE = localEnv("DATEHAJA_SAY_VOICE") || "Samantha";
 
@@ -71,8 +79,22 @@ const cues = [...vtt.matchAll(/(\d\d:\d\d:\d\d\.\d\d\d) --> (\d\d:\d\d:\d\d\.\d\
 assert(cues.length > 0, "No caption cues in public/demo/Datehaja-demo.vtt");
 
 /* --------------------------------- voice --------------------------------- */
-let voice = { name: SAY_VOICE };
-if (ENGINE === "elevenlabs") {
+/** What a directory of clips says it is, if it says anything. */
+const manifest = (() => {
+  try { return JSON.parse(readFileSync(resolve(CLIPS, "voice.json"), "utf8")); } catch { return null; }
+})();
+let voice = { name: ENGINE === "clips" ? (localEnv("DATEHAJA_VOICE_LABEL") || manifest?.label || "pre-rendered clips") : SAY_VOICE };
+if (ENGINE === "clips") {
+  // A clip reads whatever it was rendered from. Once the captions move, the
+  // voice is describing a line that is no longer on screen, and nothing else
+  // in the pipeline would notice.
+  manifest?.captions?.forEach((text, i) => assert(
+    cues[i]?.text === text,
+    `Caption ${i + 1} has changed since these clips were rendered.\n  clip: ${text}\n  film: ${cues[i]?.text ?? "(none)"}\nRe-render with ELEVENLABS_API_KEY set.`,
+  ));
+  assert(!manifest?.captions || manifest.captions.length === cues.length, `The film has ${cues.length} captions; ${CLIPS} was rendered for ${manifest.captions.length}.`);
+  console.log(`Voice: ${voice.name}, from ${CLIPS}`);
+} else if (ENGINE === "elevenlabs") {
   const voices = await fetch("https://api.elevenlabs.io/v1/voices", { headers: { "xi-api-key": KEY } });
   assert(voices.ok, `ElevenLabs voices lookup failed (${voices.status})`);
   const list = (await voices.json()).voices ?? [];
@@ -85,6 +107,11 @@ if (ENGINE === "elevenlabs") {
 
 /** Write one spoken line, whichever engine is in play. */
 async function synthesize(text, index) {
+  if (ENGINE === "clips") {
+    const file = resolve(CLIPS, `${index}.mp3`);
+    assert(existsSync(file), `Missing clip for caption ${index + 1}: ${file}`);
+    return file;
+  }
   if (ENGINE === "say") {
     const aiff = resolve(scratch, `${index}.aiff`);
     const file = resolve(scratch, `${index}.mp3`);
@@ -131,7 +158,10 @@ const chains = clips.map((c, i) => {
   const tempo = c.tempo > 1 ? `atempo=${c.tempo.toFixed(4)},` : "";
   return `[${i + 1}:a]${tempo}adelay=${delay}|${delay},apad[a${i}]`;
 });
-const mix = `${clips.map((_, i) => `[a${i}]`).join("")}amix=inputs=${clips.length}:duration=longest:dropout_transition=0,volume=${clips.length},atrim=0:${duration},asetpts=N/SR/TB[out]`;
+// amix averages, so the gain puts one voice back at its own level. loudnorm
+// then lands the result near the -16 LUFS the web expects: the raw mix measured
+// -25, which plays as "turn it up" on every device someone might judge it on.
+const mix = `${clips.map((_, i) => `[a${i}]`).join("")}amix=inputs=${clips.length}:duration=longest:dropout_transition=0,volume=${clips.length},loudnorm=I=-16:TP=-1.5:LRA=11,atrim=0:${duration},asetpts=N/SR/TB[out]`;
 const narrated = resolve(scratch, "narrated.mp4");
 run(ffmpeg, ["-y", "-v", "error", "-i", film, ...inputs,
   "-filter_complex", [...chains, mix].join(";"),
@@ -162,7 +192,9 @@ report.bytes = Number(probe.format.size);
 report.sha256 = createHash("sha256").update(readFileSync(film)).digest("hex");
 report.audio = ENGINE === "elevenlabs"
   ? `ElevenLabs ${MODEL}, voice ${voice.name}; reads the burned captions verbatim`
-  : `macOS speech synthesis, voice ${voice.name}; reads the burned captions verbatim`;
+  : ENGINE === "clips"
+    ? `${voice.name}; reads the burned captions verbatim`
+    : `macOS speech synthesis, voice ${voice.name}; reads the burned captions verbatim`;
 report.decodedCompletely = true;
 writeFileSync("submission/film-verification.json", JSON.stringify(report, null, 2) + "\n");
 console.log(`\n${report.durationSeconds.toFixed(1)}s, ${audio.codec_name} ${audio.sample_rate}Hz, ${report.bytes} bytes`);

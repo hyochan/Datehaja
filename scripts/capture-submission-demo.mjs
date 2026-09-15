@@ -13,7 +13,7 @@
  * selectors at capture time rather than hardcoded, because the public replay's
  * height depends on whichever record is pinned.
  */
-import { mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createRequire } from "node:module";
 
@@ -26,6 +26,9 @@ const arg = (flag, fallback) => {
 };
 const SITE = arg("--site", "https://merry-bass-190.convex.site").replace(/\/$/, "");
 const OUT = resolve(arg("--out", ".scratch/submission/capture"));
+// Re-shoot one beat without spending fourteen minutes on the other nine. The
+// manifest is merged rather than replaced, so the build still sees every beat.
+const ONLY = arg("--only", "");
 // Frames per second of finished film. The builder retimes each beat to the
 // storyboard's duration, so this only sets how smooth the motion is — and it is
 // the whole difference between a pan that glides and one that stutters. At four
@@ -92,6 +95,7 @@ async function open(path) {
 
 const beats = [];
 async function beat(name, run) {
+  if (ONLY && name !== ONLY) return;
   dir = resolve(OUT, name);
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir, { recursive: true });
@@ -161,6 +165,22 @@ await beat("10-human-choice", async (frames) => {
   await pan(top + 200, top + 620, frames);
 });
 
+/* ---- 08 the letter, as it actually lands in a mailbox ------------------ */
+// A real message pulled from the Concierge inbox and kept as a fixture, because
+// the film otherwise never showed the one moment the whole loop exists for: the
+// letter arriving. It is a saved send between two fictional personas and
+// carries no address — the recipient lives in the mail metadata, not the body.
+await beat("08-private-email", async (frames) => {
+  const letter = readFileSync(resolve("submission/fixtures/introduction-letter.html"), "utf8");
+  await page.setContent(letter, { waitUntil: "networkidle" });
+  // Mail clients left-align a fixed-width table, which on a 1280 frame leaves
+  // half the screen blank. Centring is framing, not a change to the letter.
+  await page.addStyleTag({ content: "body>table{margin:0 auto!important}" });
+  await page.waitForTimeout(900);
+  const height = await page.evaluate(() => document.documentElement.scrollHeight);
+  await pan(0, Math.max(0, height - 700), frames);
+});
+
 /* ---- the learning proof, in English ------------------------------------ */
 await open("/preview/agent-coaching?lang=en");
 
@@ -205,10 +225,15 @@ await beat("04-grounded-journal", async (frames) => {
   await pan(top, top + 520, frames);
 });
 
-writeFileSync(resolve(OUT, "beats.json"), JSON.stringify(beats, null, 2) + "\n");
+let manifest = beats;
+if (ONLY) {
+  const existing = JSON.parse(readFileSync(resolve(OUT, "beats.json"), "utf8"));
+  manifest = existing.map((b) => beats.find((c) => c.name === b.name) ?? b);
+}
+writeFileSync(resolve(OUT, "beats.json"), JSON.stringify(manifest, null, 2) + "\n");
 await browser.close();
 
-const missing = story.filter((b) => !beats.some((c) => c.name === b.name)).map((b) => b.name);
+const missing = story.filter((b) => !manifest.some((c) => c.name === b.name)).map((b) => b.name);
 if (missing.length) throw new Error(`Storyboard beats never captured: ${missing.join(", ")}`);
-console.log(`\n${beats.reduce((n, b) => n + b.frames, 0)} frames in ${OUT}`);
+console.log(`\n${manifest.reduce((n, b) => n + b.frames, 0)} frames in ${OUT}`);
 console.log(`Next: node scripts/build-submission-demo.mjs ${OUT}`);

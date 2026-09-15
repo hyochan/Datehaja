@@ -1,18 +1,18 @@
 {
-  "durationSeconds": 134,
+  "durationSeconds": 154,
   "width": 1280,
   "height": 840,
   "fps": "24/1",
-  "bytes": 4050630,
-  "sha256": "7386b5b995e726ee3a7e056b42e91e266c2f2d1d84e8b1b487d160b1861645f8",
+  "bytes": 5576856,
+  "sha256": "35c3abd2d890446ce5fb316982b62aa060f7779ccf7725b44d1a311ef93bac1c",
   "captions": "Burned English; VTT and transcript also provided",
-  "audio": "macOS speech synthesis, voice Samantha; reads the burned captions verbatim",
+  "audio": "ElevenLabs eleven_v3, voice Juniper; reads the burned captions verbatim",
   "decodedCompletely": true,
   "source": "Browser UI screenshots of saved fictional records; playback retimed",
   "chapters": [
     {
       "name": "01-introduction",
-      "seconds": 6
+      "seconds": 7
     },
     {
       "name": "03-generated-date",
@@ -20,15 +20,19 @@
     },
     {
       "name": "04-grounded-journal",
-      "seconds": 10
+      "seconds": 11
     },
     {
       "name": "05-private-reason",
-      "seconds": 14
+      "seconds": 16
+    },
+    {
+      "name": "08-private-email",
+      "seconds": 13
     },
     {
       "name": "07-saved-feedback",
-      "seconds": 14
+      "seconds": 15
     },
     {
       "name": "06-before-after",
@@ -44,7 +48,7 @@
     },
     {
       "name": "10-human-choice",
-      "seconds": 12
+      "seconds": 14
     }
   ]
 }
