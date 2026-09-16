@@ -406,10 +406,9 @@ test('a stale positive verdict cannot introduce people whose goals changed durin
     score: 90, summary: 'An existing conversation.', sparks: [], frictions: [], demoConsent: 'pending',
   });
   const view = await asUser(t, userId).query(api.agentDates.get, { agentDateId: dateId });
-  // Closed by the goals change, not by either human. Neither has answered, so
-  // both are still shown an open gate; a `closed` here would read as a decline.
-  expect((await t.run(ctx => ctx.db.get('agentDates', dateId)))?.status).toBe('closed');
-  expect(view?.date).toMatchObject({ status: 'debrief_ready' });
+  // Closed by the goals change, not by a decline, so it is shown as closed.
+  // Only a human no is hidden from whoever has not answered.
+  expect(view?.date).toMatchObject({ status: 'closed', introductionReady: false });
   expect(view?.counterpart.contactEmail).toBeNull();
   expect((await search(t, userId))?.status).toBe('searching');
   expect(await t.run(ctx => ctx.db.query('notifications').collect())).toHaveLength(0);
