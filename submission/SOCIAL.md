@@ -51,88 +51,84 @@ automated tests are separate evidence.
 - Learning evidence: https://merry-bass-190.convex.site/preview/agent-coaching?lang=en
 - Source: https://github.com/hyochan/Datehaja
 
-## X post
+## X post — posted
 
-Posted as an open question, not a launch. The product's own pages say the
-simulations prove nothing about real chemistry; a post that claimed otherwise
-would be the one thing in this submission that does not match its evidence. A
-question also invites replies, and replies are what "engagement counts" means.
+Posted 2026-09-16 from @hyodotdev. Opened as a question rather than a launch:
+the product's own pages say the simulations prove nothing about real chemistry,
+so a launch announcement would have been the one claim in this entry its own
+evidence does not support. A question also invites replies, and replies are
+what "engagement counts" means.
 
-A thread, because the hook fits in one post and the safety detail does not.
-Lengths counted with the link as 23 characters, the way X counts it.
-
-**Post 1 — 243/280**
-
-> A dating app where you don't go on the first date. Your AI agent does, then
-> comes home and tells you if it's worth meeting.
+> Maybe it's just me, but work asks for more focus each year and dating loses
+> the hours.
 >
-> Good idea or a terrible one? I don't know yet, so it's open.
+> So I built what I kept imagining: an agent that dates for me and tells me how
+> it went.
 >
-> Watch a finished one, no signup:
+> Not sure it's needed. Sharing anyway:
 > https://merry-bass-190.convex.site/watch
-
-**Reply — 261/280.** Tags go here so the first post stays a sentence rather than
-a list of handles.
-
-> The agent is always identified as AI and can never consent to contact for you.
-> It carries only what you told it privately, and it comes back with the case
-> against meeting too.
 >
-> Built for @convex All Gas with @OpenAI @firecrawl @agentmail
+> @convex @OpenAI @firecrawl @agentmail
+
+276 of 280, counting the link as 23 the way X does. The four handles are in the
+post itself rather than a reply, because the submission links to the post and a
+judge should not have to open a thread to see that the tagging asked for in the
+rules was done.
+
+Optional reply, if the thread is worth continuing:
+
+> How it actually works: the agent is always identified as AI and can never
+> consent to contact for you. It carries only what you told it privately, and it
+> comes home with the case against meeting too.
+>
+> Code and the full build log:
 > https://github.com/hyochan/Datehaja
-
-**Korean, 133/280**, if posting to the Korean audience too:
-
-> 첫 데이트를 내가 안 가는 데이팅 앱을 만들었습니다. 내 AI 에이전트가 대신 가요.
->
-> 좋은 아이디어인지 최악인지 아직 모르겠어서, 일단 열어둡니다.
->
-> 이미 끝난 데이트 하나 보기 (가입 없이):
-> https://merry-bass-190.convex.site/watch
-
-Upload the film natively if the account supports video posting; native video
-travels further than a link. Do not call these fictional rehearsals customer
-testimonials.
 
 ## LinkedIn post
 
-> I spent three weeks building a dating app where you don't go on the first
-> date.
+Same register, more room. The first line is what shows before "see more", so it
+carries the hedge and the observation on its own.
+
+> Maybe it's just me, but work asks for more focus each year — and dating is the
+> thing that quietly loses the hours.
 >
-> Your AI agent goes instead. It is always identified as AI, it carries only
-> what you told it privately, and it meets someone else's agent. Then it comes
-> home and tells you what happened — including when it thinks you should not
-> meet.
+> I kept imagining an agent that could go instead. Not a matchmaker, and not a
+> chatbot pretending to be me: a second self that meets someone else's agent,
+> has the conversation I don't have time for, and comes home and tells me how it
+> went — including when it thinks I shouldn't bother.
 >
-> I am genuinely unsure whether this is a good idea. It could be the honest
-> version of a first date, or it could be the thing that finally removes the
-> person from dating. I could not work it out by thinking about it, so I built
-> it and opened it.
+> So I built it, to find out whether it is actually any use.
 >
-> What I can show you is the evidence rather than the pitch:
+> Two things you can open without an account:
 >
-> · A finished agent date, no account needed — sixteen saved lines, a journal
-> that points back at the exact dialogue behind each moment, and both agents'
-> private notes: https://merry-bass-190.convex.site/watch
+> → A finished agent date. Sixteen saved lines in a bookshop, a journal that
+> points back at the exact dialogue behind each moment, and both agents' private
+> notes afterwards.
+> https://merry-bass-190.convex.site/watch
 >
-> · The same agent across four dates and three corrections from its owner, 56
-> lines kept in full. Polite speech persisted; replies did not get shorter. The
-> limits are shown next to the improvement:
+> → The same agent across four dates and three corrections from its owner, 56
+> lines kept in full. The polite register it was asked for persisted. The
+> shorter replies it was asked for did not. Both are shown.
 > https://merry-bass-190.convex.site/preview/agent-coaching?lang=en
 >
-> An agent recommendation never opens contact. Only two independent human yeses
-> do, and a no never reveals who said it.
+> What I was strict about: the agent is always identified as AI, it carries only
+> what you told it privately, and it can never consent to contact for you. A
+> recommendation opens nothing — only two independent human yeses do, and a no
+> never reveals who said it.
 >
-> The people in those records are fictional, no first-time user study has been
-> run yet, and a simulation is not chemistry. Which is the part I would most
-> like to be told I am wrong about.
+> What I cannot claim: the people in those records are fictional, no first-time
+> user study has run yet, and a simulation is not chemistry.
+>
+> So I honestly do not know whether this is useful or just a strange thing to
+> have made. That is the part I would like to hear about.
 >
 > Built for the Convex All Gas hackathon with @Convex @OpenAI @Firecrawl
 > @AgentMail. Code and the full build log, mistakes included:
 > https://github.com/hyochan/Datehaja
 
-Select the actual company mentions in the composer, rather than assuming
-plain pasted @ text creates a platform mention.
+Select the actual company mentions in the composer rather than assuming plain
+pasted @ text creates a mention — LinkedIn does not linkify it on its own, and
+an unlinked handle notifies nobody.
 
 ## Release evidence
 
