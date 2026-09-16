@@ -35,6 +35,33 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-16 - submitted, after an outside reader found one claim that was not true
+
+The entry is in: https://vibeapps.dev/tag/allgashackathon. Film unlisted on
+YouTube, both social posts up with real sponsor mentions, and the submitted URL
+is the convex.site one.
+
+The description nearly went in with a sentence that a judge could have
+disproved from this repository. It said of Convex, OpenAI, Firecrawl and
+AgentMail that "each one is load-bearing: remove it and the step above it
+stops". Three of those are. Firecrawl is not: `convex/agentDates.ts` takes
+`research.hits[...]`, and when the search returns nothing the scene still comes
+from `dateScene()` and the date runs without a citation. The sentence now names
+that exception itself, which is a better claim than the one it replaced,
+because the other three become checkable rather than decorative.
+
+Two smaller things went with it. The Convex paragraph listed features without
+ever saying auth, which is one of the words the judging criteria uses. And the
+description opened by repeating the app title, which the form already carries
+twice.
+
+The custom domain was retired earlier the same day, so everything a judge or an
+emailed link touches is now on the submitted deployment.
+
+What is still not claimed: no independent user has used this. The submission
+says so.
+
+
 ### 2026-09-16 - every debrief email was leading with a broken image
 
 Asking whether the custom domain could be the submitted URL turned up something

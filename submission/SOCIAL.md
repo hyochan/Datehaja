@@ -1,6 +1,7 @@
 # Submission and social copy — September 16, 2026
 
-**Posted 2026-09-16. The submission receipt is not claimed until the form is in.**
+**Posted and submitted 2026-09-16.** The entry is live on vibeapps.dev under
+the AllGasHackathon tag.
 Every app link below is on the submitted production deployment and was checked
 there. The film itself is unlisted on YouTube (https://youtu.be/K35t6VaF0iI); the repository keeps its
 captions and transcript, not the file.
@@ -14,42 +15,26 @@ any.
 
 ## Submission description
 
-**Datehaja — my second self dates for me.**
+As submitted:
 
-Create a private AI Dating Agent, let it meet other Agents, hear what happened,
-and tell it what felt like you. The next encounter carries that guidance.
+Create a private AI Dating Agent, let it meet other Agents, hear what happened, and tell it what felt like you. The next encounter carries that guidance.
 
-The key demonstration follows one fictional owner's Agent through four actual
-scheduled dates and three saved corrections. Read the correction, the Agent's
-reply and memory, then compare its first and latest lines. The English view
-preserves the Korean original. Polite speech persisted; shorter replies did
-not consistently follow. We show the limits along with the improvement.
+**Watch a finished date, no account needed:** https://merry-bass-190.convex.site/watch — sixteen saved lines between two fictional Agents in a bookshop. Juno opens by saying what it is: an AI standing in. The journal points each moment back to the exact lines behind it. Each Agent then writes home independently; both recommended meeting, and the record stops there, because contact opens only after two human yeses. No compatibility score, no forced match.
 
-A new English public replay follows two fictional Agents through sixteen saved
-lines in a bookshop. Its journal points back to the exact dialogue behind each
-moment. Each Agent then writes home independently; both recommended meeting,
-and the record stops there, because contact opens only after two human yeses.
-There is no compatibility score and no forced match.
+**The learning proof:** https://merry-bass-190.convex.site/preview/agent-coaching?lang=en — one fictional owner's Agent across four actual scheduled dates and three saved corrections, 56 lines kept in full. Read the correction, the Agent's saved reply and the memory it carried, then compare its first and latest lines. The English view keeps the Korean original beside it, always labelled. Polite speech persisted; shorter replies did not consistently follow. The limits are shown with the improvement.
 
-Convex stores every turn, schedules the next, streams shared progress and
-enforces private data projections and transactional consent. OpenAI generates
-dialogue, coaching and independently verified reflections. Firecrawl supplies
-cultural inspiration with an inspectable source. AgentMail sends sign-in codes
-and separate eligible introduction letters; the public showcase sends no email.
-The React app is served with Convex static hosting.
+**What the sponsors actually do**
 
-An Agent recommendation never opens contact. Only two independent human yeses
-do. The simulations do not establish real-world chemistry.
+- **Convex** is the whole backend: it stores every turn, schedules the next one, streams the date live to anyone watching, handles auth, and enforces both the private data projections and the transactional two-sided consent. The React app is served from Convex static hosting.
+- **OpenAI** generates the dialogue, the private coaching, the letters, and the reflections that are fact-checked against the transcript. A letter that fails that check is withheld rather than sent.
+- **Firecrawl** searches the live web for a cultural spark near a shared interest, and the source title and URL stay attached to the date so anyone can check them.
+- **AgentMail** sends the sign-in codes and the separate introduction letters, one per owner, never both to either.
 
-Independent first-use testing is being prepared; no participant satisfaction,
-retention or demand results are claimed. The public fictional examples and
-automated tests are separate evidence.
+Three of those four are load-bearing. Without Convex there is no app, without OpenAI there is no conversation, and without AgentMail nobody can sign in or be told the result. Firecrawl is the honest exception: if the search returns nothing the date still runs, and only the citation is missing.
 
-- App: https://merry-bass-190.convex.site
-- 2:35 narrated, English-captioned film: https://youtu.be/K35t6VaF0iI
-- Public replay: https://merry-bass-190.convex.site/watch
-- Learning evidence: https://merry-bass-190.convex.site/preview/agent-coaching?lang=en
-- Source: https://github.com/hyochan/Datehaja
+**What this is not.** An Agent recommendation never opens contact — only two independent human yeses do. The simulations do not establish real-world chemistry. Independent first-use testing is prepared but not yet run, so no participant satisfaction, retention or demand results are claimed. The public examples use fictional people.
+
+**Build log:** `hackathon.md` at the repo root records every session, including the mistakes — a public replay that was still in the wrong language, a film that narrated four things that were not on screen, and a measurement that turned out to be wrong and how.
 
 ## X post — posted
 
@@ -143,7 +128,7 @@ an unlinked handle notifies nobody.
 | X reply, carrying the safety detail | https://x.com/hyodotdev/status/2100047689652264996 |
 | LinkedIn post | https://www.linkedin.com/feed/update/urn:li:activity:7505814301929156608/ |
 | Sponsor tagging | Real mentions on both: X linkifies handles itself; the four LinkedIn company mentions were selected from the composer, so all four were notified |
-| Final submission receipt | Pending |
+| Final submission | Submitted 2026-09-16, listed under https://vibeapps.dev/tag/allgashackathon |
 
 Submission form: https://vibeapps.dev/judging/convex-all-gas-hackathon-openai/submit
 Official event: https://www.convex.dev/hackathons/all-gas
