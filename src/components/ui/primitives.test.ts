@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { Select } from "./primitives";
+import { I18nProvider } from "../../i18n";
+import { Field, Select } from "./primitives";
 
 describe("Select primitive", () => {
   function render(props: Record<string, unknown> = {}) {
@@ -28,5 +29,36 @@ describe("Select primitive", () => {
     expect(html).toMatch(/^<span class="[^"]*w-40[^"]*"><select/);
     expect(html).toContain('aria-invalid="true"');
     expect(html).toContain("pr-9");
+  });
+});
+
+describe("Field primitive", () => {
+  function render() {
+    return renderToStaticMarkup(
+      createElement(
+        I18nProvider,
+        null,
+        createElement(
+          Field,
+          { label: "Name your Dating Agent", htmlFor: "agent-name" },
+          createElement("input", { id: "agent-name" }),
+        ),
+      ),
+    );
+  }
+
+  it("keeps its label off the prose above it", () => {
+    // A label set straight under a paragraph used to sit flush against it and
+    // read as one more sentence rather than the name of the control below.
+    const html = render();
+    expect(html).toContain("mt-5");
+  });
+
+  it("does not open a gap above the first field in a section", () => {
+    // mt-5 collapses against the previous field's mb-5, so a run of fields keeps
+    // its rhythm; first:mt-0 keeps the opening field flush with its heading.
+    const html = render();
+    expect(html).toContain("first:mt-0");
+    expect(html).toContain("mb-5");
   });
 });

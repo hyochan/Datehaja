@@ -276,7 +276,11 @@ export function Field({
 }) {
   const { t } = useI18n();
   return (
-    <div className="mb-5">
+    // mt-5 collapses against the previous Field's mb-5, so a run of fields keeps
+    // its old rhythm. It only does work after prose: a label set straight under
+    // a paragraph or heading used to sit flush against it and read as one more
+    // sentence rather than the name of the control below it.
+    <div className="mt-5 mb-5 first:mt-0">
       <label
         htmlFor={htmlFor}
         className="mb-1.5 flex items-baseline gap-2 text-[14px] font-medium"

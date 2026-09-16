@@ -36,6 +36,27 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-17 - a field label was flush against the paragraph above it
+
+Every other finding this week came from reading the code. This one only
+appeared by signing up and clicking through onboarding as a new person.
+
+`Field` carried `mb-5` and no top margin. Between two fields that was fine —
+the previous field's bottom margin did the work. Set straight under a
+paragraph or a heading, the label sat at exactly zero pixels from it. Both
+are 14px and they differ only in weight and colour, so "Name your Dating
+Agent" read as one more sentence of the paragraph rather than the name of the
+box underneath it. Step two had the same collision under "Who do you hope it
+notices?", and the field was easy enough to miss that the step's own
+"Before you continue" panel was what caught it.
+
+`Field` now carries `mt-5 first:mt-0`. It collapses against the previous
+field's `mb-5`, so a run of fields keeps the rhythm it had and the opening
+field stays flush with its heading; it only does work after prose. Measured
+in the running app: both collisions went from 0px to 20px, and the gap
+between consecutive fields stayed at 20px.
+
+
 ### 2026-09-17 - a killed turn left the date running forever
 
 `runTurn` schedules the next turn from inside itself. If that action dies
