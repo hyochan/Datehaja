@@ -46,11 +46,20 @@ to match the plan. The twelve-line date was complete, its letters were
 never written, and the owner saw "This world went quiet" with no way
 back.
 
-`fail()` now records `closingAfterRound` at the stored length when an
-extension dies short, so Recheck sees a finished checkpoint. A leave on
-the last planned turn is allowed one farewell instead of ending on the
-goodbye. Turns 7–16 cycle the six-beat pause instead of reusing the
-wrap-up beat.
+`fail()` now records `closingAfterRound` at the stored length, so Recheck
+sees a finished conversation rather than a plan that will never be met.
+
+This is deliberately wider than the extension case that exposed it. Any
+date carrying at least six stored turns is closed at the length it
+actually reached and becomes reviewable — a date that dies at turn eight
+of twelve was never recoverable before either, and eight turns is a real
+conversation to write a letter about. Below six turns nothing changes:
+there is no date there to review, and the row stays failed and
+unreviewable. Both halves of that line are pinned by tests.
+
+A leave on the last planned turn is allowed one farewell instead of
+ending on the goodbye. Turns 7–16 cycle the six-beat pause instead of
+reusing the wrap-up beat.
 
 
 ### 2026-09-16 - a bad date link took the whole app to a white screen

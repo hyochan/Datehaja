@@ -398,6 +398,41 @@ describe("a completed checkpoint stays recoverable when an extension fails", () 
     expect(view?.date.canRetryReview).toBe(true);
   });
 
+  test("a date that dies partway through its plan is reviewable, not lost", async () => {
+    // The recovery is not special-cased to the 12 -> 16 extension. Any date
+    // that already has a real conversation behind it is worth a review rather
+    // than a dead row, so fail() closes it at the length it actually reached.
+    const t = createTestBackend();
+    const s = await checkpoint(t, 12, 8);
+    await t.mutation(internal.agentDates.fail, {
+      agentDateId: s.agentDateId,
+      reason: "The model stopped answering at turn 9.",
+    });
+    const date = await t.run((ctx) => ctx.db.get("agentDates", s.agentDateId));
+    expect(date).toMatchObject({ plannedTurns: 12, closingAfterRound: 8 });
+    const view = await asUser(t, s.alice).query(api.agentDates.get, {
+      agentDateId: s.agentDateId,
+    });
+    expect(view?.turns).toHaveLength(8);
+    expect(view?.date.canRetryReview).toBe(true);
+  });
+
+  test("a date that dies before it said anything stays unreviewable", async () => {
+    // Below the floor there is no conversation to write a letter about.
+    const t = createTestBackend();
+    const s = await checkpoint(t, 12, 3);
+    await t.mutation(internal.agentDates.fail, {
+      agentDateId: s.agentDateId,
+      reason: "It never got going.",
+    });
+    const date = await t.run((ctx) => ctx.db.get("agentDates", s.agentDateId));
+    expect(date?.closingAfterRound).toBeUndefined();
+    const view = await asUser(t, s.alice).query(api.agentDates.get, {
+      agentDateId: s.agentDateId,
+    });
+    expect(view?.date.canRetryReview).toBe(false);
+  });
+
   test("a leave on the last planned turn still schedules the farewell", async () => {
     const t = createTestBackend();
     const s = await checkpoint(t, 6, 5);
