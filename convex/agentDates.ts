@@ -1579,6 +1579,64 @@ export const fail = internalMutation({
   },
 });
 
+/**
+ * A running date whose `nextTurnAt` is this far in the past is dead.
+ *
+ * `nextTurnAt` is when the next turn (or debrief) is due, so a date that is
+ * only pacing has it in the future. Once that time passes, a live worker may
+ * still be in flight: the model call's 90s timeout, a single repair retry,
+ * wrapping-up reviews, and scheduler delay. The pause planner's own ceiling
+ * is ten minutes (wandering: `(2.5 + thought * 7.5) * 60s`, thought < 1).
+ * Ten minutes + 90s + two minutes of scheduler slack is 12.5 minutes; fifteen
+ * minutes sits above that so a slow-but-live date is never failed.
+ */
+export const STALLED_RUNNING_MS = 15 * 60_000;
+
+const STALLED_DATE_REASON = {
+  en: "This date stopped before the next turn arrived. The conversation so far is saved.",
+  ko: "다음 말이 오기 전에 데이트가 멈췄어요. 지금까지의 대화는 저장되어 있어요.",
+  ja: "次の発言が届く前にデートが止まりました。ここまでの会話は保存されています。",
+  de: "Dieses Date blieb stehen, bevor der nächste Beitrag kam. Das bisherige Gespräch bleibt gespeichert.",
+  fr: "Ce rendez-vous s'est arrêté avant la réplique suivante. La conversation reste enregistrée.",
+  nl: "Deze date stopte voordat de volgende beurt aankwam. Het gesprek tot nu toe is bewaard.",
+  sv: "Dejten stannade innan nästa replik kom. Samtalet hittills är sparat.",
+} as const;
+
+export const failStalled = internalMutation({
+  args: {
+    nowMs: v.number(),
+    cursor: v.optional(v.union(v.string(), v.null())),
+  },
+  returns: v.number(),
+  handler: async (ctx, args) => {
+    const page = await ctx.db
+      .query("agentDates")
+      .withIndex("by_status", (q) => q.eq("status", "running"))
+      .paginate({ numItems: 50, cursor: args.cursor ?? null });
+    let failed = 0;
+    for (const date of page.page) {
+      if (
+        date.nextTurnAt !== undefined &&
+        args.nowMs - date.nextTurnAt >= STALLED_RUNNING_MS
+      ) {
+        const done: null = await ctx.runMutation(internal.agentDates.fail, {
+          agentDateId: date._id,
+          reason: localDateCopy(date.locale, STALLED_DATE_REASON),
+        });
+        void done;
+        failed += 1;
+      }
+    }
+    if (!page.isDone) {
+      await ctx.scheduler.runAfter(0, internal.agentDates.failStalled, {
+        nowMs: args.nowMs,
+        cursor: page.continueCursor,
+      });
+    }
+    return failed;
+  },
+});
+
 export const storeTurnAndSchedule = internalMutation({
   args: {
     agentDateId: v.id("agentDates"),

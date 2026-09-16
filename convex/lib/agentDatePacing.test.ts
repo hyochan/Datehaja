@@ -50,6 +50,18 @@ describe("agent date pacing", () => {
     expect(pause.delayMs).toBeGreaterThan(2 * 60_000);
   });
 
+  it("never pauses more than ten minutes, even on the longest wandering break", () => {
+    const pause = planAgentDatePause({
+      round: 3,
+      previousMessageLength: 500,
+      voice: "quiet",
+      mode: "natural",
+      random: sequence(0.999_999, 0.01),
+    });
+    expect(pause.activity).toBe("wandering");
+    expect(pause.delayMs).toBe(10 * 60_000);
+  });
+
   it("does not reuse the sixth-turn wrap-up beat for turns 7-16", () => {
     const random = sequence(0.5, 0.9);
     const sixth = planAgentDatePause({

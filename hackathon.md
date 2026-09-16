@@ -13,7 +13,7 @@
 - **Auth:** Convex Auth
 - **AI models:** gpt-5.6-sol for date dialogue, private coaching, letters and factual verification, with no silent economy fallback on these paths. Unverified letters are withheld; lower-cost models remain available for unrelated integrations.
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-09-16
+- **Last updated:** 2026-09-17
 - **Latest verified candidate:** https://merry-bass-190.convex.site — production carries `DATEHAJA_OPEN_TRIAL`, and `bun run verify:prod` reports `scoutAccess.ok: true`. A new account signed up there with a real mailed code, completed the brief and ran a twelve-turn date.
 
 ## Rules, as verified on the official page
@@ -35,6 +35,24 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
   for the chatgpt.site route, which this project does not take.
 
 ## Log
+
+### 2026-09-17 - a killed turn left the date running forever
+
+`runTurn` schedules the next turn from inside itself. If that action dies
+without completing — a deploy restart, a runtime kill, an OOM — nothing is
+queued after it and `fail()` never runs. The row stays `status: "running"`
+with a `nextTurnAt` in the past. The owner's `get()` keeps `canRetryReview`
+false. The only cron, `dailyTick` at 09:00, only refreshes ages.
+
+A five-minute cron now reads `agentDates` by `status: "running"` and routes
+any row whose `nextTurnAt` is fifteen minutes in the past through the
+existing `fail()`. Fifteen minutes is the pause planner's own ceiling
+(wandering, ten minutes) plus the turn model's 90s timeout plus two minutes
+of scheduler slack, then a little room so a date that is only pacing, or
+still inside a live model call, is never failed. `fail()` still records
+`closingAfterRound` at the stored length, so a stalled date with enough
+turns gets Recheck and its letters. The 90s request timeout is a different
+bug; it does not recover a worker that never returns.
 
 ### 2026-09-16 - leftover concierge time helpers were still compiling
 
