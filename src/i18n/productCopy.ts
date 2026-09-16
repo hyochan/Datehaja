@@ -395,4 +395,28 @@ export const productCopy: Record<string, readonly string[]> = {
   "Effective date": ["시행일", "発効日", "Gültig ab", "Date d’entrée en vigueur", "Ingangsdatum", "Gäller från"],
   "Legal documents": ["법적 문서", "法的文書", "Rechtliche Dokumente", "Documents juridiques", "Juridische documenten", "Juridiska dokument"],
   "I am 18 or over, and I agree to the {terms}, the {community}, and the {privacy}.": ["만 18세 이상이며, {terms}, {community}, {privacy}에 동의합니다.", "18歳以上であり、{terms}、{community}、{privacy}に同意します。", "Ich bin 18 oder älter und stimme den {terms}, den {community} und dem {privacy} zu.", "J’ai 18 ans ou plus et j’accepte les {terms}, les {community} et l’{privacy}.", "Ik ben 18 of ouder en ga akkoord met de {terms}, de {community} en de {privacy}.", "Jag är 18 år eller äldre och godkänner {terms}, {community} och {privacy}."],
+  "This page couldn't be shown.": [
+    "이 페이지를 열 수 없어요.",
+    "このページを表示できませんでした。",
+    "Diese Seite konnte nicht gezeigt werden.",
+    "Cette page n’a pas pu s’afficher.",
+    "Deze pagina kon niet worden getoond.",
+    "Den här sidan kunde inte visas.",
+  ],
+  "Something here broke while it was opening. Your dates are still there — you can go back and keep going.": [
+    "이 화면을 여는 동안 문제가 생겼어요. 데이트 기록은 그대로 있으니 돌아가서 이어서 보시면 돼요.",
+    "この画面を開いている途中で問題が起きました。デートの記録はそのままなので、戻って続けられます。",
+    "Beim Öffnen ist etwas kaputtgegangen. Deine Dates sind noch da — du kannst zurück und weitermachen.",
+    "Quelque chose s’est cassé pendant l’ouverture. Vos rendez-vous sont toujours là — vous pouvez revenir et continuer.",
+    "Er ging iets mis tijdens het openen. Je dates staan er nog — je kunt teruggaan en verder.",
+    "Något gick sönder när sidan öppnades. Dina dejter finns kvar — du kan gå tillbaka och fortsätta.",
+  ],
+  "Try this page again": [
+    "이 페이지 다시 시도",
+    "このページをもう一度試す",
+    "Diese Seite erneut versuchen",
+    "Réessayer cette page",
+    "Probeer deze pagina opnieuw",
+    "Försök med den här sidan igen",
+  ],
 };
