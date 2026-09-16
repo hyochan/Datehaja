@@ -1749,4 +1749,33 @@ describe("a running date whose turn worker died", () => {
       canRetryReview: true,
     });
   });
+
+  test("a sweep continues past the first page of running dates", async () => {
+    const t = createTestBackend();
+    const s = await runningWithTurns(t, 8, NOW + 8 * 60_000);
+    const stalledId = await t.run(async (ctx) => {
+      const template = (await ctx.db.get("agentDates", s.agentDateId))!;
+      const { _id, _creationTime, ...data } = template;
+      void _id;
+      void _creationTime;
+      for (let i = 0; i < 49; i++) {
+        await ctx.db.insert("agentDates", {
+          ...data,
+          nextTurnAt: NOW + 8 * 60_000,
+        });
+      }
+      return await ctx.db.insert("agentDates", {
+        ...data,
+        nextTurnAt: NOW - STALLED_RUNNING_MS,
+      });
+    });
+    expect(await t.mutation(internal.agentDates.failStalled, { nowMs: NOW })).toBe(0);
+    await t.finishAllScheduledFunctions(() => vi.runAllTimers());
+    expect(
+      (await t.run((ctx) => ctx.db.get("agentDates", stalledId)))?.status,
+    ).toBe("failed");
+    expect(
+      (await t.run((ctx) => ctx.db.get("agentDates", s.agentDateId)))?.status,
+    ).toBe("running");
+  });
 });

@@ -1603,37 +1603,37 @@ const STALLED_DATE_REASON = {
 } as const;
 
 export const failStalled = internalMutation({
-  args: { nowMs: v.number() },
+  args: {
+    nowMs: v.number(),
+    cursor: v.optional(v.union(v.string(), v.null())),
+  },
   returns: v.number(),
   handler: async (ctx, args) => {
-    const stalled: Id<"agentDates">[] = [];
-    let cursor: string | null = null;
-    for (;;) {
-      const page = await ctx.db
-        .query("agentDates")
-        .withIndex("by_status", (q) => q.eq("status", "running"))
-        .paginate({ numItems: 50, cursor });
-      for (const date of page.page) {
-        if (
-          date.nextTurnAt !== undefined &&
-          args.nowMs - date.nextTurnAt >= STALLED_RUNNING_MS
-        ) {
-          stalled.push(date._id);
-        }
+    const page = await ctx.db
+      .query("agentDates")
+      .withIndex("by_status", (q) => q.eq("status", "running"))
+      .paginate({ numItems: 50, cursor: args.cursor ?? null });
+    let failed = 0;
+    for (const date of page.page) {
+      if (
+        date.nextTurnAt !== undefined &&
+        args.nowMs - date.nextTurnAt >= STALLED_RUNNING_MS
+      ) {
+        const done: null = await ctx.runMutation(internal.agentDates.fail, {
+          agentDateId: date._id,
+          reason: localDateCopy(date.locale, STALLED_DATE_REASON),
+        });
+        void done;
+        failed += 1;
       }
-      if (page.isDone) break;
-      cursor = page.continueCursor;
     }
-    for (const agentDateId of stalled) {
-      const date = await ctx.db.get("agentDates", agentDateId);
-      if (!date) continue;
-      const failed: null = await ctx.runMutation(internal.agentDates.fail, {
-        agentDateId,
-        reason: localDateCopy(date.locale, STALLED_DATE_REASON),
+    if (!page.isDone) {
+      await ctx.scheduler.runAfter(0, internal.agentDates.failStalled, {
+        nowMs: args.nowMs,
+        cursor: page.continueCursor,
       });
-      void failed;
     }
-    return stalled.length;
+    return failed;
   },
 });
 
