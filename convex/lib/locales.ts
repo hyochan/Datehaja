@@ -133,6 +133,9 @@ export function languageDirective(locale?: string): string {
  * anyone would choose, and are exactly what is needed to escape the example.
  */
 export function promptSafeName(name: string): string {
+  // Control characters are exactly what this is for: they are what lets a name
+  // start a new line in the instructions.
+  // eslint-disable-next-line no-control-regex
   const cleaned = name.replace(/["'\\`\u0000-\u001f\u007f\u2028\u2029]/g, " ").replace(/\s+/g, " ").trim();
   return cleaned.slice(0, 32) || "the other agent";
 }
