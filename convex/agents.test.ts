@@ -777,3 +777,62 @@ describe("contact info in Agent and owner names", () => {
     expect(JSON.stringify({ list, view })).not.toContain("alice@gmail.com");
   });
 });
+
+const VISITOR_ID = "4f73f251-9db1-47b4-8072-1e1ca83ddc1d";
+
+describe("growth identity on bootstrap", () => {
+  test("stores the visitor id on agent_created alongside the user", async () => {
+    const t = convexTest(schema, modules);
+    const owner = await t.run((ctx) =>
+      ctx.db.insert("users", {
+        name: "Rowan",
+        email: "rowan@test.invalid",
+      }),
+    );
+
+    await asUser(t, owner).mutation(api.agents.bootstrap, {
+      ...bootstrapBrief,
+      displayName: "Rowan",
+      agentName: "Orbit",
+      anonymousId: VISITOR_ID,
+    });
+
+    const created = await t.run(async (ctx) =>
+      ctx.db
+        .query("growthEvents")
+        .withIndex("by_event", (q) => q.eq("event", "agent_created"))
+        .unique(),
+    );
+    expect(created).toMatchObject({
+      userId: owner,
+      anonymousId: VISITOR_ID,
+      event: "agent_created",
+    });
+  });
+
+  test("ignores a malformed visitor id and still bootstraps", async () => {
+    const t = convexTest(schema, modules);
+    const owner = await t.run((ctx) =>
+      ctx.db.insert("users", {
+        name: "Rowan",
+        email: "rowan@test.invalid",
+      }),
+    );
+
+    await asUser(t, owner).mutation(api.agents.bootstrap, {
+      ...bootstrapBrief,
+      displayName: "Rowan",
+      agentName: "Orbit",
+      anonymousId: "not-a-browser-id",
+    });
+
+    const created = await t.run(async (ctx) =>
+      ctx.db
+        .query("growthEvents")
+        .withIndex("by_event", (q) => q.eq("event", "agent_created"))
+        .unique(),
+    );
+    expect(created?.userId).toBe(owner);
+    expect(created?.anonymousId).toBeUndefined();
+  });
+});

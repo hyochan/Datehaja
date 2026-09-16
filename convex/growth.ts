@@ -21,7 +21,7 @@ export const track = mutation({
   returns: v.null(),
   handler: async (ctx, args) => {
     const anonymousId = clean(args.anonymousId, 80);
-    if (!/^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(anonymousId)) return null;
+    if (!isAnonymousVisitorId(anonymousId)) return null;
     const rate = await checkRateLimit(
       ctx,
       `growth:${anonymousId}`,
@@ -101,6 +101,62 @@ const FUNNEL_EVENTS = [
  *  counting to @convex-dev/aggregate. */
 const SNAPSHOT_ROWS_PER_EVENT = 1000;
 
+/** Browser-minted visitor id. A random UUID, not a personal identifier. */
+export function isAnonymousVisitorId(value: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(value);
+}
+
+type ActorRow = {
+  _id: string;
+  userId?: string;
+  anonymousId?: string;
+  source?: string;
+  locale?: string;
+};
+
+function actorToken(row: ActorRow): string {
+  if (row.userId) return `user:${row.userId}`;
+  if (row.anonymousId) return `anon:${row.anonymousId}`;
+  return `row:${row._id}`;
+}
+
+/**
+ * Collapse a userId and an anonymousId into one actor when they co-occur on
+ * any row in the window. Rows that only ever carry one identifier stay
+ * distinct — this does not invent a link across historical events.
+ */
+export function resolveActorId(
+  rows: ActorRow[],
+): (row: ActorRow) => string {
+  const parent = new Map<string, string>();
+
+  const find = (token: string): string => {
+    let root = token;
+    while (parent.has(root) && parent.get(root) !== root) {
+      root = parent.get(root)!;
+    }
+    if (!parent.has(root)) parent.set(root, root);
+    let walk = token;
+    while (walk !== root) {
+      const next = parent.get(walk);
+      if (next === undefined) break;
+      parent.set(walk, root);
+      walk = next;
+    }
+    return root;
+  };
+
+  for (const row of rows) {
+    if (row.userId && row.anonymousId) {
+      const user = find(`user:${row.userId}`);
+      const anon = find(`anon:${row.anonymousId}`);
+      if (user !== anon) parent.set(user, anon);
+    }
+  }
+
+  return (row) => find(actorToken(row));
+}
+
 /**
  * Operational funnel snapshot for growth reviews. Internal-only — run it from
  * the CLI (`npx convex run growth:funnelSnapshot '{"sinceMs": ...}'`).
@@ -117,6 +173,8 @@ export const funnelSnapshot = internalQuery({
     > = {};
     const landingSources: Record<string, number> = {};
     const landingLocales: Record<string, number> = {};
+    const rowsByEvent: ActorRow[][] = [];
+    const allRows: ActorRow[] = [];
 
     for (const event of FUNNEL_EVENTS) {
       // The window bound lives in the index range, so reads scale with the
@@ -128,9 +186,15 @@ export const funnelSnapshot = internalQuery({
         )
         .order("desc")
         .take(SNAPSHOT_ROWS_PER_EVENT);
-      const actors = new Set(
-        rows.map((row) => row.userId ?? row.anonymousId ?? row._id),
-      );
+      rowsByEvent.push(rows);
+      allRows.push(...rows);
+    }
+
+    const actorId = resolveActorId(allRows);
+
+    for (const [index, event] of FUNNEL_EVENTS.entries()) {
+      const rows = rowsByEvent[index] ?? [];
+      const actors = new Set(rows.map(actorId));
       counts[event] = {
         total: rows.length,
         uniqueActors: actors.size,

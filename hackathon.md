@@ -36,6 +36,37 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-17 - the funnel counted the same person twice and called it a drop-off
+
+The first production review with outside traffic read 59 unique actors on the
+landing page, 2 at onboarding, and 4 at agent creation. A stage cannot have
+fewer people than the stage after it, so the funnel was not measuring what it
+appeared to measure.
+
+`uniqueActors` was `userId ?? anonymousId ?? _id`. Landing and onboarding are
+fired from the browser and carry a random visitor id; `agent_created` is
+written inside `agents.bootstrap` and carries a user id. The same human was
+counted as two different actors on either side of that step, so the ratio
+between them was not a conversion rate and never had been.
+
+`bootstrap` now takes an optional `anonymousId` and stores it on the creation
+event beside the user id, and the snapshot unions the two identifiers whenever
+they appear together on a row. Nothing links identifiers that never co-occur,
+so events written before this change stay separate rather than being joined by
+guesswork - the next snapshot will still show the old rows split, and only new
+activity will read as one person.
+
+The union has a known bias worth stating: two people who sign in from the same
+browser share a visitor id and collapse into one actor. That under-counts
+rather than over-counts, which is the safer direction for a funnel, and it also
+folds our own multi-account testing into one. The opposite choice would split
+one person across their devices.
+
+Only the visitor id moved. `growthEvents` still carries no profile text, no
+message content and no contact details, and this change did not add a way to
+join a growth row back to anything a person wrote.
+
+
 ### 2026-09-17 - a field label was flush against the paragraph above it
 
 Every other finding this week came from reading the code. This one only

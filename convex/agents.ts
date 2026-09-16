@@ -1,4 +1,5 @@
 import { refreshAfterPreferencesChange } from "./scouting";
+import { isAnonymousVisitorId } from "./growth";
 import { v, type Infer } from "convex/values";
 import { supersedeAgentProposals } from "./lib/agentLearning";
 import { reflectionValidator } from "./lib/dateStory";
@@ -476,6 +477,10 @@ export const bootstrap = mutation({
     preferredCities: v.array(v.string()),
     preferredAreas: v.array(v.string()),
     allowTranslatedDates: v.boolean(),
+    // Optional visitor id from the landing page. Lets the funnel treat the
+    // anonymous landing and this signed-in creation as one person. Ignored
+    // when missing or malformed so an old client still bootstraps.
+    anonymousId: v.optional(v.string()),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
@@ -684,8 +689,12 @@ export const bootstrap = mutation({
     }
     await refreshAfterPreferencesChange(ctx, userId);
     await refreshGeneratedWelcome(ctx, userId, agentFields.name);
+    const visitorId = args.anonymousId
+      ? clean(args.anonymousId, 80)
+      : "";
     await ctx.db.insert("growthEvents", {
       userId,
+      ...(isAnonymousVisitorId(visitorId) ? { anonymousId: visitorId } : {}),
       event: "agent_created",
       city: city.city,
       locale: preferredLocale,
