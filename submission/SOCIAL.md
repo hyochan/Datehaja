@@ -53,41 +53,76 @@ automated tests are separate evidence.
 
 ## X post
 
-Within a normal post's length when the URL is counted as a shortened link:
+Posted as an open question, not a launch. The product's own pages say the
+simulations prove nothing about real chemistry; a post that claimed otherwise
+would be the one thing in this submission that does not match its evidence. A
+question also invites replies, and replies are what "engagement counts" means.
 
-> I told my AI Dating Agent, “That's not how I talk.”
->
-> Datehaja carries that correction into the next date. See the saved before/after.
->
-> Built for All Gas with @convex @OpenAI @firecrawl @agentmail
->
-> https://youtu.be/K35t6VaF0iI
+English, for the accounts being tagged (261 characters with the link counted as
+23):
 
-Upload the film natively if the account supports video posting; native video travels further than a link.
-Do not call these fictional rehearsals customer testimonials.
+> A dating app where you don't go on the first date. Your AI agent does — as
+> you, always labelled AI — then comes home and tells you if it's worth meeting.
+>
+> Good idea or terrible one? I don't know yet. That's why it's open.
+>
+> Watch one that already happened, no signup:
+> https://merry-bass-190.convex.site/watch
+>
+> @convex @OpenAI @firecrawl @agentmail
+
+Korean, if posting to the Korean audience as well:
+
+> 첫 데이트를 내가 안 가는 데이팅 앱을 만들었어요. 내 AI 에이전트가 대신
+> 갑니다. 항상 AI라고 밝히고, 돌아와서 만나볼 만한지 솔직하게 말해줘요.
+>
+> 좋은 아이디어인지 최악인지 아직 모르겠어서 그냥 열어둡니다.
+>
+> 이미 끝난 데이트 하나 보기 (가입 없이):
+> https://merry-bass-190.convex.site/watch
+>
+> @convex @OpenAI @firecrawl @agentmail
+
+Upload the film natively if the account supports video posting; native video
+travels further than a link. Do not call these fictional rehearsals customer
+testimonials.
 
 ## LinkedIn post
 
-> I built Datehaja around one loop: create your AI Dating Agent, let it date,
-> hear what happened, and tell it what felt like you.
+> I spent three weeks building a dating app where you don't go on the first
+> date.
 >
-> The interesting part is what happens after “That's not how I talk.”
-> Our saved rehearsal follows one Agent through four dates and three corrections.
-> You can inspect the requests, replies, memories and later conversations.
-> Polite Korean persisted; average reply length did not decrease. Both findings
-> are visible in the English translation alongside the original.
+> Your AI agent goes instead. It is always identified as AI, it carries only
+> what you told it privately, and it meets someone else's agent. Then it comes
+> home and tells you what happened — including when it thinks you should not
+> meet.
 >
-> Convex runs the durable workflow and live app; OpenAI generates dialogue and
-> reflections; Firecrawl supplies cultural inspiration; AgentMail handles
-> private sign-in and eligible introduction emails.
+> I am genuinely unsure whether this is a good idea. It could be the honest
+> version of a first date, or it could be the thing that finally removes the
+> person from dating. I could not work it out by thinking about it, so I built
+> it and opened it.
 >
-> AI can suggest an introduction. Only two independent human yeses open contact.
+> What I can show you is the evidence rather than the pitch:
 >
-> These are fictional test records. First-time user feedback is the next check.
+> · A finished agent date, no account needed — sixteen saved lines, a journal
+> that points back at the exact dialogue behind each moment, and both agents'
+> private notes: https://merry-bass-190.convex.site/watch
 >
-> Built for All Gas with @Convex @OpenAI @Firecrawl @AgentMail.
+> · The same agent across four dates and three corrections from its owner, 56
+> lines kept in full. Polite speech persisted; replies did not get shorter. The
+> limits are shown next to the improvement:
+> https://merry-bass-190.convex.site/preview/agent-coaching?lang=en
 >
-> https://youtu.be/K35t6VaF0iI
+> An agent recommendation never opens contact. Only two independent human yeses
+> do, and a no never reveals who said it.
+>
+> The people in those records are fictional, no first-time user study has been
+> run yet, and a simulation is not chemistry. Which is the part I would most
+> like to be told I am wrong about.
+>
+> Built for the Convex All Gas hackathon with @Convex @OpenAI @Firecrawl
+> @AgentMail. Code and the full build log, mistakes included:
+> https://github.com/hyochan/Datehaja
 
 Select the actual company mentions in the composer, rather than assuming
 plain pasted @ text creates a platform mention.
