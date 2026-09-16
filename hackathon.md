@@ -36,6 +36,23 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-16 - a failed extra turn after twelve lines killed a finished date
+
+`continueConversation` raises `plannedTurns` 12 → 16 before round 13 is
+stored. `fail()` did not close the conversation at the stored length, so
+a model miss on turn 13, 14 or 15 left the row `failed` with twelve to
+fifteen turns and a plan of sixteen. Recheck requires the stored turns
+to match the plan. The twelve-line date was complete, its letters were
+never written, and the owner saw "This world went quiet" with no way
+back.
+
+`fail()` now records `closingAfterRound` at the stored length when an
+extension dies short, so Recheck sees a finished checkpoint. A leave on
+the last planned turn is allowed one farewell instead of ending on the
+goodbye. Turns 7–16 cycle the six-beat pause instead of reusing the
+wrap-up beat.
+
+
 ### 2026-09-16 - a bad date link took the whole app to a white screen
 
 There was no root ErrorBoundary. Opening `/dashboard?date=` with a

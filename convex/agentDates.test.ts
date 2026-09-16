@@ -300,6 +300,142 @@ describe("recovering a failed review without replaying the encounter", () => {
   });
 });
 
+describe("a completed checkpoint stays recoverable when an extension fails", () => {
+  async function checkpoint(
+    t: TestBackend,
+    plannedTurns: 6 | 12,
+    storedTurns: number,
+  ) {
+    const s = await setup(t);
+    await t.run(async (ctx) => {
+      await ctx.db.patch("agentDates", s.agentDateId, {
+        status: "running",
+        plannedTurns,
+        initiatorVerdict: "pending",
+        counterpartVerdict: "pending",
+        initiatorReason: "",
+        counterpartReason: "",
+      });
+      for (let round = 2; round <= storedTurns; round++) {
+        await ctx.db.insert("agentDateTurns", {
+          agentDateId: s.agentDateId,
+          round,
+          speakerUserId: round % 2 ? s.alice : s.bob,
+          speakerAgentName: round % 2 ? "Aster" : "Bori",
+          content: `Checkpoint line ${round}`,
+          subtext: "Private",
+          createdAt: NOW + round,
+        });
+      }
+    });
+    return s;
+  }
+
+  test("failing turn 13 after a 12-turn checkpoint restores a Recheck", async () => {
+    const t = createTestBackend();
+    const s = await checkpoint(t, 12, 12);
+    await t.mutation(internal.agentDates.continueConversation, {
+      agentDateId: s.agentDateId,
+      aQuestion: "What did that pause mean?",
+      bQuestion: "",
+    });
+    const extended = await t.run((ctx) => ctx.db.get("agentDates", s.agentDateId));
+    expect(extended?.plannedTurns).toBe(16);
+    await t.mutation(internal.agentDates.fail, {
+      agentDateId: s.agentDateId,
+      reason: "The extra turn never arrived.",
+    });
+    const date = await t.run((ctx) => ctx.db.get("agentDates", s.agentDateId));
+    expect(date).toMatchObject({
+      status: "failed",
+      plannedTurns: 16,
+      closingAfterRound: 12,
+    });
+    const view = await asUser(t, s.alice).query(api.agentDates.get, {
+      agentDateId: s.agentDateId,
+    });
+    expect(view?.date.canRetryReview).toBe(true);
+    await asUser(t, s.alice).mutation(api.agentDates.retryReview, {
+      agentDateId: s.agentDateId,
+    });
+    expect(
+      (await t.run((ctx) => ctx.db.get("agentDates", s.agentDateId)))
+        ?.reviewRetryStartedAt,
+    ).toEqual(expect.any(Number));
+  });
+
+  test("failing mid-extension keeps the stored extra turns reviewable", async () => {
+    const t = createTestBackend();
+    const s = await checkpoint(t, 12, 12);
+    await t.mutation(internal.agentDates.continueConversation, {
+      agentDateId: s.agentDateId,
+      aQuestion: "What did that pause mean?",
+      bQuestion: "",
+    });
+    await t.mutation(internal.agentDates.storeTurnAndSchedule, {
+      agentDateId: s.agentDateId,
+      round: 13,
+      speakerUserId: s.alice,
+      speakerAgentName: "Aster",
+      content: "The extra question, then silence.",
+      subtext: "Private",
+      nextDelayMs: 1000,
+      nextActivity: "thinking",
+    });
+    await t.mutation(internal.agentDates.fail, {
+      agentDateId: s.agentDateId,
+      reason: "Turn 14 never arrived.",
+    });
+    const date = await t.run((ctx) => ctx.db.get("agentDates", s.agentDateId));
+    expect(date).toMatchObject({
+      plannedTurns: 16,
+      closingAfterRound: 13,
+    });
+    const view = await asUser(t, s.alice).query(api.agentDates.get, {
+      agentDateId: s.agentDateId,
+    });
+    expect(view?.turns).toHaveLength(13);
+    expect(view?.date.canRetryReview).toBe(true);
+  });
+
+  test("a leave on the last planned turn still schedules the farewell", async () => {
+    const t = createTestBackend();
+    const s = await checkpoint(t, 6, 5);
+    await t.mutation(internal.agentDates.storeTurnAndSchedule, {
+      agentDateId: s.agentDateId,
+      round: 6,
+      speakerUserId: s.bob,
+      speakerAgentName: "Bori",
+      content: "I should go.",
+      subtext: "Private",
+      endsConversation: true,
+      nextDelayMs: 1000,
+      nextActivity: "thinking",
+    });
+    const date = await t.run((ctx) => ctx.db.get("agentDates", s.agentDateId));
+    expect(date).toMatchObject({ closingAfterRound: 7, plannedTurns: 6 });
+    const jobs = await t.run((ctx) =>
+      ctx.db.system.query("_scheduled_functions").collect(),
+    );
+    expect(jobs.some((job) => job.name.endsWith("runTurn"))).toBe(true);
+    expect(jobs.some((job) => job.name.endsWith("finalize"))).toBe(false);
+    await t.mutation(internal.agentDates.storeTurnAndSchedule, {
+      agentDateId: s.agentDateId,
+      round: 7,
+      speakerUserId: s.alice,
+      speakerAgentName: "Aster",
+      content: "Go well.",
+      subtext: "Private",
+      nextDelayMs: 1000,
+      nextActivity: "wrapping_up",
+    });
+    expect(
+      (await t.run((ctx) => ctx.db.get("agentDates", s.agentDateId)))
+        ?.closingAfterRound,
+    ).toBe(7);
+  });
+});
+
 describe("agent-date privacy and human consent", () => {
   test("each speaking Agent receives its owner's selected relationship intent, never the counterpart's preferences", async () => {
     const t = convexTest(schema, modules);

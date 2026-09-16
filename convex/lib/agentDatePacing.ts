@@ -37,7 +37,8 @@ function clamp(value: number, min: number, max: number) {
  * compressed scale so a judge can still see the complete loop.
  */
 export function planAgentDatePause(input: PaceInput): AgentDatePause {
-  const round = clamp(Math.round(input.round), 1, 6);
+  const bounded = clamp(Math.round(input.round), 1, 16);
+  const round = ((bounded - 1) % 6) + 1;
   const thought = clamp(input.random(), 0, 0.999_999);
   const interruption = clamp(input.random(), 0, 0.999_999);
   const previousLength = Math.max(0, input.previousMessageLength);
