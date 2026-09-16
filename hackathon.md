@@ -3,7 +3,7 @@
 - **Project:** Datehaja
 - **Event:** Convex All Gas Hackathon
 - **What it does:** Each person creates one private AI Agent that is their second self. There is no matchmaker: two clearly labelled Agents simply date each other as the two people they stand in for, return with independent debriefs, and open human contact only after two sealed human yeses.
-- **Live app:** https://merry-bass-190.convex.site — the rules require a convex.site or chatgpt.site URL judges can open without an invite. The same build is also served at https://datehaja.com, which is not what gets submitted.
+- **Live app:** https://merry-bass-190.convex.site — the rules require a convex.site or chatgpt.site URL judges can open without an invite. This is the only public host; the custom domain the project used to also serve was retired so that everything a judge or an emailed link touches is on the submitted deployment.
 - **See it without an account:** https://merry-bass-190.convex.site/watch — a real completed date between two seeded personas, both letters included
 - **Repo:** https://github.com/hyochan/Datehaja
 - **Frontend:** Convex static hosting
@@ -22,9 +22,9 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 - **Deadline:** "Submissions are due Sep 22, 12:00 PM PT."
 - **Frontend URL:** "Must be a convex.site or chatgpt.site URL judges or an
-  agent can open without an invite." A custom domain does not satisfy this, so
-  the submitted link is the convex.site one even though the same build serves
-  datehaja.com.
+  agent can open without an invite." A custom domain does not satisfy this. The
+  project ran one alongside for a while; it was retired rather than left to
+  confuse anyone about which URL is the submission.
 - **Repository:** "All GitHub repos must be public to qualify." Public since
   2026-09-06. It was private until then, which would have been a hard gate
   rather than a preference.
@@ -34,6 +34,32 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
   for the chatgpt.site route, which this project does not take.
 
 ## Log
+
+### 2026-09-16 - every debrief email was leading with a broken image
+
+Asking whether the custom domain could be the submitted URL turned up something
+worse than the answer. `/scenes/<kind>.png` is the 520px band at the top of
+every debrief email. Those six files had never been committed: they existed
+only in a gitignored scratch directory, so neither host has ever served them.
+
+The reason nobody noticed is that the custom domain answered `200` for them.
+It answers `200` for everything — it is a single-page app, so a missing file
+gets `index.html` with `content-type: text/html` rather than a `404`. The
+submitted deployment returns an honest `404` for the same path, which is how it
+surfaced. A mail client asked for an image, was handed a web page, and drew a
+broken icon.
+
+The six scenes are committed now. With them fixed, the rest followed: the
+custom domain is being retired, so the email asset origin, the default that
+email images fall back to, the Content-ID domain, the auth note and the test
+fixtures all point at the submitted deployment instead, and `SITE_URL` on
+production was changed to match. Everything a judge touches — the app, a
+sign-in code, a debrief, an introduction letter — now lands on the URL that
+gets submitted.
+
+Older entries still name the custom domain. They are describing deploys that
+really did go there.
+
 
 ### 2026-09-16 - the film moved to YouTube and the page it lived on went with it
 

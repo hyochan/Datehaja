@@ -527,15 +527,15 @@ describe("agent-date privacy and human consent", () => {
       agentDateId: s.agentDateId,
     });
     const previous = process.env.SITE_URL;
-    process.env.SITE_URL = "https://datehaja.com";
+    process.env.SITE_URL = "https://merry-bass-190.convex.site";
     try {
       const forAlice = emailReportFor(context!, "a");
       const forBob = emailReportFor(context!, "b");
       expect(forAlice.ownerSpriteUrl).toBe(
-        "https://datehaja.com/agents/v3/female-rose-curious.png",
+        "https://merry-bass-190.convex.site/agents/v3/female-rose-curious.png",
       );
       expect(forAlice.counterpartSpriteUrl).toBe(
-        "https://datehaja.com/agents/v3/male-sky-curious.png",
+        "https://merry-bass-190.convex.site/agents/v3/male-sky-curious.png",
       );
       expect(forBob.ownerSpriteUrl).toBe(forAlice.counterpartSpriteUrl);
     } finally {
@@ -557,7 +557,7 @@ describe("agent-date privacy and human consent", () => {
     try {
       const report = emailReportFor(context!, "a");
       expect(report.ownerSpriteUrl).toBe(
-        "https://datehaja.com/agents/v3/female-rose-curious.png",
+        "https://merry-bass-190.convex.site/agents/v3/female-rose-curious.png",
       );
       expect(report.counterpartSpriteUrl).not.toContain("localhost");
 

@@ -102,7 +102,7 @@ convex.site` job pushes the Convex backend and publishes the static site
 together, then verifies `merry-bass-190.convex.site` serves that exact bundle.
 The backend is not a manual step.
 
-Vercel rebuilds `datehaja.com` in parallel and independently, so that host can
+Vercel rebuilds its own preview host in parallel and independently, so that host can
 serve a new frontend for a few minutes before the backend job lands.
 
 So check whether that window is safe. It is safe when every backend change is

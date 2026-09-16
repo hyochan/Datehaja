@@ -13,8 +13,8 @@ const base = {
     counterpartAgentName: "Juno",
     ownerPalette: "sunset",
     counterpartPalette: "sky",
-    ownerSpriteUrl: "https://datehaja.com/agents/v3/male-sunset-gentle.png",
-    counterpartSpriteUrl: "https://datehaja.com/agents/v3/female-sky-gentle.png",
+    ownerSpriteUrl: "https://merry-bass-190.convex.site/agents/v3/male-sunset-gentle.png",
+    counterpartSpriteUrl: "https://merry-bass-190.convex.site/agents/v3/female-sky-gentle.png",
     worldSourceTitle: "서울 레코드 바 다시 유행",
     totalMoments: 6,
     summary: "음악과 여행 얘기에서 긴장이 풀렸고, 침묵도 편안했어요.",
@@ -38,8 +38,8 @@ const base = {
       },
     ],
   },
-  url: "https://datehaja.com/agent-date/test",
-  conversationUrl: "https://datehaja.com/dashboard?date=test",
+  url: "https://merry-bass-190.convex.site/agent-date/test",
+  conversationUrl: "https://merry-bass-190.convex.site/dashboard?date=test",
 };
 
 const englishReport = {
@@ -89,11 +89,11 @@ describe("a short, grounded letter", () => {
   });
 
   it("links to its own activity record, not an unrelated cultural article", () => {
-    const email = agentDebriefEmail({ ...base, locale: "ko-KR", report: { ...base.report, sceneImageUrl: "https://datehaja.com/scenes/cafe.png", worldSourceUrl: "https://example.com/culture" } });
-    expect(email.html).toContain('<img src="https://datehaja.com/scenes/cafe.png"');
+    const email = agentDebriefEmail({ ...base, locale: "ko-KR", report: { ...base.report, sceneImageUrl: "https://merry-bass-190.convex.site/scenes/cafe.png", worldSourceUrl: "https://example.com/culture" } });
+    expect(email.html).toContain('<img src="https://merry-bass-190.convex.site/scenes/cafe.png"');
     expect(email.html).not.toContain("서울 레코드 바 다시 유행");
     expect(email.html).not.toContain('href="https://example.com/culture"');
-    expect(email.html).toContain('href="https://datehaja.com/agent-date/test#activity"');
+    expect(email.html).toContain('href="https://merry-bass-190.convex.site/agent-date/test#activity"');
     expect(email.html).toContain(base.report.ownerSpriteUrl);
     expect(email.html).toContain(base.report.counterpartSpriteUrl);
     expect(email.html).toContain("6 마디의 대화");
@@ -103,7 +103,7 @@ describe("a short, grounded letter", () => {
   it("labels fictional previews and links to delivery settings", () => {
     const email = agentDebriefEmail({ ...base, locale: "ko-KR", report: { ...base.report, isDemo: true } });
     expect(email.html).toContain("가상의 데모 상대");
-    expect(email.html).toContain('href="https://datehaja.com/settings"');
+    expect(email.html).toContain('href="https://merry-bass-190.convex.site/settings"');
   });
 
   it("preserves the verified paragraphs and omits local date actions in an explicit preview", () => {
