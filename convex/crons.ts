@@ -19,9 +19,30 @@ export const dailyTick = internalAction({
   },
 });
 
+export const failStalledDates = internalAction({
+  args: {},
+  returns: v.null(),
+  handler: async (ctx) => {
+    const nowMs = Date.now();
+    const failed = await ctx.runMutation(internal.agentDates.failStalled, {
+      nowMs,
+    });
+    console.log(`[cron] stalledDatesFailed=${failed}`);
+    return null;
+  },
+});
+
 const crons = cronJobs();
 
 // Denormalised ages.
 crons.cron("datehaja daily", "0 9 * * *", internal.crons.dailyTick, {});
+// A dead turn worker leaves the date running with nextTurnAt in the past.
+// Five minutes bounds how long the owner then stares; daily is useless here.
+crons.interval(
+  "datehaja stalled dates",
+  { minutes: 5 },
+  internal.crons.failStalledDates,
+  {},
+);
 
 export default crons;

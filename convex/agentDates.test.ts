@@ -2,7 +2,7 @@
 import { convexTest } from "convex-test";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { api, internal } from "./_generated/api";
-import { buildDateTurnRequest, conversationLimit, emailReportFor } from "./agentDates";
+import { buildDateTurnRequest, conversationLimit, emailReportFor, STALLED_RUNNING_MS } from "./agentDates";
 import type { Id } from "./_generated/dataModel";
 import schema from "./schema";
 
@@ -1631,5 +1631,122 @@ describe('relationship needs filter the real candidate pool', () => {
     expect(dates).toHaveLength(allowed ? 2 : 1);
     if (allowed) expect(dates.find(d => d._id === result?.currentDateId)?.counterpartUserId).toBe(s.carol);
     else expect(await t.run(ctx => ctx.db.query('emailMessages').collect())).toHaveLength(0);
+  });
+});
+
+describe("a running date whose turn worker died", () => {
+  async function runningWithTurns(
+    t: TestBackend,
+    storedTurns: number,
+    nextTurnAt: number,
+  ) {
+    const s = await setup(t);
+    await t.run(async (ctx) => {
+      await ctx.db.patch("agentDates", s.agentDateId, {
+        status: "running",
+        plannedTurns: 12,
+        activity: "thinking",
+        nextTurnAt,
+        updatedAt: nextTurnAt,
+        initiatorVerdict: "pending",
+        counterpartVerdict: "pending",
+        initiatorReason: "",
+        counterpartReason: "",
+      });
+      for (let round = 2; round <= storedTurns; round++) {
+        await ctx.db.insert("agentDateTurns", {
+          agentDateId: s.agentDateId,
+          round,
+          speakerUserId: round % 2 ? s.alice : s.bob,
+          speakerAgentName: round % 2 ? "Aster" : "Bori",
+          content: `Line ${round}`,
+          subtext: "Private",
+          createdAt: NOW + round,
+        });
+      }
+    });
+    return s;
+  }
+
+  test("get, dailyTick, and retryReview never recover it", async () => {
+    const t = createTestBackend();
+    const s = await runningWithTurns(t, 8, NOW - 60 * 60_000);
+    const jobs = await t.run((ctx) =>
+      ctx.db.system.query("_scheduled_functions").collect(),
+    );
+    expect(jobs.filter((job) => job.name.endsWith("runTurn"))).toHaveLength(0);
+
+    const before = await asUser(t, s.alice).query(api.agentDates.get, {
+      agentDateId: s.agentDateId,
+    });
+    expect(before?.date).toMatchObject({
+      status: "running",
+      canRetryReview: false,
+    });
+
+    await t.action(internal.crons.dailyTick, {});
+    await asUser(t, s.alice).mutation(api.agentDates.retryReview, {
+      agentDateId: s.agentDateId,
+    });
+    const listed = await asUser(t, s.alice).query(api.agentDates.listMine, {});
+
+    const after = await asUser(t, s.alice).query(api.agentDates.get, {
+      agentDateId: s.agentDateId,
+    });
+    const row = await t.run((ctx) => ctx.db.get("agentDates", s.agentDateId));
+    expect(row?.status).toBe("running");
+    expect(row?.nextTurnAt).toBe(NOW - 60 * 60_000);
+    expect(after?.date).toMatchObject({
+      status: "running",
+      canRetryReview: false,
+    });
+    expect(listed[0]?.status).toBe("running");
+  });
+
+  test("a sweep fails a date whose nextTurnAt is far past the stall threshold", async () => {
+    const t = createTestBackend();
+    const s = await runningWithTurns(t, 8, NOW - STALLED_RUNNING_MS);
+    expect(await t.mutation(internal.agentDates.failStalled, { nowMs: NOW })).toBe(1);
+    const date = await t.run((ctx) => ctx.db.get("agentDates", s.agentDateId));
+    expect(date).toMatchObject({ status: "failed", closingAfterRound: 8 });
+    const view = await asUser(t, s.alice).query(api.agentDates.get, {
+      agentDateId: s.agentDateId,
+    });
+    expect(view?.date).toMatchObject({
+      status: "failed",
+      canRetryReview: true,
+    });
+  });
+
+  test("a sweep leaves a date that is still within the legitimate turn gap", async () => {
+    const t = createTestBackend();
+    const dueAt = NOW - (10 * 60_000 + 90_000);
+    const s = await runningWithTurns(t, 8, dueAt);
+    expect(await t.mutation(internal.agentDates.failStalled, { nowMs: NOW })).toBe(0);
+    const date = await t.run((ctx) => ctx.db.get("agentDates", s.agentDateId));
+    expect(date?.status).toBe("running");
+    expect(date?.nextTurnAt).toBe(dueAt);
+    expect(date?.closingAfterRound).toBeUndefined();
+    const view = await asUser(t, s.alice).query(api.agentDates.get, {
+      agentDateId: s.agentDateId,
+    });
+    expect(view?.date).toMatchObject({
+      status: "running",
+      canRetryReview: false,
+    });
+  });
+
+  test("the five-minute cron action fails a stalled date", async () => {
+    vi.setSystemTime(NOW);
+    const t = createTestBackend();
+    const s = await runningWithTurns(t, 8, NOW - STALLED_RUNNING_MS);
+    await t.action(internal.crons.failStalledDates, {});
+    const view = await asUser(t, s.alice).query(api.agentDates.get, {
+      agentDateId: s.agentDateId,
+    });
+    expect(view?.date).toMatchObject({
+      status: "failed",
+      canRetryReview: true,
+    });
   });
 });
