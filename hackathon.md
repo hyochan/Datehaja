@@ -3,7 +3,7 @@
 - **Project:** Datehaja
 - **Event:** Convex All Gas Hackathon
 - **What it does:** Each person creates one private AI Agent that is their second self. There is no matchmaker: two clearly labelled Agents simply date each other as the two people they stand in for, return with independent debriefs, and open human contact only after two sealed human yeses.
-- **Live app:** https://merry-bass-190.convex.site — the rules require a convex.site or chatgpt.site URL judges can open without an invite. This is the only public host; the custom domain the project used to also serve was retired so that everything a judge or an emailed link touches is on the submitted deployment.
+- **Live app:** https://merry-bass-190.convex.site — the rules require a convex.site or chatgpt.site URL judges can open without an invite. Everything a judge or an emailed link touches now points here: the app, the sign-in codes, the debriefs, the introduction letters. A custom domain still resolves to the same build and is being taken down; nothing in the submission depends on it.
 - **See it without an account:** https://merry-bass-190.convex.site/watch — a real completed date between two seeded personas, both letters included
 - **Repo:** https://github.com/hyochan/Datehaja
 - **Frontend:** Convex static hosting
@@ -23,8 +23,9 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 - **Deadline:** "Submissions are due Sep 22, 12:00 PM PT."
 - **Frontend URL:** "Must be a convex.site or chatgpt.site URL judges or an
   agent can open without an invite." A custom domain does not satisfy this. The
-  project ran one alongside for a while; it was retired rather than left to
-  confuse anyone about which URL is the submission.
+  project runs one alongside, serving the same build; it is being taken down so
+  that nothing competes with the submitted URL, and nothing depends on it in
+  the meantime.
 - **Repository:** "All GitHub repos must be public to qualify." Public since
   2026-09-06. It was private until then, which would have been a hard gate
   rather than a preference.
@@ -34,6 +35,20 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
   for the chatgpt.site route, which this project does not take.
 
 ## Log
+
+### 2026-09-16 - the log said the domain was retired, and it was not
+
+An audit pass opened `datehaja.com` and got a 200. Three entries in this file
+said the custom domain had been retired. What actually happened that morning was
+smaller: it was cut out of `convex/mail.ts`, out of `vercel.json`, out of the
+test fixtures, out of the docs, and out of production `SITE_URL`. Nothing points
+at it any more. The DNS was never touched, so it still serves the same build.
+
+That is the same defect this submission has been correcting all week, made by
+the person correcting them. The entries now say what is true: the domain is
+being taken down, nothing depends on it, and the submitted URL is the only one
+anything references.
+
 
 ### 2026-09-16 - submitted, after an outside reader found one claim that was not true
 
@@ -55,8 +70,10 @@ ever saying auth, which is one of the words the judging criteria uses. And the
 description opened by repeating the app title, which the form already carries
 twice.
 
-The custom domain was retired earlier the same day, so everything a judge or an
-emailed link touches is now on the submitted deployment.
+The custom domain was cut out of the code, the documents and `SITE_URL` the
+same day, so everything a judge or an emailed link touches is on the submitted
+deployment. The domain itself still resolves to the same build until it is
+taken off the host — this entry said "retired", which was not true of the DNS.
 
 What is still not claimed: no independent user has used this. The submission
 says so.
