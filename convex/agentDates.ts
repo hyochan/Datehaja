@@ -26,6 +26,7 @@ import {
 } from "./lib/authz";
 import { getScoutAccess } from "./billing";
 import { settleSearchEncounter } from "./scouting";
+import { redactContactInfo } from "./lib/privacy";
 import { clean, cleanMultiline, sanitizeModelText } from "./lib/text";
 import { obj, type StructuredRequest, type StructuredResult } from "./integrations/openai";
 import { search } from "./integrations/firecrawl";
@@ -295,7 +296,7 @@ export function emailReportFor(
         // Names are user-chosen and can collide between a pair, so ownership
         // travels by user id, never by name equality.
         isMine: turn.speakerUserId === ownerUserId,
-        content: turn.content,
+        content: redactContactInfo(turn.content),
       })),
   };
 }
@@ -1620,8 +1621,8 @@ export const storeTurnAndSchedule = internalMutation({
       round: args.round,
       speakerUserId: args.speakerUserId,
       speakerAgentName: clean(args.speakerAgentName, 32),
-      content: clean(args.content, 700),
-      subtext: clean(args.subtext, 260),
+      content: redactContactInfo(clean(args.content, 700)),
+      subtext: redactContactInfo(clean(args.subtext, 260)),
       createdAt: now,
     });
     await ctx.db.patch("agentDates", args.agentDateId, {
@@ -2198,7 +2199,7 @@ export const get = query({
         round: turn.round,
         isMine: turn.speakerUserId === userId,
         speakerAgentName: turn.speakerAgentName,
-        content: turn.content,
+        content: redactContactInfo(turn.content),
         createdAt: turn.createdAt,
       })),
       mine: {

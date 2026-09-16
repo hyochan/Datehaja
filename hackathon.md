@@ -36,6 +36,19 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-16 - a photo upload id was enough to take someone else's file
+
+`profiles.setPhoto` accepted any storage id. It checked that the blob
+existed and looked like an image, not that this caller was the one who
+uploaded it. Attaching another profile's photo, then replacing your own,
+would delete their file.
+
+The mutation now refuses a storage id already on another profile or on a
+site asset. Agent `essence` was also flagged in the same audit; it never
+leaves its owner as a field — only the date turns do, and those now go
+through the same contact redaction as bios.
+
+
 ### 2026-09-16 - a failed extra turn after twelve lines killed a finished date
 
 `continueConversation` raises `plannedTurns` 12 → 16 before round 13 is

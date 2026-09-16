@@ -617,6 +617,41 @@ describe("agent-date privacy and human consent", () => {
     await expect(asUser(t, s.carol).query(api.agentDates.get, { agentDateId: s.agentDateId })).rejects.toThrow();
   });
 
+  test("a stored turn does not carry contact details through to the other person", async () => {
+    const t = convexTest(schema, modules);
+    const s = await setup(t);
+    await t.run((ctx) =>
+      ctx.db.patch("agentDates", s.agentDateId, { status: "running" }),
+    );
+    await t.mutation(internal.agentDates.storeTurnAndSchedule, {
+      agentDateId: s.agentDateId,
+      round: 2,
+      speakerUserId: s.alice,
+      speakerAgentName: "Aster",
+      content: "Email me at stolen@example.com if you want to meet.",
+      subtext: "Also +82 10-1234-5678",
+      nextDelayMs: 1000,
+      nextActivity: "thinking",
+    });
+    const stored = await t.run(async (ctx) =>
+      ctx.db
+        .query("agentDateTurns")
+        .withIndex("by_date_and_round", (q) =>
+          q.eq("agentDateId", s.agentDateId).eq("round", 2),
+        )
+        .unique(),
+    );
+    expect(stored?.content).not.toContain("stolen@example.com");
+    expect(stored?.subtext).not.toContain("10-1234-5678");
+    const view = await asUser(t, s.bob).query(api.agentDates.get, {
+      agentDateId: s.agentDateId,
+    });
+    expect(JSON.stringify(view)).not.toContain("stolen@example.com");
+    expect(view?.turns.some((turn) => turn.content.includes("[removed]"))).toBe(
+      true,
+    );
+  });
+
   test("a clarification is durable, bounded, and never exposes either private question", async () => {
     const t = convexTest(schema, modules);
     const s = await setup(t);

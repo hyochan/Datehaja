@@ -666,13 +666,28 @@ export const setPhoto = mutation({
     const userId = await requireUserId(ctx);
     const profile = await requireProfile(ctx, userId);
 
-    if (args.storageId) {
-      const meta = await ctx.db.system.get("_storage", args.storageId);
+    const storageId = args.storageId;
+    if (storageId) {
+      const meta = await ctx.db.system.get("_storage", storageId);
       if (!meta) throw new Error("Upload didn't finish.");
       if (meta.size > 6 * 1024 * 1024)
         throw new Error("Photos must be under 6MB.");
       if (!meta.contentType?.startsWith("image/")) {
         throw new Error("That file isn't an image.");
+      }
+      if (profile.photoStorageId !== storageId) {
+        const taken = await ctx.db
+          .query("profiles")
+          .withIndex("by_photoStorageId", (q) =>
+            q.eq("photoStorageId", storageId),
+          )
+          .unique();
+        if (taken) throw new Error("That upload isn't yours.");
+        const hosted = await ctx.db
+          .query("siteAssets")
+          .withIndex("by_storageId", (q) => q.eq("storageId", storageId))
+          .take(1);
+        if (hosted.length > 0) throw new Error("That upload isn't yours.");
       }
     }
 

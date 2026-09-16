@@ -93,7 +93,8 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_status_and_city", ["status", "city"])
-    .index("by_demo_and_status", ["isDemo", "status"]),
+    .index("by_demo_and_status", ["isDemo", "status"])
+    .index("by_photoStorageId", ["photoStorageId"]),
 
   // ---- dating preferences ---------------------------------------------
   preferences: defineTable({
@@ -568,5 +569,6 @@ export default defineSchema({
     buildId: v.string(),
   })
     .index("by_path", ["path"])
-    .index("by_build", ["buildId"]),
+    .index("by_build", ["buildId"])
+    .index("by_storageId", ["storageId"]),
 });
