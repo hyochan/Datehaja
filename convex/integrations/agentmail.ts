@@ -137,7 +137,7 @@ export async function prepareInlineMail(
     ));
     const hash = Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
     const id = /^[A-Za-z0-9._+-]+@[A-Za-z0-9.-]+$/.test(alias)
-      ? alias : `${hash}@images.datehaja.com`;
+      ? alias : `${hash}@images.datehaja.invalid`;
     ids.set(alias, id);
     images.push({ ...attachment, content_id: id });
   }

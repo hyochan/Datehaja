@@ -32,8 +32,14 @@ export function appUrl(path = "/"): string {
   return `${base}${path}`;
 }
 
-/** Where the site is served from when nothing else says otherwise. */
-const PUBLIC_ASSET_ORIGIN = "https://datehaja.com";
+/**
+ * Where the site is served from when nothing else says otherwise.
+ *
+ * The submitted deployment, not a custom domain: the rules require the public
+ * URL to be a convex.site one, and an email that borrowed a domain the project
+ * may stop renewing would start showing broken images the day it lapsed.
+ */
+const PUBLIC_ASSET_ORIGIN = "https://merry-bass-190.convex.site";
 
 /**
  * True when a mail client somewhere else on the internet could actually fetch

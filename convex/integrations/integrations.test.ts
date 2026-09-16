@@ -375,7 +375,7 @@ describe("AgentMail helpers", () => {
       expect(new Headers(init?.headers).get("Idempotency-Key")).toBe("preview-hyo-hyo.dev");
       const body = JSON.parse(String(init?.body));
       expect(body.to).toEqual(["hyo@hyo.dev"]);
-      expect(body.attachments).toEqual([{ filename: "scene.png", content_type: "image/png", content_disposition: "inline", content_id: expect.stringMatching(/^[a-f0-9]{64}@images\.datehaja\.com$/), content: "aW1hZ2U=" }]);
+      expect(body.attachments).toEqual([{ filename: "scene.png", content_type: "image/png", content_disposition: "inline", content_id: expect.stringMatching(/^[a-f0-9]{64}@images\.datehaja\.invalid$/), content: "aW1hZ2U=" }]);
       expect(body.html).toBe(`<img src="cid:${body.attachments[0].content_id}">`);
       return new Response(JSON.stringify({ message_id: "message-1", thread_id: "thread-1" }));
     });
@@ -396,9 +396,9 @@ describe("AgentMail helpers", () => {
   });
 
   it("accepts bracketed MIME IDs and percent-encoded CID URLs without double wrapping", async () => {
-    const result = await prepareInlineMail('<img src="cid:scene%40datehaja.com">', [{ ...inlineImage, content_id: "<scene@datehaja.com>" }]);
-    expect(result.html).toBe('<img src="cid:scene@datehaja.com">');
-    expect(result.attachments[0].content_id).toBe("scene@datehaja.com");
+    const result = await prepareInlineMail('<img src="cid:scene%40datehaja.invalid">', [{ ...inlineImage, content_id: "<scene@datehaja.invalid>" }]);
+    expect(result.html).toBe('<img src="cid:scene@datehaja.invalid">');
+    expect(result.attachments[0].content_id).toBe("scene@datehaja.invalid");
   });
 
   it("blocks a dangling or ambiguous CID before contacting the mail provider", async () => {

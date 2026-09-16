@@ -58,7 +58,7 @@ production client.
 
 A browser-installed PWA uses the same top-level OAuth redirect and stored Convex
 Auth session as the site. Keep `SITE_URL` on the canonical HTTPS origin
-(`https://datehaja.com`) so the provider returns to the installed app's scope.
+(`https://merry-bass-190.convex.site`) so the provider returns to the installed app's scope.
 The web manifest is already linked from `index.html`, so the hosted app has a
 stable standalone scope and home-screen identity. A service worker is
 intentionally deferred: authentication, safety state, and live Agent activity
