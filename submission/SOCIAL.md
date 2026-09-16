@@ -1,6 +1,6 @@
 # Submission and social copy — September 16, 2026
 
-**Unsent drafts. No social post or submission receipt is claimed.**
+**Posted 2026-09-16. The submission receipt is not claimed until the form is in.**
 Every app link below is on the submitted production deployment and was checked
 there. The film itself is unlisted on YouTube (https://youtu.be/K35t6VaF0iI); the repository keeps its
 captions and transcript, not the file.
@@ -136,9 +136,13 @@ an unlinked handle notifies nobody.
 | --- | --- |
 | Current film and caption files | Built; see film-verification.json |
 | Film, unlisted on YouTube | https://youtu.be/K35t6VaF0iI |
+| Film page on the deployment | Retired; the film is on YouTube only |
 | Production revision | Shipped; `verify:prod` reports `scoutAccess.ok` |
 | Independent human sessions | 0 completed; USER_STUDY.md is ready |
-| X / LinkedIn post permalinks | Pending |
+| X post | https://x.com/hyodotdev/status/2100046684575387842 |
+| X reply, carrying the safety detail | https://x.com/hyodotdev/status/2100047689652264996 |
+| LinkedIn post | https://www.linkedin.com/feed/update/urn:li:activity:7505814301929156608/ |
+| Sponsor tagging | Real mentions on both: X linkifies handles itself; the four LinkedIn company mentions were selected from the composer, so all four were notified |
 | Final submission receipt | Pending |
 
 Submission form: https://vibeapps.dev/judging/convex-all-gas-hackathon-openai/submit
