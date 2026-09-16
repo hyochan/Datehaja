@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createElement } from "react";
+import { createElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { I18nProvider } from "../../i18n";
 import { Field, Select } from "./primitives";
@@ -39,7 +39,10 @@ describe("Field primitive", () => {
         I18nProvider,
         null,
         createElement(
-          Field,
+          // This suite is .ts, not .tsx — vitest only collects *.test.ts — so
+          // children travel as createElement's third argument. Field declares
+          // children as required, which that form does not satisfy on its own.
+          Field as (props: { label: string; htmlFor?: string }) => ReactNode,
           { label: "Name your Dating Agent", htmlFor: "agent-name" },
           createElement("input", { id: "agent-name" }),
         ),
