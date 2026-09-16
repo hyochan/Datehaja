@@ -50,6 +50,35 @@ describe("agent date pacing", () => {
     expect(pause.delayMs).toBeGreaterThan(2 * 60_000);
   });
 
+  it("does not reuse the sixth-turn wrap-up beat for turns 7-16", () => {
+    const random = sequence(0.5, 0.9);
+    const sixth = planAgentDatePause({
+      round: 6,
+      previousMessageLength: 200,
+      voice: "warm",
+      mode: "demo",
+      random,
+    });
+    const seventh = planAgentDatePause({
+      round: 7,
+      previousMessageLength: 200,
+      voice: "warm",
+      mode: "demo",
+      random: sequence(0.5, 0.9),
+    });
+    const thirteenth = planAgentDatePause({
+      round: 13,
+      previousMessageLength: 200,
+      voice: "warm",
+      mode: "demo",
+      random: sequence(0.5, 0.9),
+    });
+    expect(sixth.activity).toBe("thinking");
+    expect(seventh.activity).toBe("arriving");
+    expect(thirteenth.activity).toBe("arriving");
+    expect(seventh.delayMs).not.toBe(sixth.delayMs);
+  });
+
   it("gives private verdict writing its own final pause", () => {
     expect(planDebriefPause("demo", () => 0.5)).toEqual({
       delayMs: 4_600,

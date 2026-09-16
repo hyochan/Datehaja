@@ -82,7 +82,9 @@ type AgentBrief = {
 
 
 export function conversationLimit(date: { plannedTurns?: number; closingAfterRound?: number }) {
-  return Math.min(date.plannedTurns ?? 6, date.closingAfterRound ?? Infinity);
+  // closingAfterRound usually shortens an early leave. A leave on the last
+  // planned turn has to be allowed to ask for one farewell beyond the plan.
+  return Math.min(date.closingAfterRound ?? date.plannedTurns ?? 6, 16);
 }
 type VerdictResult = {
   reflection?: DateReflection;
@@ -1530,11 +1532,36 @@ export const fail = internalMutation({
       return null;
     }
     if (["debrief_ready", "connected", "closed", "failed"].includes(date.status)) return null;
+    const turns = await ctx.db
+      .query("agentDateTurns")
+      .withIndex("by_date_and_round", (q) =>
+        q.eq("agentDateId", args.agentDateId),
+      )
+      .take(17);
+    // continueConversation raises plannedTurns before the extra turns exist,
+    // and plannedTurns can only be 6/10/12/16, so it cannot be snapped back to
+    // the real length. Record the end on closingAfterRound instead.
+    //
+    // The floor is six turns, not the extension case that exposed this. A date
+    // that dies at turn eight of twelve is just as complete as one that dies at
+    // turn thirteen of sixteen, and a dead unreviewable row serves nobody.
+    // Under six turns there is no conversation to write a letter about, so the
+    // row stays failed and Recheck stays hidden.
+    const promised = conversationLimit(date);
+    const closingAfterRound =
+      date.closingAfterRound === undefined &&
+      turns.length >= 6 &&
+      turns.length < promised
+        ? turns.length
+        : date.closingAfterRound;
     await ctx.db.patch("agentDates", args.agentDateId, {
       status: "failed",
       nextTurnAt: undefined,
       failureReason: clean(args.reason, 240),
       updatedAt: Date.now(),
+      ...(closingAfterRound !== date.closingAfterRound
+        ? { closingAfterRound }
+        : {}),
     });
     await ctx.db.insert("growthEvents", {
       userId: date.initiatorUserId,
@@ -1583,8 +1610,9 @@ export const storeTurnAndSchedule = internalMutation({
       )
       .take(17);
     if (args.round !== prior.length + 1 || args.round > conversationLimit(date)) return null;
-    const closingAfterRound = date.closingAfterRound ?? (args.endsConversation
-      ? Math.min(args.round + 1, date.plannedTurns ?? 6) : undefined);
+    const closingAfterRound =
+      date.closingAfterRound ??
+      (args.endsConversation ? Math.min(args.round + 1, 16) : undefined);
     const now = Date.now();
     const delayMs = Math.max(0, Math.round(args.nextDelayMs));
     await ctx.db.insert("agentDateTurns", {
