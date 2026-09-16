@@ -36,6 +36,16 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-16 - any signed-in account could rebuild the demo world
+
+`demo.reseed` was a public mutation. It called `requireUserId`, so any signed-in
+account could retire and recreate the entire demo cast. Nothing in the product
+called it. `npx convex run` can invoke internal functions, which is the
+ability the comment claimed needed a public export.
+
+It is an `internalMutation` now. The public API no longer includes it.
+
+
 ### 2026-09-16 - an Agent name could carry contact details through to the other person
 
 `containsContactInfo` only ran on the profile display name in `saveBasics`. The

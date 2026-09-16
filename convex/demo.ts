@@ -1,11 +1,6 @@
 import { v } from "convex/values";
-import {
-  internalMutation,
-  internalQuery,
-  mutation,
-} from "./_generated/server";
+import { internalMutation, internalQuery } from "./_generated/server";
 import { internal } from "./_generated/api";
-import { requireUserId } from "./lib/authz";
 import { coarsen } from "./lib/geo";
 import {
   BUDGET_BANDS,
@@ -715,12 +710,11 @@ export const seed = internalMutation({
 
 /* ------------------------------ demo controls ----------------------------- */
 
-/** Manual reseed, exposed so the demo can be topped up without a deploy. */
-export const reseed = mutation({
+/** Manual reseed from the CLI or dashboard. Not on the public API. */
+export const reseed = internalMutation({
   args: {},
   returns: v.object({ created: v.number(), retired: v.number() }),
   handler: async (ctx): Promise<{ created: number; retired: number }> => {
-    await requireUserId(ctx);
     return await ctx.runMutation(internal.demo.seed, { nowMs: Date.now() });
   },
 });
