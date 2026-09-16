@@ -69,6 +69,9 @@ describe("profile photo ownership", () => {
     const t = convexTest(schema, modules);
     const { alice, bob } = await seedPeople(t);
     const storageId = await storeImage(t);
+    await asUser(t, alice).mutation(api.profiles.claimPhotoUpload, {
+      storageId,
+    });
     await asUser(t, alice).mutation(api.profiles.setPhoto, { storageId });
     await expect(
       asUser(t, bob).mutation(api.profiles.setPhoto, { storageId }),
@@ -77,10 +80,28 @@ describe("profile photo ownership", () => {
     expect(bobProfile?.profile?.photoStorageId).toBeUndefined();
   });
 
+  test("claiming an upload binds it before setPhoto", async () => {
+    const t = convexTest(schema, modules);
+    const { alice, bob } = await seedPeople(t);
+    const storageId = await storeImage(t);
+    await asUser(t, alice).mutation(api.profiles.claimPhotoUpload, {
+      storageId,
+    });
+    await expect(
+      asUser(t, bob).mutation(api.profiles.claimPhotoUpload, { storageId }),
+    ).rejects.toThrow("That upload isn't yours.");
+    await expect(
+      asUser(t, bob).mutation(api.profiles.setPhoto, { storageId }),
+    ).rejects.toThrow("That upload isn't yours.");
+  });
+
   test("the owner can attach their own upload", async () => {
     const t = convexTest(schema, modules);
     const { alice } = await seedPeople(t);
     const storageId = await storeImage(t);
+    await asUser(t, alice).mutation(api.profiles.claimPhotoUpload, {
+      storageId,
+    });
     await asUser(t, alice).mutation(api.profiles.setPhoto, { storageId });
     const mine = await asUser(t, alice).query(api.profiles.me, {});
     expect(mine?.profile?.photoStorageId).toBe(storageId);

@@ -33,6 +33,7 @@ export default function ProfilePage() {
   const me = useQuery(api.profiles.me);
   const saveAbout = useMutation(api.profiles.saveAbout);
   const generateUploadUrl = useMutation(api.profiles.generatePhotoUploadUrl);
+  const claimPhotoUpload = useMutation(api.profiles.claimPhotoUpload);
   const setPhoto = useMutation(api.profiles.setPhoto);
   const setPhotoVisibility = useMutation(api.profiles.setPhotoVisibility);
   const toast = useToast();
@@ -124,6 +125,7 @@ export default function ProfilePage() {
       const { storageId } = (await result.json()) as {
         storageId: Id<"_storage">;
       };
+      await claimPhotoUpload({ storageId });
       await setPhoto({ storageId });
       toast(t("Photo saved. Choose when a match can see it below."), "success");
     } catch (e) {

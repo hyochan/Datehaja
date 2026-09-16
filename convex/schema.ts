@@ -96,6 +96,15 @@ export default defineSchema({
     .index("by_demo_and_status", ["isDemo", "status"])
     .index("by_photoStorageId", ["photoStorageId"]),
 
+  /** Binds a storage object to the authenticated uploader after the POST. */
+  photoUploads: defineTable({
+    userId: v.id("users"),
+    storageId: v.id("_storage"),
+    createdAt: v.number(),
+  })
+    .index("by_storageId", ["storageId"])
+    .index("by_user", ["userId"]),
+
   // ---- dating preferences ---------------------------------------------
   preferences: defineTable({
     userId: v.id("users"),
