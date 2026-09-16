@@ -33,6 +33,7 @@ export default function ProfilePage() {
   const me = useQuery(api.profiles.me);
   const saveAbout = useMutation(api.profiles.saveAbout);
   const generateUploadUrl = useMutation(api.profiles.generatePhotoUploadUrl);
+  const claimPhotoUpload = useMutation(api.profiles.claimPhotoUpload);
   const setPhoto = useMutation(api.profiles.setPhoto);
   const setPhotoVisibility = useMutation(api.profiles.setPhotoVisibility);
   const toast = useToast();
@@ -124,6 +125,15 @@ export default function ProfilePage() {
       const { storageId } = (await result.json()) as {
         storageId: Id<"_storage">;
       };
+      // Vercel ships this bundle minutes before the Convex deploy job lands,
+      // so a browser can briefly hold a client for a backend without
+      // claimPhotoUpload. setPhoto binds the upload itself in that case, and a
+      // real ownership refusal still surfaces from setPhoto below.
+      try {
+        await claimPhotoUpload({ storageId });
+      } catch {
+        // fall through to setPhoto
+      }
       await setPhoto({ storageId });
       toast(t("Photo saved. Choose when a match can see it below."), "success");
     } catch (e) {

@@ -1,8 +1,13 @@
 import { refreshAfterPreferencesChange } from "./scouting";
 import { supersedeAgentProposals } from "./lib/agentLearning";
 import { v } from "convex/values";
-import { internalMutation, mutation, query } from "./_generated/server";
-import type { Doc } from "./_generated/dataModel";
+import {
+  internalMutation,
+  mutation,
+  query,
+  type MutationCtx,
+} from "./_generated/server";
+import type { Doc, Id } from "./_generated/dataModel";
 import {
   currentUserId,
   getPreferencesByUser,
@@ -659,6 +664,17 @@ export const generatePhotoUploadUrl = mutation({
   },
 });
 
+/** Bind a just-uploaded blob to this caller before setPhoto. */
+export const claimPhotoUpload = mutation({
+  args: { storageId: v.id("_storage") },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const userId = await requireUserId(ctx);
+    await bindPhotoUpload(ctx, userId, args.storageId);
+    return null;
+  },
+});
+
 export const setPhoto = mutation({
   args: { storageId: v.union(v.id("_storage"), v.null()) },
   returns: v.null(),
@@ -666,17 +682,22 @@ export const setPhoto = mutation({
     const userId = await requireUserId(ctx);
     const profile = await requireProfile(ctx, userId);
 
-    if (args.storageId) {
-      const meta = await ctx.db.system.get("_storage", args.storageId);
+    const storageId = args.storageId;
+    if (storageId) {
+      const meta = await ctx.db.system.get("_storage", storageId);
       if (!meta) throw new Error("Upload didn't finish.");
       if (meta.size > 6 * 1024 * 1024)
         throw new Error("Photos must be under 6MB.");
       if (!meta.contentType?.startsWith("image/")) {
         throw new Error("That file isn't an image.");
       }
+      if (profile.photoStorageId !== storageId) {
+        await bindPhotoUpload(ctx, userId, storageId);
+      }
     }
 
     if (profile.photoStorageId && profile.photoStorageId !== args.storageId) {
+      await releasePhotoUpload(ctx, profile.photoStorageId);
       await ctx.storage.delete(profile.photoStorageId);
     }
     await ctx.db.patch("profiles", profile._id, {
@@ -686,6 +707,49 @@ export const setPhoto = mutation({
     return null;
   },
 });
+
+async function bindPhotoUpload(
+  ctx: MutationCtx,
+  userId: Id<"users">,
+  storageId: Id<"_storage">,
+) {
+  const existing = await ctx.db
+    .query("photoUploads")
+    .withIndex("by_storageId", (q) => q.eq("storageId", storageId))
+    .unique();
+  if (existing) {
+    if (existing.userId !== userId) throw new Error("That upload isn't yours.");
+    return;
+  }
+  const taken = await ctx.db
+    .query("profiles")
+    .withIndex("by_photoStorageId", (q) => q.eq("photoStorageId", storageId))
+    .unique();
+  if (taken && taken.userId !== userId) {
+    throw new Error("That upload isn't yours.");
+  }
+  const hosted = await ctx.db
+    .query("siteAssets")
+    .withIndex("by_storageId", (q) => q.eq("storageId", storageId))
+    .take(1);
+  if (hosted.length > 0) throw new Error("That upload isn't yours.");
+  await ctx.db.insert("photoUploads", {
+    userId,
+    storageId,
+    createdAt: Date.now(),
+  });
+}
+
+async function releasePhotoUpload(
+  ctx: MutationCtx,
+  storageId: Id<"_storage">,
+) {
+  const existing = await ctx.db
+    .query("photoUploads")
+    .withIndex("by_storageId", (q) => q.eq("storageId", storageId))
+    .unique();
+  if (existing) await ctx.db.delete("photoUploads", existing._id);
+}
 
 export const setPhotoVisibility = mutation({
   args: { visibility: photoVisibilityValidator },
