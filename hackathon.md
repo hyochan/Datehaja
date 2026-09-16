@@ -36,6 +36,20 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-16 - a bad date link took the whole app to a white screen
+
+There was no root ErrorBoundary. Opening `/dashboard?date=` with a
+malformed Convex id made `agentDates.get` throw at the argument
+validator, and React had nothing to catch it. The page went blank. A
+judge following a stale or edited link would have no way back.
+
+The dashboard now treats an unusable date id as the same "this story
+isn't here" surface the date page already had, instead of throwing.
+A root boundary covers every other render error with a recovery
+screen in the 404's language — what happened, and a way back to
+the dates — never a stack trace.
+
+
 ### 2026-09-16 - any signed-in account could rebuild the demo world
 
 `demo.reseed` was a public mutation. It called `requireUserId`, so any signed-in

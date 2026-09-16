@@ -5,6 +5,7 @@ import { ConvexAuthProvider } from "@convex-dev/auth/react";
 import { ConvexReactClient } from "convex/react";
 import { getConvexUrl } from "@convex-dev/static-hosting";
 import App from "./App";
+import { ErrorBoundary } from "./components/layout/ErrorBoundary";
 import { ToastProvider } from "./components/ui/Toast";
 import { I18nProvider } from "./i18n";
 import "./styles/index.css";
@@ -37,7 +38,9 @@ createRoot(document.getElementById("root")!).render(
       <ConvexAuthProvider client={convex}>
         <BrowserRouter>
           <ToastProvider>
-            <App />
+            <ErrorBoundary>
+              <App />
+            </ErrorBoundary>
           </ToastProvider>
         </BrowserRouter>
       </ConvexAuthProvider>

@@ -18,6 +18,7 @@ import {
 import { DateActivityJournal } from "../components/agent/DateActivityJournal";
 import { DateTranscript } from "../components/agent/DateTranscript";
 import { CoachedDateTranscript } from "../components/agent/CoachedDateTranscript";
+import { MissingDate } from "../components/layout/MissingDate";
 import type { Id } from "@convex/_generated/dataModel";
 import { activityCopy, type DateActivity } from "@convex/lib/dateActivity";
 import { AgentDateWorld } from "../components/agent/AgentDateWorld";
@@ -240,20 +241,7 @@ export default function AgentDatePage() {
     );
   }
   if (!result) {
-    return (
-      <Card className="mx-auto max-w-xl p-8 text-center">
-        <h1 className="text-[32px]">{t("This story isn't here.")}</h1>
-        <p className="mt-3 text-soft">
-          {t("It may have ended, or it belongs to another person.")}
-        </p>
-        <Link
-          to="/dashboard"
-          className="mt-6 inline-block text-[14px] font-bold text-[var(--accent-text)]"
-        >
-          {t("Back to my Dating Agent →")}
-        </Link>
-      </Card>
-    );
+    return <MissingDate />;
   }
 
   const { date, mine, counterpart, turns } = result;

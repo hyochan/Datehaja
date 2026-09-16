@@ -1,5 +1,11 @@
-import { useEffect, useRef, useState } from "react";
-import { useAction, useMutation, useQuery } from "convex/react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useAction,
+  useMutation,
+  useQueries,
+  useQuery,
+  type RequestForQueries,
+} from "convex/react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { api } from "@convex/_generated/api";
 import type { Id } from "@convex/_generated/dataModel";
@@ -10,9 +16,11 @@ import {
   type AvatarConfig,
 } from "../components/agent/AgentAvatar";
 import { AgentHomeWorld } from "../components/agent/AgentDateWorld";
+import { MissingDate } from "../components/layout/MissingDate";
 import { useI18n } from "../i18n";
 import { AgentSearchWorld } from "../components/agent/AgentSearchWorld";
 import { relativeTime } from "../lib/format";
+import { parseAgentDateSearchParam } from "../lib/navigation";
 
 type AgentMessage = {
   _id: string;
@@ -99,14 +107,26 @@ export default function AgentDashboardPage() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const rawDiscussionId = searchParams.get("date");
-  const discussionId =
-    rawDiscussionId && /^[a-z0-9]{20,}$/.test(rawDiscussionId)
-      ? (rawDiscussionId as Id<"agentDates">)
-      : null;
-  const discussion = useQuery(
-    api.agentDates.get,
-    discussionId ? { agentDateId: discussionId } : "skip",
-  ) as DateDiscussion | null | undefined;
+  const discussionId = parseAgentDateSearchParam(rawDiscussionId);
+  const dateQueries = useMemo((): RequestForQueries => {
+    if (!discussionId) return {};
+    return {
+      discussion: {
+        query: api.agentDates.get,
+        args: { agentDateId: discussionId as Id<"agentDates"> },
+      },
+    };
+  }, [discussionId]);
+  const { discussion: discussionResult } = useQueries(dateQueries);
+  const discussion =
+    discussionResult instanceof Error
+      ? null
+      : (discussionResult as DateDiscussion | null | undefined);
+  const requestedDateMissing =
+    Boolean(rawDiscussionId) &&
+    (discussionId === null ||
+      discussionResult instanceof Error ||
+      discussion === null);
   const { locale, t } = useI18n();
   const [message, setMessage] = useState("");
   const [questionAnswer, setQuestionAnswer] = useState("");
@@ -167,6 +187,10 @@ export default function AgentDashboardPage() {
     if (!mine?.agent?._id) return;
     void ensureQuestion({ locale }).catch(() => undefined);
   }, [ensureQuestion, locale, mine?.agent?._id]);
+
+  if (requestedDateMissing) {
+    return <MissingDate />;
+  }
 
   if (mine === undefined || mine === null) {
     return (
