@@ -58,30 +58,37 @@ simulations prove nothing about real chemistry; a post that claimed otherwise
 would be the one thing in this submission that does not match its evidence. A
 question also invites replies, and replies are what "engagement counts" means.
 
-English, for the accounts being tagged (261 characters with the link counted as
-23):
+A thread, because the hook fits in one post and the safety detail does not.
+Lengths counted with the link as 23 characters, the way X counts it.
 
-> A dating app where you don't go on the first date. Your AI agent does — as
-> you, always labelled AI — then comes home and tells you if it's worth meeting.
+**Post 1 — 243/280**
+
+> A dating app where you don't go on the first date. Your AI agent does, then
+> comes home and tells you if it's worth meeting.
 >
-> Good idea or terrible one? I don't know yet. That's why it's open.
+> Good idea or a terrible one? I don't know yet, so it's open.
 >
-> Watch one that already happened, no signup:
+> Watch a finished one, no signup:
 > https://merry-bass-190.convex.site/watch
->
-> @convex @OpenAI @firecrawl @agentmail
 
-Korean, if posting to the Korean audience as well:
+**Reply — 261/280.** Tags go here so the first post stays a sentence rather than
+a list of handles.
 
-> 첫 데이트를 내가 안 가는 데이팅 앱을 만들었어요. 내 AI 에이전트가 대신
-> 갑니다. 항상 AI라고 밝히고, 돌아와서 만나볼 만한지 솔직하게 말해줘요.
+> The agent is always identified as AI and can never consent to contact for you.
+> It carries only what you told it privately, and it comes back with the case
+> against meeting too.
 >
-> 좋은 아이디어인지 최악인지 아직 모르겠어서 그냥 열어둡니다.
+> Built for @convex All Gas with @OpenAI @firecrawl @agentmail
+> https://github.com/hyochan/Datehaja
+
+**Korean, 133/280**, if posting to the Korean audience too:
+
+> 첫 데이트를 내가 안 가는 데이팅 앱을 만들었습니다. 내 AI 에이전트가 대신 가요.
+>
+> 좋은 아이디어인지 최악인지 아직 모르겠어서, 일단 열어둡니다.
 >
 > 이미 끝난 데이트 하나 보기 (가입 없이):
 > https://merry-bass-190.convex.site/watch
->
-> @convex @OpenAI @firecrawl @agentmail
 
 Upload the film natively if the account supports video posting; native video
 travels further than a link. Do not call these fictional rehearsals customer
