@@ -36,6 +36,20 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-16 - leftover concierge time helpers were still compiling
+
+`convex/lib/time.ts` still exported availability windows and confirm
+deadlines from the old concierge matcher. Nothing in the product imported
+it. Its only caller was its own test, twenty-three cases about overlap
+and lead time that no live path exercised. The generated API listed the
+file because Convex indexes every module, not because anything ran it.
+
+The same pass found two other leftovers with no product importer:
+`src/lib/status.ts` still labelled `inviting` / `matching` / `researching`
+drops, and `RiveAgent` was an experimental adapter no page loaded. Scripts,
+the deploy workflow and the age cron do not reference any of them.
+
+
 ### 2026-09-16 - a date request only ever saw the oldest forty people in a city
 
 `createDateRequest` read forty active profiles per city and only then
