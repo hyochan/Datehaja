@@ -2,7 +2,7 @@
 import { convexTest } from "convex-test";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { api, internal } from "./_generated/api";
-import { conversationLimit, emailReportFor } from "./agentDates";
+import { buildDateTurnRequest, conversationLimit, emailReportFor } from "./agentDates";
 import type { Id } from "./_generated/dataModel";
 import schema from "./schema";
 
@@ -1010,6 +1010,24 @@ describe("agent-date privacy and human consent", () => {
   });
 });
 
+
+describe("which model the product is willing to speak as", () => {
+  test("the date's own turns refuse the economy ladder and carry a deadline", async () => {
+    const t = convexTest(schema, modules);
+    const s = await setup(t);
+    const context = await t.query(internal.agentDates.runContext, { agentDateId: s.agentDateId });
+    const { turnRequest } = buildDateTurnRequest(context!, 1);
+
+    // hackathon.md says date dialogue has no silent economy fallback. The
+    // letters, the journal, the coaching and the verification all set this;
+    // turns were the exception, so an unavailable Sol produced a cheaper line
+    // and it was stored as an ordinary turn of the date.
+    expect(turnRequest.fallbackToDefaultModels).toBe(false);
+    // And the only model call with no deadline: a request that never answered
+    // took the action to the runtime ceiling with nothing scheduled after it.
+    expect(turnRequest.requestTimeoutMs).toBeGreaterThan(0);
+  });
+});
 
 describe("a letter arrives as it was written and verified", () => {
   test("the paragraph break survives being stored", async () => {

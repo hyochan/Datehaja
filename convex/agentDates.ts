@@ -1059,6 +1059,15 @@ Ground rules: ${introductionRule(round, context.date.locale, self.agentName)} ${
         schemaName: "agent_date_turn",
         schema: TURN_SCHEMA,
         preferredModels: AGENT_DATE_MODELS,
+        // The letters, the journal, the coaching and the verification all refuse
+        // the economy ladder. The date itself — the thing every one of those is
+        // written about — was the one path still walking it, so an unavailable
+        // model produced a cheaper line that was stored as an ordinary turn.
+        // hackathon.md says these paths have no silent fallback; now they do not.
+        fallbackToDefaultModels: false,
+        // Turns were the only model call with no deadline. A request that never
+        // answers took the action to the runtime ceiling with nothing scheduled.
+        requestTimeoutMs: 90_000,
         maxOutputTokens: 1000,
         reasoningEffort: "low" as const,
       };

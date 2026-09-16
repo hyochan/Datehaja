@@ -36,6 +36,25 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-16 - the date itself was the one path still taking the cheap model
+
+This file has said since 2026-09-08 that date dialogue, coaching, letters and
+verification run on `gpt-5.6-sol` with no silent economy fallback. The letters
+set `fallbackToDefaultModels: false`. So do the journal, the coaching and the
+verification. The turn request — the conversation those are all written about —
+did not.
+
+So an unavailable Sol did not produce an honest failed turn. It walked the
+ladder to luna, then mini, then nano, and whatever came back was stored as an
+ordinary line of the date. The unit test that pins the honest failure passes a
+request that carries the flag the production builder omits.
+
+Turns were also the only model call in the product with no deadline, which is
+the first half of a separate finding: a request that never answers takes the
+action to the runtime ceiling with nothing scheduled after it. Both are set
+now, and a test reads the real request rather than a fixture.
+
+
 ### 2026-09-16 - the log said the domain was retired, and it was not
 
 An audit pass opened `datehaja.com` and got a 200. Three entries in this file
