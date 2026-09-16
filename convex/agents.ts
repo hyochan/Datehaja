@@ -27,6 +27,7 @@ import {
   findNeighborhood,
 } from "./lib/catalog";
 import { coarsen } from "./lib/geo";
+import { containsContactInfo } from "./lib/privacy";
 import {
   agentDecisionCodeValidator,
   agentQuestionCategoryValidator,
@@ -485,6 +486,9 @@ export const bootstrap = mutation({
     const dobMs = args.dobMs ?? existingProfile?.dobMs;
     const age = dobMs === undefined ? -1 : ageOn(dobMs, now);
     if (displayName.length < 2) throw new Error("Tell us what to call you.");
+    if (containsContactInfo(displayName)) {
+      throw new Error("Please use a name, not a contact handle.");
+    }
     if (
       dobMs === undefined ||
       !Number.isFinite(dobMs) ||
@@ -523,6 +527,9 @@ export const bootstrap = mutation({
     const agentName = clean(args.agentName, 32);
     if (agentName.length < 1) {
       throw new Error("Give your Dating Agent a name.");
+    }
+    if (containsContactInfo(agentName)) {
+      throw new Error("Please use a name, not a contact handle.");
     }
     if (essence.length < 30 || desiredConnection.length < 20) {
       throw new Error("Give your Dating Agent a little more to understand.");
@@ -928,6 +935,9 @@ export const update = mutation({
       throw new Error(
         "Give your Dating Agent enough context to represent you honestly.",
       );
+    }
+    if (containsContactInfo(name)) {
+      throw new Error("Please use a name, not a contact handle.");
     }
     await supersedeAgentProposals(ctx, userId);
     await ctx.db.patch("agentProfiles", agent._id, {

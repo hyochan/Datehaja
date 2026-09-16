@@ -36,6 +36,22 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-16 - an Agent name could carry contact details through to the other person
+
+`containsContactInfo` only ran on the profile display name in `saveBasics`. The
+two mutations that actually write an Agent's name, and the owner display name
+used after onboarding, are `agents.bootstrap` and `agents.update`. They did not
+call it.
+
+A name that was an email or a handle stored as the Agent name, then showed up
+on the counterpart dashboard and in the date view, with no consent anywhere.
+The same for a contact-bearing display name written at bootstrap, which
+`saveBasics` would have refused.
+
+Both public write paths now use the same helper and the same error as the
+profile check.
+
+
 ### 2026-09-16 - the date itself was the one path still taking the cheap model
 
 This file has said since 2026-09-08 that date dialogue, coaching, letters and

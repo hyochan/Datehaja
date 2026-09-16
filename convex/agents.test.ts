@@ -11,6 +11,85 @@ function asUser(t: ReturnType<typeof convexTest>, userId: Id<"users">) {
   return t.withIdentity({ subject: userId, tokenIdentifier: `test|${userId}` });
 }
 
+const bootstrapBrief = {
+  dobMs: Date.UTC(1993, 5, 15),
+  gender: "woman" as const,
+  interestedIn: ["man" as const],
+  city: "Seoul",
+  neighborhood: "Seongsu",
+  interests: ["Films", "Coffee", "Art galleries"],
+  personalityTraits: ["Thoughtful", "Curious"],
+  avatar: {
+    palette: "rose" as const,
+    face: "gentle" as const,
+    hair: "wave" as const,
+    outfit: "cardigan" as const,
+    accessory: "star" as const,
+  },
+  essence:
+    "I am quiet at first, then warm and playful once I feel safe with someone.",
+  desiredConnection:
+    "Someone thoughtful who enjoys honest conversation and comfortable silence.",
+  boundaries: ["No pressure"],
+  voice: "warm" as const,
+  autonomy: "suggest" as const,
+  relationshipIntent: "open" as const,
+  preferredPersonalityTraits: ["Thoughtful", "Curious"],
+  personalityPreference: "flexible" as const,
+  preferredStyleTags: [] as string[],
+  stylePreference: "no_preference" as const,
+  locale: "en-US",
+  languages: ["English"],
+  matchLocationScope: "city" as const,
+  preferredCountryCodes: ["KR"],
+  preferredCities: ["Seoul"],
+  preferredAreas: [] as string[],
+  allowTranslatedDates: false,
+};
+
+const agentEdit = {
+  avatar: {
+    palette: "rose" as const,
+    face: "gentle" as const,
+    hair: "wave" as const,
+    outfit: "cardigan" as const,
+    accessory: "star" as const,
+  },
+  essence: "Quiet at first, playful once a conversation feels safe.",
+  desiredConnection: "Someone curious who can be direct without rushing.",
+  boundaries: ["No pressure"],
+  voice: "warm" as const,
+  autonomy: "suggest" as const,
+};
+
+async function insertDateBetween(
+  t: ReturnType<typeof convexTest>,
+  initiatorUserId: Id<"users">,
+  counterpartUserId: Id<"users">,
+) {
+  return await t.run(async (ctx) =>
+    ctx.db.insert("agentDates", {
+      initiatorUserId,
+      counterpartUserId,
+      status: "debrief_ready",
+      setting: "A quiet virtual observatory",
+      compatibilityScore: 82,
+      summary: "The Agents found a calm, specific kind of curiosity.",
+      sparks: ["Silence felt safe"],
+      frictions: ["Different social pace"],
+      initiatorVerdict: "encourage",
+      counterpartVerdict: "curious",
+      initiatorReason: "I would actively recommend one real conversation.",
+      counterpartReason: "There is enough here to stay curious.",
+      initiatorConsent: "pending",
+      counterpartConsent: "pending",
+      isDemoCounterpart: false,
+      createdAt: 1,
+      updatedAt: 1,
+    }),
+  );
+}
+
 async function setup(t: ReturnType<typeof convexTest>) {
   return await t.run(async (ctx) => {
     const owner = await ctx.db.insert("users", {
@@ -494,5 +573,207 @@ describe("periodic Agent learning", () => {
     expect(learned.latest?.agentDateId).toBe(agentDateId);
     expect(learned.events[0].event).toBe("agent_debrief_discussed");
     expect(JSON.stringify(learned.events)).not.toContain("small detail");
+  });
+});
+
+describe("contact info in Agent and owner names", () => {
+  const contactError = "Please use a name, not a contact handle.";
+
+  async function twoPeople(t: ReturnType<typeof convexTest>) {
+    const alice = await t.run((ctx) =>
+      ctx.db.insert("users", {
+        name: "Alice",
+        email: "alice-owner@test.invalid",
+      }),
+    );
+    const bob = await t.run((ctx) =>
+      ctx.db.insert("users", { name: "Bob", email: "bob-owner@test.invalid" }),
+    );
+    return { alice, bob };
+  }
+
+  test("bootstrap refuses a contact-bearing Agent name before it can reach a counterpart dashboard", async () => {
+    const t = convexTest(schema, modules);
+    const { alice, bob } = await twoPeople(t);
+
+    await expect(
+      asUser(t, alice).mutation(api.agents.bootstrap, {
+        ...bootstrapBrief,
+        displayName: "Alice",
+        agentName: "alice@gmail.com",
+      }),
+    ).rejects.toThrow(contactError);
+
+    const stored = await t.run(async (ctx) => ({
+      agent: await ctx.db
+        .query("agentProfiles")
+        .withIndex("by_user", (q) => q.eq("userId", alice))
+        .unique(),
+      profile: await ctx.db
+        .query("profiles")
+        .withIndex("by_user", (q) => q.eq("userId", alice))
+        .unique(),
+    }));
+    expect(stored.agent).toBeNull();
+    expect(stored.profile).toBeNull();
+
+    await asUser(t, bob).mutation(api.agents.bootstrap, {
+      ...bootstrapBrief,
+      displayName: "Bob",
+      agentName: "Bori",
+      gender: "man",
+      interestedIn: ["woman"],
+    });
+    await insertDateBetween(t, alice, bob);
+    const list = await asUser(t, bob).query(api.agentDates.listMine, {});
+    expect(JSON.stringify(list)).not.toContain("alice@gmail.com");
+  });
+
+  test("bootstrap refuses a contact-bearing display name before it can reach a counterpart dashboard", async () => {
+    const t = convexTest(schema, modules);
+    const { alice, bob } = await twoPeople(t);
+
+    await expect(
+      asUser(t, alice).mutation(api.agents.bootstrap, {
+        ...bootstrapBrief,
+        displayName: "alice@gmail.com",
+        agentName: "Aster",
+      }),
+    ).rejects.toThrow(contactError);
+
+    const profile = await t.run((ctx) =>
+      ctx.db
+        .query("profiles")
+        .withIndex("by_user", (q) => q.eq("userId", alice))
+        .unique(),
+    );
+    expect(profile).toBeNull();
+
+    await asUser(t, bob).mutation(api.agents.bootstrap, {
+      ...bootstrapBrief,
+      displayName: "Bob",
+      agentName: "Bori",
+      gender: "man",
+      interestedIn: ["woman"],
+    });
+    const agentDateId = await insertDateBetween(t, alice, bob);
+    const list = await asUser(t, bob).query(api.agentDates.listMine, {});
+    const view = await asUser(t, bob).query(api.agentDates.get, { agentDateId });
+    expect(JSON.stringify(list)).not.toContain("alice@gmail.com");
+    expect(view?.counterpart.firstName).not.toBe("alice@gmail.com");
+  });
+
+  test("bootstrap also refuses a messenger handle as the Agent name", async () => {
+    const t = convexTest(schema, modules);
+    const { alice } = await twoPeople(t);
+
+    await expect(
+      asUser(t, alice).mutation(api.agents.bootstrap, {
+        ...bootstrapBrief,
+        displayName: "Alice",
+        agentName: "dm me @alice",
+      }),
+    ).rejects.toThrow(contactError);
+  });
+
+  test("re-running bootstrap refuses contact-bearing names and leaves the stored ones alone", async () => {
+    const t = convexTest(schema, modules);
+    const { alice, bob } = await twoPeople(t);
+
+    await asUser(t, alice).mutation(api.agents.bootstrap, {
+      ...bootstrapBrief,
+      displayName: "Alice",
+      agentName: "Aster",
+    });
+    await asUser(t, bob).mutation(api.agents.bootstrap, {
+      ...bootstrapBrief,
+      displayName: "Bob",
+      agentName: "Bori",
+      gender: "man",
+      interestedIn: ["woman"],
+    });
+
+    await expect(
+      asUser(t, alice).mutation(api.agents.bootstrap, {
+        ...bootstrapBrief,
+        displayName: "Alice",
+        agentName: "alice@gmail.com",
+      }),
+    ).rejects.toThrow(contactError);
+    await expect(
+      asUser(t, alice).mutation(api.agents.bootstrap, {
+        ...bootstrapBrief,
+        displayName: "alice@gmail.com",
+        agentName: "Aster",
+      }),
+    ).rejects.toThrow(contactError);
+
+    const stored = await t.run(async (ctx) => ({
+      agent: await ctx.db
+        .query("agentProfiles")
+        .withIndex("by_user", (q) => q.eq("userId", alice))
+        .unique(),
+      profile: await ctx.db
+        .query("profiles")
+        .withIndex("by_user", (q) => q.eq("userId", alice))
+        .unique(),
+    }));
+    expect(stored.agent?.name).toBe("Aster");
+    expect(stored.profile?.displayName).toBe("Alice");
+
+    const agentDateId = await insertDateBetween(t, alice, bob);
+    const list = await asUser(t, bob).query(api.agentDates.listMine, {});
+    const view = await asUser(t, bob).query(api.agentDates.get, { agentDateId });
+    expect(list[0]?.counterpart?.agentName).toBe("Aster");
+    expect(list[0]?.counterpart?.firstName).toBe("Alice");
+    expect(view?.counterpart.agentName).toBe("Aster");
+    expect(view?.counterpart.firstName).toBe("Alice");
+  });
+
+  test("renaming an Agent to a handle does not reach the counterpart dashboard", async () => {
+    const t = convexTest(schema, modules);
+    const { alice, bob } = await twoPeople(t);
+
+    await asUser(t, alice).mutation(api.agents.bootstrap, {
+      ...bootstrapBrief,
+      displayName: "Alice",
+      agentName: "Aster",
+    });
+    await asUser(t, bob).mutation(api.agents.bootstrap, {
+      ...bootstrapBrief,
+      displayName: "Bob",
+      agentName: "Bori",
+      gender: "man",
+      interestedIn: ["woman"],
+    });
+
+    await expect(
+      asUser(t, alice).mutation(api.agents.update, {
+        ...agentEdit,
+        name: "dm me @alice",
+      }),
+    ).rejects.toThrow(contactError);
+    await expect(
+      asUser(t, alice).mutation(api.agents.update, {
+        ...agentEdit,
+        name: "alice@gmail.com",
+      }),
+    ).rejects.toThrow(contactError);
+
+    const stored = await t.run((ctx) =>
+      ctx.db
+        .query("agentProfiles")
+        .withIndex("by_user", (q) => q.eq("userId", alice))
+        .unique(),
+    );
+    expect(stored?.name).toBe("Aster");
+
+    const agentDateId = await insertDateBetween(t, alice, bob);
+    const list = await asUser(t, bob).query(api.agentDates.listMine, {});
+    const view = await asUser(t, bob).query(api.agentDates.get, { agentDateId });
+    expect(list[0]?.counterpart?.agentName).toBe("Aster");
+    expect(view?.counterpart.agentName).toBe("Aster");
+    expect(JSON.stringify({ list, view })).not.toContain("@alice");
+    expect(JSON.stringify({ list, view })).not.toContain("alice@gmail.com");
   });
 });
