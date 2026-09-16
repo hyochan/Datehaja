@@ -240,10 +240,10 @@ describe("recovering a failed review without replaying the encounter", () => {
     await t.mutation(internal.agentDates.fail, { agentDateId: s.agentDateId, recoveryStartedAt: retry, reason: "Late timeout" });
     expect(await snapshot()).toEqual(before);
     const view = await asUser(t, s.alice).query(api.agentDates.get, { agentDateId: s.agentDateId });
-    // The row is closed, but Alice never answered. She is shown an open gate,
-    // because a `closed` here could only have come from Bob and would name him.
-    expect((await t.run(ctx => ctx.db.get("agentDates", s.agentDateId)))?.status).toBe("closed");
-    expect(view?.date).toMatchObject({ status: "debrief_ready", reviewRetrying: false, reviewRecoveredAt: expect.any(Number) });
+    // A repaired review closes the row without anyone declining, so the owner
+    // sees it closed. Masking it would have offered a gate that cannot connect:
+    // the letters are history, not a live match.
+    expect(view?.date).toMatchObject({ status: "closed", introductionReady: false, reviewRetrying: false, reviewRecoveredAt: expect.any(Number) });
     expect(view?.mine).toMatchObject({ reason: "Verified own note.", consent: "pending" });
     expect(view?.counterpart).toMatchObject({ verdict: null, consent: "sealed", contactEmail: null });
     expect(JSON.stringify(view)).not.toContain("Other private note.");
@@ -1010,6 +1010,29 @@ describe("agent-date privacy and human consent", () => {
   });
 });
 
+
+describe("a letter arrives as it was written and verified", () => {
+  test("the paragraph break survives being stored", async () => {
+    const t = convexTest(schema, modules);
+    const s = await setup(t);
+    const letter = "I liked the joke you wrote on the postcard.\n\nWhat do you make of that kind of teasing?";
+    await t.mutation(internal.agentDates.finish, {
+      agentDateId: s.agentDateId,
+      expectedTurns: await readyToFinish(t, s.agentDateId),
+      aVerdict: "encourage", bVerdict: "encourage",
+      aReason: letter, bReason: letter,
+      aDecisionCode: "worth_exploring", bDecisionCode: "worth_exploring",
+      aNextSearchNote: "", bNextSearchNote: "",
+      score: 70, summary: "A balanced date.", sparks: [], frictions: [],
+      demoConsent: "pending",
+    });
+    // The letter is audited as two paragraphs and the mailer is built to keep
+    // them; `clean` used to collapse the blank line before anyone saw it.
+    const row = await t.run((ctx) => ctx.db.get("agentDates", s.agentDateId));
+    expect(row?.initiatorReason).toContain("\n\n");
+    expect(row?.initiatorReason).toBe(letter);
+  });
+});
 
 describe("what a decline is allowed to tell the other person", () => {
   test("a stranger cannot answer for either participant", async () => {

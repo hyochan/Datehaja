@@ -1703,8 +1703,11 @@ export const finish = internalMutation({
       counterpartVerdict: args.bVerdict,
       initiatorReflection: args.aReflection,
       counterpartReflection: args.bReflection,
-      initiatorReason: clean(args.aReason, 700),
-      counterpartReason: clean(args.bReason, 700),
+      // The letter is written and audited as two paragraphs, and the mailer is
+      // built to keep them. `clean` collapses every whitespace run, so what was
+      // stored and sent was not the text that passed verification.
+      initiatorReason: cleanMultiline(args.aReason, 700),
+      counterpartReason: cleanMultiline(args.bReason, 700),
       initiatorDecisionCode: args.aDecisionCode,
       counterpartDecisionCode: args.bDecisionCode,
       initiatorNextSearchNote: clean(args.aNextSearchNote, 260),
@@ -2037,7 +2040,7 @@ export const listMine = query({
           _id: date._id,
           createdAt: date.createdAt,
           updatedAt: date.updatedAt,
-          status: statusFor(date.status, myConsent),
+          status: statusFor(date, myConsent),
           paceMode:
             date.paceMode ?? (date.isDemoCounterpart ? "demo" : "natural"),
           activity: date.activity,
@@ -2045,7 +2048,7 @@ export const listMine = query({
           setting: date.setting,
           sceneKind: date.sceneKind,
           isSearchEncounter: date.isSearchEncounter,
-          introductionReady: gateOpenFor(date, isInitiator, statusFor(date.status, myConsent)),
+          introductionReady: gateOpenFor(date, isInitiator, statusFor(date, myConsent)),
           summary: date.summary,
           counterpart: profile
             ? {
@@ -2120,7 +2123,7 @@ export const get = query({
         ? await ctx.storage.getUrl(other.photoStorageId)
         : null;
     const myConsent = isInitiator ? date.initiatorConsent : date.counterpartConsent;
-    const viewerStatus = statusFor(date.status, myConsent);
+    const viewerStatus = statusFor(date, myConsent);
     const myAgentName = myAgent?.name ?? syntheticAgent(me).agentName;
     const counterpartAgentName =
       otherAgent?.name ?? syntheticAgent(other, myAgentName).agentName;
@@ -2219,10 +2222,16 @@ export const get = query({
  * that is already closed and changes nothing.
  */
 function statusFor(
-  status: Doc<"agentDates">["status"],
+  date: Pick<Doc<"agentDates">, "status" | "initiatorConsent" | "counterpartConsent">,
   myConsent: "pending" | "yes" | "no",
 ): Doc<"agentDates">["status"] {
-  return status === "closed" && myConsent === "pending" ? "debrief_ready" : status;
+  if (date.status !== "closed" || myConsent !== "pending") return date.status;
+  // Only a human no needs hiding, and it is the only human action that closes a
+  // date — a block does not. A row closed by a goals change, by a repaired
+  // review, or by a pair that could never connect says nothing about anyone's
+  // decision, and pretending it is still open offers a gate that cannot open.
+  const declined = date.initiatorConsent === "no" || date.counterpartConsent === "no";
+  return declined ? "debrief_ready" : date.status;
 }
 
 /**
