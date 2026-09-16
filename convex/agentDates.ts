@@ -479,6 +479,8 @@ export const createRequest = internalMutation({
   },
 });
 
+const DIRECT_MATCH_SCAN_PER_CITY = 200;
+
 /** Shared by an explicit demo and the durable search worker. Only the worker may supply searchId. */
 export async function createDateRequest(ctx: MutationCtx, args: {
   userId: Id<"users">;
@@ -555,6 +557,8 @@ export async function createDateRequest(ctx: MutationCtx, args: {
         lastCheckedAt: Date.now(),
       });
     }
+    // Search paginates. A direct request has to finish in one mutation, and
+    // `.take(40)` hid anyone past the oldest page once ineligible rows were dropped.
     const candidateBatches = candidatePage ? [candidatePage.page] : await Promise.all(
       candidateCities.map((city) =>
         ctx.db
@@ -562,7 +566,7 @@ export async function createDateRequest(ctx: MutationCtx, args: {
           .withIndex("by_status_and_city", (q) =>
             q.eq("status", "active").eq("city", city),
           )
-          .take(40),
+          .take(DIRECT_MATCH_SCAN_PER_CITY),
       ),
     );
     const profiles = [
