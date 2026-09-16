@@ -240,7 +240,10 @@ describe("recovering a failed review without replaying the encounter", () => {
     await t.mutation(internal.agentDates.fail, { agentDateId: s.agentDateId, recoveryStartedAt: retry, reason: "Late timeout" });
     expect(await snapshot()).toEqual(before);
     const view = await asUser(t, s.alice).query(api.agentDates.get, { agentDateId: s.agentDateId });
-    expect(view?.date).toMatchObject({ status: "closed", introductionReady: false, reviewRetrying: false, reviewRecoveredAt: expect.any(Number) });
+    // The row is closed, but Alice never answered. She is shown an open gate,
+    // because a `closed` here could only have come from Bob and would name him.
+    expect((await t.run(ctx => ctx.db.get("agentDates", s.agentDateId)))?.status).toBe("closed");
+    expect(view?.date).toMatchObject({ status: "debrief_ready", reviewRetrying: false, reviewRecoveredAt: expect.any(Number) });
     expect(view?.mine).toMatchObject({ reason: "Verified own note.", consent: "pending" });
     expect(view?.counterpart).toMatchObject({ verdict: null, consent: "sealed", contactEmail: null });
     expect(JSON.stringify(view)).not.toContain("Other private note.");
@@ -1008,6 +1011,83 @@ describe("agent-date privacy and human consent", () => {
 });
 
 
+describe("what a decline is allowed to tell the other person", () => {
+  test("a stranger cannot answer for either participant", async () => {
+    const t = convexTest(schema, modules);
+    const s = await setup(t);
+    await t.run((ctx) => ctx.db.patch("agentDates", s.agentDateId, { status: "debrief_ready" }));
+
+    await expect(
+      asUser(t, s.carol).mutation(api.agentDates.consent, { agentDateId: s.agentDateId, decision: "yes" }),
+    ).rejects.toThrow();
+    await expect(
+      t.mutation(api.agentDates.consent, { agentDateId: s.agentDateId, decision: "yes" }),
+    ).rejects.toThrow();
+
+    // Carol is neither participant, so her yes must not have landed in the
+    // counterpart's slot — where it would open Bob's inbox on Alice's next click.
+    const row = await t.run((ctx) => ctx.db.get("agentDates", s.agentDateId));
+    expect(row).toMatchObject({ initiatorConsent: "pending", counterpartConsent: "pending", status: "debrief_ready" });
+  });
+
+  test("a decline is invisible to the person who has not answered", async () => {
+    const t = convexTest(schema, modules);
+    const s = await setup(t);
+    await t.run((ctx) => ctx.db.patch("agentDates", s.agentDateId, { status: "debrief_ready" }));
+
+    await asUser(t, s.bob).mutation(api.agentDates.consent, { agentDateId: s.agentDateId, decision: "no" });
+    expect((await t.run((ctx) => ctx.db.get("agentDates", s.agentDateId)))?.status).toBe("closed");
+
+    // Alice has not answered. Nothing she can read may separate Bob's decline
+    // from silence: she is the only other person who could have ended it.
+    const view = await asUser(t, s.alice).query(api.agentDates.get, { agentDateId: s.agentDateId });
+    expect(view?.date.status).toBe("debrief_ready");
+    expect(view?.mine.consent).toBe("pending");
+    expect(view?.counterpart.consent).toBe("sealed");
+    expect(view?.counterpart.contactEmail).toBeNull();
+    expect(JSON.stringify(view)).not.toContain("closed");
+
+    const listed = await asUser(t, s.alice).query(api.agentDates.listMine, {});
+    expect(listed.find((d) => d._id === s.agentDateId)?.status).toBe("debrief_ready");
+
+    // And her own answer resolves it without ever naming him.
+    await asUser(t, s.alice).mutation(api.agentDates.consent, { agentDateId: s.agentDateId, decision: "yes" });
+    const after = await asUser(t, s.alice).query(api.agentDates.get, { agentDateId: s.agentDateId });
+    expect(after?.date.status).toBe("closed");
+    expect(after?.counterpart.contactEmail).toBeNull();
+    expect((await t.run((ctx) => ctx.db.get("agentDates", s.agentDateId)))?.counterpartConsent).toBe("no");
+  });
+
+  test("consent is refused until both debriefs are written", async () => {
+    const t = convexTest(schema, modules);
+    const s = await setup(t);
+    for (const status of ["queued", "running"] as const) {
+      await t.run((ctx) => ctx.db.patch("agentDates", s.agentDateId, { status }));
+      await expect(
+        asUser(t, s.alice).mutation(api.agentDates.consent, { agentDateId: s.agentDateId, decision: "yes" }),
+      ).rejects.toThrow("finish their debriefs");
+    }
+    const row = await t.run((ctx) => ctx.db.get("agentDates", s.agentDateId));
+    expect(row).toMatchObject({ initiatorConsent: "pending", status: "running" });
+  });
+
+  test("an answer is final, and contact cannot be recalled", async () => {
+    const t = convexTest(schema, modules);
+    const s = await setup(t);
+    await t.run((ctx) => ctx.db.patch("agentDates", s.agentDateId, { status: "debrief_ready" }));
+    await asUser(t, s.alice).mutation(api.agentDates.consent, { agentDateId: s.agentDateId, decision: "yes" });
+    await asUser(t, s.bob).mutation(api.agentDates.consent, { agentDateId: s.agentDateId, decision: "yes" });
+    expect((await t.run((ctx) => ctx.db.get("agentDates", s.agentDateId)))?.status).toBe("connected");
+
+    // The introduction has been delivered. A later no cannot unsend it, so it
+    // must not pretend to by closing the row.
+    await asUser(t, s.alice).mutation(api.agentDates.consent, { agentDateId: s.agentDateId, decision: "no" });
+    expect((await t.run((ctx) => ctx.db.get("agentDates", s.agentDateId)))).toMatchObject({
+      status: "connected", initiatorConsent: "yes",
+    });
+  });
+});
+
 describe("private keepsakes and quieter demo delivery", () => {
   test("projects only the owner's selected moment and question, including after mutual consent", async () => {
     const t = convexTest(schema, modules);
@@ -1176,8 +1256,15 @@ describe("a durable search, with no manufactured matches", () => {
     expect(next).toMatchObject({ status: "searching", encountersCompleted: 1 });
     expect(next?.nextCheckAt).toBeGreaterThan(NOW);
     const view = await asUser(t, s.bob).query(api.agentDates.get, { agentDateId: s.dateId });
-    expect(view?.date.introductionReady).toBe(false);
-    await expect(asUser(t, s.bob).mutation(api.agentDates.consent, { agentDateId: s.dateId, decision: "yes" })).rejects.toThrow("still searching");
+    // Bob's own agent encouraged, so his gate stays open. Closing it, or
+    // refusing his yes, would tell him Carol's agent was the one that did not.
+    expect(view?.date.introductionReady).toBe(true);
+    expect(view?.counterpart.verdict).toBeNull();
+    await asUser(t, s.bob).mutation(api.agentDates.consent, { agentDateId: s.dateId, decision: "yes" });
+    const answered = await asUser(t, s.bob).query(api.agentDates.get, { agentDateId: s.dateId });
+    // His yes ends it the same way a decline would: no contact, no cause given.
+    expect(answered?.date.status).toBe("closed");
+    expect(answered?.counterpart.contactEmail).toBeNull();
     expect(await t.run(ctx => ctx.db.query("notifications").collect())).toHaveLength(0);
     await advance(t, s.bob);
     expect((await readSearch(t, s.bob))?.status).toBe("waiting");

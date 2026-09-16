@@ -2023,10 +2023,9 @@ export const listMine = query({
     );
     return await Promise.all(
       dates.map(async (date) => {
-        const otherId =
-          date.initiatorUserId === userId
-            ? date.counterpartUserId
-            : date.initiatorUserId;
+        const isInitiator = date.initiatorUserId === userId;
+        const otherId = isInitiator ? date.counterpartUserId : date.initiatorUserId;
+        const myConsent = isInitiator ? date.initiatorConsent : date.counterpartConsent;
         const [profile, agent] = await Promise.all([
           getProfileByUser(ctx, otherId),
           ctx.db
@@ -2038,7 +2037,7 @@ export const listMine = query({
           _id: date._id,
           createdAt: date.createdAt,
           updatedAt: date.updatedAt,
-          status: date.status,
+          status: statusFor(date.status, myConsent),
           paceMode:
             date.paceMode ?? (date.isDemoCounterpart ? "demo" : "natural"),
           activity: date.activity,
@@ -2046,7 +2045,7 @@ export const listMine = query({
           setting: date.setting,
           sceneKind: date.sceneKind,
           isSearchEncounter: date.isSearchEncounter,
-          introductionReady: date.status !== "closed" && (!date.isSearchEncounter || (date.initiatorVerdict === "encourage" && date.counterpartVerdict === "encourage")),
+          introductionReady: gateOpenFor(date, isInitiator, statusFor(date.status, myConsent)),
           summary: date.summary,
           counterpart: profile
             ? {
@@ -2120,13 +2119,15 @@ export const get = query({
       canSeePhoto && other.photoStorageId
         ? await ctx.storage.getUrl(other.photoStorageId)
         : null;
+    const myConsent = isInitiator ? date.initiatorConsent : date.counterpartConsent;
+    const viewerStatus = statusFor(date.status, myConsent);
     const myAgentName = myAgent?.name ?? syntheticAgent(me).agentName;
     const counterpartAgentName =
       otherAgent?.name ?? syntheticAgent(other, myAgentName).agentName;
     return {
       date: {
         _id: date._id,
-        status: date.status,
+        status: viewerStatus,
         paceMode:
           date.paceMode ?? (date.isDemoCounterpart ? "demo" : "natural"),
         activity: date.activity,
@@ -2138,7 +2139,7 @@ export const get = query({
         sceneSituation: date.sceneSituation,
         activityJournal: date.activityJournal,
         isSearchEncounter: date.isSearchEncounter,
-        introductionReady: date.status !== "closed" && (!date.isSearchEncounter || (date.initiatorVerdict === "encourage" && date.counterpartVerdict === "encourage")),
+        introductionReady: gateOpenFor(date, isInitiator, viewerStatus),
         worldSourceTitle: date.worldSourceTitle,
         worldSourceUrl: date.worldSourceUrl,
         summary: date.summary,
@@ -2146,7 +2147,7 @@ export const get = query({
         frictions: date.frictions,
         scoutSignals: date.scoutSignals ?? [],
         failureReason: date.failureReason,
-        canRetryReview: (date.status === "failed" || (date.status === "closed" && date.reviewRecoveredAt !== undefined)) && date.reviewRetryStartedAt === undefined
+        canRetryReview: (date.status === "failed" || (viewerStatus === "closed" && date.reviewRecoveredAt !== undefined)) && date.reviewRetryStartedAt === undefined
           && (date.reviewRetryCount ?? 0) < 3 && rawTurns.length >= 2 && rawTurns.length === conversationLimit(date),
         reviewRetrying: date.reviewRetryStartedAt !== undefined,
         reviewRecoveredAt: date.reviewRecoveredAt,
@@ -2207,6 +2208,35 @@ export const get = query({
   },
 });
 
+/**
+ * What one participant is allowed to know about how a date ended.
+ *
+ * A date closes when the other person says no, blocks, or when the two agents
+ * did not both encourage. Someone who has not answered yet can tell none of
+ * those apart from each other — but they can tell all of them from silence, so
+ * showing them `closed` names the decliner as surely as a message would. Their
+ * own gate stays open until they use it, and their answer then lands on a row
+ * that is already closed and changes nothing.
+ */
+function statusFor(
+  status: Doc<"agentDates">["status"],
+  myConsent: "pending" | "yes" | "no",
+): Doc<"agentDates">["status"] {
+  return status === "closed" && myConsent === "pending" ? "debrief_ready" : status;
+}
+
+/**
+ * Whether to offer this viewer the contact gate.
+ *
+ * Only their own agent's verdict may decide this. Folding in the other agent's
+ * verdict published it: a viewer whose own agent encouraged, seeing no gate,
+ * has learnt that the other agent did not.
+ */
+function gateOpenFor(date: Doc<"agentDates">, isInitiator: boolean, viewerStatus: string): boolean {
+  const mine = isInitiator ? date.initiatorVerdict : date.counterpartVerdict;
+  return viewerStatus !== "closed" && (!date.isSearchEncounter || mine === "encourage");
+}
+
 export const consent = mutation({
   args: {
     agentDateId: v.id("agentDates"),
@@ -2221,10 +2251,21 @@ export const consent = mutation({
     if (!isInitiator && date.counterpartUserId !== userId) {
       throw new Error("This decision isn't yours.");
     }
-    if (!["debrief_ready", "connected"].includes(date.status)) {
+    const myConsent = isInitiator ? date.initiatorConsent : date.counterpartConsent;
+    const myVerdict = isInitiator ? date.initiatorVerdict : date.counterpartVerdict;
+    // Someone who has not answered is still being shown an open gate on a row
+    // the other side already closed. Their answer has to land somewhere: an
+    // error here would tell them exactly what `statusFor` is keeping from them.
+    const closedUnderThem = date.status === "closed" && myConsent === "pending";
+    if (!closedUnderThem && !["debrief_ready", "connected"].includes(date.status)) {
       throw new Error("Wait for both agents to finish their debriefs.");
     }
-    if (args.decision === "yes" && date.isSearchEncounter && (date.initiatorVerdict !== "encourage" || date.counterpartVerdict !== "encourage")) {
+    // One decision each. After contact has been delivered there is nothing left
+    // to decide, and an email cannot be unsent.
+    if (myConsent !== "pending") return null;
+    // Their own agent's verdict is theirs to hear about. The other agent's is
+    // not: refusing a yes because the other agent passed would publish it.
+    if (args.decision === "yes" && date.isSearchEncounter && myVerdict !== "encourage") {
       throw new Error("Your Dating Agent is still searching. This encounter did not become an introduction.");
     }
     if (args.decision === "yes" && date.isSearchEncounter && date.status !== "connected") {
@@ -2237,8 +2278,17 @@ export const consent = mutation({
     }
     const nextA = isInitiator ? args.decision : date.initiatorConsent;
     const nextB = isInitiator ? date.counterpartConsent : args.decision;
+    // Whether contact could ever open here, whatever the humans answer. A yes
+    // on a pair that can never connect ends the same way a decline does, rather
+    // than waiting on an answer the other person is not being asked for.
+    const reachable =
+      !date.isSearchEncounter ||
+      (date.initiatorVerdict === "encourage" && date.counterpartVerdict === "encourage");
+    // A closed date never reopens. Answering one that closed under you records
+    // the answer and changes nothing else — which is what it would have done
+    // had you answered first and the other person then declined.
     const status =
-      nextA === "no" || nextB === "no"
+      date.status === "closed" || nextA === "no" || nextB === "no" || !reachable
         ? "closed"
         : nextA === "yes" && nextB === "yes"
           ? "connected"
@@ -2250,7 +2300,9 @@ export const consent = mutation({
       status,
       updatedAt: Date.now(),
     });
-    if (status === "closed" || status === "connected") await settleSearchEncounter(ctx, date, status === "connected" ? "connected" : "continue");
+    if (status !== date.status && (status === "closed" || status === "connected")) {
+      await settleSearchEncounter(ctx, date, status === "connected" ? "connected" : "continue");
+    }
     await ctx.db.insert("growthEvents", {
       userId,
       event:
