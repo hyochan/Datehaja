@@ -1,8 +1,9 @@
 # Current submission film — September 16, 2026
 
-The canonical film is [Datehaja-demo.mp4](Datehaja-demo.mp4), **2:35**, narrated.
-[Watch it on the submitted URL](https://merry-bass-190.convex.site/demo).
-It replaces the earlier search/intro cut, and production now serves it.
+The film is **2:35**, narrated, and lives [unlisted on YouTube](https://youtu.be/K35t6VaF0iI).
+It is not in this repository and the deployment does not serve it: what is kept
+here is its script — [the captions](Datehaja-demo.vtt) and
+[the transcript](transcript.txt) — plus everything needed to rebuild it.
 
 This is a browser walkthrough of the actual product. It replays previously
 generated records from fictional test people; navigation is cut and playback
@@ -103,16 +104,14 @@ it, and writes `submission/film-verification.json` with its SHA-256 and the
 voice that read it. Caption failure stops the build; there is no silent
 uncaptioned fallback. It creates:
 
-- `public/demo/Datehaja-demo.mp4` and identical `submission/Datehaja-demo.mp4`
-- `public/demo/Datehaja-demo.vtt` and `public/demo/transcript.txt`
-- `public/demo/submission-poster.jpg`
-- `src/demoAssets.ts`, holding the new film's hash
+- `.scratch/submission/Datehaja-demo.mp4` and its poster — outside git, because
+  the film is hosted on YouTube rather than shipped in the repository
+- `submission/Datehaja-demo.vtt` and `submission/transcript.txt` — committed, so
+  the script stays readable and checkable against the video
+- `submission/film-verification.json` — the SHA-256 of the build, its length,
+  and the voice that read it
 
-That last one is what gets the film past the CDN. These files keep their names
-across rebuilds and are cached for four hours at the submitted URL, so `/demo`
-asks for them by hash instead. Commit it with the film; the deploy fetches the
-same URL a visitor would and fails if the bytes do not match
-`film-verification.json`.
+Re-upload the rebuilt file to YouTube yourself; nothing automates that.
 
 The old `demo:record` and `demo:build` commands describe the earlier
 authenticated-account take and can overwrite the submission copy. For this

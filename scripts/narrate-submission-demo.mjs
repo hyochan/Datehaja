@@ -19,7 +19,6 @@ import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { createHash } from "node:crypto";
 import assert from "node:assert/strict";
-import { writeDemoAssetVersion } from "./demo-asset-version.mjs";
 
 const require = createRequire(import.meta.url);
 const optional = (path, select = (v) => v) => { try { return select(require(path)); } catch { return undefined; } };
@@ -64,7 +63,7 @@ const run = (binary, args) => {
 const seconds = (path) => Number(JSON.parse(run(ffprobe, ["-v", "error", "-show_format", "-of", "json", path])).format.duration);
 
 /* ------------------------------- the script ------------------------------ */
-const vtt = readFileSync("public/demo/Datehaja-demo.vtt", "utf8");
+const vtt = readFileSync("submission/Datehaja-demo.vtt", "utf8");
 const toSeconds = (stamp) => {
   const [h, m, rest] = stamp.split(":");
   const [s, ms] = rest.split(".");
@@ -77,7 +76,7 @@ const cues = [...vtt.matchAll(/(\d\d:\d\d:\d\d\.\d\d\d) --> (\d\d:\d\d:\d\d\.\d\
   // are read aloud as noise by some voices.
   text: m[3].replaceAll("·", ",").replaceAll("—", "-").trim(),
 }));
-assert(cues.length > 0, "No caption cues in public/demo/Datehaja-demo.vtt");
+assert(cues.length > 0, "No caption cues in submission/Datehaja-demo.vtt");
 
 /* --------------------------------- voice --------------------------------- */
 /** What a directory of clips says it is, if it says anything. */
@@ -158,7 +157,7 @@ for (const [i, cue] of cues.entries()) {
 }
 
 /* --------------------------------- mux ----------------------------------- */
-const film = resolve("public/demo/Datehaja-demo.mp4");
+const film = resolve(".scratch/submission/Datehaja-demo.mp4");
 const duration = seconds(film);
 const inputs = clips.flatMap((c) => ["-i", c.file]);
 const chains = clips.map((c, i) => {
@@ -185,11 +184,10 @@ assert(Math.abs(Number(probe.format.duration) - duration) < 0.5, "Narration chan
 run(ffmpeg, ["-v", "error", "-i", narrated, "-f", "null", "-"]);
 
 copyFileSync(narrated, film);
-copyFileSync(narrated, "submission/Datehaja-demo.mp4");
 
 // The builder writes the transcript for a silent film. It is not one any more.
-const transcript = readFileSync("public/demo/transcript.txt", "utf8");
-writeFileSync("public/demo/transcript.txt", transcript.replace(
+const transcript = readFileSync("submission/transcript.txt", "utf8");
+writeFileSync("submission/transcript.txt", transcript.replace(
   "No narration; English captions are burned into the film.",
   `Narrated by ${voice.name}, reading the burned English captions verbatim.`,
 ));
@@ -205,7 +203,5 @@ report.audio = ENGINE === "elevenlabs"
     : `macOS speech synthesis, voice ${voice.name}; reads the burned captions verbatim`;
 report.decodedCompletely = true;
 writeFileSync("submission/film-verification.json", JSON.stringify(report, null, 2) + "\n");
-// Narration re-muxes the film, so the hash the page points at moved again.
-writeDemoAssetVersion(report.sha256);
 console.log(`\n${report.durationSeconds.toFixed(1)}s, ${audio.codec_name} ${audio.sample_rate}Hz, ${report.bytes} bytes`);
 console.log(`sha256 ${report.sha256}`);

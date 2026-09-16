@@ -11,9 +11,9 @@ encounter between fictional people, including the verified journal and both
 independent reflections. Do not replace its verdict to produce an introduction.
 `/preview/agent-coaching?lang=en` translates the unchanged Korean four-date
 learning rehearsal; the Korean original stays accessible. The current 155-second
-film is `/demo/Datehaja-demo.mp4`, presented at `/demo`, narrated and with
-English captions. `/demo` requests it by content hash, so a rebuild is not held
-behind the four-hour CDN cache.
+film is unlisted on YouTube at https://youtu.be/K35t6VaF0iI, narrated and with English captions. The
+deployment no longer serves it and there is no `/demo` page; the repository
+keeps the captions and the transcript under `submission/`, not the file.
 The legacy 54-second film is supplemental historical footage.
 
 Independent user validation is still pending. `/feedback` downloads closed

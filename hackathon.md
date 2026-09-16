@@ -35,6 +35,33 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-16 - the film moved to YouTube and the page it lived on went with it
+
+The submission film is now unlisted at https://youtu.be/K35t6VaF0iI, which is
+where the form asks for it and where a judge expects a video to be. With that
+settled, `/demo` had nothing left to do: a page whose only job was to serve a
+7MB file the deployment no longer needs to serve.
+
+Gone with it: the page and its route, `src/demoAssets.ts` and the hash-stamping
+that got the film past the CDN, the deploy step that checked the served bytes,
+and the two static-hosting routes for the film and its captions. The film's own
+file is out of git too. `learning-proof.mp4` stays; it is a different artifact
+and older entries point at it.
+
+Kept, because they are the part worth reading: the captions and the transcript,
+moved to `submission/` where the rest of the submission evidence lives, and
+`film-verification.json`, which now records where the film is published as well
+as what it hashes to. The pipeline still rebuilds it — into `.scratch/` rather
+than into the repository — and the rebuild after all of this produced the same
+SHA-256 as the file that went up to YouTube.
+
+The cost is stated plainly: the film is now one unlisted link away from being
+unavailable, and a clone of this repository no longer contains the thing every
+entry above discusses. That was the call; the script, the storyboard, the
+narration clips and the capture code are all still here, so it can be made
+again.
+
+
 ### 2026-09-16 - the film was accurate and it was a metronome
 
 Everything in it was true and nothing in it had a pulse. Thirty-four captions,

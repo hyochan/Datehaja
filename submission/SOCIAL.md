@@ -1,9 +1,9 @@
 # Submission and social copy — September 16, 2026
 
 **Unsent drafts. No social post or submission receipt is claimed.**
-Every link below is on the submitted production deployment and was checked
-there. Re-check /demo after any film rebuild: the page is served by CI, so a
-new film is live only once the deploy finishes.
+Every app link below is on the submitted production deployment and was checked
+there. The film itself is unlisted on YouTube (https://youtu.be/K35t6VaF0iI); the repository keeps its
+captions and transcript, not the file.
 
 **Posting is scored, not optional.** The official page lists "Social proof —
 you posted your build on X or LinkedIn. Engagement counts." among the judging
@@ -46,7 +46,7 @@ retention or demand results are claimed. The public fictional examples and
 automated tests are separate evidence.
 
 - App: https://merry-bass-190.convex.site
-- 2:35 narrated, English-captioned film: https://merry-bass-190.convex.site/demo
+- 2:35 narrated, English-captioned film: https://youtu.be/K35t6VaF0iI
 - Public replay: https://merry-bass-190.convex.site/watch
 - Learning evidence: https://merry-bass-190.convex.site/preview/agent-coaching?lang=en
 - Source: https://github.com/hyochan/Datehaja
@@ -61,9 +61,9 @@ Within a normal post's length when the URL is counted as a shortened link:
 >
 > Built for All Gas with @convex @OpenAI @firecrawl @agentmail
 >
-> https://merry-bass-190.convex.site/demo?utm_source=x&utm_campaign=allgas
+> https://youtu.be/K35t6VaF0iI
 
-Attach `submission/Datehaja-demo.mp4` if the account supports video posting.
+Upload the film natively if the account supports video posting; native video travels further than a link.
 Do not call these fictional rehearsals customer testimonials.
 
 ## LinkedIn post
@@ -87,7 +87,7 @@ Do not call these fictional rehearsals customer testimonials.
 >
 > Built for All Gas with @Convex @OpenAI @Firecrawl @AgentMail.
 >
-> https://merry-bass-190.convex.site/demo?utm_source=linkedin&utm_campaign=allgas
+> https://youtu.be/K35t6VaF0iI
 
 Select the actual company mentions in the composer, rather than assuming
 plain pasted @ text creates a platform mention.
@@ -97,7 +97,7 @@ plain pasted @ text creates a platform mention.
 | Evidence | Status |
 | --- | --- |
 | Current film and caption files | Built; see film-verification.json |
-| Film on the submitted URL | https://merry-bass-190.convex.site/demo |
+| Film, unlisted on YouTube | https://youtu.be/K35t6VaF0iI |
 | Production revision | Shipped; `verify:prod` reports `scoutAccess.ok` |
 | Independent human sessions | 0 completed; USER_STUDY.md is ready |
 | X / LinkedIn post permalinks | Pending |

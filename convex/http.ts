@@ -162,8 +162,6 @@ http.route({
 // Serve this public demo with the media type browsers need for inline playback.
 for (const [path, contentType] of [
   ["/demo/learning-proof.mp4", "video/mp4"],
-  ["/demo/Datehaja-demo.mp4", "video/mp4"],
-  ["/demo/Datehaja-demo.vtt", "text/vtt; charset=utf-8"],
 ] as const) http.route({
   path,
   method: "GET",
