@@ -240,6 +240,21 @@
     word-break: keep-all;
   }
 
+  /*
+   * Korean and Japanese break between words, not inside them. The default
+   * `normal` lets the line end anywhere, which turned 번역 into 번 / 역 on a
+   * phone — a reader sees that as a typo, not a line break. Headings already
+   * had this; body copy is where it actually shows.
+   *
+   * `anywhere` is the escape hatch: with keep-all alone, one long unbroken
+   * token (a URL, an id) would push its container sideways instead of wrapping.
+   */
+  html[lang^="ko"] :is(p, li, dd, dt, figcaption, blockquote, label, button, a, span, small, strong, b, em),
+  html[lang^="ja"] :is(p, li, dd, dt, figcaption, blockquote, label, button, a, span, small, strong, b, em) {
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+
   html[lang^="ko"] h1,
   html[lang^="ko"] h2,
   html[lang^="ko"] h3 {
@@ -6020,11 +6035,29 @@ html[lang^="ja"] .agent-debrief-title {
   width: 1.65rem;
   height: 1.65rem;
   place-items: center;
+  /* The dot stays 1.65rem; the reachable area does not. */
+  outline-offset: 0;
+  box-sizing: content-box;
   border: 1px solid var(--border);
   border-radius: 50%;
   color: var(--text-muted);
   font: 700 0.55rem/1 var(--font-sans);
   transition: 160ms ease;
+}
+
+/* Touch: widen the hit area without moving the dots apart. */
+@media (pointer: coarse) {
+  .agent-world-timeline button::after {
+    position: absolute;
+    min-width: 44px;
+    min-height: 44px;
+    content: "";
+    transform: translate(-50%, -50%);
+    inset-inline-start: 50%;
+    inset-block-start: 50%;
+  }
+  .agent-world-timeline button { position: relative; }
+  .agent-world-play button { min-height: 44px; }
 }
 
 .agent-world-timeline button[aria-pressed="true"] {
@@ -7241,7 +7274,21 @@ button.agent-search-place { cursor:pointer; }
 .date-record-line > .agent-avatar-turn { align-self: start; width: 32px; margin-top: 27px; }
 .date-record-line.is-other { margin-left: auto; }
 .date-record-speaker { display: flex; align-items: center; gap: 10px; font-size: 12px; margin: 0 0 8px; }
-.date-record-speaker a { font-size: 10px; color: var(--accent-text); }
+/*
+ * The line anchor stays 10px, because it is a marginal note and not a button —
+ * but a 12x15 target is not tappable. The padding gives it a 44px hit area and
+ * the negative margin keeps the row looking exactly as it did.
+ */
+.date-record-speaker a {
+  font-size: 10px;
+  color: var(--accent-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  margin: -14px -16px;
+}
 .date-record-line p { padding: 15px 18px; font-size: 15px; line-height: 1.85; background: var(--bg-sunken); border-radius: 3px 18px 18px; word-break: keep-all; overflow-wrap: anywhere; white-space: pre-wrap; }
 .date-record-line.is-other p { background: var(--tint-ember-bg); }
 .date-record-line:target { outline: 2px solid var(--accent-text); outline-offset: 7px; }
