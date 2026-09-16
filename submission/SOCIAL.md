@@ -5,6 +5,13 @@ Every link below is on the submitted production deployment and was checked
 there. Re-check /demo after any film rebuild: the page is served by CI, so a
 new film is live only once the deploy finishes.
 
+**Posting is scored, not optional.** The official page lists "Social proof —
+you posted your build on X or LinkedIn. Engagement counts." among the judging
+criteria, and step five of how to participate says to tag @convex, @OpenAI,
+@firecrawl and @agentmail. Because engagement is counted, post before
+submitting rather than after: the post has until Sep 22 12:00 PM PT to collect
+any.
+
 ## Submission description
 
 **Datehaja — my second self dates for me.**
