@@ -14,6 +14,108 @@ agent_landing_viewed → agent_created → agent_message_sent
 
 ---
 
+## 2026-09-17 — production, first traffic that is not ours
+
+Read from **production** (`merry-bass-190`), read-only. Two windows: all-time
+(`sinceMs: 0`) and the last seven days.
+
+### Funnel (uniqueActors)
+
+| Stage | All-time | Last 7d |
+| --- | ---: | ---: |
+| agent_landing_viewed | 59 | 35 |
+| agent_onboarding_started | 2 | 1 |
+| agent_created | 4 | 3 |
+| agent_message_sent | 2 | 2 |
+| agent_date_requested | 6 | 5 |
+| agent_date_completed | 5 | 4 |
+| agent_date_failed | 1 | 1 |
+| connection_consent_yes | 1 | 1 |
+| connection_consent_no | 0 | 0 |
+| demo_connection_completed | 1 | 1 |
+| contact_revealed | 0 | 0 |
+| scout_pass_viewed | 1 | 0 |
+| scout_pass_active_viewed | 3 | 3 |
+| scout_checkout_started | 0 | 0 |
+
+No stage was `truncated`, so these are exact counts, not lower bounds.
+
+Landing sources, all-time: `(direct)` 45, `watch` 26.
+Landing locales, all-time: `en-US` 35, `(unknown)` 26, `ko-KR` 7, `de-DE` 2,
+`sv-SE` 1.
+
+Most of the history is recent: 35 of 59 landings and 3 of 4 agents fall in the
+last seven days.
+
+### The stage-to-stage rate at the top is not computable
+
+`agent_onboarding_started` (2) is **lower** than `agent_created` (4). A step
+cannot have fewer people than the step after it, so the top of this funnel is
+not measuring what it looks like it measures.
+
+`uniqueActors` is `row.userId ?? row.anonymousId ?? row._id`
+(`convex/growth.ts:132`). `agent_landing_viewed` and
+`agent_onboarding_started` are client-side and carry `anonymousId`
+(`src/pages/AgentOnboardingPage.tsx:182`). `agent_created` is written
+server-side and carries `userId` (`convex/agents.ts:688`). The two sides of the
+landing-to-created step therefore count different identifiers for the same
+person, and dividing one by the other is not a conversion rate.
+
+`agent_onboarding_started` is additionally gated on
+`firstTimeThisSession("datehaja-onboarding-start")`, so a person who returns in
+a new browser session is counted again while the server-side event is not.
+
+So the honest statement is: **59 people reached the landing page and 4 agents
+exist.** Where the other 55 stopped — on the landing page, or part-way through
+the brief — is not currently knowable from this data.
+
+### What the data does support
+
+Once someone has an agent, the product delivers. Four agents produced six date
+requests and five completed dates: more dates than agents, which means repeat
+use, not one-and-done. One date failed. One person said yes at the human gate
+and got a demo connection.
+
+`contact_revealed` is 0, which is expected: the counterpart in these runs is a
+demo persona, so the path ends at `demo_connection_completed` by design.
+
+`scout_checkout_started` is 0 against `scout_pass_active_viewed` 3. Billing is
+intentionally locked (`convex/billing.ts`, `DATEHAJA_OPEN_TRIAL=1`), so the pass
+reads DEMO and there is nothing to start. Not a signal either way.
+
+`watch` is 26 of 71 landing events — the showcase is roughly half the traffic —
+but `agent_created` carries no source, so whether watch visitors go on to build
+an agent is also unknown.
+
+Caveat on size: with four agents total, some of which are very likely the
+owner's own accounts, none of the downstream rates are load-bearing. This entry
+is a baseline to compare against, not a result.
+
+### Proposed experiments
+
+1. **Make the top of the funnel one population.** Stamp the client's
+   `anonymousVisitorId()` onto `agent_created` alongside `userId`, or emit a
+   client-side mirror of it, so landing → onboarding → created share an
+   identifier. Metric that should move: `agent_onboarding_started` becomes ≥
+   `agent_created`. Verify by re-running the snapshot and checking the ordering
+   holds. Nothing else on this list is trustworthy until this is done.
+
+2. **Carry the landing source through to creation.** `agent_created` records
+   `city` and `locale` but not `source`. Adding it answers whether `/watch`
+   — half of all traffic — produces agents or only spectators. Metric:
+   created-by-source. Verify against `landingSources` in the same window.
+
+3. **Measure abandonment inside the brief, not just at its ends.** The brief is
+   three steps and thirteen required fields before anything happens
+   (`src/pages/AgentOnboardingPage.tsx`). One event per completed step would
+   show which step loses people. Metric: per-step counts. Only worth doing
+   after (1), and it must stay privacy-minimal — step numbers only, never field
+   contents, per the rules in `convex/growth.ts`.
+
+No changes were made in this review.
+
+---
+
 ## 2026-09-04 (second) — production, after /watch shipped
 
 Read from production (`merry-bass-190`), read-only. All-time and the seven-day
