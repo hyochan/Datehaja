@@ -180,37 +180,3 @@ jobs:
           echo "::error::$SITE is still serving '${served:-none}' rather than '$local_bundle'."
           exit 1
 
-      - name: Verify the submitted URL serves this film
-        env:
-          SITE: https://merry-bass-190.convex.site
-        # The bundle is content-hashed and therefore always fresh; the film is
-        # not. It keeps its name across rebuilds and sits behind a four-hour
-        # CDN cache, so a new film once reached viewers hours late while every
-        # check above passed. The page asks for the film by its hash, and this
-        # fetches the same URL a visitor would and compares the bytes.
-        run: |
-          set -euo pipefail
-          expected=$(node -p "require('./submission/film-verification.json').sha256")
-          url="$SITE/demo/Datehaja-demo.mp4?v=${expected:0:8}"
-          # Retry against a throwaway query string. Polling the real URL while
-          # publishing is still in flight would cache whatever the origin
-          # happened to return, and every later visitor would get that for four
-          # hours — the failure this versioning exists to prevent.
-          for attempt in 1 2 3 4 5; do
-            probe="$url&probe=$GITHUB_RUN_ID-$attempt"
-            served=$(curl -fsSL "$probe" | shasum -a 256 | cut -d' ' -f1) || served=none
-            if [ "$served" = "$expected" ]; then
-              # Now the origin is known good, ask for it the way a visitor does.
-              visitor=$(curl -fsSL "$url" | shasum -a 256 | cut -d' ' -f1) || visitor=none
-              if [ "$visitor" = "$expected" ]; then
-                echo "$SITE serves the film in film-verification.json."
-                exit 0
-              fi
-              echo "::error::The origin has the right film but $url served $visitor."
-              exit 1
-            fi
-            echo "Attempt $attempt: served $served, expected $expected."
-            sleep 5
-          done
-          echo "::error::$SITE serves a different film than submission/film-verification.json describes."
-          exit 1

@@ -29,7 +29,7 @@ const run = (binary, args) => {
   return result.stdout;
 };
 
-const film = resolve(process.argv[2] || "public/demo/Datehaja-demo.mp4");
+const film = resolve(process.argv[2] || ".scratch/submission/Datehaja-demo.mp4");
 const out = resolve(".scratch/submission/review");
 rmSync(out, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
@@ -39,10 +39,10 @@ const toSeconds = (stamp) => {
   const [s, ms] = rest.split(".");
   return Number(h) * 3600 + Number(m) * 60 + Number(s) + Number(ms) / 1000;
 };
-const cues = [...readFileSync("public/demo/Datehaja-demo.vtt", "utf8")
+const cues = [...readFileSync("submission/Datehaja-demo.vtt", "utf8")
   .matchAll(/(\d\d:\d\d:\d\d\.\d\d\d) --> (\d\d:\d\d:\d\d\.\d\d\d)\r?\n(.+)/g)]
   .map((m, i) => ({ n: i + 1, at: (toSeconds(m[1]) + toSeconds(m[2])) / 2, text: m[3].trim() }));
-if (!cues.length) throw new Error("No caption cues in public/demo/Datehaja-demo.vtt");
+if (!cues.length) throw new Error("No caption cues in submission/Datehaja-demo.vtt");
 
 for (const cue of cues) {
   run(ffmpeg, ["-y", "-v", "error", "-ss", String(cue.at), "-i", film,

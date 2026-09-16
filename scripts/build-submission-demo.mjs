@@ -1,10 +1,9 @@
-import { mkdirSync, readFileSync, writeFileSync, copyFileSync, existsSync, mkdtempSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync, existsSync, mkdtempSync } from "node:fs";
 import { resolve, relative } from "node:path";
 import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { createHash } from "node:crypto";
 import assert from "node:assert/strict";
-import { writeDemoAssetVersion } from "./demo-asset-version.mjs";
 
 // Frames are captured through the browser UI. This builder never creates dialogue
 // or alters an outcome. Keep the private capture directory outside git.
@@ -24,7 +23,6 @@ const DISSOLVE = 0.4;
 const total = story.reduce((n, beat) => n + beat.seconds, 0) - DISSOLVE * (story.length - 1);
 assert(total > 0 && total < 180, "Submission must be under three minutes");
 mkdirSync(".scratch/submission", { recursive: true });
-mkdirSync("public/demo", { recursive: true });
 const scratch = mkdtempSync(resolve(".scratch/submission/encode-"));
 const run = (binary, args) => {
   const result = spawnSync(binary, args, { encoding: "utf8", maxBuffer: 8 * 1024 * 1024 });
@@ -74,7 +72,9 @@ run(ffmpeg, ["-y", "-v", "error", ...segments.flatMap((f) => ["-i", f]),
 const ass = `[Script Info]\nScriptType: v4.00+\nPlayResX: 1280\nPlayResY: 840\nWrapStyle: 2\n\n[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\nStyle: Default,Helvetica Neue,31,&H00EEECF0,&H00EEECF0,&H00151014,&H00151014,0,0,0,0,100,100,0.6,0,1,0,0,2,90,90,40,1\n\n[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n` + cues.map(cue => `Dialogue: 0,${assTime(cue.start)},${assTime(cue.end)},Default,,0,0,0,,${cue.caption.replaceAll("\n", "\\N")}`).join("\n");
 const assPath = resolve(scratch, "captions.ass");
 writeFileSync(assPath, ass);
-const film = resolve("public/demo/Datehaja-demo.mp4");
+// The film lives on YouTube and the repository keeps only its script, so the
+// build writes it outside git. `demo:review` reads it from here.
+const film = resolve(".scratch/submission/Datehaja-demo.mp4");
 // Subtitle failures are fatal. Never silently publish an uncaptioned film.
 // Open and close on the background colour rather than cutting from nothing to a
 // full screen and back. Half a second at each end, which no caption occupies.
@@ -83,11 +83,9 @@ run(ffmpeg, ["-y", "-v", "error", "-i", joined, "-vf", `ass=${relative(root, ass
 const metadata = JSON.parse(run(ffprobe, ["-v", "error", "-show_format", "-show_streams", "-of", "json", film]));
 assert(Number(metadata.format.duration) < 180 && Math.abs(Number(metadata.format.duration) - total) < 0.2, "Unexpected film duration");
 run(ffmpeg, ["-v", "error", "-i", film, "-f", "null", "-"]);
-writeFileSync("public/demo/Datehaja-demo.vtt", "WEBVTT\n\n" + cues.map((cue, i) => `${i + 1}\n${time(cue.start)} --> ${time(cue.end)}\n${cue.caption}\n`).join("\n"));
-writeFileSync("public/demo/transcript.txt", "Datehaja — saved-record product walkthrough\nFictional test people. English translations identified on screen. Timing edited.\nNo narration; English captions are burned into the film.\n\n" + cues.map(cue => `${time(cue.start)}\n${cue.caption}\n`).join("\n"));
-run(ffmpeg, ["-y", "-v", "error", "-ss", "3", "-i", film, "-frames:v", "1", "-update", "1", "public/demo/submission-poster.jpg"]);
-copyFileSync(film, "submission/Datehaja-demo.mp4");
+writeFileSync("submission/Datehaja-demo.vtt", "WEBVTT\n\n" + cues.map((cue, i) => `${i + 1}\n${time(cue.start)} --> ${time(cue.end)}\n${cue.caption}\n`).join("\n"));
+writeFileSync("submission/transcript.txt", "Datehaja — saved-record product walkthrough\nFictional test people. English translations identified on screen. Timing edited.\nNo narration; English captions are burned into the film.\n\n" + cues.map(cue => `${time(cue.start)}\n${cue.caption}\n`).join("\n"));
+run(ffmpeg, ["-y", "-v", "error", "-ss", "3", "-i", film, "-frames:v", "1", "-update", "1", resolve(".scratch/submission/submission-poster.jpg")]);
 const report = { durationSeconds: Number(metadata.format.duration), width: metadata.streams[0].width, height: metadata.streams[0].height, fps: metadata.streams[0].avg_frame_rate, bytes: Number(metadata.format.size), sha256: createHash("sha256").update(readFileSync(film)).digest("hex"), captions: "Burned English; VTT and transcript also provided", audio: "None", decodedCompletely: true, source: "Browser UI screenshots of saved fictional records; playback retimed", chapters: story.map(beat => ({ name: beat.name, seconds: beat.seconds })) };
 writeFileSync("submission/film-verification.json", JSON.stringify(report, null, 2) + "\n");
-writeDemoAssetVersion(report.sha256);
 console.log(JSON.stringify(report, null, 2));
