@@ -46,7 +46,6 @@ import type * as lib_ownerFacts from "../lib/ownerFacts.js";
 import type * as lib_privacy from "../lib/privacy.js";
 import type * as lib_relationshipGoals from "../lib/relationshipGoals.js";
 import type * as lib_text from "../lib/text.js";
-import type * as lib_time from "../lib/time.js";
 import type * as mail from "../mail.js";
 import type * as notifications from "../notifications.js";
 import type * as profiles from "../profiles.js";
@@ -101,7 +100,6 @@ declare const fullApi: ApiFromModules<{
   "lib/privacy": typeof lib_privacy;
   "lib/relationshipGoals": typeof lib_relationshipGoals;
   "lib/text": typeof lib_text;
-  "lib/time": typeof lib_time;
   mail: typeof mail;
   notifications: typeof notifications;
   profiles: typeof profiles;

@@ -8,9 +8,9 @@ Status (2026-09-02): the rig is BUILT in the Rive file "Datehaja Agent"
 (file id 2550307, project 1514853, https://editor.rive.app/file/untitled/2550307)
 entirely through the Rive MCP server. Exporting `.riv` (Publish → To .riv,
 Export → For Runtime) is gated behind a paid Rive plan on this workspace, so
-`public/agents/agent.riv` does not exist yet. The app side is ready:
-`src/components/agent/RiveAgent.tsx` remains an experimental adapter. The
-current `/lab/avatar` bench verifies the production SVG character and editor.
+`public/agents/agent.riv` does not exist yet. There is no runtime adapter in
+the app; production still uses the SVG figure. The current `/lab/avatar`
+bench verifies that character and editor.
 The rig described below predates the new character art and needs reauthoring
 before adoption; it is not the production renderer.
 
@@ -23,11 +23,9 @@ before adoption; it is not the production renderer.
 | Lists, chips, tiny avatars | SVG `AgentAvatar` (blink + breathe) | unchanged (cheap) |
 | Debrief / connection emails | PNG snapshots of the SVG | render equivalent PNG stills if adopting the rig |
 
-Runtime: `@rive-app/react-canvas` (installed). `RiveAgent` lazy-loads
-`/agents/agent.riv`, binds the view model automatically (`autoBind`) and
-falls back to `AgentCharacter`, preserving every editor option, when the file
-fails to load.
-`prefers-reduced-motion` disables autoplay (frame 0 of `idle`).
+Runtime, when adopted: `@rive-app/react-canvas`. A previous unused adapter
+lazy-loaded `/agents/agent.riv` and fell back to `AgentCharacter` when the
+file failed to load; it was not wired into any surface and has been removed.
 
 ## Artboard
 
