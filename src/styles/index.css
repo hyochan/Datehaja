@@ -237,6 +237,15 @@
   html[lang^="ja"] h2,
   html[lang^="ja"] h3 {
     letter-spacing: -0.025em;
+  }
+
+  /*
+   * Korean only. Korean puts spaces between 어절, so keeping words whole gives
+   * the line a sensible place to end. Japanese does not: there is nothing to
+   * break at, so keep-all turns a sentence into one unbreakable run and pushes
+   * it off a narrow screen — 374px past the edge of a 320px phone, measured.
+   */
+  html[lang^="ko"] :is(h1, h2, h3) {
     word-break: keep-all;
   }
 
@@ -249,8 +258,7 @@
    * `anywhere` is the escape hatch: with keep-all alone, one long unbroken
    * token (a URL, an id) would push its container sideways instead of wrapping.
    */
-  html[lang^="ko"] :is(p, li, dd, dt, figcaption, blockquote, label, button, a, span, small, strong, b, em),
-  html[lang^="ja"] :is(p, li, dd, dt, figcaption, blockquote, label, button, a, span, small, strong, b, em) {
+  html[lang^="ko"] :is(p, li, dd, dt, figcaption, blockquote, label, button, a, span, small, strong, b, em) {
     word-break: keep-all;
     overflow-wrap: anywhere;
   }
