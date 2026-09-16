@@ -2,6 +2,7 @@
 import { convexTest } from "convex-test";
 import { describe, expect, test } from "vitest";
 import { internal } from "./_generated/api";
+import { reseed } from "./demo";
 import schema from "./schema";
 
 const modules = import.meta.glob("./**/*.ts");
@@ -141,5 +142,18 @@ describe("global demo world", () => {
     expect((await t.mutation(internal.demo.seed, { nowMs: NOW })).retired).toBe(
       0,
     );
+  });
+
+  test("reseed is not a public mutation", () => {
+    const flags = reseed as { isInternal?: boolean; isPublic?: boolean };
+    expect(flags.isInternal).toBe(true);
+    expect(flags.isPublic).not.toBe(true);
+  });
+
+  test("reseed still runs as an internal mutation without a signed-in user", async () => {
+    const t = convexTest(schema, modules);
+    const result = await t.mutation(internal.demo.reseed, {});
+    expect(result.created).toBeGreaterThan(0);
+    expect(result.retired).toBe(0);
   });
 });
