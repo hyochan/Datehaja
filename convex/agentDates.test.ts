@@ -1010,6 +1010,31 @@ describe("agent-date privacy and human consent", () => {
     expect(date?.counterpartUserId).toBe(s.carol);
   });
 
+  test("a direct request still finds the only matchable Agent past the oldest forty profiles", async () => {
+    const t = convexTest(schema, modules);
+    const s = await setup(t);
+    await t.run(async (ctx) => {
+      const profile = (await ctx.db
+        .query("profiles")
+        .withIndex("by_user", (q) => q.eq("userId", s.carol))
+        .unique())!;
+      const { _id, _creationTime, ...data } = profile;
+      void _creationTime;
+      await ctx.db.delete("profiles", _id);
+      for (let i = 0; i < 45; i++) {
+        const userId = await ctx.db.insert("users", { name: `Unfinished ${i}` });
+        await ctx.db.insert("profiles", { ...data, userId });
+      }
+      await ctx.db.insert("profiles", data);
+    });
+    const id = await t.mutation(internal.agentDates.createRequest, {
+      userId: s.bob,
+      accessMode: "subscription",
+    });
+    const date = await t.run((ctx) => ctx.db.get("agentDates", id));
+    expect(date?.counterpartUserId).toBe(s.carol);
+  });
+
   test("seals the other verdict, answer, and turn subtext before mutual consent", async () => {
     const t = convexTest(schema, modules);
     const s = await setup(t);

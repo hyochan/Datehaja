@@ -36,6 +36,27 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-16 - a date request only ever saw the oldest forty people in a city
+
+`createDateRequest` read forty active profiles per city and only then
+dropped the caller, prior dates, demo rows and anyone without an Agent.
+The forty-first person in that city was not a candidate. A city of real
+users older than the demo cast would also hide the demo world from the
+button.
+
+The durable search already paginates; that path was fine. The explicit
+request now reads two hundred per city, which is past the size this
+product will reach, and a test puts the only matchable Agent behind
+forty unfinished profiles.
+
+Left alone, because they are speed at a scale this app does not have: a
+`by_status` index on `agentSearches` (nothing scans that table by
+status), cursor pagination on `listMine` and the notification list (both
+already `.take(30)`), and moving the rate-limit increment to after the
+write (the increment lives in the same mutation as the write, so a throw
+rolls it back). The age cron already walks a saved cursor two hundred
+rows at a time.
+
 ### 2026-09-16 - a photo upload id was enough to take someone else's file
 
 `profiles.setPhoto` accepted any storage id. It checked that the blob
