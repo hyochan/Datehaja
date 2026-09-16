@@ -4,6 +4,7 @@ import { describe, expect, test } from "vitest";
 import { api, internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import schema from "./schema";
+import { SNAPSHOT_ROWS_PER_EVENT } from "./growth";
 
 const modules = import.meta.glob("./**/*.ts");
 const ANONYMOUS_ID = "4f73f251-9db1-47b4-8072-1e1ca83ddc1d";
@@ -265,5 +266,65 @@ describe("privacy-minimal growth analytics", () => {
       ]),
     );
     expect(events.every((event) => event.source === undefined)).toBe(true);
+  });
+
+  test("the same browser is one person whether its id arrives upper or lower case", async () => {
+    // The shape check accepts either case; actor tokens are compared as
+    // strings, so without folding one browser would read as two people.
+    const t = convexTest(schema, modules);
+    const userId = await t.run((ctx) =>
+      ctx.db.insert("users", { name: "Rae", email: "rae@test.invalid" }),
+    );
+    const now = Date.now();
+    await t.run(async (ctx) => {
+      await ctx.db.insert("growthEvents", {
+        anonymousId: ANONYMOUS_ID.toUpperCase(),
+        event: "agent_landing_viewed",
+        createdAt: now,
+      });
+      await ctx.db.insert("growthEvents", {
+        anonymousId: ANONYMOUS_ID,
+        event: "agent_landing_viewed",
+        createdAt: now + 1,
+      });
+      await ctx.db.insert("growthEvents", {
+        userId,
+        anonymousId: ANONYMOUS_ID.toUpperCase(),
+        event: "agent_created",
+        createdAt: now + 2,
+      });
+    });
+    const snapshot = await t.query(internal.growth.funnelSnapshot, {
+      sinceMs: 0,
+    });
+    expect(snapshot.funnel.agent_landing_viewed.uniqueActors).toBe(1);
+    expect(snapshot.funnel.agent_created.uniqueActors).toBe(1);
+  });
+
+  test("says once that a truncated sample makes every count inexact", async () => {
+    // A dropped row can be the one that linked a visitor id to a user id, and
+    // then another event — still under its own cap, still truncated:false —
+    // counts one person as two. The snapshot has to say so for the whole read.
+    const t = convexTest(schema, modules);
+    const now = Date.now();
+    await t.run(async (ctx) => {
+      for (let i = 0; i < SNAPSHOT_ROWS_PER_EVENT; i++) {
+        await ctx.db.insert("growthEvents", {
+          anonymousId: ANONYMOUS_ID,
+          event: "agent_landing_viewed",
+          createdAt: now + i,
+        });
+      }
+    });
+    const full = await t.query(internal.growth.funnelSnapshot, { sinceMs: 0 });
+    expect(full.funnel.agent_landing_viewed.truncated).toBe(true);
+    expect(full.linksTruncated).toBe(true);
+
+    // And it must not cry wolf on a sample that fits.
+    const narrow = await t.query(internal.growth.funnelSnapshot, {
+      sinceMs: now + SNAPSHOT_ROWS_PER_EVENT - 5,
+    });
+    expect(narrow.funnel.agent_landing_viewed.truncated).toBe(false);
+    expect(narrow.linksTruncated).toBe(false);
   });
 });

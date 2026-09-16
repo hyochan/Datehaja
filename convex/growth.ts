@@ -96,14 +96,34 @@ const FUNNEL_EVENTS = [
   "scout_checkout_started",
 ] as const;
 
-/** Per-event row cap. 17 events × 1000 stays under Convex's 16,384-document
- *  per-transaction read limit; once an event's window outgrows this, move
- *  counting to @convex-dev/aggregate. */
-const SNAPSHOT_ROWS_PER_EVENT = 1000;
+/**
+ * Per-event row cap. Seventeen events at this cap is up to 17,000 documents in
+ * one transaction — an earlier version of this comment called that "under
+ * Convex's 16,384-document limit", which is its own arithmetic refuting itself,
+ * and `convex/_generated/ai/guidelines.md` states no such number, so no limit is
+ * asserted here. What is true: production is under 100 rows per event, the read
+ * is an indexed range with a `take`, and once any event's window outgrows this
+ * cap the counting belongs in @convex-dev/aggregate rather than a larger cap.
+ */
+export const SNAPSHOT_ROWS_PER_EVENT = 1000;
 
-/** Browser-minted visitor id. A random UUID, not a personal identifier. */
+/**
+ * Browser-minted visitor id: a random value from the client, not a personal
+ * identifier. The shape check is deliberately loose — it rejects an email, a
+ * handle or prose, which is what it is for, but it is not RFC UUID validation
+ * and does not prove who a value belongs to.
+ */
 export function isAnonymousVisitorId(value: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(value);
+}
+
+/**
+ * The shape check accepts either case, but actor tokens are compared as
+ * strings, so `4F73…` and `4f73…` would be two people. Fold the case wherever
+ * a visitor id becomes an identity.
+ */
+export function normaliseVisitorId(value: string): string {
+  return value.toLowerCase();
 }
 
 type ActorRow = {
@@ -116,7 +136,7 @@ type ActorRow = {
 
 function actorToken(row: ActorRow): string {
   if (row.userId) return `user:${row.userId}`;
-  if (row.anonymousId) return `anon:${row.anonymousId}`;
+  if (row.anonymousId) return `anon:${normaliseVisitorId(row.anonymousId)}`;
   return `row:${row._id}`;
 }
 
@@ -149,7 +169,7 @@ export function resolveActorId(
   for (const row of rows) {
     if (row.userId && row.anonymousId) {
       const user = find(`user:${row.userId}`);
-      const anon = find(`anon:${row.anonymousId}`);
+      const anon = find(`anon:${normaliseVisitorId(row.anonymousId)}`);
       if (user !== anon) parent.set(user, anon);
     }
   }
@@ -210,6 +230,21 @@ export const funnelSnapshot = internalQuery({
       }
     }
 
-    return { sinceMs: since, funnel: counts, landingSources, landingLocales };
+    // A truncated event does not only undercount itself. The identity union is
+    // built from the same samples, so a dropped row can be the one that linked a
+    // visitor id to a user id — and then some *other* event, still well under the
+    // cap and still reporting `truncated: false`, counts one person as two. Say
+    // once, for the whole snapshot, that no count can be trusted as exact.
+    const linksTruncated = FUNNEL_EVENTS.some(
+      (event) => counts[event]?.truncated === true,
+    );
+
+    return {
+      sinceMs: since,
+      funnel: counts,
+      landingSources,
+      landingLocales,
+      linksTruncated,
+    };
   },
 });
