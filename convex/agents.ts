@@ -1,5 +1,5 @@
 import { refreshAfterPreferencesChange } from "./scouting";
-import { isAnonymousVisitorId } from "./growth";
+import { isAnonymousVisitorId, normaliseVisitorId } from "./growth";
 import { v, type Infer } from "convex/values";
 import { supersedeAgentProposals } from "./lib/agentLearning";
 import { reflectionValidator } from "./lib/dateStory";
@@ -690,7 +690,7 @@ export const bootstrap = mutation({
     await refreshAfterPreferencesChange(ctx, userId);
     await refreshGeneratedWelcome(ctx, userId, agentFields.name);
     const visitorId = args.anonymousId
-      ? clean(args.anonymousId, 80)
+      ? normaliseVisitorId(clean(args.anonymousId, 80))
       : "";
     await ctx.db.insert("growthEvents", {
       userId,

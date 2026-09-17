@@ -55,12 +55,25 @@ universal - it was the unsigned majority.)
 event beside the user id, and the snapshot unions the two identifiers whenever
 they appear together on a row in the window.
 
-**What this does not fix.** The union only sees identifiers that co-occur, so a
-person still reads as two when their landing and their creation never share a
-row: a phone that browses and a laptop that signs up, storage cleared in
-between, or an onboarding event that was suppressed (automation check, rate
-limit) while the creation row was still written. The ordering invariant holds
-for the same-browser case and is conditional otherwise.
+**What this does not fix, including in one browser.** The union only sees
+identifiers that co-occur, so a person reads as two when their landing and
+their creation never share a row: a phone that browses and a laptop that signs
+up, or storage cleared in between.
+
+A first draft of this entry said the ordering invariant at least holds for the
+same browser. It does not, and the reason is in this file's own code. `track`
+spends one rate-limit bucket - `growth:${anonymousId}`, five writes a day - on
+every funnel event together, while `trackMember` buckets per event. Five
+landing views exhaust it; the onboarding write then returns without inserting,
+and `bootstrap` writes the creation row regardless. The snapshot reads zero
+onboardings and one creation, in one browser, with nothing flagged. The
+automated-browser guard has the same shape: it silences the two client events
+and never the server one.
+
+That is absence, not a split - the count is missing a row rather than counting
+one person twice - but it breaks the ordering just the same, and it is the next
+thing to fix. Per-event buckets are the obvious repair and are deliberately not
+in this change, which is about identity.
 
 The union also spans the whole window rather than only new rows, so a person
 who landed before this change and creates an agent after it has their old row

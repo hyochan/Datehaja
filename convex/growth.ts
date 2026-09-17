@@ -20,7 +20,11 @@ export const track = mutation({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const anonymousId = clean(args.anonymousId, 80);
+    // Canonicalise before the value is used for anything: the rate-limit key
+    // below and the stored row both key on it, and the shape check accepts
+    // either case, so an alternating-case client would otherwise get its own
+    // quota bucket and its own identity.
+    const anonymousId = normaliseVisitorId(clean(args.anonymousId, 80));
     if (!isAnonymousVisitorId(anonymousId)) return null;
     const rate = await checkRateLimit(
       ctx,
@@ -118,9 +122,11 @@ export function isAnonymousVisitorId(value: string): boolean {
 }
 
 /**
- * The shape check accepts either case, but actor tokens are compared as
- * strings, so `4F73…` and `4f73…` would be two people. Fold the case wherever
- * a visitor id becomes an identity.
+ * The shape check accepts either case, but every use of a visitor id compares
+ * it as a string — the rate-limit bucket, the stored row, the actor token — so
+ * `4F73…` and `4f73…` would be two quotas and two people. Both mutations that
+ * accept one fold it on the way in; the snapshot folds again when reading rows
+ * written before that.
  */
 export function normaliseVisitorId(value: string): string {
   return value.toLowerCase();
@@ -142,8 +148,9 @@ function actorToken(row: ActorRow): string {
 
 /**
  * Collapse a userId and an anonymousId into one actor when they co-occur on
- * any row in the window. Rows that only ever carry one identifier stay
- * distinct — this does not invent a link across historical events.
+ * any row in the window. Only an observed co-occurrence creates a link, never
+ * a guess — but the window is the whole window, so one new row carrying both
+ * identifiers does join up that person's older rows that carried only one.
  */
 export function resolveActorId(
   rows: ActorRow[],

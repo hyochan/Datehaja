@@ -301,30 +301,72 @@ describe("privacy-minimal growth analytics", () => {
     expect(snapshot.funnel.agent_created.uniqueActors).toBe(1);
   });
 
-  test("says once that a truncated sample makes every count inexact", async () => {
-    // A dropped row can be the one that linked a visitor id to a user id, and
-    // then another event — still under its own cap, still truncated:false —
-    // counts one person as two. The snapshot has to say so for the whole read.
+  test("warns when a dropped row makes a different event's count wrong", async () => {
+    // The union is built from the same capped samples as the counts, so the row
+    // that gets dropped can be the one linking a visitor id to a user id. The
+    // event that then miscounts is a different one, still far under its own cap
+    // and still reporting truncated:false. One flag has to speak for the read.
     const t = convexTest(schema, modules);
+    const userId = await t.run((ctx) =>
+      ctx.db.insert("users", { name: "Io", email: "io@test.invalid" }),
+    );
+    const second = ANONYMOUS_ID.replace(/^.{8}/, "ffffffff");
     const now = Date.now();
     await t.run(async (ctx) => {
-      for (let i = 0; i < SNAPSHOT_ROWS_PER_EVENT; i++) {
+      // Oldest creation row carries the link that would join the first id.
+      await ctx.db.insert("growthEvents", {
+        userId,
+        anonymousId: ANONYMOUS_ID,
+        event: "agent_created",
+        createdAt: now,
+      });
+      // Push it past the cap. Reads are newest-first, so this one falls off.
+      for (let i = 1; i <= SNAPSHOT_ROWS_PER_EVENT; i++) {
         await ctx.db.insert("growthEvents", {
-          anonymousId: ANONYMOUS_ID,
-          event: "agent_landing_viewed",
+          userId,
+          anonymousId: i === 1 ? second : undefined,
+          event: "agent_created",
           createdAt: now + i,
         });
       }
+      // Two onboardings, well under the cap, one per visitor id.
+      await ctx.db.insert("growthEvents", {
+        anonymousId: ANONYMOUS_ID,
+        event: "agent_onboarding_started",
+        createdAt: now + 1,
+      });
+      await ctx.db.insert("growthEvents", {
+        anonymousId: second,
+        event: "agent_onboarding_started",
+        createdAt: now + 2,
+      });
     });
-    const full = await t.query(internal.growth.funnelSnapshot, { sinceMs: 0 });
-    expect(full.funnel.agent_landing_viewed.truncated).toBe(true);
-    expect(full.linksTruncated).toBe(true);
 
-    // And it must not cry wolf on a sample that fits.
-    const narrow = await t.query(internal.growth.funnelSnapshot, {
-      sinceMs: now + SNAPSHOT_ROWS_PER_EVENT - 5,
+    const snapshot = await t.query(internal.growth.funnelSnapshot, {
+      sinceMs: 0,
     });
-    expect(narrow.funnel.agent_landing_viewed.truncated).toBe(false);
-    expect(narrow.linksTruncated).toBe(false);
+    // The linking row was dropped, so onboarding reads two people where the
+    // full history has one - and onboarding itself is nowhere near its cap.
+    expect(snapshot.funnel.agent_onboarding_started.truncated).toBe(false);
+    expect(snapshot.funnel.agent_onboarding_started.uniqueActors).toBe(2);
+    // That is the whole point of the flag: this snapshot is not exact.
+    expect(snapshot.linksTruncated).toBe(true);
+  });
+
+  test("does not cry wolf on a sample that fits", async () => {
+    const t = convexTest(schema, modules);
+    const now = Date.now();
+    await t.run(async (ctx) => {
+      await ctx.db.insert("growthEvents", {
+        anonymousId: ANONYMOUS_ID,
+        event: "agent_landing_viewed",
+        createdAt: now,
+      });
+    });
+    const snapshot = await t.query(internal.growth.funnelSnapshot, {
+      sinceMs: 0,
+    });
+    expect(snapshot.funnel.agent_landing_viewed.truncated).toBe(false);
+    expect(snapshot.linksTruncated).toBe(false);
   });
 });
