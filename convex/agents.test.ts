@@ -810,6 +810,31 @@ describe("growth identity on bootstrap", () => {
     });
   });
 
+  test("stores the visitor id in one spelling however the client sends it", async () => {
+    // track folds on the way in, so if bootstrap does not, the same browser
+    // ends up stored under two spellings. The snapshot folds when reading, so
+    // the counts stay right and nothing else in the suite notices.
+    const t = convexTest(schema, modules);
+    const owner = await t.run((ctx) =>
+      ctx.db.insert("users", { name: "Wren", email: "wren@test.invalid" }),
+    );
+
+    await asUser(t, owner).mutation(api.agents.bootstrap, {
+      ...bootstrapBrief,
+      displayName: "Wren",
+      agentName: "Kite",
+      anonymousId: VISITOR_ID.toUpperCase(),
+    });
+
+    const created = await t.run(async (ctx) =>
+      ctx.db
+        .query("growthEvents")
+        .withIndex("by_event", (q) => q.eq("event", "agent_created"))
+        .unique(),
+    );
+    expect(created?.anonymousId).toBe(VISITOR_ID);
+  });
+
   test("ignores a malformed visitor id and still bootstraps", async () => {
     const t = convexTest(schema, modules);
     const owner = await t.run((ctx) =>

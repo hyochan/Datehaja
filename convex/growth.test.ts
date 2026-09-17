@@ -293,12 +293,28 @@ describe("privacy-minimal growth analytics", () => {
         event: "agent_created",
         createdAt: now + 2,
       });
+      // One onboarding under the lowercase id, one under the user id only.
+      // They are the same person; only the uppercase link row joins them.
+      await ctx.db.insert("growthEvents", {
+        anonymousId: ANONYMOUS_ID,
+        event: "agent_onboarding_started",
+        createdAt: now + 3,
+      });
+      await ctx.db.insert("growthEvents", {
+        userId,
+        event: "agent_onboarding_started",
+        createdAt: now + 4,
+      });
     });
     const snapshot = await t.query(internal.growth.funnelSnapshot, {
       sinceMs: 0,
     });
     expect(snapshot.funnel.agent_landing_viewed.uniqueActors).toBe(1);
     expect(snapshot.funnel.agent_created.uniqueActors).toBe(1);
+    // The creation row is the one carrying both identifiers, so it is where the
+    // union is built. With its id in the other case, the fold has to happen on
+    // that side too or the two onboardings below stay two people.
+    expect(snapshot.funnel.agent_onboarding_started.uniqueActors).toBe(1);
   });
 
   test("warns when a dropped row makes a different event's count wrong", async () => {

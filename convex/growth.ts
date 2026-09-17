@@ -242,6 +242,12 @@ export const funnelSnapshot = internalQuery({
     // visitor id to a user id — and then some *other* event, still well under the
     // cap and still reporting `truncated: false`, counts one person as two. Say
     // once, for the whole snapshot, that no count can be trusted as exact.
+    //
+    // What `false` entitles a reader to: every event fitted its sample, so the
+    // union saw every row this window contains. It does not promise the funnel
+    // is ordered — an event the rate limiter or the automation guard dropped was
+    // never written and so is invisible here — nor that one person on two
+    // devices is one actor, nor that two people on one browser are two.
     const linksTruncated = FUNNEL_EVENTS.some(
       (event) => counts[event]?.truncated === true,
     );
