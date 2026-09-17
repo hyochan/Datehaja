@@ -351,6 +351,73 @@ describe("privacy-minimal growth analytics", () => {
     expect(snapshot.funnel.agent_onboarding_started.uniqueActors).toBe(2);
     // That is the whole point of the flag: this snapshot is not exact.
     expect(snapshot.linksTruncated).toBe(true);
+
+  });
+
+  test("one browser is one quota and one stored id whatever case it sends", async () => {
+    // The ingress fold is what keeps an alternating-case client from getting a
+    // second rate-limit bucket. Reading folds too, so without this test a
+    // reverted ingress fold would leave the counts right and the quota wrong.
+    const t = convexTest(schema, modules);
+    for (let i = 0; i < 6; i++) {
+      await t.mutation(api.growth.track, {
+        event: "agent_landing_viewed",
+        anonymousId:
+          i % 2 === 0 ? ANONYMOUS_ID.toUpperCase() : ANONYMOUS_ID,
+      });
+    }
+    const rows = await t.run((ctx) =>
+      ctx.db.query("growthEvents").collect(),
+    );
+    // One shared bucket of five, not two buckets of five.
+    expect(rows).toHaveLength(5);
+    expect(rows.every((row) => row.anonymousId === ANONYMOUS_ID)).toBe(true);
+  });
+
+  test("the same rows under the cap read as one person", async () => {
+    // The counterfactual for the test above. Identical shape, two rows fewer,
+    // so nothing is dropped and the linking row survives: the two onboardings
+    // that read as two people when the link fell off now read as one. Without
+    // this, that test could not tell "truncation broke the link" apart from
+    // "the link never worked".
+    const t = convexTest(schema, modules);
+    const userId = await t.run((ctx) =>
+      ctx.db.insert("users", { name: "Io", email: "io@test.invalid" }),
+    );
+    const second = ANONYMOUS_ID.replace(/^.{8}/, "ffffffff");
+    const now = Date.now();
+    await t.run(async (ctx) => {
+      await ctx.db.insert("growthEvents", {
+        userId,
+        anonymousId: ANONYMOUS_ID,
+        event: "agent_created",
+        createdAt: now,
+      });
+      for (let i = 1; i <= SNAPSHOT_ROWS_PER_EVENT - 2; i++) {
+        await ctx.db.insert("growthEvents", {
+          userId,
+          anonymousId: i === 1 ? second : undefined,
+          event: "agent_created",
+          createdAt: now + i,
+        });
+      }
+      await ctx.db.insert("growthEvents", {
+        anonymousId: ANONYMOUS_ID,
+        event: "agent_onboarding_started",
+        createdAt: now + 1,
+      });
+      await ctx.db.insert("growthEvents", {
+        anonymousId: second,
+        event: "agent_onboarding_started",
+        createdAt: now + 2,
+      });
+    });
+    const snapshot = await t.query(internal.growth.funnelSnapshot, {
+      sinceMs: 0,
+    });
+    expect(snapshot.funnel.agent_created.truncated).toBe(false);
+    expect(snapshot.linksTruncated).toBe(false);
+    expect(snapshot.funnel.agent_onboarding_started.uniqueActors).toBe(1);
   });
 
   test("does not cry wolf on a sample that fits", async () => {

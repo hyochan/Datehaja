@@ -63,8 +63,10 @@ up, or storage cleared in between.
 A first draft of this entry said the ordering invariant at least holds for the
 same browser. It does not, and the reason is in this file's own code. `track`
 spends one rate-limit bucket - `growth:${anonymousId}`, five writes a day - on
-every funnel event together, while `trackMember` buckets per event. Five
-landing views exhaust it; the onboarding write then returns without inserting,
+every event it accepts, while `trackMember` buckets per event. It is the writer
+for the landing and onboarding events, fired from the landing page, `/watch`
+and onboarding, so any five of those together exhaust the budget; the next
+write returns without inserting,
 and `bootstrap` writes the creation row regardless. The snapshot reads zero
 onboardings and one creation, in one browser, with nothing flagged. The
 automated-browser guard has the same shape: it silences the two client events
