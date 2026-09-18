@@ -259,7 +259,7 @@ export default function SettingsPage() {
               onChange={(event) => setBoundaries(event.target.value)}
             />
           </Field>
-          <div className="grid gap-x-5 sm:grid-cols-2">
+          <div className="dh-field-group grid gap-x-5 sm:grid-cols-2">
             <Field label={t("Voice")} htmlFor="settings-agent-voice">
               <Select
                 id="settings-agent-voice"
