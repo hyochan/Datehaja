@@ -311,6 +311,12 @@ export default function AgentOnboardingPage() {
     setBusy(true);
     setError(null);
     try {
+      let anonymousId: string | undefined;
+      try {
+        anonymousId = anonymousVisitorId();
+      } catch {
+        // Visitor id is analytics-only; never block creating the agent.
+      }
       await bootstrap({
         locale,
         displayName,
@@ -349,6 +355,7 @@ export default function AgentOnboardingPage() {
         personalityPreference,
         preferredStyleTags,
         stylePreference,
+        anonymousId,
       });
       navigate("/membership", { replace: true });
     } catch (reason) {

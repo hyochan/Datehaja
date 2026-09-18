@@ -36,6 +36,74 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-17 - the funnel counted the same person twice and called it a drop-off
+
+The first production review with outside traffic read 59 unique actors on the
+landing page, 2 at onboarding, and 4 at agent creation. A stage cannot have
+fewer people than the stage after it, so the funnel was not measuring what it
+appeared to measure.
+
+`uniqueActors` was `userId ?? anonymousId ?? _id`. Landing and onboarding are
+fired from the browser and carry a random visitor id; `agent_created` is
+written inside `agents.bootstrap` and carries a user id. The same human was
+counted as two different actors on either side of that step, so the ratio
+between them was not a conversion rate and never had been. (`track` does stamp
+a user id when the visitor is already signed in, so the split was never
+universal - it was the unsigned majority.)
+
+`bootstrap` now takes an optional `anonymousId` and stores it on the creation
+event beside the user id, and the snapshot unions the two identifiers whenever
+they appear together on a row in the window.
+
+**What this does not fix, including in one browser.** The union only sees
+identifiers that co-occur, so a person reads as two when their landing and
+their creation never share a row: a phone that browses and a laptop that signs
+up, or storage cleared in between.
+
+A first draft of this entry said the ordering invariant at least holds for the
+same browser. It does not, and the reason is in this file's own code. `track`
+spends one rate-limit bucket - `growth:${anonymousId}`, five writes a day - on
+every event it accepts, while `trackMember` buckets per event. It is the writer
+for the landing and onboarding events, fired from the landing page, `/watch`
+and onboarding, so any five of those together exhaust the budget; the next
+write returns without inserting,
+and `bootstrap` writes the creation row regardless. The snapshot reads zero
+onboardings and one creation, in one browser, with nothing flagged. The
+automated-browser guard has the same shape: it silences the two client events
+and never the server one.
+
+That is absence, not a split - the count is missing a row rather than counting
+one person twice - but it breaks the ordering just the same, and it is the next
+thing to fix. Per-event buckets are the obvious repair and are deliberately not
+in this change, which is about identity.
+
+The union also spans the whole window rather than only new rows, so a person
+who landed before this change and creates an agent after it has their old row
+healed by the new one. All-time reads are therefore a mix: returnees join up,
+people who never came back stay split. Compare windows that begin after the
+deploy - not because old rows cannot heal, but because which ones healed is
+arbitrary.
+
+**A bias that can flatter the rate.** Two people signing in from one browser
+share a visitor id and collapse into one actor. That undercounts actors, which
+sounds safe, but a review divides one stage by another: two onboardings and one
+creation read as 1 -> 1, a 100% conversion where the truth is 50%. It makes the
+funnel look better, not worse. This is not a consequence of which identifier
+becomes the union root - root choice changes the label, not the partition.
+
+**Privacy, stated accurately.** An earlier version of this entry claimed the
+change "adds no way to join a growth row back to anything a person wrote".
+That was wrong, and it is the claim worth correcting most. A visitor who was
+anonymous before now has their prior landing rows tied to a user id the first
+time they create an agent, and a user id joins onward to the account, the
+profile, and what they wrote. The rows themselves still carry no profile text,
+message content or contact details, `funnelSnapshot` is internal and returns
+counts rather than rows, and the link is only visible to whoever can read the
+deployment - but it is a de-anonymisation of the previously unsigned majority,
+it has no expiry, and saying otherwise was the kind of claim this log exists to
+catch.
+
+
 ### 2026-09-17 - a field label was flush against the paragraph above it
 
 Every other finding this week came from reading the code. This one only
