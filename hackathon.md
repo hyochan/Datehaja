@@ -59,17 +59,37 @@ by an `overflow-hidden` ancestor, so there was no scrollbar to reveal the last
 twelve pixels of it. The row now wraps and the primary action takes the full
 width on a phone.
 
+A review then found three more things, two of them mine. The sibling rule only
+covered a field after a field, so a field after a *grid* of them still stacked
+the two margins - the same 40px, one element later, and at every width rather
+than only on a phone. And only the step-one button got the width treatment; the
+step-three button carries a label just as long and was left to overflow. Both
+are fixed here, and the rule now covers a grid exit as well.
+
+The same review argued the new test could not detect the defect that motivated
+it, because `getBoundingClientRect` is invariant under ancestor clipping. The
+direction of that argument was wrong - measured with the fix undone in the DOM,
+the button runs from 53 to 387 against a 375px viewport, so the viewport check
+does flag it. But the point underneath was right: the real clip is 32px, not
+the 12px the viewport check reports, because the ancestor cuts at 355. A defect
+clipped entirely inside the viewport would have scored zero. The test now
+intersects each box with every clipping ancestor rather than with the viewport
+alone, which is the measurement that matches the claim.
+
 The existing mobile test asserted that the document does not scroll sideways.
-That is exactly why it saw neither: the ancestor that clips the content is also
-what keeps the page from scrolling. The new test asks a different question —
-whether any text or control loses width to a clip no scroll can undo — and it
-deliberately tolerates the landing page's decorative bleed and its horizontal
-card strip, both of which are intentional. It runs against the landing page,
-which is what CI can reach signed out; the two fixes above are on the
-onboarding page and were verified by measuring the running app, not by CI.
+That is exactly why it saw none of this: the ancestor that clips the content is
+also what keeps the page from scrolling. The new one deliberately tolerates the
+landing page's decorative bleed and its horizontal card strip, both intentional
+- an earlier pass nearly reported them as defects and only checking each one
+separated them from the real finding. It runs against the landing page, which
+is what CI can reach signed out; the onboarding fixes were verified by measuring
+the running app, not by CI.
 
 Measured at 375px, before and after: sibling fields in a grid 40px -> 20px,
-elements cut with no way to reveal them 1 -> 0. At 1024px both are unchanged.
+elements cut with no way to reveal them 1 -> 0, and the clip the test can see
+12px -> 32px on the unfixed button. At 1024px the field rhythm is unchanged,
+except that the second column of each field grid no longer sits 20px below the
+first - another thing #75 had broken and this corrects.
 
 
 ### 2026-09-17 - the funnel counted the same person twice and called it a drop-off

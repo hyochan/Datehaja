@@ -486,7 +486,7 @@ export default function AgentOnboardingPage() {
                     showPreview={false}
                   />
                 </div>
-                <div className="grid gap-x-5 sm:grid-cols-2">
+                <div className="dh-field-group grid gap-x-5 sm:grid-cols-2">
                   <Field label={t("How should it sound?")}>
                     <Select
                       value={voice}
@@ -696,7 +696,7 @@ export default function AgentOnboardingPage() {
                 <h2 className="text-[34px]">
                   {t("What should your Dating Agent know about you?")}
                 </h2>
-                <div className="mt-6 grid gap-x-5 sm:grid-cols-2">
+                <div className="dh-field-group mt-6 grid gap-x-5 sm:grid-cols-2">
                   <Field
                     label={t("What should we call you?")}
                     hint={t("At least 2 characters.")}
@@ -737,7 +737,7 @@ export default function AgentOnboardingPage() {
                     ))}
                   </div>
                 </Field>
-                <div className="grid gap-x-5 sm:grid-cols-2">
+                <div className="dh-field-group grid gap-x-5 sm:grid-cols-2">
                   <Field label={t("Country")} htmlFor="country">
                     <Select
                       id="country"
@@ -1155,6 +1155,7 @@ export default function AgentOnboardingPage() {
                 </Button>
               ) : (
                 <Button
+                  className="w-full sm:w-auto"
                   size="lg"
                   loading={busy}
                   disabled={!stepReady[3]}
