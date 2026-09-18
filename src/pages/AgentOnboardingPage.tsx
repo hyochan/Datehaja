@@ -1121,7 +1121,12 @@ export default function AgentOnboardingPage() {
               </div>
             )}
 
-            <div className="mt-8 flex items-center justify-between gap-3 border-t border-[var(--border)] pt-6">
+            {/* The step label carries the agent's name, and before anyone
+                names theirs it reads "Tell Your Dating Agent who to find →" —
+                334px wide against a 293px content box on a phone, clipped by
+                an overflow-hidden ancestor with no scrollbar to reveal it.
+                Wrapping lets the primary action take the full width there. */}
+            <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border)] pt-6">
               {step > 1 ? (
                 <Button
                   variant="ghost"
@@ -1135,6 +1140,7 @@ export default function AgentOnboardingPage() {
               {step < 3 ? (
                 <Button
                   size="lg"
+                  className="w-full sm:w-auto"
                   disabled={!stepReady[step]}
                   aria-describedby={
                     step === 2 ? "ideal-person-requirements" : undefined

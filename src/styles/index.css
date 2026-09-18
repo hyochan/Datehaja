@@ -7439,3 +7439,15 @@ html[data-theme="dark"] .agent-date-state.is-live { color: #6fcf97; }
   line-height: 1.6;
   color: var(--text-muted);
 }
+
+/**
+ * A field that follows another field keeps the 20px rhythm its bottom margin
+ * already provides. `Field` carries `mt-5` so a label never sits flush against
+ * the paragraph above it, and in normal flow that margin simply collapses into
+ * the previous field's `mb-5`. Grid items do not collapse margins, and several
+ * onboarding and profile fields sit in a grid that is a single column on a
+ * phone — there the two margins added up and the gap doubled to 40px.
+ */
+.dh-field + .dh-field {
+  margin-top: 0;
+}

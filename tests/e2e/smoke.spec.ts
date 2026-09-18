@@ -127,3 +127,50 @@ test("the explanation and both fictional previews are reachable signed out", asy
     page.getByRole("heading", { name: /My second self dates for me/i }),
   ).toBeVisible();
 });
+
+test("nothing on the landing page is cut off on a phone", async ({ page }) => {
+  // A decorative element bleeding past the edge is fine, and so is a card in a
+  // horizontally scrollable strip — the landing page has both on purpose. What
+  // is not fine is text or a control that loses width to an overflow-hidden
+  // ancestor, because nothing can scroll to reveal it. That is how the
+  // onboarding step-1 button was losing its last 12px at this width.
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto("/");
+  await expect(
+    page.getByRole("heading", { name: /My second self dates for me/i }),
+  ).toBeVisible();
+
+  const cutOff = await page.evaluate(() => {
+    const reachable = (el: Element) => {
+      let parent = el.parentElement;
+      while (parent && parent !== document.body) {
+        const style = getComputedStyle(parent);
+        const scrolls =
+          style.overflowX === "auto" || style.overflowX === "scroll";
+        if (scrolls && parent.scrollWidth > parent.clientWidth + 2) return true;
+        parent = parent.parentElement;
+      }
+      return false;
+    };
+    const lost: string[] = [];
+    document
+      .querySelectorAll("h1,h2,h3,h4,p,li,button,a[href],label,input,select")
+      .forEach((el) => {
+        const box = el.getBoundingClientRect();
+        if (box.width === 0 || box.height === 0) return;
+        const visible =
+          Math.max(0, Math.min(box.right, window.innerWidth) - Math.max(box.left, 0));
+        if (box.width - visible > 8 && !reachable(el)) {
+          lost.push(
+            `${el.tagName} "${(el.textContent ?? "").trim().slice(0, 40)}" loses ${Math.round(box.width - visible)}px`,
+          );
+        }
+      });
+    return lost;
+  });
+
+  // The sibling test above asserts the document does not scroll sideways, which
+  // is exactly why it could not see this: an overflow-hidden ancestor keeps the
+  // page from scrolling while the content inside it is cut.
+  expect(cutOff).toEqual([]);
+});

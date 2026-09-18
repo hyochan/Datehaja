@@ -36,6 +36,42 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-18 - two things only a phone could show, one of them mine
+
+Every check this week ran at desktop width, so both of these walked straight
+through.
+
+The first was a regression I shipped on 2026-09-17. `Field` gained `mt-5` so a
+label would stop sitting flush against the paragraph above it, and that margin
+collapses into the previous field's `mb-5` in normal flow, which is why the
+rhythm looked unchanged. Grid items do not collapse margins. Several onboarding
+and profile fields sit in a grid that is two columns from 640px up and one
+column below it, so on a phone the two margins added and the gap between fields
+doubled to 40px. At 1024px the same fields sit side by side and their vertical
+margins never meet, which is the whole reason the measurement that passed it
+was taken there. A `.dh-field + .dh-field` rule cancels the top margin between
+siblings, so the margin now only does work after prose.
+
+The second was older. The step-one button reads "Tell {agent} who to find",
+and before anyone has named their agent that interpolates to "Your Dating
+Agent" — 334px of button against a 293px content box at 375px. It was clipped
+by an `overflow-hidden` ancestor, so there was no scrollbar to reveal the last
+twelve pixels of it. The row now wraps and the primary action takes the full
+width on a phone.
+
+The existing mobile test asserted that the document does not scroll sideways.
+That is exactly why it saw neither: the ancestor that clips the content is also
+what keeps the page from scrolling. The new test asks a different question —
+whether any text or control loses width to a clip no scroll can undo — and it
+deliberately tolerates the landing page's decorative bleed and its horizontal
+card strip, both of which are intentional. It runs against the landing page,
+which is what CI can reach signed out; the two fixes above are on the
+onboarding page and were verified by measuring the running app, not by CI.
+
+Measured at 375px, before and after: sibling fields in a grid 40px -> 20px,
+elements cut with no way to reveal them 1 -> 0. At 1024px both are unchanged.
+
+
 ### 2026-09-17 - the funnel counted the same person twice and called it a drop-off
 
 The first production review with outside traffic read 59 unique actors on the
