@@ -36,6 +36,82 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-20 - finish the mobile onboarding fix
+
+The primary button's box fit after the earlier width change, but its text still
+inherited `whitespace-nowrap`. Mobile actions now wrap their labels and grow
+vertically, keeping desktop sizing unchanged. Both the next-step and final
+actions use the same treatment.
+
+The clipping evaluator now measures button text as well as element boxes and
+is shared with an authenticated onboarding test. The opt-in development test
+walks all three steps at 320, 375, 390 and 1024px, checks button text height,
+20px field spacing and desktop column alignment. It creates only a disposable
+auth account; it never submits the profile or starts a search or model call.
+Run it with `bun run test:e2e:onboarding` against local Vite and the configured
+development backend. CI retains its account-free browser suites.
+
+Validation: all seven onboarding/smoke browser checks, 433 unit tests,
+typecheck, lint and build passed. Removing the label-wrapping fix made the new
+test fail on the actual first-step text (34px lost at 320px), confirming it
+detects the regression instead of only checking the button box.
+
+### 2026-09-18 - two things only a phone could show, one of them mine
+
+Every check this week ran at desktop width, so both of these walked straight
+through.
+
+The first was a regression I shipped on 2026-09-17. `Field` gained `mt-5` so a
+label would stop sitting flush against the paragraph above it, and that margin
+collapses into the previous field's `mb-5` in normal flow, which is why the
+rhythm looked unchanged. Grid items do not collapse margins. Several onboarding
+and profile fields sit in a grid that is two columns from 640px up and one
+column below it, so on a phone the two margins added and the gap between fields
+doubled to 40px. At 1024px the same fields sit side by side and their vertical
+margins never meet, which is the whole reason the measurement that passed it
+was taken there. A `.dh-field + .dh-field` rule cancels the top margin between
+siblings, so the margin now only does work after prose.
+
+The second was older. The step-one button reads "Tell {agent} who to find",
+and before anyone has named their agent that interpolates to "Your Dating
+Agent" — 334px of button against a 293px content box at 375px. It was clipped
+by an `overflow-hidden` ancestor, so there was no scrollbar to reveal the last
+twelve pixels of it. The row now wraps and the primary action takes the full
+width on a phone.
+
+A review then found three more things, two of them mine. The sibling rule only
+covered a field after a field, so a field after a *grid* of them still stacked
+the two margins - the same 40px, one element later, and at every width rather
+than only on a phone. And only the step-one button got the width treatment; the
+step-three button carries a label just as long and was left to overflow. Both
+are fixed here, and the rule now covers a grid exit as well.
+
+The same review argued the new test could not detect the defect that motivated
+it, because `getBoundingClientRect` is invariant under ancestor clipping. The
+direction of that argument was wrong - measured with the fix undone in the DOM,
+the button runs from 53 to 387 against a 375px viewport, so the viewport check
+does flag it. But the point underneath was right: the real clip is 32px, not
+the 12px the viewport check reports, because the ancestor cuts at 355. A defect
+clipped entirely inside the viewport would have scored zero. The test now
+intersects each box with every clipping ancestor rather than with the viewport
+alone, which is the measurement that matches the claim.
+
+The existing mobile test asserted that the document does not scroll sideways.
+That is exactly why it saw none of this: the ancestor that clips the content is
+also what keeps the page from scrolling. The new one deliberately tolerates the
+landing page's decorative bleed and its horizontal card strip, both intentional
+- an earlier pass nearly reported them as defects and only checking each one
+separated them from the real finding. It runs against the landing page, which
+is what CI can reach signed out; the onboarding fixes were verified by measuring
+the running app, not by CI.
+
+Measured at 375px, before and after: sibling fields in a grid 40px -> 20px,
+elements cut with no way to reveal them 1 -> 0, and the clip the test can see
+12px -> 32px on the unfixed button. At 1024px the field rhythm is unchanged,
+except that the second column of each field grid no longer sits 20px below the
+first - another thing #75 had broken and this corrects.
+
+
 ### 2026-09-17 - the funnel counted the same person twice and called it a drop-off
 
 The first production review with outside traffic read 59 unique actors on the

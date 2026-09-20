@@ -276,11 +276,14 @@ export function Field({
 }) {
   const { t } = useI18n();
   return (
-    // mt-5 collapses against the previous Field's mb-5, so a run of fields keeps
-    // its old rhythm. It only does work after prose: a label set straight under
-    // a paragraph or heading used to sit flush against it and read as one more
-    // sentence rather than the name of the control below it.
-    <div className="mt-5 mb-5 first:mt-0">
+    // mt-5 only does work after prose: a label set straight under a paragraph
+    // or heading used to sit flush against it and read as one more sentence
+    // rather than the name of the control below it. Between two fields it is
+    // cancelled by the `.dh-field + .dh-field` rule in index.css, because
+    // margins collapse in normal flow but not between grid items — several of
+    // these fields live in a grid that is one column on a phone, where mt-5
+    // and the previous field's mb-5 would otherwise add up to a 40px gap.
+    <div className="dh-field mt-5 mb-5 first:mt-0">
       <label
         htmlFor={htmlFor}
         className="mb-1.5 flex items-baseline gap-2 text-[14px] font-medium"

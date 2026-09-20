@@ -12,6 +12,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "test:e2e:onboarding": "node -e \"if ('E2E_BASE_URL' in process.env) { console.error('Unset E2E_BASE_URL: onboarding layout checks require local Vite and the development backend.'); process.exit(1); }\" && DATEHAJA_ONBOARDING_LAYOUT_E2E=1 playwright test tests/e2e/onboarding-layout.spec.ts",
     "test:e2e:full": "DATEHAJA_FULL_E2E=1 playwright test tests/e2e/full-flow.spec.ts",
     "test:e2e:pair": "DATEHAJA_TWO_ACCOUNT_E2E=1 playwright test tests/e2e/two-account-flow.spec.ts",
     "demo:record": "DATEHAJA_DEMO_RECORD=1 playwright test tests/e2e/demo-recording.spec.ts --output .scratch/demo/recording",

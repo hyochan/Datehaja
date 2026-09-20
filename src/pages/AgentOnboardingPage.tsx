@@ -486,7 +486,7 @@ export default function AgentOnboardingPage() {
                     showPreview={false}
                   />
                 </div>
-                <div className="grid gap-x-5 sm:grid-cols-2">
+                <div className="dh-field-group grid gap-x-5 sm:grid-cols-2">
                   <Field label={t("How should it sound?")}>
                     <Select
                       value={voice}
@@ -696,7 +696,7 @@ export default function AgentOnboardingPage() {
                 <h2 className="text-[34px]">
                   {t("What should your Dating Agent know about you?")}
                 </h2>
-                <div className="mt-6 grid gap-x-5 sm:grid-cols-2">
+                <div className="dh-field-group mt-6 grid gap-x-5 sm:grid-cols-2">
                   <Field
                     label={t("What should we call you?")}
                     hint={t("At least 2 characters.")}
@@ -737,7 +737,7 @@ export default function AgentOnboardingPage() {
                     ))}
                   </div>
                 </Field>
-                <div className="grid gap-x-5 sm:grid-cols-2">
+                <div className="dh-field-group grid gap-x-5 sm:grid-cols-2">
                   <Field label={t("Country")} htmlFor="country">
                     <Select
                       id="country"
@@ -1121,7 +1121,12 @@ export default function AgentOnboardingPage() {
               </div>
             )}
 
-            <div className="mt-8 flex items-center justify-between gap-3 border-t border-[var(--border)] pt-6">
+            {/* The step label carries the agent's name, and before anyone
+                names theirs it reads "Tell Your Dating Agent who to find →" —
+                334px wide against a 293px content box on a phone, clipped by
+                an overflow-hidden ancestor with no scrollbar to reveal it.
+                Wrapping lets the primary action take the full width there. */}
+            <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border)] pt-6">
               {step > 1 ? (
                 <Button
                   variant="ghost"
@@ -1135,6 +1140,7 @@ export default function AgentOnboardingPage() {
               {step < 3 ? (
                 <Button
                   size="lg"
+                  className="w-full max-sm:h-auto max-sm:min-h-13 max-sm:whitespace-normal max-sm:py-3 max-sm:[overflow-wrap:anywhere] sm:w-auto"
                   disabled={!stepReady[step]}
                   aria-describedby={
                     step === 2 ? "ideal-person-requirements" : undefined
@@ -1149,6 +1155,7 @@ export default function AgentOnboardingPage() {
                 </Button>
               ) : (
                 <Button
+                  className="w-full max-sm:h-auto max-sm:min-h-13 max-sm:whitespace-normal max-sm:py-3 max-sm:[overflow-wrap:anywhere] sm:w-auto"
                   size="lg"
                   loading={busy}
                   disabled={!stepReady[3]}

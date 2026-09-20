@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { horizontalClipping } from "./helpers/clipping";
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
@@ -126,4 +127,28 @@ test("the explanation and both fictional previews are reachable signed out", asy
   await expect(
     page.getByRole("heading", { name: /My second self dates for me/i }),
   ).toBeVisible();
+});
+
+test("nothing on the landing page is cut off on a phone", async ({ page }) => {
+  // A decorative element bleeding past the edge is fine, and so is a card in a
+  // horizontally scrollable strip - the landing page has both on purpose. What
+  // is not fine is text or a control that loses width to a clip nothing can
+  // scroll away.
+  //
+  // The measurement is against every clipping ancestor, not just the viewport.
+  // getBoundingClientRect is invariant under ancestor clipping, so a box that
+  // sits entirely on screen can still be sliced in half by an overflow-hidden
+  // parent - and the viewport-only version of this check would call that fine.
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto("/");
+  await expect(
+    page.getByRole("heading", { name: /My second self dates for me/i }),
+  ).toBeVisible();
+
+  const cutOff = await page.evaluate(horizontalClipping);
+
+  // The sibling test above asserts the document does not scroll sideways, which
+  // is exactly why it could not see this class of defect: the ancestor doing the
+  // clipping is also what stops the page from scrolling.
+  expect(cutOff).toEqual([]);
 });
