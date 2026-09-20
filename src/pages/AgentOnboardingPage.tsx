@@ -1140,7 +1140,7 @@ export default function AgentOnboardingPage() {
               {step < 3 ? (
                 <Button
                   size="lg"
-                  className="w-full sm:w-auto"
+                  className="w-full max-sm:h-auto max-sm:min-h-13 max-sm:whitespace-normal max-sm:py-3 max-sm:[overflow-wrap:anywhere] sm:w-auto"
                   disabled={!stepReady[step]}
                   aria-describedby={
                     step === 2 ? "ideal-person-requirements" : undefined
@@ -1155,7 +1155,7 @@ export default function AgentOnboardingPage() {
                 </Button>
               ) : (
                 <Button
-                  className="w-full sm:w-auto"
+                  className="w-full max-sm:h-auto max-sm:min-h-13 max-sm:whitespace-normal max-sm:py-3 max-sm:[overflow-wrap:anywhere] sm:w-auto"
                   size="lg"
                   loading={busy}
                   disabled={!stepReady[3]}

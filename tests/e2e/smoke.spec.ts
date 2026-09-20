@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { horizontalClipping } from "./helpers/clipping";
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
@@ -144,54 +145,7 @@ test("nothing on the landing page is cut off on a phone", async ({ page }) => {
     page.getByRole("heading", { name: /My second self dates for me/i }),
   ).toBeVisible();
 
-  const cutOff = await page.evaluate(() => {
-    const scrollableAncestor = (el: Element) => {
-      let parent = el.parentElement;
-      while (parent && parent !== document.body) {
-        const style = getComputedStyle(parent);
-        const scrolls =
-          style.overflowX === "auto" || style.overflowX === "scroll";
-        if (scrolls && parent.scrollWidth > parent.clientWidth + 2) return true;
-        parent = parent.parentElement;
-      }
-      return false;
-    };
-    // Width left after intersecting with the viewport and every ancestor that
-    // clips horizontally.
-    const survivingWidth = (el: Element) => {
-      const box = el.getBoundingClientRect();
-      let left = Math.max(box.left, 0);
-      let right = Math.min(box.right, window.innerWidth);
-      let parent = el.parentElement;
-      while (parent && parent !== document.body) {
-        const style = getComputedStyle(parent);
-        if (style.overflowX !== "visible") {
-          const clip = parent.getBoundingClientRect();
-          left = Math.max(left, clip.left);
-          right = Math.min(right, clip.right);
-        }
-        parent = parent.parentElement;
-      }
-      return Math.max(0, right - left);
-    };
-    const lost: string[] = [];
-    document
-      .querySelectorAll(
-        "h1,h2,h3,h4,h5,h6,p,li,button,a[href],label,input,select,textarea,figcaption",
-      )
-      .forEach((el) => {
-        const box = el.getBoundingClientRect();
-        if (box.width === 0 || box.height === 0) return;
-        if (scrollableAncestor(el)) return;
-        const missing = box.width - survivingWidth(el);
-        if (missing > 4) {
-          lost.push(
-            `${el.tagName} "${(el.textContent ?? "").trim().slice(0, 40)}" loses ${Math.round(missing)}px`,
-          );
-        }
-      });
-    return lost;
-  });
+  const cutOff = await page.evaluate(horizontalClipping);
 
   // The sibling test above asserts the document does not scroll sideways, which
   // is exactly why it could not see this class of defect: the ancestor doing the

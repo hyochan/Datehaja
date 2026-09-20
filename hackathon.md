@@ -36,6 +36,26 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-20 - finish the mobile onboarding fix
+
+The primary button's box fit after the earlier width change, but its text still
+inherited `whitespace-nowrap`. Mobile actions now wrap their labels and grow
+vertically, keeping desktop sizing unchanged. Both the next-step and final
+actions use the same treatment.
+
+The clipping evaluator now measures button text as well as element boxes and
+is shared with an authenticated onboarding test. The opt-in development test
+walks all three steps at 320, 375, 390 and 1024px, checks button text height,
+20px field spacing and desktop column alignment. It creates only a disposable
+auth account; it never submits the profile or starts a search or model call.
+Run it with `bun run test:e2e:onboarding` against local Vite and the configured
+development backend. CI retains its account-free browser suites.
+
+Validation: all seven onboarding/smoke browser checks, 433 unit tests,
+typecheck, lint and build passed. Removing the label-wrapping fix made the new
+test fail on the actual first-step text (34px lost at 320px), confirming it
+detects the regression instead of only checking the button box.
+
 ### 2026-09-18 - two things only a phone could show, one of them mine
 
 Every check this week ran at desktop width, so both of these walked straight
