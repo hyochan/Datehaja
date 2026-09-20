@@ -15,13 +15,14 @@ Contact opens only after two independent human yeses.
    projections and transactional consent, with direct source links.
 
 **[Submitted entry](https://vibeapps.dev/s/datehaja) ·
-[Submitted 2:28 demo](https://youtu.be/-KZKKBA9m-I) ·
+[Submitted 2:10 demo](https://youtu.be/qu1VWBXuIz8) ·
 [September 20 replacement-cut details](submission/DEMO_SCRIPT.md)**
 
 All public examples use fictional people. Verified independent study
 participants: **0**. User validation remains incomplete; no satisfaction or
 demand result is claimed. The September 20 film and shortened description are
-published on the existing submission; the earlier upload remains available.
+published on the existing submission. The final cut restores product context
+before the learning proof. The September 16 upload was deleted at the owner's request.
 
 ## Project record
 
@@ -60,13 +61,29 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 ## Log
 
+### 2026-09-20 - establish the product before showing the learning
+
+The final 2:10 cut introduces Datehaja at 0:00, shows the owner correction at
+0:08.6 and reaches the before/after comparison at 0:16.2. It replaces the
+earlier 2:28 cut, which withheld the product introduction until 0:42.8.
+Selected capture windows remove the lead-in to the comparison, while saved
+voice clips remain at their original speed. All 28 caption frames were reviewed.
+The narration no longer claims the bookshop pair called it a night.
+
+The current film is https://youtu.be/qu1VWBXuIz8. The existing hackathon entry
+uses this URL; the app's two video links are updated in this source revision.
+The September 16 YouTube upload was deleted after the owner's final confirmation.
+Its local original and archived transcript remain. No independent participant
+result is added. See [verification](submission/JUDGE_CUT_REVIEW.md).
+
 ### 2026-09-20 - show the learning loop in the first 30 seconds
 
 The replacement cut opens with the owner's correction and shows the later-date
 speech change before 30 seconds. It reuses saved captures and narration, keeps
 the limitations visible, and runs 2:28. It is published as unlisted at
 https://youtu.be/-KZKKBA9m-I and replaces the video link on the existing Vibe Apps
-entry. The previous 2:35 upload remains available for earlier shared links.
+entry. This was an intermediate cut, superseded by the context-first cut above.
+The September 16 upload was subsequently deleted at the owner's request.
 
 The front of this log and the shortened submission copy now give one judge
 route: account-free date, English learning comparison, delivered test email and

@@ -1,23 +1,39 @@
 [
   {
+    "name": "01-introduction",
+    "seconds": 9,
+    "captions": [
+      "On Datehaja, you don't go on the first date.",
+      "Your Agent meets theirs. You decide whether anything follows."
+    ]
+  },
+  {
     "name": "07-saved-feedback",
-    "seconds": 12,
+    "seconds": 8,
     "captions": [
       "“That’s not how I talk.”",
-      "The owner corrects Rio. The reply and the memory are saved.",
-      "The correction points back to the line that caused it.",
-      "The date it came from is never rewritten."
+      "The owner corrects Rio. The reply and the memory are saved."
+    ],
+    "captureWindows": [
+      [
+        0.05,
+        0.55
+      ]
     ]
   },
   {
     "name": "06-before-after",
-    "seconds": 20,
+    "seconds": 14,
     "captions": [
-      "Now the same Agent, across four saved dates.",
-      "Four dates, fifty-six lines, all kept.",
       "The original stays beside a clearly labelled translation.",
       "On a later date, the polite register is still there.",
       "Nothing replaces the original. Both versions stay visible."
+    ],
+    "captureWindows": [
+      [
+        0.4,
+        1
+      ]
     ]
   },
   {
@@ -29,23 +45,24 @@
     ]
   },
   {
-    "name": "01-introduction",
-    "seconds": 9,
-    "captions": [
-      "On Datehaja, you don't go on the first date.",
-      "Your Agent meets theirs. You decide whether anything follows."
-    ]
-  },
-  {
     "name": "03-generated-date",
-    "seconds": 32,
+    "seconds": 27,
     "captions": [
       "Here's a finished Agent date. You can watch it without signing up.",
       "Juno starts by saying exactly what it is: an AI standing in.",
-      "It talks with Sol in a bookshop, then calls it a night.",
       "Sixteen saved lines. You can step through every one.",
       "The scene is built around a page pulled off the live web.",
       "The ending is kept as it happened, not tidied afterwards."
+    ],
+    "captureWindows": [
+      [
+        0,
+        0.3333333333333333
+      ],
+      [
+        0.5,
+        1
+      ]
     ]
   },
   {
@@ -78,10 +95,9 @@
   },
   {
     "name": "11-execution",
-    "seconds": 10,
+    "seconds": 7,
     "captions": [
-      "Convex, OpenAI, Firecrawl, AgentMail.",
-      "Not logos. Every one of them ran in this film."
+      "Convex, OpenAI, Firecrawl, AgentMail."
     ]
   },
   {

@@ -1,56 +1,34 @@
 {
-  "durationSeconds": 130.416667,
+  "durationSeconds": 148.416667,
   "width": 1280,
   "height": 840,
   "fps": "24/1",
-  "bytes": 6441091,
-  "sha256": "0e9f375891bb8f67f0e0a7d7306da765d296cbbbf05fc0f9f70986bcb5ec8db5",
+  "bytes": 7277068,
+  "sha256": "b204c5e6217a986399acff508cb45e1cee51649ca4145e926419ffec4b5d2b8a",
   "captions": "Burned English; VTT and transcript also provided",
   "audio": "ElevenLabs eleven_v3, voice Juniper; reads the burned captions verbatim",
   "decodedCompletely": true,
   "source": "Browser UI screenshots of saved fictional records; playback retimed",
   "chapters": [
     {
-      "name": "01-introduction",
-      "seconds": 9
-    },
-    {
       "name": "07-saved-feedback",
-      "seconds": 8,
-      "captureWindows": [
-        [
-          0.05,
-          0.55
-        ]
-      ]
+      "seconds": 12
     },
     {
       "name": "06-before-after",
-      "seconds": 14,
-      "captureWindows": [
-        [
-          0.4,
-          1
-        ]
-      ]
+      "seconds": 20
     },
     {
       "name": "09-later-date",
       "seconds": 12
     },
     {
+      "name": "01-introduction",
+      "seconds": 9
+    },
+    {
       "name": "03-generated-date",
-      "seconds": 27,
-      "captureWindows": [
-        [
-          0,
-          0.3333333333333333
-        ],
-        [
-          0.5,
-          1
-        ]
-      ]
+      "seconds": 32
     },
     {
       "name": "04-grounded-journal",
@@ -66,7 +44,7 @@
     },
     {
       "name": "11-execution",
-      "seconds": 7
+      "seconds": 10
     },
     {
       "name": "10-human-choice",

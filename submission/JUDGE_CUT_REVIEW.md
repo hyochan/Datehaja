@@ -1,59 +1,56 @@
-# September 20 judge cut — verification
+# September 20 final cut — verification
 
-Status: [new film published](https://youtu.be/-KZKKBA9m-I), unlisted, and
-[existing submission updated](https://vibeapps.dev/s/datehaja) on September 20.
-The previous 2:35 upload remains available and its description links to the
-new cut. The two app-link changes are included in
-[PR #79](https://github.com/hyochan/Datehaja/pull/79); its production workflow
-records whether this source revision has reached the live app.
+The current film is [2:10 on YouTube](https://youtu.be/qu1VWBXuIz8), unlisted.
+It replaces the video on the [existing submission](https://vibeapps.dev/s/datehaja).
+The two app-link changes are included in this source revision; verify their
+release through the main deployment workflow and both live pages.
 
-## What changed
+## Editorial change
 
-The owner correction moved from 1:19 to the opening. Saved feedback runs from
-0:00 to 0:12, the before/after screen appears at 0:19.6, and the caption about
-polite speech on a later date begins at 0:23.6. The unchanged-history and reply
-length limitations remain visible. The later replay follows at 0:31.2.
+The intermediate cut put the correction first but delayed the explanation of
+Datehaja until 0:42.8. The final cut starts with the homepage and the Agent/human
+roles, then shows the owner correction at 0:08.6 and the comparison at 0:16.2.
+The retained-polite-speech caption starts at 0:20.867. A later encounter follows
+at 0:29.8. The reply-length limitation and original records remain visible.
 
-The cut reuses the existing fictional-record captures and all 34 original
-voice clips. No new dates, model calls, email delivery or production changes
-were needed. Exact-text voice lookup keeps each reordered caption paired with
-its original MP3; unknown text, duplicate manifest entries and voice overruns
-fail before replacing the film.
+Selected capture windows remove navigation lead-ins and redundant narration.
+The film no longer says the bookshop pair called it a night: the record ends
+with a proposal, not a departure. The sponsor names stay visible on their job
+cards; narration claiming they all ran during the film was removed because
+this is a playback of saved evidence.
 
-## Checks completed
+This addresses identifiable context and timing problems. It is an editorial
+judgment, not an audience comprehension test or proof of improved judging odds.
 
-- Build, offline narration and full FFmpeg decode: **148.416667 seconds**,
-  H.264, 1280×840, 24 fps; AAC, stereo, 44.1 kHz.
-- SHA-256: `b204c5e6217a986399acff508cb45e1cee51649ca4145e926419ffec4b5d2b8a`.
-- Visually inspected all 34 caption midpoint frames in four contact sheets:
-  saved reply/memory, date chooser, Korean/English comparison, replay, journal,
-  owner letters, delivered-message label, sponsor cards and consent copy.
-- All clips fit their caption windows. One 3.29-second line uses 1.20× tempo;
-  no other clip in this cut requires speeding up.
-- Negative checks reject unrecorded caption text, duplicate manifest captions
-  and a caption too short for its clip. Node syntax check, lint and
-  `git diff --check` passed.
-- Local Markdown links resolve. The shortened submission description is
-  212 whitespace-delimited words.
-- Browser verification: the Vibe Apps entry displays the new video URL,
-  212-word description and learning-focused tagline, while retaining the
-  repository and original social links. The new YouTube upload passed checks
-  with no issues, shows Unlisted and played beyond 30 seconds in a separate
-  browser (148.441 seconds after YouTube processing). `/watch` loads all
-  16 saved lines and both viewpoint controls without
-  sign-in; the English `#comparison` URL shows source/translation, all four
-  dates and the reply-length limitation.
+## Artifact checks
 
-These checks verify the artifact and public evidence path. They do not add an
-independent participant or establish demand. Verified independent sessions: 0.
+- 130.416667 seconds; H.264, 1280×840, 24 fps; AAC stereo, 44.1 kHz.
+- SHA-256: `0e9f375891bb8f67f0e0a7d7306da765d296cbbbf05fc0f9f70986bcb5ec8db5`.
+- Full FFmpeg decode completed. All 28 caption midpoint frames were inspected
+  across four contact sheets: homepage, correction/reply/memory, comparison,
+  later date, bookshop source/ending, journal, separate letters, labelled test
+  email, service job cards and human consent.
+- All 28 original voice clips fit at 1× speed. No new TTS calls were used.
+- The builder rejects overlapping, out-of-range and empty capture windows.
+  Those three negative cases were exercised in isolated temporary directories.
+- Node syntax, lint and whitespace checks passed.
 
-## Publication handoff
+## Publication and limits
 
-The MP4 is `.scratch/submission/Datehaja-demo.mp4`; original published metadata
-is preserved under `submission/archive/2026-09-16/`. The original MP4 is also
-backed up locally. Upload, playback and saved-entry checks are complete. The
-app's two current-film links are updated in this source revision.
-The old film remains a valid walkthrough and is preserved.
+YouTube processing and copyright checks completed with no issues. The selected
+visibility is Unlisted. The custom thumbnail is the product introduction from
+the actual film. The upload uses the timed chapter description for this cut.
+Playback advanced beyond 31 seconds in a separate browser (130.441 seconds
+after YouTube processing). Reloading the existing submission showed both its
+Video Demo link and embedded player pointing to `qu1VWBXuIz8`.
 
-The September 22 22:00 KST content cutoff leaves six hours for public links and
-critical errors before September 23 04:00 KST. Recruitment remains paused.
+The earlier September 16 upload (`K35t6VaF0iI`) was deleted only after the owner
+confirmed the permanent-deletion screen. Its public watch page then said the
+uploader had deleted it. Both earlier MP4s and their caption metadata remain
+archived locally; the September 20 intermediate transcript is also archived in
+this repository. Its URL is superseded by the final cut.
+
+The app still shows saved fictional rehearsals. The delivered email belongs to
+a separate development rehearsal, as labelled in the film. Verified independent
+study participants remain **0**. No satisfaction, demand or retention result is
+claimed. Recruitment and automated outreach remain paused.
