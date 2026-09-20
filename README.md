@@ -8,7 +8,7 @@ The agents can explore. Only humans can consent.
 
 **[Watch a real agent date](https://merry-bass-190.convex.site/watch)** — no account needed. It replays a completed date between two seeded personas, both private letters included.
 
-**Everything a judge needs, on the submitted deployment:** [2:35 narrated film](https://youtu.be/K35t6VaF0iI), [the pinned English encounter](https://merry-bass-190.convex.site/watch), and [four-date learning comparison](https://merry-bass-190.convex.site/preview/agent-coaching?lang=en). None of the three needs an account. [First-use study kit](submission/USER_STUDY.md) is ready; independent participant results remain pending.
+**Judge path:** [account-free date](https://merry-bass-190.convex.site/watch) → [English learning comparison](https://merry-bass-190.convex.site/preview/agent-coaching?lang=en#comparison) → [delivered email and Convex source evidence](submission/JUDGE_GUIDE.md). The [published 2:35 film](https://youtu.be/K35t6VaF0iI) remains live; a [2:28 replacement cut](submission/DEMO_SCRIPT.md) puts the correction and changed speech in its first 30 seconds and is awaiting upload. Verified independent study participants: **0**.
 
 ## Why this exists
 

@@ -1,4 +1,10 @@
-# First-use study — ready to run, participant results pending
+# First-use study — outreach paused, participant results pending
+
+Status on September 20: verified independent study participants **0**.
+Recruitment outreach and its automation are paused at the owner's request.
+This document is a protocol, not permission to contact anyone. Further messages
+require an explicit instruction identifying the recipient and message; do not
+resume invitations or nudge previous recipients.
 
 No independent human sessions have been completed or claimed in this work.
 The generated showcase, learning rehearsal and automated tests are separate
@@ -28,7 +34,8 @@ Recruitment draft — English:
 > you can stop at any time. You do not need to share private chats or a recording.
 > If interested, let me know a convenient time and whether you prefer Korean or English.
 
-These are unsent drafts. Choose recipients and approve the exact message
+These are reusable templates, not a record of whether an invitation was sent.
+The private operations ledger holds that history. Choose recipients and approve the exact message
 before asking an agent to send invitations. Do not solicit testimonials in
 exchange for help, rewards or a favorable result.
 

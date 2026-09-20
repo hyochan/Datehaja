@@ -1,4 +1,11 @@
-# Submission and social copy — September 16, 2026
+# Submission and social copy — September 20, 2026
+
+**Prepared revision:** [short submission description](SUBMISSION_DESCRIPTION.md).
+It leads with the owner correction and gives judges the date → English learning
+comparison → delivered email/Convex route. It is prepared for the existing
+[entry](https://vibeapps.dev/s/datehaja); this file does not claim it is published.
+The existing social posts below are historical records, not instructions to
+post again. Outreach and automated follow-ups are paused.
 
 **Posted and submitted 2026-09-16.** The entry is live on vibeapps.dev under
 the AllGasHackathon tag.
@@ -13,7 +20,7 @@ criteria, and step five of how to participate says to tag @convex, @OpenAI,
 submitting rather than after: the post has until Sep 22 12:00 PM PT to collect
 any.
 
-## Submission description
+## September 16 submission description — historical
 
 As submitted:
 

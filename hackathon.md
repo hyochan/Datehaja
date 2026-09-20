@@ -1,10 +1,34 @@
-# Hackathon log
+# Datehaja — Convex All Gas Hackathon
+
+**An Agent dates, comes home, and remembers what its owner corrects.**
+Contact opens only after two independent human yeses.
+
+## Judge path — three stops, no account
+
+1. **[Watch the date](https://merry-bass-190.convex.site/watch):** 16 saved
+   lines, a journal linked to those lines, and two independent Agent letters.
+2. **[Compare the learning](https://merry-bass-190.convex.site/preview/agent-coaching?lang=en#comparison):**
+   one Agent, four dates, three corrections. Polite Korean persisted; shorter
+   replies did not. English translations preserve the Korean originals.
+3. **[Inspect the email and Convex evidence](submission/JUDGE_GUIDE.md):**
+   an actually delivered test letter, durable scheduled turns, private
+   projections and transactional consent, with direct source links.
+
+**[Submitted entry](https://vibeapps.dev/s/datehaja) ·
+[Published 2:35 demo](https://youtu.be/K35t6VaF0iI) ·
+[September 20 replacement-cut details](submission/DEMO_SCRIPT.md)**
+
+All public examples use fictional people. Verified independent study
+participants: **0**. User validation remains incomplete; no satisfaction or
+demand result is claimed. The 2:28 replacement film is prepared locally and
+has not yet replaced the submitted YouTube link.
+
+## Project record
 
 - **Project:** Datehaja
 - **Event:** Convex All Gas Hackathon
 - **What it does:** Each person creates one private AI Agent that is their second self. There is no matchmaker: two clearly labelled Agents simply date each other as the two people they stand in for, return with independent debriefs, and open human contact only after two sealed human yeses.
-- **Live app:** https://merry-bass-190.convex.site — the rules require a convex.site or chatgpt.site URL judges can open without an invite. Everything a judge or an emailed link touches now points here: the app, the sign-in codes, the debriefs, the introduction letters. A custom domain still resolves to the same build and is being taken down; nothing in the submission depends on it.
-- **See it without an account:** https://merry-bass-190.convex.site/watch — a real completed date between two seeded personas, both letters included
+- **Live app:** https://merry-bass-190.convex.site
 - **Repo:** https://github.com/hyochan/Datehaja
 - **Frontend:** Convex static hosting
 - **Convex deployment:** https://merry-bass-190.convex.cloud
@@ -13,7 +37,7 @@
 - **Auth:** Convex Auth
 - **AI models:** gpt-5.6-sol for date dialogue, private coaching, letters and factual verification, with no silent economy fallback on these paths. Unverified letters are withheld; lower-cost models remain available for unrelated integrations.
 - **Started:** 2026-08-26T22:04:05Z
-- **Last updated:** 2026-09-17
+- **Last updated:** 2026-09-20
 - **Latest verified candidate:** https://merry-bass-190.convex.site — production carries `DATEHAJA_OPEN_TRIAL`, and `bun run verify:prod` reports `scoutAccess.ok: true`. A new account signed up there with a real mailed code, completed the brief and ran a twelve-turn date.
 
 ## Rules, as verified on the official page
@@ -35,6 +59,18 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
   for the chatgpt.site route, which this project does not take.
 
 ## Log
+
+### 2026-09-20 - show the learning loop in the first 30 seconds
+
+The replacement cut opens with the owner's correction and shows the later-date
+speech change before 30 seconds. It reuses saved captures and narration, keeps
+the limitations visible, and runs 2:28. The existing 2:35 YouTube upload remains
+the published version while the replacement awaits upload.
+
+The front of this log and the shortened submission copy now give one judge
+route: account-free date, English learning comparison, delivered test email and
+Convex source. Independent user validation remains incomplete at zero verified
+participants. [Artifact checks and publication status](submission/JUDGE_CUT_REVIEW.md).
 
 ### 2026-09-20 - finish the mobile onboarding fix
 
