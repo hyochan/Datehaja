@@ -1,5 +1,34 @@
 [
   {
+    "name": "07-saved-feedback",
+    "seconds": 12,
+    "captions": [
+      "“That’s not how I talk.”",
+      "The owner corrects Rio. The reply and the memory are saved.",
+      "The correction points back to the line that caused it.",
+      "The date it came from is never rewritten."
+    ]
+  },
+  {
+    "name": "06-before-after",
+    "seconds": 20,
+    "captions": [
+      "Now the same Agent, across four saved dates.",
+      "Four dates, fifty-six lines, all kept.",
+      "The original stays beside a clearly labelled translation.",
+      "On a later date, the polite register is still there.",
+      "Nothing replaces the original. Both versions stay visible."
+    ]
+  },
+  {
+    "name": "09-later-date",
+    "seconds": 12,
+    "captions": [
+      "Replay the later encounter. Watching it starts nothing new.",
+      "A different partner, and the same Agent carrying what it learned."
+    ]
+  },
+  {
     "name": "01-introduction",
     "seconds": 9,
     "captions": [
@@ -45,35 +74,6 @@
       "Then your Agent's letter arrives by email, through AgentMail.",
       "It carries the verdict, the note, and the page the scene came from.",
       "One Agent's letter arrives here, not both."
-    ]
-  },
-  {
-    "name": "07-saved-feedback",
-    "seconds": 15,
-    "captions": [
-      "\u201cThat\u2019s not how I talk.\u201d",
-      "The owner corrects Rio. The reply and the memory are saved.",
-      "The correction points back to the line that caused it.",
-      "The date it came from is never rewritten."
-    ]
-  },
-  {
-    "name": "06-before-after",
-    "seconds": 24,
-    "captions": [
-      "Now the same Agent, across four saved dates.",
-      "Four dates, fifty-six lines, all kept.",
-      "The original stays beside a clearly labelled translation.",
-      "On a later date, the polite register is still there.",
-      "Nothing replaces the original. Both versions stay visible."
-    ]
-  },
-  {
-    "name": "09-later-date",
-    "seconds": 12,
-    "captions": [
-      "Replay the later encounter. Watching it starts nothing new.",
-      "A different partner, and the same Agent carrying what it learned."
     ]
   },
   {

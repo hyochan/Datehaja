@@ -3,7 +3,7 @@
   "engine": "elevenlabs",
   "model": "eleven_v3",
   "voice": "Juniper",
-  "note": "One file per caption, named by its zero-based caption index. Rendered once through the ElevenLabs studio and kept here so `bun run demo:narrate` rebuilds the exact submitted film without a paid key. Regenerate with ELEVENLABS_API_KEY set, which takes precedence over these.",
+  "note": "Each MP3 is named by its zero-based index in this manifest, not the current film order. The narrator matches exact caption text to that index, allowing reordered cuts to reuse this reading. Use DATEHAJA_TTS=clips bun run demo:narrate to force offline reuse even when an API key exists. Without an explicit engine, ELEVENLABS_API_KEY selects a fresh reading.",
   "captions": [
     "On Datehaja, you don't go on the first date.",
     "Your Agent meets theirs. You decide whether anything follows.",

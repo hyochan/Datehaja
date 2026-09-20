@@ -43,7 +43,7 @@ const VOICE_NAME = localEnv("ELEVENLABS_VOICE") || "Rachel";
 // local one is not as good, but it is the difference between hearing the
 // pacing today and waiting on a credential — and swapping engines later only
 // re-runs this step, never the capture.
-// "clips" reads one already-rendered file per caption, in caption order, for a
+// "clips" matches each caption to its already-rendered file by exact text, for a
 // voice this machine cannot synthesise itself. `submission/narration` holds the
 // reading that shipped, so the film rebuilds without anyone paying for a key;
 // a key still wins, because a fresh render is the point of having one.
@@ -84,15 +84,17 @@ const manifest = (() => {
   try { return JSON.parse(readFileSync(resolve(CLIPS, "voice.json"), "utf8")); } catch { return null; }
 })();
 let voice = { name: ENGINE === "clips" ? (localEnv("DATEHAJA_VOICE_LABEL") || manifest?.label || "pre-rendered clips") : SAY_VOICE };
+let clipIndices;
 if (ENGINE === "clips") {
-  // A clip reads whatever it was rendered from. Once the captions move, the
-  // voice is describing a line that is no longer on screen, and nothing else
-  // in the pipeline would notice.
-  manifest?.captions?.forEach((text, i) => assert(
-    cues[i]?.text === text,
-    `Caption ${i + 1} has changed since these clips were rendered.\n  clip: ${text}\n  film: ${cues[i]?.text ?? "(none)"}\nRe-render with ELEVENLABS_API_KEY set.`,
-  ));
-  assert(!manifest?.captions || manifest.captions.length === cues.length, `The film has ${cues.length} captions; ${CLIPS} was rendered for ${manifest.captions.length}.`);
+  // Reordering a film must reorder its voice too. Exact-text lookup lets us
+  // reuse the original reading without silently accepting changed words.
+  assert(Array.isArray(manifest?.captions), `Missing caption manifest: ${CLIPS}/voice.json`);
+  assert(new Set(manifest.captions).size === manifest.captions.length, "Ambiguous duplicate captions in voice manifest");
+  clipIndices = cues.map((cue, i) => {
+    const index = manifest.captions.indexOf(cue.text);
+    assert(index >= 0, `No saved voice clip for caption ${i + 1}: ${cue.text}\nRender the changed caption before building the film.`);
+    return index;
+  });
   console.log(`Voice: ${voice.name}, from ${CLIPS}`);
 } else if (ENGINE === "elevenlabs") {
   const voices = await fetch("https://api.elevenlabs.io/v1/voices", { headers: { "xi-api-key": KEY } });
@@ -108,7 +110,7 @@ if (ENGINE === "clips") {
 /** Write one spoken line, whichever engine is in play. */
 async function synthesize(text, index) {
   if (ENGINE === "clips") {
-    const file = resolve(CLIPS, `${index}.mp3`);
+    const file = resolve(CLIPS, `${clipIndices[index]}.mp3`);
     assert(existsSync(file), `Missing clip for caption ${index + 1}: ${file}`);
     return file;
   }
@@ -145,6 +147,7 @@ for (const [i, cue] of cues.entries()) {
   // Keep a breath at the end of the caption rather than butting up against it.
   const room = Math.max(0.4, cue.window - 0.25);
   const tempo = spoken > room ? Math.min(1.35, spoken / room) : 1;
+  assert(spoken / tempo <= room + 0.001, `Caption ${i + 1} is too short for its voice clip; lengthen the storyboard beat.`);
   // Let the screen arrive before the voice does, by a share of whatever the
   // line can spare. Every line starting on its caption's tick is what made the
   // reading sound like a metronome. A dense line comes in almost at once; one

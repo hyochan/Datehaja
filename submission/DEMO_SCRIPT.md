@@ -1,9 +1,18 @@
-# Current submission film — September 16, 2026
+# Replacement submission film — September 20, 2026
 
-The film is **2:35**, narrated, and lives [unlisted on YouTube](https://youtu.be/K35t6VaF0iI).
-It is not in this repository and the deployment does not serve it: what is kept
-here is its script — [the captions](Datehaja-demo.vtt) and
-[the transcript](transcript.txt) — plus everything needed to rebuild it.
+The new cut is **2:28**, narrated, with the correction at 0:00, visible
+before/after comparison at 0:19.6, and the later-date polite-register caption at
+0:23.6. It is [published as unlisted](https://youtu.be/-KZKKBA9m-I) and linked
+from the [updated submission](https://vibeapps.dev/s/datehaja). The local file is
+`.scratch/submission/Datehaja-demo.mp4`. The [previous 2:35 film](https://youtu.be/K35t6VaF0iI)
+is preserved for existing links. Its original
+[captions](archive/2026-09-16/Datehaja-demo.vtt),
+[transcript](archive/2026-09-16/transcript.txt) and
+[verification](archive/2026-09-16/film-verification.json) are archived.
+
+The repository keeps the current film's [captions](Datehaja-demo.vtt),
+[transcript](transcript.txt) and build verification; neither film is served by
+the app deployment.
 
 This is a browser walkthrough of the actual product. It replays previously
 generated records from fictional test people; navigation is cut and playback
@@ -15,16 +24,16 @@ of real-world chemistry.
 
 | Time | Actual screen |
 | --- | --- |
-| 0:00–0:09 | Product hook |
-| 0:09–0:41 | The pinned public replay: Juno and Sol, sixteen saved lines |
-| 0:40–0:51 | That same date's journal, each card naming the lines behind it |
-| 0:51–1:07 | Each Agent's independent note, and two recommendations nobody has answered |
-| 1:06–1:19 | An introduction letter as it landed in a mailbox, sent through AgentMail — labelled on screen as an earlier Juno/Sol rehearsal, not the bookshop date above |
-| 1:19–1:34 | Separate Rio rehearsal: saved correction, reply and memory |
-| 1:34–1:58 | Before/after, English translation beside the untouched originals |
-| 1:57–2:09 | Replay of a later encounter with a new partner |
-| 2:09–2:19 | The four job cards, each naming the service that handles it |
-| 2:18–2:35 | Two independent human yeses to open contact, then the closing page |
+| 0:00–0:12 | Rio rehearsal: “That's not how I talk,” saved correction, reply and memory |
+| 0:11.6–0:31.6 | Four dates, then before/after at 0:19.6; translation beside unchanged originals and the limitation on reply length |
+| 0:31.2–0:43.2 | Replay of a later encounter with a new partner |
+| 0:42.8–0:51.8 | Product introduction |
+| 0:51.4–1:23.4 | Public replay: Juno and Sol, sixteen saved lines |
+| 1:23–1:34 | That same date's journal and its source-line chips |
+| 1:33.6–1:49.6 | Each Agent's independent note; two recommendations nobody has answered |
+| 1:49.2–2:02.2 | Actual AgentMail-delivered letter, labelled as an earlier development rehearsal |
+| 2:01.8–2:11.8 | The four job cards, each naming the service that handles it |
+| 2:11.4–2:28.4 | Two human yeses to open contact, then the closing page |
 
 Beats cross-dissolve, so the rows overlap by four tenths of a second.
 
@@ -66,7 +75,7 @@ off screen. Recapture whenever the product or the pinned record changes.
 # Optional local tools: npm install --prefix .scratch/media-tools --no-save ffmpeg-static ffprobe-static
 bun run demo:capture      # add --site URL to film a different deployment
 bun run demo:submission
-bun run demo:narrate      # reads submission/narration; a key re-renders it
+DATEHAJA_TTS=clips bun run demo:narrate # reuse the original reading; no API call
 bun run demo:review       # one frame per caption, to read picture against words
 ```
 
@@ -86,8 +95,8 @@ two steps therefore rebuild the film with no key and nothing to pay for; from
 the same capture directory on the machine that shot it, the rebuild reproduced
 the submitted SHA-256 exactly. A fresh clone has to recapture first — the
 capture directory is deliberately outside git — and frames shot at a different
-moment will not hash the same. Setting `ELEVENLABS_API_KEY`
-takes precedence and renders a fresh reading instead; `DATEHAJA_TTS=say` falls
+moment will not hash the same. Without an explicit `DATEHAJA_TTS=clips`, setting
+`ELEVENLABS_API_KEY` selects a fresh reading instead; `DATEHAJA_TTS=say` falls
 back to the voice built into macOS. If a caption is edited without re-rendering,
 `demo:narrate` stops and names the line rather than shipping a voice reading
 something that is no longer on screen.
@@ -111,7 +120,14 @@ uncaptioned fallback. It creates:
 - `submission/film-verification.json` — the SHA-256 of the build, its length,
   and the voice that read it
 
-Re-upload the rebuilt file to YouTube yourself; nothing automates that.
+Saved narration is matched by exact caption text, so reordering beats also
+reorders the correct voice clips. Unknown wording, ambiguous duplicate entries
+or a voice clip that cannot fit its cue at up to 1.35× speed stop the build.
+
+The September 20 upload passed YouTube's checks with no issues and played in a
+separate browser. The existing Vibe Apps entry now shows its new video URL,
+short description and learning-focused tagline. Preserve the previous upload.
+Any future rebuild needs the same upload, playback and saved-entry verification.
 
 The old `demo:record` and `demo:build` commands describe the earlier
 authenticated-account take and can overwrite the submission copy. For this
@@ -131,4 +147,6 @@ edit dialogue or verdicts to manufacture an introduction. See
 Production `merry-bass-190` requires explicit target approval. Deploy backend
 before frontend, preview the production record before pinning it, verify the
 film with no login, then use the updated social/submission drafts. Posting
-and final submission are still separate, unsent actions.
+and submission changes are separate from production deployment. The original
+entry and social posts were published September 16; the replacement cut and
+updated entry were published September 20.
