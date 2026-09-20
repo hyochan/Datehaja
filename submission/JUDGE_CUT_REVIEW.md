@@ -2,7 +2,10 @@
 
 Status: [new film published](https://youtu.be/-KZKKBA9m-I), unlisted, and
 [existing submission updated](https://vibeapps.dev/s/datehaja) on September 20.
-The previous 2:35 upload remains available. App link changes await release.
+The previous 2:35 upload remains available and its description links to the
+new cut. The two app-link changes are included in
+[PR #79](https://github.com/hyochan/Datehaja/pull/79); its production workflow
+records whether this source revision has reached the live app.
 
 ## What changed
 
@@ -49,7 +52,7 @@ independent participant or establish demand. Verified independent sessions: 0.
 The MP4 is `.scratch/submission/Datehaja-demo.mp4`; original published metadata
 is preserved under `submission/archive/2026-09-16/`. The original MP4 is also
 backed up locally. Upload, playback and saved-entry checks are complete. The
-app's two current-film links are updated in source and await production release.
+app's two current-film links are updated in this source revision.
 The old film remains a valid walkthrough and is preserved.
 
 The September 22 22:00 KST content cutoff leaves six hours for public links and
