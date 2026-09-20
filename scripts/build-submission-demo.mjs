@@ -40,12 +40,31 @@ for (const [index, beat] of story.entries()) {
   const source = beats.find(value => value.name === beat.name);
   assert(source && Number.isInteger(source.frames) && source.frames > 1, `Missing capture: ${beat.name}`);
   assert(beat.captions?.length > 0, `Missing captions: ${beat.name}`);
+  // Select inspected portions of a capture before retiming. Fractions preserve
+  // the same editorial selection when a later capture has a different FPS.
+  const windows = beat.captureWindows ?? [[0, 1]];
+  assert(Array.isArray(windows) && windows.length > 0, `Missing capture windows: ${beat.name}`);
+  let previousEnd = 0;
+  const ranges = windows.map(window => {
+    assert(Array.isArray(window) && window.length === 2, `Invalid capture window: ${beat.name}`);
+    const [start, end] = window;
+    assert(Number.isFinite(start) && Number.isFinite(end) && start >= previousEnd && end <= 1 && end > start,
+      `Capture windows must be ordered, non-overlapping fractions: ${beat.name}`);
+    previousEnd = end;
+    const first = Math.floor(start * source.frames);
+    const last = Math.floor(end * source.frames) - 1;
+    assert(last >= first, `Empty capture window: ${beat.name}`);
+    return { first, last };
+  });
+  const selectedFrames = ranges.reduce((count, range) => count + range.last - range.first + 1, 0);
+  const rate = selectedFrames / beat.seconds;
+  const select = ranges.map(({ first, last }) => `between(n,${first},${last})`).join("+");
   for (let n = 1; n <= source.frames; n++) assert(existsSync(resolve(captures, beat.name, `${String(n).padStart(4,"0")}.png`)), `Missing frame ${beat.name}/${n}`);
   const output = resolve(scratch, `${index}.mp4`);
   // Browser screenshot bytes may be JPEG despite the capture filename suffix.
   const magic = readFileSync(resolve(captures, beat.name, "0001.png"));
   const codec = magic[0] === 0xff && magic[1] === 0xd8 ? "mjpeg" : "png";
-  run(ffmpeg, ["-y", "-v", "error", "-framerate", String(source.frames / beat.seconds), "-c:v", codec, "-i", resolve(captures, beat.name, "%04d.png"), "-vf", "scale=1280:720:flags=lanczos,pad=1280:840:0:0:color=0x151014,fps=24,setsar=1", "-t", String(beat.seconds), "-an", "-c:v", "libx264", "-preset", "fast", "-crf", "21", "-pix_fmt", "yuv420p", "-threads", "4", output]);
+  run(ffmpeg, ["-y", "-v", "error", "-framerate", String(rate), "-c:v", codec, "-i", resolve(captures, beat.name, "%04d.png"), "-vf", `select='${select}',setpts=N/(${rate}*TB),scale=1280:720:flags=lanczos,pad=1280:840:0:0:color=0x151014,fps=24,setsar=1`, "-t", String(beat.seconds), "-an", "-c:v", "libx264", "-preset", "fast", "-crf", "21", "-pix_fmt", "yuv420p", "-threads", "4", output]);
   segments.push(output);
   lengths.push(beat.seconds);
   beat.captions.forEach((caption, i) => cues.push({ start: offset + beat.seconds * i / beat.captions.length, end: offset + beat.seconds * (i + 1) / beat.captions.length, caption }));
@@ -86,6 +105,6 @@ run(ffmpeg, ["-v", "error", "-i", film, "-f", "null", "-"]);
 writeFileSync("submission/Datehaja-demo.vtt", "WEBVTT\n\n" + cues.map((cue, i) => `${i + 1}\n${time(cue.start)} --> ${time(cue.end)}\n${cue.caption}\n`).join("\n"));
 writeFileSync("submission/transcript.txt", "Datehaja — saved-record product walkthrough\nFictional test people. English translations identified on screen. Timing edited.\nNo narration; English captions are burned into the film.\n\n" + cues.map(cue => `${time(cue.start)}\n${cue.caption}\n`).join("\n"));
 run(ffmpeg, ["-y", "-v", "error", "-ss", "3", "-i", film, "-frames:v", "1", "-update", "1", resolve(".scratch/submission/submission-poster.jpg")]);
-const report = { durationSeconds: Number(metadata.format.duration), width: metadata.streams[0].width, height: metadata.streams[0].height, fps: metadata.streams[0].avg_frame_rate, bytes: Number(metadata.format.size), sha256: createHash("sha256").update(readFileSync(film)).digest("hex"), captions: "Burned English; VTT and transcript also provided", audio: "None", decodedCompletely: true, source: "Browser UI screenshots of saved fictional records; playback retimed", chapters: story.map(beat => ({ name: beat.name, seconds: beat.seconds })) };
+const report = { durationSeconds: Number(metadata.format.duration), width: metadata.streams[0].width, height: metadata.streams[0].height, fps: metadata.streams[0].avg_frame_rate, bytes: Number(metadata.format.size), sha256: createHash("sha256").update(readFileSync(film)).digest("hex"), captions: "Burned English; VTT and transcript also provided", audio: "None", decodedCompletely: true, source: "Browser UI screenshots of saved fictional records; playback retimed", chapters: story.map(beat => ({ name: beat.name, seconds: beat.seconds, ...(beat.captureWindows ? { captureWindows: beat.captureWindows } : {}) })) };
 writeFileSync("submission/film-verification.json", JSON.stringify(report, null, 2) + "\n");
 console.log(JSON.stringify(report, null, 2));

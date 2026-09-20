@@ -80,7 +80,7 @@ export default function WatchPage() {
           )}
         </p>
         <nav className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-[13px] text-soft">
-          <a className="inline-flex min-h-11 items-center underline underline-offset-4" href="https://youtu.be/-KZKKBA9m-I" target="_blank" rel="noreferrer">{say("전체 시연 영상", "Watch the full walkthrough")} ↗</a>
+          <a className="inline-flex min-h-11 items-center underline underline-offset-4" href="https://youtu.be/qu1VWBXuIz8" target="_blank" rel="noreferrer">{say("전체 시연 영상", "Watch the full walkthrough")} ↗</a>
           <Link className="inline-flex min-h-11 items-center underline underline-offset-4" to="/preview/agent-coaching">{say("피드백 이후 달라진 만남", "See what owner feedback changed")} ↗</Link>
         </nav>
 
