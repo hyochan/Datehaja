@@ -15,13 +15,13 @@ Contact opens only after two independent human yeses.
    projections and transactional consent, with direct source links.
 
 **[Submitted entry](https://vibeapps.dev/s/datehaja) ·
-[Published 2:35 demo](https://youtu.be/K35t6VaF0iI) ·
+[Submitted 2:28 demo](https://youtu.be/-KZKKBA9m-I) ·
 [September 20 replacement-cut details](submission/DEMO_SCRIPT.md)**
 
 All public examples use fictional people. Verified independent study
 participants: **0**. User validation remains incomplete; no satisfaction or
-demand result is claimed. The 2:28 replacement film is prepared locally and
-has not yet replaced the submitted YouTube link.
+demand result is claimed. The September 20 film and shortened description are
+published on the existing submission; the earlier upload remains available.
 
 ## Project record
 
@@ -64,8 +64,9 @@ Read from https://www.convex.dev/hackathons/all-gas on 2026-09-04, quoted:
 
 The replacement cut opens with the owner's correction and shows the later-date
 speech change before 30 seconds. It reuses saved captures and narration, keeps
-the limitations visible, and runs 2:28. The existing 2:35 YouTube upload remains
-the published version while the replacement awaits upload.
+the limitations visible, and runs 2:28. It is published as unlisted at
+https://youtu.be/-KZKKBA9m-I and replaces the video link on the existing Vibe Apps
+entry. The previous 2:35 upload remains available for earlier shared links.
 
 The front of this log and the shortened submission copy now give one judge
 route: account-free date, English learning comparison, delivered test email and

@@ -1,16 +1,17 @@
 # Submission and social copy — September 20, 2026
 
-**Prepared revision:** [short submission description](SUBMISSION_DESCRIPTION.md).
+**Published September 20 revision:** [short submission description](SUBMISSION_DESCRIPTION.md).
 It leads with the owner correction and gives judges the date → English learning
-comparison → delivered email/Convex route. It is prepared for the existing
-[entry](https://vibeapps.dev/s/datehaja); this file does not claim it is published.
+comparison → delivered email/Convex route. The existing
+[entry](https://vibeapps.dev/s/datehaja) now displays this copy and the
+[new 2:28 video](https://youtu.be/-KZKKBA9m-I).
 The existing social posts below are historical records, not instructions to
 post again. Outreach and automated follow-ups are paused.
 
 **Posted and submitted 2026-09-16.** The entry is live on vibeapps.dev under
 the AllGasHackathon tag.
 Every app link below is on the submitted production deployment and was checked
-there. The film itself is unlisted on YouTube (https://youtu.be/K35t6VaF0iI); the repository keeps its
+there. The current film is unlisted on YouTube (https://youtu.be/-KZKKBA9m-I); the repository keeps its
 captions and transcript, not the file.
 
 **Posting is scored, not optional.** The official page lists "Social proof —
@@ -127,7 +128,7 @@ an unlinked handle notifies nobody.
 | Evidence | Status |
 | --- | --- |
 | Current film and caption files | Built; see film-verification.json |
-| Film, unlisted on YouTube | https://youtu.be/K35t6VaF0iI |
+| Film, unlisted on YouTube (updated September 20) | https://youtu.be/-KZKKBA9m-I |
 | Film page on the deployment | Retired; the film is on YouTube only |
 | Production revision | Shipped; `verify:prod` reports `scoutAccess.ok` |
 | Independent human sessions | 0 completed; USER_STUDY.md is ready |

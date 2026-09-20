@@ -18,7 +18,7 @@ opens only after two independent human yeses.
 3. **Check delivery and the runtime.** The
    [delivered email fixture](fixtures/introduction-letter.html) is an actual
    AgentMail message from an earlier fictional development rehearsal, shown
-   in the [film](https://youtu.be/K35t6VaF0iI) at 1:06. It is separate from the
+   in the [film](https://youtu.be/-KZKKBA9m-I) at 1:49. It is separate from the
    bookshop record; that public pair cannot receive email.
    In [convex/agentDates.ts](../convex/agentDates.ts), inspect
    `storeTurnAndSchedule` (durable turns and scheduled continuation),
@@ -37,8 +37,7 @@ They show an implemented feedback loop, inspectable records and delivered test
 email. **Verified independent study participants: 0.** No satisfaction,
 retention, demand or real-world chemistry results are claimed.
 
-The [existing entry](https://vibeapps.dev/s/datehaja) and
-[published 2:35 film](https://youtu.be/K35t6VaF0iI) are live. The September 20
-**2:28 replacement cut is prepared locally**, with feedback and changed speech
-in its first 30 seconds; see [the film script](DEMO_SCRIPT.md). Do not describe
-that replacement as uploaded until its new URL has been verified.
+The [existing entry](https://vibeapps.dev/s/datehaja) now links to the
+[September 20 film](https://youtu.be/-KZKKBA9m-I), **2:28**, with feedback and
+changed speech in its first 30 seconds. The old upload is preserved so previously
+shared links continue to work. See [the film script](DEMO_SCRIPT.md).

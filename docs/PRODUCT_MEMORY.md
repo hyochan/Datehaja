@@ -10,11 +10,12 @@ September 11 submission work: `/watch` pins a reviewed, newly generated English
 encounter between fictional people, including the verified journal and both
 independent reflections. Do not replace its verdict to produce an introduction.
 `/preview/agent-coaching?lang=en` translates the unchanged Korean four-date
-learning rehearsal; the Korean original stays accessible. The current 155-second
-film is unlisted on YouTube at https://youtu.be/K35t6VaF0iI, narrated and with English captions. The
+learning rehearsal; the Korean original stays accessible. The current 148-second
+film is unlisted on YouTube at https://youtu.be/-KZKKBA9m-I, narrated and with English captions. The
 deployment no longer serves it and there is no `/demo` page; the repository
 keeps the captions and the transcript under `submission/`, not the file.
-The legacy 54-second film is supplemental historical footage.
+The previous 155-second upload at https://youtu.be/K35t6VaF0iI remains available
+for existing links. The legacy 54-second film is supplemental historical footage.
 
 Independent user validation is still pending. `/feedback` downloads closed
 answers locally; it does not store or send responses. `submission/USER_STUDY.md`
@@ -27,9 +28,10 @@ See `docs/SUBMISSION_READINESS.md` for release evidence and remaining actions.
 
 September 20 submission polish: the existing Vibe Apps entry is already live.
 The 2:28 replacement film opens with feedback and shows the later-date speech
-change before 30 seconds; it is a local candidate until a new YouTube URL is
-verified. `submission/JUDGE_GUIDE.md` gives the account-free judge route. Keep
-the existing 2:35 film and entry available during any replacement. The internal
+change before 30 seconds. Its upload and playback are verified, and the
+existing entry now contains the new video link and shortened description.
+`submission/JUDGE_GUIDE.md` gives the account-free judge route. Keep the
+previous 2:35 film available for old links. The internal
 content cutoff is September 22 at 22:00 Asia/Seoul; the remaining six hours are
 for broken links and critical failures, not new features or recruitment.
 

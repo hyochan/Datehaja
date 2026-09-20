@@ -2,14 +2,15 @@
 
 The new cut is **2:28**, narrated, with the correction at 0:00, visible
 before/after comparison at 0:19.6, and the later-date polite-register caption at
-0:23.6. It is prepared locally at `.scratch/submission/Datehaja-demo.mp4` and
-**has not been uploaded**. The [published 2:35 film](https://youtu.be/K35t6VaF0iI)
-remains the submitted version. Its original
+0:23.6. It is [published as unlisted](https://youtu.be/-KZKKBA9m-I) and linked
+from the [updated submission](https://vibeapps.dev/s/datehaja). The local file is
+`.scratch/submission/Datehaja-demo.mp4`. The [previous 2:35 film](https://youtu.be/K35t6VaF0iI)
+is preserved for existing links. Its original
 [captions](archive/2026-09-16/Datehaja-demo.vtt),
 [transcript](archive/2026-09-16/transcript.txt) and
 [verification](archive/2026-09-16/film-verification.json) are archived.
 
-The repository keeps the replacement's [captions](Datehaja-demo.vtt),
+The repository keeps the current film's [captions](Datehaja-demo.vtt),
 [transcript](transcript.txt) and build verification; neither film is served by
 the app deployment.
 
@@ -123,10 +124,10 @@ Saved narration is matched by exact caption text, so reordering beats also
 reorders the correct voice clips. Unknown wording, ambiguous duplicate entries
 or a voice clip that cannot fit its cue at up to 1.35× speed stop the build.
 
-Publishing is a separate step: upload the verified replacement as unlisted,
-verify its playback, then update the existing submission's video field and
-the repository's current-film links. Preserve the old upload. Do not claim the
-new cut is submitted until the entry visibly contains its new URL.
+The September 20 upload passed YouTube's checks with no issues and played in a
+separate browser. The existing Vibe Apps entry now shows its new video URL,
+short description and learning-focused tagline. Preserve the previous upload.
+Any future rebuild needs the same upload, playback and saved-entry verification.
 
 The old `demo:record` and `demo:build` commands describe the earlier
 authenticated-account take and can overwrite the submission copy. For this
@@ -147,5 +148,5 @@ Production `merry-bass-190` requires explicit target approval. Deploy backend
 before frontend, preview the production record before pinning it, verify the
 film with no login, then use the updated social/submission drafts. Posting
 and submission changes are separate from production deployment. The original
-entry and social posts were published September 16; the replacement cut is
-still local.
+entry and social posts were published September 16; the replacement cut and
+updated entry were published September 20.

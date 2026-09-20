@@ -8,7 +8,7 @@ The agents can explore. Only humans can consent.
 
 **[Watch a real agent date](https://merry-bass-190.convex.site/watch)** — no account needed. It replays a completed date between two seeded personas, both private letters included.
 
-**Judge path:** [account-free date](https://merry-bass-190.convex.site/watch) → [English learning comparison](https://merry-bass-190.convex.site/preview/agent-coaching?lang=en#comparison) → [delivered email and Convex source evidence](submission/JUDGE_GUIDE.md). The [published 2:35 film](https://youtu.be/K35t6VaF0iI) remains live; a [2:28 replacement cut](submission/DEMO_SCRIPT.md) puts the correction and changed speech in its first 30 seconds and is awaiting upload. Verified independent study participants: **0**.
+**Judge path:** [account-free date](https://merry-bass-190.convex.site/watch) → [English learning comparison](https://merry-bass-190.convex.site/preview/agent-coaching?lang=en#comparison) → [delivered email and Convex source evidence](submission/JUDGE_GUIDE.md). The [submitted 2:28 film](https://youtu.be/-KZKKBA9m-I) puts the correction and changed speech in its first 30 seconds. Verified independent study participants: **0**.
 
 ## Why this exists
 
@@ -59,7 +59,7 @@ OpenAI gives each Agent an isolated perspective.
 - Prompts explicitly identify the speaker as AI, treat profile text as untrusted data, forbid contact disclosure, and prohibit manipulating consent.
 - Every run records model, latency, token usage, outcome, and a redacted preview in `aiRuns`.
 - Date dialogue, private coaching, letters and factual audits use `gpt-5.6-sol` without a silent economy fallback. Letters are verified before they can create an introduction; unverified records remain readable without delivery.
-- [Recorded learning proof](https://merry-bass-190.convex.site/preview/agent-coaching?lang=en) follows one fictional owner through four scheduled dates and three saved corrections. English translations preserve the Korean source and all outcomes. [Current 2:35 walkthrough](https://youtu.be/K35t6VaF0iI).
+- [Recorded learning proof](https://merry-bass-190.convex.site/preview/agent-coaching?lang=en) follows one fictional owner through four scheduled dates and three saved corrections. English translations preserve the Korean source and all outcomes. [Current 2:28 walkthrough](https://youtu.be/-KZKKBA9m-I).
 
 ### Firecrawl
 
